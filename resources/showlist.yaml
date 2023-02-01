@@ -1,0 +1,24 @@
+1:
+    vis: "img"
+2:
+    vis: "msg"
+    val: "\n"
+3:
+    vis: "name"
+4:
+    vis: "msg"
+    val: "\n所属章节："
+5:
+    vis: "chap"
+6:
+    vis: "msg"
+    val: "\n上架版本："
+7:
+    vis: "version"
+8:
+    vis: "msg"
+    val: "\n"
+9:  #内置换行
+    vis: "rank"
+10:
+    vis: "done"
