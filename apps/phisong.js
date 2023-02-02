@@ -8,7 +8,7 @@ var ranklist = [] //定级数据
 var userdata = []
 var dftdata = []
 var songlist = [] //曲名排序的歌曲列表
-let showinfo = get.getData('showconfig')
+let showconfig = get.getData('showconfig')
 let infolist = get.getData('infolist')
 ranklist = get.getData('ranklist')
 songlist = get.getData('songlist')
@@ -95,7 +95,7 @@ export class phirks extends plugin {
 
     /**phi曲目查询 */
     async find(e) {
-        showinfo = await get.getData('showconfig')
+        showconfig = await get.getData('showconfig')
         infolist = await get.getData('infolist')
         ranklist = await get.getData('ranklist')
         songlist = await get.getData('songlist')
@@ -207,15 +207,15 @@ function getsongsinfo(mic) {
         let msgRes = []
         let cnt = 0
         for (let i = 1; ; ++i) {
-            if (showinfo[`${i}`]['vis'] == 'done') {
+            if (showconfig[`${i}`]['vis'] == 'done') {
                 break
             }
-            switch (showinfo[`${i}`]['vis']) {
+            switch (showconfig[`${i}`]['vis']) {
                 case 'img': {
                     // msgRes[cnt++] = get.getimg(name)
                     break
                 } case 'msg': {
-                    msgRes[cnt++] = showinfo[`${i}`]['val']
+                    msgRes[cnt++] = showconfig[`${i}`]['val']
                     break
                 } case 'rank': {
                     if (ranklist[`${name}`]['SP']) {
@@ -235,7 +235,7 @@ function getsongsinfo(mic) {
                     }
                     break
                 } default: {
-                    msgRes[cnt++] = infolist[`${name}`][`${showinfo[`${i}`]['vis']}`]
+                    msgRes[cnt++] = infolist[`${name}`][`${showconfig[`${i}`]['vis']}`]
                 }
             }
         }
