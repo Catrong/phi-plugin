@@ -142,24 +142,24 @@ class get {
     getsongsinfo(mic) {
         let name = this.songsnick(mic)
         if (name) {
-            let showinfo = this.getData('showconfig')
+            let showconfig = this.getData('showconfig')
             let infolist = this.getData('infolist')
             let ranklist = this.getData('ranklist')
             let msgRes = []
             let cnt = 0
             for (let i = 1; ; ++i) {
-                if (showinfo[`${i}`]['vis'] == 'done') {
+                if (showconfig[`${i}`]['vis'] == 'done') {
                     /**结束 */
                     break
                 }
-                switch (showinfo[`${i}`]['vis']) {
+                switch (showconfig[`${i}`]['vis']) {
                     case 'img': {
                         /**特殊类型：曲绘 */
                         msgRes[cnt++] = this.getimg(name)
                         break
                     } case 'msg': {
                         /**特殊类型：文字 */
-                        msgRes[cnt++] = showinfo[`${i}`]['val']
+                        msgRes[cnt++] = showconfig[`${i}`]['val']
                         break
                     } case 'rank': {
                         /**特殊类型：定级(物量) 须保持ranklist和infolist一致 */
@@ -181,7 +181,7 @@ class get {
                         break
                     } default: {
                         /**非特殊类型，直接读取infolist.yaml */
-                        msgRes[cnt++] = infolist[`${name}`][`${showinfo[`${i}`]['vis']}`]
+                        msgRes[cnt++] = infolist[`${name}`][`${showconfig[`${i}`]['vis']}`]
                     }
                 }
             }
