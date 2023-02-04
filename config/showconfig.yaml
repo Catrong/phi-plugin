@@ -5,6 +5,12 @@
 #值为 msg 代表类型为消息，需要在 val 中写消息内容，\n 代表换行
 #值为 rank 代表类型为定级，固定形式为 IN: 14.5  物量：996 文末不具有换行
 
+#值为 name 代表类型为曲名，可在\resources\infolist.yaml中更改
+#值为 chap 代表类型为章节，可在\resources\infolist.yaml中更改
+#值为 version 代表类型为上架版本，可在\resources\infolist.yaml中更改
+
+#值为 done 代表结束
+
 1:
     vis: "img"
 2:
