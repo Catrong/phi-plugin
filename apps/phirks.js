@@ -16,6 +16,7 @@ songlist = get.getData('songlist')
 //插件由个人独立编写，由于我没学过js，这个插件是一点一点照着其他大佬的插件抄的，如果有什么地方写的不对欢迎提出意见或做出修改
 //如果有什么好的建议也欢迎提出
 
+
 export class phirks extends plugin {
     constructor() {
         super({
@@ -193,7 +194,11 @@ export class phirks extends plugin {
             if (userdata["puting"]) {
                 /**获取到输入的acc */
                 if (!findacc(e)) {
-                    await e.reply(`设置成功！现在可以继续告诉我需要修改的曲目名称，也可以发送 #rks结束 来结束修改哦！`)
+                    await e.reply(`设置成功！`)
+                    userdata["sutdown"] = 0
+                    userdata["puting"] = 0
+                    userdata["finish"] = 1
+                    userdata["updata"] = 0
                 }
             } else {
                 /**获取到输入的曲名 */
@@ -207,7 +212,7 @@ export class phirks extends plugin {
                     await e.reply(`结束请发送 #rks结束 哦！`)
                 } else {
                     /**匹配成功，打上标记，下次读入acc */
-                    userdata["puting"] = 1
+                    userdata["puting"] = get.getsongsxh(mic)
                     get.setData(`${e.user_id}`, userdata)
                     ask(e, mic)
                 }
