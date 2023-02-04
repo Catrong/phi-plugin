@@ -4,7 +4,7 @@
 适用于 Yunzai-Bot V3 的 phigros 辅助插件
 
 #### 安装：
-使用Gitee安装
+在云崽目录下运行
 ```
 git clone https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
 ```
