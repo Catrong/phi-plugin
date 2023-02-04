@@ -12,7 +12,7 @@ let showconfig = get.getData('showconfig')
 let infolist = get.getData('infolist')
 ranklist = get.getData('ranklist')
 songlist = get.getData('songlist')
-
+let WhoIsInputing = []
 
 export class phirks extends plugin {
     constructor() {
@@ -39,8 +39,12 @@ export class phirks extends plugin {
                     fnc: 'find'
                 },
                 {
-                    reg: '^#phi随机.*',
+                    reg: '^#phi随机.*$',
                     fnc: 'randmic'
+                },
+                {
+                    reg: '^#phi计算等效rks.*$',
+                    fnc: 'comtorks'
                 }
             ]
         })
@@ -142,18 +146,18 @@ export class phirks extends plugin {
     /**随机定级范围内曲 */
     async randmic(e) {
         let msg = e.msg.replace(/#phi随机(\s*)/g, "")
-        let isask = [1,1,1,1]
-        if(e.msg.includes('AT')||e.msg.includes('IN')||e.msg.includes('HD')||e.msg.includes('EZ')) {
-            isask = [0,0,0,0]
-            if(e.msg.includes('AT')) {isask[0] = 1}
-            if(e.msg.includes('IN')) {isask[1] = 1}
-            if(e.msg.includes('HD')) {isask[2] = 1}
-            if(e.msg.includes('EZ')) {isask[3] = 1}
+        let isask = [1, 1, 1, 1]
+        if (e.msg.includes('AT') || e.msg.includes('IN') || e.msg.includes('HD') || e.msg.includes('EZ')) {
+            isask = [0, 0, 0, 0]
+            if (e.msg.includes('AT')) { isask[0] = 1 }
+            if (e.msg.includes('IN')) { isask[1] = 1 }
+            if (e.msg.includes('HD')) { isask[2] = 1 }
+            if (e.msg.includes('EZ')) { isask[3] = 1 }
         }
-        msg = msg.replace(/\s*|AT|IN|HD|EZ/g,"")
-        msg = msg.replace(/AT/g,"")
-        msg = msg.replace(/IN/g,"")
-        msg = msg.replace(/EZ/g,"")
+        msg = msg.replace(/\s*|AT|IN|HD|EZ/g, "")
+        msg = msg.replace(/AT/g, "")
+        msg = msg.replace(/IN/g, "")
+        msg = msg.replace(/EZ/g, "")
         let rank = msg.split('-')
         let randm1 = Math.floor(Math.random() * 165)
         let mic = songlist[randm1]
@@ -170,24 +174,24 @@ export class phirks extends plugin {
                 logger.info(`${rank[0]}   ${rank[1]}`)
                 let cnt = 0
                 while (++cnt) {
-                    if(cnt > 10000) {
-                        e.reply(`没有找到符合要求的曲目！QAQ`,true)
+                    if (cnt > 10000) {
+                        e.reply(`没有找到符合要求的曲目！QAQ`, true)
                         return true
                     }
                     let torank = ranklist[`${mic}`]['AT']
-                    if (isask[0]&&torank >= rank[0] && torank <= rank[1]) {
+                    if (isask[0] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
                     torank = ranklist[`${mic}`]['IN']
-                    if (isask[1]&&torank >= rank[0] && torank <= rank[1]) {
+                    if (isask[1] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
                     torank = ranklist[`${mic}`]['HD']
-                    if (isask[2]&&torank >= rank[0] && torank <= rank[1]) {
+                    if (isask[2] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
                     torank = ranklist[`${mic}`]['EZ']
-                    if (isask[3]&&torank >= rank[0] && torank <= rank[1]) {
+                    if (isask[3] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
                     randm1 = Math.floor(Math.random() * 165)
@@ -195,7 +199,46 @@ export class phirks extends plugin {
                 }
             }
         }
-        e.reply(get.getsongsinfo(`${mic}`),true)
+        e.reply(get.getsongsinfo(`${mic}`), true)
+    }
+
+    async comtorks(e) {
+        ranklist = get.getData('ranklist')
+        let msg = e.msg.replace(/#phi计算等效rks(\s*)/g, "")
+        let dfic = 0
+        if(msg.includes('-AT')) {
+            dfic = 'AT'
+            msg = msg.replace(/(\s*)-AT/g,"")
+        } else if(msg.includes('-IN')) {
+            dfic = 'IN'
+            msg = msg.replace(/(\s*)-IN/g,"")
+        } else if(msg.includes('-HD')) {
+            dfic = 'HD'
+            msg = msg.replace(/(\s*)-HD/g,"")
+        } else if(msg.includes('-EZ')) {
+            dfic = 'EZ'
+            msg = msg.replace(/(\s*)-EZ/g,"")
+        }
+        let data = msg.split(/\s\|\s/g)
+        if (!data[1] || typeof (Number(data[1])) != 'number') {
+            e.reply(`错误读入！请在曲目名称和定级之间以 | 分隔！`)
+            return true
+        }
+        logger.info(`${data}  ${dfic}`)
+        if (data[1] < 1 || data[1] > 100) {
+            e.reply(`请输入正确的acc！单位%。`)
+            return true
+        }
+        let mic = get.songsnick(data[0])
+        if (!mic) {
+            e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
+        } else if(!ranklist[`${mic}`][`${dfic}`]) {
+            e.reply(`${mic} 没有 ${dfic} 这个难度吧喂！请在难度前面加 -`)
+        } else {
+            await e.reply(get.getsongsinfo(mic))
+            e.reply(`计算结果：${Number(dxrks(data[1],ranklist[`${mic}`][`${dfic}`])).toFixed(4)}`, true)
+        }
+        return true
     }
 }
 
@@ -242,5 +285,15 @@ function getsongsinfo(mic) {
         return msgRes
     } else {
         return `未找到${mic}的相关曲目信息QAQ`
+    }
+}
+
+function dxrks(acc, rank) {
+    if (acc == 100) {
+        /**满分原曲定数即为有效rks */
+        return rank
+    } else {
+        /**非满分计算公式 [(((acc - 55) / 45) ^ 2) * 原曲定数] */
+        return rank * (((acc - 55) / 45) * ((acc - 55) / 45))
     }
 }
