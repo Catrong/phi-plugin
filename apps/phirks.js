@@ -199,6 +199,7 @@ export class phirks extends plugin {
                     userdata["puting"] = 0
                     userdata["finish"] = 1
                     userdata["updata"] = 0
+                    get.setData(`${e.user_id}`, userdata)
                 }
             } else {
                 /**获取到输入的曲名 */
