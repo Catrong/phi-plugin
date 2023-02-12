@@ -1,1320 +1,3486 @@
-"996":
-  "name": "996"
-  "version": "2.1.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 996
-  "HD": 453
-  "EZ": 392
-"[PRAW]":
-  "name": "[PRAW]"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 1171
-  "HD": 692
-  "EZ": 419
-"After Dawn":
-  "name": "After Dawn"
-  "version": "2.2.0"
-  "chap": "Side story2- 弭刻日"
-  "AT": 0
-  "IN": 975
-  "HD": 478
-  "EZ": 194
-"Aleph-0":
-  "name": "Aleph-0"
-  "version": "1.2.5"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 684
-  "HD": 438
-  "EZ": 124
-"Another Me by D_AAN":
-  "name": "Another Me by D_AAN"
-  "version": "2.1.0"
-  "chap": "ChapterEX-KALPA 精选集"
-  "AT": 0
-  "IN": 1449
-  "HD": 715
-  "EZ": 455
-"Another Me by Neutral Moon":
-  "name": "Another Me by Neutral Moon"
-  "version": "1.4.0"
-  "chap": "ChapterEX-Rising Sun Traxx 精选集"
-  "AT": 0
-  "IN": 564
-  "HD": 259
-  "EZ": 111
-"Another Round":
-  "name": "Another Round"
-  "version": "2.1.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 505
-  "HD": 353
-  "EZ": 136
-"Aphasia":
-  "name": "Aphasia"
-  "version": "1.2.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 553
-  "HD": 362
-  "EZ": 283
-"Apocalypse":
-  "name": "Apocalypse"
-  "version": "2.3.0"
-  "chap": "ChapterEX-Lanota 精选集"
-  "AT": 0
-  "IN": 676
-  "HD": 382
-  "EZ": 207
-"Apocalyptic":
-  "name": "Apocalyptic"
-  "version": "1.6.10"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 676
-  "HD": 329
-  "EZ": 282
-"Ark":
-  "name": "Ark"
-  "version": "2.2.0"
-  "chap": "Side story2- 弭刻日"
-  "AT": 0
-  "IN": 726
-  "HD": 523
-  "EZ": 290
-"-Arkhei-":
-  "name": "-Arkhei-"
-  "version": "2.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 644
-  "HD": 454
-  "EZ": 462
-"Äventyr":
-  "name": "Äventyr"
-  "version": "1.6.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 954
-  "HD": 626
-  "EZ": 345
-"Believe Light (feat. 果丸哒呦)":
-  "name": "Believe Light (feat. 果丸哒呦)"
-  "version": "2.4.5"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 972
-  "HD": 580
-  "EZ": 264
-"Better Graphic Animation":
-  "name": "Better Graphic Animation"
-  "version": "1.6.7"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 616
-  "HD": 469
-  "EZ": 178
-"Bonus Time":
-  "name": "Bonus Time"
-  "version": "1.1.0"
-  "chap": "Chapter4-管道迷宫"
-  "AT": 0
-  "IN": 689
-  "HD": 319
-  "EZ": 190
-"Brave Notes":
-  "name": "Brave Notes"
-  "version": "2.4.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 768
-  "HD": 442
-  "EZ": 299
-"Break Over":
-  "name": "Break Over"
-  "version": "2.4.4"
-  "chap": "Single-单曲 精选集"
-  "AT": 570
-  "IN": 910
-  "HD": 919
-  "EZ": 300
-"Break Through The Barrier":
-  "name": "Break Through The Barrier"
-  "version": "1.4.0"
-  "chap": "ChapterEX-Rising Sun Traxx 精选集"
-  "AT": 0
-  "IN": 1090
-  "HD": 623
-  "EZ": 384
-"Burn":
-  "name": "Burn"
-  "version": "1.2.4"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 707
-  "HD": 497
-  "EZ": 278
-"c.s.q.n.":
-  "name": "c.s.q.n."
-  "version": "2.4.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1066
-  "HD": 755
-  "EZ": 330
-"Cereris":
-  "name": "Cereris"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 898
-  "HD": 703
-  "EZ": 470
-"Cervelle Connexion":
-  "name": "Cervelle Connexion"
-  "version": "1.6.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 563
-  "HD": 569
-  "EZ": 301
-"Chronologika":
-  "name": "Chronologika"
-  "version": "2.0.0"
-  "chap": "Chapter7-时钟链接"
-  "AT": 0
-  "IN": 776
-  "HD": 456
-  "EZ": 271
-"Chronomia":
-  "name": "Chronomia"
-  "version": "2.0.0"
-  "chap": "Chapter7-时钟链接"
-  "AT": 0
-  "IN": 992
-  "HD": 663
-  "EZ": 338
-"Chronos Collapse - La Campanella":
-  "name": "Chronos Collapse - La Campanella"
-  "version": "2.0.0"
-  "chap": "Chapter7-时钟链接"
-  "AT": 0
-  "IN": 1500
-  "HD": 773
-  "EZ": 350
-"Chronostasis":
-  "name": "Chronostasis"
-  "version": "1.4.0"
-  "chap": "ChapterEX-Rising Sun Traxx 精选集"
-  "AT": 0
-  "IN": 1148
-  "HD": 665
-  "EZ": 596
-"Cipher : /2&//<|0":
-  "name": "Cipher : /2&//<|0"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 969
-  "HD": 526
-  "EZ": 380
-"Class Memories":
-  "name": "Class Memories"
-  "version": "1.1.0"
-  "chap": "Chapter4-管道迷宫"
-  "AT": 0
-  "IN": 1194
-  "HD": 801
-  "EZ": 612
-"Clock Paradox":
-  "name": "Clock Paradox"
-  "version": "2.0.0"
-  "chap": "Chapter7-时钟链接"
-  "AT": 0
-  "IN": 520
-  "HD": 312
-  "EZ": 188
-"Colorful Days♪":
-  "name": "Colorful Days♪"
-  "version": "1.5.0"
-  "chap": "Chapter6-方舟蜃景"
-  "AT": 0
-  "IN": 407
-  "HD": 186
-  "EZ": 156
-"Concvssion":
-  "name": "Concvssion"
-  "version": "2.1.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1000
-  "HD": 700
-  "EZ": 450
-"Credits":
-  "name": "Credits"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 535
-  "HD": 355
-  "EZ": 188
-"CROSS † SOUL":
-  "name": "CROSS † SOUL"
-  "version": "1.4.2"
-  "chap": "ChapterEX-HyuN 精选集"
-  "AT": 0
-  "IN": 1305
-  "HD": 892
-  "EZ": 517
-"cryout":
-  "name": "cryout"
-  "version": "1.3.0"
-  "chap": "Chapter5-霓虹灯牌"
-  "AT": 0
-  "IN": 733
-  "HD": 529
-  "EZ": 221
-"Cthugha":
-  "name": "Cthugha"
-  "version": "1.6.8"
-  "chap": "ChapterEX-Muse Dash 精选集"
-  "AT": 1444
-  "IN": 1333
-  "HD": 697
-  "EZ": 378
-"Dash":
-  "name": "Dash"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 346
-  "HD": 210
-  "EZ": 114
-"DataErr0r":
-  "name": "DataErr0r"
-  "version": "2.4.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 613
-  "HD": 400
-  "EZ": 50
-"dB doll":
-  "name": "dB doll"
-  "version": "2.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 377
-  "IN": 237
-  "HD": 124
-  "EZ": 60
-"Dead Soul":
-  "name": "Dead Soul"
-  "version": "1.4.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 787
-  "HD": 613
-  "EZ": 273
-"Demiurge":
-  "name": "Demiurge"
-  "version": "2.1.3"
-  "chap": "Side story2- 弭刻日"
-  "AT": 0
-  "IN": 520
-  "HD": 445
-  "EZ": 100
-"Demonkin":
-  "name": "Demonkin"
-  "version": "2.2.0"
-  "chap": "Side story2- 弭刻日"
-  "AT": 0
-  "IN": 829
-  "HD": 513
-  "EZ": 426
-"Disorder":
-  "name": "Disorder"
-  "version": "1.4.2"
-  "chap": "ChapterEX-HyuN 精选集"
-  "AT": 0
-  "IN": 918
-  "HD": 629
-  "EZ": 444
-"Dlyrotz":
-  "name": "Dlyrotz"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 764
-  "HD": 382
-  "EZ": 279
-"Don't Never Around":
-  "name": "Don't Never Around"
-  "version": "2.1.0"
-  "chap": "ChapterEX-KALPA 精选集"
-  "AT": 0
-  "IN": 1028
-  "HD": 639
-  "EZ": 308
-"Doppelganger":
-  "name": "Doppelganger"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 921
-  "HD": 437
-  "EZ": 257
-"Dreamland":
-  "name": "Dreamland"
-  "version": "2.1.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 627
-  "HD": 476
-  "EZ": 338
-"Drop It":
-  "name": "Drop It"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1031
-  "HD": 602
-  "EZ": 505
-"El Condor Pasa (Phigros Edit)":
-  "name": "El Condor Pasa (Phigros Edit)"
-  "version": "2.4.4"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1140
-  "HD": 585
-  "EZ": 259
-"Electron":
-  "name": "Electron"
-  "version": "1.5.7"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 576
-  "HD": 423
-  "EZ": 219
-"Eltaw":
-  "name": "Eltaw"
-  "version": "1.6.6"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 855
-  "HD": 608
-  "EZ": 391
-"End Me":
-  "name": "End Me"
-  "version": "1.5.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 724
-  "HD": 320
-  "EZ": 217
-"ENERGY SYNERGY MATRIX":
-  "name": "ENERGY SYNERGY MATRIX"
-  "version": "1.1.0"
-  "chap": "Chapter4-管道迷宫"
-  "AT": 0
-  "IN": 750
-  "HD": 468
-  "EZ": 190
-"energy trixxx":
-  "name": "energy trixxx"
-  "version": "1.6.11"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 930
-  "HD": 477
-  "EZ": 252
-"Engine x Start!! (melody mix)":
-  "name": "Engine x Start!! (melody mix)"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 433
-  "HD": 262
-  "EZ": 126
-"Eradication Catastrophe":
-  "name": "Eradication Catastrophe"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 463
-  "HD": 319
-  "EZ": 111
-"Eternal Snow":
-  "name": "Eternal Snow"
-  "version": "2.4.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 700
-  "HD": 533
-  "EZ": 288
-"Feast远东之宴":
-  "name": "Feast远东之宴"
-  "version": "2.4.7"
-  "chap": "ChapterEX-茶鸣拾贰律 精选集"
-  "AT": 0
-  "IN": 1000
-  "HD": 800
-  "EZ": 600
-"Final Step!":
-  "name": "Final Step!"
-  "version": "1.6.8"
-  "chap": "ChapterEX-Muse Dash 精选集"
-  "AT": 0
-  "IN": 931
-  "HD": 604
-  "EZ": 355
-"Find_Me":
-  "name": "Find_Me"
-  "version": "1.2.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 836
-  "HD": 657
-  "EZ": 465
-"FULi AUTO BUSTER":
-  "name": "FULi AUTO BUSTER"
-  "version": "2.1.4"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 755
-  "HD": 596
-  "EZ": 285
-"FULi AUTO SHOOTER":
-  "name": "FULi AUTO SHOOTER"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 843
-  "HD": 537
-  "EZ": 165
-"Future Mind":
-  "name": "Future Mind"
-  "version": "2.1.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 866
-  "HD": 570
-  "EZ": 365
-"Get Back":
-  "name": "Get Back"
-  "version": "1.4.4"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 708
-  "HD": 550
-  "EZ": 321
-"Get Ready!!":
-  "name": "Get Ready!!"
-  "version": "1.6.7"
-  "chap": "ChapterEX-WAVEAT 精选集"
-  "AT": 0
-  "IN": 819
-  "HD": 584
-  "EZ": 363
 "Glaciaxion":
-  "name": "Glaciaxion"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 729
-  "HD": 418
-  "EZ": 66
-"GOODBOUNCE":
-  "name": "GOODBOUNCE"
-  "version": "1.4.7"
-  "chap": "ChapterEX-GOOD 精选集"
-  "AT": 0
-  "IN": 898
-  "HD": 797
-  "EZ": 588
-"GOODFORTUNE":
-  "name": "GOODFORTUNE"
-  "version": "1.4.7"
-  "chap": "ChapterEX-GOOD 精选集"
-  "AT": 0
-  "IN": 1011
-  "HD": 733
-  "EZ": 455
-"GOODRAGE":
-  "name": "GOODRAGE"
-  "version": "1.4.7"
-  "chap": "ChapterEX-GOOD 精选集"
-  "AT": 0
-  "IN": 1034
-  "HD": 628
-  "EZ": 308
-"GOODTEK":
-  "name": "GOODTEK"
-  "version": "1.4.7"
-  "chap": "ChapterEX-GOOD 精选集"
-  "AT": 0
-  "IN": 873
-  "HD": 609
-  "EZ": 295
-"GOODWORLD":
-  "name": "GOODWORLD"
-  "version": "1.4.7"
-  "chap": "ChapterEX-GOOD 精选集"
-  "AT": 0
-  "IN": 960
-  "HD": 805
-  "EZ": 215
-"Hardcore Kwaya":
-  "name": "Hardcore Kwaya"
-  "version": "1.6.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 852
-  "HD": 611
-  "EZ": 340
-"HAZARD":
-  "name": "HAZARD"
-  "version": "2.1.0"
-  "chap": "ChapterEX-KALPA 精选集"
-  "AT": 0
-  "IN": 588
-  "HD": 507
-  "EZ": 283
-"Horizon Blue":
-  "name": "Horizon Blue"
-  "version": "2.3.0"
-  "chap": "ChapterEX-Lanota 精选集"
-  "AT": 0
-  "IN": 1084
-  "HD": 733
-  "EZ": 519
-"HumaN":
-  "name": "HumaN"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 554
-  "HD": 382
-  "EZ": 182
-"I Must Say No":
-  "name": "I Must Say No"
-  "version": "2.2.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 470
-  "HD": 364
-  "EZ": 76
-"Igallta":
-  "name": "Igallta"
-  "version": "1.5.0"
-  "chap": "Chapter6-方舟蜃景"
-  "AT": 1114
-  "IN": 1018
-  "HD": 601
-  "EZ": 414
-"inferior":
-  "name": "inferior"
-  "version": "2.4.0"
-  "chap": "ChapterEX-姜米條 精选集"
-  "AT": 0
-  "IN": 755
-  "HD": 489
-  "EZ": 226
-"INFiNiTE ENERZY -Overdoze-":
-  "name": "INFiNiTE ENERZY -Overdoze-"
-  "version": "2.2.0"
-  "chap": "Side story2- 弭刻日"
-  "AT": 888
-  "IN": 888
-  "HD": 666
-  "EZ": 333
-"Infinity Heaven":
-  "name": "Infinity Heaven"
-  "version": "1.4.2"
-  "chap": "ChapterEX-HyuN 精选集"
-  "AT": 0
-  "IN": 1029
-  "HD": 422
-  "EZ": 164
-"Initialize":
-  "name": "Initialize"
-  "version": "1.6.7"
-  "chap": "ChapterEX-WAVEAT 精选集"
-  "AT": 0
-  "IN": 581
-  "HD": 354
-  "EZ": 117
-"JunXion Between Life And Death(VIP Mix)":
-  "name": "JunXion Between Life And Death(VIP Mix)"
-  "version": "1.3.0"
-  "chap": "Chapter5-霓虹灯牌"
-  "AT": 0
-  "IN": 722
-  "HD": 593
-  "EZ": 262
-"Kerberos":
-  "name": "Kerberos"
-  "version": "2.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 978
-  "HD": 683
-  "EZ": 262
-"Khronostasis Katharsis":
-  "name": "Khronostasis Katharsis"
-  "version": "1.2.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 861
-  "HD": 747
-  "EZ": 394
-"Leave All Behind":
-  "name": "Leave All Behind"
-  "version": "1.4.6"
-  "chap": "Chapter5-霓虹灯牌"
-  "AT": 0
-  "IN": 523
-  "HD": 394
-  "EZ": 210
-"life flashes before weeb eyes":
-  "name": "life flashes before weeb eyes"
-  "version": "1.4.0"
-  "chap": "ChapterEX-Rising Sun Traxx 精选集"
-  "AT": 0
-  "IN": 1065
-  "HD": 960
-  "EZ": 567
-"Luminescent":
-  "name": "Luminescent"
-  "version": "2.1.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 650
-  "HD": 608
-  "EZ": 330
-"Lyrith -迷宮リリス-":
-  "name": "Lyrith -迷宮リリス-"
-  "version": "1.6.0"
-  "chap": "Side story1-忘忧宫"
-  "AT": 1236
-  "IN": 1122
-  "HD": 700
-  "EZ": 248
-"Magenta Potion":
-  "name": "Magenta Potion"
-  "version": "1.4.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 791
-  "HD": 631
-  "EZ": 334
-"MARENOL":
-  "name": "MARENOL"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 689
-  "HD": 467
-  "EZ": 95
-"mechanted":
-  "name": "mechanted"
-  "version": "1.4.0"
-  "chap": "ChapterEX-Rising Sun Traxx 精选集"
-  "AT": 0
-  "IN": 662
-  "HD": 500
-  "EZ": 184
-"micro.wav":
-  "name": "micro.wav"
-  "version": "1.5.0"
-  "chap": "Chapter6-方舟蜃景"
-  "AT": 0
-  "IN": 649
-  "HD": 459
-  "EZ": 196
-"Miracle Forest (VIP Mix)":
-  "name": "Miracle Forest (VIP Mix)"
-  "version": "1.6.0"
-  "chap": "Side story1-忘忧宫"
-  "AT": 0
-  "IN": 839
-  "HD": 586
-  "EZ": 323
-"MOBILYS":
-  "name": "MOBILYS"
-  "version": "1.6.0"
-  "chap": "Side story1-忘忧宫"
-  "AT": 0
-  "IN": 938
-  "HD": 530
-  "EZ": 311
-"modulus":
-  "name": "modulus"
-  "version": "1.6.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 774
-  "HD": 482
-  "EZ": 258
-"Next Time":
-  "name": "Next Time"
-  "version": "1.3.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 387
-  "HD": 303
-  "EZ": 240
-"Nhelv":
-  "name": "Nhelv"
-  "version": "2.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 833
-  "HD": 571
-  "EZ": 196
-"Nick of Time":
-  "name": "Nick of Time"
-  "version": "2.0.0"
-  "chap": "Chapter7-时钟链接"
-  "AT": 0
-  "IN": 745
-  "HD": 429
-  "EZ": 328
-"NO ONE YES MAN":
-  "name": "NO ONE YES MAN"
-  "version": "1.5.0"
-  "chap": "Chapter6-方舟蜃景"
-  "AT": 0
-  "IN": 844
-  "HD": 612
-  "EZ": 394
-"Non-Melodic Ragez (MUG Edit)":
-  "name": "Non-Melodic Ragez (MUG Edit)"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 1235
-  "HD": 604
-  "EZ": 221
-"NYA!!! (Phigros ver.) ":
-  "name": "NYA!!! (Phigros ver.) "
-  "version": "1.3.0"
-  "chap": "Chapter5-霓虹灯牌"
-  "AT": 0
-  "IN": 666
-  "HD": 428
-  "EZ": 122
-"On And On!!":
-  "name": "On And On!!"
-  "version": "2.3.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 830
-  "HD": 323
-  "EZ": 195
-"opia":
-  "name": "opia"
-  "version": "2.2.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 793
-  "HD": 548
-  "EZ": 233
-"Orthodox":
-  "name": "Orthodox"
-  "version": "1.5.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 962
-  "HD": 627
-  "EZ": 304
-"Palescreen":
-  "name": "Palescreen"
-  "version": "1.4.5"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1059
-  "HD": 772
-  "EZ": 224
-"Parallel Retrogression(Game Ver.)":
-  "name": "Parallel Retrogression(Game Ver.)"
-  "version": "1.5.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 851
-  "HD": 697
-  "EZ": 507
-"Pixel Rebelz":
-  "name": "Pixel Rebelz"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 941
-  "HD": 698
-  "EZ": 250
-"Pont des souvenirs":
-  "name": "Pont des souvenirs"
-  "version": "2.4.5"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 899
-  "HD": 567
-  "EZ": 461
-"Protoflicker":
-  "name": "Protoflicker"
-  "version": "2.3.0"
-  "chap": "ChapterEX-Lanota 精选集"
-  "AT": 0
-  "IN": 1210
-  "HD": 511
-  "EZ": 259
-"Rainy Season":
-  "name": "Rainy Season"
-  "version": "2.4.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 660
-  "HD": 594
-  "EZ": 304
-"Re_Nascence (Psystyle Ver.)":
-  "name": "Re_Nascence (Psystyle Ver.)"
-  "version": "2.2.0"
-  "chap": "Side story2- 弭刻日"
-  "AT": 0
-  "IN": 827
-  "HD": 806
-  "EZ": 378
-"Reimei":
-  "name": "Reimei"
-  "version": "1.3.0"
-  "chap": "Chapter5-霓虹灯牌"
-  "AT": 0
-  "IN": 983
-  "HD": 644
-  "EZ": 325
-"RESSiSTANCE":
-  "name": "RESSiSTANCE"
-  "version": "2.1.0"
-  "chap": "ChapterEX-KALPA 精选集"
-  "AT": 0
-  "IN": 1026
-  "HD": 744
-  "EZ": 499
-"RIPPER":
-  "name": "RIPPER"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1186
-  "HD": 704
-  "EZ": 520
-"Rrhar'il":
-  "name": "Rrhar'il"
-  "version": "2.0.0"
-  "chap": "Chapter7-时钟链接"
-  "AT": 1300
-  "IN": 1300
-  "HD": 700
-  "EZ": 446
-"Rubbish Sorting":
-  "name": "Rubbish Sorting"
-  "version": "1.3.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 613
-  "HD": 475
-  "EZ": 229
-"Sein":
-  "name": "Sein"
-  "version": "1.2.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 721
-  "HD": 473
-  "EZ": 203
-"Shadow":
-  "name": "Shadow"
-  "version": "2.4.0"
-  "chap": "ChapterEX-姜米條 精选集"
-  "AT": 1089
-  "IN": 840
-  "HD": 549
-  "EZ": 393
-"SIGMA":
-  "name": "SIGMA"
-  "version": "1.5.7"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 785
-  "HD": 516
-  "EZ": 352
-"Snow Desert":
-  "name": "Snow Desert"
-  "version": "1.2.4"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 552
-  "HD": 534
-  "EZ": 236
-"Sparkle New Life":
-  "name": "Sparkle New Life"
-  "version": "1.2.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 684
-  "HD": 497
-  "EZ": 305
-"Spasmodic":
-  "name": "Spasmodic"
-  "version": "1.3.0"
-  "chap": "Chapter5-霓虹灯牌"
-  "AT": 1671
-  "IN": 1389
-  "HD": 904
-  "EZ": 637
-"Speed Up!":
-  "name": "Speed Up!"
-  "version": "1.4.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 711
-  "HD": 463
-  "EZ": 262
-"Starduster":
-  "name": "Starduster"
-  "version": "1.5.3"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 874
-  "HD": 578
-  "EZ": 280
-"Stasis":
-  "name": "Stasis"
-  "version": "2.3.0"
-  "chap": "ChapterEX-Lanota 精选集"
-  "AT": 1700
-  "IN": 1322
-  "HD": 902
-  "EZ": 446
-"Sultan Rage":
-  "name": "Sultan Rage"
-  "version": "1.1.0"
-  "chap": "Chapter4-管道迷宫"
-  "AT": 0
-  "IN": 485
-  "HD": 334
-  "EZ": 159
-"-SURREALISM-":
-  "name": "-SURREALISM-"
-  "version": "1.1.0"
-  "chap": "Chapter4-管道迷宫"
-  "AT": 0
-  "IN": 914
-  "HD": 532
-  "EZ": 302
-"The Mountain Eater":
-  "name": "The Mountain Eater"
-  "version": "1.5.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 697
-  "HD": 386
-  "EZ": 210
-"Time to Night Sky (feat. Lee Yu Jin)":
-  "name": "Time to Night Sky (feat. Lee Yu Jin)"
-  "version": "2.1.0"
-  "chap": "ChapterEX-KALPA 精选集"
-  "AT": 0
-  "IN": 540
-  "HD": 559
-  "EZ": 165
-"Träne":
-  "name": "Träne"
-  "version": "1.6.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 661
-  "HD": 420
-  "EZ": 148
-"Unorthodox Thoughts":
-  "name": "Unorthodox Thoughts"
-  "version": "1.6.9"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 729
-  "HD": 644
-  "EZ": 512
-"volcanic":
-  "name": "volcanic"
-  "version": "1.6.7"
-  "chap": "ChapterEX-WAVEAT 精选集"
-  "AT": 1650
-  "IN": 1178
-  "HD": 985
-  "EZ": 1052
-"WATER":
-  "name": "WATER"
-  "version": "1.6.0"
-  "chap": "Side story1-忘忧宫"
-  "AT": 0
-  "IN": 643
-  "HD": 703
-  "EZ": 338
-"Wavetapper":
-  "name": "Wavetapper"
-  "version": "1.6.5"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 866
-  "HD": 507
-  "EZ": 470
-"Winter↑cube↓":
-  "name": "Winter↑cube↓"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 733
-  "HD": 696
-  "EZ": 401
-"With You":
-  "name": "With You"
-  "version": "1.6.9"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 774
-  "HD": 654
-  "EZ": 226
-"XING":
-  "name": "XING"
-  "version": "1.6.8"
-  "chap": "ChapterEX-Muse Dash 精选集"
-  "AT": 0
-  "IN": 711
-  "HD": 587
-  "EZ": 310
-"You are the Miserable":
-  "name": "You are the Miserable"
-  "version": "2.3.0"
-  "chap": "ChapterEX-Lanota 精选集"
-  "AT": 1344
-  "IN": 893
-  "HD": 762
-  "EZ": 486
-"Ποσειδών":
-  "name": "Ποσειδών"
-  "version": "1.6.0"
-  "chap": "Side story1-忘忧宫"
-  "AT": 0
-  "IN": 450
-  "HD": 397
-  "EZ": 533
-"ρars/ey":
-  "name": "ρars/ey"
-  "version": "2.0.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 777
-  "HD": 449
-  "EZ": 181
-"いざ、参ります":
-  "name": "いざ、参ります"
-  "version": "2.3.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 865
-  "HD": 441
-  "EZ": 188
-"ジングルベル(Jingle Bell)":
-  "name": "ジングルベル(Jingle Bell)"
-  "version": "2.1.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1239
-  "HD": 492
-  "EZ": 639
-"もぺもぺ":
-  "name": "もぺもぺ"
-  "version": "1.4.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 720
-  "IN": 412
-  "HD": 289
-  "EZ": 125
-"瓷岁":
-  "name": "瓷岁"
-  "version": "2.4.7"
-  "chap": "ChapterEX-茶鸣拾贰律 精选集"
-  "AT": 0
-  "IN": 365
-  "HD": 309
-  "EZ": 120
-"大和撫子 -Wild Dances-":
-  "name": "大和撫子 -Wild Dances-"
-  "version": "1.6.6"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1002
-  "HD": 549
-  "EZ": 274
-"风屿":
-  "name": "风屿"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1156
-  "HD": 802
-  "EZ": 368
+    "song": "Glaciaxion"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/0b/Glaciaxion_Phigros.png/300px-Glaciaxion_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/0b/Glaciaxion_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "140"
+    "composer": "SunsetRay"
+    "length": "2:43"
+    "illustrator": "艾若拉"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.5"
+    "in_combo": "729"
+    "in_charter": "Barbarianerman vs. NerSAN"
+    "hd_level": "6.7"
+    "hd_combo": "418"
+    "hd_charter": "Arenn Saki"
+    "ez_level": "1.1"
+    "ez_combo": "66"
+    "ez_charter": "Barbarianerman"
+"Eradication Catastrophe":
+    "song": "Eradication Catastrophe"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/60/Eradication_Catastrophe_Phigros.png/300px-Eradication_Catastrophe_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/60/Eradication_Catastrophe_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "120"
+    "composer": "NceS"
+    "length": "2:06"
+    "illustrator": "海产"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "11.6"
+    "in_combo": "463"
+    "in_charter": "阿爽 & Ctymax"
+    "hd_level": "7.5"
+    "hd_combo": "319"
+    "hd_charter": "阿爽"
+    "ez_level": "3.5"
+    "ez_combo": "111"
+    "ez_charter": "阿爽"
+"Credits":
+    "song": "Credits"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/2b/Credits.png/300px-Credits.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/2b/Credits.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "179"
+    "composer": "Frums"
+    "length": "1:40"
+    "illustrator": "Ctymax"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.7"
+    "in_combo": "535"
+    "in_charter": "Ctymax"
+    "hd_level": "10.4"
+    "hd_combo": "355"
+    "hd_charter": "Ctymax"
+    "ez_level": "4.4"
+    "ez_combo": "188"
+    "ez_charter": "Ctymax"
+"Dlyrotz":
+    "song": "Dlyrotz"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/0c/Dlyrotz_Phigros.png/300px-Dlyrotz_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/0c/Dlyrotz_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "175"
+    "composer": "Likey"
+    "length": "2:01"
+    "illustrator": "DoublePian"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.6"
+    "in_combo": "764"
+    "in_charter": "晨 vs Barbarianerman"
+    "hd_level": "11.7"
+    "hd_combo": "382"
+    "hd_charter": "晨"
+    "ez_level": "6.5"
+    "ez_combo": "279"
+    "ez_charter": "晨"
+"Engine x Start!! (melody mix)":
+    "song": "Engine x Start!! (melody mix)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/9/9e/Engine_x_Start_Phigros.png/300px-Engine_x_Start_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/9/9e/Engine_x_Start_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "186"
+    "composer": "CrossingSound"
+    "length": "1:31"
+    "illustrator": "赤芽"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.4"
+    "in_combo": "433"
+    "in_charter": "Arenn Saki&Catcats"
+    "hd_level": "10.5"
+    "hd_combo": "262"
+    "hd_charter": "Arenn Saki&Catcats"
+    "ez_level": "4.7"
+    "ez_combo": "126"
+    "ez_charter": "Arenn Saki&Catcats"
 "光":
-  "name": "光"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 517
-  "HD": 453
-  "EZ": 249
-"華灯爱":
-  "name": "華灯爱"
-  "version": "1.2.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 520
-  "HD": 394
-  "EZ": 318
+    "song": "光"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/57/%E5%85%89_Phigros.png/300px-%E5%85%89_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/57/%E5%85%89_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "180"
+    "composer": "姜米條"
+    "length": "2:11"
+    "illustrator": "winder"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.8"
+    "in_combo": "517"
+    "in_charter": "Catcats & 百九十八"
+    "hd_level": "8.4"
+    "hd_combo": "453"
+    "hd_charter": "Catcats & 百九十八"
+    "ez_level": "4.9"
+    "ez_combo": "249"
+    "ez_charter": "Catcats & 百九十八"
+"Winter↑cube↓":
+    "song": "Winter↑cube↓"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/7/7c/Winter_Cube_Phigros.png/300px-Winter_Cube_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/7/7c/Winter_Cube_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "104"
+    "composer": "Ctymax feat. NceS"
+    "length": "2:35"
+    "illustrator": "翠冷兮"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.4"
+    "in_combo": "733"
+    "in_charter": "百九十八"
+    "hd_level": "10.7"
+    "hd_combo": "696"
+    "hd_charter": "小鹏 fixed by Barbarianerman"
+    "ez_level": "6.7"
+    "ez_combo": "401"
+    "ez_charter": "小鹏 fixed by Barbarianerman"
 "混乱-Confusion":
-  "name": "混乱-Confusion"
-  "version": "1.0.0"
-  "chap": "Chapter-Legacy"
-  "AT": 0
-  "IN": 978
-  "HD": 602
-  "EZ": 290
-"开心病":
-  "name": "开心病"
-  "version": "1.2.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 840
-  "HD": 442
-  "EZ": 158
-"狂喜蘭舞":
-  "name": "狂喜蘭舞"
-  "version": "1.2.1"
-  "chap": "Single-单曲 精选集"
-  "AT": 1325
-  "IN": 968
-  "HD": 651
-  "EZ": 472
-"青丘":
-  "name": "青丘"
-  "version": "2.4.6"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 1304
-  "HD": 534
-  "EZ": 284
-"青芽":
-  "name": "青芽"
-  "version": "2.4.2"
-  "chap": "ChapterEX-茶鸣拾贰律 精选集"
-  "AT": 0
-  "IN": 1102
-  "HD": 520
-  "EZ": 366
-"万吨匿名信":
-  "name": "万吨匿名信"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 781
-  "HD": 648
-  "EZ": 307
-"望影の方舟Six":
-  "name": "望影の方舟Six"
-  "version": "1.5.0"
-  "chap": "Chapter6-方舟蜃景"
-  "AT": 0
-  "IN": 1066
-  "HD": 526
-  "EZ": 276
-"心之所向":
-  "name": "心之所向"
-  "version": "2.4.0"
-  "chap": "ChapterEX-姜米條 精选集"
-  "AT": 0
-  "IN": 713
-  "HD": 422
-  "EZ": 226
-"雪降り、メリクリ":
-  "name": "雪降り、メリクリ"
-  "version": "1.6.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 939
-  "HD": 559
-  "EZ": 316
-"桜樹街道":
-  "name": "桜樹街道"
-  "version": "1.6.7"
-  "chap": "ChapterEX-WAVEAT 精选集"
-  "AT": 0
-  "IN": 459
-  "HD": 421
-  "EZ": 292
-"萤火虫の怨":
-  "name": "萤火虫の怨"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 885
-  "HD": 746
-  "EZ": 245
-"游园地":
-  "name": "游园地"
-  "version": "1.6.10"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 481
-  "HD": 444
-  "EZ": 220
-"月下缭乱":
-  "name": "月下缭乱"
-  "version": "2.3.2"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 969
-  "HD": 533
-  "EZ": 419
-"云女孩":
-  "name": "云女孩"
-  "version": "1.0.0"
-  "chap": "Single-单曲 精选集"
-  "AT": 0
-  "IN": 669
-  "HD": 538
-  "EZ": 220
-"盏茗":
-  "name": "盏茗"
-  "version": "2.4.2"
-  "chap": "ChapterEX-茶鸣拾贰律 精选集"
-  "AT": 0
-  "IN": 706
-  "HD": 176
-  "EZ": 83
-"重生":
-  "name": "重生"
-  "version": "1.5.0"
-  "chap": "Chapter6-方舟蜃景"
-  "AT": 0
-  "IN": 900
-  "HD": 650
-  "EZ": 354
+    "song": "混乱-Confusion"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/6f/Confusion_Phigros.png/300px-Confusion_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/6f/Confusion_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "180"
+    "composer": "OnlyMyBlackScore"
+    "length": "2:07"
+    "illustrator": "L-sp4"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "978"
+    "in_charter": "XMT小咩兔"
+    "hd_level": "11.4"
+    "hd_combo": "602"
+    "hd_charter": "月下樱&115"
+    "ez_level": "5.3"
+    "ez_combo": "290"
+    "ez_charter": "月下樱&115"
+"Cipher: /2&//<|0":
+    "song": "Cipher: /2&//<|0"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/5a/Cipher_%E6%96%B0_Phigros.JPG/300px-Cipher_%E6%96%B0_Phigros.JPG"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/5a/Cipher_%E6%96%B0_Phigros.JPG"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "179"
+    "composer": "Tetrajectory feat. Ctymax"
+    "length": "2:34"
+    "illustrator": "IvyTowers"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "969"
+    "in_charter": "Gausbon"
+    "hd_level": "10.8"
+    "hd_combo": "526"
+    "hd_charter": "Gausbon"
+    "ez_level": "6.8"
+    "ez_combo": "380"
+    "ez_charter": "Gausbon"
+"FULi AUTO SHOOTER":
+    "song": "FULi AUTO SHOOTER"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/9/97/FULi_Phigros_2048%2A1080.png/300px-FULi_Phigros_2048%2A1080.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/9/97/FULi_Phigros_2048%2A1080.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "145"
+    "composer": "MYUKKE."
+    "length": "2:09"
+    "illustrator": "ViscerA & Psycholine"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "843"
+    "in_charter": "AUTO. SHOOTER. fixed by Ctymax"
+    "hd_level": "11.3"
+    "hd_combo": "537"
+    "hd_charter": "AUTO. SHOOTER."
+    "ez_level": "4.1"
+    "ez_combo": "165"
+    "ez_charter": "AUTO. SHOOTER."
+"HumaN":
+    "song": "HumaN"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/8a/HumaN_Phigros.png/300px-HumaN_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/8a/HumaN_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "180"
+    "composer": "SOTUI"
+    "length": "2:14"
+    "illustrator": "CH"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.6"
+    "in_combo": "554"
+    "in_charter": "CN_115+TangScend"
+    "hd_level": "8.8"
+    "hd_combo": "382"
+    "hd_charter": "阿爽"
+    "ez_level": "5.6"
+    "ez_combo": "182"
+    "ez_charter": "阿爽"
+"[PRAW]":
+    "song": "[PRAW]"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/be/PRAW_Phigros.png/300px-PRAW_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/be/PRAW_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "210"
+    "composer": "BlueWind"
+    "length": "2:36"
+    "illustrator": "老张"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.9"
+    "in_combo": "1171"
+    "in_charter": "晨 vs. 阿爽"
+    "hd_level": "11.8"
+    "hd_combo": "692"
+    "hd_charter": "阿爽"
+    "ez_level": "4.4"
+    "ez_combo": "419"
+    "ez_charter": "阿爽"
+"Cereris":
+    "song": "Cereris"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/9/91/Cereris_Phigros_%E9%AB%98%E6%B8%85.png/300px-Cereris_Phigros_%E9%AB%98%E6%B8%85.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/9/91/Cereris_Phigros_%E9%AB%98%E6%B8%85.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "175"
+    "composer": "SunsetRay/NceS"
+    "length": "2:47"
+    "illustrator": "IvyTowers"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "898"
+    "in_charter": "StupiGGy"
+    "hd_level": "10.5"
+    "hd_combo": "703"
+    "hd_charter": "StupiGGy"
+    "ez_level": "6.9"
+    "ez_combo": "470"
+    "ez_charter": "StupiGGy"
+"Pixel Rebelz":
+    "song": "Pixel Rebelz"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/c4/Pixel_Rebelz_Phigros_Old.png/300px-Pixel_Rebelz_Phigros_Old.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/c4/Pixel_Rebelz_Phigros_Old.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "150"
+    "composer": "Normal1zer"
+    "length": "2:22"
+    "illustrator": "艾是Abby"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.2"
+    "in_combo": "941"
+    "in_charter": "NerSAN"
+    "hd_level": "11.9"
+    "hd_combo": "698"
+    "hd_charter": "阿爽"
+    "ez_level": "4.5"
+    "ez_combo": "250"
+    "ez_charter": "阿爽"
+"Non-Melodic Ragez(MUG Edit)":
+    "song": "Non-Melodic Ragez(MUG Edit)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/fe/Non-Melodic_Ragez_Phigros.png/300px-Non-Melodic_Ragez_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/fe/Non-Melodic_Ragez_Phigros.png"
+    "chapter": "Chapter Legacy 过去的章节"
+    "bpm": "205"
+    "composer": "Normal1zer"
+    "length": "2:19"
+    "illustrator": "cycats"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.8"
+    "in_combo": "1235"
+    "in_charter": "分化者 fixed by Barbarianerman"
+    "hd_level": "10.5"
+    "hd_combo": "604"
+    "hd_charter": "分化者『RageS』"
+    "ez_level": "5.8"
+    "ez_combo": "221"
+    "ez_charter": "分化者『RageS』"
+"Sultan Rage":
+    "song": "Sultan Rage"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/08/Sultan_Rage_Phigros.png/300px-Sultan_Rage_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/08/Sultan_Rage_Phigros.png"
+    "chapter": "Chapter 4 管道迷宫"
+    "bpm": "155"
+    "composer": "MonstDeath"
+    "length": "1:56"
+    "illustrator": "笔记RE"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.5"
+    "in_combo": "485"
+    "in_charter": "百九十八"
+    "hd_level": "8.5"
+    "hd_combo": "334"
+    "hd_charter": "百九十八"
+    "ez_level": "3.9"
+    "ez_combo": "159"
+    "ez_charter": "百九十八"
+"Class Memories":
+    "song": "Class Memories"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/81/Class_Memories_Phigros.png/300px-Class_Memories_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/81/Class_Memories_Phigros.png"
+    "chapter": "Chapter 4 管道迷宫"
+    "bpm": "145"
+    "composer": "Antistar feat. Ctymax"
+    "length": "2:27"
+    "illustrator": "xperz"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.5"
+    "in_combo": "1194"
+    "in_charter": "JKy"
+    "hd_level": "8.9"
+    "hd_combo": "801"
+    "hd_charter": "JKy"
+    "ez_level": "4.5"
+    "ez_combo": "612"
+    "ez_charter": "JKy"
+"-SURREALISM-":
+    "song": "-SURREALISM-"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/19/SURREALISM_Phigros.png/300px-SURREALISM_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/19/SURREALISM_Phigros.png"
+    "chapter": "Chapter 4 管道迷宫"
+    "bpm": "180"
+    "composer": "Itsuki"
+    "length": "2:33"
+    "illustrator": "喵n葵"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.4"
+    "in_combo": "914"
+    "in_charter": "-StupiGGy- fixed by 晨"
+    "hd_level": "7.7"
+    "hd_combo": "532"
+    "hd_charter": "-StupiGGy-"
+    "ez_level": "4.6"
+    "ez_combo": "302"
+    "ez_charter": "-StupiGGy-"
+"Bonus Time":
+    "song": "Bonus Time"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/13/Bonus_Time_Phigros.png/300px-Bonus_Time_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/13/Bonus_Time_Phigros.png"
+    "chapter": "Chapter 4 管道迷宫"
+    "bpm": "180"
+    "composer": "Megalo_PaleWhite"
+    "length": "1:55"
+    "illustrator": "笔记RE"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.2"
+    "in_combo": "689"
+    "in_charter": "Uvernight fixed by 百九十八"
+    "hd_level": "9.3"
+    "hd_combo": "319"
+    "hd_charter": "Uvernight fixed by Barbarianerman"
+    "ez_level": "4.7"
+    "ez_combo": "190"
+    "ez_charter": "Uvernight fixed by Barbarianerman"
+"ENERGY SYNERGY MATRIX":
+    "song": "ENERGY SYNERGY MATRIX"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/d9/EnergySynergyMatrix.png/300px-EnergySynergyMatrix.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/d9/EnergySynergyMatrix.png"
+    "chapter": "Chapter 4 管道迷宫"
+    "bpm": "160"
+    "composer": "Tanchiky"
+    "length": "2:05"
+    "illustrator": "Karameru"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "750"
+    "in_charter": "B B M pow"
+    "hd_level": "10.7"
+    "hd_combo": "468"
+    "hd_charter": "Ctymax vs 阿爽"
+    "ez_level": "5.9"
+    "ez_combo": "190"
+    "ez_charter": "Ctymax vs 阿爽"
+"NYA!!!(Phigros ver.)":
+    "song": "NYA!!!(Phigros ver.)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/7/78/Nya_221_Phigros.png/300px-Nya_221_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/7/78/Nya_221_Phigros.png"
+    "chapter": "Chapter 5 霓虹灯牌"
+    "bpm": "154"
+    "composer": "FLuoRiTe/姜米條"
+    "length": "2:35"
+    "illustrator": "NEKO&海产"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.9"
+    "in_combo": "666"
+    "in_charter": "HCC!!!"
+    "hd_level": "8.6"
+    "hd_combo": "428"
+    "hd_charter": "HCC!!!"
+    "ez_level": "1.8"
+    "ez_combo": "122"
+    "ez_charter": "HCC!!!"
+"JunXion Between Life And Death(VIP Mix)":
+    "song": "JunXion Between Life And Death(VIP Mix)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/51/JunXion_%E6%96%B0_Phigros.jpeg/300px-JunXion_%E6%96%B0_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/51/JunXion_%E6%96%B0_Phigros.jpeg"
+    "chapter": "Chapter 5 霓虹灯牌"
+    "bpm": "164"
+    "composer": "1N6Fs"
+    "length": "2:22"
+    "illustrator": "IvyTowers"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.3"
+    "in_combo": "722"
+    "in_charter": "鲲&百九十八"
+    "hd_level": "8.7"
+    "hd_combo": "593"
+    "hd_charter": "鲲&百九十八"
+    "ez_level": "3.2"
+    "ez_combo": "262"
+    "ez_charter": "鲲&百九十八"
+"cryout":
+    "song": "cryout"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/68/Cryout_Phigros.png/300px-Cryout_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/68/Cryout_Phigros.png"
+    "chapter": "Chapter 5 霓虹灯牌"
+    "bpm": "180"
+    "composer": "Ju_E"
+    "length": "2:04"
+    "illustrator": "Haight"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.7"
+    "in_combo": "733"
+    "in_charter": "Ctymax"
+    "hd_level": "9.9"
+    "hd_combo": "529"
+    "hd_charter": "Ctymax"
+    "ez_level": "4.3"
+    "ez_combo": "221"
+    "ez_charter": "Ctymax"
+"Reimei":
+    "song": "Reimei"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/61/Reimei_Phigros.png/300px-Reimei_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/61/Reimei_Phigros.png"
+    "chapter": "Chapter 5 霓虹灯牌"
+    "bpm": "185"
+    "composer": "影虎。"
+    "length": "2:28"
+    "illustrator": "英英英"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.1"
+    "in_combo": "983"
+    "in_charter": "百九十八"
+    "hd_level": "11.9"
+    "hd_combo": "644"
+    "hd_charter": "百九十八"
+    "ez_level": "6.8"
+    "ez_combo": "325"
+    "ez_charter": "百九十八"
 "尊師 ～The Guru～":
-  "name": "尊師 ～The Guru～"
-  "version": "1.3.0"
-  "chap": "Chapter5-霓虹灯牌"
-  "AT": 0
-  "IN": 738
-  "HD": 346
-  "EZ": 180
+    "song": "尊師 ～The Guru～"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/5e/The_Guru_Phigros.png/300px-The_Guru_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/5e/The_Guru_Phigros.png"
+    "chapter": "Chapter 5 霓虹灯牌"
+    "bpm": "152"
+    "composer": "rider"
+    "length": "2:05"
+    "illustrator": "1B"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.2"
+    "in_combo": "738"
+    "in_charter": "奥術 ~The Empery~"
+    "hd_level": "9.4"
+    "hd_combo": "346"
+    "hd_charter": "奥術 ~The Empery~"
+    "ez_level": "3.6"
+    "ez_combo": "180"
+    "ez_charter": "奥術 ~The Empery~"
+"Spasmodic":
+    "song": "Spasmodic"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/ce/Spasmodic.png/300px-Spasmodic.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/ce/Spasmodic.png"
+    "chapter": "Chapter 5 霓虹灯牌"
+    "bpm": "200"
+    "composer": "姜米條☆颶風~?元力上人?"
+    "length": "2:34"
+    "illustrator": "昔璃☆暴雨~?危難聖帝?"
+    "at_level": "16.4"
+    "at_combo": "1671"
+    "at_charter": "無極☆雷鳴~?死の序曲?"
+    "in_level": "15.2"
+    "in_combo": "1389"
+    "in_charter": "無極☆雷鳴~?死の序曲?"
+    "hd_level": "12.6"
+    "hd_combo": "904"
+    "hd_charter": "無極☆雷鳴~?死の序曲?"
+    "ez_level": "7.9"
+    "ez_combo": "637"
+    "ez_charter": "無極☆雷鳴~?死の序曲?"
+"Leave All Behind":
+    "song": "Leave All Behind"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/02/LeaveAllBehind_Phigros.jpg/300px-LeaveAllBehind_Phigros.jpg"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/02/LeaveAllBehind_Phigros.jpg"
+    "chapter": "Chapter 5 霓虹灯牌"
+    "bpm": "150"
+    "composer": "rider"
+    "length": "2:07"
+    "illustrator": "笔记RE"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.7"
+    "in_combo": "523"
+    "in_charter": "亚树见希子 & 百九十八"
+    "hd_level": "6.4"
+    "hd_combo": "394"
+    "hd_charter": "亚树见希子 & 百九十八"
+    "ez_level": "2.5"
+    "ez_combo": "210"
+    "ez_charter": "亚树见希子 & 百九十八"
+"Colorful Days?":
+    "song": "Colorful Days?"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/b2/Colorful_Days_Phigros.png/300px-Colorful_Days_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/b2/Colorful_Days_Phigros.png"
+    "chapter": "Chapter 6 方舟蜃景"
+    "bpm": "136"
+    "composer": "P4koo feat. つゆり花鈴"
+    "length": "1:39"
+    "illustrator": "Doro-nyong & Ratif"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.7"
+    "in_combo": "407"
+    "in_charter": "阿?爽"
+    "hd_level": "7.1"
+    "hd_combo": "186"
+    "hd_charter": "阿?爽"
+    "ez_level": "4.6"
+    "ez_combo": "156"
+    "ez_charter": "阿?爽"
+"micro.wav":
+    "song": "micro.wav"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/c9/Micro.wav_Phigros.png/300px-Micro.wav_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/c9/Micro.wav_Phigros.png"
+    "chapter": "Chapter 6 方舟蜃景"
+    "bpm": "172"
+    "composer": "dandeless"
+    "length": "2:04"
+    "illustrator": "snake.ribs"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.5"
+    "in_combo": "649"
+    "in_charter": "百九十八"
+    "hd_level": "10.7"
+    "hd_combo": "459"
+    "hd_charter": "百九十八"
+    "ez_level": "6.2"
+    "ez_combo": "196"
+    "ez_charter": "百九十八"
+"重生":
+    "song": "重生"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/7/76/%E9%87%8D%E7%94%9F_Phigros.png/300px-%E9%87%8D%E7%94%9F_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/7/76/%E9%87%8D%E7%94%9F_Phigros.png"
+    "chapter": "Chapter 6 方舟蜃景"
+    "bpm": "195"
+    "composer": "姜米條"
+    "length": "2:23"
+    "illustrator": "昔璃&TNiK"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.6"
+    "in_combo": "900"
+    "in_charter": "Barbarianerman"
+    "hd_level": "9.3"
+    "hd_combo": "650"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "5.8"
+    "ez_combo": "354"
+    "ez_charter": "Barbarianerman"
+"NO ONE YES MAN":
+    "song": "NO ONE YES MAN"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/25/NO_ONE_YES_MAN_Phigros.png/300px-NO_ONE_YES_MAN_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/25/NO_ONE_YES_MAN_Phigros.png"
+    "chapter": "Chapter 6 方舟蜃景"
+    "bpm": "170"
+    "composer": "MYUKKE."
+    "length": "2:04"
+    "illustrator": "青鸟"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.4"
+    "in_combo": "844"
+    "in_charter": "晨 vs. Ctymax"
+    "hd_level": "11.8"
+    "hd_combo": "612"
+    "hd_charter": "晨"
+    "ez_level": "5.5"
+    "ez_combo": "394"
+    "ez_charter": "Ctymax"
+"望影の方舟Six":
+    "song": "望影の方舟Six"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e2/Houyou_no_hakobune_Six_Phigros.png/300px-Houyou_no_hakobune_Six_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e2/Houyou_no_hakobune_Six_Phigros.png"
+    "chapter": "Chapter 6 方舟蜃景"
+    "bpm": "209"
+    "composer": "Se-U-Ra"
+    "length": "1:52"
+    "illustrator": "鲸弑"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.7"
+    "in_combo": "1066"
+    "in_charter": "六回目Traveler Scend as \"Knight of Arq\""
+    "hd_level": "12.9"
+    "hd_combo": "526"
+    "hd_charter": "六回目Traveler Scend"
+    "ez_level": "6.3"
+    "ez_combo": "276"
+    "ez_charter": "六回目Traveler Scend"
+"Igallta":
+    "song": "Igallta"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/60/Igallta_Phigros.png/300px-Igallta_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/60/Igallta_Phigros.png"
+    "chapter": "Chapter 6 方舟蜃景"
+    "bpm": "230"
+    "composer": "Se-U-Ra"
+    "length": "2:02"
+    "illustrator": "Se-U-Ra"
+    "at_level": "16.7"
+    "at_combo": "1114"
+    "at_charter": "断罪の剣『神』"
+    "in_level": "15.6"
+    "in_combo": "1018"
+    "in_charter": "夜明の剣『靈』"
+    "hd_level": "12.7"
+    "hd_combo": "601"
+    "hd_charter": "平川の剣『士』"
+    "ez_level": "7.7"
+    "ez_combo": "414"
+    "ez_charter": "信仰の剣『生』"
+"Clock Paradox":
+    "song": "Clock Paradox"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/7/71/Clock_Paradox.jpeg/300px-Clock_Paradox.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/7/71/Clock_Paradox.jpeg"
+    "chapter": "Chapter 7 时钟链接"
+    "bpm": "140"
+    "composer": "WyvernP"
+    "length": "2:30"
+    "illustrator": "汉堡"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.6"
+    "in_combo": "520"
+    "in_charter": "Barbarianerman vs. Alloces"
+    "hd_level": "5.8"
+    "hd_combo": "312"
+    "hd_charter": "Barbarianerman vs. Alloces"
+    "ez_level": "2.3"
+    "ez_combo": "188"
+    "ez_charter": "Barbarianerman vs. Alloces"
+"Chronologika":
+    "song": "Chronologika"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/b5/Chronologika_Phigros.jpeg/300px-Chronologika_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/b5/Chronologika_Phigros.jpeg"
+    "chapter": "Chapter 7 时钟链接"
+    "bpm": "180"
+    "composer": "Hundotte"
+    "length": "2:14"
+    "illustrator": "幽灵星"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.9"
+    "in_combo": "776"
+    "in_charter": "Ctymax vs. Barbarianerman"
+    "hd_level": "9.8"
+    "hd_combo": "456"
+    "hd_charter": "XMT小咩兔"
+    "ez_level": "3.7"
+    "ez_combo": "271"
+    "ez_charter": "TimiTini"
+"Nick of Time":
+    "song": "Nick of Time"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/10/Nick_of_Time_Phigros.jpeg/300px-Nick_of_Time_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/10/Nick_of_Time_Phigros.jpeg"
+    "chapter": "Chapter 7 时钟链接"
+    "bpm": "175"
+    "composer": "P4koo"
+    "length": "2:22"
+    "illustrator": "青鸟"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "745"
+    "in_charter": "NerSAN"
+    "hd_level": "8.1"
+    "hd_combo": "429"
+    "hd_charter": "晨 vs. XMT小咩兔"
+    "ez_level": "4.4"
+    "ez_combo": "328"
+    "ez_charter": "晨 vs. XMT小咩兔"
+"Chronomia":
+    "song": "Chronomia"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/bb/Chronomia_Phigros.jpeg/300px-Chronomia_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/bb/Chronomia_Phigros.jpeg"
+    "chapter": "Chapter 7 时钟链接"
+    "bpm": "227"
+    "composer": "Lime"
+    "length": "2:26"
+    "illustrator": "inukoro"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.3"
+    "in_combo": "992"
+    "in_charter": "时の希 & 百九十八"
+    "hd_level": "10.4"
+    "hd_combo": "663"
+    "hd_charter": "Rikko"
+    "ez_level": "4.7"
+    "ez_combo": "338"
+    "ez_charter": "Pcat"
+"Chronos Collapse - La Campanella":
+    "song": "Chronos Collapse - La Campanella"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/6d/CCLC_Phigros.jpeg/300px-CCLC_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/6d/CCLC_Phigros.jpeg"
+    "chapter": "Chapter 7 时钟链接"
+    "bpm": "180"
+    "composer": "SunsetRay"
+    "length": "2:33"
+    "illustrator": "老张"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.9"
+    "in_combo": "1500"
+    "in_charter": "NerSAN vs. 阿爽『Collapse』"
+    "hd_level": "10.6"
+    "hd_combo": "773"
+    "hd_charter": "阿爽『Destroy』"
+    "ez_level": "2.8"
+    "ez_combo": "350"
+    "ez_charter": "Pcat『Scatter』"
+"Rrhar'il":
+    "song": "Rrhar'il"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/a/a9/Rrhar%E2%80%99il_Phigros.jpeg/300px-Rrhar%E2%80%99il_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/a/a9/Rrhar%E2%80%99il_Phigros.jpeg"
+    "chapter": "Chapter 7 时钟链接"
+    "bpm": "190"
+    "composer": "Team Grimoire"
+    "length": "2:12"
+    "illustrator": "犀牛坨动画工坊"
+    "at_level": "16.8"
+    "at_combo": "1300"
+    "at_charter": "RWND -p 16493:62786:92551"
+    "in_level": "15.7"
+    "in_combo": "1300"
+    "in_charter": "RDRT -p 20:08:31"
+    "hd_level": "12.7"
+    "hd_combo": "700"
+    "hd_charter": "RDRT -p 20:02:21"
+    "ez_level": "7.2"
+    "ez_combo": "446"
+    "ez_charter": "RDRT -p 19:08:31"
+"Ποσειδ?ν":
+    "song": "Ποσειδ?ν"
+    "illustration": "undefined"
+    "illustration_big": "undefined"
+    "chapter": "Side Story 1 忘忧宫"
+    "bpm": "175"
+    "composer": "1112 vs. Star*"
+    "length": "2:03"
+    "illustrator": "老张"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.8"
+    "in_combo": "450"
+    "in_charter": "Jαckψ feat. Βαρβαρο?αντρα?"
+    "hd_level": "8.4"
+    "hd_combo": "397"
+    "hd_charter": "Jαckψ"
+    "ez_level": "4.7"
+    "ez_combo": "533"
+    "ez_charter": "Jαckψ a.k.a JKy"
+"WATER":
+    "song": "WATER"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/a/ad/WATER_Phigros.png/300px-WATER_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/a/ad/WATER_Phigros.png"
+    "chapter": "Side Story 1 忘忧宫"
+    "bpm": "170"
+    "composer": "A-39/沙包P"
+    "length": "2:36"
+    "illustrator": "knife美工刀"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.6"
+    "in_combo": "643"
+    "in_charter": "乱流に巻き込まれ"
+    "hd_level": "9.4"
+    "hd_combo": "703"
+    "hd_charter": "対流に巻き込まれ"
+    "ez_level": "4.5"
+    "ez_combo": "338"
+    "ez_charter": "急流に巻き込まれ"
+"Miracle Forest (VIP Mix)":
+    "song": "Miracle Forest (VIP Mix)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/81/Miracle_Forest_Phigros.png/300px-Miracle_Forest_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/81/Miracle_Forest_Phigros.png"
+    "chapter": "Side Story 1 忘忧宫"
+    "bpm": "192"
+    "composer": "Rinth_live"
+    "length": "2:50"
+    "illustrator": "L-sp4"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.7"
+    "in_combo": "839"
+    "in_charter": "奇跡の希 feat. 奇跡の従"
+    "hd_level": "9.8"
+    "hd_combo": "586"
+    "hd_charter": "奇跡の希"
+    "ez_level": "2.6"
+    "ez_combo": "323"
+    "ez_charter": "奇跡の希"
+"MOBILYS":
+    "song": "MOBILYS"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/45/MOBILYS_Phigros.png/300px-MOBILYS_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/45/MOBILYS_Phigros.png"
+    "chapter": "Side Story 1 忘忧宫"
+    "bpm": "144"
+    "composer": "Dachs"
+    "length": "2:43"
+    "illustrator": "わっふゑ"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "938"
+    "in_charter": "StupiGGy vs. 百九十八 ft. 野从"
+    "hd_level": "9.7"
+    "hd_combo": "530"
+    "hd_charter": "百九十八"
+    "ez_level": "4.8"
+    "ez_combo": "311"
+    "ez_charter": "百九十八"
+"Lyrith -迷宮リリス-":
+    "song": "Lyrith -迷宮リリス-"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/b0/Phigros_Lyrith.png/300px-Phigros_Lyrith.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/b0/Phigros_Lyrith.png"
+    "chapter": "Side Story 1 忘忧宫"
+    "bpm": "177"
+    "composer": "ユメミド"
+    "length": "2:27"
+    "illustrator": "何呵"
+    "at_level": "16.3"
+    "at_combo": "1236"
+    "at_charter": "CN_115 as \"prediCameNt\""
+    "in_level": "15.9"
+    "in_combo": "1122"
+    "in_charter": "Arenn Saki as \"lAβyrinS\""
+    "hd_level": "11.6"
+    "hd_combo": "700"
+    "hd_charter": "Arenn Saki as \"myStery\""
+    "ez_level": "5.2"
+    "ez_combo": "248"
+    "ez_charter": "Arenn Saki as \"mAze\""
+"Demiurge":
+    "song": "Demiurge"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/9/96/Demiurge_Phigros.png/300px-Demiurge_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/9/96/Demiurge_Phigros.png"
+    "chapter": "Side Story 2 弭刻日"
+    "bpm": "111"
+    "composer": "Rabpit"
+    "length": "2:49"
+    "illustrator": "青鸟"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "11.8"
+    "in_combo": "520"
+    "in_charter": "\"Demiurge\" ~ Dawn"
+    "hd_level": "7.4"
+    "hd_combo": "445"
+    "hd_charter": "\"Creator\" ~ StupiGGy"
+    "ez_level": "1.4"
+    "ez_combo": "100"
+    "ez_charter": "\"Manufacturer\" ~ Rikko"
+"Demonkin":
+    "song": "Demonkin"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/d8/Demonkin_Phigros.png/300px-Demonkin_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/d8/Demonkin_Phigros.png"
+    "chapter": "Side Story 2 弭刻日"
+    "bpm": "192"
+    "composer": "Forged Reigns"
+    "length": "2:18"
+    "illustrator": "Jeffery"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.7"
+    "in_combo": "829"
+    "in_charter": "Sillyp & Alloces"
+    "hd_level": "10.7"
+    "hd_combo": "513"
+    "hd_charter": "Alloces"
+    "ez_level": "6.1"
+    "ez_combo": "426"
+    "ez_charter": "Alloces"
+"Re_Nascence (Psystyle Ver.)":
+    "song": "Re_Nascence (Psystyle Ver.)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/ef/Re_Nascence_Phigros.png/300px-Re_Nascence_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/ef/Re_Nascence_Phigros.png"
+    "chapter": "Side Story 2 弭刻日"
+    "bpm": "150"
+    "composer": "Rinth_live"
+    "length": "2:27"
+    "illustrator": "Tsuioku"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.6"
+    "in_combo": "827"
+    "in_charter": "NerSAN & 百九十八"
+    "hd_level": "11.4"
+    "hd_combo": "806"
+    "hd_charter": "NerSAN"
+    "ez_level": "4.7"
+    "ez_combo": "378"
+    "ez_charter": "NerSAN"
+"Ark":
+    "song": "Ark"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/0f/Ark_Phigros.png/300px-Ark_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/0f/Ark_Phigros.png"
+    "chapter": "Side Story 2 弭刻日"
+    "bpm": "180"
+    "composer": "kanoryo"
+    "length": "2:38"
+    "illustrator": "MOAI WORKS"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.9"
+    "in_combo": "726"
+    "in_charter": "阿爽 eat Ctymax"
+    "hd_level": "10.9"
+    "hd_combo": "523"
+    "hd_charter": "TimiTini"
+    "ez_level": "4.4"
+    "ez_combo": "290"
+    "ez_charter": "TimiTini"
+"After Dawn":
+    "song": "After Dawn"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/a/a7/After_Dawn_Phigros.png/300px-After_Dawn_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/a/a7/After_Dawn_Phigros.png"
+    "chapter": "Side Story 2 弭刻日"
+    "bpm": "110"
+    "composer": "S9ryne"
+    "length": "2:22"
+    "illustrator": "月亮酱"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.3"
+    "in_combo": "975"
+    "in_charter": "BarbariaNerSAN feat. Snorkel"
+    "hd_level": "11.1"
+    "hd_combo": "478"
+    "hd_charter": "NerSAN feat. Pcat"
+    "ez_level": "4.2"
+    "ez_combo": "194"
+    "ez_charter": "Barbarianerman"
+"INFiNiTE ENERZY -Overdoze-":
+    "song": "INFiNiTE ENERZY -Overdoze-"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/9/95/INFiNiTE_ENERZY_-Overdoze-_Phigros.png/300px-INFiNiTE_ENERZY_-Overdoze-_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/9/95/INFiNiTE_ENERZY_-Overdoze-_Phigros.png"
+    "chapter": "Side Story 2 弭刻日"
+    "bpm": "180"
+    "composer": "Reku Mochizuki"
+    "length": "1:57"
+    "illustrator": "knife美工刀"
+    "at_level": "16.3"
+    "at_combo": "888"
+    "at_charter": "while(TangScend=TangScend);"
+    "in_level": "14.6"
+    "in_combo": "888"
+    "in_charter": "while(TangScend==TangScend);"
+    "hd_level": "12.4"
+    "hd_combo": "666"
+    "hd_charter": "while(TangScend>=TangScend);"
+    "ez_level": "7.5"
+    "ez_combo": "333"
+    "ez_charter": "while(TangScend<=TangScend);"
+"Another Me (Rising Sun Traxx)":
+    "song": "Another Me (Rising Sun Traxx)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/5c/Another_Me_%E6%96%B0_Phigros.jpeg/300px-Another_Me_%E6%96%B0_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/5c/Another_Me_%E6%96%B0_Phigros.jpeg"
+    "chapter": "Chapter EX-Rising Sun Traxx 精选集"
+    "bpm": "175"
+    "composer": "Neutral Moon"
+    "length": "2:19"
+    "illustrator": "IvyTowers"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.6"
+    "in_combo": "564"
+    "in_charter": "NerSAN"
+    "hd_level": "5.6"
+    "hd_combo": "259"
+    "hd_charter": "__Additional__(Self)"
+    "ez_level": "1.7"
+    "ez_combo": "111"
+    "ez_charter": "__Additional__(Self)"
+"mechanted":
+    "song": "mechanted"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/a/ab/Mechanted_Phigros.png/300px-Mechanted_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/a/ab/Mechanted_Phigros.png"
+    "chapter": "Chapter EX-Rising Sun Traxx 精选集"
+    "bpm": "172"
+    "composer": "rareguy"
+    "length": "1:55"
+    "illustrator": "IvyTowers"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "662"
+    "in_charter": "Ctymax"
+    "hd_level": "11.3"
+    "hd_combo": "500"
+    "hd_charter": "Ctymax"
+    "ez_level": "2.7"
+    "ez_combo": "184"
+    "ez_charter": "Ctymax"
+"life flashes before weeb eyes":
+    "song": "life flashes before weeb eyes"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/1a/Life_flashes_before_weeb_eyes_Phigros.png/300px-Life_flashes_before_weeb_eyes_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/1a/Life_flashes_before_weeb_eyes_Phigros.png"
+    "chapter": "Chapter EX-Rising Sun Traxx 精选集"
+    "bpm": "227"
+    "composer": "BilliumMoto"
+    "length": "2:36"
+    "illustrator": "百九十八"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "1065"
+    "in_charter": "百九十八"
+    "hd_level": "11.9"
+    "hd_combo": "960"
+    "hd_charter": "百九十八"
+    "ez_level": "6.6"
+    "ez_combo": "567"
+    "ez_charter": "百九十八"
+"Break Through The Barrier":
+    "song": "Break Through The Barrier"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/46/Break_Through_The_Barrier_Phigros.png/300px-Break_Through_The_Barrier_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/46/Break_Through_The_Barrier_Phigros.png"
+    "chapter": "Chapter EX-Rising Sun Traxx 精选集"
+    "bpm": "176"
+    "composer": "lixound"
+    "length": "2:12"
+    "illustrator": "Xquid"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.9"
+    "in_combo": "1090"
+    "in_charter": "百九十八"
+    "hd_level": "10.8"
+    "hd_combo": "623"
+    "hd_charter": "Catcats"
+    "ez_level": "5.9"
+    "ez_combo": "384"
+    "ez_charter": "Catcats"
+"Chronostasis":
+    "song": "Chronostasis"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/6b/Chronostasis_Phigros.png/300px-Chronostasis_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/6b/Chronostasis_Phigros.png"
+    "chapter": "Chapter EX-Rising Sun Traxx 精选集"
+    "bpm": "196"
+    "composer": "黒皇帝"
+    "length": "2:22"
+    "illustrator": "Sand"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.9"
+    "in_combo": "1148"
+    "in_charter": "Gausbon"
+    "hd_level": "11.6"
+    "hd_combo": "665"
+    "hd_charter": "Gausbon"
+    "ez_level": "6.8"
+    "ez_combo": "596"
+    "ez_charter": "Gausbon"
+"Infinity Heaven":
+    "song": "Infinity Heaven"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/7/78/Infinity_Heaven_Phigros.png/300px-Infinity_Heaven_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/7/78/Infinity_Heaven_Phigros.png"
+    "chapter": "Chapter EX-HyuN 精选集"
+    "bpm": "160"
+    "composer": "HyuN"
+    "length": "2:34"
+    "illustrator": "DoublePian"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.6"
+    "in_combo": "1029"
+    "in_charter": "晨 vs 阿爽"
+    "hd_level": "8.4"
+    "hd_combo": "422"
+    "hd_charter": "晨 vs 阿爽"
+    "ez_level": "3.3"
+    "ez_combo": "164"
+    "ez_charter": "晨 vs 阿爽"
+"Disorder":
+    "song": "Disorder"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/55/Disorder_Phigros.png/300px-Disorder_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/55/Disorder_Phigros.png"
+    "chapter": "Chapter EX-HyuN 精选集"
+    "bpm": "193"
+    "composer": "HyuN feat. YURI"
+    "length": "2:14"
+    "illustrator": "Nabom"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "918"
+    "in_charter": "Gausbon"
+    "hd_level": "9.8"
+    "hd_combo": "629"
+    "hd_charter": "Gausbon"
+    "ez_level": "5.4"
+    "ez_combo": "444"
+    "ez_charter": "Gausbon"
+"CROSS?SOUL":
+    "song": "CROSS?SOUL"
+    "illustration": "undefined"
+    "illustration_big": "undefined"
+    "chapter": "Chapter EX-HyuN 精选集"
+    "bpm": "200"
+    "composer": "HyuN feat. Syepias"
+    "length": "2:19"
+    "illustrator": "knife美工刀"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.9"
+    "in_combo": "1305"
+    "in_charter": "無?極"
+    "hd_level": "12.8"
+    "hd_combo": "892"
+    "hd_charter": "無?極 fixed by Rikko"
+    "ez_level": "7.7"
+    "ez_combo": "517"
+    "ez_charter": "無?極"
+"GOODTEK":
+    "song": "GOODTEK"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e4/GOODTEK.png/300px-GOODTEK.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e4/GOODTEK.png"
+    "chapter": "Chapter EX-GOOD精选集"
+    "bpm": "190"
+    "composer": "EBIMAYO"
+    "length": "2:05"
+    "illustrator": "Ctymax feat. EBIMAYO"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.2"
+    "in_combo": "873"
+    "in_charter": "百九十八"
+    "hd_level": "10.8"
+    "hd_combo": "609"
+    "hd_charter": "百九十八"
+    "ez_level": "5.4"
+    "ez_combo": "295"
+    "ez_charter": "百九十八"
+"GOODBOUNCE":
+    "song": "GOODBOUNCE"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e5/GOODBOUNCE_Phigros.png/300px-GOODBOUNCE_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e5/GOODBOUNCE_Phigros.png"
+    "chapter": "Chapter EX-GOOD精选集"
+    "bpm": "180"
+    "composer": "EBIMAYO"
+    "length": "2:12"
+    "illustrator": "EBIMAYO"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "898"
+    "in_charter": "Ctymax vs. Gausbounce"
+    "hd_level": "11.6"
+    "hd_combo": "797"
+    "hd_charter": "Gausbounce"
+    "ez_level": "5.7"
+    "ez_combo": "588"
+    "ez_charter": "Gausbounce & 晨"
+"GOODWORLD":
+    "song": "GOODWORLD"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/85/GOODWORLD_Phigros.png/300px-GOODWORLD_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/85/GOODWORLD_Phigros.png"
+    "chapter": "Chapter EX-GOOD精选集"
+    "bpm": "165"
+    "composer": "EBIMAYO"
+    "length": "2:11"
+    "illustrator": "EBIMAYO"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.5"
+    "in_combo": "960"
+    "in_charter": "StupiGGy vs. 阿爽"
+    "hd_level": "11.4"
+    "hd_combo": "805"
+    "hd_charter": "StupiGGy"
+    "ez_level": "3.2"
+    "ez_combo": "215"
+    "ez_charter": "阿爽"
+"GOODFORTUNE":
+    "song": "GOODFORTUNE"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/81/GOODFORTUNE_Phigros.png/300px-GOODFORTUNE_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/81/GOODFORTUNE_Phigros.png"
+    "chapter": "Chapter EX-GOOD精选集"
+    "bpm": "170"
+    "composer": "EBIMAYO"
+    "length": "2:13"
+    "illustrator": "Ctymax"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.4"
+    "in_combo": "1011"
+    "in_charter": "晨"
+    "hd_level": "8.7"
+    "hd_combo": "733"
+    "hd_charter": "晨"
+    "ez_level": "7.3"
+    "ez_combo": "455"
+    "ez_charter": "晨"
+"GOODRAGE":
+    "song": "GOODRAGE"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/fe/GOODRAGE_Phigros.png/300px-GOODRAGE_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/fe/GOODRAGE_Phigros.png"
+    "chapter": "Chapter EX-GOOD精选集"
+    "bpm": "222"
+    "composer": "EBIMAYO"
+    "length": "2:01"
+    "illustrator": "Ctymax feat. EBIMAYO"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.8"
+    "in_combo": "1034"
+    "in_charter": "Ctymax vs. 阿爽"
+    "hd_level": "7.8"
+    "hd_combo": "628"
+    "hd_charter": "阿爽"
+    "ez_level": "4.6"
+    "ez_combo": "308"
+    "ez_charter": "阿爽"
+"Initialize":
+    "song": "Initialize"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/a/a0/Initialize_Phigros.png/300px-Initialize_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/a/a0/Initialize_Phigros.png"
+    "chapter": "Chapter EX-WAVEAT 精选集"
+    "bpm": "128"
+    "composer": "iF"
+    "length": "2:07"
+    "illustrator": "あおお/A-ZERO,morph"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "11.6"
+    "in_combo": "581"
+    "in_charter": "Arenn Saki vs. NerSAN"
+    "hd_level": "7.2"
+    "hd_combo": "354"
+    "hd_charter": "NerSAN"
+    "ez_level": "2.5"
+    "ez_combo": "117"
+    "ez_charter": "阿爽"
+"桜樹街道":
+    "song": "桜樹街道"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/5f/%E6%A1%9C%E6%A8%B9%E8%A1%97%E9%81%93_Phigros.png/300px-%E6%A1%9C%E6%A8%B9%E8%A1%97%E9%81%93_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/5f/%E6%A1%9C%E6%A8%B9%E8%A1%97%E9%81%93_Phigros.png"
+    "chapter": "Chapter EX-WAVEAT 精选集"
+    "bpm": "135"
+    "composer": "kozato snow"
+    "length": "2:24"
+    "illustrator": "あおお/A-ZERO,morph"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.6"
+    "in_combo": "459"
+    "in_charter": "百九十八"
+    "hd_level": "7.4"
+    "hd_combo": "421"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "3.6"
+    "ez_combo": "292"
+    "ez_charter": "Barbarianerman"
+"Get Ready!!":
+    "song": "Get Ready!!"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/1a/Get_Ready_Phigros.png/300px-Get_Ready_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/1a/Get_Ready_Phigros.png"
+    "chapter": "Chapter EX-WAVEAT 精选集"
+    "bpm": "142"
+    "composer": "iF"
+    "length": "2:10"
+    "illustrator": "あおお/A-ZERO,morph"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.5"
+    "in_combo": "819"
+    "in_charter": "StupiGGy"
+    "hd_level": "8.7"
+    "hd_combo": "584"
+    "hd_charter": "StupiGGy"
+    "ez_level": "4.5"
+    "ez_combo": "363"
+    "ez_charter": "StupiGGy"
+"volcanic":
+    "song": "volcanic"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/a/aa/Volcanic_Phigros.png/300px-Volcanic_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/a/aa/Volcanic_Phigros.png"
+    "chapter": "Chapter EX-WAVEAT 精选集"
+    "bpm": "191~382"
+    "composer": "DETRO a.k.a ルゼ"
+    "length": "2:16"
+    "illustrator": "あおお/A-ZERO,morph"
+    "at_level": "16.2"
+    "at_combo": "1650"
+    "at_charter": "Alloces"
+    "in_level": "14.8"
+    "in_combo": "1178"
+    "in_charter": "Ctymax in a volcano,very delicious"
+    "hd_level": "11.9"
+    "hd_combo": "985"
+    "hd_charter": "Rikko"
+    "ez_level": "7.3"
+    "ez_combo": "1052"
+    "ez_charter": "Barbarianerman"
+"XING":
+    "song": "XING"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/2c/XING_Phigros.png/300px-XING_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/2c/XING_Phigros.png"
+    "chapter": "Chapter EX-Muse Dash 精选集"
+    "bpm": "177"
+    "composer": "ginkiha"
+    "length": "2:16"
+    "illustrator": "打雷打人（青鸟modified）"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.8"
+    "in_combo": "711"
+    "in_charter": "Sillyp vs. 阿爽"
+    "hd_level": "9.9"
+    "hd_combo": "587"
+    "hd_charter": "StupiGGy"
+    "ez_level": "5.5"
+    "ez_combo": "310"
+    "ez_charter": "StupiGGy"
+"Final Step!":
+    "song": "Final Step!"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/84/Final_Step%21_Phigros.png/300px-Final_Step%21_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/84/Final_Step%21_Phigros.png"
+    "chapter": "Chapter EX-Muse Dash 精选集"
+    "bpm": "180"
+    "composer": "Lime"
+    "length": "2:17"
+    "illustrator": "谷地（青鸟modified）"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.3"
+    "in_combo": "931"
+    "in_charter": "Barbarianerman vs. Uvernight"
+    "hd_level": "11.8"
+    "hd_combo": "604"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "5.9"
+    "ez_combo": "355"
+    "ez_charter": "Barbarianerman"
+"Cthugha":
+    "song": "Cthugha"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/d1/Cthugha_Phigros.png/300px-Cthugha_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/d1/Cthugha_Phigros.png"
+    "chapter": "Chapter EX-Muse Dash 精选集"
+    "bpm": "213"
+    "composer": "USAO"
+    "length": "2:34"
+    "illustrator": "谷地（青鸟modified）"
+    "at_level": "15.9"
+    "at_combo": "1444"
+    "at_charter": "百九十八 feat. NerSAN"
+    "in_level": "15.7"
+    "in_combo": "1333"
+    "in_charter": "Gausbon"
+    "hd_level": "12.3"
+    "hd_combo": "697"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "7.2"
+    "ez_combo": "378"
+    "ez_charter": "Barbarianerman"
+"Time to Night Sky (feat. Lee Yu Jin)":
+    "song": "Time to Night Sky (feat. Lee Yu Jin)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/fc/Time_to_Night_Sky_%28feat._Lee_Yu_Jin%29_Phigros.png/300px-Time_to_Night_Sky_%28feat._Lee_Yu_Jin%29_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/fc/Time_to_Night_Sky_%28feat._Lee_Yu_Jin%29_Phigros.png"
+    "chapter": "Chapter EX-KALPA 精选集"
+    "bpm": "128"
+    "composer": "HyuN & KLYDIX"
+    "length": "2:11"
+    "illustrator": "ZG"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.6"
+    "in_combo": "540"
+    "in_charter": "Likey & 198ar"
+    "hd_level": "9.1"
+    "hd_combo": "559"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "2.7"
+    "ez_combo": "165"
+    "ez_charter": "Rikko"
+"HAZARD":
+    "song": "HAZARD"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/cb/HAZARD_Phigros.png/300px-HAZARD_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/cb/HAZARD_Phigros.png"
+    "chapter": "Chapter EX-KALPA 精选集"
+    "bpm": "128"
+    "composer": "Limpid"
+    "length": "2:07"
+    "illustrator": "ZG"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "588"
+    "in_charter": "阿爽"
+    "hd_level": "10.9"
+    "hd_combo": "507"
+    "hd_charter": "NerSAN"
+    "ez_level": "3.6"
+    "ez_combo": "283"
+    "ez_charter": "NerSAN"
+"Another Me (KALPA)":
+    "song": "Another Me (KALPA)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/c1/Another_Me_KALPA_Phigros.png/300px-Another_Me_KALPA_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/c1/Another_Me_KALPA_Phigros.png"
+    "chapter": "Chapter EX-KALPA 精选集"
+    "bpm": "210"
+    "composer": "D_AAN"
+    "length": "2:46"
+    "illustrator": "ZG"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.5"
+    "in_combo": "1449"
+    "in_charter": "NerSAN vs. Ctymax as \"泥头鱼\""
+    "hd_level": "9.2"
+    "hd_combo": "715"
+    "hd_charter": "Another cat"
+    "ez_level": "4.8"
+    "ez_combo": "455"
+    "ez_charter": "Pcat"
+"Don't Never Around":
+    "song": "Don't Never Around"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/f0/Don%27t_Never_Around%28Phigros%29.png/300px-Don%27t_Never_Around%28Phigros%29.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/f0/Don%27t_Never_Around%28Phigros%29.png"
+    "chapter": "Chapter EX-KALPA 精选集"
+    "bpm": "175"
+    "composer": "HAMA"
+    "length": "1:59"
+    "illustrator": "Arahosi"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.6"
+    "in_combo": "1028"
+    "in_charter": "XMT小咩兔"
+    "hd_level": "11.7"
+    "hd_combo": "639"
+    "hd_charter": "XMT小咩兔"
+    "ez_level": "4.4"
+    "ez_combo": "308"
+    "ez_charter": "XMT小咩兔"
+"RESSiSTANCE":
+    "song": "RESSiSTANCE"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/06/RESSiSTANCE%28Phigros%29.png/300px-RESSiSTANCE%28Phigros%29.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/06/RESSiSTANCE%28Phigros%29.png"
+    "chapter": "Chapter EX-KALPA 精选集"
+    "bpm": "205"
+    "composer": "ぐるたみん"
+    "length": "2:28"
+    "illustrator": "LINUS"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.8"
+    "in_combo": "1026"
+    "in_charter": "其三 我所存在的证明"
+    "hd_level": "10.6"
+    "hd_combo": "744"
+    "hd_charter": "其二 向前迈进的理由"
+    "ez_level": "6.1"
+    "ez_combo": "499"
+    "ez_charter": "其一 呼吸尚存的标志"
+"Apocalypse":
+    "song": "Apocalypse"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/69/Phisong_apocalypse.png/300px-Phisong_apocalypse.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/69/Phisong_apocalypse.png"
+    "chapter": "Chapter EX-Lanota 精选集"
+    "bpm": "220"
+    "composer": "アリスシャッハと魔法の楽団"
+    "length": "2:45"
+    "illustrator": "Lanota ? Noxy Games Inc."
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.5"
+    "in_combo": "676"
+    "in_charter": "Rikko & 198"
+    "hd_level": "8.6"
+    "hd_combo": "382"
+    "hd_charter": "B."
+    "ez_level": "3.8"
+    "ez_combo": "207"
+    "ez_charter": "R."
+"Protoflicker":
+    "song": "Protoflicker"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/c0/Phisong_protoflicker.png/300px-Phisong_protoflicker.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/c0/Phisong_protoflicker.png"
+    "chapter": "Chapter EX-Lanota 精选集"
+    "bpm": "140"
+    "composer": "Silentroom"
+    "length": "2:48"
+    "illustrator": "Lanota ? Noxy Games Inc."
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.2"
+    "in_combo": "1210"
+    "in_charter": "Gausbon"
+    "hd_level": "10.6"
+    "hd_combo": "511"
+    "hd_charter": "RTH"
+    "ez_level": "3.6"
+    "ez_combo": "259"
+    "ez_charter": "Barbarianerman & J.R"
+"Horizon Blue":
+    "song": "Horizon Blue"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/3/36/Phisong_horizon_blue.png/300px-Phisong_horizon_blue.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/3/36/Phisong_horizon_blue.png"
+    "chapter": "Chapter EX-Lanota 精选集"
+    "bpm": "200"
+    "composer": "Nothing But Requiem feat. Aikapin & Chiyoko"
+    "length": "2:47"
+    "illustrator": "Lanota ? Noxy Games Inc."
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.4"
+    "in_combo": "1084"
+    "in_charter": "Nothing But Ner & Pcat"
+    "hd_level": "12.2"
+    "hd_combo": "733"
+    "hd_charter": "Nothing But Likey"
+    "ez_level": "6.5"
+    "ez_combo": "519"
+    "ez_charter": "Nothing But Uvernight"
+"You are the Miserable":
+    "song": "You are the Miserable"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/fe/Phisong_you_are_the_miserable.png/300px-Phisong_you_are_the_miserable.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/fe/Phisong_you_are_the_miserable.png"
+    "chapter": "Chapter EX-Lanota 精选集"
+    "bpm": "163"
+    "composer": "t+pazolite"
+    "length": "2:43"
+    "illustrator": "Lanota ? Noxy Games Inc."
+    "at_level": "15.8"
+    "at_combo": "1344"
+    "at_charter": "Pat Brick Man Mr.C & Mr.B"
+    "in_level": "14.6"
+    "in_combo": "893"
+    "in_charter": "We are the Miserable"
+    "hd_level": "11.7"
+    "hd_combo": "762"
+    "hd_charter": "M3d1uM"
+    "ez_level": "5.8"
+    "ez_combo": "486"
+    "ez_charter": "M3d1uM"
+"Stasis":
+    "song": "Stasis"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e1/Phisong_stasis.png/300px-Phisong_stasis.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e1/Phisong_stasis.png"
+    "chapter": "Chapter EX-Lanota 精选集"
+    "bpm": "180"
+    "composer": "Maozon"
+    "length": "2:34"
+    "illustrator": "Lanota ? Noxy Games Inc."
+    "at_level": "16.4"
+    "at_combo": "1700"
+    "at_charter": "百九十八"
+    "in_level": "15.5"
+    "in_combo": "1322"
+    "in_charter": "ST AS is XMT"
+    "hd_level": "11.1"
+    "hd_combo": "902"
+    "hd_charter": "空の希"
+    "ez_level": "5.2"
+    "ez_combo": "446"
+    "ez_charter": "空の希"
+"Shadow":
+    "song": "Shadow"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/fe/Shadow_Phigros.png/300px-Shadow_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/fe/Shadow_Phigros.png"
+    "chapter": "Chapter EX-姜米條 精选集"
+    "bpm": "172"
+    "composer": "姜米条&SumaiLight"
+    "length": "2:23"
+    "illustrator": "御坂果子"
+    "at_level": "15.9"
+    "at_combo": "1089"
+    "at_charter": "J0(_)I2|\\|3y'5 3|\\||) "
+    "in_level": "14.5"
+    "in_combo": "840"
+    "in_charter": "Sillyp vs 晨"
+    "hd_level": "10.3"
+    "hd_combo": "549"
+    "hd_charter": "晨"
+    "ez_level": "4.7"
+    "ez_combo": "393"
+    "ez_charter": "晨"
+"心之所向":
+    "song": "心之所向"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/87/%E5%BF%83%E4%B9%8B%E6%89%80%E5%90%91_Phigros.png/300px-%E5%BF%83%E4%B9%8B%E6%89%80%E5%90%91_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/87/%E5%BF%83%E4%B9%8B%E6%89%80%E5%90%91_Phigros.png"
+    "chapter": "Chapter EX-姜米條 精选集"
+    "bpm": "180"
+    "composer": "姜米條"
+    "length": "2:16"
+    "illustrator": "笔记RE"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.6"
+    "in_combo": "713"
+    "in_charter": "倪之所爽"
+    "hd_level": "9.7"
+    "hd_combo": "422"
+    "hd_charter": "波之所杂"
+    "ez_level": "4.4"
+    "ez_combo": "226"
+    "ez_charter": "波之所杂"
+"inferior":
+    "song": "inferior"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/47/Inferior.png/300px-Inferior.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/47/Inferior.png"
+    "chapter": "Chapter EX-姜米條 精选集"
+    "bpm": "200"
+    "composer": "姜米條"
+    "length": "2:03"
+    "illustrator": "群青kurara"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.6"
+    "in_combo": "755"
+    "in_charter": "JKy, the inferior"
+    "hd_level": "7.9"
+    "hd_combo": "489"
+    "hd_charter": "Ner, the inferior"
+    "ez_level": "7.1"
+    "ez_combo": "226"
+    "ez_charter": "Ner, the inferior"
+"盏茗":
+    "song": "盏茗"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/ec/%E7%9B%8F%E8%8C%97_Phigros.png/300px-%E7%9B%8F%E8%8C%97_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/ec/%E7%9B%8F%E8%8C%97_Phigros.png"
+    "chapter": "Chapter EX-茶鸣拾贰律 精选集"
+    "bpm": "131"
+    "composer": "茶鸣拾贰律"
+    "length": "2:10"
+    "illustrator": "茶鸣拾贰律"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.3"
+    "in_combo": "706"
+    "in_charter": "NerSAN sipping XMTea"
+    "hd_level": "4.3"
+    "hd_combo": "176"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "2.1"
+    "ez_combo": "83"
+    "ez_charter": "Barbarianerman"
+"青芽":
+    "song": "青芽"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e7/%E9%9D%92%E8%8A%BD_Phigros.png/300px-%E9%9D%92%E8%8A%BD_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e7/%E9%9D%92%E8%8A%BD_Phigros.png"
+    "chapter": "Chapter EX-茶鸣拾贰律 精选集"
+    "bpm": "108"
+    "composer": "茶鸣拾贰律"
+    "length": "2:27"
+    "illustrator": "茶鸣拾贰律"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "1102"
+    "in_charter": "Hook vs. _鉄"
+    "hd_level": "10.8"
+    "hd_combo": "520"
+    "hd_charter": "逆流而上的小咩兔"
+    "ez_level": "5.2"
+    "ez_combo": "366"
+    "ez_charter": "生根发芽的小咩兔"
+"瓷岁":
+    "song": "瓷岁"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/be/%E7%93%B7%E5%B2%81_Phigros.png/300px-%E7%93%B7%E5%B2%81_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/be/%E7%93%B7%E5%B2%81_Phigros.png"
+    "chapter": "Chapter EX-茶鸣拾贰律 精选集"
+    "bpm": "128"
+    "composer": "茶鸣拾贰律"
+    "length": "2:54"
+    "illustrator": "茶鸣拾贰律"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "7.1"
+    "in_combo": "365"
+    "in_charter": "「兔」年大吉"
+    "hd_level": "6.6"
+    "hd_combo": "309"
+    "hd_charter": "「流」年大顺"
+    "ez_level": "3.6"
+    "ez_combo": "120"
+    "ez_charter": "「流」年大顺"
+"Feast远东之宴":
+    "song": "Feast远东之宴"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/2f/Feast%E8%BF%9C%E4%B8%9C%E4%B9%8B%E5%AE%B4_Phigros.png/300px-Feast%E8%BF%9C%E4%B8%9C%E4%B9%8B%E5%AE%B4_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/2f/Feast%E8%BF%9C%E4%B8%9C%E4%B9%8B%E5%AE%B4_Phigros.png"
+    "chapter": "Chapter EX-茶鸣拾贰律 精选集"
+    "bpm": "128"
+    "composer": "茶鸣拾贰律"
+    "length": "2:40"
+    "illustrator": "茶鸣拾贰律"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.3"
+    "in_combo": "1000"
+    "in_charter": "Gino"
+    "hd_level": "11.9"
+    "hd_combo": "800"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "6.6"
+    "ez_combo": "600"
+    "ez_charter": "Barbarianerman"
+"Doppelganger":
+    "song": "Doppelganger"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/86/Doppelganger_Phigros.png/300px-Doppelganger_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/86/Doppelganger_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "280"
+    "composer": "LeaF"
+    "length": "2:25"
+    "illustrator": "海产"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "921"
+    "in_charter": "Gausbon"
+    "hd_level": "9.4"
+    "hd_combo": "437"
+    "hd_charter": "阿爽"
+    "ez_level": "4.8"
+    "ez_combo": "257"
+    "ez_charter": "阿爽"
+"もぺもぺ":
+    "song": "もぺもぺ"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/b3/Mopemope_phi.png/300px-Mopemope_phi.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/b3/Mopemope_phi.png"
+    "chapter": "单曲精选集"
+    "bpm": "100"
+    "composer": "LeaF"
+    "length": "1:50"
+    "illustrator": "Cycats"
+    "at_level": "14.9"
+    "at_combo": "720"
+    "at_charter": "阿爽"
+    "in_level": "11.1"
+    "in_combo": "412"
+    "in_charter": "阿爽"
+    "hd_level": "8.5"
+    "hd_combo": "289"
+    "hd_charter": "阿爽 fixed by Barbarianerman"
+    "ez_level": "3.4"
+    "ez_combo": "125"
+    "ez_charter": "阿爽 fixed by Barbarianerman"
+"MARENOL":
+    "song": "MARENOL"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/0f/MARENOL_Phigros.png/300px-MARENOL_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/0f/MARENOL_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "140"
+    "composer": "LeaF"
+    "length": "2:29"
+    "illustrator": "喵n葵"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.2"
+    "in_combo": "689"
+    "in_charter": "百九十八"
+    "hd_level": "10.2"
+    "hd_combo": "467"
+    "hd_charter": "H.C.C fixed by Barbarianerman"
+    "ez_level": "1.9"
+    "ez_combo": "95"
+    "ez_charter": "H.C.C fixed by Barbarianerman"
+"萤火虫の怨":
+    "song": "萤火虫の怨"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/4f/%E8%90%A4%E7%81%AB%E8%99%AB%E3%81%AE%E6%80%A8_Phigros.png/300px-%E8%90%A4%E7%81%AB%E8%99%AB%E3%81%AE%E6%80%A8_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/4f/%E8%90%A4%E7%81%AB%E8%99%AB%E3%81%AE%E6%80%A8_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "100"
+    "composer": "闫东炜"
+    "length": "2:38"
+    "illustrator": "L-sp4"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.1"
+    "in_combo": "885"
+    "in_charter": "阿爽 & 百九十八"
+    "hd_level": "10.6"
+    "hd_combo": "746"
+    "hd_charter": "阿爽 & 百九十八"
+    "ez_level": "4.3"
+    "ez_combo": "245"
+    "ez_charter": "阿爽 & 百九十八"
+"万吨匿名信":
+    "song": "万吨匿名信"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/15/Wandunnimingxin_new_illustration.png/300px-Wandunnimingxin_new_illustration.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/15/Wandunnimingxin_new_illustration.png"
+    "chapter": "单曲精选集"
+    "bpm": "120"
+    "composer": "闫东炜"
+    "length": "2:44"
+    "illustrator": "IvyTowers"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.3"
+    "in_combo": "781"
+    "in_charter": "猫の信 & 百九十八"
+    "hd_level": "9.7"
+    "hd_combo": "648"
+    "hd_charter": "猫の信 & 百九十八"
+    "ez_level": "5.7"
+    "ez_combo": "307"
+    "ez_charter": "猫の信 & 百九十八"
+"风屿":
+    "song": "风屿"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/ef/%E9%A3%8E%E5%B1%BF_Phigros.png/300px-%E9%A3%8E%E5%B1%BF_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/ef/%E9%A3%8E%E5%B1%BF_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "170"
+    "composer": "闫东炜"
+    "length": "2:59"
+    "illustrator": "cycats"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.7"
+    "in_combo": "1156"
+    "in_charter": "Arenn Saki vs Catcats vs 百九十八"
+    "hd_level": "10.3"
+    "hd_combo": "802"
+    "hd_charter": "Arenn Saki vs Catcats vs 百九十八"
+    "ez_level": "5.9"
+    "ez_combo": "368"
+    "ez_charter": "Arenn Saki vs Catcats vs 百九十八"
+"dB doll":
+    "song": "dB doll"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/ca/DB_doll_Phigros.png/300px-DB_doll_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/ca/DB_doll_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "128"
+    "composer": "YUE.STEVEN/uen"
+    "length": "1:48"
+    "illustrator": "何呵"
+    "at_level": "13.6"
+    "at_combo": "377"
+    "at_charter": "NerSAN & 百九十八"
+    "in_level": "6.2"
+    "in_combo": "237"
+    "in_charter": "阿爽"
+    "hd_level": "3.6"
+    "hd_combo": "124"
+    "hd_charter": "阿爽 fixed by Barbarianerman"
+    "ez_level": "1.3"
+    "ez_combo": "60"
+    "ez_charter": "阿爽 fixed by Barbarianerman"
+"Dash from SOUL NOTES":
+    "song": "Dash from SOUL NOTES"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/80/Dash_Phigros.png/300px-Dash_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/80/Dash_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "128"
+    "composer": "5-HTP/李祥晖"
+    "length": "1:54"
+    "illustrator": "艾是Abby"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "11.7"
+    "in_combo": "346"
+    "in_charter": "JKy"
+    "hd_level": "5.7"
+    "hd_combo": "210"
+    "hd_charter": "阿爽 fixed by Barbarianerman"
+    "ez_level": "2.5"
+    "ez_combo": "114"
+    "ez_charter": "阿爽 fixed by Barbarianerman"
+"云女孩":
+    "song": "云女孩"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e7/%E4%BA%91%E5%A5%B3%E5%AD%A9_Phigros.png/300px-%E4%BA%91%E5%A5%B3%E5%AD%A9_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e7/%E4%BA%91%E5%A5%B3%E5%AD%A9_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "155"
+    "composer": "符白牙/SiYFics"
+    "length": "2:58"
+    "illustrator": "御坂果子"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.6"
+    "in_combo": "669"
+    "in_charter": "云正太"
+    "hd_level": "9.9"
+    "hd_combo": "538"
+    "hd_charter": "Cloud Catcats"
+    "ez_level": "2.8"
+    "ez_combo": "220"
+    "ez_charter": "Cloud Catcats"
+"Drop It from SOUL NOTES":
+    "song": "Drop It from SOUL NOTES"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/4a/Drop_It_Phigros.png/300px-Drop_It_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/4a/Drop_It_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "126"
+    "composer": "Asuka"
+    "length": "3:22"
+    "illustrator": "TNiK"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.1"
+    "in_combo": "1031"
+    "in_charter": "NerSAN & 百九十八"
+    "hd_level": "9.6"
+    "hd_combo": "602"
+    "hd_charter": "Drop Catcats"
+    "ez_level": "3.8"
+    "ez_combo": "505"
+    "ez_charter": "Drop Catcats"
+"RIPPER":
+    "song": "RIPPER"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/21/RIPPER_Phigros.png/300px-RIPPER_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/21/RIPPER_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "150"
+    "composer": "Friedwav"
+    "length": "3:19"
+    "illustrator": "何呵"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.2"
+    "in_combo": "1186"
+    "in_charter": "撕裂者『Alloces vs Shin』"
+    "hd_level": "11.2"
+    "hd_combo": "704"
+    "hd_charter": "撕裂者『無極』 fixed by 晨"
+    "ez_level": "7.8"
+    "ez_combo": "520"
+    "ez_charter": "撕裂者『無極』 fixed by 晨"
+"Aphasia":
+    "song": "Aphasia"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/83/Aphasia_Phigros.jpeg/300px-Aphasia_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/83/Aphasia_Phigros.jpeg"
+    "chapter": "单曲精选集"
+    "bpm": "128"
+    "composer": "闫东炜"
+    "length": "1:56"
+    "illustrator": "笔记RE"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.1"
+    "in_combo": "553"
+    "in_charter": "百九十八"
+    "hd_level": "8.8"
+    "hd_combo": "362"
+    "hd_charter": "百九十八"
+    "ez_level": "4.2"
+    "ez_combo": "283"
+    "ez_charter": "百九十八"
+"开心病":
+    "song": "开心病"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e1/%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png/300px-%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e1/%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "131"
+    "composer": "闫东炜"
+    "length": "1:55"
+    "illustrator": "喵n葵"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "840"
+    "in_charter": "Barbarianerman feat. 晨"
+    "hd_level": "9.8"
+    "hd_combo": "442"
+    "hd_charter": "阿爽"
+    "ez_level": "3.7"
+    "ez_combo": "158"
+    "ez_charter": "阿爽"
+"華灯爱":
+    "song": "華灯爱"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/a/a9/%E8%8F%AF%E7%81%AF%E7%88%B1_Phigros.png/300px-%E8%8F%AF%E7%81%AF%E7%88%B1_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/a/a9/%E8%8F%AF%E7%81%AF%E7%88%B1_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "120"
+    "composer": "闫东炜"
+    "length": "1:54"
+    "illustrator": "IvyTowers"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.1"
+    "in_combo": "520"
+    "in_charter": "Barbarianerman"
+    "hd_level": "9.3"
+    "hd_combo": "394"
+    "hd_charter": "Gausbon"
+    "ez_level": "5.5"
+    "ez_combo": "318"
+    "ez_charter": "Gausbon"
+"Find_Me":
+    "song": "Find_Me"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/bb/Find_Me_Phigros.png/300px-Find_Me_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/bb/Find_Me_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "191"
+    "composer": "K-forest"
+    "length": "2:07"
+    "illustrator": "YuKiMuMa"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "836"
+    "in_charter": "Find_Ctymax fixed by 百九十八"
+    "hd_level": "10.5"
+    "hd_combo": "657"
+    "hd_charter": "Find_Ctymax"
+    "ez_level": "5.7"
+    "ez_combo": "465"
+    "ez_charter": "Find_Ctymax"
+"Sein":
+    "song": "Sein"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/b9/Sein_Phigros.png/300px-Sein_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/b9/Sein_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "210"
+    "composer": "朔(Apo11o program vs. お月さま交響曲) ft. kuroa×荒巻"
+    "length": "1:59"
+    "illustrator": "hideo"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.9"
+    "in_combo": "721"
+    "in_charter": "A.S.H&晨"
+    "hd_level": "9.2"
+    "hd_combo": "473"
+    "hd_charter": "A.S.H"
+    "ez_level": "4.6"
+    "ez_combo": "203"
+    "ez_charter": "A.S.H"
+"狂喜蘭舞":
+    "song": "狂喜蘭舞"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/18/Kxlw_phi.jpg/300px-Kxlw_phi.jpg"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/18/Kxlw_phi.jpg"
+    "chapter": "单曲精选集"
+    "bpm": "230"
+    "composer": "LeaF"
+    "length": "2:41"
+    "illustrator": "DoublePian"
+    "at_level": "16.1"
+    "at_combo": "1325"
+    "at_charter": "Catcats aka. 無極 VS H.C.C. fixed by 野从&晨"
+    "in_level": "14.4"
+    "in_combo": "968"
+    "in_charter": "晨"
+    "hd_level": "10.8"
+    "hd_combo": "651"
+    "hd_charter": "Catcats aka. 無極 VS H.C.C. fixed by Pcat"
+    "ez_level": "6.8"
+    "ez_combo": "472"
+    "ez_charter": "Catcats aka. 無極 VS H.C.C. fixed by 晨"
+"Sparkle New Life":
+    "song": "Sparkle New Life"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/09/Sparkle_New_Life_Phigros.png/300px-Sparkle_New_Life_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/09/Sparkle_New_Life_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "150"
+    "composer": "rider"
+    "length": "2:17"
+    "illustrator": "1B"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.4"
+    "in_combo": "684"
+    "in_charter": "Sparkle Ctymax fixed by 百九十八"
+    "hd_level": "9.2"
+    "hd_combo": "497"
+    "hd_charter": "Sparkle Ctymax"
+    "ez_level": "4.2"
+    "ez_combo": "305"
+    "ez_charter": "Sparkle Ctymax"
+"Khronostasis Katharsis":
+    "song": "Khronostasis Katharsis"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/f9/Khronostasis_Katharsis_Phigros.png/300px-Khronostasis_Katharsis_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/f9/Khronostasis_Katharsis_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "188"
+    "composer": "Halv"
+    "length": "2:14"
+    "illustrator": "utosao"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.2"
+    "in_combo": "861"
+    "in_charter": "StupiGGy fixed by 百九十八"
+    "hd_level": "10.8"
+    "hd_combo": "747"
+    "hd_charter": "StupiGGy"
+    "ez_level": "5.2"
+    "ez_combo": "394"
+    "ez_charter": "StupiGGy"
+"Snow Desert":
+    "song": "Snow Desert"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/d8/Snow_Desert_Phigros.png/300px-Snow_Desert_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/d8/Snow_Desert_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "125"
+    "composer": "WyvernP"
+    "length": "2:22"
+    "illustrator": "knife美工刀"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.6"
+    "in_combo": "552"
+    "in_charter": "CN_115"
+    "hd_level": "9.6"
+    "hd_combo": "534"
+    "hd_charter": "CN_115"
+    "ez_level": "5.1"
+    "ez_combo": "236"
+    "ez_charter": "CN_115"
+"Burn":
+    "song": "Burn"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/c2/Burn_Phigros.png/300px-Burn_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/c2/Burn_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "148"
+    "composer": "NceS"
+    "length": "2:17"
+    "illustrator": "knife美工刀"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "707"
+    "in_charter": "Burn Full Catcats VS Ctymatch Girl"
+    "hd_level": "10.6"
+    "hd_combo": "497"
+    "hd_charter": "Burn Full Catcats"
+    "ez_level": "4.2"
+    "ez_combo": "278"
+    "ez_charter": "Ctymatch Girl "
+"Aleph-0":
+    "song": "Aleph-0"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e0/Aleph-0_Phigros.png/300px-Aleph-0_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e0/Aleph-0_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "35~400"
+    "composer": "LeaF"
+    "length": "2:20"
+    "illustrator": "Optie"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.6"
+    "in_combo": "684"
+    "in_charter": "阿爽 VS Arenn Saki"
+    "hd_level": "11.6"
+    "hd_combo": "438"
+    "hd_charter": "阿爽 VS Arenn Saki"
+    "ez_level": "4.5"
+    "ez_combo": "124"
+    "ez_charter": "阿爽 VS Arenn Saki"
+"Next Time":
+    "song": "Next Time"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/04/Next_Time_Phigros.png/300px-Next_Time_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/04/Next_Time_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "175"
+    "composer": "SaMZing"
+    "length": "1:50"
+    "illustrator": "叶藤"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.6"
+    "in_combo": "387"
+    "in_charter": "Gausbon ~ See you next time ~"
+    "hd_level": "9.2"
+    "hd_combo": "303"
+    "hd_charter": "Gausbon ~ See you next time ~"
+    "ez_level": "4.8"
+    "ez_combo": "240"
+    "ez_charter": "Gausbon ~ See you next time ~"
+"Rubbish Sorting":
+    "song": "Rubbish Sorting"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/f0/Rubbish_Sorting_Phigros.png/300px-Rubbish_Sorting_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/f0/Rubbish_Sorting_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "128"
+    "composer": "Ctymax vs. NceS"
+    "length": "2:46"
+    "illustrator": "knife美工刀"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.8"
+    "in_combo": "613"
+    "in_charter": "阿爽 vs. Ctymax -Haose 垃圾-"
+    "hd_level": "9.4"
+    "hd_combo": "475"
+    "hd_charter": "阿爽 vs. Ctymax -Haose 垃圾-"
+    "ez_level": "3.3"
+    "ez_combo": "229"
+    "ez_charter": "阿爽 vs. Ctymax -Haose 垃圾-"
+"Dead Soul":
+    "song": "Dead Soul"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/5d/Dead_Soul_Phigros.jpg/300px-Dead_Soul_Phigros.jpg"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/5d/Dead_Soul_Phigros.jpg"
+    "chapter": "单曲精选集"
+    "bpm": "132"
+    "composer": "Sound Souler"
+    "length": "2:27"
+    "illustrator": "Photonskyto"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "787"
+    "in_charter": "Phigros Charting Team"
+    "hd_level": "11.7"
+    "hd_combo": "613"
+    "hd_charter": "Phigros Charting Team"
+    "ez_level": "4.3"
+    "ez_combo": "273"
+    "ez_charter": "Phigros Charting Team"
+"Speed Up!":
+    "song": "Speed Up!"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/05/Speed_Up_Phigros.jpeg/300px-Speed_Up_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/05/Speed_Up_Phigros.jpeg"
+    "chapter": "单曲精选集"
+    "bpm": "145"
+    "composer": "DarTokki"
+    "length": "2:20"
+    "illustrator": "TNiK"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.3"
+    "in_combo": "711"
+    "in_charter": "Ctymax VS 百九十八"
+    "hd_level": "10.3"
+    "hd_combo": "463"
+    "hd_charter": "Ctymax VS 百九十八"
+    "ez_level": "4.3"
+    "ez_combo": "262"
+    "ez_charter": "Ctymax VS 百九十八"
+"Magenta Potion":
+    "song": "Magenta Potion"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/3/3d/Magenta_Potion_Phigros.png/300px-Magenta_Potion_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/3/3d/Magenta_Potion_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "150"
+    "composer": "EmoCo."
+    "length": "2:27"
+    "illustrator": "NO|SER"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.5"
+    "in_combo": "791"
+    "in_charter": "Ctymax VS 晨"
+    "hd_level": "11.3"
+    "hd_combo": "631"
+    "hd_charter": "Ctymax VS 晨"
+    "ez_level": "6.3"
+    "ez_combo": "334"
+    "ez_charter": "Ctymax VS 晨"
+"Get Back":
+    "song": "Get Back"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/f7/Get_Back_Phigros.png/300px-Get_Back_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/f7/Get_Back_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "128"
+    "composer": "CAP3"
+    "length": "2:24"
+    "illustrator": "TiNK"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.8"
+    "in_combo": "708"
+    "in_charter": "JKy"
+    "hd_level": "11.4"
+    "hd_combo": "550"
+    "hd_charter": "JKy"
+    "ez_level": "6.6"
+    "ez_combo": "321"
+    "ez_charter": "JKy"
+"Palescreen":
+    "song": "Palescreen"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/da/Palescreen_Phigros_2048%2A1080.png/300px-Palescreen_Phigros_2048%2A1080.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/da/Palescreen_Phigros_2048%2A1080.png"
+    "chapter": "单曲精选集"
+    "bpm": "173"
+    "composer": "WyvernP feat. Madol"
+    "length": "2:25"
+    "illustrator": "GAMEBAKA"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.7"
+    "in_combo": "1059"
+    "in_charter": "Jeitie"
+    "hd_level": "11.8"
+    "hd_combo": "772"
+    "hd_charter": "Jeitie"
+    "ez_level": "5.6"
+    "ez_combo": "224"
+    "ez_charter": "Jeitie"
+"The Mountain Eater":
+    "song": "The Mountain Eater"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/21/The_Mountain_Eater_Phigros.png/300px-The_Mountain_Eater_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/21/The_Mountain_Eater_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "127"
+    "composer": "Paul Bazooka"
+    "length": "2:03"
+    "illustrator": "START SEED"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "697"
+    "in_charter": "百九十八"
+    "hd_level": "9.1"
+    "hd_combo": "386"
+    "hd_charter": "百九十八"
+    "ez_level": "4.3"
+    "ez_combo": "210"
+    "ez_charter": "百九十八"
+"Orthodox":
+    "song": "Orthodox"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/d5/Orthodox_Phigros.png/300px-Orthodox_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/d5/Orthodox_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "170"
+    "composer": "tokiwa"
+    "length": "2:21"
+    "illustrator": "cycats"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.2"
+    "in_combo": "962"
+    "in_charter": "Uvernight"
+    "hd_level": "10.6"
+    "hd_combo": "627"
+    "hd_charter": "Uvernight"
+    "ez_level": "4.7"
+    "ez_combo": "304"
+    "ez_charter": "Uvernight"
+"End Me":
+    "song": "End Me"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/3/3d/End_Me_Phigros.png/300px-End_Me_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/3/3d/End_Me_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "100~120"
+    "composer": "ZxNX as Delaina"
+    "length": "2:10"
+    "illustrator": "何呵"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.3"
+    "in_combo": "724"
+    "in_charter": "鲲 fixed by 百九十八"
+    "hd_level": "7.5"
+    "hd_combo": "320"
+    "hd_charter": "鲲"
+    "ez_level": "5.8"
+    "ez_combo": "217"
+    "ez_charter": "鲲"
+"Parallel Retrogression(Game Ver.)":
+    "song": "Parallel Retrogression(Game Ver.)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/27/Parallel_Retrogression_Phigros.png/300px-Parallel_Retrogression_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/27/Parallel_Retrogression_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "175"
+    "composer": "Tetrajectory"
+    "length": "2:22"
+    "illustrator": "青鸟"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "851"
+    "in_charter": "HaraKuma"
+    "hd_level": "10.7"
+    "hd_combo": "697"
+    "hd_charter": "HaraKuma"
+    "ez_level": "6.8"
+    "ez_combo": "507"
+    "ez_charter": "HaraKuma"
+"Starduster":
+    "song": "Starduster"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/f4/Starduster_Phigros.png/300px-Starduster_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/f4/Starduster_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "110"
+    "composer": "Quree"
+    "length": "2:09"
+    "illustrator": "IvyTowers"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.1"
+    "in_combo": "874"
+    "in_charter": "NerSAN"
+    "hd_level": "11.4"
+    "hd_combo": "578"
+    "hd_charter": "NerSAN"
+    "ez_level": "5.6"
+    "ez_combo": "280"
+    "ez_charter": "NerSAN"
+"Electron":
+    "song": "Electron"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/5d/Electron_Phigros.png/300px-Electron_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/5d/Electron_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "134"
+    "composer": "ElousΛ.-FZ"
+    "length": "2:08"
+    "illustrator": "DoublePian"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.2"
+    "in_combo": "576"
+    "in_charter": "百九十八"
+    "hd_level": "10.4"
+    "hd_combo": "423"
+    "hd_charter": "百九十八"
+    "ez_level": "3.7"
+    "ez_combo": "219"
+    "ez_charter": "百九十八"
+"SIGMA":
+    "song": "SIGMA"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/a/ab/SIGMA_Phigros.png/300px-SIGMA_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/a/ab/SIGMA_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "200"
+    "composer": "Kry.exe"
+    "length": "2:01"
+    "illustrator": "塔塔"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.6"
+    "in_combo": "785"
+    "in_charter": "Bσrbσriσn∑rmσn.∑x∑"
+    "hd_level": "11.5"
+    "hd_combo": "516"
+    "hd_charter": "Bσrbσriσnermσn.exe"
+    "ez_level": "4.8"
+    "ez_combo": "352"
+    "ez_charter": "Barbarianerman.exe"
+"Hardcore Kwaya":
+    "song": "Hardcore Kwaya"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/5f/Hardcore_Kwaya_Phigros.png/300px-Hardcore_Kwaya_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/5f/Hardcore_Kwaya_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "200"
+    "composer": "EnFr"
+    "length": "2:00"
+    "illustrator": "EnFr"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.6"
+    "in_combo": "852"
+    "in_charter": "Two skunks (Ctymax and 晨)in Africa shouting WAHHHHHH!"
+    "hd_level": "9.2"
+    "hd_combo": "611"
+    "hd_charter": "Hardcore Barbaya"
+    "ez_level": "4.3"
+    "ez_combo": "340"
+    "ez_charter": "One skunk (Ctymax) in Africa"
+"?ventyr":
+    "song": "?ventyr"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/c8/Aventyr.png/300px-Aventyr.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/c8/Aventyr.png"
+    "chapter": "单曲精选集"
+    "bpm": "114~132"
+    "composer": "Grand Thaw / Rig?l Theatre"
+    "length": "2:40"
+    "illustrator": "Grand Thaw / Rig?l Theatre"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.7"
+    "in_combo": "954"
+    "in_charter": "Barbarianerman vs. Snorkel"
+    "hd_level": "9.4"
+    "hd_combo": "626"
+    "hd_charter": "Snorkel"
+    "ez_level": "2.3"
+    "ez_combo": "345"
+    "ez_charter": "Barbarianerman"
+"Tr?ne":
+    "song": "Tr?ne"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/61/Trane_Phigros.png/300px-Trane_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/61/Trane_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "135"
+    "composer": "MALVA."
+    "length": "2:26"
+    "illustrator": "しえろ"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.5"
+    "in_combo": "661"
+    "in_charter": "Barbarianerman"
+    "hd_level": "6.7"
+    "hd_combo": "420"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "1.5"
+    "ez_combo": "148"
+    "ez_charter": "Barbarianerman"
+"雪降り、メリクリ":
+    "song": "雪降り、メリクリ"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/06/Yuki_Ori_Meri_Kuri_Phigros.png/300px-Yuki_Ori_Meri_Kuri_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/06/Yuki_Ori_Meri_Kuri_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "180"
+    "composer": "A-39"
+    "length": "2:38"
+    "illustrator": "犀牛坨动画工坊"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.3"
+    "in_combo": "939"
+    "in_charter": "N\\erry Xmas"
+    "hd_level": "9.3"
+    "hd_combo": "559"
+    "hd_charter": "Merry ChristymAxS"
+    "ez_level": "5.6"
+    "ez_combo": "316"
+    "ez_charter": "Merry xmAS"
+"Cervelle Connexion":
+    "song": "Cervelle Connexion"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/43/Cervelle_Connexion_Phigros.png/300px-Cervelle_Connexion_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/43/Cervelle_Connexion_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "142"
+    "composer": "SCTL"
+    "length": "2:27"
+    "illustrator": "SCTL"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.5"
+    "in_combo": "563"
+    "in_charter": "Eastern Ailuropoda Gang"
+    "hd_level": "11.3"
+    "hd_combo": "569"
+    "hd_charter": "Eastern Ailuropoda Gang"
+    "ez_level": "4.8"
+    "ez_combo": "301"
+    "ez_charter": "Eastern Ailuropoda Gang"
+"modulus":
+    "song": "modulus"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/67/Modulus_Phigros.png/300px-Modulus_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/67/Modulus_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "158"
+    "composer": "PTB10"
+    "length": "2:00"
+    "illustrator": "geralt"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "774"
+    "in_charter": "Pat Brick Man Mr.C"
+    "hd_level": "10.1"
+    "hd_combo": "482"
+    "hd_charter": "Cty moyules"
+    "ez_level": "3.7"
+    "ez_combo": "258"
+    "ez_charter": "Cty moyules"
+"Wavetapper":
+    "song": "Wavetapper"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/1e/Wavetapper_Phigros.png/300px-Wavetapper_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/1e/Wavetapper_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "112"
+    "composer": "Frums"
+    "length": "2:41"
+    "illustrator": "百九十八"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.8"
+    "in_combo": "866"
+    "in_charter": "百九十八 vs. Barbarianerman"
+    "hd_level": "6.9"
+    "hd_combo": "507"
+    "hd_charter": "Sillyp"
+    "ez_level": "4.4"
+    "ez_combo": "470"
+    "ez_charter": "Sillyp"
+"大和撫子 -Wild Dances-":
+    "song": "大和撫子 -Wild Dances-"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/13/%E5%A4%A7%E5%92%8C%E6%92%AB%E5%AD%90_Wild_Dances_Phigros.png/300px-%E5%A4%A7%E5%92%8C%E6%92%AB%E5%AD%90_Wild_Dances_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/13/%E5%A4%A7%E5%92%8C%E6%92%AB%E5%AD%90_Wild_Dances_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "158"
+    "composer": "adaptor vs DRIVE."
+    "length": "2:07"
+    "illustrator": "りゆうら"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "1002"
+    "in_charter": "Eaimo vs. CtyNer dancing wildly"
+    "hd_level": "11.8"
+    "hd_combo": "549"
+    "hd_charter": "Eaimo fixed by NerSAN"
+    "ez_level": "5.7"
+    "ez_combo": "274"
+    "ez_charter": "Eaimo fixed by NerSAN"
+"Eltaw":
+    "song": "Eltaw"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/04/Eltaw_Phigros.png/300px-Eltaw_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/04/Eltaw_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "193"
+    "composer": "Fl00t"
+    "length": "2:15"
+    "illustrator": "xperz"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "855"
+    "in_charter": "BarbariaNERman vs. JKy"
+    "hd_level": "10.5"
+    "hd_combo": "608"
+    "hd_charter": "JKy"
+    "ez_level": "5.8"
+    "ez_combo": "391"
+    "ez_charter": "JKy"
+"Better Graphic Animation":
+    "song": "Better Graphic Animation"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/da/Better_Graphic_Animation_Phigros.png/300px-Better_Graphic_Animation_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/da/Better_Graphic_Animation_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "180"
+    "composer": "ルゼ"
+    "length": "1:42"
+    "illustrator": "A-Zero Project"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.3"
+    "in_combo": "616"
+    "in_charter": "縱連打の信者☆無極"
+    "hd_level": "11.7"
+    "hd_combo": "469"
+    "hd_charter": "NerSAN"
+    "ez_level": "6.4"
+    "ez_combo": "178"
+    "ez_charter": "NerSAN"
+"With You":
+    "song": "With You"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/86/With_You_Phigros.png/300px-With_You_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/86/With_You_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "170"
+    "composer": "Cashew"
+    "length": "2:06"
+    "illustrator": "ADZUKI"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.4"
+    "in_combo": "774"
+    "in_charter": "with U"
+    "hd_level": "9.3"
+    "hd_combo": "654"
+    "hd_charter": "with U"
+    "ez_level": "3.5"
+    "ez_combo": "226"
+    "ez_charter": "with U"
+"Unorthodox Thoughts":
+    "song": "Unorthodox Thoughts"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/b/b5/Unorthodox_Thoughts_Phigros.png/300px-Unorthodox_Thoughts_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/b/b5/Unorthodox_Thoughts_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "146"
+    "composer": "Joulez"
+    "length": "2:23"
+    "illustrator": "ASXX"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "729"
+    "in_charter": "Barbarianerman vs. HaraKuma"
+    "hd_level": "11.3"
+    "hd_combo": "644"
+    "hd_charter": "HaraKuma"
+    "ez_level": "4.7"
+    "ez_combo": "512"
+    "ez_charter": "Barbarianerman"
+"Apocalyptic":
+    "song": "Apocalyptic"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/f7/Apocalyptic_Phigros.png/300px-Apocalyptic_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/f7/Apocalyptic_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "160"
+    "composer": "Z ClaxX & SumaiLight"
+    "length": "2:09"
+    "illustrator": "佑木いずみ& Ctymax"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.4"
+    "in_combo": "676"
+    "in_charter": "NerSAN vs. 阿爽"
+    "hd_level": "9.6"
+    "hd_combo": "329"
+    "hd_charter": "NerSAN"
+    "ez_level": "3.2"
+    "ez_combo": "282"
+    "ez_charter": "阿爽"
+"游园地":
+    "song": "游园地"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/8/8f/%E6%B8%B8%E5%9B%AD%E5%9C%B0_Phigros.png/300px-%E6%B8%B8%E5%9B%AD%E5%9C%B0_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/8/8f/%E6%B8%B8%E5%9B%AD%E5%9C%B0_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "128"
+    "composer": "椒盐菠萝"
+    "length": "2:07"
+    "illustrator": "CEM"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.2"
+    "in_combo": "481"
+    "in_charter": "椒盐倪尔"
+    "hd_level": "7.7"
+    "hd_combo": "444"
+    "hd_charter": "野从菠萝"
+    "ez_level": "2.8"
+    "ez_combo": "220"
+    "ez_charter": "野从菠萝"
+"energy trixxx":
+    "song": "energy trixxx"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e9/Energy_trixxx_Phigros.png/300px-Energy_trixxx_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e9/Energy_trixxx_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "160"
+    "composer": "KAH"
+    "length": "2:25"
+    "illustrator": "手鞠鈴&自動車 原付"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.2"
+    "in_combo": "930"
+    "in_charter": "NerSANNN"
+    "hd_level": "11.4"
+    "hd_combo": "477"
+    "hd_charter": "NerSANN"
+    "ez_level": "4.3"
+    "ez_combo": "252"
+    "ez_charter": "NerSAN"
+"Nhelv":
+    "song": "Nhelv"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/ea/Nhelv_Phigros.jpeg/300px-Nhelv_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/ea/Nhelv_Phigros.jpeg"
+    "chapter": "单曲精选集"
+    "bpm": "174.59"
+    "composer": "Silentroom"
+    "length": "2:39"
+    "illustrator": "駿"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.4"
+    "in_combo": "833"
+    "in_charter": "森德雷斯 vs. 百九十八"
+    "hd_level": "11.9"
+    "hd_combo": "571"
+    "hd_charter": "StupiGGy"
+    "ez_level": "1.7"
+    "ez_combo": "196"
+    "ez_charter": "野从"
+"-Arkhei-":
+    "song": "-Arkhei-"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/9/9a/-Arkhei-_Phigros.jpeg/300px--Arkhei-_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/9/9a/-Arkhei-_Phigros.jpeg"
+    "chapter": "单曲精选集"
+    "bpm": "112"
+    "composer": "Sera Amagi"
+    "length": "2:37"
+    "illustrator": "Hachimitsu☆Boy"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "12.1"
+    "in_combo": "644"
+    "in_charter": "-JKy-"
+    "hd_level": "9.7"
+    "hd_combo": "454"
+    "hd_charter": "-JKy-"
+    "ez_level": "5.5"
+    "ez_combo": "462"
+    "ez_charter": "-JKy-"
+"Kerberos":
+    "song": "Kerberos"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e6/Kerberos_Phigros.jpeg/300px-Kerberos_Phigros.jpeg"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e6/Kerberos_Phigros.jpeg"
+    "chapter": "单曲精选集"
+    "bpm": "197"
+    "composer": "Zris"
+    "length": "2:07"
+    "illustrator": "Eridani"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.4"
+    "in_combo": "978"
+    "in_charter": "Snorkel vs. NerSAN"
+    "hd_level": "12.4"
+    "hd_combo": "683"
+    "hd_charter": "NerSAN"
+    "ez_level": "5.7"
+    "ez_combo": "262"
+    "ez_charter": "Alloces"
+"ρars/ey":
+    "song": "ρars/ey"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/5/5c/Parsley_jacket.png/300px-Parsley_jacket.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/5/5c/Parsley_jacket.png"
+    "chapter": "单曲精选集"
+    "bpm": "180"
+    "composer": "siqlo"
+    "length": "2:04"
+    "illustrator": "出前 x nekomiya"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "777"
+    "in_charter": "TangScend"
+    "hd_level": "11.3"
+    "hd_combo": "449"
+    "hd_charter": "Rikko & TangScend"
+    "ez_level": "3.1"
+    "ez_combo": "181"
+    "ez_charter": "Rikko"
+"Concvssion":
+    "song": "Concvssion"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/22/Concvssion%28Phigros%29.png/300px-Concvssion%28Phigros%29.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/22/Concvssion%28Phigros%29.png"
+    "chapter": "单曲精选集"
+    "bpm": "190"
+    "composer": "Halv"
+    "length": "2:31"
+    "illustrator": "汉堡"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.5"
+    "in_combo": "1000"
+    "in_charter": "Phigros Charting Team"
+    "hd_level": "10.2"
+    "hd_combo": "700"
+    "hd_charter": "晨"
+    "ez_level": "4.1"
+    "ez_combo": "450"
+    "ez_charter": "J.R"
+"ジングルベル(Jingle Bell)":
+    "song": "ジングルベル(Jingle Bell)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/3/33/%E3%82%B8%E3%83%B3%E3%82%B0%E3%83%AB%E3%83%99%E3%83%AB%28Jingle_Bell%29_Phigros.png/300px-%E3%82%B8%E3%83%B3%E3%82%B0%E3%83%AB%E3%83%99%E3%83%AB%28Jingle_Bell%29_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/3/33/%E3%82%B8%E3%83%B3%E3%82%B0%E3%83%AB%E3%83%99%E3%83%AB%28Jingle_Bell%29_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "175"
+    "composer": "A-39/沙包P"
+    "length": "2:47"
+    "illustrator": "爱39的Konya"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.5"
+    "in_combo": "1239"
+    "in_charter": "NerSANTA vs. BarbarianerSLEDGE"
+    "hd_level": "7.2"
+    "hd_combo": "492"
+    "hd_charter": "merry XM AS"
+    "ez_level": "4.3"
+    "ez_combo": "639"
+    "ez_charter": "merry CNrisTimas"
+"Dreamland":
+    "song": "Dreamland"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/10/Dreamland_Phigros.png/300px-Dreamland_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/10/Dreamland_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "120"
+    "composer": "z1on & kyrrin"
+    "length": "2:32"
+    "illustrator": "海产"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.2"
+    "in_combo": "627"
+    "in_charter": "XMT & 198"
+    "hd_level": "9.8"
+    "hd_combo": "476"
+    "hd_charter": "Bea"
+    "ez_level": "5.2"
+    "ez_combo": "338"
+    "ez_charter": "Bea"
+"Another Round":
+    "song": "Another Round"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/7/74/Another_Round_Phigros.png/300px-Another_Round_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/7/74/Another_Round_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "128"
+    "composer": "Justin Dai"
+    "length": "2:24"
+    "illustrator": "艾是Abby"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.3"
+    "in_combo": "505"
+    "in_charter": "TimiTini →\"X\"← 阿爽"
+    "hd_level": "7.5"
+    "hd_combo": "353"
+    "hd_charter": "Another Stage"
+    "ez_level": "3.2"
+    "ez_combo": "136"
+    "ez_charter": "阿爽"
+"996":
+    "song": "996"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/e/e4/996_Phigros.png/300px-996_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/e/e4/996_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "140"
+    "composer": "李化禹"
+    "length": "2:34"
+    "illustrator": "笔记RE"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.5"
+    "in_combo": "996"
+    "in_charter": "Barbarianerman & NerSAN in the ICU"
+    "hd_level": "8.1"
+    "hd_combo": "453"
+    "hd_charter": "Likey"
+    "ez_level": "3.8"
+    "ez_combo": "392"
+    "ez_charter": "RTH"
+"Future Mind":
+    "song": "Future Mind"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/3/37/Future_Mind_Phigros.png/300px-Future_Mind_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/3/37/Future_Mind_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "180"
+    "composer": "Ray Nautica & Reku Mochizuki"
+    "length": "2:13"
+    "illustrator": "Keiby.comics"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.6"
+    "in_combo": "866"
+    "in_charter": "Future BarbarXMT"
+    "hd_level": "11.7"
+    "hd_combo": "570"
+    "hd_charter": "XMT小咩兔"
+    "ez_level": "5.3"
+    "ez_combo": "365"
+    "ez_charter": "Barbarianerman"
+"Luminescent":
+    "song": "Luminescent"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/ce/Luminescent_Phigros.png/300px-Luminescent_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/ce/Luminescent_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "141"
+    "composer": "Daison"
+    "length": "2:37"
+    "illustrator": "鲸弑"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "650"
+    "in_charter": "百九十八"
+    "hd_level": "9.3"
+    "hd_combo": "608"
+    "hd_charter": "Uvernight"
+    "ez_level": "5.7"
+    "ez_combo": "330"
+    "ez_charter": "Uvernight"
+"FULi AUTO BUSTER":
+    "song": "FULi AUTO BUSTER"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/9/99/Phigros_FULi_AUTO_BUSTER.png/300px-Phigros_FULi_AUTO_BUSTER.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/9/99/Phigros_FULi_AUTO_BUSTER.png"
+    "chapter": "单曲精选集"
+    "bpm": "145"
+    "composer": "MYUKKE."
+    "length": "2:04"
+    "illustrator": "cycats"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "755"
+    "in_charter": "百九十八 busting 阿爽"
+    "hd_level": "8.6"
+    "hd_combo": "596"
+    "hd_charter": "M3d1uM & 百九十八"
+    "ez_level": "4.8"
+    "ez_combo": "285"
+    "ez_charter": "M3d1uM & 百九十八"
+"I Must Say No":
+    "song": "I Must Say No"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/3/37/I_Must_Say_No_Phigros.png/300px-I_Must_Say_No_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/3/37/I_Must_Say_No_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "175"
+    "composer": "TangJuan"
+    "length": "1:56"
+    "illustrator": "cycats"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.5"
+    "in_combo": "470"
+    "in_charter": "Likey & 百九十八"
+    "hd_level": "9.5"
+    "hd_combo": "364"
+    "hd_charter": "JKy"
+    "ez_level": "2.6"
+    "ez_combo": "76"
+    "ez_charter": "Likey"
+"opia":
+    "song": "opia"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/40/Opia_Phigros.png/300px-Opia_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/40/Opia_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "193"
+    "composer": "rN"
+    "length": "2:29"
+    "illustrator": "rN @ 湯元画伯"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.5"
+    "in_combo": "793"
+    "in_charter": "Jeitie & CorruptedEntity『Hollow』"
+    "hd_level": "11.6"
+    "hd_combo": "548"
+    "hd_charter": "BlindForest『Observing』"
+    "ez_level": "5.4"
+    "ez_combo": "233"
+    "ez_charter": "BlindForest"
+"いざ、参ります":
+    "song": "いざ、参ります"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/4e/%E3%81%84%E3%81%96%E3%80%81%E5%8F%82%E3%82%8A%E3%81%BE%E3%81%99_Phigros.png/300px-%E3%81%84%E3%81%96%E3%80%81%E5%8F%82%E3%82%8A%E3%81%BE%E3%81%99_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/4e/%E3%81%84%E3%81%96%E3%80%81%E5%8F%82%E3%82%8A%E3%81%BE%E3%81%99_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "188"
+    "composer": "U-ske feat. 棗いつき"
+    "length": "1:42"
+    "illustrator": "绿风マルト"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.1"
+    "in_combo": "865"
+    "in_charter": "小咩兔、参上"
+    "hd_level": "9.6"
+    "hd_combo": "441"
+    "hd_charter": "Clutter & Barbarianerman"
+    "ez_level": "4.1"
+    "ez_combo": "188"
+    "ez_charter": "Clutter & Barbarianerman"
+"月下缭乱":
+    "song": "月下缭乱"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/2/2c/%E6%9C%88%E4%B8%8B%E7%BC%AD%E4%B9%B1_Phigros_2.png/300px-%E6%9C%88%E4%B8%8B%E7%BC%AD%E4%B9%B1_Phigros_2.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/2/2c/%E6%9C%88%E4%B8%8B%E7%BC%AD%E4%B9%B1_Phigros_2.png"
+    "chapter": "单曲精选集"
+    "bpm": "175"
+    "composer": "月见静华 vs. LUNARiUM"
+    "length": "2:29"
+    "illustrator": "TNiK"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.8"
+    "in_combo": "969"
+    "in_charter": "iv"
+    "hd_level": "9.4"
+    "hd_combo": "533"
+    "hd_charter": "XMT小咩兔"
+    "ez_level": "4.8"
+    "ez_combo": "419"
+    "ez_charter": "XMT小咩兔"
+"On And On!!":
+    "song": "On And On!!"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/03/On_And_On%21%21_Phigros.png/300px-On_And_On%21%21_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/03/On_And_On%21%21_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "170"
+    "composer": "ETIA. feat. Jenga"
+    "length": "2:00"
+    "illustrator": "わっふゑ"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.7"
+    "in_combo": "830"
+    "in_charter": "NerSAN feat. Takanashi Rikko"
+    "hd_level": "10.3"
+    "hd_combo": "323"
+    "hd_charter": "Rikko"
+    "ez_level": "5.1"
+    "ez_combo": "195"
+    "ez_charter": "Rikko"
+"DataErr0r":
+    "song": "DataErr0r"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/c/c1/DataErr0r_Phigros.png/300px-DataErr0r_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/c/c1/DataErr0r_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "180"
+    "composer": "Cosmograph"
+    "length": "2:04"
+    "illustrator": "Photonskyto"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.6"
+    "in_combo": "613"
+    "in_charter": "TangScend -Err0rederci-"
+    "hd_level": "11.6"
+    "hd_combo": "400"
+    "hd_charter": "Rikko"
+    "ez_level": "6.1"
+    "ez_combo": "50"
+    "ez_charter": "[!!12:|<|<ο!!]"
+"c.s.q.n.":
+    "song": "c.s.q.n."
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/64/Csqn_Phigros.png/300px-Csqn_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/64/Csqn_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "174"
+    "composer": "Aoi"
+    "length": "2:04"
+    "illustrator": "Ctymax vs. TNiK feat. 出前"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.7"
+    "in_combo": "1066"
+    "in_charter": "s.t.p.g."
+    "hd_level": "12.6"
+    "hd_combo": "755"
+    "hd_charter": "h.o.m.e.e.e."
+    "ez_level": "5.1"
+    "ez_combo": "330"
+    "ez_charter": "b.b.n.m."
+"Brave Notes":
+    "song": "Brave Notes"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/6/6c/Brave_Notes_Phigros.png/300px-Brave_Notes_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/6/6c/Brave_Notes_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "192"
+    "composer": "Turquoise(DRIVE.+Nota)"
+    "length": "1:58"
+    "illustrator": "林语"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.6"
+    "in_combo": "768"
+    "in_charter": "Brave Eaimo"
+    "hd_level": "11.4"
+    "hd_combo": "442"
+    "hd_charter": "Brave Eaimo"
+    "ez_level": "5.6"
+    "ez_combo": "299"
+    "ez_charter": "Brave Eaimo"
+"Eternal Snow":
+    "song": "Eternal Snow"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/f/f3/Eternal_Snow_Phigros.png/300px-Eternal_Snow_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/f/f3/Eternal_Snow_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "140"
+    "composer": "Abyss Idols"
+    "length": "2:35"
+    "illustrator": "Sak"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "13.5"
+    "in_combo": "700"
+    "in_charter": "JKy"
+    "hd_level": "8.8"
+    "hd_combo": "533"
+    "hd_charter": "M3d1uM"
+    "ez_level": "4.2"
+    "ez_combo": "288"
+    "ez_charter": "M3d1uM"
+"Rainy Season":
+    "song": "Rainy Season"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/4/43/Rainy_Season_Phigros.png/300px-Rainy_Season_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/4/43/Rainy_Season_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "188"
+    "composer": "Abyss Idols"
+    "length": "1:53"
+    "illustrator": "Robins"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.4"
+    "in_combo": "660"
+    "in_charter": "Raiky Season"
+    "hd_level": "10.7"
+    "hd_combo": "594"
+    "hd_charter": "StupiGGy"
+    "ez_level": "5.4"
+    "ez_combo": "304"
+    "ez_charter": "StupiGGy"
+"El Condor Pasa (Phigros Edit)":
+    "song": "El Condor Pasa (Phigros Edit)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/d7/El_Condor_Pasa_Phigros.png/300px-El_Condor_Pasa_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/d7/El_Condor_Pasa_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "150"
+    "composer": "Plastic Fruits"
+    "length": "2:12"
+    "illustrator": "青鸟"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.5"
+    "in_combo": "1140"
+    "in_charter": "XMT小咩兔"
+    "hd_level": "12.5"
+    "hd_combo": "585"
+    "hd_charter": "TimiTini"
+    "ez_level": "4.6"
+    "ez_combo": "259"
+    "ez_charter": "TimiTini"
+"Break Over":
+    "song": "Break Over"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/d/d2/Break_Over_Phigros.png/300px-Break_Over_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/d/d2/Break_Over_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "185"
+    "composer": "K-forest"
+    "length": "2:08"
+    "illustrator": "圆规Compasses"
+    "at_level": "14.9"
+    "at_combo": "570"
+    "at_charter": "百九十八"
+    "in_level": "14.6"
+    "in_combo": "910"
+    "in_charter": "百九十八 vs. Barbarianerman"
+    "hd_level": "11.8"
+    "hd_combo": "919"
+    "hd_charter": "Barbarianerman"
+    "ez_level": "5.1"
+    "ez_combo": "300"
+    "ez_charter": "Barbarianerman"
+"Believe Light (feat. 果丸哒呦)":
+    "song": "Believe Light (feat. 果丸哒呦)"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/7/74/Believe_Light_%28feat.%E6%9E%9C%E4%B8%B8%E5%93%92%E5%91%A6%29_Phigros.png/300px-Believe_Light_%28feat.%E6%9E%9C%E4%B8%B8%E5%93%92%E5%91%A6%29_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/7/74/Believe_Light_%28feat.%E6%9E%9C%E4%B8%B8%E5%93%92%E5%91%A6%29_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "150"
+    "composer": "Scaler & Mestie & 果丸哒呦"
+    "length": "2:50"
+    "illustrator": "圆规compasses"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "14.5"
+    "in_combo": "972"
+    "in_charter": "Believe Ctymax & TimiTini"
+    "hd_level": "9.5"
+    "hd_combo": "580"
+    "hd_charter": "Believe TimiTini"
+    "ez_level": "2.7"
+    "ez_combo": "264"
+    "ez_charter": "Believe Ctymax"
+"Pont des souvenirs":
+    "song": "Pont des souvenirs"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/0/05/Pont_des_souvenirs_Phigros.png/300px-Pont_des_souvenirs_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/0/05/Pont_des_souvenirs_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "185"
+    "composer": "VeetaCrush vs. [itsu(feat.itsu)]"
+    "length": "2:45"
+    "illustrator": "林语"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.2"
+    "in_combo": "899"
+    "in_charter": "晨"
+    "hd_level": "10.7"
+    "hd_combo": "567"
+    "hd_charter": "JKy"
+    "ez_level": "5.7"
+    "ez_combo": "461"
+    "ez_charter": "JKy"
+"青丘":
+    "song": "青丘"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/9/94/%E9%9D%92%E4%B8%98_Phigros.png/300px-%E9%9D%92%E4%B8%98_Phigros.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/9/94/%E9%9D%92%E4%B8%98_Phigros.png"
+    "chapter": "单曲精选集"
+    "bpm": "180"
+    "composer": "BLACK 0"
+    "length": "2:47"
+    "illustrator": "BLACK 0"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": "15.3"
+    "in_combo": "1304"
+    "in_charter": "KillJoy"
+    "hd_level": "10.5"
+    "hd_combo": "534"
+    "hd_charter": "Su1fuR"
+    "ez_level": "5.6"
+    "ez_combo": "284"
+    "ez_charter": "Ctymax"
+"Introduction":
+    "song": "Introduction"
+    "illustration": "https://img.moegirl.org.cn/common/thumb/1/13/Introduction.png/300px-Introduction.png"
+    "illustration_big": "https://img.moegirl.org.cn/common/1/13/Introduction.png"
+    "chapter": "--"
+    "bpm": "138"
+    "composer": "姜米條&ElousΛ.-FZ"
+    "length": "2:30"
+    "illustrator": "L-sp4"
+    "at_level": 0,
+    "at_combo": 0,
+    "at_charter": 0,
+    "in_level": 0,
+    "in_combo": 0,
+    "in_charter": 0,
+    "hd_level": 0,
+    "hd_combo": 0,
+    "hd_charter": 0,
+    "ez_level": "-"
+    "ez_combo": "180"
+    "ez_charter": "Barbarianerman"
