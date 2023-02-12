@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import YAML from 'yaml'
 import { _path } from "./path.js";
 import { segment } from "oicq";
+import fetch from "node-fetch"
 
 
 class get {
@@ -90,13 +91,18 @@ class get {
     }
 
 
-    /**获取曲绘/图片 ，曲名为原名 */
-    getimg(img) {
+    /**获取曲绘/图片 ，曲名为原名 是否为大图 */
+    getimg(img, isBig) {
         // name = 'phi'
-        let Illlist = this.getData('Illlist')
-        let name = Illlist[`${img}`]
-        if (name) {
-            return segment.image(`/plugins/phi-plugin/resources/Ill/${name}.png`)
+        let infolist = this.getData('infolist')
+        let url
+        if(isBig) {
+            url = infolist[`${img}`][`illustration_big`]
+        } else {
+            url = infolist[`${img}`][`illustration`]
+        }
+        if (url) {
+            return segment.image(url)
         } else {
             return segment.image(`/plugins/phi-plugin/resources/otherimg/${img}`)
         }
@@ -116,14 +122,14 @@ class get {
     /**获取章节信息，曲名为原名 */
     songschap(mic) {
         let infolist = this.getData('infolist')
-        return infolist[`${mic}`]['chap']
+        return infolist[`${mic}`]['chapter']
     }
 
     /**获取上架时间，曲名为原名 */
-    songsvison(mic) {
-        let infolist = this.getData('infolist')
-        return infolist[`${mic}`]['version']
-    }
+    // songsvison(mic) {
+    //     let infolist = this.getData('infolist')
+    //     return infolist[`${mic}`]['version']
+    // }
 
     /**匹配歌曲名称，根据参数返回原曲名称 */
     songsnick(mic) {
@@ -148,40 +154,59 @@ class get {
             let msgRes = []
             let cnt = 0
             for (let i = 1; ; ++i) {
-                if (showconfig[`${i}`]['vis'] == 'done') {
+                if (showconfig[`${i}`]['vis'] == '结束') {
                     /**结束 */
                     break
                 }
                 switch (showconfig[`${i}`]['vis']) {
-                    case 'img': {
+                    case '曲绘': {
                         /**特殊类型：曲绘 */
-                        msgRes[cnt++] = this.getimg(name)
+                        msgRes[cnt++] = this.getimg(name, true)
                         break
-                    } case 'msg': {
+                    } case '文字': {
                         /**特殊类型：文字 */
                         msgRes[cnt++] = showconfig[`${i}`]['val']
                         break
-                    } case 'rank': {
+                    } case '定级': {
                         /**特殊类型：定级(物量) 须保持ranklist和infolist一致 */
                         if (ranklist[`${name}`]['SP']) {
-                            msgRes[cnt++] = `SP: ${ranklist[`${name}`]['SP']}    物量: ${infolist[`${name}`]['SP']}\n`
+                            msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_level']}    物量: ${infolist[`${name}`]['sp_combo']}    谱师： ${infolist[`${name}`]['sp_charter']}\n`
                         }
                         if (ranklist[`${name}`]['AT']) {
-                            msgRes[cnt++] = `AT: ${ranklist[`${name}`]['AT']}    物量: ${infolist[`${name}`]['AT']}\n`
+                            msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_level']}    物量: ${infolist[`${name}`]['at_combo']}    谱师： ${infolist[`${name}`]['at_charter']}\n`
                         }
                         if (ranklist[`${name}`]['IN']) {
-                            msgRes[cnt++] = `IN: ${ranklist[`${name}`]['IN']}    物量: ${infolist[`${name}`]['IN']}\n`
+                            msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['in_combo']}    谱师： ${infolist[`${name}`]['in_charter']}\n`
                         }
                         if (ranklist[`${name}`]['HD']) {
-                            msgRes[cnt++] = `HD: ${ranklist[`${name}`]['HD']}    物量: ${infolist[`${name}`]['HD']}\n`
+                            msgRes[cnt++] = `HD: ${infolist[`${name}`]['hd_level']}    物量: ${infolist[`${name}`]['hd_combo']}    谱师： ${infolist[`${name}`]['hd_charter']}\n`
                         }
                         if (ranklist[`${name}`]['EZ']) {
-                            msgRes[cnt++] = `EZ: ${ranklist[`${name}`]['EZ']}    物量: ${infolist[`${name}`]['EZ']}`
+                            msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_level']}    物量: ${infolist[`${name}`]['ez_combo']}    谱师： ${infolist[`${name}`]['ez_charter']}\n`
                         }
                         break
-                    } default: {
-                        /**非特殊类型，直接读取infolist.yaml */
-                        msgRes[cnt++] = infolist[`${name}`][`${showconfig[`${i}`]['vis']}`]
+                    } case '曲名': {
+                        msgRes[cnt++] = infolist[`${name}`][`song`]
+                        break
+                    } case '曲师': {
+                        msgRes[cnt++] = infolist[`${name}`][`composer`]
+                        break
+                    } case '长度': {
+                        msgRes[cnt++] = infolist[`${name}`][`length`]
+                        break
+                    } case '章节': {
+                        msgRes[cnt++] = infolist[`${name}`][`chapter`]
+                        break
+                    } case '画师': {
+                        msgRes[cnt++] = infolist[`${name}`][`illustrator`]
+                        break
+                    } case 'BPM': {
+                        msgRes[cnt++] = infolist[`${name}`][`bpm`]
+                        break
+                    }
+                    default: {
+                        /**错误类型 */
+                        logger.info(`[phi 插件] 未找到 ${showconfig[`${i}`]['vis']} 所对应的信息`)
                     }
                 }
             }
