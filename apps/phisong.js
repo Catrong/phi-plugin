@@ -62,9 +62,7 @@ export class phirks extends plugin {
             let msgRes = get.getsongsinfo(name)
             e.reply(msgRes, true)
         } else {
-            await e.reply(`未找到${msg}的相关曲目信息QAQ`, true)
-            await e.reply(get.getimg('对不起.gif'))
-            await e.reply(`可以输入 #phi申请 原曲名称 ---> 别名 来向主人提出命名申请哦！`)
+            await e.reply(`未找到${msg}的相关曲目信息QAQ\n可以输入 #phi申请 原曲名称 ---> 别名 来向主人提出命名申请哦！`, true)
         }
     }
 
