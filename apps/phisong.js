@@ -221,7 +221,7 @@ export class phirks extends plugin {
         }
         let data = msg.split(/\s\|\s/g)
         if (!data[1] || typeof (Number(data[1])) != 'number') {
-            e.reply(`错误读入！请在曲目名称和定级之间以 | 分隔！`)
+            e.reply(`错误读入！请在曲目名称和 acc 之间以 | 分隔！`)
             return true
         }
         logger.info(`${data}  ${dfic}`)
