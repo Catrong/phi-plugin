@@ -7,9 +7,9 @@
     "composer": "SunsetRay"
     "length": "2:43"
     "illustrator": "艾若拉"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.5"
     "in_combo": "729"
     "in_charter": "Barbarianerman vs. NerSAN"
@@ -28,10 +28,10 @@
     "composer": "NceS"
     "length": "2:06"
     "illustrator": "海产"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "11.6"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "12.7"
     "in_combo": "463"
     "in_charter": "阿爽 & Ctymax"
     "hd_level": "7.5"
@@ -49,9 +49,9 @@
     "composer": "Frums"
     "length": "1:40"
     "illustrator": "Ctymax"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.7"
     "in_combo": "535"
     "in_charter": "Ctymax"
@@ -70,16 +70,16 @@
     "composer": "Likey"
     "length": "2:01"
     "illustrator": "DoublePian"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.6"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "13.7"
     "in_combo": "764"
     "in_charter": "晨 vs Barbarianerman"
-    "hd_level": "11.7"
+    "hd_level": "9.4"
     "hd_combo": "382"
     "hd_charter": "晨"
-    "ez_level": "6.5"
+    "ez_level": ""
     "ez_combo": "279"
     "ez_charter": "晨"
 "Engine x Start!! (melody mix)":
@@ -91,9 +91,9 @@
     "composer": "CrossingSound"
     "length": "1:31"
     "illustrator": "赤芽"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.4"
     "in_combo": "433"
     "in_charter": "Arenn Saki&Catcats"
@@ -112,16 +112,16 @@
     "composer": "姜米條"
     "length": "2:11"
     "illustrator": "winder"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.8"
     "in_combo": "517"
     "in_charter": "Catcats & 百九十八"
     "hd_level": "8.4"
     "hd_combo": "453"
     "hd_charter": "Catcats & 百九十八"
-    "ez_level": "4.9"
+    "ez_level": ""
     "ez_combo": "249"
     "ez_charter": "Catcats & 百九十八"
 "Winter↑cube↓":
@@ -133,9 +133,9 @@
     "composer": "Ctymax feat. NceS"
     "length": "2:35"
     "illustrator": "翠冷兮"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.4"
     "in_combo": "733"
     "in_charter": "百九十八"
@@ -154,9 +154,9 @@
     "composer": "OnlyMyBlackScore"
     "length": "2:07"
     "illustrator": "L-sp4"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.8"
     "in_combo": "978"
     "in_charter": "XMT小咩兔"
@@ -175,16 +175,16 @@
     "composer": "Tetrajectory feat. Ctymax"
     "length": "2:34"
     "illustrator": "IvyTowers"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.7"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.4"
     "in_combo": "969"
     "in_charter": "Gausbon"
-    "hd_level": "10.8"
+    "hd_level": "9.7"
     "hd_combo": "526"
     "hd_charter": "Gausbon"
-    "ez_level": "6.8"
+    "ez_level": ""
     "ez_combo": "380"
     "ez_charter": "Gausbon"
 "FULi AUTO SHOOTER":
@@ -196,9 +196,9 @@
     "composer": "MYUKKE."
     "length": "2:09"
     "illustrator": "ViscerA & Psycholine"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.8"
     "in_combo": "843"
     "in_charter": "AUTO. SHOOTER. fixed by Ctymax"
@@ -217,9 +217,9 @@
     "composer": "SOTUI"
     "length": "2:14"
     "illustrator": "CH"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.6"
     "in_combo": "554"
     "in_charter": "CN_115+TangScend"
@@ -238,10 +238,10 @@
     "composer": "BlueWind"
     "length": "2:36"
     "illustrator": "老张"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.9"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.1"
     "in_combo": "1171"
     "in_charter": "晨 vs. 阿爽"
     "hd_level": "11.8"
@@ -259,16 +259,16 @@
     "composer": "SunsetRay/NceS"
     "length": "2:47"
     "illustrator": "IvyTowers"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.8"
     "in_combo": "898"
     "in_charter": "StupiGGy"
-    "hd_level": "10.5"
+    "hd_level": "11.4"
     "hd_combo": "703"
     "hd_charter": "StupiGGy"
-    "ez_level": "6.9"
+    "ez_level": ""
     "ez_combo": "470"
     "ez_charter": "StupiGGy"
 "Pixel Rebelz":
@@ -280,10 +280,10 @@
     "composer": "Normal1zer"
     "length": "2:22"
     "illustrator": "艾是Abby"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "15.2"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.1"
     "in_combo": "941"
     "in_charter": "NerSAN"
     "hd_level": "11.9"
@@ -301,13 +301,13 @@
     "composer": "Normal1zer"
     "length": "2:19"
     "illustrator": "cycats"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.8"
     "in_combo": "1235"
     "in_charter": "分化者 fixed by Barbarianerman"
-    "hd_level": "10.5"
+    "hd_level": "11.8"
     "hd_combo": "604"
     "hd_charter": "分化者『RageS』"
     "ez_level": "5.8"
@@ -322,9 +322,9 @@
     "composer": "MonstDeath"
     "length": "1:56"
     "illustrator": "笔记RE"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.5"
     "in_combo": "485"
     "in_charter": "百九十八"
@@ -343,16 +343,16 @@
     "composer": "Antistar feat. Ctymax"
     "length": "2:27"
     "illustrator": "xperz"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.5"
     "in_combo": "1194"
     "in_charter": "JKy"
-    "hd_level": "8.9"
+    "hd_level": "10.4"
     "hd_combo": "801"
     "hd_charter": "JKy"
-    "ez_level": "4.5"
+    "ez_level": ""
     "ez_combo": "612"
     "ez_charter": "JKy"
 "-SURREALISM-":
@@ -364,16 +364,16 @@
     "composer": "Itsuki"
     "length": "2:33"
     "illustrator": "喵n葵"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.4"
     "in_combo": "914"
     "in_charter": "-StupiGGy- fixed by 晨"
-    "hd_level": "7.7"
+    "hd_level": "9.4"
     "hd_combo": "532"
     "hd_charter": "-StupiGGy-"
-    "ez_level": "4.6"
+    "ez_level": ""
     "ez_combo": "302"
     "ez_charter": "-StupiGGy-"
 "Bonus Time":
@@ -385,9 +385,9 @@
     "composer": "Megalo_PaleWhite"
     "length": "1:55"
     "illustrator": "笔记RE"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.2"
     "in_combo": "689"
     "in_charter": "Uvernight fixed by 百九十八"
@@ -406,16 +406,16 @@
     "composer": "Tanchiky"
     "length": "2:05"
     "illustrator": "Karameru"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.8"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.6"
     "in_combo": "750"
     "in_charter": "B B M pow"
-    "hd_level": "10.7"
+    "hd_level": "11.5"
     "hd_combo": "468"
     "hd_charter": "Ctymax vs 阿爽"
-    "ez_level": "5.9"
+    "ez_level": ""
     "ez_combo": "190"
     "ez_charter": "Ctymax vs 阿爽"
 "NYA!!!(Phigros ver.)":
@@ -427,9 +427,9 @@
     "composer": "FLuoRiTe/姜米條"
     "length": "2:35"
     "illustrator": "NEKO&海产"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.9"
     "in_combo": "666"
     "in_charter": "HCC!!!"
@@ -448,9 +448,9 @@
     "composer": "1N6Fs"
     "length": "2:22"
     "illustrator": "IvyTowers"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.3"
     "in_combo": "722"
     "in_charter": "鲲&百九十八"
@@ -469,9 +469,9 @@
     "composer": "Ju_E"
     "length": "2:04"
     "illustrator": "Haight"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.7"
     "in_combo": "733"
     "in_charter": "Ctymax"
@@ -490,9 +490,9 @@
     "composer": "影虎。"
     "length": "2:28"
     "illustrator": "英英英"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.1"
     "in_combo": "983"
     "in_charter": "百九十八"
@@ -511,16 +511,16 @@
     "composer": "rider"
     "length": "2:05"
     "illustrator": "1B"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.2"
     "in_combo": "738"
     "in_charter": "奥術 ~The Empery~"
-    "hd_level": "9.4"
+    "hd_level": "11.6"
     "hd_combo": "346"
     "hd_charter": "奥術 ~The Empery~"
-    "ez_level": "3.6"
+    "ez_level": ""
     "ez_combo": "180"
     "ez_charter": "奥術 ~The Empery~"
 "Spasmodic":
@@ -532,7 +532,7 @@
     "composer": "姜米條☆颶風~?元力上人?"
     "length": "2:34"
     "illustrator": "昔璃☆暴雨~?危難聖帝?"
-    "at_level": "16.4"
+    "at_level": "16.3"
     "at_combo": "1671"
     "at_charter": "無極☆雷鳴~?死の序曲?"
     "in_level": "15.2"
@@ -541,7 +541,7 @@
     "hd_level": "12.6"
     "hd_combo": "904"
     "hd_charter": "無極☆雷鳴~?死の序曲?"
-    "ez_level": "7.9"
+    "ez_level": ""
     "ez_combo": "637"
     "ez_charter": "無極☆雷鳴~?死の序曲?"
 "Leave All Behind":
@@ -553,9 +553,9 @@
     "composer": "rider"
     "length": "2:07"
     "illustrator": "笔记RE"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.7"
     "in_combo": "523"
     "in_charter": "亚树见希子 & 百九十八"
@@ -574,9 +574,9 @@
     "composer": "P4koo feat. つゆり花鈴"
     "length": "1:39"
     "illustrator": "Doro-nyong & Ratif"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.7"
     "in_combo": "407"
     "in_charter": "阿?爽"
@@ -595,9 +595,9 @@
     "composer": "dandeless"
     "length": "2:04"
     "illustrator": "snake.ribs"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.5"
     "in_combo": "649"
     "in_charter": "百九十八"
@@ -616,9 +616,9 @@
     "composer": "姜米條"
     "length": "2:23"
     "illustrator": "昔璃&TNiK"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.6"
     "in_combo": "900"
     "in_charter": "Barbarianerman"
@@ -637,9 +637,9 @@
     "composer": "MYUKKE."
     "length": "2:04"
     "illustrator": "青鸟"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.4"
     "in_combo": "844"
     "in_charter": "晨 vs. Ctymax"
@@ -658,9 +658,9 @@
     "composer": "Se-U-Ra"
     "length": "1:52"
     "illustrator": "鲸弑"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.7"
     "in_combo": "1066"
     "in_charter": "六回目Traveler Scend as \"Knight of Arq\""
@@ -700,9 +700,9 @@
     "composer": "WyvernP"
     "length": "2:30"
     "illustrator": "汉堡"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.6"
     "in_combo": "520"
     "in_charter": "Barbarianerman vs. Alloces"
@@ -721,9 +721,9 @@
     "composer": "Hundotte"
     "length": "2:14"
     "illustrator": "幽灵星"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.9"
     "in_combo": "776"
     "in_charter": "Ctymax vs. Barbarianerman"
@@ -742,9 +742,9 @@
     "composer": "P4koo"
     "length": "2:22"
     "illustrator": "青鸟"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "745"
     "in_charter": "NerSAN"
@@ -763,13 +763,13 @@
     "composer": "Lime"
     "length": "2:26"
     "illustrator": "inukoro"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.3"
     "in_combo": "992"
     "in_charter": "时の希 & 百九十八"
-    "hd_level": "10.4"
+    "hd_level": "11.1"
     "hd_combo": "663"
     "hd_charter": "Rikko"
     "ez_level": "4.7"
@@ -784,16 +784,16 @@
     "composer": "SunsetRay"
     "length": "2:33"
     "illustrator": "老张"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.9"
     "in_combo": "1500"
     "in_charter": "NerSAN vs. 阿爽『Collapse』"
     "hd_level": "10.6"
     "hd_combo": "773"
     "hd_charter": "阿爽『Destroy』"
-    "ez_level": "2.8"
+    "ez_level": ""
     "ez_combo": "350"
     "ez_charter": "Pcat『Scatter』"
 "Rrhar'il":
@@ -826,9 +826,9 @@
     "composer": "1112 vs. Star*"
     "length": "2:03"
     "illustrator": "老张"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.8"
     "in_combo": "450"
     "in_charter": "Jαckψ feat. Βαρβαρο?αντρα?"
@@ -847,9 +847,9 @@
     "composer": "A-39/沙包P"
     "length": "2:36"
     "illustrator": "knife美工刀"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.6"
     "in_combo": "643"
     "in_charter": "乱流に巻き込まれ"
@@ -868,9 +868,9 @@
     "composer": "Rinth_live"
     "length": "2:50"
     "illustrator": "L-sp4"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.7"
     "in_combo": "839"
     "in_charter": "奇跡の希 feat. 奇跡の従"
@@ -889,9 +889,9 @@
     "composer": "Dachs"
     "length": "2:43"
     "illustrator": "わっふゑ"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "938"
     "in_charter": "StupiGGy vs. 百九十八 ft. 野从"
@@ -901,8 +901,8 @@
     "ez_level": "4.8"
     "ez_combo": "311"
     "ez_charter": "百九十八"
-"Lyrith -迷宮リリス-":
-    "song": "Lyrith -迷宮リリス-"
+"Lyrith -迷宮リリス-":
+    "song": "Lyrith -迷宮リリス-"
     "illustration": "https://img.moegirl.org.cn/common/thumb/b/b0/Phigros_Lyrith.png/300px-Phigros_Lyrith.png"
     "illustration_big": "https://img.moegirl.org.cn/common/b/b0/Phigros_Lyrith.png"
     "chapter": "Side Story 1 忘忧宫"
@@ -910,7 +910,7 @@
     "composer": "ユメミド"
     "length": "2:27"
     "illustrator": "何呵"
-    "at_level": "16.3"
+    "at_level": "16.2"
     "at_combo": "1236"
     "at_charter": "CN_115 as \"prediCameNt\""
     "in_level": "15.9"
@@ -931,9 +931,9 @@
     "composer": "Rabpit"
     "length": "2:49"
     "illustrator": "青鸟"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "11.8"
     "in_combo": "520"
     "in_charter": "\"Demiurge\" ~ Dawn"
@@ -952,9 +952,9 @@
     "composer": "Forged Reigns"
     "length": "2:18"
     "illustrator": "Jeffery"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.7"
     "in_combo": "829"
     "in_charter": "Sillyp & Alloces"
@@ -973,9 +973,9 @@
     "composer": "Rinth_live"
     "length": "2:27"
     "illustrator": "Tsuioku"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.6"
     "in_combo": "827"
     "in_charter": "NerSAN & 百九十八"
@@ -994,10 +994,10 @@
     "composer": "kanoryo"
     "length": "2:38"
     "illustrator": "MOAI WORKS"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.9"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.1"
     "in_combo": "726"
     "in_charter": "阿爽 eat Ctymax"
     "hd_level": "10.9"
@@ -1015,9 +1015,9 @@
     "composer": "S9ryne"
     "length": "2:22"
     "illustrator": "月亮酱"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.3"
     "in_combo": "975"
     "in_charter": "BarbariaNerSAN feat. Snorkel"
@@ -1057,16 +1057,16 @@
     "composer": "Neutral Moon"
     "length": "2:19"
     "illustrator": "IvyTowers"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.6"
     "in_combo": "564"
     "in_charter": "NerSAN"
-    "hd_level": "5.6"
+    "hd_level": "9.2"
     "hd_combo": "259"
     "hd_charter": "__Additional__(Self)"
-    "ez_level": "1.7"
+    "ez_level": ""
     "ez_combo": "111"
     "ez_charter": "__Additional__(Self)"
 "mechanted":
@@ -1078,9 +1078,9 @@
     "composer": "rareguy"
     "length": "1:55"
     "illustrator": "IvyTowers"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.7"
     "in_combo": "662"
     "in_charter": "Ctymax"
@@ -1099,9 +1099,9 @@
     "composer": "BilliumMoto"
     "length": "2:36"
     "illustrator": "百九十八"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.8"
     "in_combo": "1065"
     "in_charter": "百九十八"
@@ -1120,16 +1120,16 @@
     "composer": "lixound"
     "length": "2:12"
     "illustrator": "Xquid"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.9"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.7"
     "in_combo": "1090"
     "in_charter": "百九十八"
     "hd_level": "10.8"
     "hd_combo": "623"
     "hd_charter": "Catcats"
-    "ez_level": "5.9"
+    "ez_level": ""
     "ez_combo": "384"
     "ez_charter": "Catcats"
 "Chronostasis":
@@ -1141,16 +1141,16 @@
     "composer": "黒皇帝"
     "length": "2:22"
     "illustrator": "Sand"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "15.9"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.8"
     "in_combo": "1148"
     "in_charter": "Gausbon"
-    "hd_level": "11.6"
+    "hd_level": "11.2"
     "hd_combo": "665"
     "hd_charter": "Gausbon"
-    "ez_level": "6.8"
+    "ez_level": ""
     "ez_combo": "596"
     "ez_charter": "Gausbon"
 "Infinity Heaven":
@@ -1162,9 +1162,9 @@
     "composer": "HyuN"
     "length": "2:34"
     "illustrator": "DoublePian"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.6"
     "in_combo": "1029"
     "in_charter": "晨 vs 阿爽"
@@ -1183,9 +1183,9 @@
     "composer": "HyuN feat. YURI"
     "length": "2:14"
     "illustrator": "Nabom"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.7"
     "in_combo": "918"
     "in_charter": "Gausbon"
@@ -1204,9 +1204,9 @@
     "composer": "HyuN feat. Syepias"
     "length": "2:19"
     "illustrator": "knife美工刀"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.9"
     "in_combo": "1305"
     "in_charter": "無?極"
@@ -1225,10 +1225,10 @@
     "composer": "EBIMAYO"
     "length": "2:05"
     "illustrator": "Ctymax feat. EBIMAYO"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.2"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "13.8"
     "in_combo": "873"
     "in_charter": "百九十八"
     "hd_level": "10.8"
@@ -1246,9 +1246,9 @@
     "composer": "EBIMAYO"
     "length": "2:12"
     "illustrator": "EBIMAYO"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "898"
     "in_charter": "Ctymax vs. Gausbounce"
@@ -1267,9 +1267,9 @@
     "composer": "EBIMAYO"
     "length": "2:11"
     "illustrator": "EBIMAYO"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.5"
     "in_combo": "960"
     "in_charter": "StupiGGy vs. 阿爽"
@@ -1288,9 +1288,9 @@
     "composer": "EBIMAYO"
     "length": "2:13"
     "illustrator": "Ctymax"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.4"
     "in_combo": "1011"
     "in_charter": "晨"
@@ -1309,13 +1309,13 @@
     "composer": "EBIMAYO"
     "length": "2:01"
     "illustrator": "Ctymax feat. EBIMAYO"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "15.8"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.7"
     "in_combo": "1034"
     "in_charter": "Ctymax vs. 阿爽"
-    "hd_level": "7.8"
+    "hd_level": ""
     "hd_combo": "628"
     "hd_charter": "阿爽"
     "ez_level": "4.6"
@@ -1330,9 +1330,9 @@
     "composer": "iF"
     "length": "2:07"
     "illustrator": "あおお/A-ZERO,morph"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "11.6"
     "in_combo": "581"
     "in_charter": "Arenn Saki vs. NerSAN"
@@ -1351,10 +1351,10 @@
     "composer": "kozato snow"
     "length": "2:24"
     "illustrator": "あおお/A-ZERO,morph"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "12.6"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "13.4"
     "in_combo": "459"
     "in_charter": "百九十八"
     "hd_level": "7.4"
@@ -1372,10 +1372,10 @@
     "composer": "iF"
     "length": "2:10"
     "illustrator": "あおお/A-ZERO,morph"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "13.5"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "13.7"
     "in_combo": "819"
     "in_charter": "StupiGGy"
     "hd_level": "8.7"
@@ -1414,9 +1414,9 @@
     "composer": "ginkiha"
     "length": "2:16"
     "illustrator": "打雷打人（青鸟modified）"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.8"
     "in_combo": "711"
     "in_charter": "Sillyp vs. 阿爽"
@@ -1435,9 +1435,9 @@
     "composer": "Lime"
     "length": "2:17"
     "illustrator": "谷地（青鸟modified）"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.3"
     "in_combo": "931"
     "in_charter": "Barbarianerman vs. Uvernight"
@@ -1456,10 +1456,10 @@
     "composer": "USAO"
     "length": "2:34"
     "illustrator": "谷地（青鸟modified）"
-    "at_level": "15.9"
+    "at_level": "15.8"
     "at_combo": "1444"
     "at_charter": "百九十八 feat. NerSAN"
-    "in_level": "15.7"
+    "in_level": "15.6"
     "in_combo": "1333"
     "in_charter": "Gausbon"
     "hd_level": "12.3"
@@ -1477,9 +1477,9 @@
     "composer": "HyuN & KLYDIX"
     "length": "2:11"
     "illustrator": "ZG"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.6"
     "in_combo": "540"
     "in_charter": "Likey & 198ar"
@@ -1498,9 +1498,9 @@
     "composer": "Limpid"
     "length": "2:07"
     "illustrator": "ZG"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.7"
     "in_combo": "588"
     "in_charter": "阿爽"
@@ -1519,9 +1519,9 @@
     "composer": "D_AAN"
     "length": "2:46"
     "illustrator": "ZG"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.5"
     "in_combo": "1449"
     "in_charter": "NerSAN vs. Ctymax as \"泥头鱼\""
@@ -1540,9 +1540,9 @@
     "composer": "HAMA"
     "length": "1:59"
     "illustrator": "Arahosi"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.6"
     "in_combo": "1028"
     "in_charter": "XMT小咩兔"
@@ -1561,9 +1561,9 @@
     "composer": "ぐるたみん"
     "length": "2:28"
     "illustrator": "LINUS"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.8"
     "in_combo": "1026"
     "in_charter": "其三 我所存在的证明"
@@ -1582,9 +1582,9 @@
     "composer": "アリスシャッハと魔法の楽団"
     "length": "2:45"
     "illustrator": "Lanota ? Noxy Games Inc."
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.5"
     "in_combo": "676"
     "in_charter": "Rikko & 198"
@@ -1603,9 +1603,9 @@
     "composer": "Silentroom"
     "length": "2:48"
     "illustrator": "Lanota ? Noxy Games Inc."
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.2"
     "in_combo": "1210"
     "in_charter": "Gausbon"
@@ -1624,10 +1624,10 @@
     "composer": "Nothing But Requiem feat. Aikapin & Chiyoko"
     "length": "2:47"
     "illustrator": "Lanota ? Noxy Games Inc."
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "15.4"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.5"
     "in_combo": "1084"
     "in_charter": "Nothing But Ner & Pcat"
     "hd_level": "12.2"
@@ -1708,9 +1708,9 @@
     "composer": "姜米條"
     "length": "2:16"
     "illustrator": "笔记RE"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.6"
     "in_combo": "713"
     "in_charter": "倪之所爽"
@@ -1729,13 +1729,13 @@
     "composer": "姜米條"
     "length": "2:03"
     "illustrator": "群青kurara"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.6"
     "in_combo": "755"
     "in_charter": "JKy, the inferior"
-    "hd_level": "7.9"
+    "hd_level": ""
     "hd_combo": "489"
     "hd_charter": "Ner, the inferior"
     "ez_level": "7.1"
@@ -1750,9 +1750,9 @@
     "composer": "茶鸣拾贰律"
     "length": "2:10"
     "illustrator": "茶鸣拾贰律"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.3"
     "in_combo": "706"
     "in_charter": "NerSAN sipping XMTea"
@@ -1771,12 +1771,12 @@
     "composer": "茶鸣拾贰律"
     "length": "2:27"
     "illustrator": "茶鸣拾贰律"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.7"
     "in_combo": "1102"
-    "in_charter": "Hook vs. _鉄"
+    "in_charter": "Hook vs._鉄"
     "hd_level": "10.8"
     "hd_combo": "520"
     "hd_charter": "逆流而上的小咩兔"
@@ -1792,9 +1792,9 @@
     "composer": "茶鸣拾贰律"
     "length": "2:54"
     "illustrator": "茶鸣拾贰律"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "7.1"
     "in_combo": "365"
     "in_charter": "「兔」年大吉"
@@ -1813,9 +1813,9 @@
     "composer": "茶鸣拾贰律"
     "length": "2:40"
     "illustrator": "茶鸣拾贰律"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.3"
     "in_combo": "1000"
     "in_charter": "Gino"
@@ -1834,13 +1834,13 @@
     "composer": "LeaF"
     "length": "2:25"
     "illustrator": "海产"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.8"
     "in_combo": "921"
     "in_charter": "Gausbon"
-    "hd_level": "9.4"
+    "hd_level": "9.8"
     "hd_combo": "437"
     "hd_charter": "阿爽"
     "ez_level": "4.8"
@@ -1876,9 +1876,9 @@
     "composer": "LeaF"
     "length": "2:29"
     "illustrator": "喵n葵"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.2"
     "in_combo": "689"
     "in_charter": "百九十八"
@@ -1897,9 +1897,9 @@
     "composer": "闫东炜"
     "length": "2:38"
     "illustrator": "L-sp4"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.1"
     "in_combo": "885"
     "in_charter": "阿爽 & 百九十八"
@@ -1918,9 +1918,9 @@
     "composer": "闫东炜"
     "length": "2:44"
     "illustrator": "IvyTowers"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.3"
     "in_combo": "781"
     "in_charter": "猫の信 & 百九十八"
@@ -1939,9 +1939,9 @@
     "composer": "闫东炜"
     "length": "2:59"
     "illustrator": "cycats"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.7"
     "in_combo": "1156"
     "in_charter": "Arenn Saki vs Catcats vs 百九十八"
@@ -1981,9 +1981,9 @@
     "composer": "5-HTP/李祥晖"
     "length": "1:54"
     "illustrator": "艾是Abby"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "11.7"
     "in_combo": "346"
     "in_charter": "JKy"
@@ -2002,9 +2002,9 @@
     "composer": "符白牙/SiYFics"
     "length": "2:58"
     "illustrator": "御坂果子"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.6"
     "in_combo": "669"
     "in_charter": "云正太"
@@ -2023,9 +2023,9 @@
     "composer": "Asuka"
     "length": "3:22"
     "illustrator": "TNiK"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.1"
     "in_combo": "1031"
     "in_charter": "NerSAN & 百九十八"
@@ -2044,16 +2044,16 @@
     "composer": "Friedwav"
     "length": "3:19"
     "illustrator": "何呵"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.2"
     "in_combo": "1186"
     "in_charter": "撕裂者『Alloces vs Shin』"
     "hd_level": "11.2"
     "hd_combo": "704"
     "hd_charter": "撕裂者『無極』 fixed by 晨"
-    "ez_level": "7.8"
+    "ez_level": ""
     "ez_combo": "520"
     "ez_charter": "撕裂者『無極』 fixed by 晨"
 "Aphasia":
@@ -2065,9 +2065,9 @@
     "composer": "闫东炜"
     "length": "1:56"
     "illustrator": "笔记RE"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.1"
     "in_combo": "553"
     "in_charter": "百九十八"
@@ -2086,16 +2086,16 @@
     "composer": "闫东炜"
     "length": "1:55"
     "illustrator": "喵n葵"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.4"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.2"
     "in_combo": "840"
     "in_charter": "Barbarianerman feat. 晨"
-    "hd_level": "9.8"
+    "hd_level": "11.5"
     "hd_combo": "442"
     "hd_charter": "阿爽"
-    "ez_level": "3.7"
+    "ez_level": ""
     "ez_combo": "158"
     "ez_charter": "阿爽"
 "華灯爱":
@@ -2107,16 +2107,16 @@
     "composer": "闫东炜"
     "length": "1:54"
     "illustrator": "IvyTowers"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.1"
     "in_combo": "520"
     "in_charter": "Barbarianerman"
-    "hd_level": "9.3"
+    "hd_level": "9.6"
     "hd_combo": "394"
     "hd_charter": "Gausbon"
-    "ez_level": "5.5"
+    "ez_level": ""
     "ez_combo": "318"
     "ez_charter": "Gausbon"
 "Find_Me":
@@ -2128,9 +2128,9 @@
     "composer": "K-forest"
     "length": "2:07"
     "illustrator": "YuKiMuMa"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "836"
     "in_charter": "Find_Ctymax fixed by 百九十八"
@@ -2149,9 +2149,9 @@
     "composer": "朔(Apo11o program vs. お月さま交響曲) ft. kuroa×荒巻"
     "length": "1:59"
     "illustrator": "hideo"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.9"
     "in_combo": "721"
     "in_charter": "A.S.H&晨"
@@ -2191,9 +2191,9 @@
     "composer": "rider"
     "length": "2:17"
     "illustrator": "1B"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.4"
     "in_combo": "684"
     "in_charter": "Sparkle Ctymax fixed by 百九十八"
@@ -2212,16 +2212,16 @@
     "composer": "Halv"
     "length": "2:14"
     "illustrator": "utosao"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.2"
     "in_combo": "861"
     "in_charter": "StupiGGy fixed by 百九十八"
-    "hd_level": "10.8"
+    "hd_level": "11.6"
     "hd_combo": "747"
     "hd_charter": "StupiGGy"
-    "ez_level": "5.2"
+    "ez_level": ""
     "ez_combo": "394"
     "ez_charter": "StupiGGy"
 "Snow Desert":
@@ -2233,13 +2233,13 @@
     "composer": "WyvernP"
     "length": "2:22"
     "illustrator": "knife美工刀"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "13.6"
-    "in_combo": "552"
-    "in_charter": "CN_115"
-    "hd_level": "9.6"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "13.3"
+    "in_combo": "655"
+    "in_charter": "VikingNexus"
+    "hd_level": "10.3"
     "hd_combo": "534"
     "hd_charter": "CN_115"
     "ez_level": "5.1"
@@ -2254,9 +2254,9 @@
     "composer": "NceS"
     "length": "2:17"
     "illustrator": "knife美工刀"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.8"
     "in_combo": "707"
     "in_charter": "Burn Full Catcats VS Ctymatch Girl"
@@ -2275,12 +2275,12 @@
     "composer": "LeaF"
     "length": "2:20"
     "illustrator": "Optie"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "15.6"
-    "in_combo": "684"
-    "in_charter": "阿爽 VS Arenn Saki"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.7"
+    "in_combo": "885"
+    "in_charter": "Clutter"
     "hd_level": "11.6"
     "hd_combo": "438"
     "hd_charter": "阿爽 VS Arenn Saki"
@@ -2296,9 +2296,9 @@
     "composer": "SaMZing"
     "length": "1:50"
     "illustrator": "叶藤"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.6"
     "in_combo": "387"
     "in_charter": "Gausbon ~ See you next time ~"
@@ -2317,9 +2317,9 @@
     "composer": "Ctymax vs. NceS"
     "length": "2:46"
     "illustrator": "knife美工刀"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.8"
     "in_combo": "613"
     "in_charter": "阿爽 vs. Ctymax -Haose 垃圾-"
@@ -2338,9 +2338,9 @@
     "composer": "Sound Souler"
     "length": "2:27"
     "illustrator": "Photonskyto"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "787"
     "in_charter": "Phigros Charting Team"
@@ -2359,9 +2359,9 @@
     "composer": "DarTokki"
     "length": "2:20"
     "illustrator": "TNiK"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.3"
     "in_combo": "711"
     "in_charter": "Ctymax VS 百九十八"
@@ -2380,9 +2380,9 @@
     "composer": "EmoCo."
     "length": "2:27"
     "illustrator": "NO|SER"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.5"
     "in_combo": "791"
     "in_charter": "Ctymax VS 晨"
@@ -2401,9 +2401,9 @@
     "composer": "CAP3"
     "length": "2:24"
     "illustrator": "TiNK"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.8"
     "in_combo": "708"
     "in_charter": "JKy"
@@ -2422,9 +2422,9 @@
     "composer": "WyvernP feat. Madol"
     "length": "2:25"
     "illustrator": "GAMEBAKA"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.7"
     "in_combo": "1059"
     "in_charter": "Jeitie"
@@ -2443,9 +2443,9 @@
     "composer": "Paul Bazooka"
     "length": "2:03"
     "illustrator": "START SEED"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "697"
     "in_charter": "百九十八"
@@ -2464,10 +2464,10 @@
     "composer": "tokiwa"
     "length": "2:21"
     "illustrator": "cycats"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.2"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.3"
     "in_combo": "962"
     "in_charter": "Uvernight"
     "hd_level": "10.6"
@@ -2485,10 +2485,10 @@
     "composer": "ZxNX as Delaina"
     "length": "2:10"
     "illustrator": "何呵"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.3"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.1"
     "in_combo": "724"
     "in_charter": "鲲 fixed by 百九十八"
     "hd_level": "7.5"
@@ -2506,9 +2506,9 @@
     "composer": "Tetrajectory"
     "length": "2:22"
     "illustrator": "青鸟"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "851"
     "in_charter": "HaraKuma"
@@ -2527,9 +2527,9 @@
     "composer": "Quree"
     "length": "2:09"
     "illustrator": "IvyTowers"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.1"
     "in_combo": "874"
     "in_charter": "NerSAN"
@@ -2548,9 +2548,9 @@
     "composer": "ElousΛ.-FZ"
     "length": "2:08"
     "illustrator": "DoublePian"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.2"
     "in_combo": "576"
     "in_charter": "百九十八"
@@ -2569,9 +2569,9 @@
     "composer": "Kry.exe"
     "length": "2:01"
     "illustrator": "塔塔"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.6"
     "in_combo": "785"
     "in_charter": "Bσrbσriσn∑rmσn.∑x∑"
@@ -2590,9 +2590,9 @@
     "composer": "EnFr"
     "length": "2:00"
     "illustrator": "EnFr"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.6"
     "in_combo": "852"
     "in_charter": "Two skunks (Ctymax and 晨)in Africa shouting WAHHHHHH!"
@@ -2611,9 +2611,9 @@
     "composer": "Grand Thaw / Rig?l Theatre"
     "length": "2:40"
     "illustrator": "Grand Thaw / Rig?l Theatre"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.7"
     "in_combo": "954"
     "in_charter": "Barbarianerman vs. Snorkel"
@@ -2632,9 +2632,9 @@
     "composer": "MALVA."
     "length": "2:26"
     "illustrator": "しえろ"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.5"
     "in_combo": "661"
     "in_charter": "Barbarianerman"
@@ -2653,9 +2653,9 @@
     "composer": "A-39"
     "length": "2:38"
     "illustrator": "犀牛坨动画工坊"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.3"
     "in_combo": "939"
     "in_charter": "N\\erry Xmas"
@@ -2674,9 +2674,9 @@
     "composer": "SCTL"
     "length": "2:27"
     "illustrator": "SCTL"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.5"
     "in_combo": "563"
     "in_charter": "Eastern Ailuropoda Gang"
@@ -2695,9 +2695,9 @@
     "composer": "PTB10"
     "length": "2:00"
     "illustrator": "geralt"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.7"
     "in_combo": "774"
     "in_charter": "Pat Brick Man Mr.C"
@@ -2716,9 +2716,9 @@
     "composer": "Frums"
     "length": "2:41"
     "illustrator": "百九十八"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.8"
     "in_combo": "866"
     "in_charter": "百九十八 vs. Barbarianerman"
@@ -2737,9 +2737,9 @@
     "composer": "adaptor vs DRIVE."
     "length": "2:07"
     "illustrator": "りゆうら"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.8"
     "in_combo": "1002"
     "in_charter": "Eaimo vs. CtyNer dancing wildly"
@@ -2758,9 +2758,9 @@
     "composer": "Fl00t"
     "length": "2:15"
     "illustrator": "xperz"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "855"
     "in_charter": "BarbariaNERman vs. JKy"
@@ -2779,9 +2779,9 @@
     "composer": "ルゼ"
     "length": "1:42"
     "illustrator": "A-Zero Project"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.3"
     "in_combo": "616"
     "in_charter": "縱連打の信者☆無極"
@@ -2800,9 +2800,9 @@
     "composer": "Cashew"
     "length": "2:06"
     "illustrator": "ADZUKI"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.4"
     "in_combo": "774"
     "in_charter": "with U"
@@ -2821,10 +2821,10 @@
     "composer": "Joulez"
     "length": "2:23"
     "illustrator": "ASXX"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.4"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "13.9"
     "in_combo": "729"
     "in_charter": "Barbarianerman vs. HaraKuma"
     "hd_level": "11.3"
@@ -2842,10 +2842,10 @@
     "composer": "Z ClaxX & SumaiLight"
     "length": "2:09"
     "illustrator": "佑木いずみ& Ctymax"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "13.4"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "13.6"
     "in_combo": "676"
     "in_charter": "NerSAN vs. 阿爽"
     "hd_level": "9.6"
@@ -2863,9 +2863,9 @@
     "composer": "椒盐菠萝"
     "length": "2:07"
     "illustrator": "CEM"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.2"
     "in_combo": "481"
     "in_charter": "椒盐倪尔"
@@ -2884,9 +2884,9 @@
     "composer": "KAH"
     "length": "2:25"
     "illustrator": "手鞠鈴&自動車 原付"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.2"
     "in_combo": "930"
     "in_charter": "NerSANNN"
@@ -2905,9 +2905,9 @@
     "composer": "Silentroom"
     "length": "2:39"
     "illustrator": "駿"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.4"
     "in_combo": "833"
     "in_charter": "森德雷斯 vs. 百九十八"
@@ -2926,9 +2926,9 @@
     "composer": "Sera Amagi"
     "length": "2:37"
     "illustrator": "Hachimitsu☆Boy"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "12.1"
     "in_combo": "644"
     "in_charter": "-JKy-"
@@ -2947,10 +2947,10 @@
     "composer": "Zris"
     "length": "2:07"
     "illustrator": "Eridani"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "15.4"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.5"
     "in_combo": "978"
     "in_charter": "Snorkel vs. NerSAN"
     "hd_level": "12.4"
@@ -2968,9 +2968,9 @@
     "composer": "siqlo"
     "length": "2:04"
     "illustrator": "出前 x nekomiya"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.7"
     "in_combo": "777"
     "in_charter": "TangScend"
@@ -2989,9 +2989,9 @@
     "composer": "Halv"
     "length": "2:31"
     "illustrator": "汉堡"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.5"
     "in_combo": "1000"
     "in_charter": "Phigros Charting Team"
@@ -3010,9 +3010,9 @@
     "composer": "A-39/沙包P"
     "length": "2:47"
     "illustrator": "爱39的Konya"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.5"
     "in_combo": "1239"
     "in_charter": "NerSANTA vs. BarbarianerSLEDGE"
@@ -3031,9 +3031,9 @@
     "composer": "z1on & kyrrin"
     "length": "2:32"
     "illustrator": "海产"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.2"
     "in_combo": "627"
     "in_charter": "XMT & 198"
@@ -3052,9 +3052,9 @@
     "composer": "Justin Dai"
     "length": "2:24"
     "illustrator": "艾是Abby"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.3"
     "in_combo": "505"
     "in_charter": "TimiTini →\"X\"← 阿爽"
@@ -3073,10 +3073,10 @@
     "composer": "李化禹"
     "length": "2:34"
     "illustrator": "笔记RE"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.5"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.6"
     "in_combo": "996"
     "in_charter": "Barbarianerman & NerSAN in the ICU"
     "hd_level": "8.1"
@@ -3094,9 +3094,9 @@
     "composer": "Ray Nautica & Reku Mochizuki"
     "length": "2:13"
     "illustrator": "Keiby.comics"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.6"
     "in_combo": "866"
     "in_charter": "Future BarbarXMT"
@@ -3115,9 +3115,9 @@
     "composer": "Daison"
     "length": "2:37"
     "illustrator": "鲸弑"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "650"
     "in_charter": "百九十八"
@@ -3136,9 +3136,9 @@
     "composer": "MYUKKE."
     "length": "2:04"
     "illustrator": "cycats"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.7"
     "in_combo": "755"
     "in_charter": "百九十八 busting 阿爽"
@@ -3157,9 +3157,9 @@
     "composer": "TangJuan"
     "length": "1:56"
     "illustrator": "cycats"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.5"
     "in_combo": "470"
     "in_charter": "Likey & 百九十八"
@@ -3178,9 +3178,9 @@
     "composer": "rN"
     "length": "2:29"
     "illustrator": "rN @ 湯元画伯"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.5"
     "in_combo": "793"
     "in_charter": "Jeitie & CorruptedEntity『Hollow』"
@@ -3199,10 +3199,10 @@
     "composer": "U-ske feat. 棗いつき"
     "length": "1:42"
     "illustrator": "绿风マルト"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "15.1"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.8"
     "in_combo": "865"
     "in_charter": "小咩兔、参上"
     "hd_level": "9.6"
@@ -3220,16 +3220,16 @@
     "composer": "月见静华 vs. LUNARiUM"
     "length": "2:29"
     "illustrator": "TNiK"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.8"
     "in_combo": "969"
     "in_charter": "iv"
     "hd_level": "9.4"
     "hd_combo": "533"
     "hd_charter": "XMT小咩兔"
-    "ez_level": "4.8"
+    "ez_level": ""
     "ez_combo": "419"
     "ez_charter": "XMT小咩兔"
 "On And On!!":
@@ -3241,10 +3241,10 @@
     "composer": "ETIA. feat. Jenga"
     "length": "2:00"
     "illustrator": "わっふゑ"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": "14.7"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "14.9"
     "in_combo": "830"
     "in_charter": "NerSAN feat. Takanashi Rikko"
     "hd_level": "10.3"
@@ -3262,9 +3262,9 @@
     "composer": "Cosmograph"
     "length": "2:04"
     "illustrator": "Photonskyto"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.6"
     "in_combo": "613"
     "in_charter": "TangScend -Err0rederci-"
@@ -3283,9 +3283,9 @@
     "composer": "Aoi"
     "length": "2:04"
     "illustrator": "Ctymax vs. TNiK feat. 出前"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.7"
     "in_combo": "1066"
     "in_charter": "s.t.p.g."
@@ -3304,9 +3304,9 @@
     "composer": "Turquoise(DRIVE.+Nota)"
     "length": "1:58"
     "illustrator": "林语"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.6"
     "in_combo": "768"
     "in_charter": "Brave Eaimo"
@@ -3325,9 +3325,9 @@
     "composer": "Abyss Idols"
     "length": "2:35"
     "illustrator": "Sak"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "13.5"
     "in_combo": "700"
     "in_charter": "JKy"
@@ -3346,9 +3346,9 @@
     "composer": "Abyss Idols"
     "length": "1:53"
     "illustrator": "Robins"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.4"
     "in_combo": "660"
     "in_charter": "Raiky Season"
@@ -3367,9 +3367,9 @@
     "composer": "Plastic Fruits"
     "length": "2:12"
     "illustrator": "青鸟"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.5"
     "in_combo": "1140"
     "in_charter": "XMT小咩兔"
@@ -3409,9 +3409,9 @@
     "composer": "Scaler & Mestie & 果丸哒呦"
     "length": "2:50"
     "illustrator": "圆规compasses"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "14.5"
     "in_combo": "972"
     "in_charter": "Believe Ctymax & TimiTini"
@@ -3430,9 +3430,9 @@
     "composer": "VeetaCrush vs. [itsu(feat.itsu)]"
     "length": "2:45"
     "illustrator": "林语"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.2"
     "in_combo": "899"
     "in_charter": "晨"
@@ -3451,9 +3451,9 @@
     "composer": "BLACK 0"
     "length": "2:47"
     "illustrator": "BLACK 0"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
     "in_level": "15.3"
     "in_combo": "1304"
     "in_charter": "KillJoy"
@@ -3463,6 +3463,69 @@
     "ez_level": "5.6"
     "ez_combo": "284"
     "ez_charter": "Ctymax"
+"Poison AND÷OR Affection":
+    "song": "Poison AND÷OR Affection"
+    "illustration": "undefined"
+    "illustration_big": "undefined"
+    "chapter": "单曲精选集"
+    "bpm": "120"
+    "composer": "LeaF"
+    "length": "2:09"
+    "illustrator": "笔记RE/海产"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.5"
+    "in_combo": "888"
+    "in_charter": "1÷98"
+    "hd_level": "9.6"
+    "hd_combo": "278"
+    "hd_charter": "&ikko"
+    "ez_level": ""
+    "ez_combo": "140"
+    "ez_charter": "R/kko"
+"Upshift":
+    "song": "Upshift"
+    "illustration": "undefined"
+    "illustration_big": "undefined"
+    "chapter": "单曲精选集"
+    "bpm": "155"
+    "composer": "Iriss-Frantzz"
+    "length": "2:21"
+    "illustrator": "Iriss=Frantzz=s-don"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.3"
+    "in_combo": "946"
+    "in_charter": "_鉄"
+    "hd_level": "10.8"
+    "hd_combo": "545"
+    "hd_charter": "CorruptedEntity&野从"
+    "ez_level": ""
+    "ez_combo": "630"
+    "ez_charter": "Lumiere"
+"インフェルノシティ":
+    "song": "インフェルノシティ"
+    "illustration": "undefined"
+    "illustration_big": "undefined"
+    "chapter": "单曲精选集"
+    "bpm": "215"
+    "composer": "Ponchi  feat. はぁち"
+    "length": "2:04"
+    "illustrator": "LESYEF&藍瀬まなみ"
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": "15.7"
+    "in_combo": "1275"
+    "in_charter": "Alloces"
+    "hd_level": "11.2"
+    "hd_combo": "578"
+    "hd_charter": "Alloces feat. Uvernight"
+    "ez_level": ""
+    "ez_combo": "352"
+    "ez_charter": "Su1fuR"
 "Introduction":
     "song": "Introduction"
     "illustration": "https://img.moegirl.org.cn/common/thumb/1/13/Introduction.png/300px-Introduction.png"
@@ -3472,15 +3535,15 @@
     "composer": "姜米條&ElousΛ.-FZ"
     "length": "2:30"
     "illustrator": "L-sp4"
-    "at_level": 0,
-    "at_combo": 0,
-    "at_charter": 0,
-    "in_level": 0,
-    "in_combo": 0,
-    "in_charter": 0,
-    "hd_level": 0,
-    "hd_combo": 0,
-    "hd_charter": 0,
+    "at_level": 0
+    "at_combo": 0
+    "at_charter": 0
+    "in_level": 0
+    "in_combo": 0
+    "in_charter": 0
+    "hd_level": 0
+    "hd_combo": 0
+    "hd_charter": 0
     "ez_level": "-"
     "ez_combo": "180"
     "ez_charter": "Barbarianerman"
