@@ -150,7 +150,6 @@ class get {
         if (name) {
             let showconfig = this.getData('showconfig')
             let infolist = this.getData('infolist')
-            let ranklist = this.getData('ranklist')
             let msgRes = []
             let cnt = 0
             for (let i = 1; ; ++i) {
@@ -168,21 +167,21 @@ class get {
                         msgRes[cnt++] = showconfig[`${i}`]['val']
                         break
                     } case '定级': {
-                        /**特殊类型：定级(物量) 须保持ranklist和infolist一致 */
-                        if (ranklist[`${name}`]['SP']) {
-                            msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_level']}    物量: ${infolist[`${name}`]['sp_combo']}    谱师： ${infolist[`${name}`]['sp_charter']}\n`
+                        /**特殊类型：定级(物量)  */
+                        if (infolist[`${name}`]['sp_level']) {
+                            msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_level']}    物量: ${infolist[`${name}`]['sp_combo']}\n谱师: ${infolist[`${name}`]['sp_charter']}\n`
                         }
-                        if (ranklist[`${name}`]['AT']) {
-                            msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_level']}    物量: ${infolist[`${name}`]['at_combo']}    谱师： ${infolist[`${name}`]['at_charter']}\n`
+                        if (infolist[`${name}`]['at_level']) {
+                            msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_level']}    物量: ${infolist[`${name}`]['at_combo']}\n谱师: ${infolist[`${name}`]['at_charter']}\n`
                         }
-                        if (ranklist[`${name}`]['IN']) {
-                            msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['in_combo']}    谱师： ${infolist[`${name}`]['in_charter']}\n`
+                        if (infolist[`${name}`]['in_level']) {
+                            msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['in_combo']}\n谱师: ${infolist[`${name}`]['in_charter']}\n`
                         }
-                        if (ranklist[`${name}`]['HD']) {
-                            msgRes[cnt++] = `HD: ${infolist[`${name}`]['hd_level']}    物量: ${infolist[`${name}`]['hd_combo']}    谱师： ${infolist[`${name}`]['hd_charter']}\n`
+                        if (infolist[`${name}`]['hd_level']) {
+                            msgRes[cnt++] = `HD: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['hd_combo']}\n谱师: ${infolist[`${name}`]['hd_charter']}\n`
                         }
-                        if (ranklist[`${name}`]['EZ']) {
-                            msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_level']}    物量: ${infolist[`${name}`]['ez_combo']}    谱师： ${infolist[`${name}`]['ez_charter']}\n`
+                        if (infolist[`${name}`]['ez_level']) {
+                            msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_level']}    物量: ${infolist[`${name}`]['ez_combo']}\n谱师: ${infolist[`${name}`]['ez_charter']}\n`
                         }
                         break
                     } case '曲名': {
