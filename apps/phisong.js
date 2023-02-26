@@ -1,18 +1,13 @@
 
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
-import common from "../../../lib/common/common.js";
-import { segment } from 'oicq';
+import common from "../../../lib/common/common.js"
+import { segment } from 'oicq'
 
-var ranklist = [] //定级数据
 var userdata = []
-var dftdata = []
-var songlist = [] //曲名排序的歌曲列表
+var songlist = get.getData('songlist') //曲名排序的歌曲列表
 let showconfig = get.getData('showconfig')
 let infolist = get.getData('infolist')
-ranklist = get.getData('ranklist')
-songlist = get.getData('songlist')
-let WhoIsInputing = []
 
 export class phirks extends plugin {
     constructor() {
@@ -45,6 +40,10 @@ export class phirks extends plugin {
                 {
                     reg: '^#phi计算等效rks.*$',
                     fnc: 'comtorks'
+                },
+                {
+                    reg: '^#phi计算推分rks.*$',
+                    fnc: 'comtuifenrks'
                 }
             ]
         })
@@ -54,7 +53,7 @@ export class phirks extends plugin {
 
     /**歌曲图鉴 */
     async serch(e) {
-        ranklist = get.getData('ranklist')
+        infolist = get.getData('infolist')
         songlist = get.getData('songlist')
         let msg = e.msg.replace(/#phi曲(\s*)/g, "")
         let name = get.songsnick(msg)
@@ -72,10 +71,11 @@ export class phirks extends plugin {
             e.reply("只有主人可以设置别名哦！")
         }
         let msg = e.msg.replace(/#phi设置别名(\s*)/g, "")
-        msg = msg.split(/(\s*)--->(\s*)/g)
+        msg = msg.replace(/(\s*)--->(\s*)/g," ---> ")
+        msg = msg.split(" ---> ")
         if (msg[1]) {
             msg[0] = get.songsnick(msg[0])
-            if (ranklist[`${msg[0]}`]) {
+            if (infolist[`${msg[0]}`]) {
                 get.setnick(`${msg[0]}`, `${msg[1]}`)
                 e.reply("设置完成！")
             } else {
@@ -99,7 +99,7 @@ export class phirks extends plugin {
     async find(e) {
         showconfig = await get.getData('showconfig')
         infolist = await get.getData('infolist')
-        ranklist = await get.getData('ranklist')
+        infolist = await get.getData('infolist')
         songlist = await get.getData('songlist')
         let msg = e.msg.replace(/#phi查询(\s*)/g, "")
         if (msg.includes("章节")) {
@@ -176,19 +176,19 @@ export class phirks extends plugin {
                         e.reply(`没有找到符合要求的曲目！QAQ`, true)
                         return true
                     }
-                    let torank = ranklist[`${mic}`]['AT']
+                    let torank = infolist[`${mic}`]['at_level']
                     if (isask[0] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = ranklist[`${mic}`]['IN']
+                    torank = infolist[`${mic}`]['in_level']
                     if (isask[1] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = ranklist[`${mic}`]['HD']
+                    torank = infolist[`${mic}`]['hd_level']
                     if (isask[2] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = ranklist[`${mic}`]['EZ']
+                    torank = infolist[`${mic}`]['ez_level']
                     if (isask[3] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
@@ -201,28 +201,32 @@ export class phirks extends plugin {
     }
 
     async comtorks(e) {
-        ranklist = get.getData('ranklist')
+        infolist = get.getData('infolist')
         let msg = e.msg.replace(/#phi计算等效rks(\s*)/g, "")
-        let dfic = 0
-        if(msg.includes('-AT')) {
-            dfic = 'AT'
-            msg = msg.replace(/(\s*)-AT/g,"")
-        } else if(msg.includes('-IN')) {
-            dfic = 'IN'
-            msg = msg.replace(/(\s*)-IN/g,"")
-        } else if(msg.includes('-HD')) {
-            dfic = 'HD'
-            msg = msg.replace(/(\s*)-HD/g,"")
-        } else if(msg.includes('-EZ')) {
-            dfic = 'EZ'
-            msg = msg.replace(/(\s*)-EZ/g,"")
-        }
-        let data = msg.split(/\s\|\s/g)
-        if (!data[1] || typeof (Number(data[1])) != 'number') {
-            e.reply(`错误读入！请在曲目名称和 acc 之间以 | 分隔！`)
+        let diffic = 0
+        if (msg.includes('-AT')) {
+            diffic = 'AT'
+            msg = msg.replace(/(\s*)-AT/g, "")
+        } else if (msg.includes('-IN')) {
+            diffic = 'IN'
+            msg = msg.replace(/(\s*)-IN/g, "")
+        } else if (msg.includes('-HD')) {
+            diffic = 'HD'
+            msg = msg.replace(/(\s*)-HD/g, "")
+        } else if (msg.includes('-EZ')) {
+            diffic = 'EZ'
+            msg = msg.replace(/(\s*)-EZ/g, "")
+        } else {
+            e.reply(`没有指定难度我怎么算嘛！请在末尾加上 -难度 哦！`)
             return true
         }
-        logger.info(`${data}  ${dfic}`)
+        msg = msg.replace(/(\s*)\|(\s*)/g," | ")
+        let data = msg.split(" | ")
+        if (!data[1] || typeof (Number(data[1])) != 'number') {
+            e.reply(`请在曲目名称和 acc 之间以 | 分隔！`)
+            return true
+        }
+        logger.info(`${data}  ${diffic}`)
         if (data[1] < 1 || data[1] > 100) {
             e.reply(`请输入正确的acc！单位%。`)
             return true
@@ -230,13 +234,128 @@ export class phirks extends plugin {
         let mic = get.songsnick(data[0])
         if (!mic) {
             e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
-        } else if(!ranklist[`${mic}`][`${dfic}`]) {
-            e.reply(`${mic} 没有 ${dfic} 这个难度吧喂！请在难度前面加 -`)
+        } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) {
+            e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
         } else {
             await e.reply(get.getsongsinfo(mic))
-            e.reply(`计算结果：${Number(dxrks(data[1],ranklist[`${mic}`][`${dfic}`])).toFixed(4)}`, true)
+            e.reply(`计算结果：${Number(dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_level`])).toFixed(4)}`, true)
         }
         return true
+    }
+
+    /**计算推分所须 rks
+     * 格式 #phi计算推分rks 曲名 | acc | 当前rsk -难度
+     * 或 #phi计算推分rks 曲名 -难度 （对于已有rks数据的用户）
+     */
+    async comtuifenrks(e) {
+        infolist = get.getData('infolist')
+        let msg = e.msg.replace(/#phi计算推分rks(\s*)/g, "")
+        let diffic = 0
+        if (msg.includes('-AT')) {
+            diffic = 'AT'
+            msg = msg.replace(/(\s*)-AT/g, "")
+        } else if (msg.includes('-IN')) {
+            diffic = 'IN'
+            msg = msg.replace(/(\s*)-IN/g, "")
+        } else if (msg.includes('-HD')) {
+            diffic = 'HD'
+            msg = msg.replace(/(\s*)-HD/g, "")
+        } else if (msg.includes('-EZ')) {
+            diffic = 'EZ'
+            msg = msg.replace(/(\s*)-EZ/g, "")
+        } else {
+            e.reply(`没有指定难度我怎么算嘛！请在末尾加上 -难度 哦！`)
+            return true
+        }
+        userdata = get.getData(`${e.user_id}`)
+        /**判断是否有本地rks数据 */
+        let local = 0
+        if (userdata && (userdata["finish"] || userdata["sutdown"])) {
+            local = 1
+        }
+        msg = msg.replace(/(\s*)\|(\s*)/g," | ")
+        let data = msg.split(" | ")
+        /**是否输入rks */
+        if (!data[2]) {
+            if (!local) {
+                e.reply(`糟糕，读入出错了呢！请按照 【名称 | 当前acc | 当前rks】 的格式发送哦！`)
+                return true
+            } else {
+                /**使用本地rks数据 */
+                let mic = get.songsnick(data[0])
+                data[1] = userdata[`${mic}`][`${diffic}`]
+                data[2] = userdata["b19"]["rank"]
+                if (!mic) {
+                    e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
+                    return true
+                } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) {
+                    e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
+                    return true
+                } else {
+                    e.reply(get.getsongsinfo(mic))
+                    /**先计算等效rks */
+                    let rks = dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) > data[2]
+                    if (rks >= data[2]) {
+                        /**如果大于等于当前rks */
+                        e.reply(`这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`)
+                        return true
+                    } if (infolist[`${mic}`][`${diffic.toLowerCase()}_level`] < data[2]) {
+                        /**如果歌曲本身定数小于rks */
+                        e.reply(`这首歌的定数太低了吧！你的 b19 的等效 rks 都有 ${data[2]} 了好嘛！`)
+                        return true
+                    } else {
+                        /**计算推分所需rks */
+                        let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) + 55
+                        e.reply(`至少要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！`,true)
+                        return true
+                    }
+                }
+            }
+        }
+        if (data[1] < 17 && data[2] > 17) {
+            let tem = data[1]
+            data[1] = data[2]
+            data[2] = tem
+        }
+        if (data[2] > 17) {
+            e.reply(`rks怎么可能会大于 17 啊！`)
+            return true
+        }
+        if (data[1] > 100) {
+            e.reply(`acc 为什么会比 100 还高啊！`)
+            return true
+        }
+        let mic = get.songsnick(data[0])
+        if (!mic) {
+            e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
+            return true
+        } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) {
+            e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
+            return true
+        } else {
+            e.reply(get.getsongsinfo(mic))
+            /**先计算等效rks */
+            let rks = dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_level`])
+            logger.info(data)
+            if (rks >= data[2]) {
+                /**如果大于等于当前rks */
+                e.reply(`这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`)
+                return true
+            } if (infolist[`${mic}`][`${diffic.toLowerCase()}_level`] < data[2]) {
+                /**如果歌曲本身定数小于rks */
+                if (local) {
+                    e.reply(`这首歌的定数太低了吧！如果需要使用本地 rks 信息的话请不要输入 rks 哦！`)
+                } else {
+                    e.reply(`这首歌的定数太低了吧！在没有你的全部 rks 信息之前是不可能算出来的吧！`)
+                }
+                return true
+            } else {
+                /**计算推分所需rks */
+                let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) + 55
+                e.reply(`需要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！由于 phigros 的平均数计算规则，所需的 acc 可能会更小哦！`,true)
+                return true
+            }
+        }
     }
 }
 
@@ -248,35 +367,59 @@ function getsongsinfo(mic) {
         let msgRes = []
         let cnt = 0
         for (let i = 1; ; ++i) {
-            if (showconfig[`${i}`]['vis'] == 'done') {
+            if (showconfig[`${i}`]['vis'] == '结束') {
+                /**结束 */
                 break
             }
             switch (showconfig[`${i}`]['vis']) {
-                case 'img': {
-                    // msgRes[cnt++] = get.getimg(name)
+                case '曲绘': {
+                    /**特殊类型：曲绘 */
+                    msgRes[cnt++] = this.getimg(name, true)
                     break
-                } case 'msg': {
+                } case '文字': {
+                    /**特殊类型：文字 */
                     msgRes[cnt++] = showconfig[`${i}`]['val']
                     break
-                } case 'rank': {
-                    if (ranklist[`${name}`]['SP']) {
-                        msgRes[cnt++] = `SP: ${ranklist[`${name}`]['SP']}    物量: ${infolist[`${name}`]['SP']}\n`
-                    }
-                    if (ranklist[`${name}`]['AT']) {
-                        msgRes[cnt++] = `AT: ${ranklist[`${name}`]['AT']}    物量: ${infolist[`${name}`]['AT']}\n`
-                    }
-                    if (ranklist[`${name}`]['IN']) {
-                        msgRes[cnt++] = `IN: ${ranklist[`${name}`]['IN']}    物量: ${infolist[`${name}`]['IN']}\n`
-                    }
-                    if (ranklist[`${name}`]['HD']) {
-                        msgRes[cnt++] = `HD: ${ranklist[`${name}`]['HD']}    物量: ${infolist[`${name}`]['HD']}\n`
-                    }
-                    if (ranklist[`${name}`]['EZ']) {
-                        msgRes[cnt++] = `EZ: ${ranklist[`${name}`]['EZ']}    物量: ${infolist[`${name}`]['EZ']}\n`
-                    }
+                } case '定级': {
+                    /**特殊类型：定级(物量)  */
+                        if (infolist[`${name}`]['sp_level']) {
+                            msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_level']}    物量: ${infolist[`${name}`]['sp_combo']}\n谱师: ${infolist[`${name}`]['sp_charter']}\n`
+                        }
+                        if (infolist[`${name}`]['at_level']) {
+                            msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_level']}    物量: ${infolist[`${name}`]['at_combo']}\n谱师: ${infolist[`${name}`]['at_charter']}\n`
+                        }
+                        if (infolist[`${name}`]['in_level']) {
+                            msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['in_combo']}\n谱师: ${infolist[`${name}`]['in_charter']}\n`
+                        }
+                        if (infolist[`${name}`]['hd_level']) {
+                            msgRes[cnt++] = `HD: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['hd_combo']}\n谱师: ${infolist[`${name}`]['hd_charter']}\n`
+                        }
+                        if (infolist[`${name}`]['ez_level']) {
+                            msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_level']}    物量: ${infolist[`${name}`]['ez_combo']}\n谱师: ${infolist[`${name}`]['ez_charter']}\n`
+                        }
                     break
-                } default: {
-                    msgRes[cnt++] = infolist[`${name}`][`${showconfig[`${i}`]['vis']}`]
+                } case '曲名': {
+                    msgRes[cnt++] = infolist[`${name}`][`song`]
+                    break
+                } case '曲师': {
+                    msgRes[cnt++] = infolist[`${name}`][`composer`]
+                    break
+                } case '长度': {
+                    msgRes[cnt++] = infolist[`${name}`][`length`]
+                    break
+                } case '章节': {
+                    msgRes[cnt++] = infolist[`${name}`][`chapter`]
+                    break
+                } case '画师': {
+                    msgRes[cnt++] = infolist[`${name}`][`illustrator`]
+                    break
+                } case 'BPM': {
+                    msgRes[cnt++] = infolist[`${name}`][`bpm`]
+                    break
+                }
+                default: {
+                    /**错误类型 */
+                    logger.info(`[phi 插件] 未找到 ${showconfig[`${i}`]['vis']} 所对应的信息`)
                 }
             }
         }
@@ -290,6 +433,8 @@ function dxrks(acc, rank) {
     if (acc == 100) {
         /**满分原曲定数即为有效rks */
         return rank
+    } else if(acc < 55) {
+        return 0
     } else {
         /**非满分计算公式 [(((acc - 55) / 45) ^ 2) * 原曲定数] */
         return rank * (((acc - 55) / 45) * ((acc - 55) / 45))

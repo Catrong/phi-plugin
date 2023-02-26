@@ -3,12 +3,12 @@ import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js";
 
-var ranklist = [] //定级列表
+var infolist = [] //定级列表
 var userdata = [] //当前用户的acc数据
 var dftdata = [] //初始化的数据
 var songlist = [] //曲名顺序的列表
 
-ranklist = get.getData('ranklist')
+infolist = get.getData('infolist')
 songlist = get.getData('songlist')
 
 //插件作者QQ号：1436375503
@@ -54,11 +54,11 @@ export class phirks extends plugin {
         if (userdata) {
             if (userdata["finish"] || userdata["sutdown"]) {
                 /**更新统计数据 */
-                ranklist = get.getData('ranklist')
+                infolist = get.getData('infolist')
                 songlist = get.getData('songlist')
-                userdata["phi"] = { 'name': 0, 'dffic': 0, 'acc': 0, 'rank': 0 }
+                userdata["phi"] = { 'name': 0, 'diffic': 0, 'acc': 0, 'rank': 0 }
                 for (let i = 1; i <= 21; ++i) {
-                    userdata[`b${i}`] = { 'name': 0, 'dffic': 0, 'acc': 0, 'rank': 0 }
+                    userdata[`b${i}`] = { 'name': 0, 'diffic': 0, 'acc': 0, 'rank': 0 }
                 }
                 for (let i = 0; ; ++i) {
                     let mic = songlist[i]
@@ -78,12 +78,13 @@ export class phirks extends plugin {
                 if (name) {
 
                     let img = get.getimg(name)
-                    let dffic = userdata["phi"]["dffic"]
-                    let rank = ranklist[`${name}`][`${dffic}`]
+                    let diffic = userdata["phi"]["diffic"]
+                    let rank = infolist[`${name}`][`${diffic.toLowerCase()}_level`]
                     let acc = userdata["phi"]["acc"] * 100
                     let rks = dxrks(acc, rank)
+                    userdata[`phi`]["rank"] = rks
                     ans += rks
-                    msgRes[0] = [`您的φ1曲目为：\n`, img, `\n曲名：${name}\n难度：${dffic}  定数：${rank}\nacc：${acc}  等效rks：${rks}`]
+                    msgRes[0] = [`您的φ1曲目为：\n`, img, `\n曲名：${name}\n难度：${diffic}  定数：${rank}\nacc：${acc}  等效rks：${rks}`]
                 } else {
                     msgRes[0] = `您还没有任何一首歌达到满分呢！\n{{{(>_<)}}}\n要不要去试试收割一首谱面呢？任何难度的都可以哦！\n( •̀ ω •́ )✧`
                 }
@@ -96,14 +97,15 @@ export class phirks extends plugin {
                         break
                     }
                     let img = get.getimg(name)
-                    let dffic = userdata[`b${i}`]["dffic"]
-                    let rank = ranklist[`${name}`][`${dffic}`]
+                    let diffic = userdata[`b${i}`]["diffic"]
+                    let rank = infolist[`${name}`][`${diffic.toLowerCase()}_level`]
                     let acc = userdata[`b${i}`]["acc"] * 100
                     let rks = dxrks(acc, rank)
+                    userdata[`b${i}`]["rank"] = rks
                     if (i <= 19) {
                         ans += rks
                     }
-                    msgRes[i] = [`您的Best#${i}曲目为：\n`, img, `\n曲名：${name}\n难度：${dffic}  定数：${rank}\nacc：${acc.toFixed(2)}%  等效rks：${rks.toFixed(2)}`]
+                    msgRes[i] = [`您的Best#${i}曲目为：\n`, img, `\n曲名：${name}\n难度：${diffic}  定数：${rank}\nacc：${acc.toFixed(2)}%  等效rks：${rks.toFixed(2)}`]
                 }
 
                 /**数据分析 */
@@ -115,6 +117,10 @@ export class phirks extends plugin {
 
                 /**发送合并消息 */
                 e.reply(await common.makeForwardMsg(e, msgRes, ""), true)
+
+                
+                /**写入文件，更新rks信息 */
+                get.setData(`${e.user_id}`, userdata)
             } else {
                 e.reply(`您的分数信息不完全哦！请私聊完成录入进程吧！`)
             }
@@ -129,7 +135,7 @@ export class phirks extends plugin {
     async inputacc(e) {
 
         /**更新yaml数据（支持热更新） */
-        ranklist = get.getData('ranklist')
+        infolist = get.getData('infolist')
         songlist = get.getData('songlist')
 
         if (e.isGroup) {
@@ -195,6 +201,7 @@ export class phirks extends plugin {
                 /**获取到输入的acc */
                 if (!findacc(e)) {
                     await e.reply(`设置成功！`)
+                    /**结束输入状态 */
                     userdata["sutdown"] = 0
                     userdata["puting"] = 0
                     userdata["finish"] = 1
@@ -267,11 +274,11 @@ function ask(e, mic) {
     } else {
         /**发送正在设置的曲目，序号存储在 userdata['puting'] 中 */
         let msgRes = []
-        if (ranklist[`${mic}`]['AT']) {
+        if (infolist[`${mic}`]['at_level']) {
             e.reply(`提示，这一首是有AT等级的哦！`)
-            msgRes = [`请发送\n`, get.getimg(mic), `\n${ranklist[`${mic}`]['name']}的 AT IN HD EZ acc，例： 98.99 100 100 100`]
+            msgRes = [`请发送\n`, get.getimg(mic), `\n${infolist[`${mic}`]['song']}的 AT IN HD EZ acc，例： 98.99 100 100 100`]
         } else {
-            msgRes = [`请发送\n`, get.getimg(mic), `\n${ranklist[`${mic}`]['name']}的 IN HD EZ acc，例： 98.99 100 100`]
+            msgRes = [`请发送\n`, get.getimg(mic), `\n${infolist[`${mic}`]['song']}的 IN HD EZ acc，例： 98.99 100 100`]
         }
         e.reply(msgRes)
     }
@@ -293,7 +300,7 @@ function findacc(e) {
         acc[i] /= 100  /**实际存储为0-1的浮点数 */
     }
     /**写入到数组 */
-    if (ranklist[`${mic}`]['AT']) {
+    if (infolist[`${mic}`]['at_level']) {
         acc[3] = Number(acc[3])
         if (!acc[3]) acc[3] = 0
         if (typeof acc[3] != 'number' || acc[3] < 0 || acc[3] > 100) {
@@ -339,14 +346,14 @@ function savedata(e, mic) {
 
 
 /**将结果插入rks计算排序（插排） */
-function insrt(mic, dffic) {
+function insrt(mic, diffic) {
     let fnal = 0
-    let acc = userdata[`${mic}`][dffic]
-    let score = dxrks(acc * 100, ranklist[`${mic}`][dffic])
+    let acc = userdata[`${mic}`][diffic]
+    let score = dxrks(acc * 100, infolist[`${mic}`][`${diffic.toLowerCase()}_level`])
     /**更新phi1 */
     if (acc === 1) {
         if (score > userdata['phi']['rank']) {
-            userdata['phi'] = { 'name': ranklist[`${mic}`]['name'], 'dffic': dffic, 'acc': acc, 'rank': score }
+            userdata['phi'] = { 'name': infolist[`${mic}`]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
         }
     }
     /**查找需要插入的位置（fnal） */
@@ -363,7 +370,7 @@ function insrt(mic, dffic) {
         userdata[`b${i}`] = userdata[`b${i - 1}`]
     }
     //                        曲名                                 难度            acc        有效rks
-    userdata[`b${fnal}`] = { 'name': ranklist[`${mic}`]['name'], 'dffic': dffic, 'acc': acc, 'rank': score }
+    userdata[`b${fnal}`] = { 'name': infolist[`${mic}`]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
     return true
 }
 
@@ -372,7 +379,10 @@ function insrt(mic, dffic) {
 function dxrks(acc, rank) {
     if (acc == 100) {
         /**满分原曲定数即为有效rks */
-        return rank
+        return Number(rank)
+    } else if(acc < 55) {
+        /**无效acc */
+        return 0
     } else {
         /**非满分计算公式 [(((acc - 55) / 45) ^ 2) * 原曲定数] */
         return rank * (((acc - 55) / 45) * ((acc - 55) / 45))
