@@ -153,14 +153,16 @@ export class phirks extends plugin {
             userdata["finish"] = 0
             userdata["sutdown"] = 0
             e.reply(`开始录入全部成绩（按照曲名排序）……\n停止输入请发送 #rks结束 ，暂停请发 #rks暂停。\n发送acc请按照顺序同时发送每一等级的acc！\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
-            ask(e)
+            mic = songlist["0"]
+            ask(e, mic)
         } else if (!userdata["finish"]) {
             /**断点续读 */
             e.reply(`检测到您有未完成的输入……即将从上一次的记录开始……\n如需修改请先 #rks结束 再 #rksacc，暂停请发 #rks暂停。\n如需删除原有数据请 #rks数据删除 。\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
             userdata["sutdown"] = 0
             userdata["finish"] = 0
             get.setData(`${e.user_id}`, userdata)
-            ask(e)
+            mic = songlist[`${userdata["puting"]}`]
+            ask(e, mic)
         } else {
             userdata = get.getData(`${e.user_id}`)
             /**旧用户修改成绩 */
@@ -215,9 +217,7 @@ export class phirks extends plugin {
                     /**匹配失败 */
                     userdata["puting"] = 0
                     get.setData(`${e.user_id}`, userdata)
-                    await e.reply(`waaa，没有找到${e.msg}的曲目信息！QAQ`)
-                    await e.reply(get.getimg('对不起.gif'))
-                    await e.reply(`结束请发送 #rks结束 哦！`)
+                    await e.reply(`没有找到${e.msg}的曲目信息！QAQ\n结束请发送 #rks结束 哦！`)
                 } else {
                     /**匹配成功，打上标记，下次读入acc */
                     userdata["puting"] = get.getsongsxh(mic)
@@ -327,6 +327,24 @@ function findacc(e) {
 /**保存数据 */
 function savedata(e, mic) {
     /**有效rks的前提为 acc >= 70% */
+    if (!userdata[`${mic}`]) {
+        
+        if (mic.includes("Another Me") {
+            /**兼容旧名称  */
+            if （mic == "Another Me (KALPA)") {
+                mic = "Another Me by D_AAN"
+            } else if (mic == "Another Me (Rising Sun Traxx)") {
+                mic = "Another Me by Neutral Moon"
+            }
+            if (!userdata[`${mic}`]) {
+                logger.info(`[phi插件] 更新rks时未找到${mic}`)
+                return true
+            }
+        } else {
+            logger.info(`[phi插件] 更新rks时未找到${mic}`)
+            return true
+        }
+    }
     if (userdata[`${mic}`]['AT'] >= 0.7) {
         insrt(mic, 'AT')
     }
