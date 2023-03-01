@@ -329,7 +329,7 @@ function savedata(e, mic) {
     /**有效rks的前提为 acc >= 70% */
     if (!userdata[`${mic}`]) {
         
-        if (mic.includes("Another Me") {
+        if (mic.includes("Another Me")) {
             /**兼容旧名称  */
             if （mic == "Another Me (KALPA)") {
                 mic = "Another Me by D_AAN"
