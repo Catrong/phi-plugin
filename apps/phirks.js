@@ -331,7 +331,7 @@ function savedata(e, mic) {
         
         if (mic.includes("Another Me")) {
             /**兼容旧名称  */
-            if （mic == "Another Me (KALPA)") {
+            if (mic == "Another Me (KALPA)") {
                 mic = "Another Me by D_AAN"
             } else if (mic == "Another Me (Rising Sun Traxx)") {
                 mic = "Another Me by Neutral Moon"
