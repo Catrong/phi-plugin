@@ -1,4 +1,5 @@
 
+
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js";
@@ -7,6 +8,8 @@ var infolist = [] //定级列表
 var userdata = [] //当前用户的acc数据
 var dftdata = [] //初始化的数据
 var songlist = [] //曲名顺序的列表
+var readlist = [[]] //待读入列表
+var idlist = [] //待读入用户
 
 infolist = get.getData('infolist')
 songlist = get.getData('songlist')
@@ -36,6 +39,10 @@ export class phirks extends plugin {
                     fnc: 'inputacc'
                 },
                 {
+                    reg: '^#rks修改$',
+                    fnc: 'changerks'
+                },
+                {
                     reg: '^#rks数据删除$',
                     fnc: 'del'
                 },
@@ -52,7 +59,7 @@ export class phirks extends plugin {
     async comscore(e) {
         userdata = get.getData(`${e.user_id}`)
         if (userdata) {
-            if (userdata["finish"] || userdata["sutdown"]) {
+            if (userdata["finish"]) {
                 /**更新统计数据 */
                 infolist = get.getData('infolist')
                 songlist = get.getData('songlist')
@@ -60,14 +67,10 @@ export class phirks extends plugin {
                 for (let i = 1; i <= 21; ++i) {
                     userdata[`b${i}`] = { 'name': 0, 'diffic': 0, 'acc': 0, 'rank': 0 }
                 }
-                for (let i = 0; ; ++i) {
-                    let mic = songlist[i]
-                    if (!mic) {
-                        break
-                    }
-                    savedata(e, mic)
+                for (let i in songlist) {
+                    savedata(e, songlist[i])
                 }
-                get.setData(`${e.user_id}`, userdata)
+                
                 /**根据数据计算rks */
                 let cnt = 0
                 let msgRes = []
@@ -118,9 +121,7 @@ export class phirks extends plugin {
                 /**发送合并消息 */
                 e.reply(await common.makeForwardMsg(e, msgRes, ""), true)
 
-                
-                /**写入文件，更新rks信息 */
-                get.setData(`${e.user_id}`, userdata)
+
             } else {
                 e.reply(`您的分数信息不完全哦！请私聊完成录入进程吧！`)
             }
@@ -145,35 +146,38 @@ export class phirks extends plugin {
         }
         userdata = get.getData(`${e.user_id}`)
         if (!userdata) {
-            /**新用户 */
-            dftdata = get.getData('dftdata')
-            get.setData(`${e.user_id}`, dftdata)
-            userdata = get.getData(`${e.user_id}`)
-            userdata["puting"] = 0
-            userdata["finish"] = 0
-            userdata["sutdown"] = 0
-            e.reply(`开始录入全部成绩（按照曲名排序）……\n停止输入请发送 #rks结束 ，暂停请发 #rks暂停。\n发送acc请按照顺序同时发送每一等级的acc！\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
-            mic = songlist["0"]
-            ask(e, mic)
-        } else if (!userdata["finish"]) {
-            /**断点续读 */
-            e.reply(`检测到您有未完成的输入……即将从上一次的记录开始……\n如需修改请先 #rks结束 再 #rksacc，暂停请发 #rks暂停。\n如需删除原有数据请 #rks数据删除 。\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
-            userdata["sutdown"] = 0
-            userdata["finish"] = 0
-            get.setData(`${e.user_id}`, userdata)
-            mic = songlist[`${userdata["puting"]}`]
-            ask(e, mic)
-        } else {
-            userdata = get.getData(`${e.user_id}`)
-            /**旧用户修改成绩 */
-            e.reply(`我在听，请告诉我需要修改的曲目名称哦`)
-            userdata['updata'] = 1
-            userdata['finish'] = 0
-            userdata['sutdown'] = 0
-            get.setData(`${e.user_id}`, userdata)
+            userdata = {}
         }
+        userdata["finish"] = 0
+        FindtoRead(e)
+        e.reply(`开始录入未读入的曲目成绩（按照曲名排序）……\n停止输入请发送 #rks结束 ，暂停请发 #rks暂停。\n发送acc请按照顺序同时发送每一等级的acc！\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
+        mic = readlist[idlist.indexOf(e.user_id)][0]
+        get.setData(e.user_id)
+        ask(e, mic)
         return true
     }
+
+    /**修改rks #rks修改 */
+    async changerks(e) {
+        let msg = e.msg.replace(/#rks修改(\s*)/g, "")
+        let song = get.songsnick(msg)
+        if (!song) {
+            e.reply(`没有找到 ${msg} 有关的曲目信息QAQ！`)
+            return true
+        }
+        userdata = get.getData(`${e.user_id}`)
+        if (!userdata) {
+            e.reply('没有检测到您的存档哦！将自动为您创建……')
+            userdata = {}
+        }
+        FindtoRead(e, song)
+        userdata["finish"] = 0
+        mic = readlist[idlist.indexOf(e.user_id)][0]
+        get.setData(e.user_id)
+        ask(e, mic)
+        return true
+    }
+
 
     /**正在输入acc */
     async inputing(e) {
@@ -184,68 +188,27 @@ export class phirks extends plugin {
         } else if (!userdata) {
             /**无数据 */
             return false
-        } else if (userdata["finish"] || userdata["sutdown"]) {
+        } else if (userdata["finish"]) {
             /**或并非正在输入 */
             return false
         } else if (e.msg.includes('rks结束')) {
             /**结束输入，不允许从断点继续，但允许修改单曲 */
             /**打上标记 */
-            userdata["sutdown"] = 0
-            userdata["puting"] = 0
             userdata["finish"] = 1
-            userdata["updata"] = 0
-
+            readlist[idlist.indexOf(e.user_id)] = []
             get.setData(`${e.user_id}`, userdata)
             e.reply(`录入工作已结束！现在可以发送 #rks 查询数据了！\n可以发送 #rksacc 更新单曲成绩！`)
-        } else if (userdata['updata']) {
-            /**修改单曲部分 */
-            if (userdata["puting"]) {
-                /**获取到输入的acc */
-                if (!findacc(e)) {
-                    await e.reply(`设置成功！`)
-                    /**结束输入状态 */
-                    userdata["sutdown"] = 0
-                    userdata["puting"] = 0
-                    userdata["finish"] = 1
-                    userdata["updata"] = 0
-                    get.setData(`${e.user_id}`, userdata)
-                }
-            } else {
-                /**获取到输入的曲名 */
-                let mic = get.songsnick(e.msg)
-                if (!mic) {
-                    /**匹配失败 */
-                    userdata["puting"] = 0
-                    get.setData(`${e.user_id}`, userdata)
-                    await e.reply(`没有找到${e.msg}的曲目信息！QAQ\n结束请发送 #rks结束 哦！`)
-                } else {
-                    /**匹配成功，打上标记，下次读入acc */
-                    userdata["puting"] = get.getsongsxh(mic)
-                    get.setData(`${e.user_id}`, userdata)
-                    ask(e, mic)
-                }
-            }
-            return true
-        } else if (e.msg.includes('rks暂停')) {
-            /**中断输入，不允许修改单曲，但允许从断点继续 */
-            /**打上标记 */
-            userdata["sutdown"] = 1
-            userdata["finish"] = 0
-
-            get.setData(`${e.user_id}`, userdata)
-            e.reply(`录入工作已暂停！现在可以发送 #rks 查询数据了！\n可以发送 #rksacc 继续录入成绩！`)
         } else {
             /**正常读入acc */
-            let now = userdata["puting"]
-            let mic = songlist[`${now}`]
-            
+            let mic = readlist[idlist.indexOf(e.user_id)][0]
+
             if (findacc(e)) {
                 return true
             }
-            ++userdata['puting']
+            readlist[idlist.indexOf(e.user_id)].shift()
+
             get.setData(`${e.user_id}`, userdata)
-            now = userdata["puting"]
-            mic = songlist[`${now}`]
+            mic = readlist[idlist.indexOf(e.user_id)][0]
             ask(e, mic)
         }
         return true
@@ -287,8 +250,7 @@ function ask(e, mic) {
 
 /**获取信息中的acc 失败返回true */
 function findacc(e) {
-    let now = userdata["puting"]  /**当前读取的曲目 */
-    let mic = songlist[`${now}`]  /**获取曲目名称 */
+    let mic = readlist[idlist.indexOf(e.user_id)][0]  /**获取读取的曲目名称 */
     let acc = e.msg.split(/\s+/)  /**处理得出输入 acc */
     for (let i = 0; i <= 2; ++i) {  /**检测输入是否合法 */
         acc[i] = Number(acc[i])
@@ -309,12 +271,18 @@ function findacc(e) {
         }
         acc[3] /= 100
         logger.info(`${acc[0]}  ${acc[1]}  ${acc[2]}  ${acc[3]}`)
+        if (!userdata[mic]) {
+            userdata[mic] = { 'AT': 0, 'IN': 0, 'HD': 0, 'EZ': 0 }
+        }
         userdata[`${mic}`]['AT'] = acc[0]
         userdata[`${mic}`]['IN'] = acc[1]
         userdata[`${mic}`]['HD'] = acc[2]
         userdata[`${mic}`]['EZ'] = acc[3]
     } else {
         logger.info(`${acc[0]}  ${acc[1]}  ${acc[2]}`)
+        if (!userdata[mic]) {
+            userdata[mic] = { 'IN': 0, 'HD': 0, 'EZ': 0 }
+        }
         userdata[`${mic}`]['IN'] = acc[0]
         userdata[`${mic}`]['HD'] = acc[1]
         userdata[`${mic}`]['EZ'] = acc[2]
@@ -328,7 +296,7 @@ function findacc(e) {
 function savedata(e, mic) {
     /**有效rks的前提为 acc >= 70% */
     if (!userdata[`${mic}`]) {
-        
+
         if (mic.includes("Another Me")) {
             /**兼容旧名称  */
             if (mic == "Another Me (KALPA)") {
@@ -337,11 +305,9 @@ function savedata(e, mic) {
                 mic = "Another Me by Neutral Moon"
             }
             if (!userdata[`${mic}`]) {
-                logger.info(`[phi插件] 更新rks时未找到${mic}`)
                 return true
             }
         } else {
-            logger.info(`[phi插件] 更新rks时未找到${mic}`)
             return true
         }
     }
@@ -357,8 +323,7 @@ function savedata(e, mic) {
     if (userdata[`${mic}`]['EZ'] >= 0.7) {
         insrt(mic, 'EZ')
     }
-    /**写入文件 */
-    get.setData(`${e.user_id}`, userdata)
+    
     return true
 }
 
@@ -368,23 +333,29 @@ function insrt(mic, diffic) {
     let fnal = 0
     let acc = userdata[`${mic}`][diffic]
     let score = dxrks(acc * 100, infolist[`${mic}`][`${diffic.toLowerCase()}_level`])
+
+    
+
     /**更新phi1 */
     if (acc === 1) {
-        if (score > userdata['phi']['rank']) {
+        if (!userdata.phi || score > userdata['phi']['rank']) {
             userdata['phi'] = { 'name': infolist[`${mic}`]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
         }
     }
     /**查找需要插入的位置（fnal） */
     for (let i = 1; i <= 21; ++i) {
-        if (userdata[`b${i}`]['rank'] < score) {
+        if (!userdata[`b${i}`] || userdata[`b${i}`]['rank'] < score) {
             fnal = i
             break
         }
     }
     /**不会对b21产生影响直接返回 */
-    if (!fnal) return true  
+    if (!fnal) return true
     /**更新b21 */
     for (let i = 21; i > fnal; --i) {
+        if (!userdata[`b${i - 1}`]) {
+            continue
+        }
         userdata[`b${i}`] = userdata[`b${i - 1}`]
     }
     //                        曲名                                 难度            acc        有效rks
@@ -398,7 +369,7 @@ function dxrks(acc, rank) {
     if (acc == 100) {
         /**满分原曲定数即为有效rks */
         return Number(rank)
-    } else if(acc < 55) {
+    } else if (acc < 55) {
         /**无效acc */
         return 0
     } else {
@@ -407,3 +378,28 @@ function dxrks(acc, rank) {
     }
 }
 
+
+function FindtoRead(e, mic) {
+    let num = idlist.indexOf(e.user_id)
+    if (num == -1) {
+        num = idlist.length
+        idlist.push(e.user_id)
+    }
+
+    if (mic) {
+        let song = get.songsnick(mic)
+        if (!song) {
+            return true
+        }
+        readlist[num] = []
+        readlist[num].push(song)
+        return true
+    }
+
+    for (let i in songlist) {
+        if (!userdata[songlist[i]]) {
+            readlist.push(songlist[i])
+        }
+    }
+    return true
+}
