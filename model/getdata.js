@@ -94,17 +94,13 @@ class get {
     /**获取曲绘/图片 ，曲名为原名 是否为大图 */
     getimg(img, isBig) {
         // name = 'phi'
-        let song = this.songsnick(img)
-        let url = 0
-        if (song) {
-            let infolist = this.getData('infolist')
-            if(isBig) {
-                url = infolist[`${img}`][`illustration_big`]
-            } else {
-                url = infolist[`${img}`][`illustration`]
-            }
+        let infolist = this.getData('infolist')
+        let url
+        if(isBig) {
+            url = infolist[`${img}`][`illustration_big`]
+        } else {
+            url = infolist[`${img}`][`illustration`]
         }
-        logger.info('[phi插件 getimg] 未找到' + img)
         if (url) {
             return segment.image(url)
         } else {
@@ -138,21 +134,14 @@ class get {
     /**匹配歌曲名称，根据参数返回原曲名称 */
     songsnick(mic) {
         let songnick = this.getData('nicklist')
-        let nickconfig = this.getData('nickconfig')
-        if (songnick[mic]) {
-            return songnick[mic]
-        } else if (nickconfig[mic]) {
-            return nickconfig[mic]
-        }
-        logger.info('[phi插件 songsnick] 未找到' + mic)
-        return false
+        return songnick[mic]
     }
 
     /**设置别名 原名, 别名 */
     setnick(mic, nick) {
-        let songnick = this.getData('nickconfig')
+        let songnick = this.getData('nicklist')
         songnick[`${nick}`] = `${mic}`
-        this.setData('nickconfig', nickconfig)
+        this.setData('nicklist', songnick)
     }
 
     /**获取歌曲介绍，曲名支持别名，格式支持修改/config/showconfig.yaml热更新 */
