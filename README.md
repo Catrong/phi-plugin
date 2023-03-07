@@ -11,9 +11,9 @@ git clone https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
 #### 功能
 | 功能名称  |  功能说明  |
 |-------| ----- |
-| #rksacc|开始输入acc，会根据已有数据判断输入模式（支持中断、单曲修改）|
+| #rksacc|开始输入未输入的acc|
 | #rks结束|输入acc状态下有效，结束输入状态，可以进行查分|
-| #rks修改 曲名|修改acc|
+| #rks修改 曲名|修改单曲acc|
 | #rks|查询rks，目前会提供得出的phi1及b21结果，日后会加入推分建议、打歌统计等|
 | #rks数据删除|删除本地个人数据|
 | #phi曲xxx|查询phigros中某一曲目的图鉴，支持设定别名，支持修改图鉴格式|
