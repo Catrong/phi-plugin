@@ -95,17 +95,23 @@ class get {
     getimg(img, isBig) {
         // name = 'phi'
         let infolist = this.getData('infolist')
-        let url
-        if(isBig) {
-            url = infolist[`${img}`][`illustration_big`]
-        } else {
-            url = infolist[`${img}`][`illustration`]
+        let song = this.songsnick(img)
+        if (song) {
+            let url
+            if(isBig) {
+                url = infolist[`${img}`][`illustration_big`]
+            } else {
+                url = infolist[`${img}`][`illustration`]
+            }
         }
-        if (url) {
-            return segment.image(url)
-        } else {
-            return segment.image(`/plugins/phi-plugin/resources/otherimg/${img}`)
-        }
+        logger.info('未找到 ' + img)
+        return false
+        
+        //if (url) {
+        //    return segment.image(url)
+        //} else {
+        //    return segment.image(`/plugins/phi-plugin/resources/otherimg/${img}`)
+        //}
     }
 
 
@@ -131,17 +137,23 @@ class get {
     //     return infolist[`${mic}`]['version']
     // }
 
-    /**匹配歌曲名称，根据参数返回原曲名称 */
+    /**匹配歌曲名称，根据参数返回原曲名称 list优先级大于config */
     songsnick(mic) {
         let songnick = this.getData('nicklist')
-        return songnick[mic]
+        let nickconfig = this.getData('nickconfig')
+        if (songnick[mic]) {
+            return songnick[mic]
+        } else if (nickconfig[mic]) {
+            return nickconfig[mic]
+        }
+        return false
     }
 
     /**设置别名 原名, 别名 */
     setnick(mic, nick) {
-        let songnick = this.getData('nicklist')
-        songnick[`${nick}`] = `${mic}`
-        this.setData('nicklist', songnick)
+        let nickconfig = this.getData('nickconfig')
+        nickconfig[`${nick}`] = `${mic}`
+        this.setData('nickconfig', nickconfig)
     }
 
     /**获取歌曲介绍，曲名支持别名，格式支持修改/config/showconfig.yaml热更新 */
