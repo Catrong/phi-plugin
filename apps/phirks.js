@@ -38,7 +38,7 @@ export class phirks extends plugin {
                     fnc: 'inputacc'
                 },
                 {
-                    reg: '^#rks修改$',
+                    reg: '^#rks修改(.*)$',
                     fnc: 'changerks'
                 },
                 {
