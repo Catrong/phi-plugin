@@ -96,8 +96,8 @@ class get {
         // name = 'phi'
         let infolist = this.getData('infolist')
         let song = this.songsnick(img)
+        let url = 0
         if (song) {
-            let url
             if(isBig) {
                 url = infolist[`${img}`][`illustration_big`]
             } else {
