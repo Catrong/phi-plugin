@@ -104,11 +104,12 @@ class get {
                 url = infolist[`${img}`][`illustration`]
             }
         }
+        
+        if (url) {
+            return segment.image(url)
+        }
         logger.info('未找到 ' + img)
         return false
-        
-        //if (url) {
-        //    return segment.image(url)
         //} else {
         //    return segment.image(`/plugins/phi-plugin/resources/otherimg/${img}`)
         //}
