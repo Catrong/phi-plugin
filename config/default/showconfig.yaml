@@ -1,55 +1,30 @@
 
-#修改请严格按照本格式，数字需要严格从1开始排序
-#vis为标记
-#目前支持的标记有 曲绘 文字 曲名 章节 曲师 画师 长度 BPM 定级 结束
-#vis为结束则停止
-#vis如果不为 文字 则val值对其无影响
+#修改请严格按照本格式
 
-1:
-    vis: "曲绘"
-    val: 0
-2:
-    vis: "文字"
-    val: "\n"
-3:
-    vis: "曲名"
-    val: 0
-4:
-    vis: "文字"
-    val: "\n所属章节："
-5:
-    vis: "章节"
-    val: 0
-6:
-    vis: "文字"
-    val: "\n曲师："
-7:
-    vis: "曲师"
-    val: 0
-8:
-    vis: "文字"
-    val: "\n画师："
-9:
-    vis: "画师"
-    val: 0
-10:
-    vis: "文字"
-    val: "\n长度："
-11:
-    vis: "长度"
-    val: 0
-12:
-    vis: "文字"
-    val: "    BPM："
-13:
-    vis: "BPM"
-    val: 0
-14:
-    vis: "文字"
-    val: "\n"
-15:
-    vis: "定级"
-    val: 0
-16:
-    vis: "结束"
-    val: 0
+#目前支持的标记有
+#illustration   曲绘
+#name           曲名
+#chapter        章节
+#bpm            BPM
+#composer       曲师
+#length         时长
+#illustrator    画师
+#level          定级
+
+#如果非以上值将会直接输出内容
+
+- illustration
+- '\n'
+- name
+- '\n所属章节：'
+- chapter
+- '\n曲师：'
+- composer
+- '\n画师：'
+- illustrator
+- '\n长度：'
+- length
+- '    BPM：'
+- bpm
+- '\n'
+- level

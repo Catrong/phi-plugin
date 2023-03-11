@@ -117,6 +117,11 @@ export class phirks extends plugin {
                 }
                 msgRes[cnt++] = `您的理论rks值为： ${(ans / 20).toFixed(2)}\n如果得出结果与游戏内显示相差0.01的话是acc显示值的误差，还望理解\n(´。＿。｀)`
 
+                let totnodata = Findnodata(e).length
+                if (totnodata) {
+                    msgRes[cnt++] = `您还有${totnodata}首歌曲没有数据哦！快发送 #rksacc 去输入吧！`
+                }
+
                 /**发送合并消息 */
                 e.reply(await common.makeForwardMsg(e, msgRes, ""), true)
 
@@ -148,10 +153,10 @@ export class phirks extends plugin {
             userdata = {}
         }
         userdata["finish"] = 0
+        get.setData(`${e.user_id}`,userdata)
         FindtoRead(e)
-        e.reply(`开始录入未读入的曲目成绩（按照曲名排序）……\n停止输入请发送 #rks结束 ，暂停请发 #rks暂停。\n发送acc请按照顺序同时发送每一等级的acc！\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
-        mic = readlist[idlist.indexOf(e.user_id)][0]
-        get.setData(e.user_id)
+        e.reply(`开始录入未读入的${readlist[idlist.indexOf(e.user_id)].length}首曲目成绩（按照曲名排序）……\n停止输入请发送 #rks结束 ，暂停请发 #rks暂停。\n发送acc请按照顺序同时发送每一等级的acc！\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
+        let mic = readlist[idlist.indexOf(e.user_id)][0]
         ask(e, mic)
         return true
     }
@@ -172,7 +177,7 @@ export class phirks extends plugin {
         FindtoRead(e, song)
         userdata["finish"] = 0
         mic = readlist[idlist.indexOf(e.user_id)][0]
-        get.setData(e.user_id)
+        get.setData(`${e.user_id}`, userdata)
         ask(e, mic)
         return true
     }
@@ -377,28 +382,39 @@ function dxrks(acc, rank) {
     }
 }
 
-
+/**寻找需要读取的曲目 */
 function FindtoRead(e, mic) {
+    userdata = get.getData(`${e.user_id}`)
+    songlist = get.getData('songlist')
+
     let num = idlist.indexOf(e.user_id)
     if (num == -1) {
         num = idlist.length
         idlist.push(e.user_id)
     }
-
+    readlist[num] = []
     if (mic) {
         let song = get.songsnick(mic)
         if (!song) {
             return true
         }
-        readlist[num] = []
         readlist[num].push(song)
         return true
     }
+    readlist[num] = Findnodata(e)
+    return true
+}
 
+
+/**遍历没有数据的歌曲，返回数组 */
+function Findnodata(e) {
+    userdata = get.getData(`${e.user_id}`)
+    songlist = get.getData('songlist')
+    var nodata = []
     for (let i in songlist) {
         if (!userdata[songlist[i]]) {
-            readlist.push(songlist[i])
+            nodata.push(songlist[i])
         }
     }
-    return true
+    return nodata
 }

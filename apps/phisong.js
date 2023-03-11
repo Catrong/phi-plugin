@@ -56,13 +56,24 @@ export class phirks extends plugin {
         infolist = get.getData('infolist')
         songlist = get.getData('songlist')
         let msg = e.msg.replace(/#phi曲(\s*)/g, "")
-        let name = get.songsnick(msg)
-        if (name) {
-            let msgRes = get.getsongsinfo(name)
-            e.reply(msgRes, true)
+        let songs = get.songsnick(msg)
+        if (songs) {
+            let msgRes
+            if (songs.length == 1) {
+                msgRes = get.getsongsinfo(songs[0])
+                e.reply(msgRes, true)
+            } else {
+                msgRes = []
+                e.reply(`找到了${songs.length}首歌曲！`, true)
+                for (var i in songs) {
+                    msgRes[i] = get.getsongsinfo(songs[i])
+                }
+                e.reply(await common.makeForwardMsg(e, msgRes, ""))
+            }
         } else {
-            await e.reply(`未找到${msg}的相关曲目信息QAQ\n可以输入 #phi申请 原曲名称 ---> 别名 来向主人提出命名申请哦！`, true)
+            e.reply(`未找到${msg}的相关曲目信息QAQ\n可以输入 #phi申请 原曲名称 ---> 别名 来向主人提出命名申请哦！`, true)
         }
+        return true
     }
 
     /**设置别名 */
@@ -71,7 +82,7 @@ export class phirks extends plugin {
             e.reply("只有主人可以设置别名哦！")
         }
         let msg = e.msg.replace(/#phi设置别名(\s*)/g, "")
-        msg = msg.replace(/(\s*)--->(\s*)/g," ---> ")
+        msg = msg.replace(/(\s*)--->(\s*)/g, " ---> ")
         msg = msg.split(" ---> ")
         if (msg[1]) {
             msg[0] = get.songsnick(msg[0])
@@ -220,7 +231,7 @@ export class phirks extends plugin {
             e.reply(`没有指定难度我怎么算嘛！请在末尾加上 -难度 哦！`)
             return true
         }
-        msg = msg.replace(/(\s*)\|(\s*)/g," | ")
+        msg = msg.replace(/(\s*)\|(\s*)/g, " | ")
         let data = msg.split(" | ")
         if (!data[1] || typeof (Number(data[1])) != 'number') {
             e.reply(`请在曲目名称和 acc 之间以 | 分隔！`)
@@ -273,7 +284,7 @@ export class phirks extends plugin {
         if (userdata && (userdata["finish"] || userdata["sutdown"])) {
             local = 1
         }
-        msg = msg.replace(/(\s*)\|(\s*)/g," | ")
+        msg = msg.replace(/(\s*)\|(\s*)/g, " | ")
         let data = msg.split(" | ")
         /**是否输入rks */
         if (!data[2]) {
@@ -306,7 +317,7 @@ export class phirks extends plugin {
                     } else {
                         /**计算推分所需rks */
                         let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) + 55
-                        e.reply(`至少要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！`,true)
+                        e.reply(`至少要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！`, true)
                         return true
                     }
                 }
@@ -352,7 +363,7 @@ export class phirks extends plugin {
             } else {
                 /**计算推分所需rks */
                 let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) + 55
-                e.reply(`需要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！由于 phigros 的平均数计算规则，所需的 acc 可能会更小哦！`,true)
+                e.reply(`需要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！由于 phigros 的平均数计算规则，所需的 acc 可能会更小哦！`, true)
                 return true
             }
         }
@@ -366,60 +377,53 @@ function getsongsinfo(mic) {
     if (name) {
         let msgRes = []
         let cnt = 0
-        for (let i = 1; ; ++i) {
-            if (showconfig[`${i}`]['vis'] == '结束') {
-                /**结束 */
-                break
-            }
-            switch (showconfig[`${i}`]['vis']) {
-                case '曲绘': {
+        for (var i in showconfig) {
+            switch (showconfig[i]) {
+                case 'illustration': {
                     /**特殊类型：曲绘 */
                     msgRes[cnt++] = this.getimg(name, true)
                     break
-                } case '文字': {
-                    /**特殊类型：文字 */
-                    msgRes[cnt++] = showconfig[`${i}`]['val']
-                    break
-                } case '定级': {
+                } case 'level': {
                     /**特殊类型：定级(物量)  */
-                        if (infolist[`${name}`]['sp_level']) {
-                            msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_level']}    物量: ${infolist[`${name}`]['sp_combo']}\n谱师: ${infolist[`${name}`]['sp_charter']}\n`
-                        }
-                        if (infolist[`${name}`]['at_level']) {
-                            msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_level']}    物量: ${infolist[`${name}`]['at_combo']}\n谱师: ${infolist[`${name}`]['at_charter']}\n`
-                        }
-                        if (infolist[`${name}`]['in_level']) {
-                            msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['in_combo']}\n谱师: ${infolist[`${name}`]['in_charter']}\n`
-                        }
-                        if (infolist[`${name}`]['hd_level']) {
-                            msgRes[cnt++] = `HD: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['hd_combo']}\n谱师: ${infolist[`${name}`]['hd_charter']}\n`
-                        }
-                        if (infolist[`${name}`]['ez_level']) {
-                            msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_level']}    物量: ${infolist[`${name}`]['ez_combo']}\n谱师: ${infolist[`${name}`]['ez_charter']}`
-                        }
+                    if (infolist[`${name}`]['sp_level']) {
+                        msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_level']}    物量: ${infolist[`${name}`]['sp_combo']}\n谱师: ${infolist[`${name}`]['sp_charter']}\n`
+                    }
+                    if (infolist[`${name}`]['at_level']) {
+                        msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_level']}    物量: ${infolist[`${name}`]['at_combo']}\n谱师: ${infolist[`${name}`]['at_charter']}\n`
+                    }
+                    if (infolist[`${name}`]['in_level']) {
+                        msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['in_combo']}\n谱师: ${infolist[`${name}`]['in_charter']}\n`
+                    }
+                    if (infolist[`${name}`]['hd_level']) {
+                        msgRes[cnt++] = `HD: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['hd_combo']}\n谱师: ${infolist[`${name}`]['hd_charter']}\n`
+                    }
+                    if (infolist[`${name}`]['ez_level']) {
+                        msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_level']}    物量: ${infolist[`${name}`]['ez_combo']}\n谱师: ${infolist[`${name}`]['ez_charter']}`
+                    }
                     break
-                } case '曲名': {
+                } case 'name': {
                     msgRes[cnt++] = infolist[`${name}`][`song`]
                     break
-                } case '曲师': {
+                } case 'composer': {
                     msgRes[cnt++] = infolist[`${name}`][`composer`]
                     break
-                } case '长度': {
+                } case 'length': {
                     msgRes[cnt++] = infolist[`${name}`][`length`]
                     break
-                } case '章节': {
+                } case 'chapter': {
                     msgRes[cnt++] = infolist[`${name}`][`chapter`]
                     break
-                } case '画师': {
+                } case 'illustrator': {
                     msgRes[cnt++] = infolist[`${name}`][`illustrator`]
                     break
-                } case 'BPM': {
+                } case 'bpm': {
                     msgRes[cnt++] = infolist[`${name}`][`bpm`]
                     break
                 }
                 default: {
-                    /**错误类型 */
-                    logger.info(`[phi 插件] 未找到 ${showconfig[`${i}`]['vis']} 所对应的信息`)
+                    /**特殊类型：文字 */
+                    msgRes[cnt++] = showconfig[i]
+                    break
                 }
             }
         }
@@ -433,7 +437,7 @@ function dxrks(acc, rank) {
     if (acc == 100) {
         /**满分原曲定数即为有效rks */
         return rank
-    } else if(acc < 55) {
+    } else if (acc < 55) {
         return 0
     } else {
         /**非满分计算公式 [(((acc - 55) / 45) ^ 2) * 原曲定数] */

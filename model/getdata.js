@@ -152,8 +152,16 @@ class get {
 
     /**设置别名 原名, 别名 */
     setnick(mic, nick) {
+        logger.info(`${mic}  ${nick}`)
         let nickconfig = this.getData('nickconfig')
-        nickconfig[`${nick}`] = `${mic}`
+        if(!nickconfig) {
+            nickconfig = {}
+        }
+        if(!nickconfig[nick]) {
+            nickconfig[nick] = []
+        }
+        nickconfig[nick].push(mic)
+
         this.setData('nickconfig', nickconfig)
     }
 
@@ -165,21 +173,21 @@ class get {
             let infolist = this.getData('infolist')
             let msgRes = []
             let cnt = 0
-            for (let i = 1; ; ++i) {
-                if (showconfig[`${i}`]['vis'] == '结束') {
-                    /**结束 */
-                    break
-                }
-                switch (showconfig[`${i}`]['vis']) {
-                    case '曲绘': {
+            // illustration   曲绘
+            // name           曲名
+            // chapter        章节
+            // bpm            BPM
+            // composer       曲师
+            // length         时长
+            // illustrator    画师
+            // level          定级
+            for (var i in showconfig) {
+                switch (showconfig[i]) {
+                    case 'illustration': {
                         /**特殊类型：曲绘 */
                         msgRes[cnt++] = this.getimg(name, true)
                         break
-                    } case '文字': {
-                        /**特殊类型：文字 */
-                        msgRes[cnt++] = showconfig[`${i}`]['val']
-                        break
-                    } case '定级': {
+                    } case 'level': {
                         /**特殊类型：定级(物量)  */
                         if (infolist[`${name}`]['sp_level']) {
                             msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_level']}    物量: ${infolist[`${name}`]['sp_combo']}\n谱师: ${infolist[`${name}`]['sp_charter']}\n`
@@ -197,28 +205,29 @@ class get {
                             msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_level']}    物量: ${infolist[`${name}`]['ez_combo']}\n谱师: ${infolist[`${name}`]['ez_charter']}`
                         }
                         break
-                    } case '曲名': {
+                    } case 'name': {
                         msgRes[cnt++] = infolist[`${name}`][`song`]
                         break
-                    } case '曲师': {
+                    } case 'composer': {
                         msgRes[cnt++] = infolist[`${name}`][`composer`]
                         break
-                    } case '长度': {
+                    } case 'length': {
                         msgRes[cnt++] = infolist[`${name}`][`length`]
                         break
-                    } case '章节': {
+                    } case 'chapter': {
                         msgRes[cnt++] = infolist[`${name}`][`chapter`]
                         break
-                    } case '画师': {
+                    } case 'illustrator': {
                         msgRes[cnt++] = infolist[`${name}`][`illustrator`]
                         break
-                    } case 'BPM': {
+                    } case 'bpm': {
                         msgRes[cnt++] = infolist[`${name}`][`bpm`]
                         break
                     }
                     default: {
-                        /**错误类型 */
-                        logger.info(`[phi 插件] 未找到 ${showconfig[`${i}`]['vis']} 所对应的信息`)
+                        /**特殊类型：文字 */
+                        msgRes[cnt++] = showconfig[i]
+                        break
                     }
                 }
             }
