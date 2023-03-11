@@ -31,7 +31,7 @@ class get {
         let path
         if (chos.includes('list')) {
             path = `${this.infoPath}`
-        } else if(chos.includes('config')) {
+        } else if (chos.includes('config')) {
             path = `${this.configPath}`
             try {
                 if (!fs.existsSync(`${path}${chos}.yaml`)) { return YAML.parse(fs.readFileSync(`${this.defaultPath}${chos}.yaml`, 'utf8')) }
@@ -44,7 +44,7 @@ class get {
             path = `${this.userPath}`
         }
         try {
-            if (!fs.existsSync(`${path}${chos}.yaml`)) { return false}
+            if (!fs.existsSync(`${path}${chos}.yaml`)) { return false }
             return YAML.parse(fs.readFileSync(`${path}${chos}.yaml`, 'utf8'))
         } catch (error) {
             logger.error(`[phi插件][${chos}].yaml 读取失败 ${error}`)
@@ -57,7 +57,7 @@ class get {
         let path
         if (chos.includes('list')) {
             path = `${this.infoPath}`
-        } else if(chos.includes('config')) {
+        } else if (chos.includes('config')) {
             path = `${this.configPath}`
         } else {
             path = `${this.userPath}`
@@ -98,13 +98,13 @@ class get {
         let song = this.songsnick(img)
         let url = 0
         if (song) {
-            if(isBig) {
+            if (isBig) {
                 url = infolist[`${img}`][`illustration_big`]
             } else {
                 url = infolist[`${img}`][`illustration`]
             }
         }
-        
+
         if (url) {
             return segment.image(url)
         }
@@ -126,26 +126,28 @@ class get {
         }
     }
 
-    /**获取章节信息，曲名为原名 */
-    songschap(mic) {
-        let infolist = this.getData('infolist')
-        return infolist[`${mic}`]['chapter']
-    }
 
-    /**获取上架时间，曲名为原名 */
-    // songsvison(mic) {
-    //     let infolist = this.getData('infolist')
-    //     return infolist[`${mic}`]['version']
-    // }
-
-    /**匹配歌曲名称，根据参数返回原曲名称 list优先级大于config */
+    /**匹配歌曲名称，根据参数返回原曲名称 */
     songsnick(mic) {
         let songnick = this.getData('nicklist')
         let nickconfig = this.getData('nickconfig')
+        let all = []
         if (songnick[mic]) {
-            return songnick[mic]
-        } else if (nickconfig[mic]) {
-            return nickconfig[mic]
+            for (var i in songnick[mic]) {
+                all.push(songnick[mic][i])
+            }
+        }
+        if (nickconfig[mic]) {
+            for (var i in nickconfig[mic]) {
+                all.push(nickconfig[mic][i])
+            }
+        }
+        if (all) {
+            if (all.length == 1) {
+                return all[0]
+            } else {
+                return all
+            }
         }
         return false
     }
@@ -154,10 +156,10 @@ class get {
     setnick(mic, nick) {
         logger.info(`${mic}  ${nick}`)
         let nickconfig = this.getData('nickconfig')
-        if(!nickconfig) {
+        if (!nickconfig) {
             nickconfig = {}
         }
-        if(!nickconfig[nick]) {
+        if (!nickconfig[nick]) {
             nickconfig[nick] = []
         }
         nickconfig[nick].push(mic)

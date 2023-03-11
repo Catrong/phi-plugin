@@ -26,10 +26,6 @@ export class phirks extends plugin {
                     fnc: 'setnick'
                 },
                 {
-                    reg: '^#phi申请.*$',
-                    fnc: 'sendnick'
-                },
-                {
                     reg: '^#phi查询.*$',
                     fnc: 'find'
                 },
@@ -82,29 +78,35 @@ export class phirks extends plugin {
             e.reply("只有主人可以设置别名哦！")
         }
         let msg = e.msg.replace(/#phi设置别名(\s*)/g, "")
-        msg = msg.replace(/(\s*)--->(\s*)/g, " ---> ")
-        msg = msg.split(" ---> ")
+        if (msg.includes("--->")) {
+            msg = msg.replace(/(\s*)--->(\s*)/g, " ---> ")
+            msg = msg.split(" ---> ")
+        } else if (msg.includes("\n")) {
+            msg = msg.split("\n")
+        }
         if (msg[1]) {
             msg[0] = get.songsnick(msg[0])
-            if (infolist[`${msg[0]}`]) {
-                get.setnick(`${msg[0]}`, `${msg[1]}`)
-                e.reply("设置完成！")
+            if (msg[0]) {
+                if (typeof(msg[0]) == Array) {
+                    e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
+                }
             } else {
                 e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
             }
+            if (get.songsnick(msg[1]).includes(msg[0])) {
+                /**已经添加过该别名 */
+                e.reply(`${msg[0]} 已经有 ${msg[1]} 这个别名了哦！`)
+                return true
+            } else {
+                get.setnick(`${msg[0]}`, `${msg[1]}`)
+                e.reply("设置完成！")
+            }
         } else {
-            e.reply(`输入有误哦！请先输入本名在输入别名并且以--->分割哦！`)
+            e.reply(`输入有误哦！请按照\n原名（或已有别名） ---> 别名\n的格式发送哦！`)
         }
         return true
     }
 
-    /**申请设置别名 */
-    async sendnick(e) {
-        let tododata = get.getData('tododata')
-        tododata[`${tododata['tot']++}`] = [e.msg.replace(/#phi申请(\s*)/g, ""), e.user_id]
-        get.setData('tododata', tododata)
-        e.reply("申请成功！", true)
-    }
 
     /**phi曲目查询 */
     async find(e) {
