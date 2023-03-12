@@ -8,7 +8,7 @@
 ```
 git clone https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
 ```
-
+或
 ```
 git clone https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
 ```
