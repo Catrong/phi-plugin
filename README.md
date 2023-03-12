@@ -8,10 +8,14 @@
 ```
 git clone https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
 ```
+
+```
+git clone https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
+```
 #### 功能
 | 功能名称  |  功能说明  |
 |-------| ----- |
-| #rksacc|开始输入未输入的acc|
+| #rksacc|开始输入未输入的曲目acc|
 | #rks结束|输入acc状态下有效，结束输入状态，可以进行查分|
 | #rks修改 曲名|修改单曲acc|
 | #rks|查询rks，目前会提供得出的phi1及b21结果，日后会加入推分建议、打歌统计等|
