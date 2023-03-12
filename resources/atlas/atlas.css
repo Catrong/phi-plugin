@@ -1,0 +1,218 @@
+/* .container {
+    background: url("https://api.gmit.vip/Api/DmImg?format=image") white center top no-repeat;
+    background-size: cover;
+} */
+
+li {
+    list-style: none;
+}
+
+body {
+    display: flex;
+    height: 100%;
+    /* width: 500px !important; */
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.box {
+    margin: 20px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    font-weight: 700;
+}
+
+.tb {
+    display: flex;
+}
+
+img {
+    height: 40%;
+    width: 40%;
+    border-radius: 5%;
+    margin-right: 20px;
+}
+
+hr {
+    border: 0;
+    height: 2px;
+    background-image: linear-gradient(135deg, #bdc3c7 10%, #2c3e50);
+    border-radius: 10px;
+}
+
+.header {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.header hr {
+    margin: 5px 0px;
+}
+
+.header p {
+    font-size: 12px;
+    color: #2f4f4f;
+}
+
+.header h1 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.info {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    font-weight: 700;
+}
+
+.cpu {
+    width: 100px;
+    height: 100px;
+    background: #eee;
+    position: relative;
+    border-radius: 50%;
+}
+
+.left,
+.right {
+    width: 50px;
+    height: 100px;
+    position: absolute;
+    /* background: black; */
+    overflow: hidden;
+}
+
+.right {
+    right: 0;
+}
+
+.left .left-circle,
+.right .right-circle {
+    width: 50px;
+    height: 100px;
+    background: #90ee90;
+}
+
+.left .left-circle {
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+    transform: rotate(-180deg);
+    transform-origin: right center;
+}
+
+.right .right-circle {
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    transform: rotate(180deg);
+    transform-origin: left center;
+}
+
+.inner {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 75px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #999;
+    font-size: 20px;
+    background: white;
+}
+
+.info .li article {
+    width: 100px;
+    text-align: center;
+
+}
+
+.info .li article summary {
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.info .li article p {
+    font-size: 10px;
+    color: #2f4f4f;
+    white-space: nowrap;
+}
+
+.memory li {
+    margin: 10px;
+    display: flex;
+}
+
+.memory hr {
+    margin-bottom: 10px;
+}
+
+.memory .progress {
+    flex: 1;
+    /* width: 100%; */
+    height: 25px;
+    background: #c1c1c1;
+    margin: 0 5px;
+    position: relative;
+    border-radius: 5px;
+}
+
+.progress .current {
+    background: #90ee90;
+    height: 25px;
+    border-radius: 5px;
+}
+
+.progress .word {
+    position: absolute;
+    line-height: 25px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    white-space: nowrap;
+}
+
+.HardDisk_li .mount {
+    min-width: 15px;
+    max-width: 3em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 25px;
+    text-align: left;
+}
+
+.HardDisk_li .percentage {
+    min-width: 2em;
+    line-height: 25px;
+    text-align: center;
+}
+
+.speed {
+    width: 100%;
+    display: flex;
+    height: 25px;
+    line-height: 25px;
+    justify-content: space-between;
+}
+
+.speed p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.speed p:nth-child(1) {
+    max-width: 50%;
+}
+
+.speed p:nth-child(2) {
+    margin-left: 40px;
+}

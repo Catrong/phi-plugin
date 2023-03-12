@@ -55,16 +55,18 @@ export class phirks extends plugin {
         let songs = get.songsnick(msg)
         if (songs) {
             let msgRes
-            if (songs.length == 1) {
-                msgRes = get.getsongsinfo(songs[0])
-                e.reply(msgRes, true)
+            if (typeof songs != Array) {
+                
+                get.getsongsinfo(e, songs)
+                // msgRes = get.getsongsinfo(songs)
+                // e.reply(msgRes, true)
             } else {
                 msgRes = []
                 e.reply(`找到了${songs.length}首歌曲！`, true)
                 for (var i in songs) {
-                    msgRes[i] = get.getsongsinfo(songs[i])
+                    get.getsongsinfo(e, songs[i])
                 }
-                e.reply(await common.makeForwardMsg(e, msgRes, ""))
+                // e.reply(await common.makeForwardMsg(e, msgRes, ""))
             }
         } else {
             e.reply(`未找到${msg}的相关曲目信息QAQ\n可以输入 #phi申请 原曲名称 ---> 别名 来向主人提出命名申请哦！`, true)
