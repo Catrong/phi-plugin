@@ -22,7 +22,7 @@ class get {
         this.config = {}
 
         /**默认设置路径 */
-        this.defaultPath = `${_path}/plugins/phi-plugin/config/default/`
+        this.defaultPath = `${_path}/plugins/phi-plugin/config/default_config/`
         this.default = {}
     }
 
