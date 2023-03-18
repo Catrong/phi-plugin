@@ -336,7 +336,6 @@ function savedata(e, mic) {
 function insrt(mic, diffic) {
     let fnal = 0
     let acc = userdata[`${mic}`][diffic]
-    logger.info(mic)
     let score = dxrks(acc * 100, infolist[mic]["chart"][diffic]["difficulty"])
 
 
