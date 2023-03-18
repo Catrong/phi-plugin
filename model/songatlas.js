@@ -29,24 +29,24 @@ class atlas {
             /**谱面 */
             AT: {
                 /**定级 */
-                level: info.at_level,
+                difficulty: info.at_difficulty,
                 /**物量 */
                 combo: info.at_combo,
                 /**谱师 */
                 charter: info.at_charter
             },
             IN: {
-                level: info.in_level,
+                difficulty: info.in_difficulty,
                 combo: info.in_combo,
                 charter: info.in_charter
             },
             HD: {
-                level: info.hd_level,
+                difficulty: info.hd_difficulty,
                 combo: info.hd_combo,
                 charter: info.hd_charter
             },
             EZ: {
-                level: info.ez_level,
+                difficulty: info.ez_difficulty,
                 combo: info.ez_combo,
                 charter: info.ez_charter
             }

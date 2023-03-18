@@ -191,19 +191,19 @@ export class phirks extends plugin {
                         e.reply(`没有找到符合要求的曲目！QAQ`, true)
                         return true
                     }
-                    let torank = infolist[`${mic}`]['at_level']
+                    let torank = infolist[`${mic}`]['at_difficulty']
                     if (isask[0] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = infolist[`${mic}`]['in_level']
+                    torank = infolist[`${mic}`]['in_difficulty']
                     if (isask[1] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = infolist[`${mic}`]['hd_level']
+                    torank = infolist[`${mic}`]['hd_difficulty']
                     if (isask[2] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = infolist[`${mic}`]['ez_level']
+                    torank = infolist[`${mic}`]['ez_difficulty']
                     if (isask[3] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
@@ -249,11 +249,11 @@ export class phirks extends plugin {
         let mic = get.songsnick(data[0])
         if (!mic) {
             e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
-        } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) {
+        } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
         } else {
             await e.reply(get.getsongsinfo(mic))
-            e.reply(`计算结果：${Number(dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_level`])).toFixed(4)}`, true)
+            e.reply(`计算结果：${Number(dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`])).toFixed(4)}`, true)
         }
         return true
     }
@@ -303,24 +303,24 @@ export class phirks extends plugin {
                 if (!mic) {
                     e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
                     return true
-                } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) {
+                } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) {
                     e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
                     return true
                 } else {
                     e.reply(get.getsongsinfo(mic))
                     /**先计算等效rks */
-                    let rks = dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) > data[2]
+                    let rks = dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) > data[2]
                     if (rks >= data[2]) {
                         /**如果大于等于当前rks */
                         e.reply(`这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`)
                         return true
-                    } if (infolist[`${mic}`][`${diffic.toLowerCase()}_level`] < data[2]) {
+                    } if (infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`] < data[2]) {
                         /**如果歌曲本身定数小于rks */
                         e.reply(`这首歌的定数太低了吧！你的 b19 的等效 rks 都有 ${data[2]} 了好嘛！`)
                         return true
                     } else {
                         /**计算推分所需rks */
-                        let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) + 55
+                        let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) + 55
                         e.reply(`至少要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！`, true)
                         return true
                     }
@@ -344,19 +344,19 @@ export class phirks extends plugin {
         if (!mic) {
             e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
             return true
-        } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) {
+        } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
             return true
         } else {
             e.reply(get.getsongsinfo(mic))
             /**先计算等效rks */
-            let rks = dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_level`])
+            let rks = dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`])
             logger.info(data)
             if (rks >= data[2]) {
                 /**如果大于等于当前rks */
                 e.reply(`这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`)
                 return true
-            } if (infolist[`${mic}`][`${diffic.toLowerCase()}_level`] < data[2]) {
+            } if (infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`] < data[2]) {
                 /**如果歌曲本身定数小于rks */
                 if (local) {
                     e.reply(`这首歌的定数太低了吧！如果需要使用本地 rks 信息的话请不要输入 rks 哦！`)
@@ -366,7 +366,7 @@ export class phirks extends plugin {
                 return true
             } else {
                 /**计算推分所需rks */
-                let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_level`]) + 55
+                let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) + 55
                 e.reply(`需要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！由于 phigros 的平均数计算规则，所需的 acc 可能会更小哦！`, true)
                 return true
             }
@@ -387,22 +387,22 @@ function getsongsinfo(mic) {
                     /**特殊类型：曲绘 */
                     msgRes[cnt++] = this.getimg(name, true)
                     break
-                } case 'level': {
+                } case 'difficulty': {
                     /**特殊类型：定级(物量)  */
-                    if (infolist[`${name}`]['sp_level']) {
-                        msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_level']}    物量: ${infolist[`${name}`]['sp_combo']}\n谱师: ${infolist[`${name}`]['sp_charter']}\n`
+                    if (infolist[`${name}`]['sp_difficulty']) {
+                        msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_difficulty']}    物量: ${infolist[`${name}`]['sp_combo']}\n谱师: ${infolist[`${name}`]['sp_charter']}\n`
                     }
-                    if (infolist[`${name}`]['at_level']) {
-                        msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_level']}    物量: ${infolist[`${name}`]['at_combo']}\n谱师: ${infolist[`${name}`]['at_charter']}\n`
+                    if (infolist[`${name}`]['at_difficulty']) {
+                        msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_difficulty']}    物量: ${infolist[`${name}`]['at_combo']}\n谱师: ${infolist[`${name}`]['at_charter']}\n`
                     }
-                    if (infolist[`${name}`]['in_level']) {
-                        msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['in_combo']}\n谱师: ${infolist[`${name}`]['in_charter']}\n`
+                    if (infolist[`${name}`]['in_difficulty']) {
+                        msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_difficulty']}    物量: ${infolist[`${name}`]['in_combo']}\n谱师: ${infolist[`${name}`]['in_charter']}\n`
                     }
-                    if (infolist[`${name}`]['hd_level']) {
-                        msgRes[cnt++] = `HD: ${infolist[`${name}`]['in_level']}    物量: ${infolist[`${name}`]['hd_combo']}\n谱师: ${infolist[`${name}`]['hd_charter']}\n`
+                    if (infolist[`${name}`]['hd_difficulty']) {
+                        msgRes[cnt++] = `HD: ${infolist[`${name}`]['in_difficulty']}    物量: ${infolist[`${name}`]['hd_combo']}\n谱师: ${infolist[`${name}`]['hd_charter']}\n`
                     }
-                    if (infolist[`${name}`]['ez_level']) {
-                        msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_level']}    物量: ${infolist[`${name}`]['ez_combo']}\n谱师: ${infolist[`${name}`]['ez_charter']}`
+                    if (infolist[`${name}`]['ez_difficulty']) {
+                        msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_difficulty']}    物量: ${infolist[`${name}`]['ez_combo']}\n谱师: ${infolist[`${name}`]['ez_charter']}`
                     }
                     break
                 } case 'name': {

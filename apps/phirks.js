@@ -69,7 +69,7 @@ export class phirks extends plugin {
                 for (let i in songlist) {
                     savedata(e, songlist[i])
                 }
-                
+
                 /**根据数据计算rks */
                 let cnt = 0
                 let msgRes = []
@@ -81,7 +81,7 @@ export class phirks extends plugin {
 
                     let img = get.getimg(name)
                     let diffic = userdata["phi"]["diffic"]
-                    let rank = infolist[`${name}`][`${diffic.toLowerCase()}_level`]
+                    let rank = infolist[`${name}`][`${diffic.toLowerCase()}_difficulty`]
                     let acc = userdata["phi"]["acc"] * 100
                     let rks = dxrks(acc, rank)
                     userdata[`phi`]["rank"] = rks
@@ -100,7 +100,7 @@ export class phirks extends plugin {
                     }
                     let img = get.getimg(name)
                     let diffic = userdata[`b${i}`]["diffic"]
-                    let rank = infolist[`${name}`][`${diffic.toLowerCase()}_level`]
+                    let rank = infolist[`${name}`][`${diffic.toLowerCase()}_difficulty`]
                     let acc = userdata[`b${i}`]["acc"] * 100
                     let rks = dxrks(acc, rank)
                     userdata[`b${i}`]["rank"] = rks
@@ -153,7 +153,7 @@ export class phirks extends plugin {
             userdata = {}
         }
         userdata["finish"] = 0
-        get.setData(`${e.user_id}`,userdata)
+        get.setData(`${e.user_id}`, userdata)
         FindtoRead(e)
         e.reply(`开始录入未读入的${readlist[idlist.indexOf(e.user_id)].length}首曲目成绩（按照曲名排序）……\n停止输入请发送 #rks结束 ，暂停请发 #rks暂停。\n发送acc请按照顺序同时发送每一等级的acc！\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
         let mic = readlist[idlist.indexOf(e.user_id)][0]
@@ -241,7 +241,7 @@ function ask(e, mic) {
     } else {
         /**发送正在设置的曲目，序号存储在 userdata['puting'] 中 */
         let msgRes = []
-        if (infolist[`${mic}`]['at_level']) {
+        if (infolist[`${mic}`]['at_difficulty']) {
             e.reply(`提示，这一首是有AT等级的哦！`)
             msgRes = [`请发送\n`, get.getimg(mic), `\n${infolist[`${mic}`]['song']}的 AT IN HD EZ acc，例： 98.99 100 100 100`]
         } else {
@@ -266,7 +266,7 @@ function findacc(e) {
         acc[i] /= 100  /**实际存储为0-1的浮点数 */
     }
     /**写入到数组 */
-    if (infolist[`${mic}`]['at_level']) {
+    if (infolist[`${mic}`]['at_difficulty']) {
         acc[3] = Number(acc[3])
         if (!acc[3]) acc[3] = 0
         if (typeof acc[3] != 'number' || acc[3] < 0 || acc[3] > 100) {
@@ -327,7 +327,7 @@ function savedata(e, mic) {
     if (userdata[`${mic}`]['EZ'] >= 0.7) {
         insrt(mic, 'EZ')
     }
-    
+
     return true
 }
 
@@ -336,9 +336,9 @@ function savedata(e, mic) {
 function insrt(mic, diffic) {
     let fnal = 0
     let acc = userdata[`${mic}`][diffic]
-    let score = dxrks(acc * 100, infolist[`${mic}`][`${diffic.toLowerCase()}_level`])
+    let score = dxrks(acc * 100, infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`])
 
-    
+
 
     /**更新phi1 */
     if (acc === 1) {
