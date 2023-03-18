@@ -57,16 +57,16 @@ export class phirks extends plugin {
             let msgRes
             if (typeof songs != Array) {
                 
-                get.getsongsinfo(e, songs)
-                // msgRes = get.getsongsinfo(songs)
-                // e.reply(msgRes, true)
+                // get.getsongsinfo(e, songs)
+                msgRes = get.getsongsinfo(e, songs)
+                e.reply(msgRes, true)
             } else {
                 msgRes = []
                 e.reply(`找到了${songs.length}首歌曲！`, true)
                 for (var i in songs) {
-                    get.getsongsinfo(e, songs[i])
+                    msgRes[i] = get.getsongsinfo(e, songs[i])
                 }
-                // e.reply(await common.makeForwardMsg(e, msgRes, ""))
+                e.reply(await common.makeForwardMsg(e, msgRes, ""))
             }
         } else {
             e.reply(`未找到${msg}的相关曲目信息QAQ\n可以输入 #phi申请 原曲名称 ---> 别名 来向主人提出命名申请哦！`, true)
@@ -114,7 +114,6 @@ export class phirks extends plugin {
     async find(e) {
         showconfig = await get.getData('showconfig')
         infolist = await get.getData('infolist')
-        infolist = await get.getData('infolist')
         songlist = await get.getData('songlist')
         let msg = e.msg.replace(/#phi查询(\s*)/g, "")
         if (msg.includes("章节")) {
@@ -129,7 +128,7 @@ export class phirks extends plugin {
                 let info = []
                 for (let i = 0; songlist[i]; ++i) {
                     let mic = songlist[i]
-                    let chap = infolist[`${mic}`]['chap']
+                    let chap = infolist[`${mic}`]['chapter']
                     if (chaplist[`${chap}`]) {
                         continue
                     } else if (chap == nowchap) {
@@ -191,19 +190,19 @@ export class phirks extends plugin {
                         e.reply(`没有找到符合要求的曲目！QAQ`, true)
                         return true
                     }
-                    let torank = infolist[`${mic}`]['at_difficulty']
+                    let torank = infolist[`${mic}`]["chart"]["AT"]["difficulty"]
                     if (isask[0] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = infolist[`${mic}`]['in_difficulty']
+                    torank = infolist[`${mic}`]["chart"]["IN"]["difficulty"]
                     if (isask[1] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = infolist[`${mic}`]['hd_difficulty']
+                    torank = infolist[`${mic}`]["chart"]["HD"]["difficulty"]
                     if (isask[2] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
-                    torank = infolist[`${mic}`]['ez_difficulty']
+                    torank = infolist[`${mic}`]["chart"]["EZ"]["difficulty"]
                     if (isask[3] && torank >= rank[0] && torank <= rank[1]) {
                         break
                     }
@@ -249,11 +248,11 @@ export class phirks extends plugin {
         let mic = get.songsnick(data[0])
         if (!mic) {
             e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
-        } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) {
+        } else if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
         } else {
             await e.reply(get.getsongsinfo(mic))
-            e.reply(`计算结果：${Number(dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`])).toFixed(4)}`, true)
+            e.reply(`计算结果：${Number(dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"])).toFixed(4)}`, true)
         }
         return true
     }
@@ -303,24 +302,24 @@ export class phirks extends plugin {
                 if (!mic) {
                     e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
                     return true
-                } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) {
+                } else if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
                     e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
                     return true
                 } else {
                     e.reply(get.getsongsinfo(mic))
                     /**先计算等效rks */
-                    let rks = dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) > data[2]
+                    let rks = dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"]) > data[2]
                     if (rks >= data[2]) {
                         /**如果大于等于当前rks */
                         e.reply(`这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`)
                         return true
-                    } if (infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`] < data[2]) {
+                    } if (infolist[`${mic}`]["chart"][diffic]["difficulty"] < data[2]) {
                         /**如果歌曲本身定数小于rks */
                         e.reply(`这首歌的定数太低了吧！你的 b19 的等效 rks 都有 ${data[2]} 了好嘛！`)
                         return true
                     } else {
                         /**计算推分所需rks */
-                        let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) + 55
+                        let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`]["chart"][diffic]["difficulty"]) + 55
                         e.reply(`至少要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！`, true)
                         return true
                     }
@@ -344,19 +343,19 @@ export class phirks extends plugin {
         if (!mic) {
             e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
             return true
-        } else if (!infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) {
+        } else if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
             return true
         } else {
             e.reply(get.getsongsinfo(mic))
             /**先计算等效rks */
-            let rks = dxrks(data[1], infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`])
+            let rks = dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"])
             logger.info(data)
             if (rks >= data[2]) {
                 /**如果大于等于当前rks */
                 e.reply(`这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`)
                 return true
-            } if (infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`] < data[2]) {
+            } if (infolist[`${mic}`]["chart"][diffic]["difficulty"] < data[2]) {
                 /**如果歌曲本身定数小于rks */
                 if (local) {
                     e.reply(`这首歌的定数太低了吧！如果需要使用本地 rks 信息的话请不要输入 rks 哦！`)
@@ -366,7 +365,7 @@ export class phirks extends plugin {
                 return true
             } else {
                 /**计算推分所需rks */
-                let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`]) + 55
+                let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`]["chart"][diffic]["difficulty"]) + 55
                 e.reply(`需要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！由于 phigros 的平均数计算规则，所需的 acc 可能会更小哦！`, true)
                 return true
             }
@@ -389,20 +388,20 @@ function getsongsinfo(mic) {
                     break
                 } case 'difficulty': {
                     /**特殊类型：定级(物量)  */
-                    if (infolist[`${name}`]['sp_difficulty']) {
-                        msgRes[cnt++] = `SP: ${infolist[`${name}`]['sp_difficulty']}    物量: ${infolist[`${name}`]['sp_combo']}\n谱师: ${infolist[`${name}`]['sp_charter']}\n`
+                    if (infolist[`${name}`]["chart"]['SP']) {
+                        msgRes[cnt++] = `SP: ${infolist[`${name}`]["chart"]["SP"]["difficulty"]}    物量: ${infolist[`${name}`]["SP"]["combo"]}\n谱师: ${infolist[`${name}`]["SP"]["charter"]}\n`
                     }
-                    if (infolist[`${name}`]['at_difficulty']) {
-                        msgRes[cnt++] = `AT: ${infolist[`${name}`]['at_difficulty']}    物量: ${infolist[`${name}`]['at_combo']}\n谱师: ${infolist[`${name}`]['at_charter']}\n`
+                    if (infolist[`${name}`]["chart"]["AT"]["difficulty"]) {
+                        msgRes[cnt++] = `AT: ${infolist[`${name}`]["chart"]["AT"]["difficulty"]}    物量: ${infolist[`${name}`]["AT"]["combo"]}\n谱师: ${infolist[`${name}`]["AT"]["charter"]}\n`
                     }
-                    if (infolist[`${name}`]['in_difficulty']) {
-                        msgRes[cnt++] = `IN: ${infolist[`${name}`]['in_difficulty']}    物量: ${infolist[`${name}`]['in_combo']}\n谱师: ${infolist[`${name}`]['in_charter']}\n`
+                    if (infolist[`${name}`]["chart"]["IN"]["difficulty"]) {
+                        msgRes[cnt++] = `IN: ${infolist[`${name}`]["chart"]["IN"]["difficulty"]}    物量: ${infolist[`${name}`]["IN"]["combo"]}\n谱师: ${infolist[`${name}`]["IN"]["charter"]}\n`
                     }
-                    if (infolist[`${name}`]['hd_difficulty']) {
-                        msgRes[cnt++] = `HD: ${infolist[`${name}`]['in_difficulty']}    物量: ${infolist[`${name}`]['hd_combo']}\n谱师: ${infolist[`${name}`]['hd_charter']}\n`
+                    if (infolist[`${name}`]["chart"]["HD"]["difficulty"]) {
+                        msgRes[cnt++] = `HD: ${infolist[`${name}`]["chart"]["IN"]["difficulty"]}    物量: ${infolist[`${name}`]["HD"]["combo"]}\n谱师: ${infolist[`${name}`]["HD"]["charter"]}\n`
                     }
-                    if (infolist[`${name}`]['ez_difficulty']) {
-                        msgRes[cnt++] = `EZ: ${infolist[`${name}`]['ez_difficulty']}    物量: ${infolist[`${name}`]['ez_combo']}\n谱师: ${infolist[`${name}`]['ez_charter']}`
+                    if (infolist[`${name}`]["chart"]["EZ"]["difficulty"]) {
+                        msgRes[cnt++] = `EZ: ${infolist[`${name}`]["chart"]["EZ"]["difficulty"]}    物量: ${infolist[`${name}`]["EZ"]["combo"]}\n谱师: ${infolist[`${name}`]["EZ"]["charter"]}`
                     }
                     break
                 } case 'name': {

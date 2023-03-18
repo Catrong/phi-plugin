@@ -151,6 +151,10 @@ export default new class newPuppeteer {
       data._app = app
       fs.writeFileSync(file, JSON.stringify(data))
     }
+
+    /**返回图片信息 */
+    return await pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
+
     let base64 = await pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
     let ret = true
     if (base64) {

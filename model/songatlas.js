@@ -52,7 +52,7 @@ class atlas {
             }
         }
         // 渲染图片
-        await puppeteer.render('atlas/atlas', {
+        return await puppeteer.render('atlas/atlas', {
           ...data
         }, {
           e,

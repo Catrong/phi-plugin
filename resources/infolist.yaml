@@ -1,4225 +1,4285 @@
 -Arkhei-:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '112'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: -JKy-
+      combo: '462'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: -JKy-
+      combo: '454'
+      difficulty: '9.7'
+      level: '9'
+    IN:
+      charter: -JKy-
+      combo: '644'
+      difficulty: '12.1'
+      level: '12'
   composer: Sera Amagi
-  ez_charter: -JKy-
-  ez_combo: '462'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: -JKy-
-  hd_combo: '454'
-  hd_difficulty: '9.7'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/9/9a/-Arkhei-_Phigros.jpeg/300px--Arkhei-_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/9/9a/-Arkhei-_Phigros.jpeg
   illustrator: Hachimitsu☆Boy
-  in_charter: -JKy-
-  in_combo: '644'
-  in_difficulty: '12.1'
-  in_level: '12'
   length: '2:37'
   song: -Arkhei-
 -SURREALISM-:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter 4 管道迷宫
+  chart:
+    EZ:
+      charter: Su1fuR
+      combo: '302'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Su1fuR
+      combo: '532'
+      difficulty: '9.4'
+      level: '9'
+    IN:
+      charter: -StupiGGy- fixed by 晨
+      combo: '914'
+      difficulty: '13.4'
+      level: '13'
   composer: Itsuki
-  ez_charter: Su1fuR
-  ez_combo: '302'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Su1fuR
-  hd_combo: '532'
-  hd_difficulty: '9.4'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/1/19/SURREALISM_Phigros.png/300px-SURREALISM_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/1/19/SURREALISM_Phigros.png
   illustrator: 喵n葵
-  in_charter: -StupiGGy- fixed by 晨
-  in_combo: '914'
-  in_difficulty: '13.4'
-  in_level: '13'
   length: '2:33'
   song: -SURREALISM-
 '996':
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '140'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: RTH
+      combo: '392'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: Likey
+      combo: '453'
+      difficulty: '8.1'
+      level: '8'
+    IN:
+      charter: Barbarianerman & NerSAN in the ICU
+      combo: '996'
+      difficulty: '14.6'
+      level: '14'
   composer: 李化禹
-  ez_charter: RTH
-  ez_combo: '392'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: Likey
-  hd_combo: '453'
-  hd_difficulty: '8.1'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e4/996_Phigros.png/300px-996_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/e4/996_Phigros.png
   illustrator: 笔记RE
-  in_charter: Barbarianerman & NerSAN in the ICU
-  in_combo: '996'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:34'
   song: '996'
 After Dawn:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '110'
   chapter: Side Story 2 弭刻日
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '194'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: NerSAN feat. Pcat
+      combo: '478'
+      difficulty: '11.1'
+      level: '11'
+    IN:
+      charter: BarbariaNerSAN feat. Snorkel
+      combo: '975'
+      difficulty: '15.3'
+      level: '15'
   composer: S9ryne
-  ez_charter: Barbarianerman
-  ez_combo: '194'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: NerSAN feat. Pcat
-  hd_combo: '478'
-  hd_difficulty: '11.1'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/a/a7/After_Dawn_Phigros.png/300px-After_Dawn_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/a/a7/After_Dawn_Phigros.png
   illustrator: 月亮酱
-  in_charter: BarbariaNerSAN feat. Snorkel
-  in_combo: '975'
-  in_difficulty: '15.3'
-  in_level: '15'
   length: '2:22'
   song: After Dawn
 Aleph-0:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: 35~400
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Clutter
+      combo: '153'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: Clutter
+      combo: '531'
+      difficulty: '11.6'
+      level: '11'
+    IN:
+      charter: Clutter
+      combo: '885'
+      difficulty: '15.7'
+      level: '15'
   composer: LeaF
-  ez_charter: Clutter
-  ez_combo: '153'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: Clutter
-  hd_combo: '531'
-  hd_difficulty: '11.6'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e0/Aleph-0_Phigros.png/300px-Aleph-0_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/e0/Aleph-0_Phigros.png
   illustrator: Optie
-  in_charter: Clutter
-  in_combo: '885'
-  in_difficulty: '15.7'
-  in_level: '15'
   length: '2:20'
   song: Aleph-0
 Another Me (KALPA):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '210'
   chapter: Chapter EX-KALPA 精选集
+  chart:
+    EZ:
+      charter: Pcat
+      combo: '455'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Another cat
+      combo: '715'
+      difficulty: '9.2'
+      level: '9'
+    IN:
+      charter: NerSAN vs. Ctymax as "泥头鱼"
+      combo: '1449'
+      difficulty: '15.5'
+      level: '15'
   composer: D_AAN
-  ez_charter: Pcat
-  ez_combo: '455'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Another cat
-  hd_combo: '715'
-  hd_difficulty: '9.2'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/c/c1/Another_Me_KALPA_Phigros.png/300px-Another_Me_KALPA_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/c/c1/Another_Me_KALPA_Phigros.png
   illustrator: ZG
-  in_charter: NerSAN vs. Ctymax as "泥头鱼"
-  in_combo: '1449'
-  in_difficulty: '15.5'
-  in_level: '15'
   length: '2:46'
   song: Another Me (KALPA)
 Another Me (Rising Sun Traxx):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: Chapter EX-Rising Sun Traxx 精选集
+  chart:
+    EZ:
+      charter: Another M3
+      combo: '111'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Another M3
+      combo: '259'
+      difficulty: '9.2'
+      level: '9'
+    IN:
+      charter: NerSAN
+      combo: '564'
+      difficulty: '13.6'
+      level: '13'
   composer: Neutral Moon
-  ez_charter: Another M3
-  ez_combo: '111'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Another M3
-  hd_combo: '259'
-  hd_difficulty: '9.2'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/5/5c/Another_Me_%E6%96%B0_Phigros.jpeg/300px-Another_Me_%E6%96%B0_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/5/5c/Another_Me_%E6%96%B0_Phigros.jpeg
   illustrator: IvyTowers
-  in_charter: NerSAN
-  in_combo: '564'
-  in_difficulty: '13.6'
-  in_level: '13'
   length: '2:19'
   song: Another Me (Rising Sun Traxx)
 Another Round:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 阿爽
+      combo: '136'
+      difficulty: '3.0'
+      level: '3'
+    HD:
+      charter: Another Stage
+      combo: '353'
+      difficulty: '7.5'
+      level: '7'
+    IN:
+      charter: TimiTini →"X"← 阿爽
+      combo: '505'
+      difficulty: '13.3'
+      level: '13'
   composer: Justin Dai
-  ez_charter: 阿爽
-  ez_combo: '136'
-  ez_difficulty: '3.0'
-  ez_level: '3'
-  hd_charter: Another Stage
-  hd_combo: '353'
-  hd_difficulty: '7.5'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/7/74/Another_Round_Phigros.png/300px-Another_Round_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/7/74/Another_Round_Phigros.png
   illustrator: 艾是Abby
-  in_charter: TimiTini →"X"← 阿爽
-  in_combo: '505'
-  in_difficulty: '13.3'
-  in_level: '13'
   length: '2:24'
   song: Another Round
 Aphasia:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '283'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: 百九十八
+      combo: '362'
+      difficulty: '8.8'
+      level: '8'
+    IN:
+      charter: 百九十八
+      combo: '553'
+      difficulty: '13.1'
+      level: '13'
   composer: 闫东炜
-  ez_charter: 百九十八
-  ez_combo: '283'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: 百九十八
-  hd_combo: '362'
-  hd_difficulty: '8.8'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/8/83/Aphasia_Phigros.jpeg/300px-Aphasia_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/8/83/Aphasia_Phigros.jpeg
   illustrator: 笔记RE
-  in_charter: 百九十八
-  in_combo: '553'
-  in_difficulty: '13.1'
-  in_level: '13'
   length: '1:56'
   song: Aphasia
 Apocalypse:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '220'
   chapter: Chapter EX-Lanota 精选集
+  chart:
+    EZ:
+      charter: R.
+      combo: '207'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: B.
+      combo: '382'
+      difficulty: '8.6'
+      level: '8'
+    IN:
+      charter: Rikko & 198
+      combo: '676'
+      difficulty: '13.5'
+      level: '13'
   composer: アリスシャッハと魔法の楽団
-  ez_charter: R.
-  ez_combo: '207'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: B.
-  hd_combo: '382'
-  hd_difficulty: '8.6'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/6/69/Phisong_apocalypse.png/300px-Phisong_apocalypse.png
   illustration_big: https://img.moegirl.org.cn/common/6/69/Phisong_apocalypse.png
   illustrator: Lanota © Noxy Games Inc.
-  in_charter: Rikko & 198
-  in_combo: '676'
-  in_difficulty: '13.5'
-  in_level: '13'
   length: '2:45'
   song: Apocalypse
 Apocalyptic:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '160'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 阿爽
+      combo: '282'
+      difficulty: '3.0'
+      level: '3'
+    HD:
+      charter: NerSAN
+      combo: '329'
+      difficulty: '9.6'
+      level: '9'
+    IN:
+      charter: NerSAN vs. 阿爽
+      combo: '676'
+      difficulty: '13.6'
+      level: '13'
   composer: Z ClaxX & SumaiLight
-  ez_charter: 阿爽
-  ez_combo: '282'
-  ez_difficulty: '3.0'
-  ez_level: '3'
-  hd_charter: NerSAN
-  hd_combo: '329'
-  hd_difficulty: '9.6'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/f/f7/Apocalyptic_Phigros.png/300px-Apocalyptic_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/f7/Apocalyptic_Phigros.png
   illustrator: 佑木いずみ& Ctymax
-  in_charter: NerSAN vs. 阿爽
-  in_combo: '676'
-  in_difficulty: '13.6'
-  in_level: '13'
   length: '2:09'
   song: Apocalyptic
 Ark:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Side Story 2 弭刻日
+  chart:
+    EZ:
+      charter: TimiTini
+      combo: '290'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: TimiTini
+      combo: '523'
+      difficulty: '10.9'
+      level: '10'
+    IN:
+      charter: 阿爽 eat Ctymax
+      combo: '726'
+      difficulty: '15.1'
+      level: '15'
   composer: kanoryo
-  ez_charter: TimiTini
-  ez_combo: '290'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: TimiTini
-  hd_combo: '523'
-  hd_difficulty: '10.9'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/0/0f/Ark_Phigros.png/300px-Ark_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/0f/Ark_Phigros.png
   illustrator: MOAI WORKS
-  in_charter: 阿爽 eat Ctymax
-  in_combo: '726'
-  in_difficulty: '15.1'
-  in_level: '15'
   length: '2:38'
   song: Ark
 Believe Light (feat. 果丸哒呦):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '150'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Believe Ctymax
+      combo: '264'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: Believe TimiTini
+      combo: '580'
+      difficulty: '9.5'
+      level: '9'
+    IN:
+      charter: Believe Ctymax & TimiTini
+      combo: '972'
+      difficulty: '14.5'
+      level: '14'
   composer: Scaler & Mestie & 果丸哒呦
-  ez_charter: Believe Ctymax
-  ez_combo: '264'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: Believe TimiTini
-  hd_combo: '580'
-  hd_difficulty: '9.5'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/7/74/Believe_Light_%28feat.%E6%9E%9C%E4%B8%B8%E5%93%92%E5%91%A6%29_Phigros.png/300px-Believe_Light_%28feat.%E6%9E%9C%E4%B8%B8%E5%93%92%E5%91%A6%29_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/7/74/Believe_Light_%28feat.%E6%9E%9C%E4%B8%B8%E5%93%92%E5%91%A6%29_Phigros.png
   illustrator: 圆规compasses
-  in_charter: Believe Ctymax & TimiTini
-  in_combo: '972'
-  in_difficulty: '14.5'
-  in_level: '14'
   length: '2:50'
   song: Believe Light (feat. 果丸哒呦)
 Better Graphic Animation:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: NerSAN
+      combo: '178'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: NerSAN
+      combo: '469'
+      difficulty: '11.7'
+      level: '11'
+    IN:
+      charter: 縱連打の信者☆無極
+      combo: '616'
+      difficulty: '15.3'
+      level: '15'
   composer: ルゼ
-  ez_charter: NerSAN
-  ez_combo: '178'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: NerSAN
-  hd_combo: '469'
-  hd_difficulty: '11.7'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/d/da/Better_Graphic_Animation_Phigros.png/300px-Better_Graphic_Animation_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/d/da/Better_Graphic_Animation_Phigros.png
   illustrator: A-Zero Project
-  in_charter: 縱連打の信者☆無極
-  in_combo: '616'
-  in_difficulty: '15.3'
-  in_level: '15'
   length: '1:42'
   song: Better Graphic Animation
 Bonus Time:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter 4 管道迷宫
+  chart:
+    EZ:
+      charter: Uvernight fixed by Barbarianerman
+      combo: '190'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Uvernight fixed by Barbarianerman
+      combo: '319'
+      difficulty: '9.3'
+      level: '9'
+    IN:
+      charter: Uvernight fixed by 百九十八
+      combo: '689'
+      difficulty: '14.2'
+      level: '14'
   composer: Megalo_PaleWhite
-  ez_charter: Uvernight fixed by Barbarianerman
-  ez_combo: '190'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Uvernight fixed by Barbarianerman
-  hd_combo: '319'
-  hd_difficulty: '9.3'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/1/13/Bonus_Time_Phigros.png/300px-Bonus_Time_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/1/13/Bonus_Time_Phigros.png
   illustrator: 笔记RE
-  in_charter: Uvernight fixed by 百九十八
-  in_combo: '689'
-  in_difficulty: '14.2'
-  in_level: '14'
   length: '1:55'
   song: Bonus Time
 Brave Notes:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '192'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Brave Eaimo
+      combo: '299'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Brave Eaimo
+      combo: '442'
+      difficulty: '11.4'
+      level: '11'
+    IN:
+      charter: Brave Eaimo
+      combo: '768'
+      difficulty: '14.6'
+      level: '14'
   composer: Turquoise(DRIVE.+Nota)
-  ez_charter: Brave Eaimo
-  ez_combo: '299'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Brave Eaimo
-  hd_combo: '442'
-  hd_difficulty: '11.4'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/6/6c/Brave_Notes_Phigros.png/300px-Brave_Notes_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/6c/Brave_Notes_Phigros.png
   illustrator: 林语
-  in_charter: Brave Eaimo
-  in_combo: '768'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '1:58'
   song: Brave Notes
 Break Over:
-  at_charter: 百九十八
-  at_combo: '570'
-  at_difficulty: '14.9'
-  at_level: '14'
   bpm: '185'
   chapter: 单曲精选集
+  chart:
+    AT:
+      charter: 百九十八
+      combo: '570'
+      difficulty: '14.9'
+      level: '14'
+    EZ:
+      charter: Barbarianerman
+      combo: '300'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Barbarianerman
+      combo: '919'
+      difficulty: '11.8'
+      level: '11'
+    IN:
+      charter: 百九十八 vs. Barbarianerman
+      combo: '910'
+      difficulty: '14.6'
+      level: '14'
   composer: K-forest
-  ez_charter: Barbarianerman
-  ez_combo: '300'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Barbarianerman
-  hd_combo: '919'
-  hd_difficulty: '11.8'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/d/d2/Break_Over_Phigros.png/300px-Break_Over_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/d/d2/Break_Over_Phigros.png
   illustrator: 圆规Compasses
-  in_charter: 百九十八 vs. Barbarianerman
-  in_combo: '910'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:08'
   song: Break Over
 Break Through The Barrier:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '176'
   chapter: Chapter EX-Rising Sun Traxx 精选集
+  chart:
+    EZ:
+      charter: Su1fuR
+      combo: '384'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Su1fuR
+      combo: '623'
+      difficulty: '10.8'
+      level: '10'
+    IN:
+      charter: 百九十八
+      combo: '1090'
+      difficulty: '14.7'
+      level: '14'
   composer: lixound
-  ez_charter: Su1fuR
-  ez_combo: '384'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Su1fuR
-  hd_combo: '623'
-  hd_difficulty: '10.8'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/4/46/Break_Through_The_Barrier_Phigros.png/300px-Break_Through_The_Barrier_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/4/46/Break_Through_The_Barrier_Phigros.png
   illustrator: Xquid
-  in_charter: 百九十八
-  in_combo: '1090'
-  in_difficulty: '14.7'
-  in_level: '14'
   length: '2:12'
   song: Break Through The Barrier
 Burn:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '148'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Ctymatch Girl
+      combo: '278'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: Burn Full Catcats
+      combo: '497'
+      difficulty: '10.6'
+      level: '10'
+    IN:
+      charter: Burn Full Catcats VS Ctymatch Girl
+      combo: '707'
+      difficulty: '14.8'
+      level: '14'
   composer: NceS
-  ez_charter: Ctymatch Girl
-  ez_combo: '278'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: Burn Full Catcats
-  hd_combo: '497'
-  hd_difficulty: '10.6'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/c/c2/Burn_Phigros.png/300px-Burn_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/c/c2/Burn_Phigros.png
   illustrator: knife美工刀
-  in_charter: Burn Full Catcats VS Ctymatch Girl
-  in_combo: '707'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:17'
   song: Burn
 CROSS † SOUL:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '200'
   chapter: Chapter EX-HyuN 精选集
+  chart:
+    EZ:
+      charter: 無†極
+      combo: '517'
+      difficulty: '7.5'
+      level: '7'
+    HD:
+      charter: 無†極 fixed by Rikko
+      combo: '892'
+      difficulty: '12.8'
+      level: '12'
+    IN:
+      charter: 無†極
+      combo: '1305'
+      difficulty: '15.9'
+      level: '15'
   composer: HyuN feat. Syepias
-  ez_charter: 無†極
-  ez_combo: '517'
-  ez_difficulty: '7.5'
-  ez_level: '7'
-  hd_charter: 無†極 fixed by Rikko
-  hd_combo: '892'
-  hd_difficulty: '12.8'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/e/ee/PhigrosCROSS%E2%80%A0SOUL.png/300px-PhigrosCROSS%E2%80%A0SOUL.png
   illustration_big: https://img.moegirl.org.cn/common/e/ee/PhigrosCROSS%E2%80%A0SOUL.png
   illustrator: knife美工刀
-  in_charter: 無†極
-  in_combo: '1305'
-  in_difficulty: '15.9'
-  in_level: '15'
   length: '2:19'
-  song: CROSS†SOUL
+  song: CROSS † SOUL
 Cereris:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: Su1fuR
+      combo: '470'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Su1fuR
+      combo: '703'
+      difficulty: '11.4'
+      level: '11'
+    IN:
+      charter: StupiGGy
+      combo: '898'
+      difficulty: '14.8'
+      level: '14'
   composer: SunsetRay/NceS
-  ez_charter: Su1fuR
-  ez_combo: '470'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Su1fuR
-  hd_combo: '703'
-  hd_difficulty: '11.4'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/9/91/Cereris_Phigros_%E9%AB%98%E6%B8%85.png/300px-Cereris_Phigros_%E9%AB%98%E6%B8%85.png
   illustration_big: https://img.moegirl.org.cn/common/9/91/Cereris_Phigros_%E9%AB%98%E6%B8%85.png
   illustrator: IvyTowers
-  in_charter: StupiGGy
-  in_combo: '898'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:47'
   song: Cereris
 Cervelle Connexion:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '142'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Eastern Ailuropoda Gang
+      combo: '301'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Eastern Ailuropoda Gang
+      combo: '569'
+      difficulty: '11.3'
+      level: '11'
+    IN:
+      charter: Eastern Ailuropoda Gang
+      combo: '563'
+      difficulty: '14.5'
+      level: '14'
   composer: SCTL
-  ez_charter: Eastern Ailuropoda Gang
-  ez_combo: '301'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Eastern Ailuropoda Gang
-  hd_combo: '569'
-  hd_difficulty: '11.3'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/4/43/Cervelle_Connexion_Phigros.png/300px-Cervelle_Connexion_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/4/43/Cervelle_Connexion_Phigros.png
   illustrator: SCTL
-  in_charter: Eastern Ailuropoda Gang
-  in_combo: '563'
-  in_difficulty: '14.5'
-  in_level: '14'
   length: '2:27'
   song: Cervelle Connexion
 Chronologika:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter 7 时钟链接
+  chart:
+    EZ:
+      charter: TimiTini
+      combo: '271'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: XMT小咩兔
+      combo: '456'
+      difficulty: '9.8'
+      level: '9'
+    IN:
+      charter: Ctymax vs. Barbarianerman
+      combo: '776'
+      difficulty: '13.9'
+      level: '13'
   composer: Hundotte
-  ez_charter: TimiTini
-  ez_combo: '271'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: XMT小咩兔
-  hd_combo: '456'
-  hd_difficulty: '9.8'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/b/b5/Chronologika_Phigros.jpeg/300px-Chronologika_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/b/b5/Chronologika_Phigros.jpeg
   illustrator: 幽灵星
-  in_charter: Ctymax vs. Barbarianerman
-  in_combo: '776'
-  in_difficulty: '13.9'
-  in_level: '13'
   length: '2:14'
   song: Chronologika
 Chronomia:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '227'
   chapter: Chapter 7 时钟链接
+  chart:
+    EZ:
+      charter: Pcat
+      combo: '338'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Rikko
+      combo: '663'
+      difficulty: '11.1'
+      level: '10'
+    IN:
+      charter: 时の希 & 百九十八
+      combo: '992'
+      difficulty: '15.3'
+      level: '15'
   composer: Lime
-  ez_charter: Pcat
-  ez_combo: '338'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Rikko
-  hd_combo: '663'
-  hd_difficulty: '11.1'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/b/bb/Chronomia_Phigros.jpeg/300px-Chronomia_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/b/bb/Chronomia_Phigros.jpeg
   illustrator: inukoro
-  in_charter: 时の希 & 百九十八
-  in_combo: '992'
-  in_difficulty: '15.3'
-  in_level: '15'
   length: '2:26'
   song: Chronomia
 Chronos Collapse - La Campanella:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter 7 时钟链接
+  chart:
+    EZ:
+      charter: Pcat『Scatter』
+      combo: '350'
+      difficulty: '3.0'
+      level: '3'
+    HD:
+      charter: 阿爽『Destroy』
+      combo: '773'
+      difficulty: '11.2'
+      level: '11'
+    IN:
+      charter: NerSAN vs. 阿爽『Collapse』
+      combo: '1500'
+      difficulty: '15.9'
+      level: '15'
   composer: SunsetRay
-  ez_charter: Pcat『Scatter』
-  ez_combo: '350'
-  ez_difficulty: '3.0'
-  ez_level: '3'
-  hd_charter: 阿爽『Destroy』
-  hd_combo: '773'
-  hd_difficulty: '11.2'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/6/6d/CCLC_Phigros.jpeg/300px-CCLC_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/6/6d/CCLC_Phigros.jpeg
   illustrator: 老张
-  in_charter: NerSAN vs. 阿爽『Collapse』
-  in_combo: '1500'
-  in_difficulty: '15.9'
-  in_level: '15'
   length: '2:33'
   song: Chronos Collapse - La Campanella
 Chronostasis:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '196'
   chapter: Chapter EX-Rising Sun Traxx 精选集
+  chart:
+    EZ:
+      charter: Uvernight
+      combo: '596'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: Uvernight
+      combo: '665'
+      difficulty: '11.2'
+      level: '11'
+    IN:
+      charter: Gausbon
+      combo: '1148'
+      difficulty: '15.8'
+      level: '15'
   composer: 黒皇帝
-  ez_charter: Uvernight
-  ez_combo: '596'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: Uvernight
-  hd_combo: '665'
-  hd_difficulty: '11.2'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/6/6b/Chronostasis_Phigros.png/300px-Chronostasis_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/6b/Chronostasis_Phigros.png
   illustrator: Sand
-  in_charter: Gausbon
-  in_combo: '1148'
-  in_difficulty: '15.8'
-  in_level: '15'
   length: '2:22'
   song: Chronostasis
 'Cipher: /2&//<|0':
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '179'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: M3d1uM
+      combo: '380'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: M3d1uM
+      combo: '526'
+      difficulty: '9.7'
+      level: '9'
+    IN:
+      charter: Barbarianerman feat. Gausbon
+      combo: '1041'
+      difficulty: '14.4'
+      level: '14'
   composer: Tetrajectory feat. Ctymax
-  ez_charter: M3d1uM
-  ez_combo: '380'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: M3d1uM
-  hd_combo: '526'
-  hd_difficulty: '9.7'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/5/5a/Cipher_%E6%96%B0_Phigros.JPG/300px-Cipher_%E6%96%B0_Phigros.JPG
   illustration_big: https://img.moegirl.org.cn/common/5/5a/Cipher_%E6%96%B0_Phigros.JPG
   illustrator: IvyTowers
-  in_charter: Barbarianerman feat. Gausbon
-  in_combo: '1041'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:34'
   song: 'Cipher: /2&//<|0'
 Class Memories:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '145'
   chapter: Chapter 4 管道迷宫
+  chart:
+    EZ:
+      charter: M3d1uM
+      combo: '612'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: M3d1uM
+      combo: '801'
+      difficulty: '10.4'
+      level: '10'
+    IN:
+      charter: JKy
+      combo: '1194'
+      difficulty: '13.5'
+      level: '13'
   composer: Antistar feat. Ctymax
-  ez_charter: M3d1uM
-  ez_combo: '612'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: M3d1uM
-  hd_combo: '801'
-  hd_difficulty: '10.4'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/8/81/Class_Memories_Phigros.png/300px-Class_Memories_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/81/Class_Memories_Phigros.png
   illustrator: xperz
-  in_charter: JKy
-  in_combo: '1194'
-  in_difficulty: '13.5'
-  in_level: '13'
   length: '2:27'
   song: Class Memories
 Clock Paradox:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '140'
   chapter: Chapter 7 时钟链接
+  chart:
+    EZ:
+      charter: Barbarianerman vs. Alloces
+      combo: '188'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: Barbarianerman vs. Alloces
+      combo: '312'
+      difficulty: '6.0'
+      level: '6'
+    IN:
+      charter: Barbarianerman vs. Alloces
+      combo: '520'
+      difficulty: '12.6'
+      level: '12'
   composer: WyvernP
-  ez_charter: Barbarianerman vs. Alloces
-  ez_combo: '188'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: Barbarianerman vs. Alloces
-  hd_combo: '312'
-  hd_difficulty: '6.0'
-  hd_level: '6'
   illustration: https://img.moegirl.org.cn/common/thumb/7/71/Clock_Paradox.jpeg/300px-Clock_Paradox.jpeg
   illustration_big: https://img.moegirl.org.cn/common/7/71/Clock_Paradox.jpeg
   illustrator: 汉堡
-  in_charter: Barbarianerman vs. Alloces
-  in_combo: '520'
-  in_difficulty: '12.6'
-  in_level: '12'
   length: '2:30'
   song: Clock Paradox
 Colorful Days♪:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '136'
   chapter: Chapter 6 方舟蜃景
+  chart:
+    EZ:
+      charter: 阿♪爽
+      combo: '156'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 阿♪爽
+      combo: '186'
+      difficulty: '7.0'
+      level: '7'
+    IN:
+      charter: 阿♪爽
+      combo: '407'
+      difficulty: '12.7'
+      level: '12'
   composer: P4koo feat. つゆり花鈴
-  ez_charter: 阿♪爽
-  ez_combo: '156'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 阿♪爽
-  hd_combo: '186'
-  hd_difficulty: '7.0'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/b/b2/Colorful_Days_Phigros.png/300px-Colorful_Days_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/b/b2/Colorful_Days_Phigros.png
   illustrator: Doro-nyong & Ratif
-  in_charter: 阿♪爽
-  in_combo: '407'
-  in_difficulty: '12.7'
-  in_level: '12'
   length: '1:39'
   song: Colorful Days♪
 Concvssion:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '190'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: J.R
+      combo: '450'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: 晨
+      combo: '700'
+      difficulty: '10.2'
+      level: '10'
+    IN:
+      charter: Phigros Charting Team
+      combo: '1000'
+      difficulty: '15.5'
+      level: '15'
   composer: Halv
-  ez_charter: J.R
-  ez_combo: '450'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: 晨
-  hd_combo: '700'
-  hd_difficulty: '10.2'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/2/22/Concvssion%28Phigros%29.png/300px-Concvssion%28Phigros%29.png
   illustration_big: https://img.moegirl.org.cn/common/2/22/Concvssion%28Phigros%29.png
   illustrator: 汉堡
-  in_charter: Phigros Charting Team
-  in_combo: '1000'
-  in_difficulty: '15.5'
-  in_level: '15'
   length: '2:31'
   song: Concvssion
 Credits:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '179'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: Ctymax
+      combo: '188'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Ctymax
+      combo: '355'
+      difficulty: '10.4'
+      level: '10'
+    IN:
+      charter: Ctymax
+      combo: '535'
+      difficulty: '13.7'
+      level: '13'
   composer: Frums
-  ez_charter: Ctymax
-  ez_combo: '188'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Ctymax
-  hd_combo: '355'
-  hd_difficulty: '10.4'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/2/2b/Credits.png/300px-Credits.png
   illustration_big: https://img.moegirl.org.cn/common/2/2b/Credits.png
   illustrator: Ctymax
-  in_charter: Ctymax
-  in_combo: '535'
-  in_difficulty: '13.7'
-  in_level: '13'
   length: '1:40'
   song: Credits
 Cthugha:
-  at_charter: 百九十八 feat. NerSAN
-  at_combo: '1444'
-  at_difficulty: '15.8'
-  at_level: '15'
   bpm: '213'
   chapter: Chapter EX-Muse Dash 精选集
+  chart:
+    AT:
+      charter: 百九十八 feat. NerSAN
+      combo: '1444'
+      difficulty: '15.8'
+      level: '15'
+    EZ:
+      charter: Barbarianerman
+      combo: '378'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: Barbarianerman
+      combo: '697'
+      difficulty: '12.3'
+      level: '12'
+    IN:
+      charter: Gausbon
+      combo: '1333'
+      difficulty: '15.6'
+      level: '15'
   composer: USAO
-  ez_charter: Barbarianerman
-  ez_combo: '378'
-  ez_difficulty: '7.0'
-  ez_level: '7'
-  hd_charter: Barbarianerman
-  hd_combo: '697'
-  hd_difficulty: '12.3'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/d/d1/Cthugha_Phigros.png/300px-Cthugha_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/d/d1/Cthugha_Phigros.png
   illustrator: 谷地（青鸟modified）
-  in_charter: Gausbon
-  in_combo: '1333'
-  in_difficulty: '15.6'
-  in_level: '15'
   length: '2:34'
   song: Cthugha
 Dash from SOUL NOTES:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 阿爽 fixed by Barbarianerman
+      combo: '114'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: 阿爽 fixed by Barbarianerman
+      combo: '210'
+      difficulty: '5.5'
+      level: '5'
+    IN:
+      charter: JKy
+      combo: '346'
+      difficulty: '11.7'
+      level: '11'
   composer: 小红Akane，李祥晖
-  ez_charter: 阿爽 fixed by Barbarianerman
-  ez_combo: '114'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: 阿爽 fixed by Barbarianerman
-  hd_combo: '210'
-  hd_difficulty: '5.5'
-  hd_level: '5'
   illustration: https://img.moegirl.org.cn/common/thumb/8/80/Dash_Phigros.png/300px-Dash_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/80/Dash_Phigros.png
   illustrator: 艾是Abby
-  in_charter: JKy
-  in_combo: '346'
-  in_difficulty: '11.7'
-  in_level: '11'
   length: '1:54'
   song: Dash from SOUL NOTES
 DataErr0r:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: '[!!12:|<|<ο!!]'
+      combo: '50'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: Rikko
+      combo: '400'
+      difficulty: '11.6'
+      level: '11'
+    IN:
+      charter: TangScend -Err0rederci-
+      combo: '613'
+      difficulty: '14.6'
+      level: '14'
   composer: Cosmograph
-  ez_charter: '[!!12:|<|<ο!!]'
-  ez_combo: '50'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: Rikko
-  hd_combo: '400'
-  hd_difficulty: '11.6'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/c/c1/DataErr0r_Phigros.png/300px-DataErr0r_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/c/c1/DataErr0r_Phigros.png
   illustrator: Photonskyto
-  in_charter: TangScend -Err0rederci-
-  in_combo: '613'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:04'
   song: DataErr0r
 Dead Soul:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '132'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Phigros Charting Team
+      combo: '273'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Phigros Charting Team
+      combo: '613'
+      difficulty: '11.7'
+      level: '11'
+    IN:
+      charter: Phigros Charting Team
+      combo: '787'
+      difficulty: '14.4'
+      level: '14'
   composer: Sound Souler
-  ez_charter: Phigros Charting Team
-  ez_combo: '273'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Phigros Charting Team
-  hd_combo: '613'
-  hd_difficulty: '11.7'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/5/5d/Dead_Soul_Phigros.jpg/300px-Dead_Soul_Phigros.jpg
   illustration_big: https://img.moegirl.org.cn/common/5/5d/Dead_Soul_Phigros.jpg
   illustrator: Photonskyto
-  in_charter: Phigros Charting Team
-  in_combo: '787'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:27'
   song: Dead Soul
 Demiurge:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '111'
   chapter: Side Story 2 弭刻日
+  chart:
+    EZ:
+      charter: '"Manufacturer" ~ Rikko'
+      combo: '100'
+      difficulty: '1.5'
+      level: '1'
+    HD:
+      charter: '"Creator" ~ StupiGGy'
+      combo: '445'
+      difficulty: '7.5'
+      level: '7'
+    IN:
+      charter: '"Demiurge" ~ Dawn'
+      combo: '520'
+      difficulty: '11.8'
+      level: '11'
   composer: Rabpit
-  ez_charter: '"Manufacturer" ~ Rikko'
-  ez_combo: '100'
-  ez_difficulty: '1.5'
-  ez_level: '1'
-  hd_charter: '"Creator" ~ StupiGGy'
-  hd_combo: '445'
-  hd_difficulty: '7.5'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/9/96/Demiurge_Phigros.png/300px-Demiurge_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/9/96/Demiurge_Phigros.png
   illustrator: 青鸟
-  in_charter: '"Demiurge" ~ Dawn'
-  in_combo: '520'
-  in_difficulty: '11.8'
-  in_level: '11'
   length: '2:49'
   song: Demiurge
 Demonkin:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '192'
   chapter: Side Story 2 弭刻日
+  chart:
+    EZ:
+      charter: Alloces
+      combo: '426'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: Alloces
+      combo: '513'
+      difficulty: '10.7'
+      level: '10'
+    IN:
+      charter: Sillyp & Alloces
+      combo: '829'
+      difficulty: '13.7'
+      level: '13'
   composer: Forged Reigns
-  ez_charter: Alloces
-  ez_combo: '426'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: Alloces
-  hd_combo: '513'
-  hd_difficulty: '10.7'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/d/d8/Demonkin_Phigros.png/300px-Demonkin_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/d/d8/Demonkin_Phigros.png
   illustrator: Jeffery
-  in_charter: Sillyp & Alloces
-  in_combo: '829'
-  in_difficulty: '13.7'
-  in_level: '13'
   length: '2:18'
   song: Demonkin
 Disorder:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '193'
   chapter: Chapter EX-HyuN 精选集
+  chart:
+    EZ:
+      charter: Gausbon
+      combo: '444'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Gausbon
+      combo: '629'
+      difficulty: '9.8'
+      level: '9'
+    IN:
+      charter: Gausbon
+      combo: '918'
+      difficulty: '14.7'
+      level: '14'
   composer: HyuN feat. YURI
-  ez_charter: Gausbon
-  ez_combo: '444'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Gausbon
-  hd_combo: '629'
-  hd_difficulty: '9.8'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/5/55/Disorder_Phigros.png/300px-Disorder_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/5/55/Disorder_Phigros.png
   illustrator: Nabom
-  in_charter: Gausbon
-  in_combo: '918'
-  in_difficulty: '14.7'
-  in_level: '14'
   length: '2:14'
   song: Disorder
 Dlyrotz:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: Su1fuR
+      combo: '279'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Su1fuR
+      combo: '382'
+      difficulty: '9.4'
+      level: '9'
+    IN:
+      charter: XMT小咩兔 vs Barbarianerman
+      combo: '584'
+      difficulty: '13.7'
+      level: '13'
   composer: Likey
-  ez_charter: Su1fuR
-  ez_combo: '279'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Su1fuR
-  hd_combo: '382'
-  hd_difficulty: '9.4'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/0/0c/Dlyrotz_Phigros.png/300px-Dlyrotz_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/0c/Dlyrotz_Phigros.png
   illustrator: DoublePian
-  in_charter: XMT小咩兔 vs Barbarianerman
-  in_combo: '584'
-  in_difficulty: '13.7'
-  in_level: '13'
   length: '2:01'
   song: Dlyrotz
 Don't Never Around:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: Chapter EX-KALPA 精选集
+  chart:
+    EZ:
+      charter: XMT小咩兔
+      combo: '308'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: XMT小咩兔
+      combo: '639'
+      difficulty: '11.7'
+      level: '11'
+    IN:
+      charter: XMT小咩兔
+      combo: '1028'
+      difficulty: '15.6'
+      level: '15'
   composer: HAMA
-  ez_charter: XMT小咩兔
-  ez_combo: '308'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: XMT小咩兔
-  hd_combo: '639'
-  hd_difficulty: '11.7'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/f/f0/Don%27t_Never_Around%28Phigros%29.png/300px-Don%27t_Never_Around%28Phigros%29.png
   illustration_big: https://img.moegirl.org.cn/common/f/f0/Don%27t_Never_Around%28Phigros%29.png
   illustrator: Arahosi
-  in_charter: XMT小咩兔
-  in_combo: '1028'
-  in_difficulty: '15.6'
-  in_level: '15'
   length: '1:59'
   song: Don't Never Around
 Doppelganger:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '280'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Lumiere
+      combo: '257'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Lumiere
+      combo: '437'
+      difficulty: '9.8'
+      level: '9'
+    IN:
+      charter: Gausbon
+      combo: '921'
+      difficulty: '14.8'
+      level: '14'
   composer: LeaF
-  ez_charter: Lumiere
-  ez_combo: '257'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Lumiere
-  hd_combo: '437'
-  hd_difficulty: '9.8'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/8/86/Doppelganger_Phigros.png/300px-Doppelganger_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/86/Doppelganger_Phigros.png
   illustrator: 海产
-  in_charter: Gausbon
-  in_combo: '921'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:25'
   song: Doppelganger
 Dreamland:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '120'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Bea
+      combo: '338'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Bea
+      combo: '476'
+      difficulty: '9.8'
+      level: '9'
+    IN:
+      charter: XMT & 198
+      combo: '627'
+      difficulty: '13.2'
+      level: '13'
   composer: z1on & kyrrin
-  ez_charter: Bea
-  ez_combo: '338'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Bea
-  hd_combo: '476'
-  hd_difficulty: '9.8'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/1/10/Dreamland_Phigros.png/300px-Dreamland_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/1/10/Dreamland_Phigros.png
   illustrator: 海产
-  in_charter: XMT & 198
-  in_combo: '627'
-  in_difficulty: '13.2'
-  in_level: '13'
   length: '2:32'
   song: Dreamland
 Drop It from SOUL NOTES:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '126'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Drop Catcats
+      combo: '505'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: Drop Catcats
+      combo: '602'
+      difficulty: '9.6'
+      level: '9'
+    IN:
+      charter: NerSAN & 百九十八
+      combo: '1031'
+      difficulty: '14.1'
+      level: '14'
   composer: Asuka
-  ez_charter: Drop Catcats
-  ez_combo: '505'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: Drop Catcats
-  hd_combo: '602'
-  hd_difficulty: '9.6'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/4/4a/Drop_It_Phigros.png/300px-Drop_It_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/4/4a/Drop_It_Phigros.png
   illustrator: TNiK
-  in_charter: NerSAN & 百九十八
-  in_combo: '1031'
-  in_difficulty: '14.1'
-  in_level: '14'
   length: '3:22'
   song: Drop It from SOUL NOTES
 ENERGY SYNERGY MATRIX:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '160'
   chapter: Chapter 4 管道迷宫
+  chart:
+    EZ:
+      charter: Su1fuR
+      combo: '190'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Su1fuR
+      combo: '468'
+      difficulty: '11.5'
+      level: '11'
+    IN:
+      charter: B B M pow
+      combo: '750'
+      difficulty: '14.6'
+      level: '14'
   composer: Tanchiky
-  ez_charter: Su1fuR
-  ez_combo: '190'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Su1fuR
-  hd_combo: '468'
-  hd_difficulty: '11.5'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/d/d9/EnergySynergyMatrix.png/300px-EnergySynergyMatrix.png
   illustration_big: https://img.moegirl.org.cn/common/d/d9/EnergySynergyMatrix.png
   illustrator: Karameru
-  in_charter: B B M pow
-  in_combo: '750'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:05'
   song: ENERGY SYNERGY MATRIX
 El Condor Pasa (Phigros Edit):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '150'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: TimiTini
+      combo: '259'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: TimiTini
+      combo: '585'
+      difficulty: '12.5'
+      level: '12'
+    IN:
+      charter: XMT小咩兔
+      combo: '1140'
+      difficulty: '15.5'
+      level: '15'
   composer: Plastic Fruits
-  ez_charter: TimiTini
-  ez_combo: '259'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: TimiTini
-  hd_combo: '585'
-  hd_difficulty: '12.5'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/d/d7/El_Condor_Pasa_Phigros.png/300px-El_Condor_Pasa_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/d/d7/El_Condor_Pasa_Phigros.png
   illustrator: 青鸟
-  in_charter: XMT小咩兔
-  in_combo: '1140'
-  in_difficulty: '15.5'
-  in_level: '15'
   length: '2:12'
   song: El Condor Pasa (Phigros Edit)
 Electron:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '134'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '219'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: 百九十八
+      combo: '423'
+      difficulty: '10.4'
+      level: '10'
+    IN:
+      charter: 百九十八
+      combo: '576'
+      difficulty: '13.2'
+      level: '13'
   composer: ElousΛ.-FZ
-  ez_charter: 百九十八
-  ez_combo: '219'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: 百九十八
-  hd_combo: '423'
-  hd_difficulty: '10.4'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/5/5d/Electron_Phigros.png/300px-Electron_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/5/5d/Electron_Phigros.png
   illustrator: DoublePian
-  in_charter: 百九十八
-  in_combo: '576'
-  in_difficulty: '13.2'
-  in_level: '13'
   length: '2:08'
   song: Electron
 Eltaw:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '193'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: JKy
+      combo: '391'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: JKy
+      combo: '608'
+      difficulty: '10.5'
+      level: '10'
+    IN:
+      charter: BarbariaNERman vs. JKy
+      combo: '855'
+      difficulty: '14.4'
+      level: '14'
   composer: Fl00t
-  ez_charter: JKy
-  ez_combo: '391'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: JKy
-  hd_combo: '608'
-  hd_difficulty: '10.5'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/0/04/Eltaw_Phigros.png/300px-Eltaw_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/04/Eltaw_Phigros.png
   illustrator: xperz
-  in_charter: BarbariaNERman vs. JKy
-  in_combo: '855'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:15'
   song: Eltaw
 End Me:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: 100~120
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 鲲
+      combo: '217'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: 鲲
+      combo: '320'
+      difficulty: '7.5'
+      level: '7'
+    IN:
+      charter: 鲲 fixed by 百九十八
+      combo: '724'
+      difficulty: '14.1'
+      level: '14'
   composer: ZxNX as Delaina
-  ez_charter: 鲲
-  ez_combo: '217'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: 鲲
-  hd_combo: '320'
-  hd_difficulty: '7.5'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/3/3d/End_Me_Phigros.png/300px-End_Me_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/3/3d/End_Me_Phigros.png
   illustrator: 何呵
-  in_charter: 鲲 fixed by 百九十八
-  in_combo: '724'
-  in_difficulty: '14.1'
-  in_level: '14'
   length: '2:10'
   song: End Me
 Engine x Start!! (melody mix):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '186'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: Arenn Saki&Catcats
+      combo: '126'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Arenn Saki&Catcats
+      combo: '262'
+      difficulty: '10.5'
+      level: '10'
+    IN:
+      charter: Arenn Saki&Catcats
+      combo: '433'
+      difficulty: '13.4'
+      level: '13'
   composer: CrossingSound
-  ez_charter: Arenn Saki&Catcats
-  ez_combo: '126'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Arenn Saki&Catcats
-  hd_combo: '262'
-  hd_difficulty: '10.5'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/9/9e/Engine_x_Start_Phigros.png/300px-Engine_x_Start_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/9/9e/Engine_x_Start_Phigros.png
   illustrator: 赤芽
-  in_charter: Arenn Saki&Catcats
-  in_combo: '433'
-  in_difficulty: '13.4'
-  in_level: '13'
   length: '1:31'
   song: Engine x Start!! (melody mix)
 Eradication Catastrophe:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '120'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '111'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: Barbarianerman
+      combo: '319'
+      difficulty: '7.5'
+      level: '7'
+    IN:
+      charter: Barbarianerman
+      combo: '593'
+      difficulty: '12.7'
+      level: '12'
   composer: NceS
-  ez_charter: Barbarianerman
-  ez_combo: '111'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: Barbarianerman
-  hd_combo: '319'
-  hd_difficulty: '7.5'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/6/60/Eradication_Catastrophe_Phigros.png/300px-Eradication_Catastrophe_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/60/Eradication_Catastrophe_Phigros.png
   illustrator: 海产
-  in_charter: Barbarianerman
-  in_combo: '593'
-  in_difficulty: '12.7'
-  in_level: '12'
   length: '2:06'
   song: Eradication Catastrophe
 Eternal Snow:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '140'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: M3d1uM
+      combo: '288'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: M3d1uM
+      combo: '533'
+      difficulty: '8.8'
+      level: '8'
+    IN:
+      charter: JKy
+      combo: '700'
+      difficulty: '13.5'
+      level: '13'
   composer: Abyss Idols
-  ez_charter: M3d1uM
-  ez_combo: '288'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: M3d1uM
-  hd_combo: '533'
-  hd_difficulty: '8.8'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/f/f3/Eternal_Snow_Phigros.png/300px-Eternal_Snow_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/f3/Eternal_Snow_Phigros.png
   illustrator: Sak
-  in_charter: JKy
-  in_combo: '700'
-  in_difficulty: '13.5'
-  in_level: '13'
   length: '2:35'
   song: Eternal Snow
 FULi AUTO BUSTER:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '145'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: M3d1uM & 百九十八
+      combo: '285'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: M3d1uM & 百九十八
+      combo: '596'
+      difficulty: '8.6'
+      level: '8'
+    IN:
+      charter: 百九十八 busting 阿爽
+      combo: '755'
+      difficulty: '14.7'
+      level: '14'
   composer: MYUKKE.
-  ez_charter: M3d1uM & 百九十八
-  ez_combo: '285'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: M3d1uM & 百九十八
-  hd_combo: '596'
-  hd_difficulty: '8.6'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/9/99/Phigros_FULi_AUTO_BUSTER.png/300px-Phigros_FULi_AUTO_BUSTER.png
   illustration_big: https://img.moegirl.org.cn/common/9/99/Phigros_FULi_AUTO_BUSTER.png
   illustrator: cycats
-  in_charter: 百九十八 busting 阿爽
-  in_combo: '755'
-  in_difficulty: '14.7'
-  in_level: '14'
   length: '2:04'
   song: FULi AUTO BUSTER
 FULi AUTO SHOOTER:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '145'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: AUTO. SHOOTER.
+      combo: '165'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: AUTO. SHOOTER.
+      combo: '537'
+      difficulty: '11.3'
+      level: '11'
+    IN:
+      charter: AUTO. SHOOTER. fixed by Ctymax
+      combo: '843'
+      difficulty: '14.8'
+      level: '14'
   composer: MYUKKE.
-  ez_charter: AUTO. SHOOTER.
-  ez_combo: '165'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: AUTO. SHOOTER.
-  hd_combo: '537'
-  hd_difficulty: '11.3'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/9/97/FULi_Phigros_2048%2A1080.png/300px-FULi_Phigros_2048%2A1080.png
   illustration_big: https://img.moegirl.org.cn/common/9/97/FULi_Phigros_2048%2A1080.png
   illustrator: ViscerA & Psycholine
-  in_charter: AUTO. SHOOTER. fixed by Ctymax
-  in_combo: '843'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:09'
   song: FULi AUTO SHOOTER
 Feast远东之宴:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: Chapter EX-茶鸣拾贰律 精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '600'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: Barbarianerman
+      combo: '800'
+      difficulty: '11.9'
+      level: '11'
+    IN:
+      charter: Gino
+      combo: '1000'
+      difficulty: '15.3'
+      level: '15'
   composer: 茶鸣拾贰律
-  ez_charter: Barbarianerman
-  ez_combo: '600'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: Barbarianerman
-  hd_combo: '800'
-  hd_difficulty: '11.9'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/2/2f/Feast%E8%BF%9C%E4%B8%9C%E4%B9%8B%E5%AE%B4_Phigros.png/300px-Feast%E8%BF%9C%E4%B8%9C%E4%B9%8B%E5%AE%B4_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/2/2f/Feast%E8%BF%9C%E4%B8%9C%E4%B9%8B%E5%AE%B4_Phigros.png
   illustrator: 茶鸣拾贰律
-  in_charter: Gino
-  in_combo: '1000'
-  in_difficulty: '15.3'
-  in_level: '15'
   length: '2:40'
   song: Feast远东之宴
 Final Step!:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter EX-Muse Dash 精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '355'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: Barbarianerman
+      combo: '604'
+      difficulty: '11.8'
+      level: '11'
+    IN:
+      charter: Barbarianerman vs. Uvernight
+      combo: '931'
+      difficulty: '14.3'
+      level: '14'
   composer: Lime
-  ez_charter: Barbarianerman
-  ez_combo: '355'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: Barbarianerman
-  hd_combo: '604'
-  hd_difficulty: '11.8'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/8/84/Final_Step%21_Phigros.png/300px-Final_Step%21_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/84/Final_Step%21_Phigros.png
   illustrator: 谷地（青鸟modified）
-  in_charter: Barbarianerman vs. Uvernight
-  in_combo: '931'
-  in_difficulty: '14.3'
-  in_level: '14'
   length: '2:17'
   song: Final Step!
 Find_Me:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '191'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Find_Ctymax
+      combo: '465'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Find_Ctymax
+      combo: '657'
+      difficulty: '10.5'
+      level: '10'
+    IN:
+      charter: Find_Ctymax fixed by 百九十八
+      combo: '836'
+      difficulty: '14.4'
+      level: '14'
   composer: K-forest
-  ez_charter: Find_Ctymax
-  ez_combo: '465'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Find_Ctymax
-  hd_combo: '657'
-  hd_difficulty: '10.5'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/b/bb/Find_Me_Phigros.png/300px-Find_Me_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/b/bb/Find_Me_Phigros.png
   illustrator: YuKiMuMa
-  in_charter: Find_Ctymax fixed by 百九十八
-  in_combo: '836'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:07'
   song: Find_Me
 Future Mind:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '365'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: XMT小咩兔
+      combo: '570'
+      difficulty: '11.7'
+      level: '11'
+    IN:
+      charter: Future BarbarXMT
+      combo: '866'
+      difficulty: '14.6'
+      level: '14'
   composer: Ray Nautica & Reku Mochizuki
-  ez_charter: Barbarianerman
-  ez_combo: '365'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: XMT小咩兔
-  hd_combo: '570'
-  hd_difficulty: '11.7'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/3/37/Future_Mind_Phigros.png/300px-Future_Mind_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/3/37/Future_Mind_Phigros.png
   illustrator: Keiby.comics
-  in_charter: Future BarbarXMT
-  in_combo: '866'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:13'
   song: Future Mind
 GOODBOUNCE:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter EX-GOOD精选集
+  chart:
+    EZ:
+      charter: Gausbounce & 晨
+      combo: '588'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Gausbounce
+      combo: '797'
+      difficulty: '11.6'
+      level: '11'
+    IN:
+      charter: Ctymax vs. Gausbounce
+      combo: '898'
+      difficulty: '14.4'
+      level: '14'
   composer: EBIMAYO
-  ez_charter: Gausbounce & 晨
-  ez_combo: '588'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Gausbounce
-  hd_combo: '797'
-  hd_difficulty: '11.6'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e5/GOODBOUNCE_Phigros.png/300px-GOODBOUNCE_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/e5/GOODBOUNCE_Phigros.png
   illustrator: EBIMAYO
-  in_charter: Ctymax vs. Gausbounce
-  in_combo: '898'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:12'
   song: GOODBOUNCE
 GOODFORTUNE:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '170'
   chapter: Chapter EX-GOOD精选集
+  chart:
+    EZ:
+      charter: 晨
+      combo: '455'
+      difficulty: '7.5'
+      level: '7'
+    HD:
+      charter: 晨
+      combo: '733'
+      difficulty: '8.7'
+      level: '8'
+    IN:
+      charter: 晨
+      combo: '1011'
+      difficulty: '15.4'
+      level: '15'
   composer: EBIMAYO
-  ez_charter: 晨
-  ez_combo: '455'
-  ez_difficulty: '7.5'
-  ez_level: '7'
-  hd_charter: 晨
-  hd_combo: '733'
-  hd_difficulty: '8.7'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/8/81/GOODFORTUNE_Phigros.png/300px-GOODFORTUNE_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/81/GOODFORTUNE_Phigros.png
   illustrator: Ctymax
-  in_charter: 晨
-  in_combo: '1011'
-  in_difficulty: '15.4'
-  in_level: '15'
   length: '2:13'
   song: GOODFORTUNE
 GOODRAGE:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '222'
   chapter: Chapter EX-GOOD精选集
+  chart:
+    EZ:
+      charter: 阿爽
+      combo: '308'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 阿爽
+      combo: '628'
+      difficulty: '7.5'
+      level: '7'
+    IN:
+      charter: Ctymax vs. 阿爽
+      combo: '1034'
+      difficulty: '15.7'
+      level: '15'
   composer: EBIMAYO
-  ez_charter: 阿爽
-  ez_combo: '308'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 阿爽
-  hd_combo: '628'
-  hd_difficulty: '7.5'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/f/fe/GOODRAGE_Phigros.png/300px-GOODRAGE_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/fe/GOODRAGE_Phigros.png
   illustrator: Ctymax feat. EBIMAYO
-  in_charter: Ctymax vs. 阿爽
-  in_combo: '1034'
-  in_difficulty: '15.7'
-  in_level: '15'
   length: '2:01'
   song: GOODRAGE
 GOODTEK:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '190'
   chapter: Chapter EX-GOOD精选集
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '295'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: 百九十八
+      combo: '609'
+      difficulty: '10.8'
+      level: '10'
+    IN:
+      charter: 百九十八
+      combo: '873'
+      difficulty: '13.8'
+      level: '13'
   composer: EBIMAYO
-  ez_charter: 百九十八
-  ez_combo: '295'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: 百九十八
-  hd_combo: '609'
-  hd_difficulty: '10.8'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e4/GOODTEK.png/300px-GOODTEK.png
   illustration_big: https://img.moegirl.org.cn/common/e/e4/GOODTEK.png
   illustrator: Ctymax feat. EBIMAYO
-  in_charter: 百九十八
-  in_combo: '873'
-  in_difficulty: '13.8'
-  in_level: '13'
   length: '2:05'
   song: GOODTEK
 GOODWORLD:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '165'
   chapter: Chapter EX-GOOD精选集
+  chart:
+    EZ:
+      charter: 阿爽
+      combo: '215'
+      difficulty: '3.0'
+      level: '3'
+    HD:
+      charter: StupiGGy
+      combo: '805'
+      difficulty: '11.4'
+      level: '11'
+    IN:
+      charter: StupiGGy vs. 阿爽
+      combo: '960'
+      difficulty: '14.5'
+      level: '14'
   composer: EBIMAYO
-  ez_charter: 阿爽
-  ez_combo: '215'
-  ez_difficulty: '3.0'
-  ez_level: '3'
-  hd_charter: StupiGGy
-  hd_combo: '805'
-  hd_difficulty: '11.4'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/8/85/GOODWORLD_Phigros.png/300px-GOODWORLD_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/85/GOODWORLD_Phigros.png
   illustrator: EBIMAYO
-  in_charter: StupiGGy vs. 阿爽
-  in_combo: '960'
-  in_difficulty: '14.5'
-  in_level: '14'
   length: '2:11'
   song: GOODWORLD
 Get Back:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: JKy
+      combo: '321'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: JKy
+      combo: '550'
+      difficulty: '11.4'
+      level: '11'
+    IN:
+      charter: JKy
+      combo: '708'
+      difficulty: '13.8'
+      level: '13'
   composer: CAP3
-  ez_charter: JKy
-  ez_combo: '321'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: JKy
-  hd_combo: '550'
-  hd_difficulty: '11.4'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/f/f7/Get_Back_Phigros.png/300px-Get_Back_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/f7/Get_Back_Phigros.png
   illustrator: TiNK
-  in_charter: JKy
-  in_combo: '708'
-  in_difficulty: '13.8'
-  in_level: '13'
   length: '2:24'
   song: Get Back
 Get Ready!!:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '142'
   chapter: Chapter EX-WAVEAT 精选集
+  chart:
+    EZ:
+      charter: StupiGGy
+      combo: '363'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: StupiGGy
+      combo: '584'
+      difficulty: '8.7'
+      level: '8'
+    IN:
+      charter: StupiGGy
+      combo: '819'
+      difficulty: '13.7'
+      level: '13'
   composer: iF
-  ez_charter: StupiGGy
-  ez_combo: '363'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: StupiGGy
-  hd_combo: '584'
-  hd_difficulty: '8.7'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/1/1a/Get_Ready_Phigros.png/300px-Get_Ready_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/1/1a/Get_Ready_Phigros.png
   illustrator: あおお/A-ZERO,morph
-  in_charter: StupiGGy
-  in_combo: '819'
-  in_difficulty: '13.7'
-  in_level: '13'
   length: '2:10'
   song: Get Ready!!
 Glaciaxion:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '140'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '66'
+      difficulty: '1.0'
+      level: '1'
+    HD:
+      charter: Arenn Saki
+      combo: '418'
+      difficulty: '6.5'
+      level: '6'
+    IN:
+      charter: Barbarianerman vs. NerSAN
+      combo: '729'
+      difficulty: '12.5'
+      level: '12'
   composer: SunsetRay
-  ez_charter: Barbarianerman
-  ez_combo: '66'
-  ez_difficulty: '1.0'
-  ez_level: '1'
-  hd_charter: Arenn Saki
-  hd_combo: '418'
-  hd_difficulty: '6.5'
-  hd_level: '6'
   illustration: https://img.moegirl.org.cn/common/thumb/0/0b/Glaciaxion_Phigros.png/300px-Glaciaxion_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/0b/Glaciaxion_Phigros.png
   illustrator: 艾若拉
-  in_charter: Barbarianerman vs. NerSAN
-  in_combo: '729'
-  in_difficulty: '12.5'
-  in_level: '12'
   length: '2:43'
   song: Glaciaxion
 HAZARD:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: Chapter EX-KALPA 精选集
+  chart:
+    EZ:
+      charter: NerSAN
+      combo: '283'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: NerSAN
+      combo: '507'
+      difficulty: '10.9'
+      level: '10'
+    IN:
+      charter: 阿爽
+      combo: '588'
+      difficulty: '14.7'
+      level: '14'
   composer: Limpid
-  ez_charter: NerSAN
-  ez_combo: '283'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: NerSAN
-  hd_combo: '507'
-  hd_difficulty: '10.9'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/c/cb/HAZARD_Phigros.png/300px-HAZARD_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/c/cb/HAZARD_Phigros.png
   illustrator: ZG
-  in_charter: 阿爽
-  in_combo: '588'
-  in_difficulty: '14.7'
-  in_level: '14'
   length: '2:07'
   song: HAZARD
 Hardcore Kwaya:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '200'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: One skunk (Ctymax) in Africa
+      combo: '340'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Hardcore Barbaya
+      combo: '611'
+      difficulty: '9.2'
+      level: '9'
+    IN:
+      charter: Two skunks (Ctymax and 晨)in Africa shouting WAHHHHHH!
+      combo: '852'
+      difficulty: '14.6'
+      level: '14'
   composer: EnFr
-  ez_charter: One skunk (Ctymax) in Africa
-  ez_combo: '340'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Hardcore Barbaya
-  hd_combo: '611'
-  hd_difficulty: '9.2'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/5/5f/Hardcore_Kwaya_Phigros.png/300px-Hardcore_Kwaya_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/5/5f/Hardcore_Kwaya_Phigros.png
   illustrator: EnFr
-  in_charter: Two skunks (Ctymax and 晨)in Africa shouting WAHHHHHH!
-  in_combo: '852'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:00'
   song: Hardcore Kwaya
 Horizon Blue:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '200'
   chapter: Chapter EX-Lanota 精选集
+  chart:
+    EZ:
+      charter: Nothing But Uvernight
+      combo: '519'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: Nothing But Likey
+      combo: '733'
+      difficulty: '12.2'
+      level: '12'
+    IN:
+      charter: Nothing But Ner & Pcat
+      combo: '1084'
+      difficulty: '15.5'
+      level: '15'
   composer: Nothing But Requiem feat. Aikapin & Chiyoko
-  ez_charter: Nothing But Uvernight
-  ez_combo: '519'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: Nothing But Likey
-  hd_combo: '733'
-  hd_difficulty: '12.2'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/3/36/Phisong_horizon_blue.png/300px-Phisong_horizon_blue.png
   illustration_big: https://img.moegirl.org.cn/common/3/36/Phisong_horizon_blue.png
   illustrator: Lanota © Noxy Games Inc.
-  in_charter: Nothing But Ner & Pcat
-  in_combo: '1084'
-  in_difficulty: '15.5'
-  in_level: '15'
   length: '2:47'
   song: Horizon Blue
 HumaN:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: 阿爽
+      combo: '182'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: 阿爽
+      combo: '382'
+      difficulty: '8.8'
+      level: '8'
+    IN:
+      charter: CN_115+TangScend
+      combo: '554'
+      difficulty: '12.6'
+      level: '12'
   composer: SOTUI
-  ez_charter: 阿爽
-  ez_combo: '182'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: 阿爽
-  hd_combo: '382'
-  hd_difficulty: '8.8'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/8/8a/HumaN_Phigros.png/300px-HumaN_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/8a/HumaN_Phigros.png
   illustrator: CH
-  in_charter: CN_115+TangScend
-  in_combo: '554'
-  in_difficulty: '12.6'
-  in_level: '12'
   length: '2:14'
   song: HumaN
 I Must Say No:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Likey
+      combo: '76'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: JKy
+      combo: '364'
+      difficulty: '9.5'
+      level: '9'
+    IN:
+      charter: Likey & 百九十八
+      combo: '470'
+      difficulty: '13.5'
+      level: '13'
   composer: TangJuan
-  ez_charter: Likey
-  ez_combo: '76'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: JKy
-  hd_combo: '364'
-  hd_difficulty: '9.5'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/3/37/I_Must_Say_No_Phigros.png/300px-I_Must_Say_No_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/3/37/I_Must_Say_No_Phigros.png
   illustrator: cycats
-  in_charter: Likey & 百九十八
-  in_combo: '470'
-  in_difficulty: '13.5'
-  in_level: '13'
   length: '1:56'
   song: I Must Say No
 INFiNiTE ENERZY -Overdoze-:
-  at_charter: while(TangScend=TangScend);
-  at_combo: '888'
-  at_difficulty: '16.3'
-  at_level: '16'
   bpm: '180'
   chapter: Side Story 2 弭刻日
+  chart:
+    AT:
+      charter: while(TangScend=TangScend);
+      combo: '888'
+      difficulty: '16.3'
+      level: '16'
+    EZ:
+      charter: while(TangScend<=TangScend);
+      combo: '333'
+      difficulty: '7.5'
+      level: '7'
+    HD:
+      charter: while(TangScend>=TangScend);
+      combo: '666'
+      difficulty: '12.4'
+      level: '12'
+    IN:
+      charter: while(TangScend==TangScend);
+      combo: '888'
+      difficulty: '14.6'
+      level: '14'
   composer: Reku Mochizuki
-  ez_charter: while(TangScend<=TangScend);
-  ez_combo: '333'
-  ez_difficulty: '7.5'
-  ez_level: '7'
-  hd_charter: while(TangScend>=TangScend);
-  hd_combo: '666'
-  hd_difficulty: '12.4'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/9/95/INFiNiTE_ENERZY_-Overdoze-_Phigros.png/300px-INFiNiTE_ENERZY_-Overdoze-_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/9/95/INFiNiTE_ENERZY_-Overdoze-_Phigros.png
   illustrator: knife美工刀
-  in_charter: while(TangScend==TangScend);
-  in_combo: '888'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '1:57'
   song: INFiNiTE ENERZY -Overdoze-
 Igallta:
-  at_charter: 断罪の剣『神』
-  at_combo: '1114'
-  at_difficulty: '16.7'
-  at_level: '16'
   bpm: '230'
   chapter: Chapter 6 方舟蜃景
+  chart:
+    AT:
+      charter: 断罪の剣『神』
+      combo: '1114'
+      difficulty: '16.7'
+      level: '16'
+    EZ:
+      charter: 信仰の剣『生』
+      combo: '414'
+      difficulty: '7.5'
+      level: '7'
+    HD:
+      charter: 平川の剣『士』
+      combo: '601'
+      difficulty: '12.7'
+      level: '12'
+    IN:
+      charter: 夜明の剣『靈』
+      combo: '1018'
+      difficulty: '15.6'
+      level: '15'
   composer: Se-U-Ra
-  ez_charter: 信仰の剣『生』
-  ez_combo: '414'
-  ez_difficulty: '7.5'
-  ez_level: '7'
-  hd_charter: 平川の剣『士』
-  hd_combo: '601'
-  hd_difficulty: '12.7'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/6/60/Igallta_Phigros.png/300px-Igallta_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/60/Igallta_Phigros.png
   illustrator: Se-U-Ra
-  in_charter: 夜明の剣『靈』
-  in_combo: '1018'
-  in_difficulty: '15.6'
-  in_level: '15'
   length: '2:02'
   song: Igallta
 Infinity Heaven:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '160'
   chapter: Chapter EX-HyuN 精选集
+  chart:
+    EZ:
+      charter: 晨 vs 阿爽
+      combo: '164'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: 晨 vs 阿爽
+      combo: '422'
+      difficulty: '8.4'
+      level: '8'
+    IN:
+      charter: 晨 vs 阿爽
+      combo: '1029'
+      difficulty: '13.6'
+      level: '13'
   composer: HyuN
-  ez_charter: 晨 vs 阿爽
-  ez_combo: '164'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: 晨 vs 阿爽
-  hd_combo: '422'
-  hd_difficulty: '8.4'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/7/78/Infinity_Heaven_Phigros.png/300px-Infinity_Heaven_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/7/78/Infinity_Heaven_Phigros.png
   illustrator: DoublePian
-  in_charter: 晨 vs 阿爽
-  in_combo: '1029'
-  in_difficulty: '13.6'
-  in_level: '13'
   length: '2:34'
   song: Infinity Heaven
 Initialize:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: Chapter EX-WAVEAT 精选集
+  chart:
+    EZ:
+      charter: 阿爽
+      combo: '117'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: NerSAN
+      combo: '354'
+      difficulty: '7.0'
+      level: '7'
+    IN:
+      charter: Arenn Saki vs. NerSAN
+      combo: '581'
+      difficulty: '11.6'
+      level: '11'
   composer: iF
-  ez_charter: 阿爽
-  ez_combo: '117'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: NerSAN
-  hd_combo: '354'
-  hd_difficulty: '7.0'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/a/a0/Initialize_Phigros.png/300px-Initialize_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/a/a0/Initialize_Phigros.png
   illustrator: あおお/A-ZERO,morph
-  in_charter: Arenn Saki vs. NerSAN
-  in_combo: '581'
-  in_difficulty: '11.6'
-  in_level: '11'
   length: '2:07'
   song: Initialize
 Introduction:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '138'
   chapter: --
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '42'
+      difficulty: '-'
+      level: '2'
   composer: 姜米條&ElousΛ.-FZ
-  ez_charter: Barbarianerman
-  ez_combo: '42'
-  ez_difficulty: '-'
-  ez_level: '2'
-  hd_charter: 0
-  hd_combo: 0
-  hd_difficulty: 0
-  hd_level: 0
   illustration: https://img.moegirl.org.cn/common/thumb/1/13/Introduction.png/300px-Introduction.png
   illustration_big: https://img.moegirl.org.cn/common/1/13/Introduction.png
   illustrator: L-sp4
-  in_charter: 0
-  in_combo: 0
-  in_difficulty: 0
-  in_level: 0
   length: '2:30'
   song: Introduction
 JunXion Between Life And Death(VIP Mix):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '164'
   chapter: Chapter 5 霓虹灯牌
+  chart:
+    EZ:
+      charter: 鲲&百九十八
+      combo: '262'
+      difficulty: '3.0'
+      level: '3'
+    HD:
+      charter: 鲲&百九十八
+      combo: '593'
+      difficulty: '8.7'
+      level: '8'
+    IN:
+      charter: 鲲&百九十八
+      combo: '722'
+      difficulty: '13.3'
+      level: '13'
   composer: 1N6Fs
-  ez_charter: 鲲&百九十八
-  ez_combo: '262'
-  ez_difficulty: '3.0'
-  ez_level: '3'
-  hd_charter: 鲲&百九十八
-  hd_combo: '593'
-  hd_difficulty: '8.7'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/5/51/JunXion_%E6%96%B0_Phigros.jpeg/300px-JunXion_%E6%96%B0_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/5/51/JunXion_%E6%96%B0_Phigros.jpeg
   illustrator: IvyTowers
-  in_charter: 鲲&百九十八
-  in_combo: '722'
-  in_difficulty: '13.3'
-  in_level: '13'
   length: '2:22'
   song: JunXion Between Life And Death(VIP Mix)
 Kerberos:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '197'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Alloces
+      combo: '262'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: NerSAN
+      combo: '683'
+      difficulty: '12.4'
+      level: '12'
+    IN:
+      charter: Snorkel vs. NerSAN
+      combo: '978'
+      difficulty: '15.5'
+      level: '15'
   composer: Zris
-  ez_charter: Alloces
-  ez_combo: '262'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: NerSAN
-  hd_combo: '683'
-  hd_difficulty: '12.4'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e6/Kerberos_Phigros.jpeg/300px-Kerberos_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/e/e6/Kerberos_Phigros.jpeg
   illustrator: Eridani
-  in_charter: Snorkel vs. NerSAN
-  in_combo: '978'
-  in_difficulty: '15.5'
-  in_level: '15'
   length: '2:07'
   song: Kerberos
 Khronostasis Katharsis:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '188'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: XMT小咩兔 & Myna
+      combo: '394'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: XMT小咩兔 & Myna
+      combo: '747'
+      difficulty: '11.6'
+      level: '11'
+    IN:
+      charter: StupiGGy fixed by 百九十八
+      combo: '861'
+      difficulty: '14.2'
+      level: '14'
   composer: Halv
-  ez_charter: XMT小咩兔 & Myna
-  ez_combo: '394'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: XMT小咩兔 & Myna
-  hd_combo: '747'
-  hd_difficulty: '11.6'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/f/f9/Khronostasis_Katharsis_Phigros.png/300px-Khronostasis_Katharsis_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/f9/Khronostasis_Katharsis_Phigros.png
   illustrator: utosao
-  in_charter: StupiGGy fixed by 百九十八
-  in_combo: '861'
-  in_difficulty: '14.2'
-  in_level: '14'
   length: '2:14'
   song: Khronostasis Katharsis
 Leave All Behind:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '150'
   chapter: Chapter 5 霓虹灯牌
+  chart:
+    EZ:
+      charter: 亚树见希子 & 百九十八
+      combo: '210'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: 亚树见希子 & 百九十八
+      combo: '394'
+      difficulty: '6.5'
+      level: '6'
+    IN:
+      charter: 亚树见希子 & 百九十八
+      combo: '523'
+      difficulty: '12.7'
+      level: '12'
   composer: rider
-  ez_charter: 亚树见希子 & 百九十八
-  ez_combo: '210'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: 亚树见希子 & 百九十八
-  hd_combo: '394'
-  hd_difficulty: '6.5'
-  hd_level: '6'
   illustration: https://img.moegirl.org.cn/common/thumb/0/02/LeaveAllBehind_Phigros.jpg/300px-LeaveAllBehind_Phigros.jpg
   illustration_big: https://img.moegirl.org.cn/common/0/02/LeaveAllBehind_Phigros.jpg
   illustrator: 笔记RE
-  in_charter: 亚树见希子 & 百九十八
-  in_combo: '523'
-  in_difficulty: '12.7'
-  in_level: '12'
   length: '2:07'
   song: Leave All Behind
 Luminescent:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '141'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Uvernight
+      combo: '330'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Uvernight
+      combo: '608'
+      difficulty: '9.3'
+      level: '9'
+    IN:
+      charter: 百九十八
+      combo: '650'
+      difficulty: '14.4'
+      level: '14'
   composer: Daison
-  ez_charter: Uvernight
-  ez_combo: '330'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Uvernight
-  hd_combo: '608'
-  hd_difficulty: '9.3'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/c/ce/Luminescent_Phigros.png/300px-Luminescent_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/c/ce/Luminescent_Phigros.png
   illustrator: 鲸弑
-  in_charter: 百九十八
-  in_combo: '650'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:37'
   song: Luminescent
 Lyrith -迷宮リリス-:
-  at_charter: CN_115 as "prediCameNt"
-  at_combo: '1236'
-  at_difficulty: '16.2'
-  at_level: '16'
   bpm: '177'
   chapter: Side Story 1 忘忧宫
+  chart:
+    AT:
+      charter: CN_115 as "prediCameNt"
+      combo: '1236'
+      difficulty: '16.2'
+      level: '16'
+    EZ:
+      charter: Arenn Saki as "mAze"
+      combo: '248'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Arenn Saki as "myStery"
+      combo: '700'
+      difficulty: '11.6'
+      level: '11'
+    IN:
+      charter: Arenn Saki as "lAβyrinS"
+      combo: '1122'
+      difficulty: '15.9'
+      level: '15'
   composer: ユメミド
-  ez_charter: Arenn Saki as "mAze"
-  ez_combo: '248'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Arenn Saki as "myStery"
-  hd_combo: '700'
-  hd_difficulty: '11.6'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/b/b0/Phigros_Lyrith.png/300px-Phigros_Lyrith.png
   illustration_big: https://img.moegirl.org.cn/common/b/b0/Phigros_Lyrith.png
   illustrator: 何呵
-  in_charter: Arenn Saki as "lAβyrinS"
-  in_combo: '1122'
-  in_difficulty: '15.9'
-  in_level: '15'
   length: '2:27'
   song: Lyrith -迷宮リリス-
 MARENOL:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '140'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: H.C.C fixed by Barbarianerman
+      combo: '95'
+      difficulty: '2.0'
+      level: '2'
+    HD:
+      charter: H.C.C fixed by Barbarianerman
+      combo: '467'
+      difficulty: '10.2'
+      level: '10'
+    IN:
+      charter: 百九十八
+      combo: '689'
+      difficulty: '14.2'
+      level: '14'
   composer: LeaF
-  ez_charter: H.C.C fixed by Barbarianerman
-  ez_combo: '95'
-  ez_difficulty: '2.0'
-  ez_level: '2'
-  hd_charter: H.C.C fixed by Barbarianerman
-  hd_combo: '467'
-  hd_difficulty: '10.2'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/0/0f/MARENOL_Phigros.png/300px-MARENOL_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/0f/MARENOL_Phigros.png
   illustrator: 喵n葵
-  in_charter: 百九十八
-  in_combo: '689'
-  in_difficulty: '14.2'
-  in_level: '14'
   length: '2:29'
   song: MARENOL
 MOBILYS:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '144'
   chapter: Side Story 1 忘忧宫
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '311'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: 百九十八
+      combo: '530'
+      difficulty: '9.7'
+      level: '9'
+    IN:
+      charter: StupiGGy vs. 百九十八 ft. 野从
+      combo: '938'
+      difficulty: '14.4'
+      level: '14'
   composer: Dachs
-  ez_charter: 百九十八
-  ez_combo: '311'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: 百九十八
-  hd_combo: '530'
-  hd_difficulty: '9.7'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/4/45/MOBILYS_Phigros.png/300px-MOBILYS_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/4/45/MOBILYS_Phigros.png
   illustrator: わっふゑ
-  in_charter: StupiGGy vs. 百九十八 ft. 野从
-  in_combo: '938'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:43'
   song: MOBILYS
 Magenta Potion:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '150'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Ctymax VS 晨
+      combo: '334'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: Ctymax VS 晨
+      combo: '631'
+      difficulty: '11.3'
+      level: '11'
+    IN:
+      charter: Ctymax VS 晨
+      combo: '791'
+      difficulty: '14.5'
+      level: '14'
   composer: EmoCo.
-  ez_charter: Ctymax VS 晨
-  ez_combo: '334'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: Ctymax VS 晨
-  hd_combo: '631'
-  hd_difficulty: '11.3'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/3/3d/Magenta_Potion_Phigros.png/300px-Magenta_Potion_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/3/3d/Magenta_Potion_Phigros.png
   illustrator: NO|SER
-  in_charter: Ctymax VS 晨
-  in_combo: '791'
-  in_difficulty: '14.5'
-  in_level: '14'
   length: '2:27'
   song: Magenta Potion
 Miracle Forest (VIP Mix):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '192'
   chapter: Side Story 1 忘忧宫
+  chart:
+    EZ:
+      charter: 奇跡の希
+      combo: '323'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: 奇跡の希
+      combo: '586'
+      difficulty: '9.8'
+      level: '9'
+    IN:
+      charter: 奇跡の希 feat. 奇跡の従
+      combo: '839'
+      difficulty: '13.7'
+      level: '13'
   composer: Rinth_live
-  ez_charter: 奇跡の希
-  ez_combo: '323'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: 奇跡の希
-  hd_combo: '586'
-  hd_difficulty: '9.8'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/8/81/Miracle_Forest_Phigros.png/300px-Miracle_Forest_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/81/Miracle_Forest_Phigros.png
   illustrator: L-sp4
-  in_charter: 奇跡の希 feat. 奇跡の従
-  in_combo: '839'
-  in_difficulty: '13.7'
-  in_level: '13'
   length: '2:50'
   song: Miracle Forest (VIP Mix)
 NO ONE YES MAN:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '170'
   chapter: Chapter 6 方舟蜃景
+  chart:
+    EZ:
+      charter: Ctymax
+      combo: '394'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: 晨
+      combo: '612'
+      difficulty: '11.8'
+      level: '11'
+    IN:
+      charter: 晨 vs. Ctymax
+      combo: '844'
+      difficulty: '15.4'
+      level: '15'
   composer: MYUKKE.
-  ez_charter: Ctymax
-  ez_combo: '394'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: 晨
-  hd_combo: '612'
-  hd_difficulty: '11.8'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/2/25/NO_ONE_YES_MAN_Phigros.png/300px-NO_ONE_YES_MAN_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/2/25/NO_ONE_YES_MAN_Phigros.png
   illustrator: 青鸟
-  in_charter: 晨 vs. Ctymax
-  in_combo: '844'
-  in_difficulty: '15.4'
-  in_level: '15'
   length: '2:04'
   song: NO ONE YES MAN
 NYA!!!(Phigros ver.):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '154'
   chapter: Chapter 5 霓虹灯牌
+  chart:
+    EZ:
+      charter: HCC!!!
+      combo: '122'
+      difficulty: '2.0'
+      level: '2'
+    HD:
+      charter: HCC!!!
+      combo: '428'
+      difficulty: '8.6'
+      level: '8'
+    IN:
+      charter: HCC!!!
+      combo: '666'
+      difficulty: '12.9'
+      level: '12'
   composer: FLuoRiTe/姜米條
-  ez_charter: HCC!!!
-  ez_combo: '122'
-  ez_difficulty: '2.0'
-  ez_level: '2'
-  hd_charter: HCC!!!
-  hd_combo: '428'
-  hd_difficulty: '8.6'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/7/78/Nya_221_Phigros.png/300px-Nya_221_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/7/78/Nya_221_Phigros.png
   illustrator: NEKO&海产
-  in_charter: HCC!!!
-  in_combo: '666'
-  in_difficulty: '12.9'
-  in_level: '12'
   length: '2:35'
   song: NYA!!!(Phigros ver.)
 Next Time:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Gausbon ~ See you next time ~
+      combo: '240'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Gausbon ~ See you next time ~
+      combo: '303'
+      difficulty: '9.2'
+      level: '9'
+    IN:
+      charter: Gausbon ~ See you next time ~
+      combo: '387'
+      difficulty: '12.6'
+      level: '12'
   composer: SaMZing
-  ez_charter: Gausbon ~ See you next time ~
-  ez_combo: '240'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Gausbon ~ See you next time ~
-  hd_combo: '303'
-  hd_difficulty: '9.2'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/0/04/Next_Time_Phigros.png/300px-Next_Time_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/04/Next_Time_Phigros.png
   illustrator: 叶藤
-  in_charter: Gausbon ~ See you next time ~
-  in_combo: '387'
-  in_difficulty: '12.6'
-  in_level: '12'
   length: '1:50'
   song: Next Time
 Nhelv:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '174.59'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 野从
+      combo: '196'
+      difficulty: '1.5'
+      level: '1'
+    HD:
+      charter: StupiGGy
+      combo: '571'
+      difficulty: '11.9'
+      level: '11'
+    IN:
+      charter: 森德雷斯 vs. 百九十八
+      combo: '833'
+      difficulty: '15.4'
+      level: '15'
   composer: Silentroom
-  ez_charter: 野从
-  ez_combo: '196'
-  ez_difficulty: '1.5'
-  ez_level: '1'
-  hd_charter: StupiGGy
-  hd_combo: '571'
-  hd_difficulty: '11.9'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/e/ea/Nhelv_Phigros.jpeg/300px-Nhelv_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/e/ea/Nhelv_Phigros.jpeg
   illustrator: 駿
-  in_charter: 森德雷斯 vs. 百九十八
-  in_combo: '833'
-  in_difficulty: '15.4'
-  in_level: '15'
   length: '2:39'
   song: Nhelv
 Nick of Time:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: Chapter 7 时钟链接
+  chart:
+    EZ:
+      charter: 晨 vs. XMT小咩兔
+      combo: '328'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 晨 vs. XMT小咩兔
+      combo: '429'
+      difficulty: '8.1'
+      level: '8'
+    IN:
+      charter: NerSAN
+      combo: '745'
+      difficulty: '14.4'
+      level: '14'
   composer: P4koo
-  ez_charter: 晨 vs. XMT小咩兔
-  ez_combo: '328'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 晨 vs. XMT小咩兔
-  hd_combo: '429'
-  hd_difficulty: '8.1'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/1/10/Nick_of_Time_Phigros.jpeg/300px-Nick_of_Time_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/1/10/Nick_of_Time_Phigros.jpeg
   illustrator: 青鸟
-  in_charter: NerSAN
-  in_combo: '745'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:22'
   song: Nick of Time
 Non-Melodic Ragez(MUG Edit):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '205'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: Clutter
+      combo: '221'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Clutter
+      combo: '604'
+      difficulty: '11.8'
+      level: '11'
+    IN:
+      charter: 分化者 fixed by Barbarianerman
+      combo: '1235'
+      difficulty: '15.8'
+      level: '15'
   composer: Normal1zer
-  ez_charter: Clutter
-  ez_combo: '221'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Clutter
-  hd_combo: '604'
-  hd_difficulty: '11.8'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/f/fe/Non-Melodic_Ragez_Phigros.png/300px-Non-Melodic_Ragez_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/fe/Non-Melodic_Ragez_Phigros.png
   illustrator: cycats
-  in_charter: 分化者 fixed by Barbarianerman
-  in_combo: '1235'
-  in_difficulty: '15.8'
-  in_level: '15'
   length: '2:19'
   song: Non-Melodic Ragez(MUG Edit)
 On And On!!:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '170'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Rikko
+      combo: '195'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Rikko
+      combo: '323'
+      difficulty: '10.3'
+      level: '10'
+    IN:
+      charter: NerSAN feat. Takanashi Rikko
+      combo: '830'
+      difficulty: '14.9'
+      level: '14'
   composer: ETIA. feat. Jenga
-  ez_charter: Rikko
-  ez_combo: '195'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Rikko
-  hd_combo: '323'
-  hd_difficulty: '10.3'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/0/03/On_And_On%21%21_Phigros.png/300px-On_And_On%21%21_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/03/On_And_On%21%21_Phigros.png
   illustrator: わっふゑ
-  in_charter: NerSAN feat. Takanashi Rikko
-  in_combo: '830'
-  in_difficulty: '14.9'
-  in_level: '14'
   length: '2:00'
   song: On And On!!
 Orthodox:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '170'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Uvernight
+      combo: '304'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Uvernight
+      combo: '627'
+      difficulty: '10.6'
+      level: '10'
+    IN:
+      charter: Uvernight
+      combo: '962'
+      difficulty: '14.3'
+      level: '14'
   composer: tokiwa
-  ez_charter: Uvernight
-  ez_combo: '304'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Uvernight
-  hd_combo: '627'
-  hd_difficulty: '10.6'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/d/d5/Orthodox_Phigros.png/300px-Orthodox_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/d/d5/Orthodox_Phigros.png
   illustrator: cycats
-  in_charter: Uvernight
-  in_combo: '962'
-  in_difficulty: '14.3'
-  in_level: '14'
   length: '2:21'
   song: Orthodox
 Palescreen:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '173'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Jeitie
+      combo: '224'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Jeitie
+      combo: '772'
+      difficulty: '11.8'
+      level: '11'
+    IN:
+      charter: Jeitie
+      combo: '1059'
+      difficulty: '15.7'
+      level: '15'
   composer: WyvernP feat. Madol
-  ez_charter: Jeitie
-  ez_combo: '224'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Jeitie
-  hd_combo: '772'
-  hd_difficulty: '11.8'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/d/da/Palescreen_Phigros_2048%2A1080.png/300px-Palescreen_Phigros_2048%2A1080.png
   illustration_big: https://img.moegirl.org.cn/common/d/da/Palescreen_Phigros_2048%2A1080.png
   illustrator: GAMEBAKA
-  in_charter: Jeitie
-  in_combo: '1059'
-  in_difficulty: '15.7'
-  in_level: '15'
   length: '2:25'
   song: Palescreen
 Parallel Retrogression(Game Ver.):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: HaraKuma
+      combo: '507'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: HaraKuma
+      combo: '697'
+      difficulty: '10.7'
+      level: '10'
+    IN:
+      charter: HaraKuma
+      combo: '851'
+      difficulty: '14.4'
+      level: '14'
   composer: Tetrajectory
-  ez_charter: HaraKuma
-  ez_combo: '507'
-  ez_difficulty: '7.0'
-  ez_level: '7'
-  hd_charter: HaraKuma
-  hd_combo: '697'
-  hd_difficulty: '10.7'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/2/27/Parallel_Retrogression_Phigros.png/300px-Parallel_Retrogression_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/2/27/Parallel_Retrogression_Phigros.png
   illustrator: 青鸟
-  in_charter: HaraKuma
-  in_combo: '851'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:22'
   song: Parallel Retrogression(Game Ver.)
 Pixel Rebelz:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '150'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: 阿爽
+      combo: '250'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 阿爽
+      combo: '698'
+      difficulty: '11.9'
+      level: '11'
+    IN:
+      charter: NerSAN
+      combo: '941'
+      difficulty: '15.1'
+      level: '15'
   composer: Normal1zer
-  ez_charter: 阿爽
-  ez_combo: '250'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 阿爽
-  hd_combo: '698'
-  hd_difficulty: '11.9'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/c/c4/Pixel_Rebelz_Phigros_Old.png/300px-Pixel_Rebelz_Phigros_Old.png
   illustration_big: https://img.moegirl.org.cn/common/c/c4/Pixel_Rebelz_Phigros_Old.png
   illustrator: 艾是Abby
-  in_charter: NerSAN
-  in_combo: '941'
-  in_difficulty: '15.1'
-  in_level: '15'
   length: '2:22'
   song: Pixel Rebelz
 Poison AND÷OR Affection:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '120'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: R/kko
+      combo: '140'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: '&ikko'
+      combo: '278'
+      difficulty: '9.6'
+      level: '9'
+    IN:
+      charter: 1÷98
+      combo: '888'
+      difficulty: '15.5'
+      level: '15'
   composer: LeaF
-  ez_charter: R/kko
-  ez_combo: '140'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: '&ikko'
-  hd_combo: '278'
-  hd_difficulty: '9.6'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/8/80/Poison_AND%C3%B7OR_Affection_Phigros.png/300px-Poison_AND%C3%B7OR_Affection_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/80/Poison_AND%C3%B7OR_Affection_Phigros.png
   illustrator: 笔记RE/海产
-  in_charter: 1÷98
-  in_combo: '888'
-  in_difficulty: '15.5'
-  in_level: '15'
   length: '2:09'
   song: Poison AND÷OR Affection
 Pont des souvenirs:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '185'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: JKy
+      combo: '461'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: JKy
+      combo: '567'
+      difficulty: '10.7'
+      level: '10'
+    IN:
+      charter: 晨
+      combo: '899'
+      difficulty: '15.2'
+      level: '15'
   composer: VeetaCrush vs. [itsu(feat.itsu)]
-  ez_charter: JKy
-  ez_combo: '461'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: JKy
-  hd_combo: '567'
-  hd_difficulty: '10.7'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/0/05/Pont_des_souvenirs_Phigros.png/300px-Pont_des_souvenirs_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/05/Pont_des_souvenirs_Phigros.png
   illustrator: 林语
-  in_charter: 晨
-  in_combo: '899'
-  in_difficulty: '15.2'
-  in_level: '15'
   length: '2:45'
   song: Pont des souvenirs
 Protoflicker:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '140'
   chapter: Chapter EX-Lanota 精选集
+  chart:
+    EZ:
+      charter: Barbarianerman & J.R
+      combo: '259'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: RTH
+      combo: '511'
+      difficulty: '10.6'
+      level: '10'
+    IN:
+      charter: Gausbon
+      combo: '1210'
+      difficulty: '15.2'
+      level: '15'
   composer: Silentroom
-  ez_charter: Barbarianerman & J.R
-  ez_combo: '259'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: RTH
-  hd_combo: '511'
-  hd_difficulty: '10.6'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/c/c0/Phisong_protoflicker.png/300px-Phisong_protoflicker.png
   illustration_big: https://img.moegirl.org.cn/common/c/c0/Phisong_protoflicker.png
   illustrator: Lanota © Noxy Games Inc.
-  in_charter: Gausbon
-  in_combo: '1210'
-  in_difficulty: '15.2'
-  in_level: '15'
   length: '2:48'
   song: Protoflicker
 RESSiSTANCE:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '205'
   chapter: Chapter EX-KALPA 精选集
+  chart:
+    EZ:
+      charter: 其一 呼吸尚存的标志
+      combo: '499'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: 其二 向前迈进的理由
+      combo: '744'
+      difficulty: '10.6'
+      level: '10'
+    IN:
+      charter: 其三 我所存在的证明
+      combo: '1026'
+      difficulty: '15.8'
+      level: '15'
   composer: ぐるたみん
-  ez_charter: 其一 呼吸尚存的标志
-  ez_combo: '499'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: 其二 向前迈进的理由
-  hd_combo: '744'
-  hd_difficulty: '10.6'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/0/06/RESSiSTANCE%28Phigros%29.png/300px-RESSiSTANCE%28Phigros%29.png
   illustration_big: https://img.moegirl.org.cn/common/0/06/RESSiSTANCE%28Phigros%29.png
   illustrator: LINUS
-  in_charter: 其三 我所存在的证明
-  in_combo: '1026'
-  in_difficulty: '15.8'
-  in_level: '15'
   length: '2:28'
   song: RESSiSTANCE
 RIPPER:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '150'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 撕裂者『無極』 fixed by 晨
+      combo: '520'
+      difficulty: '7.5'
+      level: '7'
+    HD:
+      charter: 撕裂者『無極』 fixed by 晨
+      combo: '704'
+      difficulty: '11.2'
+      level: '11'
+    IN:
+      charter: 撕裂者『Alloces vs Shin』
+      combo: '1186'
+      difficulty: '15.2'
+      level: '15'
   composer: Friedwav
-  ez_charter: 撕裂者『無極』 fixed by 晨
-  ez_combo: '520'
-  ez_difficulty: '7.5'
-  ez_level: '7'
-  hd_charter: 撕裂者『無極』 fixed by 晨
-  hd_combo: '704'
-  hd_difficulty: '11.2'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/2/21/RIPPER_Phigros.png/300px-RIPPER_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/2/21/RIPPER_Phigros.png
   illustrator: 何呵
-  in_charter: 撕裂者『Alloces vs Shin』
-  in_combo: '1186'
-  in_difficulty: '15.2'
-  in_level: '15'
   length: '3:19'
   song: RIPPER
 Rainy Season:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '188'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: StupiGGy
+      combo: '304'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: StupiGGy
+      combo: '594'
+      difficulty: '10.7'
+      level: '10'
+    IN:
+      charter: Raiky Season
+      combo: '660'
+      difficulty: '14.4'
+      level: '14'
   composer: Abyss Idols
-  ez_charter: StupiGGy
-  ez_combo: '304'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: StupiGGy
-  hd_combo: '594'
-  hd_difficulty: '10.7'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/4/43/Rainy_Season_Phigros.png/300px-Rainy_Season_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/4/43/Rainy_Season_Phigros.png
   illustrator: Robins
-  in_charter: Raiky Season
-  in_combo: '660'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '1:53'
   song: Rainy Season
 Re_Nascence (Psystyle Ver.):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '150'
   chapter: Side Story 2 弭刻日
+  chart:
+    EZ:
+      charter: NerSAN
+      combo: '378'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: NerSAN
+      combo: '806'
+      difficulty: '11.4'
+      level: '11'
+    IN:
+      charter: NerSAN & 百九十八
+      combo: '827'
+      difficulty: '14.6'
+      level: '14'
   composer: Rinth_live
-  ez_charter: NerSAN
-  ez_combo: '378'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: NerSAN
-  hd_combo: '806'
-  hd_difficulty: '11.4'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/e/ef/Re_Nascence_Phigros.png/300px-Re_Nascence_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/ef/Re_Nascence_Phigros.png
   illustrator: Tsuioku
-  in_charter: NerSAN & 百九十八
-  in_combo: '827'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:27'
   song: Re_Nascence (Psystyle Ver.)
 Reimei:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '185'
   chapter: Chapter 5 霓虹灯牌
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '325'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: 百九十八
+      combo: '644'
+      difficulty: '11.9'
+      level: '11'
+    IN:
+      charter: 百九十八
+      combo: '983'
+      difficulty: '15.1'
+      level: '15'
   composer: 影虎。
-  ez_charter: 百九十八
-  ez_combo: '325'
-  ez_difficulty: '7.0'
-  ez_level: '7'
-  hd_charter: 百九十八
-  hd_combo: '644'
-  hd_difficulty: '11.9'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/6/61/Reimei_Phigros.png/300px-Reimei_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/61/Reimei_Phigros.png
   illustrator: 英英英
-  in_charter: 百九十八
-  in_combo: '983'
-  in_difficulty: '15.1'
-  in_level: '15'
   length: '2:28'
   song: Reimei
 Rrhar'il:
-  at_charter: RWND -p 16493:62786:92551
-  at_combo: '1300'
-  at_difficulty: '16.8'
-  at_level: '16'
   bpm: '190'
   chapter: Chapter 7 时钟链接
+  chart:
+    AT:
+      charter: RWND -p 16493:62786:92551
+      combo: '1300'
+      difficulty: '16.8'
+      level: '16'
+    EZ:
+      charter: RDRT -p 19:08:31
+      combo: '446'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: RDRT -p 20:02:21
+      combo: '700'
+      difficulty: '12.7'
+      level: '12'
+    IN:
+      charter: RDRT -p 20:08:31
+      combo: '1300'
+      difficulty: '15.7'
+      level: '15'
   composer: Team Grimoire
-  ez_charter: RDRT -p 19:08:31
-  ez_combo: '446'
-  ez_difficulty: '7.0'
-  ez_level: '7'
-  hd_charter: RDRT -p 20:02:21
-  hd_combo: '700'
-  hd_difficulty: '12.7'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/a/a9/Rrhar%E2%80%99il_Phigros.jpeg/300px-Rrhar%E2%80%99il_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/a/a9/Rrhar%E2%80%99il_Phigros.jpeg
   illustrator: 犀牛坨动画工坊
-  in_charter: RDRT -p 20:08:31
-  in_combo: '1300'
-  in_difficulty: '15.7'
-  in_level: '15'
   length: '2:12'
   song: Rrhar'il
 Rubbish Sorting:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 阿爽 vs. Ctymax -Haose 垃圾-
+      combo: '229'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: 阿爽 vs. Ctymax -Haose 垃圾-
+      combo: '475'
+      difficulty: '9.4'
+      level: '9'
+    IN:
+      charter: 阿爽 vs. Ctymax -Haose 垃圾-
+      combo: '613'
+      difficulty: '12.8'
+      level: '12'
   composer: Ctymax vs. NceS
-  ez_charter: 阿爽 vs. Ctymax -Haose 垃圾-
-  ez_combo: '229'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: 阿爽 vs. Ctymax -Haose 垃圾-
-  hd_combo: '475'
-  hd_difficulty: '9.4'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/f/f0/Rubbish_Sorting_Phigros.png/300px-Rubbish_Sorting_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/f0/Rubbish_Sorting_Phigros.png
   illustrator: knife美工刀
-  in_charter: 阿爽 vs. Ctymax -Haose 垃圾-
-  in_combo: '613'
-  in_difficulty: '12.8'
-  in_level: '12'
   length: '2:46'
   song: Rubbish Sorting
 SIGMA:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '200'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Barbarianerman.exe
+      combo: '352'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Bσrbσriσnermσn.exe
+      combo: '516'
+      difficulty: '11.5'
+      level: '11'
+    IN:
+      charter: Bσrbσriσn∑rmσn.∑x∑
+      combo: '785'
+      difficulty: '15.6'
+      level: '15'
   composer: Kry.exe
-  ez_charter: Barbarianerman.exe
-  ez_combo: '352'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Bσrbσriσnermσn.exe
-  hd_combo: '516'
-  hd_difficulty: '11.5'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/a/ab/SIGMA_Phigros.png/300px-SIGMA_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/a/ab/SIGMA_Phigros.png
   illustrator: 塔塔
-  in_charter: Bσrbσriσn∑rmσn.∑x∑
-  in_combo: '785'
-  in_difficulty: '15.6'
-  in_level: '15'
   length: '2:01'
   song: SIGMA
 Sein:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '210'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: A.S.H
+      combo: '203'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: A.S.H
+      combo: '473'
+      difficulty: '9.2'
+      level: '9'
+    IN:
+      charter: A.S.H&晨
+      combo: '721'
+      difficulty: '14.9'
+      level: '14'
   composer: 朔(Apo11o program vs. お月さま交響曲) ft. kuroa×荒巻
-  ez_charter: A.S.H
-  ez_combo: '203'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: A.S.H
-  hd_combo: '473'
-  hd_difficulty: '9.2'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/b/b9/Sein_Phigros.png/300px-Sein_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/b/b9/Sein_Phigros.png
   illustrator: hideo
-  in_charter: A.S.H&晨
-  in_combo: '721'
-  in_difficulty: '14.9'
-  in_level: '14'
   length: '1:59'
   song: Sein
 Shadow:
-  at_charter: J0(_)I2|\|3y'5 3|\||)
-  at_combo: '1089'
-  at_difficulty: '15.9'
-  at_level: '15'
   bpm: '172'
   chapter: Chapter EX-姜米條 精选集
+  chart:
+    AT:
+      charter: J0(_)I2|\|3y'5 3|\||)
+      combo: '1089'
+      difficulty: '15.9'
+      level: '15'
+    EZ:
+      charter: 晨
+      combo: '393'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 晨
+      combo: '549'
+      difficulty: '10.3'
+      level: '10'
+    IN:
+      charter: Sillyp vs 晨
+      combo: '840'
+      difficulty: '14.5'
+      level: '14'
   composer: 姜米条&SumaiLight
-  ez_charter: 晨
-  ez_combo: '393'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 晨
-  hd_combo: '549'
-  hd_difficulty: '10.3'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/f/fe/Shadow_Phigros.png/300px-Shadow_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/fe/Shadow_Phigros.png
   illustrator: 御坂果子
-  in_charter: Sillyp vs 晨
-  in_combo: '840'
-  in_difficulty: '14.5'
-  in_level: '14'
   length: '2:23'
   song: Shadow
 Snow Desert:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '125'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: VikingNexus
+      combo: '236'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: VikingNexus
+      combo: '534'
+      difficulty: '10.3'
+      level: '10'
+    IN:
+      charter: VikingNexus
+      combo: '655'
+      difficulty: '13.3'
+      level: '13'
   composer: WyvernP
-  ez_charter: VikingNexus
-  ez_combo: '236'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: VikingNexus
-  hd_combo: '534'
-  hd_difficulty: '10.3'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/d/d8/Snow_Desert_Phigros.png/300px-Snow_Desert_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/d/d8/Snow_Desert_Phigros.png
   illustrator: knife美工刀
-  in_charter: VikingNexus
-  in_combo: '655'
-  in_difficulty: '13.3'
-  in_level: '13'
   length: '2:22'
   song: Snow Desert
 Sparkle New Life:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '150'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Sparkle Ctymax
+      combo: '305'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: Sparkle Ctymax
+      combo: '497'
+      difficulty: '9.2'
+      level: '9'
+    IN:
+      charter: Sparkle Ctymax fixed by 百九十八
+      combo: '684'
+      difficulty: '12.4'
+      level: '12'
   composer: rider
-  ez_charter: Sparkle Ctymax
-  ez_combo: '305'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: Sparkle Ctymax
-  hd_combo: '497'
-  hd_difficulty: '9.2'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/0/09/Sparkle_New_Life_Phigros.png/300px-Sparkle_New_Life_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/09/Sparkle_New_Life_Phigros.png
   illustrator: 1B
-  in_charter: Sparkle Ctymax fixed by 百九十八
-  in_combo: '684'
-  in_difficulty: '12.4'
-  in_level: '12'
   length: '2:17'
   song: Sparkle New Life
 Spasmodic:
-  at_charter: 無極☆雷鳴~♫死の序曲♫
-  at_combo: '1671'
-  at_difficulty: '16.3'
-  at_level: '16'
   bpm: '200'
   chapter: Chapter 5 霓虹灯牌
+  chart:
+    AT:
+      charter: 無極☆雷鳴~♫死の序曲♫
+      combo: '1671'
+      difficulty: '16.3'
+      level: '16'
+    EZ:
+      charter: 無極☆雷鳴~♫死の序曲♫
+      combo: '637'
+      difficulty: '7.5'
+      level: '7'
+    HD:
+      charter: 無極☆雷鳴~♫死の序曲♫
+      combo: '904'
+      difficulty: '12.6'
+      level: '12'
+    IN:
+      charter: 無極☆雷鳴~♫死の序曲♫
+      combo: '1389'
+      difficulty: '15.2'
+      level: '15'
   composer: 姜米條☆颶風~♫元力上人♫
-  ez_charter: 無極☆雷鳴~♫死の序曲♫
-  ez_combo: '637'
-  ez_difficulty: '7.5'
-  ez_level: '7'
-  hd_charter: 無極☆雷鳴~♫死の序曲♫
-  hd_combo: '904'
-  hd_difficulty: '12.6'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/c/ce/Spasmodic.png/300px-Spasmodic.png
   illustration_big: https://img.moegirl.org.cn/common/c/ce/Spasmodic.png
   illustrator: 昔璃☆暴雨~♫危難聖帝♫
-  in_charter: 無極☆雷鳴~♫死の序曲♫
-  in_combo: '1389'
-  in_difficulty: '15.2'
-  in_level: '15'
   length: '2:34'
   song: Spasmodic
 Speed Up!:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '145'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Ctymax VS 百九十八
+      combo: '262'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Ctymax VS 百九十八
+      combo: '463'
+      difficulty: '10.3'
+      level: '10'
+    IN:
+      charter: Ctymax VS 百九十八
+      combo: '711'
+      difficulty: '14.3'
+      level: '14'
   composer: DarTokki
-  ez_charter: Ctymax VS 百九十八
-  ez_combo: '262'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Ctymax VS 百九十八
-  hd_combo: '463'
-  hd_difficulty: '10.3'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/0/05/Speed_Up_Phigros.jpeg/300px-Speed_Up_Phigros.jpeg
   illustration_big: https://img.moegirl.org.cn/common/0/05/Speed_Up_Phigros.jpeg
   illustrator: TNiK
-  in_charter: Ctymax VS 百九十八
-  in_combo: '711'
-  in_difficulty: '14.3'
-  in_level: '14'
   length: '2:20'
   song: Speed Up!
 Starduster:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '110'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: NerSAN
+      combo: '280'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: NerSAN
+      combo: '578'
+      difficulty: '11.4'
+      level: '11'
+    IN:
+      charter: NerSAN
+      combo: '874'
+      difficulty: '15.1'
+      level: '15'
   composer: Quree
-  ez_charter: NerSAN
-  ez_combo: '280'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: NerSAN
-  hd_combo: '578'
-  hd_difficulty: '11.4'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/f/f4/Starduster_Phigros.png/300px-Starduster_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/f4/Starduster_Phigros.png
   illustrator: IvyTowers
-  in_charter: NerSAN
-  in_combo: '874'
-  in_difficulty: '15.1'
-  in_level: '15'
   length: '2:09'
   song: Starduster
 Stasis:
-  at_charter: 百九十八
-  at_combo: '1700'
-  at_difficulty: '16.4'
-  at_level: '16'
   bpm: '180'
   chapter: Chapter EX-Lanota 精选集
+  chart:
+    AT:
+      charter: 百九十八
+      combo: '1700'
+      difficulty: '16.4'
+      level: '16'
+    EZ:
+      charter: 空の希
+      combo: '446'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: 空の希
+      combo: '902'
+      difficulty: '11.1'
+      level: '11'
+    IN:
+      charter: ST AS is XMT
+      combo: '1322'
+      difficulty: '15.5'
+      level: '15'
   composer: Maozon
-  ez_charter: 空の希
-  ez_combo: '446'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: 空の希
-  hd_combo: '902'
-  hd_difficulty: '11.1'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e1/Phisong_stasis.png/300px-Phisong_stasis.png
   illustration_big: https://img.moegirl.org.cn/common/e/e1/Phisong_stasis.png
   illustrator: Lanota © Noxy Games Inc.
-  in_charter: ST AS is XMT
-  in_combo: '1322'
-  in_difficulty: '15.5'
-  in_level: '15'
   length: '2:34'
   song: Stasis
 Sultan Rage:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '155'
   chapter: Chapter 4 管道迷宫
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '159'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: 百九十八
+      combo: '334'
+      difficulty: '8.5'
+      level: '8'
+    IN:
+      charter: 百九十八
+      combo: '485'
+      difficulty: '12.5'
+      level: '12'
   composer: MonstDeath
-  ez_charter: 百九十八
-  ez_combo: '159'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: 百九十八
-  hd_combo: '334'
-  hd_difficulty: '8.5'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/0/08/Sultan_Rage_Phigros.png/300px-Sultan_Rage_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/08/Sultan_Rage_Phigros.png
   illustrator: 笔记RE
-  in_charter: 百九十八
-  in_combo: '485'
-  in_difficulty: '12.5'
-  in_level: '12'
   length: '1:56'
   song: Sultan Rage
 The Mountain Eater:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '127'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '210'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 百九十八
+      combo: '386'
+      difficulty: '9.1'
+      level: '9'
+    IN:
+      charter: 百九十八
+      combo: '697'
+      difficulty: '14.4'
+      level: '14'
   composer: Paul Bazooka
-  ez_charter: 百九十八
-  ez_combo: '210'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 百九十八
-  hd_combo: '386'
-  hd_difficulty: '9.1'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/2/21/The_Mountain_Eater_Phigros.png/300px-The_Mountain_Eater_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/2/21/The_Mountain_Eater_Phigros.png
   illustrator: START SEED
-  in_charter: 百九十八
-  in_combo: '697'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:03'
   song: The Mountain Eater
 Time to Night Sky (feat. Lee Yu Jin):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: Chapter EX-KALPA 精选集
+  chart:
+    EZ:
+      charter: Rikko
+      combo: '165'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: Barbarianerman
+      combo: '559'
+      difficulty: '9.1'
+      level: '9'
+    IN:
+      charter: Likey & 198ar
+      combo: '540'
+      difficulty: '13.6'
+      level: '13'
   composer: HyuN & KLYDIX
-  ez_charter: Rikko
-  ez_combo: '165'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: Barbarianerman
-  hd_combo: '559'
-  hd_difficulty: '9.1'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/f/fc/Time_to_Night_Sky_%28feat._Lee_Yu_Jin%29_Phigros.png/300px-Time_to_Night_Sky_%28feat._Lee_Yu_Jin%29_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/f/fc/Time_to_Night_Sky_%28feat._Lee_Yu_Jin%29_Phigros.png
   illustrator: ZG
-  in_charter: Likey & 198ar
-  in_combo: '540'
-  in_difficulty: '13.6'
-  in_level: '13'
   length: '2:11'
   song: Time to Night Sky (feat. Lee Yu Jin)
-Träne:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
+Träne:
   bpm: '135'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '148'
+      difficulty: '1.5'
+      level: '1'
+    HD:
+      charter: Barbarianerman
+      combo: '420'
+      difficulty: '6.5'
+      level: '6'
+    IN:
+      charter: Barbarianerman
+      combo: '661'
+      difficulty: '14.5'
+      level: '14'
   composer: MALVA.
-  ez_charter: Barbarianerman
-  ez_combo: '148'
-  ez_difficulty: '1.5'
-  ez_level: '1'
-  hd_charter: Barbarianerman
-  hd_combo: '420'
-  hd_difficulty: '6.5'
-  hd_level: '6'
   illustration: https://img.moegirl.org.cn/common/thumb/6/61/Trane_Phigros.png/300px-Trane_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/61/Trane_Phigros.png
   illustrator: しえろ
-  in_charter: Barbarianerman
-  in_combo: '661'
-  in_difficulty: '14.5'
-  in_level: '14'
   length: '2:26'
-  song: Träne
+  song: Träne
 Unorthodox Thoughts:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '146'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '512'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: HaraKuma
+      combo: '644'
+      difficulty: '11.3'
+      level: '11'
+    IN:
+      charter: Barbarianerman vs. HaraKuma
+      combo: '729'
+      difficulty: '13.9'
+      level: '13'
   composer: Joulez
-  ez_charter: Barbarianerman
-  ez_combo: '512'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: HaraKuma
-  hd_combo: '644'
-  hd_difficulty: '11.3'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/b/b5/Unorthodox_Thoughts_Phigros.png/300px-Unorthodox_Thoughts_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/b/b5/Unorthodox_Thoughts_Phigros.png
   illustrator: ASXX
-  in_charter: Barbarianerman vs. HaraKuma
-  in_combo: '729'
-  in_difficulty: '13.9'
-  in_level: '13'
   length: '2:23'
   song: Unorthodox Thoughts
 Upshift:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '155'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Lumiere
+      combo: '630'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: CorruptedEntity &野从
+      combo: '545'
+      difficulty: '10.8'
+      level: '10'
+    IN:
+      charter: _鉄
+      combo: '946'
+      difficulty: '15.3'
+      level: '15'
   composer: Iriss-Frantzz
-  ez_charter: Lumiere
-  ez_combo: '630'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: CorruptedEntity &野从
-  hd_combo: '545'
-  hd_difficulty: '10.8'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/1/1a/Upshift_Phigros.png/300px-Upshift_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/1/1a/Upshift_Phigros.png
   illustrator: Iriss=Frantzz=s-don
-  in_charter: _鉄
-  in_combo: '946'
-  in_difficulty: '15.3'
-  in_level: '15'
   length: '2:21'
   song: Upshift
 WATER:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '170'
   chapter: Side Story 1 忘忧宫
+  chart:
+    EZ:
+      charter: 急流に巻き込まれ
+      combo: '338'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 対流に巻き込まれ
+      combo: '703'
+      difficulty: '9.4'
+      level: '9'
+    IN:
+      charter: 乱流に巻き込まれ
+      combo: '643'
+      difficulty: '13.6'
+      level: '13'
   composer: A-39/沙包P
-  ez_charter: 急流に巻き込まれ
-  ez_combo: '338'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 対流に巻き込まれ
-  hd_combo: '703'
-  hd_difficulty: '9.4'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/a/ad/WATER_Phigros.png/300px-WATER_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/a/ad/WATER_Phigros.png
   illustrator: knife美工刀
-  in_charter: 乱流に巻き込まれ
-  in_combo: '643'
-  in_difficulty: '13.6'
-  in_level: '13'
   length: '2:36'
   song: WATER
 Wavetapper:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '112'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Sillyp
+      combo: '470'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Sillyp
+      combo: '507'
+      difficulty: '7.0'
+      level: '7'
+    IN:
+      charter: 百九十八 vs. Barbarianerman
+      combo: '866'
+      difficulty: '13.8'
+      level: '13'
   composer: Frums
-  ez_charter: Sillyp
-  ez_combo: '470'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Sillyp
-  hd_combo: '507'
-  hd_difficulty: '7.0'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/1/1e/Wavetapper_Phigros.png/300px-Wavetapper_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/1/1e/Wavetapper_Phigros.png
   illustrator: 百九十八
-  in_charter: 百九十八 vs. Barbarianerman
-  in_combo: '866'
-  in_difficulty: '13.8'
-  in_level: '13'
   length: '2:41'
   song: Wavetapper
 Winter↑cube↓:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '104'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: 小鹏 fixed by Barbarianerman
+      combo: '401'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: 小鹏 fixed by Barbarianerman
+      combo: '696'
+      difficulty: '10.7'
+      level: '10'
+    IN:
+      charter: 百九十八
+      combo: '733'
+      difficulty: '13.4'
+      level: '13'
   composer: Ctymax feat. NceS
-  ez_charter: 小鹏 fixed by Barbarianerman
-  ez_combo: '401'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: 小鹏 fixed by Barbarianerman
-  hd_combo: '696'
-  hd_difficulty: '10.7'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/7/7c/Winter_Cube_Phigros.png/300px-Winter_Cube_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/7/7c/Winter_Cube_Phigros.png
   illustrator: 翠冷兮
-  in_charter: 百九十八
-  in_combo: '733'
-  in_difficulty: '13.4'
-  in_level: '13'
   length: '2:35'
   song: Winter↑cube↓
 With You:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '170'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: with U
+      combo: '226'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: with U
+      combo: '654'
+      difficulty: '9.3'
+      level: '9'
+    IN:
+      charter: with U
+      combo: '774'
+      difficulty: '13.4'
+      level: '13'
   composer: Cashew
-  ez_charter: with U
-  ez_combo: '226'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: with U
-  hd_combo: '654'
-  hd_difficulty: '9.3'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/8/86/With_You_Phigros.png/300px-With_You_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/86/With_You_Phigros.png
   illustrator: ADZUKI
-  in_charter: with U
-  in_combo: '774'
-  in_difficulty: '13.4'
-  in_level: '13'
   length: '2:06'
   song: With You
 XING:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '177'
   chapter: Chapter EX-Muse Dash 精选集
+  chart:
+    EZ:
+      charter: StupiGGy
+      combo: '310'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: StupiGGy
+      combo: '587'
+      difficulty: '9.9'
+      level: '9'
+    IN:
+      charter: Sillyp vs. 阿爽
+      combo: '711'
+      difficulty: '13.8'
+      level: '13'
   composer: ginkiha
-  ez_charter: StupiGGy
-  ez_combo: '310'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: StupiGGy
-  hd_combo: '587'
-  hd_difficulty: '9.9'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/2/2c/XING_Phigros.png/300px-XING_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/2/2c/XING_Phigros.png
   illustrator: 打雷打人（青鸟modified）
-  in_charter: Sillyp vs. 阿爽
-  in_combo: '711'
-  in_difficulty: '13.8'
-  in_level: '13'
   length: '2:16'
   song: XING
 You are the Miserable:
-  at_charter: Pat Brick Man Mr.C & Mr.B
-  at_combo: '1344'
-  at_difficulty: '15.8'
-  at_level: '15'
   bpm: '163'
   chapter: Chapter EX-Lanota 精选集
+  chart:
+    AT:
+      charter: Pat Brick Man Mr.C & Mr.B
+      combo: '1344'
+      difficulty: '15.8'
+      level: '15'
+    EZ:
+      charter: M3d1uM
+      combo: '486'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: M3d1uM
+      combo: '762'
+      difficulty: '11.7'
+      level: '11'
+    IN:
+      charter: We are the Miserable
+      combo: '893'
+      difficulty: '14.6'
+      level: '14'
   composer: t+pazolite
-  ez_charter: M3d1uM
-  ez_combo: '486'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: M3d1uM
-  hd_combo: '762'
-  hd_difficulty: '11.7'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/f/fe/Phisong_you_are_the_miserable.png/300px-Phisong_you_are_the_miserable.png
   illustration_big: https://img.moegirl.org.cn/common/f/fe/Phisong_you_are_the_miserable.png
   illustrator: Lanota © Noxy Games Inc.
-  in_charter: We are the Miserable
-  in_combo: '893'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:43'
   song: You are the Miserable
 '[PRAW]':
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '210'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: 阿爽
+      combo: '419'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 阿爽
+      combo: '692'
+      difficulty: '11.8'
+      level: '11'
+    IN:
+      charter: 晨 vs. 阿爽
+      combo: '1171'
+      difficulty: '15.1'
+      level: '15'
   composer: BlueWind
-  ez_charter: 阿爽
-  ez_combo: '419'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 阿爽
-  hd_combo: '692'
-  hd_difficulty: '11.8'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/b/be/PRAW_Phigros.png/300px-PRAW_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/b/be/PRAW_Phigros.png
   illustrator: 老张
-  in_charter: 晨 vs. 阿爽
-  in_combo: '1171'
-  in_difficulty: '15.1'
-  in_level: '15'
   length: '2:36'
   song: '[PRAW]'
 c.s.q.n.:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '174'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: b.b.n.m.
+      combo: '330'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: h.o.m.e.e.e.
+      combo: '755'
+      difficulty: '12.5'
+      level: '12'
+    IN:
+      charter: s.t.p.g.
+      combo: '1066'
+      difficulty: '15.7'
+      level: '15'
   composer: Aoi
-  ez_charter: b.b.n.m.
-  ez_combo: '330'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: h.o.m.e.e.e.
-  hd_combo: '755'
-  hd_difficulty: '12.5'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/6/64/Csqn_Phigros.png/300px-Csqn_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/64/Csqn_Phigros.png
   illustrator: Ctymax vs. TNiK feat. 出前
-  in_charter: s.t.p.g.
-  in_combo: '1066'
-  in_difficulty: '15.7'
-  in_level: '15'
   length: '2:04'
   song: c.s.q.n.
 cryout:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter 5 霓虹灯牌
+  chart:
+    EZ:
+      charter: Ctymax
+      combo: '221'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Ctymax
+      combo: '529'
+      difficulty: '9.9'
+      level: '9'
+    IN:
+      charter: Ctymax
+      combo: '733'
+      difficulty: '13.7'
+      level: '13'
   composer: Ju_E
-  ez_charter: Ctymax
-  ez_combo: '221'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Ctymax
-  hd_combo: '529'
-  hd_difficulty: '9.9'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/6/68/Cryout_Phigros.png/300px-Cryout_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/68/Cryout_Phigros.png
   illustrator: Haight
-  in_charter: Ctymax
-  in_combo: '733'
-  in_difficulty: '13.7'
-  in_level: '13'
   length: '2:04'
   song: cryout
 dB doll:
-  at_charter: NerSAN & 百九十八
-  at_combo: '377'
-  at_difficulty: '13.6'
-  at_level: '13'
   bpm: '128'
   chapter: 单曲精选集
+  chart:
+    AT:
+      charter: NerSAN & 百九十八
+      combo: '377'
+      difficulty: '13.6'
+      level: '13'
+    EZ:
+      charter: 阿爽 fixed by Barbarianerman
+      combo: '60'
+      difficulty: '1.5'
+      level: '1'
+    HD:
+      charter: 阿爽 fixed by Barbarianerman
+      combo: '124'
+      difficulty: '3.5'
+      level: '3'
+    IN:
+      charter: 阿爽
+      combo: '237'
+      difficulty: '6.0'
+      level: '6'
   composer: YUE.STEVEN/uen
-  ez_charter: 阿爽 fixed by Barbarianerman
-  ez_combo: '60'
-  ez_difficulty: '1.5'
-  ez_level: '1'
-  hd_charter: 阿爽 fixed by Barbarianerman
-  hd_combo: '124'
-  hd_difficulty: '3.5'
-  hd_level: '3'
   illustration: https://img.moegirl.org.cn/common/thumb/c/ca/DB_doll_Phigros.png/300px-DB_doll_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/c/ca/DB_doll_Phigros.png
   illustrator: 何呵
-  in_charter: 阿爽
-  in_combo: '237'
-  in_difficulty: '6.0'
-  in_level: '6'
   length: '1:48'
   song: dB doll
 energy trixxx:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '160'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: NerSAN
+      combo: '252'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: NerSANN
+      combo: '477'
+      difficulty: '11.4'
+      level: '11'
+    IN:
+      charter: NerSANNN
+      combo: '930'
+      difficulty: '15.2'
+      level: '15'
   composer: KAH
-  ez_charter: NerSAN
-  ez_combo: '252'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: NerSANN
-  hd_combo: '477'
-  hd_difficulty: '11.4'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e9/Energy_trixxx_Phigros.png/300px-Energy_trixxx_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/e9/Energy_trixxx_Phigros.png
   illustrator: 手鞠鈴&自動車 原付
-  in_charter: NerSANNN
-  in_combo: '930'
-  in_difficulty: '15.2'
-  in_level: '15'
   length: '2:25'
   song: energy trixxx
 inferior:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '200'
   chapter: Chapter EX-姜米條 精选集
+  chart:
+    EZ:
+      charter: Ner, the inferior
+      combo: '226'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: Ner, the inferior
+      combo: '489'
+      difficulty: '7.5'
+      level: '7'
+    IN:
+      charter: JKy, the inferior
+      combo: '755'
+      difficulty: '14.6'
+      level: '14'
   composer: 姜米條
-  ez_charter: Ner, the inferior
-  ez_combo: '226'
-  ez_difficulty: '7.0'
-  ez_level: '7'
-  hd_charter: Ner, the inferior
-  hd_combo: '489'
-  hd_difficulty: '7.5'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/4/47/Inferior.png/300px-Inferior.png
   illustration_big: https://img.moegirl.org.cn/common/4/47/Inferior.png
   illustrator: 群青kurara
-  in_charter: JKy, the inferior
-  in_combo: '755'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:03'
   song: inferior
 life flashes before weeb eyes:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '227'
   chapter: Chapter EX-Rising Sun Traxx 精选集
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '567'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: 百九十八
+      combo: '960'
+      difficulty: '11.9'
+      level: '11'
+    IN:
+      charter: 百九十八
+      combo: '1065'
+      difficulty: '14.8'
+      level: '14'
   composer: BilliumMoto
-  ez_charter: 百九十八
-  ez_combo: '567'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: 百九十八
-  hd_combo: '960'
-  hd_difficulty: '11.9'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/1/1a/Life_flashes_before_weeb_eyes_Phigros.png/300px-Life_flashes_before_weeb_eyes_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/1/1a/Life_flashes_before_weeb_eyes_Phigros.png
   illustrator: 百九十八
-  in_charter: 百九十八
-  in_combo: '1065'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:36'
   song: life flashes before weeb eyes
 mechanted:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '172'
   chapter: Chapter EX-Rising Sun Traxx 精选集
+  chart:
+    EZ:
+      charter: Ctymax
+      combo: '184'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: Ctymax
+      combo: '500'
+      difficulty: '11.3'
+      level: '11'
+    IN:
+      charter: Ctymax
+      combo: '662'
+      difficulty: '14.7'
+      level: '14'
   composer: rareguy
-  ez_charter: Ctymax
-  ez_combo: '184'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: Ctymax
-  hd_combo: '500'
-  hd_difficulty: '11.3'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/a/ab/Mechanted_Phigros.png/300px-Mechanted_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/a/ab/Mechanted_Phigros.png
   illustrator: IvyTowers
-  in_charter: Ctymax
-  in_combo: '662'
-  in_difficulty: '14.7'
-  in_level: '14'
   length: '1:55'
   song: mechanted
 micro.wav:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '172'
   chapter: Chapter 6 方舟蜃景
+  chart:
+    EZ:
+      charter: 百九十八
+      combo: '196'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: 百九十八
+      combo: '459'
+      difficulty: '10.7'
+      level: '10'
+    IN:
+      charter: 百九十八
+      combo: '649'
+      difficulty: '14.5'
+      level: '14'
   composer: dandeless
-  ez_charter: 百九十八
-  ez_combo: '196'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: 百九十八
-  hd_combo: '459'
-  hd_difficulty: '10.7'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/c/c9/Micro.wav_Phigros.png/300px-Micro.wav_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/c/c9/Micro.wav_Phigros.png
   illustrator: snake.ribs
-  in_charter: 百九十八
-  in_combo: '649'
-  in_difficulty: '14.5'
-  in_level: '14'
   length: '2:04'
   song: micro.wav
 modulus:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '158'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Cty moyules
+      combo: '258'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: Cty moyules
+      combo: '482'
+      difficulty: '10.1'
+      level: '10'
+    IN:
+      charter: Pat Brick Man Mr.C
+      combo: '774'
+      difficulty: '14.7'
+      level: '14'
   composer: PTB10
-  ez_charter: Cty moyules
-  ez_combo: '258'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: Cty moyules
-  hd_combo: '482'
-  hd_difficulty: '10.1'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/6/67/Modulus_Phigros.png/300px-Modulus_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/67/Modulus_Phigros.png
   illustrator: geralt
-  in_charter: Pat Brick Man Mr.C
-  in_combo: '774'
-  in_difficulty: '14.7'
-  in_level: '14'
   length: '2:00'
   song: modulus
 opia:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '193'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: BlindForest
+      combo: '233'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: BlindForest『Observing』
+      combo: '548'
+      difficulty: '11.6'
+      level: '11'
+    IN:
+      charter: Jeitie & CorruptedEntity 『Hollow』
+      combo: '793'
+      difficulty: '15.5'
+      level: '15'
   composer: rN
-  ez_charter: BlindForest
-  ez_combo: '233'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: BlindForest『Observing』
-  hd_combo: '548'
-  hd_difficulty: '11.6'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/4/40/Opia_Phigros.png/300px-Opia_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/4/40/Opia_Phigros.png
   illustrator: rN @ 湯元画伯
-  in_charter: Jeitie & CorruptedEntity 『Hollow』
-  in_combo: '793'
-  in_difficulty: '15.5'
-  in_level: '15'
   length: '2:29'
   song: opia
 volcanic:
-  at_charter: Alloces
-  at_combo: '1650'
-  at_difficulty: '16.2'
-  at_level: '16'
   bpm: 191~382
   chapter: Chapter EX-WAVEAT 精选集
+  chart:
+    AT:
+      charter: Alloces
+      combo: '1650'
+      difficulty: '16.2'
+      level: '16'
+    EZ:
+      charter: Barbarianerman
+      combo: '1052'
+      difficulty: '7.5'
+      level: '7'
+    HD:
+      charter: Rikko
+      combo: '985'
+      difficulty: '11.9'
+      level: '11'
+    IN:
+      charter: Ctymax in a volcano,very delicious
+      combo: '1178'
+      difficulty: '14.8'
+      level: '14'
   composer: DETRO a.k.a ルゼ
-  ez_charter: Barbarianerman
-  ez_combo: '1052'
-  ez_difficulty: '7.5'
-  ez_level: '7'
-  hd_charter: Rikko
-  hd_combo: '985'
-  hd_difficulty: '11.9'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/a/aa/Volcanic_Phigros.png/300px-Volcanic_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/a/aa/Volcanic_Phigros.png
   illustrator: あおお/A-ZERO,morph
-  in_charter: Ctymax in a volcano,very delicious
-  in_combo: '1178'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:16'
   song: volcanic
-Äventyr:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
+Äventyr:
   bpm: 114~132
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '345'
+      difficulty: '2.5'
+      level: '2'
+    HD:
+      charter: Snorkel
+      combo: '626'
+      difficulty: '9.4'
+      level: '9'
+    IN:
+      charter: Barbarianerman vs. Snorkel
+      combo: '954'
+      difficulty: '13.7'
+      level: '13'
   composer: Grand Thaw / Rigël Theatre
-  ez_charter: Barbarianerman
-  ez_combo: '345'
-  ez_difficulty: '2.5'
-  ez_level: '2'
-  hd_charter: Snorkel
-  hd_combo: '626'
-  hd_difficulty: '9.4'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/c/c8/Aventyr.png/300px-Aventyr.png
   illustration_big: https://img.moegirl.org.cn/common/c/c8/Aventyr.png
   illustrator: Grand Thaw / Rigël Theatre
-  in_charter: Barbarianerman vs. Snorkel
-  in_combo: '954'
-  in_difficulty: '13.7'
-  in_level: '13'
   length: '2:40'
-  song: Äventyr
+  song: Äventyr
 Ποσειδών:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: Side Story 1 忘忧宫
+  chart:
+    EZ:
+      charter: Jαckψ a.k.a JKy
+      combo: '533'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: Jαckψ
+      combo: '397'
+      difficulty: '8.4'
+      level: '8'
+    IN:
+      charter: Jαckψ feat. Βαρβαροςαντρας
+      combo: '450'
+      difficulty: '12.8'
+      level: '12'
   composer: 1112 vs. Star*
-  ez_charter: Jαckψ a.k.a JKy
-  ez_combo: '533'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: Jαckψ
-  hd_combo: '397'
-  hd_difficulty: '8.4'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/0/01/%CE%A0%CE%BF%CF%83%CE%B5%CE%B9%CE%B4%CF%8E%CE%BD_Phigros.png/300px-%CE%A0%CE%BF%CF%83%CE%B5%CE%B9%CE%B4%CF%8E%CE%BD_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/01/%CE%A0%CE%BF%CF%83%CE%B5%CE%B9%CE%B4%CF%8E%CE%BD_Phigros.png
   illustrator: 老张
-  in_charter: Jαckψ feat. Βαρβαροςαντρας
-  in_combo: '450'
-  in_difficulty: '12.8'
-  in_level: '12'
   length: '2:03'
   song: Ποσειδών
 ρars/ey:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Rikko
+      combo: '181'
+      difficulty: '3.0'
+      level: '3'
+    HD:
+      charter: Rikko & TangScend
+      combo: '449'
+      difficulty: '11.3'
+      level: '11'
+    IN:
+      charter: TangScend
+      combo: '777'
+      difficulty: '14.7'
+      level: '14'
   composer: siqlo
-  ez_charter: Rikko
-  ez_combo: '181'
-  ez_difficulty: '3.0'
-  ez_level: '3'
-  hd_charter: Rikko & TangScend
-  hd_combo: '449'
-  hd_difficulty: '11.3'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/5/5c/Parsley_jacket.png/300px-Parsley_jacket.png
   illustration_big: https://img.moegirl.org.cn/common/5/5c/Parsley_jacket.png
   illustrator: 出前 x nekomiya
-  in_charter: TangScend
-  in_combo: '777'
-  in_difficulty: '14.7'
-  in_level: '14'
   length: '2:04'
   song: ρars/ey
 いざ、参ります:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '188'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Clutter & Barbarianerman
+      combo: '188'
+      difficulty: '4.0'
+      level: '4'
+    HD:
+      charter: Clutter & Barbarianerman
+      combo: '441'
+      difficulty: '9.6'
+      level: '9'
+    IN:
+      charter: 小咩兔、参上
+      combo: '865'
+      difficulty: '14.8'
+      level: '14'
   composer: U-ske feat. 棗いつき
-  ez_charter: Clutter & Barbarianerman
-  ez_combo: '188'
-  ez_difficulty: '4.0'
-  ez_level: '4'
-  hd_charter: Clutter & Barbarianerman
-  hd_combo: '441'
-  hd_difficulty: '9.6'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/4/4e/%E3%81%84%E3%81%96%E3%80%81%E5%8F%82%E3%82%8A%E3%81%BE%E3%81%99_Phigros.png/300px-%E3%81%84%E3%81%96%E3%80%81%E5%8F%82%E3%82%8A%E3%81%BE%E3%81%99_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/4/4e/%E3%81%84%E3%81%96%E3%80%81%E5%8F%82%E3%82%8A%E3%81%BE%E3%81%99_Phigros.png
   illustrator: 绿风マルト
-  in_charter: 小咩兔、参上
-  in_combo: '865'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '1:42'
   song: いざ、参ります
 もぺもぺ:
-  at_charter: 阿爽
-  at_combo: '720'
-  at_difficulty: '14.9'
-  at_level: '14'
   bpm: '100'
   chapter: 单曲精选集
+  chart:
+    AT:
+      charter: 阿爽
+      combo: '720'
+      difficulty: '14.9'
+      level: '14'
+    EZ:
+      charter: 阿爽 fixed by Barbarianerman
+      combo: '125'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: 阿爽 fixed by Barbarianerman
+      combo: '289'
+      difficulty: '8.5'
+      level: '8'
+    IN:
+      charter: 阿爽
+      combo: '412'
+      difficulty: '11.1'
+      level: '11'
   composer: LeaF
-  ez_charter: 阿爽 fixed by Barbarianerman
-  ez_combo: '125'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: 阿爽 fixed by Barbarianerman
-  hd_combo: '289'
-  hd_difficulty: '8.5'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/b/b3/Mopemope_phi.png/300px-Mopemope_phi.png
   illustration_big: https://img.moegirl.org.cn/common/b/b3/Mopemope_phi.png
   illustrator: Cycats
-  in_charter: 阿爽
-  in_combo: '412'
-  in_difficulty: '11.1'
-  in_level: '11'
   length: '1:50'
   song: もぺもぺ
 インフェルノシティ:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '215'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Su1fuR
+      combo: '352'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Alloces feat. Uvernight
+      combo: '578'
+      difficulty: '11.2'
+      level: '11'
+    IN:
+      charter: Alloces
+      combo: '1275'
+      difficulty: '15.7'
+      level: '15'
   composer: Ponchi♪ feat. はぁち
-  ez_charter: Su1fuR
-  ez_combo: '352'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Alloces feat. Uvernight
-  hd_combo: '578'
-  hd_difficulty: '11.2'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/3/33/%E3%82%A4%E3%83%B3%E3%83%95%E3%82%A7%E3%83%AB%E3%83%8E%E3%82%B7%E3%83%86%E3%82%A3_Phigros_Illust.png/300px-%E3%82%A4%E3%83%B3%E3%83%95%E3%82%A7%E3%83%AB%E3%83%8E%E3%82%B7%E3%83%86%E3%82%A3_Phigros_Illust.png
   illustration_big: https://img.moegirl.org.cn/common/3/33/%E3%82%A4%E3%83%B3%E3%83%95%E3%82%A7%E3%83%AB%E3%83%8E%E3%82%B7%E3%83%86%E3%82%A3_Phigros_Illust.png
   illustrator: LESYEF & 藍瀬 まなみ
-  in_charter: Alloces
-  in_combo: '1275'
-  in_difficulty: '15.7'
-  in_level: '15'
   length: '2:04'
   song: インフェルノシティ
 ジングルベル(Jingle Bell):
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: merry CNrisTimas
+      combo: '639'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: merry XM AS
+      combo: '492'
+      difficulty: '7.0'
+      level: '7'
+    IN:
+      charter: NerSANTA vs. BarbarianerSLEDGE
+      combo: '1239'
+      difficulty: '14.5'
+      level: '14'
   composer: A-39/沙包P
-  ez_charter: merry CNrisTimas
-  ez_combo: '639'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: merry XM AS
-  hd_combo: '492'
-  hd_difficulty: '7.0'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/3/33/%E3%82%B8%E3%83%B3%E3%82%B0%E3%83%AB%E3%83%99%E3%83%AB%28Jingle_Bell%29_Phigros.png/300px-%E3%82%B8%E3%83%B3%E3%82%B0%E3%83%AB%E3%83%99%E3%83%AB%28Jingle_Bell%29_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/3/33/%E3%82%B8%E3%83%B3%E3%82%B0%E3%83%AB%E3%83%99%E3%83%AB%28Jingle_Bell%29_Phigros.png
   illustrator: 爱39的Konya
-  in_charter: NerSANTA vs. BarbarianerSLEDGE
-  in_combo: '1239'
-  in_difficulty: '14.5'
-  in_level: '14'
   length: '2:47'
   song: ジングルベル(Jingle Bell)
 万吨匿名信:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '120'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 猫の信 & 百九十八
+      combo: '307'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: 猫の信 & 百九十八
+      combo: '648'
+      difficulty: '9.7'
+      level: '9'
+    IN:
+      charter: 猫の信 & 百九十八
+      combo: '781'
+      difficulty: '13.3'
+      level: '13'
   composer: 闫东炜
-  ez_charter: 猫の信 & 百九十八
-  ez_combo: '307'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: 猫の信 & 百九十八
-  hd_combo: '648'
-  hd_difficulty: '9.7'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/1/15/Wandunnimingxin_new_illustration.png/300px-Wandunnimingxin_new_illustration.png
   illustration_big: https://img.moegirl.org.cn/common/1/15/Wandunnimingxin_new_illustration.png
   illustrator: IvyTowers
-  in_charter: 猫の信 & 百九十八
-  in_combo: '781'
-  in_difficulty: '13.3'
-  in_level: '13'
   length: '2:44'
   song: 万吨匿名信
 云女孩:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '155'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Cloud Catcats
+      combo: '220'
+      difficulty: '3.0'
+      level: '3'
+    HD:
+      charter: Cloud Catcats
+      combo: '538'
+      difficulty: '9.9'
+      level: '9'
+    IN:
+      charter: 云正太
+      combo: '669'
+      difficulty: '12.6'
+      level: '12'
   composer: 符白牙/SiYFics
-  ez_charter: Cloud Catcats
-  ez_combo: '220'
-  ez_difficulty: '3.0'
-  ez_level: '3'
-  hd_charter: Cloud Catcats
-  hd_combo: '538'
-  hd_difficulty: '9.9'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e7/%E4%BA%91%E5%A5%B3%E5%AD%A9_Phigros.png/300px-%E4%BA%91%E5%A5%B3%E5%AD%A9_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/e7/%E4%BA%91%E5%A5%B3%E5%AD%A9_Phigros.png
   illustrator: 御坂果子
-  in_charter: 云正太
-  in_combo: '669'
-  in_difficulty: '12.6'
-  in_level: '12'
   length: '2:58'
   song: 云女孩
 光:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: Catcats & 百九十八
+      combo: '249'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Catcats & 百九十八
+      combo: '453'
+      difficulty: '8.4'
+      level: '8'
+    IN:
+      charter: Catcats & 百九十八
+      combo: '517'
+      difficulty: '12.8'
+      level: '12'
   composer: 姜米條
-  ez_charter: Catcats & 百九十八
-  ez_combo: '249'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: Catcats & 百九十八
-  hd_combo: '453'
-  hd_difficulty: '8.4'
-  hd_level: '8'
   illustration: https://img.moegirl.org.cn/common/thumb/5/57/%E5%85%89_Phigros.png/300px-%E5%85%89_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/5/57/%E5%85%89_Phigros.png
   illustrator: winder
-  in_charter: Catcats & 百九十八
-  in_combo: '517'
-  in_difficulty: '12.8'
-  in_level: '12'
   length: '2:11'
   song: 光
 大和撫子 -Wild Dances-:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '158'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Eaimo fixed by NerSAN
+      combo: '274'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Eaimo fixed by NerSAN
+      combo: '549'
+      difficulty: '11.8'
+      level: '11'
+    IN:
+      charter: Eaimo vs. CtyNer dancing wildly
+      combo: '1002'
+      difficulty: '14.8'
+      level: '14'
   composer: adaptor vs DRIVE.
-  ez_charter: Eaimo fixed by NerSAN
-  ez_combo: '274'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Eaimo fixed by NerSAN
-  hd_combo: '549'
-  hd_difficulty: '11.8'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/1/13/%E5%A4%A7%E5%92%8C%E6%92%AB%E5%AD%90_Wild_Dances_Phigros.png/300px-%E5%A4%A7%E5%92%8C%E6%92%AB%E5%AD%90_Wild_Dances_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/1/13/%E5%A4%A7%E5%92%8C%E6%92%AB%E5%AD%90_Wild_Dances_Phigros.png
   illustrator: りゆうら
-  in_charter: Eaimo vs. CtyNer dancing wildly
-  in_combo: '1002'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:07'
   song: 大和撫子 -Wild Dances-
 尊師 ～The Guru～:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '152'
   chapter: Chapter 5 霓虹灯牌
+  chart:
+    EZ:
+      charter: M3d1uM
+      combo: '180'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: M3d1uM
+      combo: '346'
+      difficulty: '11.6'
+      level: '11'
+    IN:
+      charter: 奥術 ~The Empery~
+      combo: '738'
+      difficulty: '15.2'
+      level: '15'
   composer: rider
-  ez_charter: M3d1uM
-  ez_combo: '180'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: M3d1uM
-  hd_combo: '346'
-  hd_difficulty: '11.6'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/5/5e/The_Guru_Phigros.png/300px-The_Guru_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/5/5e/The_Guru_Phigros.png
   illustrator: 1B
-  in_charter: 奥術 ~The Empery~
-  in_combo: '738'
-  in_difficulty: '15.2'
-  in_level: '15'
   length: '2:05'
   song: 尊師 ～The Guru～
 开心病:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '131'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: HaraKuma
+      combo: '158'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: HaraKuma
+      combo: '442'
+      difficulty: '11.5'
+      level: '11'
+    IN:
+      charter: Barbarianerman feat. 晨
+      combo: '840'
+      difficulty: '14.2'
+      level: '14'
   composer: 闫东炜
-  ez_charter: HaraKuma
-  ez_combo: '158'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: HaraKuma
-  hd_combo: '442'
-  hd_difficulty: '11.5'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e1/%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png/300px-%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/e1/%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png
   illustrator: 喵n葵
-  in_charter: Barbarianerman feat. 晨
-  in_combo: '840'
-  in_difficulty: '14.2'
-  in_level: '14'
   length: '1:55'
   song: 开心病
 心之所向:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter EX-姜米條 精选集
+  chart:
+    EZ:
+      charter: 波之所杂
+      combo: '226'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 波之所杂
+      combo: '422'
+      difficulty: '9.7'
+      level: '9'
+    IN:
+      charter: 倪之所爽
+      combo: '713'
+      difficulty: '13.6'
+      level: '13'
   composer: 姜米條
-  ez_charter: 波之所杂
-  ez_combo: '226'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 波之所杂
-  hd_combo: '422'
-  hd_difficulty: '9.7'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/8/87/%E5%BF%83%E4%B9%8B%E6%89%80%E5%90%91_Phigros.png/300px-%E5%BF%83%E4%B9%8B%E6%89%80%E5%90%91_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/87/%E5%BF%83%E4%B9%8B%E6%89%80%E5%90%91_Phigros.png
   illustrator: 笔记RE
-  in_charter: 倪之所爽
-  in_combo: '713'
-  in_difficulty: '13.6'
-  in_level: '13'
   length: '2:16'
   song: 心之所向
 月下缭乱:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '175'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: XMT小咩兔
+      combo: '419'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: XMT小咩兔
+      combo: '533'
+      difficulty: '9.4'
+      level: '9'
+    IN:
+      charter: iv
+      combo: '969'
+      difficulty: '14.8'
+      level: '14'
   composer: 月见静华 vs. LUNARiUM
-  ez_charter: XMT小咩兔
-  ez_combo: '419'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: XMT小咩兔
-  hd_combo: '533'
-  hd_difficulty: '9.4'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/2/2c/%E6%9C%88%E4%B8%8B%E7%BC%AD%E4%B9%B1_Phigros_2.png/300px-%E6%9C%88%E4%B8%8B%E7%BC%AD%E4%B9%B1_Phigros_2.png
   illustration_big: https://img.moegirl.org.cn/common/2/2c/%E6%9C%88%E4%B8%8B%E7%BC%AD%E4%B9%B1_Phigros_2.png
   illustrator: TNiK
-  in_charter: iv
-  in_combo: '969'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:29'
   song: 月下缭乱
 望影の方舟Six:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '209'
   chapter: Chapter 6 方舟蜃景
+  chart:
+    EZ:
+      charter: 六回目Traveler Scend
+      combo: '276'
+      difficulty: '6.5'
+      level: '6'
+    HD:
+      charter: 六回目Traveler Scend
+      combo: '526'
+      difficulty: '12.9'
+      level: '12'
+    IN:
+      charter: 六回目Traveler Scend as "Knight of Arq"
+      combo: '1066'
+      difficulty: '15.7'
+      level: '15'
   composer: Se-U-Ra
-  ez_charter: 六回目Traveler Scend
-  ez_combo: '276'
-  ez_difficulty: '6.5'
-  ez_level: '6'
-  hd_charter: 六回目Traveler Scend
-  hd_combo: '526'
-  hd_difficulty: '12.9'
-  hd_level: '12'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e2/Houyou_no_hakobune_Six_Phigros.png/300px-Houyou_no_hakobune_Six_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/e2/Houyou_no_hakobune_Six_Phigros.png
   illustrator: 鲸弑
-  in_charter: 六回目Traveler Scend as "Knight of Arq"
-  in_combo: '1066'
-  in_difficulty: '15.7'
-  in_level: '15'
   length: '1:52'
   song: 望影の方舟Six
 桜樹街道:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '135'
   chapter: Chapter EX-WAVEAT 精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '292'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: Barbarianerman
+      combo: '421'
+      difficulty: '7.5'
+      level: '7'
+    IN:
+      charter: 百九十八
+      combo: '459'
+      difficulty: '13.4'
+      level: '13'
   composer: kozato snow
-  ez_charter: Barbarianerman
-  ez_combo: '292'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: Barbarianerman
-  hd_combo: '421'
-  hd_difficulty: '7.5'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/5/5f/%E6%A1%9C%E6%A8%B9%E8%A1%97%E9%81%93_Phigros.png/300px-%E6%A1%9C%E6%A8%B9%E8%A1%97%E9%81%93_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/5/5f/%E6%A1%9C%E6%A8%B9%E8%A1%97%E9%81%93_Phigros.png
   illustrator: あおお/A-ZERO,morph
-  in_charter: 百九十八
-  in_combo: '459'
-  in_difficulty: '13.4'
-  in_level: '13'
   length: '2:24'
   song: 桜樹街道
 混乱-Confusion:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: Chapter Legacy 过去的章节
+  chart:
+    EZ:
+      charter: 月下樱&115
+      combo: '290'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: 月下樱&115
+      combo: '602'
+      difficulty: '11.4'
+      level: '11'
+    IN:
+      charter: XMT小咩兔
+      combo: '978'
+      difficulty: '14.8'
+      level: '14'
   composer: OnlyMyBlackScore
-  ez_charter: 月下樱&115
-  ez_combo: '290'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: 月下樱&115
-  hd_combo: '602'
-  hd_difficulty: '11.4'
-  hd_level: '11'
   illustration: https://img.moegirl.org.cn/common/thumb/6/6f/Confusion_Phigros.png/300px-Confusion_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/6/6f/Confusion_Phigros.png
   illustrator: L-sp4
-  in_charter: XMT小咩兔
-  in_combo: '978'
-  in_difficulty: '14.8'
-  in_level: '14'
   length: '2:07'
   song: 混乱-Confusion
 游园地:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 野从菠萝
+      combo: '220'
+      difficulty: '2.8'
+      level: '2'
+    HD:
+      charter: 野从菠萝
+      combo: '444'
+      difficulty: '7.5'
+      level: '7'
+    IN:
+      charter: 椒盐倪尔
+      combo: '481'
+      difficulty: '13.2'
+      level: '13'
   composer: 椒盐菠萝
-  ez_charter: 野从菠萝
-  ez_combo: '220'
-  ez_difficulty: '2.8'
-  ez_level: '2'
-  hd_charter: 野从菠萝
-  hd_combo: '444'
-  hd_difficulty: '7.5'
-  hd_level: '7'
   illustration: https://img.moegirl.org.cn/common/thumb/8/8f/%E6%B8%B8%E5%9B%AD%E5%9C%B0_Phigros.png/300px-%E6%B8%B8%E5%9B%AD%E5%9C%B0_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/8/8f/%E6%B8%B8%E5%9B%AD%E5%9C%B0_Phigros.png
   illustrator: CEM
-  in_charter: 椒盐倪尔
-  in_combo: '481'
-  in_difficulty: '13.2'
-  in_level: '13'
   length: '2:07'
   song: 游园地
 狂喜蘭舞:
-  at_charter: Catcats aka. 無極 VS H.C.C. fixed by 野从&晨
-  at_combo: '1325'
-  at_difficulty: '16.1'
-  at_level: '16'
   bpm: '230'
   chapter: 单曲精选集
+  chart:
+    AT:
+      charter: Catcats aka. 無極 VS H.C.C. fixed by 野从&晨
+      combo: '1325'
+      difficulty: '16.1'
+      level: '16'
+    EZ:
+      charter: Catcats aka. 無極 VS H.C.C. fixed by 晨
+      combo: '472'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: Catcats aka. 無極 VS H.C.C. fixed by Pcat
+      combo: '651'
+      difficulty: '10.8'
+      level: '10'
+    IN:
+      charter: 晨
+      combo: '968'
+      difficulty: '14.4'
+      level: '14'
   composer: LeaF
-  ez_charter: Catcats aka. 無極 VS H.C.C. fixed by 晨
-  ez_combo: '472'
-  ez_difficulty: '7.0'
-  ez_level: '7'
-  hd_charter: Catcats aka. 無極 VS H.C.C. fixed by Pcat
-  hd_combo: '651'
-  hd_difficulty: '10.8'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/1/18/Kxlw_phi.jpg/300px-Kxlw_phi.jpg
   illustration_big: https://img.moegirl.org.cn/common/1/18/Kxlw_phi.jpg
   illustrator: DoublePian
-  in_charter: 晨
-  in_combo: '968'
-  in_difficulty: '14.4'
-  in_level: '14'
   length: '2:41'
   song: 狂喜蘭舞
 瓷岁:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '128'
   chapter: Chapter EX-茶鸣拾贰律 精选集
+  chart:
+    EZ:
+      charter: 「流」年大顺
+      combo: '120'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: 「流」年大顺
+      combo: '309'
+      difficulty: '6.5'
+      level: '6'
+    IN:
+      charter: 「兔」年大吉
+      combo: '365'
+      difficulty: '7.0'
+      level: '7'
   composer: 茶鸣拾贰律
-  ez_charter: 「流」年大顺
-  ez_combo: '120'
-  ez_difficulty: '3.5'
-  ez_level: '3'
-  hd_charter: 「流」年大顺
-  hd_combo: '309'
-  hd_difficulty: '6.5'
-  hd_level: '6'
   illustration: https://img.moegirl.org.cn/common/thumb/b/be/%E7%93%B7%E5%B2%81_Phigros.png/300px-%E7%93%B7%E5%B2%81_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/b/be/%E7%93%B7%E5%B2%81_Phigros.png
   illustrator: 茶鸣拾贰律
-  in_charter: 「兔」年大吉
-  in_combo: '365'
-  in_difficulty: '7.0'
-  in_level: '7'
   length: '2:54'
   song: 瓷岁
 盏茗:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '131'
   chapter: Chapter EX-茶鸣拾贰律 精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '83'
+      difficulty: '2.0'
+      level: '2'
+    HD:
+      charter: Barbarianerman
+      combo: '176'
+      difficulty: '4.5'
+      level: '4'
+    IN:
+      charter: NerSAN sipping XMTea
+      combo: '706'
+      difficulty: '13.3'
+      level: '13'
   composer: 茶鸣拾贰律
-  ez_charter: Barbarianerman
-  ez_combo: '83'
-  ez_difficulty: '2.0'
-  ez_level: '2'
-  hd_charter: Barbarianerman
-  hd_combo: '176'
-  hd_difficulty: '4.5'
-  hd_level: '4'
   illustration: https://img.moegirl.org.cn/common/thumb/e/ec/%E7%9B%8F%E8%8C%97_Phigros.png/300px-%E7%9B%8F%E8%8C%97_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/ec/%E7%9B%8F%E8%8C%97_Phigros.png
   illustrator: 茶鸣拾贰律
-  in_charter: NerSAN sipping XMTea
-  in_combo: '706'
-  in_difficulty: '13.3'
-  in_level: '13'
   length: '2:10'
   song: 盏茗
 華灯爱:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '120'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: HaraKuma
+      combo: '318'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: HaraKuma
+      combo: '394'
+      difficulty: '9.6'
+      level: '9'
+    IN:
+      charter: Barbarianerman
+      combo: '520'
+      difficulty: '14.1'
+      level: '14'
   composer: 闫东炜
-  ez_charter: HaraKuma
-  ez_combo: '318'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: HaraKuma
-  hd_combo: '394'
-  hd_difficulty: '9.6'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/a/a9/%E8%8F%AF%E7%81%AF%E7%88%B1_Phigros.png/300px-%E8%8F%AF%E7%81%AF%E7%88%B1_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/a/a9/%E8%8F%AF%E7%81%AF%E7%88%B1_Phigros.png
   illustrator: IvyTowers
-  in_charter: Barbarianerman
-  in_combo: '520'
-  in_difficulty: '14.1'
-  in_level: '14'
   length: '1:54'
   song: 華灯爱
 萤火虫の怨:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '100'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 阿爽 & 百九十八
+      combo: '245'
+      difficulty: '4.5'
+      level: '4'
+    HD:
+      charter: 阿爽 & 百九十八
+      combo: '746'
+      difficulty: '10.6'
+      level: '10'
+    IN:
+      charter: 阿爽 & 百九十八
+      combo: '885'
+      difficulty: '13.1'
+      level: '13'
   composer: 闫东炜
-  ez_charter: 阿爽 & 百九十八
-  ez_combo: '245'
-  ez_difficulty: '4.5'
-  ez_level: '4'
-  hd_charter: 阿爽 & 百九十八
-  hd_combo: '746'
-  hd_difficulty: '10.6'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/4/4f/%E8%90%A4%E7%81%AB%E8%99%AB%E3%81%AE%E6%80%A8_Phigros.png/300px-%E8%90%A4%E7%81%AB%E8%99%AB%E3%81%AE%E6%80%A8_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/4/4f/%E8%90%A4%E7%81%AB%E8%99%AB%E3%81%AE%E6%80%A8_Phigros.png
   illustrator: L-sp4
-  in_charter: 阿爽 & 百九十八
-  in_combo: '885'
-  in_difficulty: '13.1'
-  in_level: '13'
   length: '2:38'
   song: 萤火虫の怨
 重生:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '195'
   chapter: Chapter 6 方舟蜃景
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '354'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: Barbarianerman
+      combo: '650'
+      difficulty: '9.3'
+      level: '9'
+    IN:
+      charter: Barbarianerman
+      combo: '900'
+      difficulty: '14.6'
+      level: '14'
   composer: 姜米條
-  ez_charter: Barbarianerman
-  ez_combo: '354'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: Barbarianerman
-  hd_combo: '650'
-  hd_difficulty: '9.3'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/7/76/%E9%87%8D%E7%94%9F_Phigros.png/300px-%E9%87%8D%E7%94%9F_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/7/76/%E9%87%8D%E7%94%9F_Phigros.png
   illustrator: 昔璃&TNiK
-  in_charter: Barbarianerman
-  in_combo: '900'
-  in_difficulty: '14.6'
-  in_level: '14'
   length: '2:23'
   song: 重生
 雪降り、メリクリ:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Merry xmAS
+      combo: '316'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Merry ChristymAxS
+      combo: '559'
+      difficulty: '9.3'
+      level: '9'
+    IN:
+      charter: N\erry Xmas
+      combo: '939'
+      difficulty: '15.3'
+      level: '15'
   composer: A-39
-  ez_charter: Merry xmAS
-  ez_combo: '316'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Merry ChristymAxS
-  hd_combo: '559'
-  hd_difficulty: '9.3'
-  hd_level: '9'
   illustration: https://img.moegirl.org.cn/common/thumb/0/06/Yuki_Ori_Meri_Kuri_Phigros.png/300px-Yuki_Ori_Meri_Kuri_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/0/06/Yuki_Ori_Meri_Kuri_Phigros.png
   illustrator: 犀牛坨动画工坊
-  in_charter: N\erry Xmas
-  in_combo: '939'
-  in_difficulty: '15.3'
-  in_level: '15'
   length: '2:38'
   song: 雪降り、メリクリ
 青丘:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '180'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Ctymax
+      combo: '284'
+      difficulty: '5.5'
+      level: '5'
+    HD:
+      charter: Su1fuR
+      combo: '534'
+      difficulty: '10.5'
+      level: '10'
+    IN:
+      charter: KillJoy
+      combo: '1304'
+      difficulty: '15.3'
+      level: '15'
   composer: BLACK 0
-  ez_charter: Ctymax
-  ez_combo: '284'
-  ez_difficulty: '5.5'
-  ez_level: '5'
-  hd_charter: Su1fuR
-  hd_combo: '534'
-  hd_difficulty: '10.5'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/9/94/%E9%9D%92%E4%B8%98_Phigros.png/300px-%E9%9D%92%E4%B8%98_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/9/94/%E9%9D%92%E4%B8%98_Phigros.png
   illustrator: BLACK 0
-  in_charter: KillJoy
-  in_combo: '1304'
-  in_difficulty: '15.3'
-  in_level: '15'
   length: '2:47'
   song: 青丘
 青芽:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '108'
   chapter: Chapter EX-茶鸣拾贰律 精选集
+  chart:
+    EZ:
+      charter: 生根发芽的小咩兔
+      combo: '366'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: 逆流而上的小咩兔
+      combo: '520'
+      difficulty: '10.8'
+      level: '10'
+    IN:
+      charter: Hook vs._鉄
+      combo: '1102'
+      difficulty: '14.7'
+      level: '14'
   composer: 茶鸣拾贰律
-  ez_charter: 生根发芽的小咩兔
-  ez_combo: '366'
-  ez_difficulty: '5.0'
-  ez_level: '5'
-  hd_charter: 逆流而上的小咩兔
-  hd_combo: '520'
-  hd_difficulty: '10.8'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/e/e7/%E9%9D%92%E8%8A%BD_Phigros.png/300px-%E9%9D%92%E8%8A%BD_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/e7/%E9%9D%92%E8%8A%BD_Phigros.png
   illustrator: 茶鸣拾贰律
-  in_charter: Hook vs._鉄
-  in_combo: '1102'
-  in_difficulty: '14.7'
-  in_level: '14'
   length: '2:27'
   song: 青芽
 风屿:
-  at_charter: 0
-  at_combo: 0
-  at_difficulty: 0
-  at_level: 0
   bpm: '170'
   chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Arenn Saki vs Catcats vs 百九十八
+      combo: '368'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: Arenn Saki vs Catcats vs 百九十八
+      combo: '802'
+      difficulty: '10.3'
+      level: '10'
+    IN:
+      charter: Arenn Saki vs Catcats vs 百九十八
+      combo: '1156'
+      difficulty: '13.7'
+      level: '13'
   composer: 闫东炜
-  ez_charter: Arenn Saki vs Catcats vs 百九十八
-  ez_combo: '368'
-  ez_difficulty: '6.0'
-  ez_level: '6'
-  hd_charter: Arenn Saki vs Catcats vs 百九十八
-  hd_combo: '802'
-  hd_difficulty: '10.3'
-  hd_level: '10'
   illustration: https://img.moegirl.org.cn/common/thumb/e/ef/%E9%A3%8E%E5%B1%BF_Phigros.png/300px-%E9%A3%8E%E5%B1%BF_Phigros.png
   illustration_big: https://img.moegirl.org.cn/common/e/ef/%E9%A3%8E%E5%B1%BF_Phigros.png
   illustrator: cycats
-  in_charter: Arenn Saki vs Catcats vs 百九十八
-  in_combo: '1156'
-  in_difficulty: '13.7'
-  in_level: '13'
   length: '2:59'
   song: 风屿

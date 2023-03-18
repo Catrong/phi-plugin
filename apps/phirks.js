@@ -81,7 +81,7 @@ export class phirks extends plugin {
 
                     let img = get.getimg(name)
                     let diffic = userdata["phi"]["diffic"]
-                    let rank = infolist[`${name}`][`${diffic.toLowerCase()}_difficulty`]
+                    let rank = infolist[name]["chart"][diffic]["difficulty"]
                     let acc = userdata["phi"]["acc"] * 100
                     let rks = dxrks(acc, rank)
                     userdata[`phi`]["rank"] = rks
@@ -100,7 +100,7 @@ export class phirks extends plugin {
                     }
                     let img = get.getimg(name)
                     let diffic = userdata[`b${i}`]["diffic"]
-                    let rank = infolist[`${name}`][`${diffic.toLowerCase()}_difficulty`]
+                    let rank = infolist[name]["chart"][diffic]["difficulty"]
                     let acc = userdata[`b${i}`]["acc"] * 100
                     let rks = dxrks(acc, rank)
                     userdata[`b${i}`]["rank"] = rks
@@ -241,11 +241,11 @@ function ask(e, mic) {
     } else {
         /**发送正在设置的曲目，序号存储在 userdata['puting'] 中 */
         let msgRes = []
-        if (infolist[`${mic}`]['at_difficulty']) {
+        if (infolist[mic]["chart"]["AT"]["difficulty"]) {
             e.reply(`提示，这一首是有AT等级的哦！`)
-            msgRes = [`请发送\n`, get.getimg(mic), `\n${infolist[`${mic}`]['song']}的 AT IN HD EZ acc，例： 98.99 100 100 100`]
+            msgRes = [`请发送\n`, get.getimg(mic), `\n${infolist[mic]['song']}的 AT IN HD EZ acc，例： 98.99 100 100 100`]
         } else {
-            msgRes = [`请发送\n`, get.getimg(mic), `\n${infolist[`${mic}`]['song']}的 IN HD EZ acc，例： 98.99 100 100`]
+            msgRes = [`请发送\n`, get.getimg(mic), `\n${infolist[mic]['song']}的 IN HD EZ acc，例： 98.99 100 100`]
         }
         e.reply(msgRes)
     }
@@ -266,7 +266,7 @@ function findacc(e) {
         acc[i] /= 100  /**实际存储为0-1的浮点数 */
     }
     /**写入到数组 */
-    if (infolist[`${mic}`]['at_difficulty']) {
+    if (infolist[mic]["chart"]["AT"]["difficulty"]) {
         acc[3] = Number(acc[3])
         if (!acc[3]) acc[3] = 0
         if (typeof acc[3] != 'number' || acc[3] < 0 || acc[3] > 100) {
@@ -336,14 +336,15 @@ function savedata(e, mic) {
 function insrt(mic, diffic) {
     let fnal = 0
     let acc = userdata[`${mic}`][diffic]
-    let score = dxrks(acc * 100, infolist[`${mic}`][`${diffic.toLowerCase()}_difficulty`])
+    logger.info(mic)
+    let score = dxrks(acc * 100, infolist[mic]["chart"][diffic]["difficulty"])
 
 
 
     /**更新phi1 */
     if (acc === 1) {
         if (!userdata.phi || score > userdata['phi']['rank']) {
-            userdata['phi'] = { 'name': infolist[`${mic}`]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
+            userdata['phi'] = { 'name': infolist[mic]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
         }
     }
     /**查找需要插入的位置（fnal） */
@@ -363,7 +364,7 @@ function insrt(mic, diffic) {
         userdata[`b${i}`] = userdata[`b${i - 1}`]
     }
     //                        曲名                                 难度            acc        有效rks
-    userdata[`b${fnal}`] = { 'name': infolist[`${mic}`]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
+    userdata[`b${fnal}`] = { 'name': infolist[mic]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
     return true
 }
 
