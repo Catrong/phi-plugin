@@ -58,13 +58,13 @@ export class phirks extends plugin {
             if (typeof songs != Array) {
                 
                 // get.getsongsinfo(e, songs)
-                msgRes = get.getsongsinfo(e, songs)
-                e.reply(msgRes, true)
+                msgRes = await get.getsongsinfo(e, songs)
+                e.reply(msgRes)
             } else {
                 msgRes = []
                 e.reply(`找到了${songs.length}首歌曲！`, true)
                 for (var i in songs) {
-                    msgRes[i] = get.getsongsinfo(e, songs[i])
+                    msgRes[i] = await get.getsongsinfo(e, songs[i])
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, ""))
             }

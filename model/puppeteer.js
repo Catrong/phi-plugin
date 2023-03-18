@@ -153,11 +153,11 @@ export default new class newPuppeteer {
     }
 
     /**返回图片信息 */
-    return await pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
 
     let base64 = await pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
     let ret = true
     if (base64) {
+      return base64
       ret = await e.reply(base64)
     }
     return cfg.retMsgId ? ret : true

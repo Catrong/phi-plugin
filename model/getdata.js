@@ -171,7 +171,7 @@ class get {
     getsongsinfo(e, name) {
         if (name) {
             let infolist = this.getData('infolist')
-            atlas.atlas(e, infolist[name])
+            return atlas.atlas(e, infolist[name])
         } else {
             /**未找到曲目 */
             return `未找到${name}的相关曲目信息QAQ`

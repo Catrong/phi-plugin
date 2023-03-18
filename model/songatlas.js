@@ -27,29 +27,10 @@ class atlas {
             /**画师 */
             illustrator: info.illustrator,
             /**谱面 */
-            AT: {
-                /**定级 */
-                difficulty: info.at_difficulty,
-                /**物量 */
-                combo: info.at_combo,
-                /**谱师 */
-                charter: info.at_charter
-            },
-            IN: {
-                difficulty: info.in_difficulty,
-                combo: info.in_combo,
-                charter: info.in_charter
-            },
-            HD: {
-                difficulty: info.hd_difficulty,
-                combo: info.hd_combo,
-                charter: info.hd_charter
-            },
-            EZ: {
-                difficulty: info.ez_difficulty,
-                combo: info.ez_combo,
-                charter: info.ez_charter
-            }
+            AT: info.chart.AT,
+            IN: info.chart.IN,
+            HD: info.chart.HD,
+            EZ: info.chart.EZ
         }
         // 渲染图片
         return await puppeteer.render('atlas/atlas', {
