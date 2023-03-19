@@ -25,10 +25,10 @@ export class phirks extends plugin {
                     reg: '^#phi设置别名.*$',
                     fnc: 'setnick'
                 },
-                {
-                    reg: '^#phi查询.*$',
-                    fnc: 'find'
-                },
+                // {
+                //     reg: '^#phi查询.*$',
+                //     fnc: 'find'
+                // },
                 {
                     reg: '^#phi随机.*$',
                     fnc: 'randmic'
@@ -62,11 +62,11 @@ export class phirks extends plugin {
                 e.reply(msgRes)
             } else {
                 msgRes = []
-                e.reply(`找到了${songs.length}首歌曲！`, true)
+                // e.reply(`找到了${songs.length}首歌曲！`, true)
                 for (var i in songs) {
                     msgRes[i] = await get.getsongsinfo(e, songs[i])
                 }
-                e.reply(await common.makeForwardMsg(e, msgRes, ""))
+                // e.reply(await common.makeForwardMsg(e, msgRes, ""))
             }
         } else {
             e.reply(`未找到${msg}的相关曲目信息QAQ\n可以输入 #phi申请 原曲名称 ---> 别名 来向主人提出命名申请哦！`, true)
