@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     justify-content: space-around;
     background: url("../otherimg/phigros.png") white center top no-repeat;
-    background-size: auto 100%;
+    background-size: auto 200%;
 }
 
 .box {
