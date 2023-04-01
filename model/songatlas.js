@@ -26,7 +26,9 @@ class atlas {
             AT: info.chart.AT,
             IN: info.chart.IN,
             HD: info.chart.HD,
-            EZ: info.chart.EZ
+            EZ: info.chart.EZ,
+            /**其他消息（备注） */
+            othermsg: info.othermsg
         }
         // 渲染图片
         return await puppeteer.render('atlas/atlas', {

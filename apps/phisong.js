@@ -301,8 +301,45 @@ export class phirks extends plugin {
         } else if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
         } else {
-            await e.reply(get.getsongsinfo(mic))
-            e.reply(`计算结果：${Number(dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"])).toFixed(4)}`, true)
+            mic = mic[0]
+            let info = infolist[mic]
+            let song = {
+                /**曲名 */
+                song: info.song,
+                /**曲绘 */
+                illustration_big: info.illustration_big,
+                /**章节 */
+                chapter: info.chapter,
+                /**bpm */
+                bpm: info.bpm,
+                /**曲师 */
+                composer: info.composer,
+                /**时长 */
+                length: info.length,
+                /**画师 */
+                illustrator: info.illustrator,
+
+                othermsg: `计算结果：${Number(dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"])).toFixed(4)}`,
+
+                chart: {
+                }
+            }
+            switch (diffic) {
+                case "AT": {
+                    song.chart['AT'] = info.chart['AT']
+                    break
+                } case "IN": {
+                    song.chart['IN'] = info.chart['IN']
+                    break
+                } case "HD": {
+                    song.chart['HD'] = info.chart['HD']
+                    break
+                } case "EZ": {
+                    song.chart['EZ'] = info.chart['EZ']
+                    break
+                }
+            }
+            await e.reply(await get.getsongsinfo(e, mic, song))
         }
         return true
     }
@@ -351,6 +388,7 @@ export class phirks extends plugin {
                     e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
                     return true
                 }
+                mic = mic[0]
                 data[1] = userdata[`${mic}`][`${diffic}`]
                 data[2] = userdata["b19"]["rank"]
                 if (!mic) {
@@ -360,7 +398,7 @@ export class phirks extends plugin {
                     e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
                     return true
                 } else {
-                    e.reply(get.getsongsinfo(mic))
+                    e.reply(await get.getsongsinfo(e, mic))
                     /**先计算等效rks */
                     let rks = dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"]) > data[2]
                     if (rks >= data[2]) {
@@ -401,11 +439,12 @@ export class phirks extends plugin {
             e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
             return true
         }
-        else if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
+        mic = mic[0]
+        if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
             return true
         } else {
-            e.reply(get.getsongsinfo(mic))
+            e.reply(await get.getsongsinfo(e, mic))
             /**先计算等效rks */
             let rks = dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"])
             logger.info(data)
