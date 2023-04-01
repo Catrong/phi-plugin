@@ -8,17 +8,25 @@
 
 {{/block}}
 {{block 'main'}}
+
+{{if illustration}}
 <style>
     body {
         background: url("{{illustration}}") white center top no-repeat;
         background-size: auto 200%;
     }
 </style>
+{{/if}}
+
 <div class="box">
     <h1>{{song}}</h1>
     <hr noshade>
     <div class="tb">
+        <!-- {{if illustration}}
         <img src="{{illustration}}" alt="曲绘">
+        {{else}} -->
+        <img src= "{{pluResPath}}/otherimg/phigros.png" alt="曲绘">
+        <!-- {{/if}} -->
         <div class="header">
             <p>曲师：{{composer}}</p>
             <p>画师：{{illustrator}}</p>

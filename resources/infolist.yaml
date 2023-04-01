@@ -4283,3 +4283,54 @@ Äventyr:
   illustrator: cycats
   length: '2:59'
   song: 风屿
+零號車輛:
+  bpm: 240
+  chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 零號宇夜
+      combo: '594'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: 壹號阿爽
+      combo: '1058'
+      difficulty: '12.8'
+      level: '12'
+    IN:
+      charter: Pact【零】198
+      combo: '1240'
+      difficulty: '15.8'
+      level: '15'
+  composer: seatrus
+  illustration: 0
+  illustration_big: 0
+  illustrator: 2Al4wU4
+  length: '2:30'
+  song: 零號車輛
+Random:
+  bpm: 132
+  chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '275'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: IMD_6
+      combo: '568'
+      difficulty: '11.1'
+      level: '11'
+    IN:
+      charter: _鉄
+      combo: '732'
+      difficulty: '14.7'
+      level: '14'
+  composer: Sobrem × Silentroom
+  illustration: 0
+  illustration_big: 0
+  illustrator: Harkiadel
+  length: '2:14'
+  song: Random
+

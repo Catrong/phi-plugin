@@ -1,7 +1,7 @@
-/* .container {
-    background: url("https://api.gmit.vip/Api/DmImg?format=image") white center top no-repeat;
-    background-size: cover;
-} */
+.container {
+    background: url("../otherimg/phigros.png") white center top no-repeat;
+    background-size: auto 100%;
+}
 
 li {
     list-style: none;
