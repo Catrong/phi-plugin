@@ -51,7 +51,10 @@ git clone https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
 #### 曲绘资源
 
 https://wwvr.lanzouw.com/b0328fk4d
+
 密码:ophi
+
+请将曲绘文件解压后放在 /resources/Ill 下
 
 ---
 
