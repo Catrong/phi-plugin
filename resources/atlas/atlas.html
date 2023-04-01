@@ -37,6 +37,9 @@
     </div>
     <div class="tb">
         <div class="header">
+            {{if SP}}
+            <p>SP:{{SP["difficulty"]}}</p>
+            {{/if}}
             {{if AT}}
             <p>AT:{{AT["difficulty"]}}</p>
             {{/if}}
@@ -51,6 +54,9 @@
             {{/if}}
         </div>
         <div class="header">
+            {{if SP}}
+            <p>{{SP["combo"]}}combo</p>
+            {{/if}}
             {{if AT}}
             <p>{{AT["combo"]}}combo</p>
             {{/if}}
@@ -65,6 +71,9 @@
             {{/if}}
         </div>
         <div class="header">
+            {{if SP}}
+            <p>chart by {{SP["charter"]}}</p>
+            {{/if}}
             {{if AT}}
             <p>chart by {{AT["charter"]}}</p>
             {{/if}}

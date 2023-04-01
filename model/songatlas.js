@@ -5,7 +5,6 @@ let interval = false
 class atlas {
 
     async atlas(e, info) {
-      logger.info(info)
         // 渲染数据
         let data = {
             /**曲名 */
@@ -23,6 +22,7 @@ class atlas {
             /**画师 */
             illustrator: info.illustrator,
             /**谱面 */
+            SP: info.chart.SP,
             AT: info.chart.AT,
             IN: info.chart.IN,
             HD: info.chart.HD,
@@ -35,7 +35,6 @@ class atlas {
           e,
           scale: 2.0
         })
-        interval = false
     }
 }
 
