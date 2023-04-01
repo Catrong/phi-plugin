@@ -132,7 +132,7 @@ class get {
     songsnick(mic) {
         let songnick = this.getData('nicklist')
         let nickconfig = this.getData('nickconfig')
-        let all = []
+        var all = []
         if (songnick[mic]) {
             for (var i in songnick[mic]) {
                 all.push(songnick[mic][i])
@@ -145,7 +145,7 @@ class get {
         }
         if (all) {
             if (all.length == 1) {
-                return all[0]
+                return all
             } else {
                 return all
             }
@@ -168,10 +168,14 @@ class get {
     }
 
     /**获取歌曲介绍，曲名为原名，格式支持修改/config/showconfig.yaml热更新 */
-    getsongsinfo(e, name) {
-        if (name) {
+    getsongsinfo(e, name, data) {
+
+        if (!data) {
             let infolist = this.getData('infolist')
-            return atlas.atlas(e, infolist[name])
+            data = infolist[name]
+        }
+        if (data) {
+            return atlas.atlas(e, data)
         } else {
             /**未找到曲目 */
             return `未找到${name}的相关曲目信息QAQ`

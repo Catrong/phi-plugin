@@ -10,6 +10,13 @@
   font-family: 'YS';
   src: url("./font/HYWH-65W.woff") format('woff'), url("./font/HYWH-65W.ttf") format('truetype');
 }
+@font-face {
+  font-family: 'PHI';
+  src: url("./font/phi.ttf") format('woff'), url("./font/phi.ttf") format('truetype');
+}
+.font-PHI {
+  font-family: Number, "phi", PHI, PingFangSC-Medium, "PingFang SC", sans-serif;
+}
 .font-YS {
   font-family: Number, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
 }
@@ -26,7 +33,7 @@
 body {
   font-size: 18px;
   color: #1e1f20;
-  font-family: Number, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
+  font-family: Number, "phi", PHI, PingFangSC-Medium, "PingFang SC", sans-serif;
   transform: scale(1.4);
   transform-origin: 0 0;
   width: 600px;
@@ -44,7 +51,7 @@ body {
   margin-top: 30px;
 }
 .head-box .title {
-  font-family: Number, "印品南征北战NZBZ体", NZBZ, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
+  font-family: Number, "phi", PHI, PingFangSC-Medium, "PingFang SC", sans-serif;
   font-size: 36px;
   text-shadow: 0 0 1px #000, 1px 1px 3px rgba(0, 0, 0, 0.9);
 }

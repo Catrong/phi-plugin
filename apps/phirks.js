@@ -169,6 +169,11 @@ export class phirks extends plugin {
             e.reply(`没有找到 ${msg} 有关的曲目信息QAQ！`)
             return true
         }
+        if (song[1]) {
+            e.reply(`${msg}含有多个对应曲目哦！请换一种名字吧！`)
+            return true
+        }
+        song = song[0]
         userdata = get.getData(`${e.user_id}`)
         if (!userdata) {
             e.reply('没有检测到您的存档哦！将自动为您创建……')
@@ -398,6 +403,7 @@ function FindtoRead(e, mic) {
         if (!song) {
             return true
         }
+        song = song[0]
         readlist[num].push(song)
         return true
     }

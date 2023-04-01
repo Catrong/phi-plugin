@@ -2,7 +2,6 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
-import { segment } from 'oicq'
 
 var userdata = []
 var songlist = get.getData('songlist') //曲名排序的歌曲列表
@@ -55,8 +54,9 @@ export class phirks extends plugin {
         let songs = get.songsnick(msg)
         if (songs) {
             let msgRes
-            if (typeof songs != Array) {
-                
+
+            if (!songs[1]) {
+                songs = songs[0]
                 // get.getsongsinfo(e, songs)
                 msgRes = await get.getsongsinfo(e, songs)
                 e.reply(msgRes)
@@ -87,20 +87,21 @@ export class phirks extends plugin {
             msg = msg.split("\n")
         }
         if (msg[1]) {
-            msg[0] = get.songsnick(msg[0])
-            if (msg[0]) {
-                if (typeof(msg[0]) == Array) {
+            let mic = get.songsnick(msg[0])
+            if (mic) {
+                if (mic[1]) {
                     e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
+                    return true
                 }
             } else {
                 e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
             }
-            if (get.songsnick(msg[1]).includes(msg[0])) {
+            if (get.songsnick(msg[1]).includes(mic)) {
                 /**已经添加过该别名 */
-                e.reply(`${msg[0]} 已经有 ${msg[1]} 这个别名了哦！`)
+                e.reply(`${mic} 已经有 ${msg[1]} 这个别名了哦！`)
                 return true
             } else {
-                get.setnick(`${msg[0]}`, `${msg[1]}`)
+                get.setnick(`${mic}`, `${msg[1]}`)
                 e.reply("设置完成！")
             }
         } else {
@@ -157,6 +158,8 @@ export class phirks extends plugin {
 
     /**随机定级范围内曲 */
     async randmic(e) {
+        infolist = get.getData('infolist')
+        songlist = get.getData('songlist')
         let msg = e.msg.replace(/#phi随机(\s*)/g, "")
         let isask = [1, 1, 1, 1]
         if (e.msg.includes('AT') || e.msg.includes('IN') || e.msg.includes('HD') || e.msg.includes('EZ')) {
@@ -171,47 +174,91 @@ export class phirks extends plugin {
         msg = msg.replace(/IN/g, "")
         msg = msg.replace(/EZ/g, "")
         let rank = msg.split('-')
-        let randm1 = Math.floor(Math.random() * 165)
-        let mic = songlist[randm1]
         if (rank[0]) {
             if (!rank[1] || rank[0] < 0 || rank[1] < 0 || (rank[0] > 16 && rank[1] > 16)) {
                 e.reply(`${msg}是哪门子的定级范围呀！请用 - 作为分隔符！`)
-                return true
             } else {
                 if (rank[0] > rank[1]) {
                     let tem = rank[0]
                     rank[0] = rank[1]
                     rank[1] = tem
                 }
-                logger.info(`${rank[0]}   ${rank[1]}`)
                 let cnt = 0
-                while (++cnt) {
-                    if (cnt > 10000) {
-                        e.reply(`没有找到符合要求的曲目！QAQ`, true)
-                        return true
+                let ranklist = [] //rank池
+                for (let i in songlist) {
+                    let mic = songlist[i]
+                    let torank
+                    if (infolist[`${mic}`]["chart"]["AT"]) {
+                        torank = infolist[`${mic}`]["chart"]["AT"]["difficulty"]
+                        if (isask[0] && torank >= rank[0] && torank <= rank[1]) {
+                            ranklist.push([mic, 'AT'])
+                        }
                     }
-                    let torank = infolist[`${mic}`]["chart"]["AT"]["difficulty"]
-                    if (isask[0] && torank >= rank[0] && torank <= rank[1]) {
-                        break
+                    if (infolist[mic]["chart"]["IN"]) {
+                        torank = infolist[`${mic}`]["chart"]["IN"]["difficulty"]
+                        if (isask[1] && torank >= rank[0] && torank <= rank[1]) {
+                            ranklist.push([mic, 'IN'])
+                        }
                     }
-                    torank = infolist[`${mic}`]["chart"]["IN"]["difficulty"]
-                    if (isask[1] && torank >= rank[0] && torank <= rank[1]) {
-                        break
+                    if (infolist[mic]["chart"]["HD"]) {
+                        torank = infolist[`${mic}`]["chart"]["HD"]["difficulty"]
+                        if (isask[2] && torank >= rank[0] && torank <= rank[1]) {
+                            ranklist.push([mic, 'HD'])
+                        }
                     }
-                    torank = infolist[`${mic}`]["chart"]["HD"]["difficulty"]
-                    if (isask[2] && torank >= rank[0] && torank <= rank[1]) {
-                        break
+                    if (infolist[mic]["chart"]["EZ"]) {
+                        torank = infolist[`${mic}`]["chart"]["EZ"]["difficulty"]
+                        if (isask[3] && torank >= rank[0] && torank <= rank[1]) {
+                            ranklist.push([mic, 'EZ'])
+                        }
                     }
-                    torank = infolist[`${mic}`]["chart"]["EZ"]["difficulty"]
-                    if (isask[3] && torank >= rank[0] && torank <= rank[1]) {
-                        break
+                }
+                if (ranklist.length) {
+                    let mic = ranklist[Math.floor(Math.random() * ranklist.length)]
+                    let info = infolist[mic[0]]
+
+                    let song = {
+                        /**曲名 */
+                        song: info.song,
+                        /**曲绘 */
+                        illustration_big: info.illustration_big,
+                        /**章节 */
+                        chapter: info.chapter,
+                        /**bpm */
+                        bpm: info.bpm,
+                        /**曲师 */
+                        composer: info.composer,
+                        /**时长 */
+                        length: info.length,
+                        /**画师 */
+                        illustrator: info.illustrator,
+
+                        chart: {
+                        }
                     }
-                    randm1 = Math.floor(Math.random() * 165)
-                    mic = songlist[randm1]
+                    switch (mic[1]) {
+                        case "AT": {
+                            song.chart['AT'] = info.chart['AT']
+                            break
+                        } case "IN": {
+                            song.chart['IN'] = info.chart['IN']
+                            break
+                        } case "HD": {
+                            song.chart['HD'] = info.chart['HD']
+                            break
+                        } case "EZ": {
+                            song.chart['EZ'] = info.chart['EZ']
+                            break
+                        }
+                    }
+
+                    await e.reply(await get.getsongsinfo(e, mic[0], song))
+                } else {
+                    e.reply(`没有找到符合要求的曲目QAQ`)
                 }
             }
         }
-        e.reply(get.getsongsinfo(`${mic}`), true)
+        return true
     }
 
     async comtorks(e) {
@@ -248,6 +295,9 @@ export class phirks extends plugin {
         let mic = get.songsnick(data[0])
         if (!mic) {
             e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
+        } else if (mic[1]) {
+            e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
+            return true
         } else if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
         } else {
@@ -297,6 +347,10 @@ export class phirks extends plugin {
             } else {
                 /**使用本地rks数据 */
                 let mic = get.songsnick(data[0])
+                if (mic[1]) {
+                    e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
+                    return true
+                }
                 data[1] = userdata[`${mic}`][`${diffic}`]
                 data[2] = userdata["b19"]["rank"]
                 if (!mic) {
@@ -343,7 +397,11 @@ export class phirks extends plugin {
         if (!mic) {
             e.reply(`没有找到 ${data[0]} 相关的曲目信息！\nQAQ`)
             return true
-        } else if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
+        } else if (mic[1]) {
+            e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
+            return true
+        }
+        else if (!infolist[`${mic}`]["chart"][diffic]["difficulty"]) {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
             return true
         } else {

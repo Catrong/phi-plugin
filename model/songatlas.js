@@ -1,15 +1,10 @@
-import plugin from '../../../lib/plugins/plugin.js'
-import os from 'os'
 import puppeteer from './puppeteer.js'
-import moment from 'moment'
-import lodash from 'lodash'
 
 
 let interval = false
 class atlas {
 
     async atlas(e, info) {
-
         // 渲染数据
         let data = {
             /**曲名 */

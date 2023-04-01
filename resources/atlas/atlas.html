@@ -11,34 +11,63 @@
 <style>
     body {
         background: url("{{illustration}}") white center top no-repeat;
-        background-size: cover;
+        background-size: auto 200%;
     }
 </style>
 <div class="box">
+    <h1>{{song}}</h1>
+    <hr noshade>
     <div class="tb">
         <img src="{{illustration}}" alt="曲绘">
         <div class="header">
-            <h1>{{song}}</h1>
-            <hr noshade>
             <p>曲师：{{composer}}</p>
             <p>画师：{{illustrator}}</p>
             <p>章节：{{chapter}}</p>
-            <p>时长：{{length}} bpm：{{bpm}}</p>
+            <p>时长：{{length}}</p>
+            <p>bpm: {{bpm}}</p>
         </div>
     </div>
     <div class="tb">
         <div class="header">
-            {{if AT["difficulty"]}}
-            <p>AT:{{AT["difficulty"]}}&nbsp;&nbsp;物量:{{AT["combo"]}}&nbsp;&nbsp;谱师：{{AT["charter"]}}</p>
+            {{if AT}}
+            <p>AT:{{AT["difficulty"]}}</p>
             {{/if}}
-            {{if IN["difficulty"]}}
-            <p>IN:{{IN["difficulty"]}}&nbsp;&nbsp;物量:{{IN["combo"]}}&nbsp;&nbsp;谱师：{{IN["charter"]}}</p>
+            {{if IN}}
+            <p>IN:{{IN["difficulty"]}}</p>
             {{/if}}
-            {{if HD["difficulty"]}}
-            <p>HD:{{HD["difficulty"]}}&nbsp;&nbsp;物量:{{HD["combo"]}}&nbsp;&nbsp;谱师：{{HD["charter"]}}</p>
+            {{if HD}}
+            <p>HD:{{HD["difficulty"]}}</p>
             {{/if}}
-            {{if EZ["difficulty"]}}
-            <p>EZ:{{EZ["difficulty"]}}&nbsp;&nbsp;物量:{{EZ["combo"]}}&nbsp;&nbsp;谱师：{{EZ["charter"]}}</p>
+            {{if EZ}}
+            <p>EZ:{{EZ["difficulty"]}}</p>
+            {{/if}}
+        </div>
+        <div class="header">
+            {{if AT}}
+            <p>{{AT["combo"]}}combo</p>
+            {{/if}}
+            {{if IN}}
+            <p>{{IN["combo"]}}combo</p>
+            {{/if}}
+            {{if HD}}
+            <p>{{HD["combo"]}}combo</p>
+            {{/if}}
+            {{if EZ}}
+            <p>{{EZ["combo"]}}combo</p>
+            {{/if}}
+        </div>
+        <div class="header">
+            {{if AT}}
+            <p>chart by {{AT["charter"]}}</p>
+            {{/if}}
+            {{if IN}}
+            <p>chart by {{IN["charter"]}}</p>
+            {{/if}}
+            {{if HD}}
+            <p>chart by {{HD["charter"]}}</p>
+            {{/if}}
+            {{if EZ}}
+            <p>chart by {{EZ["charter"]}}</p>
             {{/if}}
         </div>
     </div>

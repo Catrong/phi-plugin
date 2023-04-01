@@ -16,6 +16,7 @@ body {
 }
 
 .box {
+    font-family: PHI;
     margin: 20px;
     padding: 10px;
     background: rgba(255, 255, 255, 0.45);
@@ -24,8 +25,10 @@ body {
     -webkit-backdrop-filter: blur(6px);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    font-weight: 700;
+    font-weight: bolder;
+    font-size: 0.8rem;
 }
+
 
 .tb {
     display: flex;
@@ -48,6 +51,8 @@ hr {
 .header {
     max-width: 100%;
     overflow: hidden;
+    margin-right: 20px;
+    margin-top: 5px;
 }
 
 .header hr {
