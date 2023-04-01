@@ -41,9 +41,17 @@ git clone https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
 
 #### Todo
 ·写菜单
-·写图片格式的图鉴
+
 ·写b19图
+
 ·...
+
+---
+
+#### 曲绘资源
+
+https://wwvr.lanzouw.com/b0328fk4d
+密码:ophi
 
 ---
 

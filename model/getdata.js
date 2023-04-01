@@ -96,11 +96,20 @@ class get {
     getimg(img, isBig) {
         // name = 'phi'
         let infolist = this.getData('infolist')
+        let illlist = this.getData('illlist')
         let song = this.songsnick(img)
+        let illname = illlist[song]
         let url = 0
         if (song) {
             if (isBig) {
-                url = infolist[`${song}`][`illustration_big`]
+                if(illname) {
+                    url = `${this.infoPath}/Ill/${illname}`
+                    if(!fs.existsSync(url)) {
+                        url = infolist[`${song}`][`illustration_big`]
+                    }
+                } else {
+                    url = infolist[`${song}`][`illustration_big`]
+                }
             } else {
                 url = infolist[`${song}`][`illustration`]
             }
@@ -111,21 +120,8 @@ class get {
         }
         logger.info('未找到 ' + img)
         return false
-        //} else {
-        //    return segment.image(`/plugins/phi-plugin/resources/otherimg/${img}`)
-        //}
     }
 
-
-    /**获取歌曲的曲名序号(音序)，曲名为原名 */
-    getsongsxh(mic) {
-        let resonglist = this.getData('resonglist')
-        if (resonglist[`${mic}`]) {
-            return resonglist[`${mic}`]
-        } else {
-            return false
-        }
-    }
 
 
     /**匹配歌曲名称，根据参数返回原曲名称 */
@@ -175,6 +171,13 @@ class get {
             data = infolist[name]
         }
         if (data) {
+            let illlist = this.getData('illlist')
+            let illname = illlist[data.song]
+            let url = `${this.infoPath}Ill/${illname}.png`
+            logger.info(url)
+            if(fs.existsSync(url)) {
+                data.illustration_big = url
+            }
             return atlas.atlas(e, data)
         } else {
             /**未找到曲目 */

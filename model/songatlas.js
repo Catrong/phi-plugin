@@ -5,6 +5,7 @@ let interval = false
 class atlas {
 
     async atlas(e, info) {
+      logger.info(info)
         // 渲染数据
         let data = {
             /**曲名 */

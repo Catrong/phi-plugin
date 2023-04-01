@@ -1,7 +1,4 @@
-.container {
-    background: url("../otherimg/phigros.png") white center top no-repeat;
-    background-size: auto 100%;
-}
+
 
 li {
     list-style: none;
@@ -13,6 +10,8 @@ body {
     /* width: 500px !important; */
     flex-direction: column;
     justify-content: space-around;
+    background: url("../otherimg/phigros.png") white center top no-repeat;
+    background-size: auto 100%;
 }
 
 .box {
