@@ -214,45 +214,12 @@ export class phirks extends plugin {
                     }
                 }
                 if (ranklist.length) {
+
                     let mic = ranklist[Math.floor(Math.random() * ranklist.length)]
-                    let info = infolist[mic[0]]
 
-                    let song = {
-                        /**曲名 */
-                        song: info.song,
-                        /**曲绘 */
-                        illustration_big: info.illustration_big,
-                        /**章节 */
-                        chapter: info.chapter,
-                        /**bpm */
-                        bpm: info.bpm,
-                        /**曲师 */
-                        composer: info.composer,
-                        /**时长 */
-                        length: info.length,
-                        /**画师 */
-                        illustrator: info.illustrator,
 
-                        chart: {
-                        }
-                    }
-                    switch (mic[1]) {
-                        case "AT": {
-                            song.chart['AT'] = info.chart['AT']
-                            break
-                        } case "IN": {
-                            song.chart['IN'] = info.chart['IN']
-                            break
-                        } case "HD": {
-                            song.chart['HD'] = info.chart['HD']
-                            break
-                        } case "EZ": {
-                            song.chart['EZ'] = info.chart['EZ']
-                            break
-                        }
-                    }
+                    await e.reply(await get.getsongsinfo(e, mic[0], songinfo(infolist[mic[0]], mic[1])))
 
-                    await e.reply(await get.getsongsinfo(e, mic[0], song))
                 } else {
                     e.reply(`没有找到符合要求的曲目QAQ`)
                 }
@@ -302,43 +269,8 @@ export class phirks extends plugin {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
         } else {
             mic = mic[0]
-            let info = infolist[mic]
-            let song = {
-                /**曲名 */
-                song: info.song,
-                /**曲绘 */
-                illustration_big: info.illustration_big,
-                /**章节 */
-                chapter: info.chapter,
-                /**bpm */
-                bpm: info.bpm,
-                /**曲师 */
-                composer: info.composer,
-                /**时长 */
-                length: info.length,
-                /**画师 */
-                illustrator: info.illustrator,
-
-                othermsg: `计算结果：${Number(dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"])).toFixed(4)}`,
-
-                chart: {
-                }
-            }
-            switch (diffic) {
-                case "AT": {
-                    song.chart['AT'] = info.chart['AT']
-                    break
-                } case "IN": {
-                    song.chart['IN'] = info.chart['IN']
-                    break
-                } case "HD": {
-                    song.chart['HD'] = info.chart['HD']
-                    break
-                } case "EZ": {
-                    song.chart['EZ'] = info.chart['EZ']
-                    break
-                }
-            }
+            let song = songinfo(infolist[mic], diffic)
+            song.othermsg = `计算结果：${Number(dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"])).toFixed(4)}`
             await e.reply(await get.getsongsinfo(e, mic, song))
         }
         return true
@@ -398,23 +330,24 @@ export class phirks extends plugin {
                     e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
                     return true
                 } else {
-                    e.reply(await get.getsongsinfo(e, mic))
+                    let song = songinfo(infolist[mic], diffic)
+                    
                     /**先计算等效rks */
                     let rks = dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"]) > data[2]
                     if (rks >= data[2]) {
                         /**如果大于等于当前rks */
-                        e.reply(`这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`)
-                        return true
+                        song.othermsg = `这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`
                     } if (infolist[`${mic}`]["chart"][diffic]["difficulty"] < data[2]) {
                         /**如果歌曲本身定数小于rks */
-                        e.reply(`这首歌的定数太低了吧！你的 b19 的等效 rks 都有 ${data[2]} 了好嘛！`)
-                        return true
+                        song.othermsg = `这首歌的定数太低了吧！你的 b19 的等效 rks 都有 ${data[2]} 了好嘛！`
                     } else {
                         /**计算推分所需rks */
                         let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`]["chart"][diffic]["difficulty"]) + 55
-                        e.reply(`至少要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！`, true)
-                        return true
+                        song.othermsg = `至少要把这首歌的 acc 推到 ${ans.toFixed(4)}% 以上哦！`
                     }
+
+                    await e.reply(await get.getsongsinfo(e, mic, song))
+                    return true
                 }
             }
         }
@@ -444,28 +377,30 @@ export class phirks extends plugin {
             e.reply(`${mic} 没有 ${diffic} 这个难度吧喂！请在难度前面加 -`)
             return true
         } else {
-            e.reply(await get.getsongsinfo(e, mic))
+            let song = songinfo(infolist[mic], diffic)
+
             /**先计算等效rks */
             let rks = dxrks(data[1], infolist[`${mic}`]["chart"][diffic]["difficulty"])
             logger.info(data)
             if (rks >= data[2]) {
                 /**如果大于等于当前rks */
-                e.reply(`这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`)
-                return true
-            } if (infolist[`${mic}`]["chart"][diffic]["difficulty"] < data[2]) {
+                song.othermsg = `这首歌目前已经为你贡献了等效 ${rks} 的 rks 了哦！接下来 acc 的任何一点增长都会对 rks 有帮助的！`
+
+            } else if (infolist[`${mic}`]["chart"][diffic]["difficulty"] < data[2]) {
                 /**如果歌曲本身定数小于rks */
                 if (local) {
-                    e.reply(`这首歌的定数太低了吧！如果需要使用本地 rks 信息的话请不要输入 rks 哦！`)
+                    song.othermsg = `这首歌的定数太低了吧！如果需要使用本地 rks 信息的话请不要输入 rks 哦！`
                 } else {
-                    e.reply(`这首歌的定数太低了吧！在没有你的全部 rks 信息之前是不可能算出来的吧！`)
+                    song.othermsg = `这首歌的定数太低了吧！在没有你的全部 rks 信息之前是不可能算出来的吧！`
                 }
-                return true
             } else {
                 /**计算推分所需rks */
                 let ans = 45 * Math.sqrt(data[2] / infolist[`${mic}`]["chart"][diffic]["difficulty"]) + 55
-                e.reply(`需要把这首歌的 acc 推到 ${ans.toFixed(4)} 以上哦！由于 phigros 的平均数计算规则，所需的 acc 可能会更小哦！`, true)
-                return true
+                song.othermsg = `需要把这首歌的 acc 推到 ${ans.toFixed(4)}% 以上哦！由于 phigros 的平均数计算规则，所需的 acc 可能会更小哦！`
             }
+
+            await e.reply(await get.getsongsinfo(e, mic, song))
+            return true
         }
     }
 }
@@ -543,4 +478,43 @@ function dxrks(acc, rank) {
         /**非满分计算公式 [(((acc - 55) / 45) ^ 2) * 原曲定数] */
         return rank * (((acc - 55) / 45) * ((acc - 55) / 45))
     }
+}
+
+/**返回单独难度的info */
+function songinfo(info, diffic) {
+    let song = {
+        /**曲名 */
+        song: info.song,
+        /**曲绘 */
+        illustration_big: info.illustration_big,
+        /**章节 */
+        chapter: info.chapter,
+        /**bpm */
+        bpm: info.bpm,
+        /**曲师 */
+        composer: info.composer,
+        /**时长 */
+        length: info.length,
+        /**画师 */
+        illustrator: info.illustrator,
+
+        chart: {
+        }
+    }
+    switch (diffic) {
+        case "AT": {
+            song.chart['AT'] = info.chart['AT']
+            break
+        } case "IN": {
+            song.chart['IN'] = info.chart['IN']
+            break
+        } case "HD": {
+            song.chart['HD'] = info.chart['HD']
+            break
+        } case "EZ": {
+            song.chart['EZ'] = info.chart['EZ']
+            break
+        }
+    }
+    return song
 }
