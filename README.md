@@ -12,11 +12,11 @@
 
 ```
 //使用github
-git clone https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
+git clone --drpth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
 ```
 ```
 //使用gitee
-git clone https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
+git clone --drpth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
 ```
 
 ---
