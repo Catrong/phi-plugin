@@ -2588,6 +2588,31 @@ Rainy Season:
   illustrator: Robins
   length: '1:53'
   song: Rainy Season
+Random:
+  bpm: '132'
+  chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: Barbarianerman
+      combo: '275'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: IMD_6
+      combo: '568'
+      difficulty: '11.1'
+      level: '11'
+    IN:
+      charter: _鉄
+      combo: '732'
+      difficulty: '14.7'
+      level: '14'
+  composer: Sobrem × Silentroom
+  illustration: https://img.moegirl.org.cn/common/thumb/2/21/Random_Phigros.png/300px-Random_Phigros.png
+  illustration_big: https://img.moegirl.org.cn/common/2/21/Random_Phigros.png
+  illustrator: Harkiadel
+  length: '2:16'
+  song: Random
 Re_Nascence (Psystyle Ver.):
   bpm: '150'
   chapter: Side Story 2 弭刻日
@@ -3008,7 +3033,7 @@ Time to Night Sky (feat. Lee Yu Jin):
   illustrator: ZG
   length: '2:11'
   song: Time to Night Sky (feat. Lee Yu Jin)
-Träne:
+Träne:
   bpm: '135'
   chapter: 单曲精选集
   chart:
@@ -3032,7 +3057,7 @@ Träne:
   illustration_big: https://img.moegirl.org.cn/common/6/61/Trane_Phigros.png
   illustrator: しえろ
   length: '2:26'
-  song: Träne
+  song: Träne
 Unorthodox Thoughts:
   bpm: '146'
   chapter: 单曲精选集
@@ -3548,7 +3573,7 @@ volcanic:
   illustrator: あおお/A-ZERO,morph
   length: '2:16'
   song: volcanic
-Äventyr:
+Äventyr:
   bpm: 114~132
   chapter: 单曲精选集
   chart:
@@ -3572,7 +3597,7 @@ Äventyr:
   illustration_big: https://img.moegirl.org.cn/common/c/c8/Aventyr.png
   illustrator: Grand Thaw / Rigël Theatre
   length: '2:40'
-  song: Äventyr
+  song: Äventyr
 Ποσειδών:
   bpm: '175'
   chapter: Side Story 1 忘忧宫
@@ -3778,6 +3803,21 @@ Äventyr:
   illustrator: 御坂果子
   length: '2:58'
   song: 云女孩
+今年も「雪降り、メリクリ」目指して顽张ります！！:
+  bpm: 156~234
+  chapter: --
+  chart: 
+    SP:
+      charter: 今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\リンコ*198食べ放題//
+      combo: '2500'
+      difficulty: 'IN 12 → Byd 12'
+      level: '?'
+  composer: AiSS vs. 华牧狸 w/ 夜轮 ft.結月ゆかり
+  illustration: https://img.moegirl.org.cn/common/thumb/3/33/%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg/300px-%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg
+  illustration_big: https://img.moegirl.org.cn/common/3/33/%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg
+  illustrator: Vios.NoFurry.git
+  length: '3:45'
+  song: 今年も「雪降り、メリクリ」目指して顽张ります！！
 光:
   bpm: '180'
   chapter: Chapter Legacy 过去的章节
@@ -4010,8 +4050,8 @@ Äventyr:
     EZ:
       charter: 野从菠萝
       combo: '220'
-      difficulty: '2.8'
-      level: '2'
+      difficulty: '3.0'
+      level: '3'
     HD:
       charter: 野从菠萝
       combo: '444'
@@ -4208,6 +4248,31 @@ Äventyr:
   illustrator: 犀牛坨动画工坊
   length: '2:38'
   song: 雪降り、メリクリ
+零號車輛:
+  bpm: '240'
+  chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: 零號宇夜
+      combo: '594'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: 壹號阿爽
+      combo: '1058'
+      difficulty: '12.8'
+      level: '12'
+    IN:
+      charter: Pcat【零】198
+      combo: '1240'
+      difficulty: '15.8'
+      level: '15'
+  composer: seatrus
+  illustration: https://img.moegirl.org.cn/common/thumb/8/8b/%E9%9B%B6%E8%99%9F%E8%BB%8A%E8%BC%9B_Phigros.png/300px-%E9%9B%B6%E8%99%9F%E8%BB%8A%E8%BC%9B_Phigros.png
+  illustration_big: https://img.moegirl.org.cn/common/8/8b/%E9%9B%B6%E8%99%9F%E8%BB%8A%E8%BC%9B_Phigros.png
+  illustrator: 2Al4wU4
+  length: '2:24'
+  song: 零號車輛
 青丘:
   bpm: '180'
   chapter: 单曲精选集
@@ -4283,69 +4348,3 @@ Äventyr:
   illustrator: cycats
   length: '2:59'
   song: 风屿
-零號車輛:
-  bpm: 240
-  chapter: 单曲精选集
-  chart:
-    EZ:
-      charter: 零號宇夜
-      combo: '594'
-      difficulty: '7.0'
-      level: '7'
-    HD:
-      charter: 壹號阿爽
-      combo: '1058'
-      difficulty: '12.8'
-      level: '12'
-    IN:
-      charter: Pact【零】198
-      combo: '1240'
-      difficulty: '15.8'
-      level: '15'
-  composer: seatrus
-  illustration: 0
-  illustration_big: 0
-  illustrator: 2Al4wU4
-  length: '2:30'
-  song: 零號車輛
-Random:
-  bpm: 132
-  chapter: 单曲精选集
-  chart:
-    EZ:
-      charter: Barbarianerman
-      combo: '275'
-      difficulty: '6.0'
-      level: '6'
-    HD:
-      charter: IMD_6
-      combo: '568'
-      difficulty: '11.1'
-      level: '11'
-    IN:
-      charter: _鉄
-      combo: '732'
-      difficulty: '14.7'
-      level: '14'
-  composer: Sobrem × Silentroom
-  illustration: 0
-  illustration_big: 0
-  illustrator: Harkiadel
-  length: '2:14'
-  song: Random
-今年も「雪降り、メリクリ」目指して頑張ります！！:
-  bpm: '?'
-  chapter: "?"
-  chart:
-    SP:
-      charter: '?'
-      combo: '2500'
-      difficulty: 'IN 12 to Byd 12'
-      level: '?'
-  composer: 'AiSS vs. 华牧狸 w/ 夜輪 ft.結月ゆかり'
-  illustration: 0
-  illustration_big: 0
-  illustrator: Vios.NoFurry.git
-  length: '3:44'
-  song: '今年も「雪降り、メリクリ」目指して頑張ります！！'
-
