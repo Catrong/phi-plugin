@@ -52,7 +52,7 @@ export class phirks extends plugin {
         songlist = get.getData('songlist')
         let msg = e.msg.replace(/#phi曲(\s*)/g, "")
         let songs = get.songsnick(msg)
-        if (songs) {
+        if (songs[0]) {
             let msgRes
 
             if (!songs[1]) {

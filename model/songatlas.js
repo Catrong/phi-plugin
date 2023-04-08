@@ -38,6 +38,16 @@ class atlas {
           scale: 2.0
         })
     }
+
+
+    async b19(e, data) {
+      return await puppeteer.render('b19/b19', {
+        ...data
+      }, {
+        e,
+        scale: 2.0
+      })
+    }
 }
 
 

@@ -173,18 +173,25 @@ class get {
             data = infolist[name]
         }
         if (data) {
-            let illlist = this.getData('illlist')
-            let illname = illlist[data.song]
-            let url = `${this.infoPath}Ill/${illname}.png`
-            logger.info(url)
-            if(fs.existsSync(url)) {
-                data.illustration_big = url
-            }
+            data.illustration_big = this.getill(name)
             return atlas.atlas(e, data)
         } else {
             /**未找到曲目 */
             return `未找到${name}的相关曲目信息QAQ`
         }
+    }
+
+    /**获取曲绘，返回地址，原名 */
+    getill(name) {
+        let infolist = this.getData('infolist')
+        let illlist = this.getData('illlist')
+        let illname = illlist[name]
+        let url = `${this.infoPath}Ill/${illname}.png`
+        if(fs.existsSync(url)) {
+            return url
+        }
+        else return infolist[name].illustration_big
+
     }
 }
 

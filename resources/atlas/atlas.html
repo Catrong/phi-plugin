@@ -13,13 +13,17 @@
 <style>
     body {
         background: url("{{illustration}}") white center top no-repeat;
-        background-size: auto 200%;
+        background-size: auto 220%;
     }
 </style>
 {{/if}}
 
 <div class="box">
+    {{if song.length >= 20}}
+    <h1 style="font-size: 1.3rem;">{{song}}</h1>
+    {{else}}
     <h1>{{song}}</h1>
+    {{/if}}
     <hr noshade>
     <div class="tb">
         {{if illustration}}

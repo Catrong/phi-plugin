@@ -1,7 +1,7 @@
 
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
-import common from "../../../lib/common/common.js";
+import atlas from '../model/songatlas.js'
 
 var infolist = [] //定级列表
 var userdata = [] //当前用户的acc数据
@@ -62,68 +62,68 @@ export class phirks extends plugin {
                 /**更新统计数据 */
                 infolist = get.getData('infolist')
                 songlist = get.getData('songlist')
-                userdata["phi"] = { 'name': 0, 'diffic': 0, 'acc': 0, 'rank': 0 }
-                for (let i = 1; i <= 21; ++i) {
-                    userdata[`b${i}`] = { 'name': 0, 'diffic': 0, 'acc': 0, 'rank': 0 }
-                }
+                var b19 = []
+
                 for (let i in songlist) {
-                    savedata(e, songlist[i])
+                    savedata(e, songlist[i], b19)
                 }
 
                 /**根据数据计算rks */
-                let cnt = 0
-                let msgRes = []
-                let name = userdata["phi"]["name"]
                 let ans = 0
+                let data = []
+                let song = b19.phi
 
-                /**phi1 曲目 */
-                if (name) {
-
-                    let img = get.getimg(name)
-                    let diffic = userdata["phi"]["diffic"]
-                    let rank = infolist[name]["chart"][diffic]["difficulty"]
-                    let acc = userdata["phi"]["acc"] * 100
-                    let rks = dxrks(acc, rank)
-                    userdata[`phi`]["rank"] = rks
-                    ans += rks
-                    msgRes[0] = [`您的φ1曲目为：\n`, img, `\n曲名：${name}\n难度：${diffic}  定数：${rank}\nacc：${acc}  等效rks：${rks}`]
-                } else {
-                    msgRes[0] = `您还没有任何一首歌达到满分呢！\n{{{(>_<)}}}\n要不要去试试收割一首谱面呢？任何难度的都可以哦！\n( •̀ ω •́ )✧`
+                /**phi */
+                if (b19.phi) {
+                    data.push({
+                        style: 'Phi',
+                        song: song.song,
+                        difficulty: song.difficulty,
+                        acc: (song.acc*100).toFixed(2),
+                        ranking: song.ranking,
+                        score: (song.score).toFixed(2),
+                        illustration: get.getill(song.song)
+                    })
+                    ans += song.score
                 }
 
                 /**b21曲目（rks仅计算b19） */
-                for (let i = 1; i <= 21; ++i) {
-                    let name = userdata[`b${i}`]["name"]
-                    if (!name) {
-                        cnt = i
-                        break
-                    }
-                    let img = get.getimg(name)
-                    let diffic = userdata[`b${i}`]["diffic"]
-                    let rank = infolist[name]["chart"][diffic]["difficulty"]
-                    let acc = userdata[`b${i}`]["acc"] * 100
-                    let rks = dxrks(acc, rank)
-                    userdata[`b${i}`]["rank"] = rks
+
+                for (let i = 1; b19[i]; ++i) {
+                    song = b19[i]
+                    data.push({
+                        style: i,
+                        song: song.song,
+                        difficulty: song.difficulty,
+                        acc: (song.acc*100).toFixed(2),
+                        ranking: song.ranking,
+                        score: (song.score).toFixed(2),
+                        illustration: get.getill(song.song)
+                    })
                     if (i <= 19) {
-                        ans += rks
+                        ans += song.score
                     }
-                    msgRes[i] = [`您的Best#${i}曲目为：\n`, img, `\n曲名：${name}\n难度：${diffic}  定数：${rank}\nacc：${acc.toFixed(2)}%  等效rks：${rks.toFixed(2)}`]
                 }
+                b19 = []
+                b19.b19 = data
+                b19.player = e.user_id
+                b19.rks = (ans/20).toFixed(2)
+                e.reply(await atlas.b19(e, b19))
 
                 /**数据分析 */
-                if (!cnt) { cnt = 22 }
-                if (cnt < 19) {
-                    msgRes[cnt++] = `您打过的曲目数量还没有达到19首呢！有时间要去多尝试一下哦！\n（￣︶￣）↗　`
-                }
-                msgRes[cnt++] = `您的理论rks值为： ${(ans / 20).toFixed(2)}\n如果得出结果与游戏内显示相差0.01的话是acc显示值的误差，还望理解\n(´。＿。｀)`
+                // if (!cnt) { cnt = 22 }
+                // if (cnt < 19) {
+                    
+                // }
+                // msgRes[cnt++] = `您的理论rks值为： ${(ans / 20).toFixed(2)}\n如果得出结果与游戏内显示相差0.01的话是acc显示值的误差，还望理解\n(´。＿。｀)`
 
-                let totnodata = Findnodata(e).length
-                if (totnodata) {
-                    msgRes[cnt++] = `您还有${totnodata}首歌曲没有数据哦！快发送 #rksacc 去输入吧！`
-                }
+                // let totnodata = Findnodata(e).length
+                // if (totnodata) {
+                    
+                // }
 
-                /**发送合并消息 */
-                e.reply(await common.makeForwardMsg(e, msgRes, ""), true)
+                // /**发送合并消息 */
+                // e.reply(await common.makeForwardMsg(e, msgRes, ""), true)
 
 
             } else {
@@ -302,58 +302,52 @@ function findacc(e) {
 }
 
 /**保存数据 */
-function savedata(e, mic) {
+function savedata(e, mic, b19) {
     /**有效rks的前提为 acc >= 70% */
     if (!userdata[`${mic}`]) {
-
-        if (mic.includes("Another Me")) {
-            /**兼容旧名称  */
-            if (mic == "Another Me (KALPA)") {
-                mic = "Another Me by D_AAN"
-            } else if (mic == "Another Me (Rising Sun Traxx)") {
-                mic = "Another Me by Neutral Moon"
-            }
-            if (!userdata[`${mic}`]) {
-                return true
-            }
-        } else {
-            return true
-        }
+        return true
     }
     if (userdata[`${mic}`]['AT'] >= 0.7) {
-        insrt(mic, 'AT')
+        insrt(mic, 'AT', b19)
     }
     if (userdata[`${mic}`]['IN'] >= 0.7) {
-        insrt(mic, 'IN')
+        insrt(mic, 'IN', b19)
     }
     if (userdata[`${mic}`]['HD'] >= 0.7) {
-        insrt(mic, 'HD')
+        insrt(mic, 'HD', b19)
     }
     if (userdata[`${mic}`]['EZ'] >= 0.7) {
-        insrt(mic, 'EZ')
+        insrt(mic, 'EZ', b19)
     }
-
     return true
 }
 
 
 /**将结果插入rks计算排序（插排） */
-function insrt(mic, diffic) {
+function insrt(mic, difficulty, b19) {
     let fnal = 0
-    let acc = userdata[`${mic}`][diffic]
-    let score = dxrks(acc * 100, infolist[mic]["chart"][diffic]["difficulty"])
-
+    let acc = userdata[`${mic}`][difficulty]
+    let song = infolist[mic]
+    let ranking = song["chart"][difficulty]["difficulty"]
+    let score = dxrks(acc * 100, ranking)
 
 
     /**更新phi1 */
     if (acc === 1) {
-        if (!userdata.phi || score > userdata['phi']['rank']) {
-            userdata['phi'] = { 'name': infolist[mic]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
+        if (!b19.phi || score > b19.phi.score) {
+            b19.phi = {
+                song: infolist[mic]['song'],
+                difficulty: difficulty,
+                acc: acc,
+                score: score,
+                ranking: ranking,
+                illustration: song.illustration_big
+            }
         }
     }
     /**查找需要插入的位置（fnal） */
     for (let i = 1; i <= 21; ++i) {
-        if (!userdata[`b${i}`] || userdata[`b${i}`]['rank'] < score) {
+        if (!b19[i] || b19[i].score < score) {
             fnal = i
             break
         }
@@ -362,13 +356,21 @@ function insrt(mic, diffic) {
     if (!fnal) return true
     /**更新b21 */
     for (let i = 21; i > fnal; --i) {
-        if (!userdata[`b${i - 1}`]) {
+        if (!b19[i - 1]) {
             continue
         }
-        userdata[`b${i}`] = userdata[`b${i - 1}`]
+        b19[i] = b19[i - 1]
     }
-    //                        曲名                                 难度            acc        有效rks
-    userdata[`b${fnal}`] = { 'name': infolist[mic]['song'], 'diffic': diffic, 'acc': acc, 'rank': score }
+
+    b19[fnal] = {
+        song: infolist[mic]['song'],
+        difficulty: difficulty,
+        acc: acc,
+        score: score,
+        ranking: ranking,
+        illustration: song.illustration_big
+    }
+
     return true
 }
 
