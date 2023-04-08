@@ -246,7 +246,7 @@ function ask(e, mic) {
     } else {
         /**发送正在设置的曲目，序号存储在 userdata['puting'] 中 */
         let msgRes = []
-        if (infolist[mic]["chart"]["AT"]["difficulty"]) {
+        if (infolist[mic]["chart"]["AT"]) {
             e.reply(`提示，这一首是有AT等级的哦！`)
             msgRes = [`请发送\n`, get.getimg(mic), `\n${infolist[mic]['song']}的 AT IN HD EZ acc，例： 98.99 100 100 100`]
         } else {
@@ -271,7 +271,7 @@ function findacc(e) {
         acc[i] /= 100  /**实际存储为0-1的浮点数 */
     }
     /**写入到数组 */
-    if (infolist[mic]["chart"]["AT"]["difficulty"]) {
+    if (infolist[mic]["chart"]["AT"]) {
         acc[3] = Number(acc[3])
         if (!acc[3]) acc[3] = 0
         if (typeof acc[3] != 'number' || acc[3] < 0 || acc[3] > 100) {
