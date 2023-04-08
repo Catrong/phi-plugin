@@ -10,13 +10,16 @@
 #### 安装：
 在云崽目录下运行
 
+使用github
+
 ```
-//使用github
-git clone https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
+git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
 ```
+
+使用gitee
+
 ```
-//使用gitee
-git clone https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
+git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
 ```
 
 ---
