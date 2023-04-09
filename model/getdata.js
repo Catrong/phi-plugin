@@ -101,7 +101,7 @@ class get {
         let illname = illlist[song]
         let url = 0
         song = song [0]
-        logger.info(infolist[`${song}`])
+        
         if (song) {
             if (isBig) {
                 if(illname) {
