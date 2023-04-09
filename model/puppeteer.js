@@ -134,9 +134,10 @@ export default new class newPuppeteer {
         waitUntil: 'networkidle0'
       },
       sys: {
-        scale: `style=transform:scale(${cfg.scale || 1})`,
+        scale: `style=transform:scale(${cfg.scale || 2})`,
         copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
       },
+      Version: Version,
       quality: 100
     }
 

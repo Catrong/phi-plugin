@@ -70,12 +70,13 @@ export class phirks extends plugin {
 
                 /**根据数据计算rks */
                 let ans = 0
-                let data = []
+                let score = []
+                let data = {}
                 let song = b19.phi
-
+                data.other = []
                 /**phi */
                 if (b19.phi) {
-                    data.push({
+                    score.push({
                         style: 'Phi',
                         song: song.song,
                         difficulty: song.difficulty,
@@ -85,13 +86,16 @@ export class phirks extends plugin {
                         illustration: get.getill(song.song)
                     })
                     ans += song.score
+                } else {
+                    data.other.push(`您还没有任何一首歌达到满分呢！{{{(>_<)}}}`)
+                    data.other.push(`要不要去试试收割一首谱面呢？任何难度的都可以哦！( •̀ ω •́ )✧`)
                 }
 
                 /**b21曲目（rks仅计算b19） */
-
-                for (let i = 1; b19[i]; ++i) {
+                let i = 1
+                for (i = 1; b19[i]; ++i) {
                     song = b19[i]
-                    data.push({
+                    score.push({
                         style: i,
                         song: song.song,
                         difficulty: song.difficulty,
@@ -104,11 +108,18 @@ export class phirks extends plugin {
                         ans += song.score
                     }
                 }
-                b19 = []
-                b19.b19 = data
-                b19.player = e.user_id
-                b19.rks = (ans/20).toFixed(2)
-                e.reply(await atlas.b19(e, b19))
+                if(i < 19) {
+                    data.other.push(`您计入rks的曲目数量还没有达到19首呢！有时间要去多尝试一下哦！（￣︶￣）↗　`)
+                }
+                let totnodata = Findnodata(e).length
+                if (totnodata) {
+                    data.other.push(`您还有${totnodata}首歌曲没有数据哦！快发送 #rksacc 去输入吧！`)
+                }
+
+                data.b19 = score
+                data.player = e.user_id
+                data.rks = (ans/20).toFixed(2)
+                e.reply(await atlas.b19(e, data))
 
                 /**数据分析 */
                 // if (!cnt) { cnt = 22 }

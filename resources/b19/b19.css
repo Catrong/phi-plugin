@@ -1,0 +1,233 @@
+
+@font-face {
+    font-family: 'PHI';
+    src: url("../common/font/phi.ttf") format('woff'), url("../common/font/phi.ttf") format('truetype');
+}
+
+body {
+    width: 2040px;
+    height: 4840px;
+    background: url("./res/back.png") white center top no-repeat;
+    background-size: cover;
+    font-family: PHI;
+}
+
+.header {
+    margin-bottom: 10%;
+    height: 10%;
+}
+
+.header img {
+    float: left;
+    margin-top: 5%;
+    margin-left: -4%;
+    margin-right: -38%;
+    width: 110%;
+}
+
+.header .info {
+    float: left;
+    margin-top: 11%;
+    width: 28%;
+}
+
+.header p {
+    font-size: 3rem;
+    color: #ffffff;
+    margin: 1%;
+}
+
+.tb {
+    float: left;
+    width: 50%;
+    height: 100%;
+    margin-bottom: -74%;
+}
+
+.AT {
+    width: 100%;
+    height: 100%;
+    background: url("./res/AT.png");
+    background-size: cover;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.AT-phi {
+    width: 100%;
+    height: 100%;
+    background: url("./res/AT-phi.png");
+    background-size: cover;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.IN {
+    width: 100%;
+    height: 100%;
+    background: url("./res/IN.png");
+    background-size: cover;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.IN-phi {
+    width: 100%;
+    height: 100%;
+    background: url("./res/IN-phi.png");
+    background-size: cover;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.HD {
+    width: 100%;
+    height: 100%;
+    background: url("./res/HD.png");
+    background-size: cover;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.HD-phi {
+    width: 100%;
+    height: 100%;
+    background: url("./res/HD-phi.png");
+    background-size: cover;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.EZ {
+    width: 100%;
+    height: 100%;
+    background: url("./res/EZ.png");
+    background-size: cover;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.EZ-phi {
+    width: 100%;
+    height: 100%;
+    background: url("./res/EZ-phi.png");
+    background-size: cover;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.asong {
+    width: 95%;
+    height: 6.07%;
+}
+
+.imgbox {
+    width: 96.5%;
+    height: 84%;
+    margin-top: 1%;
+}
+
+
+.imgbox img {
+    height: 97%;
+    width: auto;
+    -webkit-clip-path: polygon(13.2% 0%, 100% 0%, 86.8% 100%, 0% 100%, 13.2% 0%);
+    margin-top: 0.35%;
+    float: left;
+}
+
+.infobox {
+    float: left;
+    width: 50%;
+}
+
+.infobox p {
+    text-align: center;
+    margin: 0;
+    color: #ffffff;
+}
+
+.title {
+    display: flex;
+    height: 18%;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 0.5%;
+}
+
+.title p {
+    color: #000000;
+    font-size: 1.8rem;
+    align-items: center;
+}
+
+.title .num {
+    float: left;
+    width: 15%;
+}
+
+.title .song {
+    float: left;
+    width: 85%;
+}
+
+.rank {
+    margin-top: 7%;
+    margin-left: 15%;
+    height: 33%;
+}
+
+.rank .difficulty {
+    float: left;
+    margin-top: 1%;
+    font-size: 2.5rem;
+    width: 20%;
+}
+
+.rank .ranking {
+    float: left;
+    font-size: 1.5rem;
+    margin-top: 10%;
+}
+
+.rank .acc {
+    float: left;
+    font-size: 2.5rem;
+    width: 50%;
+    margin-top: 4%;
+    margin-left: 4%;
+}
+
+.rankscore {
+    font-size: 3.2rem;
+    margin-left: -11%;
+    margin-top: -2%;
+    float: left;
+    width: 108%;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.bottom {
+    font-size: 2rem;
+    background: url('./res/bottom.png');
+    width: 1536px;
+    height: 400px;
+    background-size: cover;
+    float: left;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    margin-left: 13%;
+    flex-direction: column;
+}
+
+.bottom p {
+    color: #ffffff;
+    margin: 0;
+}
+
+.version {
+    float: left;
+}
