@@ -80,7 +80,7 @@ export class phirks extends plugin {
                         style: 'Phi',
                         song: song.song,
                         difficulty: song.difficulty,
-                        acc: (song.acc*100).toFixed(2),
+                        acc: (song.acc * 100).toFixed(2),
                         ranking: song.ranking,
                         score: (song.score).toFixed(2),
                         illustration: get.getill(song.song)
@@ -99,7 +99,7 @@ export class phirks extends plugin {
                         style: i,
                         song: song.song,
                         difficulty: song.difficulty,
-                        acc: (song.acc*100).toFixed(2),
+                        acc: (song.acc * 100).toFixed(2),
                         ranking: song.ranking,
                         score: (song.score).toFixed(2),
                         illustration: get.getill(song.song)
@@ -108,7 +108,7 @@ export class phirks extends plugin {
                         ans += song.score
                     }
                 }
-                if(i < 19) {
+                if (i < 19) {
                     data.other.push(`您计入rks的曲目数量还没有达到19首呢！有时间要去多尝试一下哦！（￣︶￣）↗　`)
                 }
                 let totnodata = Findnodata(e).length
@@ -118,23 +118,8 @@ export class phirks extends plugin {
 
                 data.b19 = score
                 data.player = e.user_id
-                data.rks = (ans/20).toFixed(2)
+                data.rks = (ans / 20).toFixed(2)
                 e.reply(await atlas.b19(e, data))
-
-                /**数据分析 */
-                // if (!cnt) { cnt = 22 }
-                // if (cnt < 19) {
-                    
-                // }
-                // msgRes[cnt++] = `您的理论rks值为： ${(ans / 20).toFixed(2)}\n如果得出结果与游戏内显示相差0.01的话是acc显示值的误差，还望理解\n(´。＿。｀)`
-
-                // let totnodata = Findnodata(e).length
-                // if (totnodata) {
-                    
-                // }
-
-                // /**发送合并消息 */
-                // e.reply(await common.makeForwardMsg(e, msgRes, ""), true)
 
 
             } else {
@@ -166,7 +151,12 @@ export class phirks extends plugin {
         userdata["finish"] = 0
         get.setData(`${e.user_id}`, userdata)
         FindtoRead(e)
-        e.reply(`开始录入未读入的${readlist[idlist.indexOf(e.user_id)].length}首曲目成绩（按照曲名排序）……\n停止输入请发送 #rks结束 ，暂停请发 #rks暂停。\n发送acc请按照顺序同时发送每一等级的acc！\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
+        if (readlist[idlist.indexOf(e.user_id)].length) {
+            e.reply(`开始录入未读入的${readlist[idlist.indexOf(e.user_id)].length}首曲目成绩（按照曲名排序）……\n停止输入请发送 #rks结束 ，暂停请发 #rks暂停。\n发送acc请按照顺序同时发送每一等级的acc！\n读入时默认从高等级向低等级读取，如果没有数据将会自动补0\n例：对于一首没有AT的曲目仅发送 98.79 ，将会自动将 HD EZ acc设置为0`)
+        }
+        else {
+            e.reply(`你的所有曲目成绩均已录入过了哦！如果需要修改单曲请发送 #rks修改+曲名，删除数据可以发送 #rks数据删除`)
+        }
         let mic = readlist[idlist.indexOf(e.user_id)][0]
         ask(e, mic)
         return true
@@ -192,7 +182,7 @@ export class phirks extends plugin {
         }
         FindtoRead(e, song)
         userdata["finish"] = 0
-        mic = readlist[idlist.indexOf(e.user_id)][0]
+        let mic = readlist[idlist.indexOf(e.user_id)][0]
         get.setData(`${e.user_id}`, userdata)
         ask(e, mic)
         return true
@@ -251,11 +241,9 @@ function ask(e, mic) {
         /**所有曲目录入完毕 */
         e.reply('幸苦了！读入完毕！输入 #rks 查询你的rks数据吧！')
         userdata['finish'] = 1
-        userdata['sutdown'] = 0
-        userdata['puting'] = 0
         get.setData(`${e.user_id}`, userdata)
     } else {
-        /**发送正在设置的曲目，序号存储在 userdata['puting'] 中 */
+        /**发送正在设置的曲目 */
         let msgRes = []
         if (infolist[mic]["chart"]["AT"]) {
             e.reply(`提示，这一首是有AT等级的哦！`)
@@ -294,18 +282,32 @@ function findacc(e) {
         if (!userdata[mic]) {
             userdata[mic] = { 'AT': 0, 'IN': 0, 'HD': 0, 'EZ': 0 }
         }
-        userdata[`${mic}`]['AT'] = acc[0]
-        userdata[`${mic}`]['IN'] = acc[1]
-        userdata[`${mic}`]['HD'] = acc[2]
-        userdata[`${mic}`]['EZ'] = acc[3]
+        if (acc[0]) {
+            userdata[`${mic}`]['AT'] = acc[0]
+        }
+        if (acc[1]) {
+            userdata[`${mic}`]['IN'] = acc[1]
+        }
+        if (acc[2]) {
+            userdata[`${mic}`]['HD'] = acc[2]
+        }
+        if (acc[3]) {
+            userdata[`${mic}`]['EZ'] = acc[3]
+        }
     } else {
         logger.info(`${acc[0]}  ${acc[1]}  ${acc[2]}`)
         if (!userdata[mic]) {
             userdata[mic] = { 'IN': 0, 'HD': 0, 'EZ': 0 }
         }
-        userdata[`${mic}`]['IN'] = acc[0]
-        userdata[`${mic}`]['HD'] = acc[1]
-        userdata[`${mic}`]['EZ'] = acc[2]
+        if(acc[0]) {
+            userdata[`${mic}`]['IN'] = acc[0]
+        }
+        if(acc[1]) {
+            userdata[`${mic}`]['HD'] = acc[1]
+        }
+        if(acc[2]) {
+            userdata[`${mic}`]['EZ'] = acc[2]
+        }
     }
     /**写入到文件 */
     get.setData(`${e.user_id}`, userdata)
@@ -412,12 +414,7 @@ function FindtoRead(e, mic) {
     }
     readlist[num] = []
     if (mic) {
-        let song = get.songsnick(mic)
-        if (!song) {
-            return true
-        }
-        song = song[0]
-        readlist[num].push(song)
+        readlist[num].push(mic)
         return true
     }
     readlist[num] = Findnodata(e)
