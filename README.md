@@ -47,8 +47,6 @@ git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugi
 #### Todo
 ·写菜单
 
-·写b19图
-
 ·...
 
 ---
