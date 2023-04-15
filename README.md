@@ -36,8 +36,6 @@ git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugi
 | #rks数据删除|删除本地个人数据|
 | #phi曲xxx|查询phigros中某一曲目的图鉴，支持设定别名，支持修改图鉴格式|
 | #phi设置别名 xxx ---> xxx|设置某一歌曲的别名，格式为 原名(或已有别名) ---> 别名（会自动过滤--->两边的空格）|
-| #phi申请 xxx ---> xxx|向主人发出别名设置申请，格式没有限制，会将内容保存在 /data/tododata.yaml 中|
-| #phi查询章节|发送曲目列表以章节进行分组的所有曲目信息，日后会增加其他分组方式|
 | #phi随机(定数-定数)(AT IN HD EZ)|在指定范围内随机一首曲目，目前支持指定定数及难度，难度可多选|
 | #phi计算等效rks [曲名] \| [acc] -[难度]|例：#phi计算等效rks 痉挛 \| 99 -IN ，可以计算等效rks|
 | #phi计算推分rks [曲名] \| [acc] \| [当前rks]|例：#phi计算推分rks a0 \| 0 \| 14.56 -IN 或 #phi计算推分rks a0 （用于本地已有数据的用户）|
