@@ -1,6 +1,6 @@
 # phi-plugin
 
-版本：v0.8.0
+版本：v0.8.1
 
 ---
 
@@ -45,7 +45,14 @@ git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugi
 ---
 
 #### Todo
+
 ·写菜单
+
+·加入云存档
+
+·加入收集品、头像等的图鉴
+
+·点phi的歌
 
 ·...
 
