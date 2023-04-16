@@ -29,6 +29,7 @@ git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugi
 #### 功能
 | 功能名称  |  功能说明  |
 |-------| ----- |
+| #phi帮助|帮助|
 | #rksacc|开始输入未输入的曲目acc|
 | #rks结束|输入acc状态下有效，结束输入状态，可以进行查分|
 | #rks修改 曲名|修改单曲acc|

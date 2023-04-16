@@ -105,7 +105,7 @@ class get {
         if (song) {
             if (isBig) {
                 if(illname) {
-                    url = `${this.infoPath}/Ill/${illname}`
+                    url = `${this.infoPath}/Ill/${illname}.png`
                     if(!fs.existsSync(url)) {
                         url = infolist[`${song}`][`illustration_big`]
                     }
@@ -114,6 +114,11 @@ class get {
                 }
             } else {
                 url = infolist[`${song}`][`illustration`]
+            }
+        } else {
+            url = `${this.infoPath}/otherimg/${img}.png`
+            if(!fs.existsSync(url)) {
+                url = 0
             }
         }
 
