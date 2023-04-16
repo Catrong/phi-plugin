@@ -16,8 +16,13 @@
 
 <div class="tb">
     {{each b19 data}}
-    {{if data.style == "Phi" || data.style % 2 == 0}}
+    {{if data.style == "Phi" || data.style % 2 == 0 || data.style == "noinfo"}}
     <div class="asong">
+        {{if data.style == "noinfo"}}
+        <div class="noinfo">
+        <img src="{{_res_path}}b19/res/noinfo.png" alt="无信息">
+        </div>
+        {{else}}
         <div class="imgbox">
 
             {{if data.difficulty == "AT"}}
@@ -79,6 +84,7 @@
                     </div>
                 </div>
         </div>
+        {{/if}}
     </div>
     {{/if}}
     {{/each}}

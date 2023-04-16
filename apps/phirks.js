@@ -29,7 +29,7 @@ export class phirks extends plugin {
             rule: [
                 {
                     /**正则匹配 */
-                    reg: '^#rks$',
+                    reg: '^#(rks|b19)$',
                     /**执行方法 */
                     fnc: 'comscore'
                 },
@@ -82,11 +82,14 @@ export class phirks extends plugin {
                         difficulty: song.difficulty,
                         acc: (song.acc * 100).toFixed(2),
                         ranking: song.ranking,
-                        score: (song.score).toFixed(2),
+                        score: (song.score).toFixed(4),
                         illustration: get.getill(song.song)
                     })
                     ans += song.score
                 } else {
+                    score.push({
+                        style: "noinfo"
+                    })
                     data.other.push(`您还没有任何一首歌达到满分呢！{{{(>_<)}}}`)
                     data.other.push(`要不要去试试收割一首谱面呢？任何难度的都可以哦！( •̀ ω •́ )✧`)
                 }
@@ -101,7 +104,7 @@ export class phirks extends plugin {
                         difficulty: song.difficulty,
                         acc: (song.acc * 100).toFixed(2),
                         ranking: song.ranking,
-                        score: (song.score).toFixed(2),
+                        score: (song.score).toFixed(4),
                         illustration: get.getill(song.song)
                     })
                     if (i <= 19) {

@@ -121,6 +121,12 @@ body {
     height: 293.788px;
 }
 
+.noinfo img {
+    width: 95%;
+    margin-top: 1%;
+    margin-left: 6%;
+}
+
 .imgbox {
     width: 96.5%;
     height: 84%;
