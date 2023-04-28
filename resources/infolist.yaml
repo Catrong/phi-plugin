@@ -25,7 +25,7 @@
   song: -Arkhei-
 -SURREALISM-:
   bpm: '180'
-  chapter: Chapter 4 管道迷宫
+  chapter: Chapter Legacy 过去的章节
   chart:
     EZ:
       charter: Su1fuR
@@ -110,8 +110,8 @@ Aleph-0:
     HD:
       charter: Clutter
       combo: '531'
-      difficulty: '11.6'
-      level: '11'
+      difficulty: '12.1'
+      level: '12'
     IN:
       charter: Clutter
       combo: '885'
@@ -350,7 +350,7 @@ Better Graphic Animation:
   song: Better Graphic Animation
 Bonus Time:
   bpm: '180'
-  chapter: Chapter 4 管道迷宫
+  chapter: Chapter Legacy 过去的章节
   chart:
     EZ:
       charter: Uvernight fixed by Barbarianerman
@@ -423,8 +423,8 @@ Break Over:
       difficulty: '14.6'
       level: '14'
   composer: K-forest
-  illustration: https://img.moegirl.org.cn/common/thumb/d/d2/Break_Over_Phigros.png/300px-Break_Over_Phigros.png
-  illustration_big: https://img.moegirl.org.cn/common/d/d2/Break_Over_Phigros.png
+  illustration: https://img.moegirl.org.cn/common/thumb/d/d3/Break_Over_Phigros_%E6%96%B0.png/300px-Break_Over_Phigros_%E6%96%B0.png
+  illustration_big: https://img.moegirl.org.cn/common/d/d3/Break_Over_Phigros_%E6%96%B0.png
   illustrator: 圆规Compasses
   length: '2:08'
   song: Break Over
@@ -680,7 +680,7 @@ Chronostasis:
   song: 'Cipher: /2&//<|0'
 Class Memories:
   bpm: '145'
-  chapter: Chapter 4 管道迷宫
+  chapter: Chapter Legacy 过去的章节
   chart:
     EZ:
       charter: M3d1uM
@@ -778,6 +778,31 @@ Concvssion:
   illustrator: 汉堡
   length: '2:31'
   song: Concvssion
+Crave Wave:
+  bpm: '150'
+  chapter: Chapter 8 凌日潮汐
+  chart:
+    EZ:
+      charter: Likey
+      combo: '177'
+      difficulty: '3.5'
+      level: '3'
+    HD:
+      charter: Likey
+      combo: '396'
+      difficulty: '8.2'
+      level: '8'
+    IN:
+      charter: Likey feat. 198
+      combo: '816'
+      difficulty: '13.6'
+      level: '13'
+  composer: LandRoot
+  illustration: https://img.moegirl.org.cn/common/thumb/5/5a/Crave_Wave_Phigros.png/300px-Crave_Wave_Phigros.png
+  illustration_big: https://img.moegirl.org.cn/common/5/5a/Crave_Wave_Phigros.png
+  illustrator: 笔记RE
+  length: '2:08'
+  song: Crave Wave
 Credits:
   bpm: '179'
   chapter: Chapter Legacy 过去的章节
@@ -833,6 +858,36 @@ Cthugha:
   illustrator: 谷地（青鸟modified）
   length: '2:34'
   song: Cthugha
+DESTRUCTION 3,2,1:
+  bpm: '321.321'
+  chapter: Chapter 8 凌日潮汐
+  chart:
+    AT:
+      charter: ∅
+      combo: '2330'
+      difficulty: '16.6'
+      level: '16'
+    EZ:
+      charter: '{Demolition,Devastation,Destruction}'
+      combo: '1050'
+      difficulty: '7.0'
+      level: '7'
+    HD:
+      charter: '{Devastation,Destruction}'
+      combo: '1250'
+      difficulty: '12.9'
+      level: '12'
+    IN:
+      charter: '{Destruction}'
+      combo: '1532'
+      difficulty: '15.9'
+      level: '15'
+  composer: Normal1zer vs. Broken Nerdz
+  illustration: https://img.moegirl.org.cn/common/thumb/2/2f/DESTRUCTION_3%2C2%2C1_Phigros.png/300px-DESTRUCTION_3%2C2%2C1_Phigros.png
+  illustration_big: https://img.moegirl.org.cn/common/2/2f/DESTRUCTION_3%2C2%2C1_Phigros.png
+  illustrator: rN
+  length: '2:38'
+  song: DESTRUCTION 3,2,1
 Dash from SOUL NOTES:
   bpm: '128'
   chapter: 单曲精选集
@@ -983,6 +1038,36 @@ Disorder:
   illustrator: Nabom
   length: '2:14'
   song: Disorder
+Distorted Fate:
+  bpm: '150'
+  chapter: Chapter 8 凌日潮汐
+  chart:
+    AT:
+      charter: unDefined Future
+      combo: '1283'
+      difficulty: '16.7'
+      level: '16'
+    EZ:
+      charter: De Fiance
+      combo: '594'
+      difficulty: '7.5'
+      level: '7'
+    HD:
+      charter: Doubt Ful
+      combo: '970'
+      difficulty: '12.9'
+      level: '12'
+    IN:
+      charter: Divination Fortune
+      combo: '1449'
+      difficulty: '15.9'
+      level: '15'
+  composer: Sakuzyo
+  illustration: https://img.moegirl.org.cn/common/thumb/8/8e/Distorted_Fate_Phigros.png/300px-Distorted_Fate_Phigros.png
+  illustration_big: https://img.moegirl.org.cn/common/8/8e/Distorted_Fate_Phigros.png
+  illustrator: knife美工刀
+  length: '2:42'
+  song: Distorted Fate
 Dlyrotz:
   bpm: '175'
   chapter: Chapter Legacy 过去的章节
@@ -1110,7 +1195,7 @@ Drop It from SOUL NOTES:
   song: Drop It from SOUL NOTES
 ENERGY SYNERGY MATRIX:
   bpm: '160'
-  chapter: Chapter 4 管道迷宫
+  chapter: Chapter Legacy 过去的章节
   chart:
     EZ:
       charter: Su1fuR
@@ -2008,6 +2093,31 @@ Leave All Behind:
   illustrator: 笔记RE
   length: '2:07'
   song: Leave All Behind
+Luminescence:
+  bpm: '184'
+  chapter: Chapter 8 凌日潮汐
+  chart:
+    EZ:
+      charter: XMT小咩兔
+      combo: '443'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: XMT小咩兔
+      combo: '689'
+      difficulty: '11.2'
+      level: '11'
+    IN:
+      charter: Pcat & 百九十八
+      combo: '987'
+      difficulty: '14.8'
+      level: '14'
+  composer: 米虾Fomiki & 初云CLoudie
+  illustration: https://img.moegirl.org.cn/common/thumb/d/de/Luminescence_Phigros.png/300px-Luminescence_Phigros.png
+  illustration_big: https://img.moegirl.org.cn/common/d/de/Luminescence_Phigros.png
+  illustrator: 子狼
+  length: '2:35'
+  song: Luminescence
 Luminescent:
   bpm: '141'
   chapter: 单曲精选集
@@ -2663,6 +2773,31 @@ Reimei:
   illustrator: 英英英
   length: '2:28'
   song: Reimei
+Retribution:
+  bpm: '190'
+  chapter: Chapter 8 凌日潮汐
+  chart:
+    EZ:
+      charter: NerSAN
+      combo: '555'
+      difficulty: '6.0'
+      level: '6'
+    HD:
+      charter: NerSAN
+      combo: '868'
+      difficulty: '11.6'
+      level: '11'
+    IN:
+      charter: Ner as "SPΔDE"
+      combo: '1358'
+      difficulty: '15.8'
+      level: '15'
+  composer: nm-y & Kry.exe
+  illustration: https://img.moegirl.org.cn/common/thumb/e/e1/Retribution_Phigros.png/300px-Retribution_Phigros.png
+  illustration_big: https://img.moegirl.org.cn/common/e/e1/Retribution_Phigros.png
+  illustrator: NerSAN
+  length: '2:25'
+  song: Retribution
 Rrhar'il:
   bpm: '190'
   chapter: Chapter 7 时钟链接
@@ -2960,7 +3095,7 @@ Stasis:
   song: Stasis
 Sultan Rage:
   bpm: '155'
-  chapter: Chapter 4 管道迷宫
+  chapter: Chapter Legacy 过去的章节
   chart:
     EZ:
       charter: 百九十八
@@ -2983,6 +3118,31 @@ Sultan Rage:
   illustrator: 笔记RE
   length: '1:56'
   song: Sultan Rage
+The Chariot ~REVIIVAL~:
+  bpm: '190'
+  chapter: Chapter 8 凌日潮汐
+  chart:
+    EZ:
+      charter: M3d1uM
+      combo: '520'
+      difficulty: '5.0'
+      level: '5'
+    HD:
+      charter: Alloces
+      combo: '660'
+      difficulty: '10.2'
+      level: '10'
+    IN:
+      charter: Ctymax drives in BlindForest
+      combo: '1009'
+      difficulty: '14.4'
+      level: '14'
+  composer: Attoclef
+  illustration: https://img.moegirl.org.cn/common/thumb/2/2b/The_Chariot_~REVIIVAL~_Phigros.png/300px-The_Chariot_~REVIIVAL~_Phigros.png
+  illustration_big: https://img.moegirl.org.cn/common/2/2b/The_Chariot_~REVIIVAL~_Phigros.png
+  illustrator: 翠冷兮
+  length: '2:26'
+  song: The Chariot ~REVIIVAL~
 The Mountain Eater:
   bpm: '127'
   chapter: 单曲精选集
@@ -3803,21 +3963,6 @@ volcanic:
   illustrator: 御坂果子
   length: '2:58'
   song: 云女孩
-今年も「雪降り、メリクリ」目指して顽张ります！！:
-  bpm: 156~234
-  chapter: --
-  chart: 
-    SP:
-      charter: 今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\リンコ*198食べ放題//
-      combo: '2500'
-      difficulty: 'IN 12 → Byd 12'
-      level: '?'
-  composer: AiSS vs. 华牧狸 w/ 夜轮 ft.結月ゆかり
-  illustration: https://img.moegirl.org.cn/common/thumb/3/33/%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg/300px-%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg
-  illustration_big: https://img.moegirl.org.cn/common/3/33/%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg
-  illustrator: Vios.NoFurry.git
-  length: '3:45'
-  song: 今年も「雪降り、メリクリ」目指して顽张ります！！
 光:
   bpm: '180'
   chapter: Chapter Legacy 过去的章节
@@ -3913,9 +4058,9 @@ volcanic:
       difficulty: '14.2'
       level: '14'
   composer: 闫东炜
-  illustration: https://img.moegirl.org.cn/common/thumb/e/e1/%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png/300px-%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png
-  illustration_big: https://img.moegirl.org.cn/common/e/e1/%E5%BC%80%E5%BF%83%E7%97%85_Phigros.png
-  illustrator: 喵n葵
+  illustration: https://img.moegirl.org.cn/common/thumb/0/09/%E5%BC%80%E5%BF%83%E7%97%85_Phigros_%E6%96%B0.png/300px-%E5%BC%80%E5%BF%83%E7%97%85_Phigros_%E6%96%B0.png
+  illustration_big: https://img.moegirl.org.cn/common/0/09/%E5%BC%80%E5%BF%83%E7%97%85_Phigros_%E6%96%B0.png
+  illustrator: 昔璃
   length: '1:55'
   song: 开心病
 心之所向:
@@ -4327,6 +4472,11 @@ volcanic:
   bpm: '170'
   chapter: 单曲精选集
   chart:
+    AT:
+      charter: JKy
+      combo: '1236'
+      difficulty: '14.8'
+      level: '14'
     EZ:
       charter: Arenn Saki vs Catcats vs 百九十八
       combo: '368'
@@ -4348,3 +4498,18 @@ volcanic:
   illustrator: cycats
   length: '2:59'
   song: 风屿
+今年も「雪降り、メリクリ」目指して顽张ります！！:
+  bpm: 156~234
+  chapter: --
+  chart: 
+    SP:
+      charter: 今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\リンコ*198食べ放題//
+      combo: '2500'
+      difficulty: 'IN 12 → Byd 12'
+      level: '?'
+  composer: AiSS vs. 华牧狸 w/ 夜轮 ft.結月ゆかり
+  illustration: https://img.moegirl.org.cn/common/thumb/3/33/%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg/300px-%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg
+  illustration_big: https://img.moegirl.org.cn/common/3/33/%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg
+  illustrator: Vios.NoFurry.git
+  length: '3:45'
+  song: 今年も「雪降り、メリクリ」目指して顽张ります！！
