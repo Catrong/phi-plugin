@@ -1,101 +1,105 @@
-{{extend defaultLayout}}
 
 {{block 'css'}}
+
+
 <head>
     <link rel="stylesheet" href="{{_res_path}}atlas/atlas.css">
     
 </head>
 
-{{/block}}
+    {{/block}}
+
 {{block 'main'}}
-
-{{if illustration}}
-<style>
-    body {
-        background: url("{{illustration}}") white center top no-repeat;
-        background-size: auto 220%;
-    }
-</style>
-{{/if}}
-
-<div class="box">
-    {{if song.length >= 20}}
-    <h1 style="font-size: 1.3rem;">{{song}}</h1>
-    {{else}}
-    <h1>{{song}}</h1>
-    {{/if}}
-    <hr noshade>
-    <div class="tb">
-        {{if illustration}}
-        <img src="{{illustration}}" alt="曲绘">
-        {{else}}
-        <img src= "{{pluResPath}}/otherimg/phigros.png" alt="曲绘">
-        {{/if}}
-        <div class="header">
-            <p>曲师：{{composer}}</p>
-            <p>画师：{{illustrator}}</p>
-            <p>章节：{{chapter}}</p>
-            <p>时长：{{length}}</p>
-            <p>bpm：{{bpm}}</p>
+    <div class="background">
+        <img src="{{illustration}}" alt="曲绘-模糊">
+    </div>
+    <div class="box">
+        <div class="info-box">
+            <div class="name-box">
+                <div class="song">
+                    <p style="font-size: {{fontsize}}px;">{{song}}</p>
+                    <!-- <p style="font-size: 45px;">{{song}}</p> -->
+                </div>
+                <div class="composer">
+                    <p>{{composer}}</p>
+                </div>
+            </div>
+            <div class="charts-box">
+                <div class="length">
+                    <p>{{length}}</p>
+                </div>
+                <div class="txt">
+                    <div class="sqrt">
+                        <p>SONG'S_INFO</p>
+                    </div>
+                    <div class="line">
+                    </div>
+                </div>
+                <div class="common">
+                    <p>Illustrator: {{illustrator}}</p>
+                    <p>Bpm:&ensp;{{bpm}}&ensp;&ensp;&ensp;&ensp;Chapter:&ensp;{{chapter}}</p>
+                    <p>Charts:</p>
+                </div>
+                <div class="chart">
+                    {{if or}}
+                    <div class="up">
+                        <p style="color: rgb({{or.r}}, {{or.g}}, {{or.b}});">{{or.chart}}&ensp;</p>
+                        <p>&ensp;{{or.difficulty}}&ensp;</p>
+                        <p>&ensp;{{or.combo}}&ensp;Combo</p>
+                    </div>
+                    <p>Charter:&ensp;{{or.charter}}</p>
+                    {{/if}}
+                    {{if SP}}
+                    <div class="up">
+                        <p style="color: rgb(0, 0, 0);">SP&ensp;</p>
+                        <p>&ensp;{{SP.difficulty}}&ensp;</p>
+                        <p>&ensp;{{SP.combo}}&ensp;Combo</p>
+                    </div>
+                    <p>Charter:&ensp;{{SP.charter}}</p>
+                    {{/if}}
+                    {{if AT}}
+                    <div class="up">
+                        <p style="color: rgb(213, 213, 213);">AT&ensp;</p>
+                        <p>&ensp;{{AT.difficulty}}&ensp;</p>
+                        <p>&ensp;{{AT.combo}}&ensp;Combo</p>
+                    </div>
+                    <p>Charter:&ensp;{{AT.charter}}</p>
+                    {{/if}}
+                    {{if IN}}
+                    <div class="up">
+                        <p style="color: rgb(255, 159, 159);">IN&ensp;</p>
+                        <p>&ensp;{{IN.difficulty}}&ensp;</p>
+                        <p>&ensp;{{IN.combo}}&ensp;Combo</p>
+                    </div>
+                    <p>Charter:&ensp;{{IN.charter}}</p>
+                    {{/if}}
+                    {{if HD}}
+                    <div class="up">
+                        <p style="color: rgb(165, 187, 227);">HD&ensp;</p>
+                        <p>&ensp;{{HD.difficulty}}&ensp;</p>
+                        <p>&ensp;{{HD.combo}}&ensp;Combo</p>
+                    </div>
+                    <p>Charter:&ensp;{{HD.charter}}</p>
+                    {{/if}}
+                    {{if EZ}}
+                    <div class="up">
+                        <p style="color: rgb(192, 221, 173);">EZ&ensp;</p>
+                        <p>&ensp;{{EZ.difficulty}}&ensp;</p>
+                        <p>&ensp;{{EZ.combo}}&ensp;Combo</p>
+                    </div>
+                    <p>Charter:&ensp;{{EZ.charter}}</p>
+                    {{/if}}
+                    
+                </div>
+                {{if othermsg}}
+                <div class="common">
+                    <p>{{othermsg}}</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        <div class="ill-box">
+            <img src="{{illustration}}" alt="曲绘">
         </div>
     </div>
-    <div class="tb">
-        <div class="header">
-            {{if SP}}
-            <p>SP:{{SP["difficulty"]}}</p>
-            {{/if}}
-            {{if AT}}
-            <p>AT:{{AT["difficulty"]}}</p>
-            {{/if}}
-            {{if IN}}
-            <p>IN:{{IN["difficulty"]}}</p>
-            {{/if}}
-            {{if HD}}
-            <p>HD:{{HD["difficulty"]}}</p>
-            {{/if}}
-            {{if EZ}}
-            <p>EZ:{{EZ["difficulty"]}}</p>
-            {{/if}}
-        </div>
-        <div class="header">
-            {{if SP}}
-            <p>{{SP["combo"]}}combo</p>
-            {{/if}}
-            {{if AT}}
-            <p>{{AT["combo"]}}combo</p>
-            {{/if}}
-            {{if IN}}
-            <p>{{IN["combo"]}}combo</p>
-            {{/if}}
-            {{if HD}}
-            <p>{{HD["combo"]}}combo</p>
-            {{/if}}
-            {{if EZ}}
-            <p>{{EZ["combo"]}}combo</p>
-            {{/if}}
-        </div>
-        <div class="header">
-            {{if SP}}
-            <p>chart by {{SP["charter"]}}</p>
-            {{/if}}
-            {{if AT}}
-            <p>chart by {{AT["charter"]}}</p>
-            {{/if}}
-            {{if IN}}
-            <p>chart by {{IN["charter"]}}</p>
-            {{/if}}
-            {{if HD}}
-            <p>chart by {{HD["charter"]}}</p>
-            {{/if}}
-            {{if EZ}}
-            <p>chart by {{EZ["charter"]}}</p>
-            {{/if}}
-        </div>
-    </div>
-    {{if othermsg}}
-    <div class="header">
-        <p>{{othermsg}}</p>
-    </div>
-    {{/if}}
-</div>
 {{/block}}
