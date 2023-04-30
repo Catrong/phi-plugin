@@ -69,7 +69,7 @@ export class phirks extends plugin {
                 e.reply(await common.makeForwardMsg(e, msgRes, ""))
             }
         } else {
-            e.reply(`未找到${msg}的相关曲目信息QAQ\n可以输入 #phi申请 原曲名称 ---> 别名 来向主人提出命名申请哦！`, true)
+            e.reply(`未找到${msg}的相关曲目信息QAQ`, true)
         }
         return true
     }
