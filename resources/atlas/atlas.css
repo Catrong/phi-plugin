@@ -28,14 +28,20 @@ body {
     z-index: 0;
 }
 
+.big-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
 .box {
     display: flex;
     width: 1736px;
     height: 659px;
     justify-content: center;
     align-items: center;
-    margin-top: 210px;
-    margin-left: 157px;
     z-index: 1;
 }
 
@@ -188,4 +194,103 @@ body {
     height: 100%;
     -webkit-clip-path: polygon(139px 0px, 1063px 0px, 924px 560px, 0px 560px, 139px 0px);
     z-index: 2;
+}
+
+.leave {
+    width: 2040;
+    display: flex;
+}
+
+.leave-box {
+    z-index: 4;
+    display: flex;
+    filter: drop-shadow(0px 0px 30px #000);
+    margin-left: 795px;
+}
+
+.leave-box p{
+    color: white;
+    font-size: 35px;
+    margin: 0;
+}
+
+
+.leave-ez {
+    display: flex;
+    width: 100px;
+    height: 75px;
+    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #92D050;
+    margin-right: 20px;
+}
+
+.leave-hd {
+    display: flex;
+    width: 100px;
+    height: 75px;
+    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #00B0F0;
+    margin-right: 20px;
+}
+
+.leave-in {
+    display: flex;
+    width: 100px;
+    height: 75px;
+    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #FF0000;
+    margin-right: 20px;
+}
+
+.leave-at {
+    display: flex;
+    width: 100px;
+    height: 75px;
+    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #A6A6A6;
+    margin-right: 20px;
+}
+
+.leave-sp {
+    display: flex;
+    width: 100px;
+    height: 75px;
+    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #000000;
+    margin-right: 20px;
+}
+
+.created {
+    margin-top: 40px;
+    height: 50px;
+    width: 1000px;
+    display: flex;
+    background-color: rgba(0, 183, 240, 0.3);
+    border-left: 6px solid;
+    border-right: 6px solid;
+    border-color: rgb(0, 183, 240);
+    z-index: 1;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+}
+
+.created p{
+    color: white;
+    font-size: 24px;
 }
