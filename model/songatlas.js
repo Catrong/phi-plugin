@@ -7,6 +7,7 @@ class atlas {
   async atlas(e, info) {
     // 渲染数据
     let data = {
+      ...info,
       /**曲名 */
       song: info.song,
       /**曲绘 */
@@ -31,7 +32,7 @@ class atlas {
       /**其他消息（备注） */
       othermsg: info.othermsg,
       /**预处理曲名字号 */
-      fontsize: info.song.length > 19 ? 24 : Math.min(94.4 - info.song.length * 2.6, 58)
+      fontsize: Math.min(555 / fLenB(info.song) * 2, 58)
     }
     // 渲染图片
     return await puppeteer.render('atlas/atlas', {
@@ -53,5 +54,18 @@ class atlas {
   }
 }
 
+/**判断字符长度 */
+function fLenB(character) {
+  var count = 0;
+  for (var i = 0; i < character.length; i++) {
+    if ((character.charCodeAt(i) > 0 && character.charCodeAt(i) < 127)
+      || (character.charCodeAt(i) > 65376 && character.charCodeAt(i) < 65440)) {
+      count++;
+    } else {
+      count += 2;
+    }
+  }
+  return count;
+}
 
 export default new atlas()

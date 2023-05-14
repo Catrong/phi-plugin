@@ -3,3 +3,6 @@
 /resources/help/
 
 /data/
+/apps/session.js
+/resources/lib
+/model/tem.js

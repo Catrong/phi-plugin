@@ -1,6 +1,5 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
-import { segment } from "oicq";
 
 export class phirks extends plugin {
     constructor() {

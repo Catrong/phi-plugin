@@ -23,6 +23,7 @@ body {
 .background img {
     width: 100%;
     position: relative;
+    overflow: hidden;
     filter: blur(40px) brightness(75%);
     z-index: 0;
 }

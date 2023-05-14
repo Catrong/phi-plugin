@@ -178,7 +178,7 @@ class get {
             data = infolist[name]
         }
         if (data) {
-            data.illustration_big = this.getill(name)
+            data.illustration = this.getill(name)
             return atlas.atlas(e, data)
         } else {
             /**未找到曲目 */
