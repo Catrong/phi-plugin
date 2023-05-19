@@ -4,5 +4,6 @@
 
 /data/
 /apps/session.js
-/resources/lib
+/lib
 /model/tem.js
+/package.json
