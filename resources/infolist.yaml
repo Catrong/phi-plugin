@@ -4513,3 +4513,54 @@ volcanic:
   illustrator: Vios.NoFurry.git
   length: '3:45'
   song: 今年も「雪降り、メリクリ」目指して顽张ります！！
+Bougainvillea:
+  bpm: '?'
+  chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: '-'
+      combo: '-'
+      difficulty: '4'
+      level: '4'
+    HD:
+      charter: '-'
+      combo: '-'
+      difficulty: '8'
+      level: '8'
+    IN:
+      charter: '-'
+      combo: '-'
+      difficulty: '13.4'
+      level: '13'
+  composer: Jade
+  illustration: 0
+  illustration_big: 0
+  illustrator: '-'
+  length: '-'
+  song: Bougainvillea
+Now Is The Time, Do It:
+  bpm: '?'
+  chapter: 单曲精选集
+  chart:
+    EZ:
+      charter: '-'
+      combo: '-'
+      difficulty: '4'
+      level: '4'
+    HD:
+      charter: '-'
+      combo: '-'
+      difficulty: '10'
+      level: '10'
+    IN:
+      charter: '-'
+      combo: '-'
+      difficulty: '14.3'
+      level: '14'
+  composer: Roy Mikelate
+  illustration: 0
+  illustration_big: 0
+  illustrator: '-'
+  length: '-'
+  song: Now Is The Time, Do It
+
