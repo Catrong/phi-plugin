@@ -4518,49 +4518,48 @@ Bougainvillea:
   chapter: 单曲精选集
   chart:
     EZ:
-      charter: '-'
-      combo: '-'
-      difficulty: '4'
+      charter: 'Barbarvillea'
+      combo: '300'
+      difficulty: '4.0'
       level: '4'
     HD:
-      charter: '-'
-      combo: '-'
-      difficulty: '8'
+      charter: 'Barbarvillea'
+      combo: '347'
+      difficulty: '8.3'
       level: '8'
     IN:
-      charter: '-'
-      combo: '-'
+      charter: 'Barbarvillea'
+      combo: '662'
       difficulty: '13.4'
       level: '13'
-  composer: Jade
-  illustration: 0
-  illustration_big: 0
-  illustrator: '-'
-  length: '-'
+  composer: 'Jade'
+  illustration: "https://img.moegirl.org.cn/common/thumb/5/5d/Bougainvillea_Phi.png/285px-Bougainvillea_Phi.png"
+  illustration_big: "https://img.moegirl.org.cn/common/5/5d/Bougainvillea_Phi.png"
+  illustrator: 'TNiK'
+  length: '1:56'
   song: Bougainvillea
 Now Is The Time, Do It:
-  bpm: '?'
-  chapter: 单曲精选集
-  chart:
-    EZ:
-      charter: '-'
-      combo: '-'
-      difficulty: '4'
-      level: '4'
-    HD:
-      charter: '-'
-      combo: '-'
-      difficulty: '10'
-      level: '10'
-    IN:
-      charter: '-'
-      combo: '-'
-      difficulty: '14.3'
-      level: '14'
-  composer: Roy Mikelate
-  illustration: 0
-  illustration_big: 0
-  illustrator: '-'
-  length: '-'
-  song: Now Is The Time, Do It
-
+  "song": "Now Is The Time, Do It"
+  "illustration": "https://img.moegirl.org.cn/common/thumb/6/61/Now_Is_The_Time%2C_Do_It_Phigros.png/285px-Now_Is_The_Time%2C_Do_It_Phigros.png"
+  "illustration_big": "https://img.moegirl.org.cn/common/6/61/Now_Is_The_Time%2C_Do_It_Phigros.png"
+  "chapter": "单曲精选集"
+  "bpm": "158"
+  "composer": "Roy Mikelate"
+  "length": "2:14"
+  "illustrator": "青鸟"
+  "chart":
+    "EZ":
+      "level": "4"
+      "difficulty": "4.5"
+      "combo": "246"
+	  "charter": "M3d1uM"
+    "HD":
+      "level": "10"
+      "difficulty": "10.7"
+      "combo": "777"
+      "charter": "M3d1uM"
+    "IN":
+      "level": "14"
+      "difficulty": "14.3"
+      "combo": "795"
+      "charter": "Pat Brick Man Mr.N feat. Ner of Time"
