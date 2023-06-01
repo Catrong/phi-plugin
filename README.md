@@ -7,6 +7,8 @@
 #### 介绍：
 适用于 Yunzai-Bot V3 的 phigros 辅助插件
 
+暂时没有云存档功能，打算这周末（高考假期）回去加纯js版的云存档，需要云存档功能的可以移步至https://github.com/Walkersifolia/PhigrosLibrary-Plugin
+
 ---
 
 #### 安装：
