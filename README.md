@@ -24,12 +24,14 @@
 
 ```
 git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
+pnpm install -P
 ```
 
 使用gitee
 
 ```
 git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
+pnpm install -P
 ```
 
 ---
