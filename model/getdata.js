@@ -2,7 +2,7 @@
 import fs, { copyFileSync } from 'node:fs';
 import { _path } from "./path.js";
 import { segment } from "oicq";
-// import atlas from "./picmodle.js";
+import atlas from "./picmodle.js";
 import Film from './Doc.js';
 
 
