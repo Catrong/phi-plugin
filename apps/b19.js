@@ -12,7 +12,7 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^[#/]phi(\s*)(b19|rks)$',
+                    reg: '^[#/]phi (b19|rks)$',
                     fnc: 'b19'
                 }
 
