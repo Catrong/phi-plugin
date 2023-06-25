@@ -15,11 +15,11 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^[#/]phi(绑定| bind).*$',
+                    reg: '^[#/]phi(\\s*)(绑定|bind).*$',
                     fnc: 'bind'
                 },
                 {
-                    reg: '^[#/]phi(更新存档| update)$',
+                    reg: '^[#/]phi(\\s*)(更新存档|update)$',
                     fnc: 'update'
                 }
             ]

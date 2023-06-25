@@ -14,11 +14,11 @@ export class phirks extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^[#/]phi(曲| song).*$',
+                    reg: '^[#/]phi(\\s*)(曲|song).*$',
                     fnc: 'serch'
                 },
                 {
-                    reg: '^[#/]phi(设置别名| setnick).*$',
+                    reg: '^[#/]phi(\\s*)(设置别名|setnick).*$',
                     fnc: 'setnick'
                 }
                 // {
