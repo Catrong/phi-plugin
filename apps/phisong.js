@@ -14,15 +14,15 @@ export class phirks extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^(#|/)phi(\s*)(曲|song).*$',
+                    reg: '^[#/]phi(\s*)(曲|song).*$',
                     fnc: 'serch'
                 },
                 {
-                    reg: '^(#|/)phi(\s*)(设置别名|setnick).*$',
+                    reg: '^[#/]phi(\s*)(设置别名|setnick).*$',
                     fnc: 'setnick'
                 }
                 // {
-                //     reg: '^(#|/)phi(\s*)(删除别名|delnick).*$',
+                //     reg: '^[#/]phi(\s*)(删除别名|delnick).*$',
                 //     fnc: 'delnick'
                 // }
             ]
@@ -33,7 +33,7 @@ export class phirks extends plugin {
 
     /**歌曲图鉴 */
     async serch(e) {
-        let msg = e.msg.replace(/(#|\/)phi(\s*)(曲|song)(\s*)/g, "")
+        let msg = e.msg.replace(/[#/]phi(\s*)(曲|song)(\s*)/g, "")
         let songs = await get.songsnick(msg)
         if (songs[0]) {
             let msgRes

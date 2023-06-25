@@ -12,7 +12,7 @@ export class phirks extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^(#|/)(pgr|PGR|屁股肉|phi|Phi)(\s*)(命令|帮助|菜单|help|说明|功能|指令|使用说明)$',
+                    reg: '^[#/](pgr|PGR|屁股肉|phi|Phi)(\s*)(命令|帮助|菜单|help|说明|功能|指令|使用说明)$',
                     fnc: 'help'
                 }
                 
