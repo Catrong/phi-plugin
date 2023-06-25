@@ -247,8 +247,6 @@ body p {
         -1px 0 10px #63856b4d;
 }
 
-
-
 .acc p {
     font-size: 50px;
 }
@@ -264,6 +262,8 @@ body p {
     margin-left: -20%;
     filter: drop-shadow(0 0 5px #fff);
 }
+
+
 
 .createdbox {
     width: 100%;
