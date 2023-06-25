@@ -23,7 +23,7 @@ export class phirks extends plugin {
 
     /**暂行帮助 */
     async help(e) {
-        await e.reply(`⌈phi-plugin 帮助⌋(所有#均可用/代替)\n#phi曲xx  获取曲目图鉴\n#phi bind xxx #phi绑定xxx 绑定sessionToken\n#phi updata #phi更新数据 更新数据\n#phi b19 获取b19图`)
+        await e.reply(`⌈phi-plugin 帮助⌋(所有#均可用/代替)\n#phi曲xx  获取曲目图鉴\n#phi bind xxx #phi绑定xxx 绑定sessionToken\n#phi updata #phi更新存档 更新数据\n#phi b19 获取b19图`)
         return true
     }
 }
