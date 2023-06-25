@@ -39,6 +39,8 @@ git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugi
 | 功能名称  |  功能说明  |
 |-------| ----- |
 | #phi帮助|帮助|
+| #phi (bind\|绑定)|绑定sessionToken|
+| #phi (update\|更新数据)|更新存档|
 | #phi (rks\|b19)|查询rks，会提供得出的b21结果|
 | #phi曲xxx|查询phigros中某一曲目的图鉴，支持设定别名，支持修改图鉴格式|
 | #phi设置别名 xxx ---> xxx|设置某一歌曲的别名，格式为 原名(或已有别名) ---> 别名（会自动过滤--->两边的空格）|
