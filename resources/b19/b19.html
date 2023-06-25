@@ -1,175 +1,218 @@
-
 {{block 'css'}}
-<link rel="stylesheet" href="{{_res_path}}b19/b19.css">
+
+<head>
+    <link rel="stylesheet" href="{{_res_path}}/b19/b19.css">
+</head>
 {{/block}}
 
-{{block 'main'}}
-
-<div class="header">
-    <img src="{{_res_path}}b19/res/head.png" alt="head">
-    <div class="info">    
-        <p>Player: {{player}}</p>
-        <p>RanKingScore: {{rks}}</p>
-        <p style="font-size: 1.13rem;">数据为手动输入，可能与实际值有0.01左右误差，仅供参考</p>
+<body>
+    <div class="background">
+        <img src="{{background}}" alt="曲绘-模糊">
     </div>
-</div>
-
-<div class="tb">
-    {{each b19 data}}
-    {{if data.style == "Phi" || data.style % 2 == 0 || data.style == "noinfo"}}
-    <div class="asong">
-        {{if data.style == "noinfo"}}
-        <div class="noinfo">
-        <img src="{{_res_path}}b19/res/noinfo.png" alt="无信息">
+    <div class="tatle">
+        <div class="l">
+            <img src="{{_res_path}}b19/res/Phigros_Icon_3.0.0.png" alt="icon">
+            <div class="doc">
+                <p>Phigros</p>
+                <p>RankingScore查询</p>
+            </div>
         </div>
-        {{else}}
-        <div class="imgbox">
+        <div class="m"></div>
+        <div class="r">
+            <p>Player: {{PlayerId}}</p>
+            <p>RankingScore: {{Rks}}</p>
+            <div class="Challenge">
+                <p>ChallengeMode:</p>
+                <div class="Challenge-r">
+                    <img src="{{_res_path}}b19/res/{{ChallengeMode}}.png" alt="Challenge">
+                    <p>{{ChallengeModeRank}}</p>
+                </div>
+            </div>
+            <p>Date: {{Date}}</p>
+        </div>
+    </div>
+    <div class="b19">
+        <div class="L">
+            <!-- phi -->
 
-            {{if data.difficulty == "AT"}}
-                {{if data.acc == 100.00}}
-                <div class="AT-phi">
-                {{else}}
-                <div class="AT">
-                {{/if}}
-            {{/if}}
-            {{if data.difficulty == "IN"}}
-                {{if data.acc == 100.00}}
-                <div class="IN-phi">
-                {{else}}
-                <div class="IN">
-                {{/if}}
-            {{/if}}
-            {{if data.difficulty == "HD"}}
-                {{if data.acc == 100.00}}
-                <div class="HD-phi">
-                {{else}}
-                <div class="HD">
-                {{/if}}
-            {{/if}}
-            {{if data.difficulty == "EZ"}}
-                {{if data.acc == 100.00}}
-                <div class="EZ-phi">
-                {{else}}
-                <div class="EZ">
-                {{/if}}
-            {{/if}}
-                    <img src = "{{data.illustration}}" alt="曲绘" >
-                    <div class="infobox">
-                        <div class="title">
-                            <div class="num">
-                                {{if data.style == "Phi"}}
-                                <p>{{data.style}}</p>
-                                {{else}}
-                                <p>#{{data.style}}</p>
-                                {{/if}}
-                            </div>
-                            <div class="song">
-                                <p>{{data.song}}</p>
-                            </div>
+            {{if phi.song}}
+
+            <div class="song">
+                <div class="ill-box">
+                    <div class="num">
+                        <p>Phi</p>
+                    </div>
+                    <div class="ill">
+                        <img src="{{phi.illustration}}" alt="ill">
+                    </div>
+                    <div class="rank-{{phi.rank}}">
+                        <div class="org">
+                            <p>{{phi.rank}}&ensp;{{phi.difficulty}}</p>
                         </div>
-                        <div class="rank">
-                            <div class="difficulty">
-                                <p>{{data.difficulty}}</p>
-                            </div>
-                            <div class="ranking">
-                                <p>{{data.ranking}}</p>
-                            </div>
-                            <div class="acc">
-                                <p>{{data.acc}}%</p>
-                            </div>
-                        </div>
-                        <div class="rankscore">
-                            <p>{{data.score}}</p>
+                        <div class="rel">
+                            <p>{{phi.rks}}</p>
                         </div>
                     </div>
                 </div>
-        </div>
-        {{/if}}
-    </div>
-    {{/if}}
-    {{/each}}
-
-</div>
-
-
-<div class="tb" style="margin-top: 10.5%;">
-    {{each b19 data}}
-    {{if data.style % 2 == 1}}
-    <div class="asong">
-        <div class="imgbox">
-
-            {{if data.difficulty == "AT"}}
-                {{if data.acc == 100.00}}
-                <div class="AT-phi">
-                {{else}}
-                <div class="AT">
-                {{/if}}
-            {{/if}}
-            {{if data.difficulty == "IN"}}
-                {{if data.acc == 100.00}}
-                <div class="IN-phi">
-                {{else}}
-                <div class="IN">
-                {{/if}}
-            {{/if}}
-            {{if data.difficulty == "HD"}}
-                {{if data.acc == 100.00}}
-                <div class="HD-phi">
-                {{else}}
-                <div class="HD">
-                {{/if}}
-            {{/if}}
-            {{if data.difficulty == "EZ"}}
-                {{if data.acc == 100.00}}
-                <div class="EZ-phi">
-                {{else}}
-                <div class="EZ">
-                {{/if}}
-            {{/if}}
-                    <img src = "{{data.illustration}}" alt="曲绘" >
-                    <div class="infobox">
-                        <div class="title">
-                            <div class="num">
-                                {{if data.style == "Phi"}}
-                                <p>{{data.style}}</p>
-                                {{else}}
-                                <p>#{{data.style}}</p>
-                                {{/if}}
-                            </div>
-                            <div class="song">
-                                <p>{{data.song}}</p>
-                            </div>
+                <div class="info-{{phi.rank}}">
+                    <div class="songname">
+                        <p style="font-size: {{phi.size}}px;">{{phi.song}}</p>
+                    </div>
+                    <div class="songinfo">
+                        <div class="pingji">
+                            <img src="{{_res_path}}otherimg/res/{{phi.pingji}}.png" alt="pingji">
                         </div>
-                        <div class="rank">
-                            <div class="difficulty">
-                                <p>{{data.difficulty}}</p>
+                        <div class="chengji">
+                            <div class="score">
+                                <p>{{phi.score}}</p>
                             </div>
-                            <div class="ranking">
-                                <p>{{data.ranking}}</p>
+                            <div class="line"></div>
+                            <div class="acc-box">
+                                <div class="acc">
+                                    <p>{{phi.acc}}%</p>
+                                </div>
+                                <div class="suggest">
+                                    <p>>> {{phi.suggest}}</p>
+                                </div>
                             </div>
-                            <div class="acc">
-                                <p>{{data.acc}}%</p>
-                            </div>
-                        </div>
-                        <div class="rankscore">
-                            <p>{{data.score}}</p>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {{else}}
+
+            <div class="Nosignal">
+                <div class="border_corner border_corner_left_top"></div>
+                <div class="border_corner border_corner_right_top"></div>
+                <div class="border_corner border_corner_left_bottom"></div>
+                <div class="border_corner border_corner_right_bottom"></div>
+                <div class="line"></div>
+                <div class="timeout">
+                    <p>TIME_OUT</p>
+                </div>
+                <div class="client">
+                    <p>>>> PhigrOS Client Finding Phi.score</p>
+                </div>
+                <div class="sqrt">
+                    <p>////////////////////////////////////////////</p>
+                </div>
+            </div>
+
+            {{/if}}
+
+
+            {{each b19_list song}}
+
+            {{if song.num % 2 == 0}}
+            <div class="song">
+                <div class="ill-box">
+                    <div class="num">
+                        <p>#{{song.num}}</p>
+                    </div>
+                    <div class="ill">
+                        <img src="{{song.illustration}}" alt="ill">
+                    </div>
+                    <div class="rank-{{song.rank}}">
+                        <div class="org">
+                            <p>{{song.rank}}&ensp;{{song.difficulty}}</p>
+                        </div>
+                        <div class="rel">
+                            <p>{{song.rks}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-{{song.rank}}">
+                    <div class="songname">
+                        <p style="font-size: {{song.size}}px;">{{song.song}}</p>
+                    </div>
+                    <div class="songinfo">
+                        <div class="pingji">
+                            <img src="{{_res_path}}b19/res/{{song.pingji}}.png" alt="pingji">
+                        </div>
+                        <div class="chengji">
+                            <div class="score">
+                                <p>{{song.score}}</p>
+                            </div>
+                            <div class="line"></div>
+                            <div class="acc-box">
+                                <div class="acc">
+                                    <p>{{song.acc}}%</p>
+                                </div>
+                                <div class="suggest">
+                                    <p>>> {{song.suggest}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+
+            {{/each}}
+
+
+
+
+        </div>
+        <div class="R">
+            
+            {{each b19_list song}}
+
+            {{if song.num % 2 == 1}}
+            <div class="song">
+                <div class="ill-box">
+                    <div class="num">
+                        <p>#{{song.num}}</p>
+                    </div>
+                    <div class="ill">
+                        <img src="{{song.illustration}}" alt="ill">
+                    </div>
+                    <div class="rank-{{song.rank}}">
+                        <div class="org">
+                            <p>{{song.rank}}&ensp;{{song.difficulty}}</p>
+                        </div>
+                        <div class="rel">
+                            <p>{{song.rks}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-{{song.rank}}">
+                    <div class="songname">
+                        <p style="font-size: {{song.size}}px;">{{song.song}}</p>
+                    </div>
+                    <div class="songinfo">
+                        <div class="pingji">
+                            <img src="{{_res_path}}b19/res/{{song.pingji}}.png" alt="pingji">
+                        </div>
+                        <div class="chengji">
+                            <div class="score">
+                                <p>{{song.score}}</p>
+                            </div>
+                            <div class="line"></div>
+                            <div class="acc-box">
+                                <div class="acc">
+                                    <p>{{song.acc}}%</p>
+                                </div>
+                                <div class="suggest">
+                                    <p>>> {{song.suggest}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+
+            {{/each}}
         </div>
     </div>
-    {{/if}}
-    {{/each}}
-</div>
-<div class="bottom">
-    {{each other txt}}
-    <p>{{txt}}</p>
-    {{/each}}
-    <div style="flex-direction: column;">
-        <p style="float: left;">Created By Yunzai-Bot &nbsp; </p>
-        <p style="float: left; color: yellow;">{{Version.yunzai}}</p>
-        <p style="float: left;"> &nbsp; &amp; phi-Plugin &nbsp;</p>
-        <p style="float: left; color: yellow;">{{Version.ver}}</p>
+    <div class="createdbox">
+        <div class="created">
+            <p style="float: left;">Created By Yunzai-Bot &nbsp; </p>
+            <p style="float: left; color: yellow;">{{Version.yunzai}}</p>
+            <p style="float: left;"> &nbsp; &amp; phi-Plugin &nbsp;</p>
+            <p style="float: left; color: yellow;">{{Version.ver}}</p>
+        </div>
     </div>
-</div>
-{{/block}}
+</body>

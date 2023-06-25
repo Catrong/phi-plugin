@@ -1,0 +1,420 @@
+<head>
+    <style>
+        @font-face {
+            font-family: 'PHI';
+            src: url("../common/font/Source-Han-Sans.ttf") format('woff'), url("../common/font/Source-Han-Sans.ttf") format('truetype');
+        }
+
+        body {
+            height: 1080px;
+            width: 2048px;
+            margin: 0;
+        }
+
+        body p {
+            color: white;
+            font-size: 20px;
+            font-family: PHI;
+        }
+
+
+        .background {
+            display: flex;
+            height: 1080px;
+            width: 2048px;
+            margin-bottom: -1080px;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .background img {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            transform: scale(1.2);
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .big-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .box {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .box p {
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .ill-box {
+            display: flex;
+            width: 45%;
+            filter: drop-shadow(0px 0px 30px #000);
+            z-index: 2;
+        }
+
+        .ill-box img {
+            width: 100%;
+            clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+            z-index: 2;
+        }
+
+        .score-box {
+            width: 45%;
+            height: 45%;
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: nowrap;
+            flex-direction: column;
+            align-content: space-between;
+        }
+
+        .box-up,
+        .box-down {
+            width: 100%;
+            height: 50%;
+            display: flex;
+        }
+
+        .box-down {
+            margin-left: -10%;
+            align-items: flex-end;
+        }
+
+        .rank-AT,
+        .rank-IN,
+        .rank-HD,
+        .rank-EZ {
+            clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+            width: 37.5%;
+            height: 90%;
+            padding-left: 7.5%;
+            filter: drop-shadow(2px 4px 6px black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .rank-AT {
+            background-color: #d5d5d5ad;
+        }
+
+        .rank-IN {
+            background-color: #ff0000ad;
+        }
+
+        .rank-HD {
+            background-color: #00B0F0ad;
+        }
+
+        .rank-EZ {
+            background-color: #92D050ad;
+        }
+
+        .pingji {
+            height: 100%;
+            width: 100%;
+            margin-bottom: -210;
+            margin-left: -20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pingji img {
+            height: 200px;
+            filter: blur(10px);
+        }
+
+        .rank {
+            width: 90%;
+            height: 0;
+            transform: skew(-10deg);
+            display: flex;
+            align-items: flex-start;
+            z-index: 1;
+        }
+
+        .info {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .rank p {
+            font-size: 75px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-top: -5%;
+        }
+
+        .score,
+        .acc {
+            text-shadow:
+                0 0 1px #84979b7c,
+                1px 0 2px #84979b7c,
+                -1px 0 2px #84979b7c,
+                1px 0 5px #84979b7c,
+                -1px 0 10px #84979b7c;
+        }
+
+        .score {
+            width: 100%;
+            height: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: -7%;
+            margin-bottom: 5%;
+        }
+
+        .score p {
+            font-size: 60px;
+        }
+
+        .acc-box {
+            width: 90%;
+            height: 30%;
+            display: flex;
+            flex-direction: row;
+            margin-left: -23%;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .acc {
+            width: 70%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rek-acc {
+            width: 35%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .rks {
+            width: 100%;
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow:
+                0 0 1px #9da07759,
+                1px 0 1px #9da07759,
+                -1px 0 2px #9da07759,
+                1px 0 1px #9da07759,
+                -1px 0 10px #9da07759;
+        }
+
+        .suggest {
+            width: 90%;
+            height: 10%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-left: -35%;
+        }
+
+        .suggest p {
+            font-size: 25px;
+            color: #92D050;
+            text-shadow: 0 0 1px #63856b4d,
+                1px 0 2px #63856b4d,
+                -1px 0 2px #63856b4d,
+                1px 0 5px #63856b4d,
+                -1px 0 10px #63856b4d;
+        }
+
+
+
+        .acc p {
+            font-size: 50px;
+        }
+
+        .rks p {
+            font-size: 35px;
+            color: rgb(255, 255, 0);
+        }
+
+        .line {
+            width: 85%;
+            border-bottom: 3px #fff solid;
+            margin-left: -20%;
+            filter: drop-shadow(0 0 5px #fff);
+        }
+
+        .createdbox {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -80;
+        }
+
+        .created {
+            height: 50px;
+            width: 1000px;
+            display: flex;
+            background-color: rgba(0, 183, 240, 0.3);
+            border-left: 6px solid;
+            border-right: 6px solid;
+            border-color: rgb(0, 183, 240);
+            z-index: 1;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .created p {
+            color: white;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background">
+        <img src="https://img.moegirl.org.cn/common/0/0b/Glaciaxion_Phigros.png" alt="曲绘-模糊">
+    </div>
+    <div class="box">
+        <div class="ill-box">
+            <img src="https://img.moegirl.org.cn/common/0/0b/Glaciaxion_Phigros.png" alt="曲绘">
+        </div>
+        <div class="score-box">
+            <div class="box-up">
+                <div class="rank-AT">
+                    <div class="pingji">
+                        <img src="../otherimg/phi.png" alt="pingji">
+                    </div>
+                    <div class="rank">
+                        <p>AT</p>
+                    </div>
+                    <div class="info">
+                        <div class="score">
+                            <p>1000000</p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc-box">
+                            <div class="acc">
+                                <p>100.00%</p>
+                            </div>
+                            <div class="rks">
+                                <p>16.20</p>
+                            </div>
+                        </div>
+                        <div class="suggest">
+                            <p>>> 100.00%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="rank-IN">
+                    <div class="pingji">
+                        <img src="../otherimg/FC.png" alt="pingji">
+                    </div>
+                    <div class="rank">
+                        <p>IN</p>
+                    </div>
+                    <div class="info">
+                        <div class="score">
+                            <p>1000000</p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc-box">
+                            <div class="acc">
+                                <p>100.00%</p>
+                            </div>
+                            <div class="rks">
+                                <p>16.20</p>
+                            </div>
+                        </div>
+                        <div class="suggest">
+                            <p>>> 100.00%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-down">
+                <div class="rank-HD">
+                    <div class="pingji">
+                        <img src="../otherimg/V.png" alt="pingji">
+                    </div>
+                    <div class="rank">
+                        <p>HD</p>
+                    </div>
+                    <div class="info">
+                        <div class="score">
+                            <p>1000000</p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc-box">
+                            <div class="acc">
+                                <p>100.00%</p>
+                            </div>
+                            <div class="rks">
+                                <p>16.20</p>
+                            </div>
+                        </div>
+                        <div class="suggest">
+                            <p>>> 100.00%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="rank-EZ">
+                    <div class="pingji">
+                        <img src="../otherimg/F.png" alt="pingji">
+                    </div>
+                    <div class="rank">
+                        <p>EZ</p>
+                    </div>
+                    <div class="info">
+                        <div class="score">
+                            <p>1000000</p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc-box">
+                            <div class="acc">
+                                <p>100.00%</p>
+                            </div>
+                            <div class="rks">
+                                <p>16.20</p>
+                            </div>
+                        </div>
+                        <div class="suggest">
+                            <p>>> 100.00%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="createdbox">
+        <div class="created">
+            <p style="float: left;">Created By Yunzai-Bot &nbsp; </p>
+            <p style="float: left; color: yellow;">{{Version.yunzai}}</p>
+            <p style="float: left;"> &nbsp; &amp; phi-Plugin &nbsp;</p>
+            <p style="float: left; color: yellow;">{{Version.ver}}</p>
+        </div>
+
+    </div>
+</body>

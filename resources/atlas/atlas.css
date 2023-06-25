@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'PHI';
-    src: url("../common/font/phi.ttf") format('woff'), url("../common/font/phi.ttf") format('truetype');
+    src: url("../common/font/Source-Han-Sans.ttf") format('woff'), url("../common/font/Source-Han-Sans.ttf") format('truetype');
 }
 
 body {
@@ -63,7 +63,7 @@ body {
     width: 833px;
     background-color: rgba(0, 0, 0, 0.75);
     margin-left: 185px;
-    -webkit-clip-path: polygon(36px 0px, 100% 0%, 100% 100%, 0% 100%, 36px 0px);
+    clip-path: polygon(36px 0px, 100% 0%, 100% 100%, 0% 100%, 36px 0px);
     flex-direction: column;
     z-index: 1;
 }
@@ -97,9 +97,9 @@ body {
     height: 359px;
     width: 1014px;
     background-color: rgba(0, 183, 240, 0.3);
-    margin-top: 20px;
     border-left: 12px solid;
     border-color: rgb(0, 183, 240);
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     z-index: 1;
@@ -192,7 +192,7 @@ body {
 
 .ill-box img {
     height: 100%;
-    -webkit-clip-path: polygon(139px 0px, 1063px 0px, 924px 560px, 0px 560px, 139px 0px);
+    clip-path: polygon(139px 0px, 1063px 0px, 924px 560px, 0px 560px, 139px 0px);
     z-index: 2;
 }
 
@@ -220,7 +220,7 @@ body {
     display: flex;
     width: 100px;
     height: 75px;
-    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -232,7 +232,7 @@ body {
     display: flex;
     width: 100px;
     height: 75px;
-    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -244,7 +244,7 @@ body {
     display: flex;
     width: 100px;
     height: 75px;
-    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -256,7 +256,7 @@ body {
     display: flex;
     width: 100px;
     height: 75px;
-    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -268,7 +268,7 @@ body {
     display: flex;
     width: 100px;
     height: 75px;
-    -webkit-clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
+    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
     justify-content: center;
     align-items: center;
     flex-direction: column;

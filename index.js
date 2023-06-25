@@ -1,8 +1,5 @@
 import fs from 'node:fs'
 
-logger.info('------φ^_^φ------')
-logger.info(` phi插件载入成功~`)
-logger.info(`-----------------`);
 
 
 //插件作者QQ号：1436375503
@@ -33,3 +30,9 @@ for (let i in files) {
   apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
 }
 export { apps }
+
+logger.info('------φ^_^φ------')
+logger.info(` phi插件载入成功~`)
+logger.info(` 本项目云存档功能由 7aGiven/PhigrosLibrary 改写而来，感谢文酱的帮助！`)
+logger.info(` 可以在这个群找到我哦！282781491`)
+logger.info(`-----------------`);

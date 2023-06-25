@@ -1,0 +1,35 @@
+{
+  "name": "phi-plugin",
+  "version": "1.0.0",
+  "description": "phigros辅助插件",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Catrong/phi-plugin.git"
+  },
+  "author": "Catrong",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Catrong/phi-plugin/issues"
+  },
+  "homepage": "https://github.com/Catrong/phi-plugin#readme",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "keywords": [
+    "云崽",
+    "原神",
+    "Yunzai-Bot",
+    "Genshin"
+  ]
+}

@@ -1,77 +1,62 @@
 
-import fs from 'node:fs'
-import YAML from 'yaml'
+import fs, { copyFileSync } from 'node:fs';
 import { _path } from "./path.js";
 import { segment } from "oicq";
-import fetch from "node-fetch"
-import atlas from "./songatlas.js"
+// import atlas from "./picmodle.js";
+import Film from './Doc.js';
 
 
 class get {
+
+
     constructor() {
         /**曲绘资源、曲目信息路径 */
-        this.infoPath = `${_path}/plugins/phi-plugin/resources/`
-        this.info = {}
+        // this.infoPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/resources/info/`
+        this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
 
         /**用户数据路径 */
         this.userPath = `${_path}/plugins/phi-plugin/data/`
-        this.user = {}
 
         /**用户设置路径 */
         this.configPath = `${_path}/plugins/phi-plugin/config/`
-        this.config = {}
+        this.config = 0
 
         /**默认设置路径 */
         this.defaultPath = `${_path}/plugins/phi-plugin/config/default_config/`
-        this.default = {}
+        this.default = 0
+
+        this.imgPath = `${_path}/plugins/phi-plugin/resources/otherimg/`
+
     }
 
+    async init() {
+        this.info = await this.getData('infolist.json', this.infoPath)
+        this.songsid = await this.getData('songsid.yaml', this.infoPath)
+        this.songnick = await this.getData('nicklist.yaml', this.infoPath)
+    }
 
-    /**获取 chos.yaml 文件 */
-    getData(chos) {
-        let path
-        if (chos.includes('list')) {
-            path = `${this.infoPath}`
-        } else if (chos.includes('config')) {
-            path = `${this.configPath}`
-            try {
-                if (!fs.existsSync(`${path}${chos}.yaml`)) { return YAML.parse(fs.readFileSync(`${this.defaultPath}${chos}.yaml`, 'utf8')) }
-                return YAML.parse(fs.readFileSync(`${path}${chos}.yaml`, 'utf8'))
-            } catch (error) {
-                logger.error(`[phi插件][${chos}].yaml 读取失败 ${error}`)
-                return false
-            }
+    /**获取 chos 文件 
+     * @param {string}  chos 文件名称 含后缀
+     * @param {string}  kind 路径
+    */
+    async getData(chos, path) {
+        if (chos.includes('.yaml')) {
+            return Film.YamlReader(`${path}${chos}`, path)
         } else {
-            path = `${this.userPath}`
-        }
-        try {
-            if (!fs.existsSync(`${path}${chos}.yaml`)) { return false }
-            return YAML.parse(fs.readFileSync(`${path}${chos}.yaml`, 'utf8'))
-        } catch (error) {
-            logger.error(`[phi插件][${chos}].yaml 读取失败 ${error}`)
-            return false
+            return Film.JsonReader(`${path}${chos}`, path)
         }
     }
 
-    /**修改 chos.yaml 文件为 data */
-    setData(chos, data) {
-        let path
-        if (chos.includes('list')) {
-            path = `${this.infoPath}`
-        } else if (chos.includes('config')) {
-            path = `${this.configPath}`
+    /**修改 chos 文件为 data 
+     * @param {string} chos 文件名称 含后缀
+     * @param {string} data 复写内容
+     * @param {string} path 路径
+    */
+    async setData(chos, data, path) {
+        if (chos.includes('.yaml')) {
+            return Film.SetYaml(`${path}${chos}`, data, path)
         } else {
-            path = `${this.userPath}`
-        }
-        try {
-            if (!fs.existsSync(path)) {
-                // 递归创建目录
-                fs.mkdirSync(path, { recursive: true });
-            }
-            fs.writeFileSync(`${path}${chos}.yaml`, YAML.stringify(data), 'utf8')
-        } catch (error) {
-            logger.error(`[phi插件]写入文件${chos}.yaml时遇到错误\n${error}`)
-            return false
+            return Film.SetJson(`${path}${chos}`, data, path)
         }
     }
 
@@ -92,53 +77,32 @@ class get {
     }
 
 
-    /**获取曲绘/图片 ，曲名为原名 是否为大图 */
-    getimg(img, isBig) {
+    /**获取本地图片,带后缀
+     * @param {string} img 文件名
+     * @param {string} style 文件格式，默认为png
+     */
+    getimg(img, style = 'png') {
         // name = 'phi'
-        let infolist = this.getData('infolist')
-        let illlist = this.getData('illlist')
-        let song = this.songsnick(img)
-        let illname = illlist[song]
-        let url = 0
-        song = song [0]
-        
-        if (song) {
-            if (isBig) {
-                if(illname) {
-                    url = `${this.infoPath}/Ill/${illname}.png`
-                    if(!fs.existsSync(url)) {
-                        url = infolist[`${song}`][`illustration_big`]
-                    }
-                } else {
-                    url = infolist[`${song}`][`illustration_big`]
-                }
-            } else {
-                url = infolist[`${song}`][`illustration`]
-            }
-        } else {
-            url = `${this.infoPath}/otherimg/${img}.png`
-            if(!fs.existsSync(url)) {
-                url = 0
-            }
-        }
-
+        var url = `${this.imgPath}/${img}.${style}`
         if (url) {
             return segment.image(url)
         }
-        logger.info('未找到 ' + img)
+        logger.info('未找到 ' + `${img}.${style}`)
         return false
     }
 
 
 
     /**匹配歌曲名称，根据参数返回原曲名称 */
-    songsnick(mic) {
-        let songnick = this.getData('nicklist')
-        let nickconfig = this.getData('nickconfig')
+    async songsnick(mic) {
+        let nickconfig = await this.getData('nickconfig.yaml', this.configPath)
         var all = []
-        if (songnick[mic]) {
-            for (var i in songnick[mic]) {
-                all.push(songnick[mic][i])
+
+
+
+        if (this.songnick[mic]) {
+            for (var i in this.songnick[mic]) {
+                all.push(this.songnick[mic][i])
             }
         }
         if (nickconfig[mic]) {
@@ -147,18 +111,14 @@ class get {
             }
         }
         if (all) {
-            if (all.length == 1) {
-                return all
-            } else {
-                return all
-            }
+            return all
         }
         return false
     }
 
     /**设置别名 原名, 别名 */
-    setnick(mic, nick) {
-        let nickconfig = this.getData('nickconfig')
+    async setnick(mic, nick) {
+        let nickconfig = await this.getData('nickconfig.yaml', this.configPath)
         if (!nickconfig) {
             nickconfig = {}
         }
@@ -167,36 +127,80 @@ class get {
         }
         nickconfig[nick].push(mic)
 
-        this.setData('nickconfig', nickconfig)
+        this.setData('nickconfig.yaml', nickconfig, this.configPath)
     }
 
-    /**获取歌曲介绍，曲名为原名，格式支持修改/config/showconfig.yaml热更新 */
+    /**获取歌曲介绍，曲名为原名 */
     getsongsinfo(e, name, data) {
 
         if (!data) {
-            let infolist = this.getData('infolist')
-            data = infolist[name]
+            data = this.info[name]
         }
         if (data) {
             data.illustration = this.getill(name)
             return atlas.atlas(e, data)
         } else {
             /**未找到曲目 */
-            return `未找到${name}的相关曲目信息QAQ`
+            return `未找到${name}的相关曲目信息!QAQ`
         }
+    }
+
+    /**获取best19图片 */
+    async getb19(e, data) {
+        return await atlas.b19(e, data)
     }
 
     /**获取曲绘，返回地址，原名 */
     getill(name) {
-        let infolist = this.getData('infolist')
-        let illlist = this.getData('illlist')
-        let illname = illlist[name]
-        let url = `${this.infoPath}Ill/${illname}.png`
-        if(fs.existsSync(url)) {
-            return url
-        }
-        else return infolist[name].illustration_big
+        return this.info[name].illustration_big
+    }
 
+    /**获取QQ号对应的存档文件
+     * 
+     * @param {String} user_id 
+     * @returns save
+     */
+    async getsave(id) {
+        return await this.getData(`${id}.json`, `${this.userPath}`)
+    }
+
+    /**根据曲目id获取曲目信息
+     * 
+     * @param {String} 曲目id 
+     * @returnsthis.info
+     */
+    async idgetsong(id) {
+
+        return this.info[this.songsid[id]]
+    }
+
+    /**计算等效rks
+     * 
+     * @param {number} acc 
+     * @param {number} difficulty 
+     * @returns 
+     */
+    getrks(acc, difficulty) {
+        if (acc == 100) {
+            /**满分原曲定数即为有效rks */
+            return Number(difficulty)
+        } else if (acc < 55) {
+            /**无效acc */
+            return 0
+        } else {
+            /**非满分计算公式 [(((acc - 55) / 45) ^ 2) * 原曲定数] */
+            return difficulty * (((acc - 55) / 45) * ((acc - 55) / 45))
+        }
+    }
+
+    /**计算所需acc */
+    comsuggest(rks, difficulty) {
+        var ans = 45 * Math.sqrt(Number(rks.toFixed(2)) / difficulty) + 55
+
+        if (ans >= 100)
+            return "已经到顶啦"
+        else
+            return ans.toFixed(2) + "%"
     }
 }
 

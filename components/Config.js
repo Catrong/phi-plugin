@@ -3,7 +3,6 @@ import YAML from 'yaml'
 import chokidar from 'chokidar'
 import fs from 'node:fs'
 import YamlReader from './YamlReader.js'
-import cfg from '../../../lib/config/config.js'
 
 const Path = process.cwd()
 const Plugin_Name = 'phi-plugin'
@@ -20,7 +19,7 @@ class Config {
 
   /** 初始化配置 */
   initCfg () {
-    let path = `${Plugin_Path}/config/`
+    let path = `${Plugin_Path}/config/config/`
     let pathDef = `${Plugin_Path}/config/default_config/`
     const files = fs.readdirSync(pathDef).filter(file => file.endsWith('.yaml'))
     for (let file of files) {
@@ -41,11 +40,6 @@ class Config {
       return { ...defCfg, ...config, ...group[groupId] }
     }
     return { ...defCfg, ...config }
-  }
-
-  /** 主人QQ */
-  get masterQQ () {
-    return cfg.masterQQ
   }
 
   /** 默认配置和用户配置 */
