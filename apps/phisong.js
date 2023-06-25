@@ -20,11 +20,11 @@ export class phirks extends plugin {
                 {
                     reg: '^(#|/)phi(\s*)(设置别名|setnick).*$',
                     fnc: 'setnick'
-                },
-                {
-                    reg: '^(#|/)phi(\s*)(设置别名|delnick).*$',
-                    fnc: 'delnick'
                 }
+                // {
+                //     reg: '^(#|/)phi(\s*)(删除别名|delnick).*$',
+                //     fnc: 'delnick'
+                // }
             ]
         })
 
