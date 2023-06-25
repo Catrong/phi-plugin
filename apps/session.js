@@ -15,11 +15,11 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^(#|/)phi(绑定| bind).*$',
+                    reg: '^(#|/)phi(\s*)(绑定|bind).*$',
                     fnc: 'bind'
                 },
                 {
-                    reg: '^(#|/)phi(更新存档| update)$',
+                    reg: '^(#|/)phi(\s*)(更新存档|update)$',
                     fnc: 'update'
                 }
             ]
@@ -34,7 +34,7 @@ export class phisstk extends plugin {
             return true
         }
 
-        var sessionToken = e.msg.replace(/(#|\/)phi(绑定| bind)(\s*)/g, '')
+        var sessionToken = e.msg.replace(/(#|\/)phi(\s*)(绑定|bind)(\s*)/g, '')
         sessionToken.replace(" ", '')
 
         e.reply("正在绑定，请稍等一下哦！\n >_<")
