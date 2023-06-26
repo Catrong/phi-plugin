@@ -1,6 +1,7 @@
 import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
+import { segment } from "icqq";
 
 await get.init()
 
@@ -135,13 +136,16 @@ export class phib19 extends plugin {
 
         phi.suggest = "已经到顶啦"
 
-        Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\n
-                    Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\n
-                    ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\n
-                    Date: ${save.saveInfo.updatedAt}`)
+        Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
 
         if (phi.song) {
-            Remsg.push(`Phi:\n`+segment.image(get.getill(phi.song,false))+`\n${phi.song}\n${phi.rank} ${phi.difficulty}\n${phi.score} ${phi.pingji}\n${phi.acc} ${phi.rks}\nRks+0.01所需acc: ${phi.suggest}`)
+            Remsg.push([`Phi:\n`,
+                        segment.image(get.getill(phi.song, false)),
+                        `\n${phi.song}\n` +
+                        `${phi.rank} ${phi.difficulty}\n` +
+                        `${phi.score} ${phi.pingji}\n` +
+                        `${phi.acc} ${phi.rks}\n` +
+                        `Rks+0.01所需acc: ${phi.suggest}`])
         } else {
             Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
         }
@@ -149,10 +153,16 @@ export class phib19 extends plugin {
         rkslist = rkslist.sort(cmp())
 
         for (var i = 0; i < num && i < rkslist.length; ++i) {
-            Remsg.push(`#Best ${i + 1}:\n`+segment.image(get.getill(rkslist[i].song,false))+`\n${rkslist[i].song}\n${rkslist[i].rank} ${rkslist[i].difficulty}\n${rkslist[i].score} ${rkslist[i].pingji}\n${rkslist[i].acc} ${rkslist[i].rks}\nRks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`)
+            Remsg.push([`#Best ${i + 1}:\n`,
+                        segment.image(get.getill(rkslist[i].song, false)),
+                        `\n${rkslist[i].song}\n` +
+                        `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
+                        `${rkslist[i].score} ${rkslist[i].pingji}\n` +
+                        `${rkslist[i].acc} ${rkslist[i].rks}\n` +
+                        `Rks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`])
         }
 
-        await e.reply(await common.makeForwardMsg(e,Remsg,`${e.user_id} 的best${num}结果`,false))
+        await e.reply(await common.makeForwardMsg(e, Remsg, `${e.user_id} 的best${num}结果`, false))
 
 
     }
