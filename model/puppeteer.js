@@ -32,8 +32,6 @@ export default new class newPuppeteer {
        * @param {Object} cfg
        */
     async render(path, params, cfg) {
-
-
         let [app, tpl] = path.split('/')
         let { e } = cfg
         let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
@@ -58,7 +56,7 @@ export default new class newPuppeteer {
                 copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
             },
             Version: Version,
-            quality: 100
+            quality: Config.getDefOrConfig('config','randerQuality')
         }
 
         if (process.argv.includes('web-debug')) {

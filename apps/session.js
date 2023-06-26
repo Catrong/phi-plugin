@@ -34,7 +34,7 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            e.reply("请注意保护好自己的sessionToken哦！", true)
+            await e.reply("请注意保护好自己的sessionToken哦！", true)
             // return true
         }
 

@@ -50,7 +50,7 @@ body p {
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    margin-bottom: 200px;
+    margin-bottom: 100px;
     filter: drop-shadow(2px 4px 100px #bdf7ff2d);
 }
 

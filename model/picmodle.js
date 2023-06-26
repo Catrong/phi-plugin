@@ -5,11 +5,6 @@ import Config from '../components/Config.js'
 class atlas {
 
     async atlas(e, info) {
-        try {
-            var config = Config.getConfig("config")
-        } catch {
-            var config = Config.getdefSet("config")
-        }
         // 渲染数据
         let data = {
             ...info,
@@ -44,7 +39,7 @@ class atlas {
             ...data
         }, {
             e,
-            scale: config.renderScale / 100
+            scale: Config.getDefOrConfig('config','renderScale') / 100
         })
     }
 
@@ -70,7 +65,7 @@ class atlas {
             ...data
         }, {
             e,
-            scale: config.renderScale / 100
+            scale: Config.getDefOrConfig('config','renderScale') / 100
         })
     }
 }

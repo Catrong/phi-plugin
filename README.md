@@ -44,7 +44,7 @@ pnpm install -P
 |-------| ----- |
 | #phi帮助|帮助|
 | #phi (bind\|绑定)|绑定sessionToken|
-| #phi (unbind|解绑)|删除sessionToken和存档记录|
+| #phi (unbind\|解绑)|删除sessionToken和存档记录|
 | #phi (update\|更新存档)|更新存档|
 | #phi (rks\|b19)|查询rks，会提供得出的b21结果|
 | #phi best[1-99]|查询文字版rks，未指定数字默认19|
