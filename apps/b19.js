@@ -100,7 +100,7 @@ export class phib19 extends plugin {
         var num = e.msg.replace(/[#/]phi(\\s*)(best)(\\s*)/g, '')
 
         if (Number(num) % 1) {
-            e.reply(`${num}不是个数字吧！`, true)
+            await e.reply(`${num}不是个数字吧！`, true)
             return true
         }
 
@@ -111,7 +111,6 @@ export class phib19 extends plugin {
 
         var Record = save.gameRecord
         var phi = {}
-        var b19_list = []
         var Remsg = []
 
         phi.rks = 0
