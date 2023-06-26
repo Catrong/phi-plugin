@@ -175,12 +175,15 @@ class get {
 
     /**根据曲目id获取曲目信息
      * 
-     * @param {String} 曲目id 
+     * @param {String} id 曲目id 
+     * @param {true|false} info 是否返回info
      * @returnsthis.info
      */
-    async idgetsong(id) {
-
-        return this.info[this.songsid[id]]
+    async idgetsong(id, info = true) {
+        if (info)
+            return this.info[this.songsid[id]]
+        else
+            return this.songsid[id]
     }
 
     /**计算等效rks

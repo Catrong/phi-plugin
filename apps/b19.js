@@ -194,7 +194,7 @@ export class phib19 extends plugin {
         var ans
 
         for (var i in Record) {
-            if (Record[i].song == song) {
+            if (get.idgetsong(i, false) == song) {
                 ans = Record[i]
                 break
             }
