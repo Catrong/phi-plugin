@@ -15,6 +15,7 @@ class get {
         this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
 
         /**用户数据路径 */
+        // this.userPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/data/`
         this.userPath = `${_path}/plugins/phi-plugin/data/`
 
         /**用户设置路径 */

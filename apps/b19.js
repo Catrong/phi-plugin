@@ -182,24 +182,23 @@ export class phib19 extends plugin {
         }
         var song = e.msg.replace(/[#/]phi(\s*)(score|单曲成绩)(\s*)/g, '')
 
+        song = await get.songsnick(song)
+        
         if (!get.songsnick(song)) {
-            await e.reply(`未找到 ${song} 的有关信息哦！`)
+            e.reply(`未找到 ${song} 的有关信息哦！`)
             return true
         }
-
-        song = get.songsnick(song)
-
+        
         var Record = save.gameRecord
-
+        
         var ans
+
         for (var i in Record) {
-            console.info(`${i} + ${get.idgetsong(i, false)}`)
-            if (get.idgetsong(i, false) == song) {
+            if (await get.idgetsong(i, false) == song) {
                 ans = Record[i]
                 break
             }
         }
-        console.info(song)
 
         if (!ans) {
             await e.reply("我不知道你这首歌的成绩哦！可以试试⌈#phi update⌋哦！")
