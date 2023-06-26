@@ -192,13 +192,14 @@ export class phib19 extends plugin {
         var Record = save.gameRecord
 
         var ans
-
         for (var i in Record) {
+            console.info(`${i} + ${get.idgetsong(i, false)}`)
             if (get.idgetsong(i, false) == song) {
                 ans = Record[i]
                 break
             }
         }
+        console.info(song)
 
         if (!ans) {
             await e.reply("我不知道你这首歌的成绩哦！可以试试⌈#phi update⌋哦！")
