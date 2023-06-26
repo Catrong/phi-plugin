@@ -183,14 +183,14 @@ export class phib19 extends plugin {
         var song = e.msg.replace(/[#/]phi(\s*)(score|单曲成绩)(\s*)/g, '')
 
         song = await get.songsnick(song)
-        
+
         if (!get.songsnick(song)) {
             e.reply(`未找到 ${song} 的有关信息哦！`)
             return true
         }
-        
+
         var Record = save.gameRecord
-        
+
         var ans
 
         for (var i in Record) {
@@ -209,12 +209,13 @@ export class phib19 extends plugin {
 
         for (var i in ans) {
             if (ans[i]) {
+                data.illustration = ans[i].illustration
                 data[Level[i]] = {
                     ...ans[i],
                     suggest: get.comsuggest(ans[i].rks, ans[i].difficulty)
                 }
             } else {
-                data[Level[i]].abab = 0
+                data[Level[i]] = {}
             }
         }
 
