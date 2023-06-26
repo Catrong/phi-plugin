@@ -36,8 +36,8 @@ body p {
 .background img {
     position: absolute;
     overflow: hidden;
-    transform: scale(8);
-    filter: blur(40px) brightness(75%);
+    height: 110%;
+    filter: blur(20px) brightness(75%);
     z-index: 0;
 }
 
