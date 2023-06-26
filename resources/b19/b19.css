@@ -12,6 +12,7 @@ body {
     width: 1800px;
     height: fit-content;
     font-family: PHI;
+    scale: 0.5;
 }
 
 body p {
