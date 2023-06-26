@@ -32,7 +32,7 @@ class atlas {
             /**其他消息（备注） */
             othermsg: info.othermsg,
             /**预处理曲名字号 */
-            fontsize: Math.min(555 / fLenB(info.song) * 2, 58)
+            fontsize: fLenB(info.song, 39, 28, 19, 58)
         }
         // 渲染图片
         return await puppeteer.render('atlas/atlas', {
@@ -47,12 +47,12 @@ class atlas {
     async b19(e, data) {
 
         if (data.phi) {
-            data.phi.size = fLenB(data.phi.song)
+            data.phi.size = fLenB(data.phi.song, 39, 19, 20, 30)
         }
 
         for (var i in data.b19_list) {
 
-            data.b19_list[i].size = fLenB(data.b19_list[i].song)
+            data.b19_list[i].size = fLenB(data.b19_list[i].song, 39, 19, 20, 30)
         }
 
         return await puppeteer.render('b19/b19', {
@@ -74,8 +74,18 @@ class atlas {
 }
 //20 - 30
 //39 - 19    
-/**计算字符大小 */
-function fLenB(character) {
+
+
+/**
+ * 
+ * @param {string} character 曲名
+ * @param {number} max_num 最大字符数
+ * @param {number} min_size 最小高度
+ * @param {number} min_num 最小字符数
+ * @param {number} max_size 最大高度
+ * @returns 
+ */
+function fLenB(character, max_num, min_size, min_num, max_size) {
     /**判断字符长度 */
     var count = 0;
     character = String(character)
@@ -89,10 +99,6 @@ function fLenB(character) {
     }
 
     /**计算字符大小 */
-    var max_num = 39
-    var min_size = 19
-    var min_num = 20
-    var max_size = 30
     var single = (max_size - min_size) / (max_num - min_num)
     return Math.min(max_size, max_num * single - count * single + min_size)
 }

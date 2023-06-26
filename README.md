@@ -77,6 +77,13 @@ pnpm install -P
 
 ![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/b19.jpg)
 
+#### 单曲成绩效果图
+![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/score.jpg)
+
+#### 图鉴效果图
+
+![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/atlas.jpg)
+
 ---
 
 ## 免责声明
