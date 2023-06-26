@@ -205,6 +205,8 @@ export class phib19 extends plugin {
             return false
         }
 
+        var data = {}
+
         for (var i in ans) {
             if (ans[i]) {
                 data[Level[i]] = {
