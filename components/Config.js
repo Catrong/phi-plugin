@@ -54,6 +54,7 @@ class Config {
                 return config[style]
             } else {
                 this.modify(name, style, def[style])
+                return def[style]
             }
         }
         else
