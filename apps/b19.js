@@ -149,7 +149,7 @@ export class phib19 extends plugin {
         rkslist = rkslist.sort(cmp())
 
         for (var i = 0; i < num && i < rkslist.length; ++i) {
-            Remsg.push(`#Best ${i + 1}:\n`+segment.image(get.getill(rkslist[i].song.song,false))+`\n${rkslist[i].song}\n${rkslist[i].rank} ${rkslist[i].difficulty}\n${rkslist[i].score} ${rkslist[i].pingji}\n${rkslist[i].acc} ${rkslist[i].rks}\nRks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`)
+            Remsg.push(`#Best ${i + 1}:\n`+segment.image(get.getill(rkslist[i].song,false))+`\n${rkslist[i].song}\n${rkslist[i].rank} ${rkslist[i].difficulty}\n${rkslist[i].score} ${rkslist[i].pingji}\n${rkslist[i].acc} ${rkslist[i].rks}\nRks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`)
         }
 
         await e.reply(await common.makeForwardMsg(e,Remsg,`${e.user_id} 的best${num}结果`,false))
