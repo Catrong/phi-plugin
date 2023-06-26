@@ -13,6 +13,7 @@ body p {
     color: white;
     font-size: 20px;
     font-family: PHI;
+    writing-mode: horizontal-tb;
 }
 
 
@@ -126,10 +127,15 @@ body p {
     height: 100%;
     width: 100%;
     margin-bottom: -100%;
-    margin-left: -20%;
+    margin-left: -33%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.pingji p {
+    font-size: 60px;
+    text-shadow: 0 0 20px #ffffff;
 }
 
 .pingji img {
@@ -168,10 +174,10 @@ body p {
 .acc {
     text-shadow:
         0 0 1px #84979b7c,
-        1px 0 2px #84979b7c,
-        -1px 0 2px #84979b7c,
-        1px 0 5px #84979b7c,
-        -1px 0 10px #84979b7c;
+        2px 0 2px #84979b7c,
+        -2px 0 2px #84979b7c,
+        2px 0 5px #84979b7c,
+        -2px 0 10px #84979b7c;
 }
 
 .score {
