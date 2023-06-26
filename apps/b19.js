@@ -210,6 +210,8 @@ export class phib19 extends plugin {
         for (var i in ans) {
             if (ans[i]) {
                 data.illustration = ans[i].illustration
+                ans[i].acc = ans[i].acc.toFixed(2)
+                ans[i].rks = ans[i].rks.toFixed(2)
                 data[Level[i]] = {
                     ...ans[i],
                     suggest: get.comsuggest(ans[i].rks, ans[i].difficulty)
