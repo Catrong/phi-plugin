@@ -75,7 +75,7 @@ pnpm install -P
 
 #### B19效果图
 
-[B19](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/b19.jpg)
+![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/b19.jpg)
 
 ---
 
