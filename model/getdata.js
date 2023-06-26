@@ -95,7 +95,7 @@ class get {
         let nickconfig = await this.getData('nickconfig.yaml', this.configPath)
         var all = []
 
-
+        if (this.info[mic]) all.push(mic)
 
         if (this.songnick[mic]) {
             for (var i in this.songnick[mic]) {
@@ -108,6 +108,7 @@ class get {
             }
         }
         if (all) {
+            all = Array.from(new Set(all)) //去重
             return all
         }
         return false
@@ -145,6 +146,10 @@ class get {
     /**获取best19图片 */
     async getb19(e, data) {
         return await atlas.b19(e, data)
+    }
+
+    async getsingle(e, data) {
+        return await atlas.score(e, data)
     }
 
     /**获取曲绘，返回地址，原名

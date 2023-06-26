@@ -39,7 +39,7 @@ class atlas {
             ...data
         }, {
             e,
-            scale: Config.getDefOrConfig('config','renderScale') / 100
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
         })
     }
 
@@ -59,7 +59,16 @@ class atlas {
             ...data
         }, {
             e,
-            scale: Config.getDefOrConfig('config','renderScale') / 100
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+        })
+    }
+
+    async score(e, data) {
+        return await puppeteer.render('b19/b19', {
+            ...data
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
         })
     }
 }

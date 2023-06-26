@@ -2,6 +2,7 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
+import Config from '../components/Config.js'
 
 await get.init()
 
@@ -20,11 +21,11 @@ export class phirks extends plugin {
                 {
                     reg: '^[#/]phi(\\s*)(设置别名|setnick).*$',
                     fnc: 'setnick'
+                },
+                {
+                    reg: '^[#/]phi(\\s*)(删除别名|delnick).*$',
+                    fnc: 'delnick'
                 }
-                // {
-                //     reg: '^[#/]phi(\s*)(删除别名|delnick).*$',
-                //     fnc: 'delnick'
-                // }
             ]
         })
 
@@ -92,5 +93,42 @@ export class phirks extends plugin {
         }
         return true
     }
+
+    async delnick(e) {
+        var msg = e.msg.replace(/[#/]phi(\s*)(删除别名|delnick)(\s*)/g, '')
+        var ans = Config.getConfig('nickconfig', msg)
+        if (ans) {
+            if (ans.length == 1) {
+                Config.modifyarr('nickconfig', msg, ans[0], 'del', 'config')
+                await e.reply("删除成功！")
+            } else {
+                this.nickConfig = ans
+                this.nick = msg
+                var Remsg = []
+                Remsg.push("找到了多个别名！请发送 #序号 进行选择！")
+                for (var i in ans) {
+                    Remsg.push(`#${i}\n${ans[i]}`)
+                }
+                e.reply(common.makeForwardMsg(e, Remsg, "找到了多个结果！"))
+                this.setContext('choosedelnick', true)
+
+            }
+        } else {
+            await e.reply(`未找到 ${msg} 所对应的别名哦！`)
+        }
+        return true
+    }
+
+    async choosesdelnick(e) {
+        var msg = e.msg.replace(/[#/](\s*)/g, '')
+        if (this.nickConfig.indexOf(msg) != -1) {
+            Config.modifyarr('nickconfig', this.nick, msg, 'del', 'config')
+            await e.reply("删除成功！")
+        } else {
+            e.reply(`未找到 ${msg} 所对应的别名哦！`)
+        }
+        return true
+    }
+
 
 }

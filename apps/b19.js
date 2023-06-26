@@ -7,6 +7,8 @@ await get.init()
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
+const Level = ['EZ', 'HD', 'IN', 'AT', null] //存档的难度映射
+
 export class phib19 extends plugin {
     constructor() {
         super({
@@ -20,8 +22,12 @@ export class phib19 extends plugin {
                     fnc: 'b19'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(best)(\\s*)[1-9]?[1-9]?$',
+                    reg: '^[#/]phi(\\s*)best(\\s*)[1-9]?[1-9]?$',
                     fnc: 'bestn'
+                },
+                {
+                    reg: '^[#/]phi(\\s*)(score|单曲成绩).*$',
+                    fnc: 'singlescore'
                 }
 
             ]
@@ -140,12 +146,12 @@ export class phib19 extends plugin {
 
         if (phi.song) {
             Remsg.push([`Phi:\n`,
-                        segment.image(get.getill(phi.song, false)),
-                        `\n${phi.song}\n` +
-                        `${phi.rank} ${phi.difficulty}\n` +
-                        `${phi.score} ${phi.pingji}\n` +
-                        `${phi.acc} ${phi.rks}\n` +
-                        `Rks+0.01所需acc: ${phi.suggest}`])
+                segment.image(get.getill(phi.song, false)),
+                `\n${phi.song}\n` +
+                `${phi.rank} ${phi.difficulty}\n` +
+                `${phi.score} ${phi.pingji}\n` +
+                `${phi.acc} ${phi.rks}\n` +
+                `Rks+0.01所需acc: ${phi.suggest}`])
         } else {
             Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
         }
@@ -154,16 +160,64 @@ export class phib19 extends plugin {
 
         for (var i = 0; i < num && i < rkslist.length; ++i) {
             Remsg.push([`#Best ${i + 1}:\n`,
-                        segment.image(get.getill(rkslist[i].song, false)),
-                        `\n${rkslist[i].song}\n` +
-                        `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
-                        `${rkslist[i].score} ${rkslist[i].pingji}\n` +
-                        `${rkslist[i].acc} ${rkslist[i].rks}\n` +
-                        `Rks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`])
+            segment.image(get.getill(rkslist[i].song, false)),
+            `\n${rkslist[i].song}\n` +
+            `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
+            `${rkslist[i].score} ${rkslist[i].pingji}\n` +
+            `${rkslist[i].acc} ${rkslist[i].rks}\n` +
+            `Rks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`])
         }
 
         await e.reply(await common.makeForwardMsg(e, Remsg, `${save.saveInfo.PlayerId} 的best${num}结果`, false))
 
+
+    }
+
+
+    async singlescore(e) {
+        var save = await get.getsave(e.user_id)
+        if (!save.session) {
+            e.reply("你还没有绑定sessionToken哦！发送#phi bind xxxx进行绑定哦！", true)
+            return true
+        }
+        var song = e.msg.replace(/[#/]phi(\s*)(score|单曲成绩)(\s*)/g, '')
+
+        if (!get.songsnick(song)) {
+            await e.reply(`未找到 ${song} 的有关信息哦！`)
+            return true
+        }
+
+        song = get.songsnick(song)
+
+        var Record = save.gameRecord
+
+        var ans
+
+        for (var i in Record) {
+            if (Record[i].song == song) {
+                ans = Record[i]
+                break
+            }
+        }
+
+        if (!ans) {
+            await e.reply("我不知道你这首歌的成绩哦！可以试试⌈#phi update⌋哦！")
+            return false
+        }
+
+        for (var i in ans) {
+            if (ans[i]) {
+                data[Level[i]] = {
+                    ...ans[i],
+                    suggest: get.comsuggest(ans[i].rks, ans[i].difficulty)
+                }
+            } else {
+                data[Level[i]].abab = 0
+            }
+        }
+
+        await e.reply(await get.getsingle(e, data))
+        return true
 
     }
 

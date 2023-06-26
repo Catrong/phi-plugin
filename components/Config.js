@@ -43,7 +43,7 @@ class Config {
     }
 
     /** 默认配置和用户配置 
-     * @param {string} name 文件名
+     * @param {'config'|'nickconfig'} name 文件名
      * @param {string} style key值
     */
     getDefOrConfig(name, style) {
@@ -53,7 +53,9 @@ class Config {
             if (config[style]) {
                 return config[style]
             } else {
-                this.modify(name, style, def[style])
+                /**对设置进行补全 */
+                if (name == 'config')
+                    this.modify(name, style, def[style])
                 return def[style]
             }
         }

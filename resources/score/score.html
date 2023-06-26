@@ -1,5 +1,5 @@
 <head>
-        <link rel="stylesheet" href="./score.css">
+    <link rel="stylesheet" href="./score.css">
 </head>
 
 <body>
@@ -13,86 +13,146 @@
         <div class="score-box">
             <div class="box-up">
                 <div class="rank-AT">
+                    {{if AT}}
                     <div class="pingji">
-                        <img src="../otherimg/{{pingji}}.png" alt="{{pingji}}">
+                        <img src="../otherimg/{{AT.pingji}}.png" alt="{{AT.pingji}}">
                     </div>
+                    <div class="rank">
+                        <p>AT</p>
+                    </div>
+                    {{if AT.score}}
+
+                    <div class="info">
+                        <div class="score">
+                            <p>{{AT.score}}</p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc-box">
+                            <div class="acc">
+                                <p>{{AT.acc}}</p>
+                            </div>
+                            <div class="rks">
+                                <p>{{AT.rks}}</p>
+                            </div>
+                        </div>
+                        <div class="suggest">
+                            <p>>> {{AT.suggest}}</p>
+                        </div>
+                    </div>
+
+                    {{/if}}
+                    {{else}}
+                    <div class="pingji">
+                        <p>NO_INFO</p>
+                    </div>
+                    {{/if}}
                 </div>
                 <div class="rank-IN">
+                    {{if IN}}
                     <div class="pingji">
-                        <img src="../otherimg/FC.png" alt="pingji">
+                        <img src="../otherimg/{{IN.pingji}}.png" alt="{{IN.pingji}}">
                     </div>
                     <div class="rank">
                         <p>IN</p>
                     </div>
+                    {{if IN.score}}
+
                     <div class="info">
                         <div class="score">
-                            <p>1000000</p>
+                            <p>{{IN.score}}</p>
                         </div>
                         <div class="line"></div>
                         <div class="acc-box">
                             <div class="acc">
-                                <p>100.00%</p>
+                                <p>{{IN.acc}}</p>
                             </div>
                             <div class="rks">
-                                <p>16.20</p>
+                                <p>{{IN.rks}}</p>
                             </div>
                         </div>
                         <div class="suggest">
-                            <p>>> 100.00%</p>
+                            <p>>> {{IN.suggest}}</p>
                         </div>
                     </div>
+
+                    {{/if}}
+                    {{else}}
+                    <div class="pingji">
+                        <p>NO_INFO</p>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
             <div class="box-down">
                 <div class="rank-HD">
+                    {{if HD}}
                     <div class="pingji">
-                        <img src="../otherimg/V.png" alt="pingji">
+                        <img src="../otherimg/{{HD.pingji}}.png" alt="{{HD.pingji}}">
                     </div>
                     <div class="rank">
                         <p>HD</p>
                     </div>
+                    {{if HD.score}}
+
                     <div class="info">
                         <div class="score">
-                            <p>1000000</p>
+                            <p>{{HD.score}}</p>
                         </div>
                         <div class="line"></div>
                         <div class="acc-box">
                             <div class="acc">
-                                <p>100.00%</p>
+                                <p>{{HD.acc}}</p>
                             </div>
                             <div class="rks">
-                                <p>16.20</p>
+                                <p>{{HD.rks}}</p>
                             </div>
                         </div>
                         <div class="suggest">
-                            <p>>> 100.00%</p>
+                            <p>>> {{HD.suggest}}</p>
                         </div>
                     </div>
+
+                    {{/if}}
+                    {{else}}
+                    <div class="pingji">
+                        <p>NO_INFO</p>
+                    </div>
+                    {{/if}}
                 </div>
                 <div class="rank-EZ">
+                    {{if EZ}}
                     <div class="pingji">
-                        <img src="../otherimg/F.png" alt="pingji">
+                        <img src="../otherimg/{{EZ.pingji}}.png" alt="{{EZ.pingji}}">
                     </div>
                     <div class="rank">
                         <p>EZ</p>
                     </div>
+                    {{if EZ.score}}
+
                     <div class="info">
                         <div class="score">
-                            <p>1000000</p>
+                            <p>{{EZ.score}}</p>
                         </div>
                         <div class="line"></div>
                         <div class="acc-box">
                             <div class="acc">
-                                <p>100.00%</p>
+                                <p>{{EZ.acc}}</p>
                             </div>
                             <div class="rks">
-                                <p>16.20</p>
+                                <p>{{EZ.rks}}</p>
                             </div>
                         </div>
                         <div class="suggest">
-                            <p>>> 100.00%</p>
+                            <p>>> {{EZ.suggest}}</p>
                         </div>
                     </div>
+
+                    {{/if}}
+                    {{else}}
+                    <div class="pingji">
+                        <p>NO_INFO</p>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
         </div>
