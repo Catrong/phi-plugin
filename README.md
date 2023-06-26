@@ -73,6 +73,12 @@ pnpm install -P
 
 ---
 
+#### B19效果图
+
+[B19](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/b19.jpg)
+
+---
+
 ## 免责声明
 
 1. 功能仅限内部交流与小范围使用，请勿将Yunzai-Bot及phi-Plugin用于任何以盈利为目的的场景.
