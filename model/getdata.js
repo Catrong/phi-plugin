@@ -49,7 +49,7 @@ class get {
 
     /**修改 chos 文件为 data 
      * @param {string} chos 文件名称 含后缀
-     * @param {string} data 复写内容
+     * @param {string} data 覆写内容
      * @param {string} path 路径
     */
     async setData(chos, data, path) {
@@ -60,19 +60,16 @@ class get {
         }
     }
 
-    /**删除 chos.yaml 文件 */
-    delData(chos) {
-        let path = `${this.userPath}`
-        try {
-            if (!fs.existsSync(`${path}${chos}.yaml`)) { return false }
-            fs.unlink(`${path}${chos}.yaml`, (err) => {
-                if (err) throw err
-                logger.info(`[phi插件] ${chos}.yaml 已删除`)
-            })
-            return true
-        } catch (error) {
-            logger.error(`[phi插件][${chos}].yaml 读取失败 ${error}`)
+    /**删除 chos.yaml 文件
+     * @param {string} chos 文件名称 含后缀
+     * @param {string} path 路径
+    */
+    delData(chos, path) {
+        if (!Film.DelFile(`${path}${chos}`)) {
+            logger.info(`[phi插件] ${chos} 已删除`)
             return false
+        } else {
+            return true
         }
     }
 

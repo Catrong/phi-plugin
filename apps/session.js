@@ -21,6 +21,10 @@ export class phisstk extends plugin {
                 {
                     reg: '^[#/]phi(\\s*)(更新存档|update)$',
                     fnc: 'update'
+                },
+                {
+                    reg: '^[#/]phi(\\s*)(解绑|unbind)',
+                    fnc: 'unbind'
                 }
             ]
         })
@@ -30,8 +34,8 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            e.reply("请不要在群聊绑定哦")
-            return true
+            e.reply("请注意保护好自己的sessionToken哦！", true)
+            // return true
         }
 
         var sessionToken = e.msg.replace(/(#|\/)phi(\s*)(绑定|bind)(\s*)/g, '')
@@ -51,7 +55,7 @@ export class phisstk extends plugin {
     async update(e) {
         var User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
         if (!User) {
-            e.reply('没有找到你的存档哦！请先 #phi bind 绑定sessionToken哦！！', true)
+            e.reply('没有找到你的存档哦！请先 ⌈#phi bind⌋ 绑定sessionToken！', true)
             return true
         }
         e.reply("正在更新，请稍等一下哦！\n >_<", true)
@@ -70,12 +74,12 @@ export class phisstk extends plugin {
             this.User = new PhigrosUser(sessionToken)
 
         } catch (err) {
-            logger.info("[phi-plugin]绑定sessionToken错误")
+            logger.error("[phi-plugin]绑定sessionToken错误")
             e.reply(err + User)
             return true
         }
 
-        if(await this.building())
+        if (await this.building())
             return true
 
         await get.setData(`${e.user_id}.json`, this.User, `${get.userPath}`)
@@ -91,12 +95,13 @@ export class phisstk extends plugin {
         } catch (err) {
             e.reply(`读取数字失败QAQ\n${err}`)
         }
-        if (typeof num == 'number') {
-            this.choosenum = num
-        } else {
+        if (num % 1) {
             e.reply(`${num} 不是个数字吧！`)
+            return true
+        } else {
+            this.choosenum = num
         }
-        return true
+        return false
     }
 
     async building() {
@@ -118,25 +123,30 @@ export class phisstk extends plugin {
                     builder.push(str)
                 }
                 builder.push("示例 #1")
-    
+
                 logger.info("[phi-plugin]发现多个存档")
                 console.info(builder)
                 e.reply(common.makeForwardMsg(builder))
-    
+
                 this.setContext('choose')
-    
-    
+
+                if (!this.choosenum)
+                    return true
+
+
                 try {
                     if (!this.User.chooseSave(this.choosenum)) {
+                        logger.error(`[phi-plugin]未找到 ${this.choosenum} 号存档`)
                         this.e.reply(`没有找到 ${this.choosenum} 号存档哦！`)
                         return true
                     }
                     this.building()
                 } catch (err) {
+                    logger.error(`[phi-plugin]绑定错误 ${err}`)
                     this.e.reply(`出错啦！QAQ\n${err}`)
                     return true
                 }
-                
+
                 break
             }
             default: {
@@ -144,5 +154,14 @@ export class phisstk extends plugin {
             }
         }
         return false
+    }
+
+    async unbind(e) {
+        if (get.delData(e.user_id, get.userPath)) {
+            e.reply('没有找到你的存档哦！', true)
+        } else {
+            e.reply('解绑成功', true)
+        }
+        return true
     }
 }

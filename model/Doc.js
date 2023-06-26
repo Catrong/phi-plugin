@@ -70,6 +70,20 @@ class Film {
             return false
         }
     }
+
+
+    async DelFile(path) {
+        try {
+            if (!fs.existsSync(`${path}`)) { return false }
+            fs.unlink(`${path}`, (err) => {
+                if (err) throw err
+            })
+            return true
+        } catch (error) {
+            logger.error(`[phi插件][${path}] 删除失败 ${error}`)
+            return false
+        }
+    }
 }
 
 export default new Film()

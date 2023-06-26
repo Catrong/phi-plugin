@@ -44,11 +44,14 @@ pnpm install -P
 |-------| ----- |
 | #phi帮助|帮助|
 | #phi (bind\|绑定)|绑定sessionToken|
+| #phi (unbind|解绑)|删除sessionToken和存档记录|
 | #phi (update\|更新存档)|更新存档|
 | #phi (rks\|b19)|查询rks，会提供得出的b21结果|
+| #phi best[1-99]|查询文字版rks，未指定数字默认19|
 | #phi曲xxx|查询phigros中某一曲目的图鉴，支持设定别名，支持修改图鉴格式|
 | #phi设置别名 xxx ---> xxx|设置某一歌曲的别名，格式为 原名(或已有别名) ---> 别名（会自动过滤--->两边的空格）|
 | #phi随机(定数-定数)(AT IN HD EZ)|在指定范围内随机一首曲目，目前支持指定定数及难度，难度可多选|
+| #phi(强制)?更新|更新phi-plugin|
 
 ---
 
