@@ -18,7 +18,7 @@ class get {
         this.userPath = `${_path}/plugins/phi-plugin/data/`
 
         /**用户设置路径 */
-        this.configPath = `${_path}/plugins/phi-plugin/config/`
+        this.configPath = `${_path}/plugins/phi-plugin/config/config/`
         this.config = 0
 
         /**默认设置路径 */
