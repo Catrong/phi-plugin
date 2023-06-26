@@ -147,9 +147,16 @@ class get {
         return await atlas.b19(e, data)
     }
 
-    /**获取曲绘，返回地址，原名 */
-    getill(name) {
-        return this.info[name].illustration_big
+    /**获取曲绘，返回地址，原名
+     * @param {string} name 原名
+     * @param {boolean} [isBig=true] 是否为大图
+    */
+    getill(name, isBig = true) {
+        if (isBig) {
+            return this.info[name].illustration_big
+        } else {
+            return this.info[name].illustration
+        }
     }
 
     /**获取QQ号对应的存档文件
