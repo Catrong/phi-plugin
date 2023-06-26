@@ -76,7 +76,7 @@ class atlas {
 //39 - 19    
 
 
-/**
+/**计算字符大小 
  * 
  * @param {string} character 曲名
  * @param {number} max_num 最大字符数

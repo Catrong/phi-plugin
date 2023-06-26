@@ -86,7 +86,7 @@ export class phib19 extends plugin {
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            background: illlist[Number((Math.random() * illlist.length).toFixed(0)) - 1]
+            background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))]
         }
 
 
