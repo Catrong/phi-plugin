@@ -35,7 +35,7 @@ export class phib19 extends plugin {
             return true
         }
 
-        e.reply("正在生成图片，大约需要1分钟，请稍等一下哦！\n//·/w\\·\\\\")
+        e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\")
         var Record = save.gameRecord
         var phi = {}
         var b19_list = []
@@ -83,7 +83,7 @@ export class phib19 extends plugin {
         }
 
 
-        await e.reply(await get.getb19(e, data))
+        await e.reply(await get.getb19(e, data), true)
 
 
 
