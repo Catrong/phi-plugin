@@ -217,7 +217,7 @@ export class phib19 extends plugin {
                     suggest: get.comsuggest(ans[i].rks, ans[i].difficulty)
                 }
             } else {
-                data[Level[i]] = {}
+                data[Level[i]] = { pingji: 'NEW' }
             }
         }
 
