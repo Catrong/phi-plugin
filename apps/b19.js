@@ -19,7 +19,7 @@ export class phib19 extends plugin {
                     fnc: 'b19'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(best)(\\s*)[1-99]$',
+                    reg: '^[#/]phi(\\s*)(best)(\\s*)[1-9][1-9]?$',
                     fnc: 'bestn'
                 }
 
