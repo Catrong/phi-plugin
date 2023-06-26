@@ -19,7 +19,7 @@ export class phib19 extends plugin {
                     fnc: 'b19'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(best)(\\s*)[1-9][1-9]?$',
+                    reg: '^[#/]phi(\\s*)(best)(\\s*)[1-9]?[1-9]?$',
                     fnc: 'bestn'
                 }
 
@@ -162,8 +162,9 @@ export class phib19 extends plugin {
                         Rks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`)
         }
 
+        console.info('asdfasdf')
 
-        await e.reply(await common.makeForwardMsg(Remsg))
+        await e.reply(await common.makeForwardMsg(e,Remsg,`${e.user_id} 的best${num}结果`,false))
 
 
     }
