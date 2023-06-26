@@ -45,12 +45,6 @@ class atlas {
 
 
     async b19(e, data) {
-        try {
-            var config = Config.getConfig("config")
-        } catch {
-            var config = Config.getdefSet("config")
-        }
-
 
         if (data.phi) {
             data.phi.size = fLenB(data.phi.song)

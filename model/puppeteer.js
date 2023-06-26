@@ -39,6 +39,7 @@ export default new class newPuppeteer {
         Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
         let data = {
             ...params,
+            b19size: Config.getDefOrConfig('config','b19size'),
             _plugin: Plugin_Name,
             saveId: params.saveId || params.save_id || tpl,
             tplFile: `./plugins/${Plugin_Name}/resources/${app}/${tpl}.html`,
