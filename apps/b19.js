@@ -162,8 +162,6 @@ export class phib19 extends plugin {
                         Rks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`)
         }
 
-        console.info('asdfasdf')
-
         await e.reply(await common.makeForwardMsg(e,Remsg,`${e.user_id} 的best${num}结果`,false))
 
 
