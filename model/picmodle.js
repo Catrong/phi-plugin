@@ -64,7 +64,7 @@ class atlas {
     }
 
     async score(e, data) {
-        return await puppeteer.render('b19/b19', {
+        return await puppeteer.render('score/score', {
             ...data
         }, {
             e,
