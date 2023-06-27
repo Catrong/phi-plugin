@@ -75,7 +75,7 @@ export class phisstk extends plugin {
 
         } catch (err) {
             logger.error("[phi-plugin]绑定sessionToken错误")
-            await e.reply("绑定sessionToken错误QAQ!" + sessionToken)
+            await e.reply("绑定sessionToken错误QAQ!\n" + sessionToken)
             return true
         }
 
