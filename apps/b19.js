@@ -90,7 +90,7 @@ export class phib19 extends plugin {
         }
 
 
-        await e.reply(segment.at(e.user_id) + `\n` + await get.getb19(e, data))
+        await e.reply([segment.at(e.user_id) , `\n` , await get.getb19(e, data)])
 
 
 

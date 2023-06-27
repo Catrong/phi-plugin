@@ -35,7 +35,7 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            await e.reply(segment.at(e.user_id) + `\n` + "请注意保护好自己的sessionToken哦！")
+            await e.reply([segment.at(e.user_id) , `\n` , "请注意保护好自己的sessionToken哦！"])
             // return true
         }
 
@@ -47,7 +47,7 @@ export class phisstk extends plugin {
         if (await this.build(e, sessionToken))
             return true
 
-        await e.reply(segment.at(e.user_id) + `\n` + "绑定成功！")
+        await e.reply([segment.at(e.user_id) , `\n` , "绑定成功！"])
         return true
     }
 
