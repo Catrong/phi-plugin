@@ -34,21 +34,19 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            await e.reply("请注意保护好自己的sessionToken哦！", true)
+            await e.reply("请注意保护好自己的sessionToken哦！", { at: true })
             // return true
         }
 
         var sessionToken = e.msg.replace(/(#|\/)phi(\s*)(绑定|bind)(\s*)/g, '')
         sessionToken.replace(" ", '')
 
-        e.reply("正在绑定，请稍等一下哦！\n >_<")
-
-
+        e.reply("正在绑定，请稍等一下哦！\n >_<", { at: true })
 
         if (await this.build(e, sessionToken))
             return true
 
-        await e.reply("绑定成功！", true)
+        await e.reply("绑定成功！", { at: true })
         return true
     }
 

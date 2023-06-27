@@ -90,7 +90,7 @@ export class phib19 extends plugin {
         }
 
 
-        await e.reply(await get.getb19(e, data), true)
+        await e.reply(await get.getb19(e, data), { at: true })
 
 
 

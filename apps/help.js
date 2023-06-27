@@ -23,13 +23,13 @@ export class phirks extends plugin {
 
     /**暂行帮助 */
     async help(e) {
-        await e.reply(`⌈phi-plugin 帮助⌋(所有#均可用/代替)\n`+
-                      `⌈#phi曲xx⌋  获取曲目图鉴\n`+
-                      `⌈#phi bind xxx #phi绑定xxx⌋ 绑定sessionToken\n`+
-                      `⌈#phi unbind xxx #phi解绑⌋ 删除sessionToken和存档记录\n`+
-                      `⌈#phi updata #phi更新存档⌋ 更新数据\n`+
+        await e.reply(`⌈phi-plugin 帮助⌋ (所有#均可用/代替)\n`+
+                      `⌈#phi曲xx⌋ 获取曲目图鉴\n`+
+                      `⌈#phi bind xxx⌋ ⌈#phi绑定xxx⌋ 绑定sessionToken\n`+
+                      `⌈#phi unbind⌋ ⌈#phi解绑⌋ 删除sessionToken和存档记录\n`+
+                      `⌈#phi updata⌋ ⌈#phi更新存档⌋ 更新数据\n`+
                       `⌈#phi b19⌋ 获取b19图\n`+
-                      `⌈#phi score #phi单曲成绩⌋ 获取单曲成绩`)
+                      `⌈#phi score⌋ ⌈#phi单曲成绩⌋ 获取单曲成绩`)
         return true
     }
 }
