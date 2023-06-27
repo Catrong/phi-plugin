@@ -36,7 +36,7 @@ export function supportGuoba() {
                 {
                     field: 'renderScale',
                     label: '渲染精度',
-                    helpMessage: '对所有的图片生效，设置渲染精度',
+                    bottomHelpMessage: '对所有的图片生效，设置渲染精度',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
