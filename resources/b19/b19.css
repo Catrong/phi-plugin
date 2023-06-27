@@ -37,7 +37,7 @@ body p {
     position: absolute;
     overflow: hidden;
     height: 110%;
-    filter: blur(20px) brightness(75%);
+    filter: blur(40px) brightness(75%);
     z-index: 0;
 }
 
