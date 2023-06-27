@@ -168,7 +168,7 @@ export class phib19 extends plugin {
             `Rks+0.01所需acc: ${get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)}`])
         }
 
-        await e.reply(await common.makeForwardMsg(e, Remsg, `${save.saveInfo.PlayerId} 的best${num}结果`, false))
+        await e.reply(await common.makeForwardMsg(e, Remsg, `${save.saveInfo.PlayerId} 的best${num}结果`))
 
 
     }
@@ -187,7 +187,7 @@ export class phib19 extends plugin {
             e.reply(`未找到 ${song} 的有关信息哦！`)
             return true
         }
-        
+
         song = await get.songsnick(song)
 
         var Record = save.gameRecord
