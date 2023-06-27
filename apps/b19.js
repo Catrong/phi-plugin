@@ -194,6 +194,28 @@ export class phib19 extends plugin {
 
         var ans
 
+        /**取出信息 */
+        var rkslist = []
+        for (var song in Record) {
+            for (var level in song) {
+                if (level == 4) break
+                var tem = Record[song][level]
+                if (!tem) continue
+                if (tem.acc >= 100) {
+                    if (tem.rks > phi.rks) {
+                        phi = tem
+                    }
+                }
+                tem.acc = Number(tem.acc).toFixed(2)
+                tem.rks = Number(tem.rks).toFixed(2)
+                rkslist.push(tem)
+            }
+        }
+
+        rkslist = rkslist.sort(cmp())
+
+        minrks = rkslist[min(18, rkslist.length)]
+
         for (var i in Record) {
             if (await get.idgetsong(i, false) == song) {
                 ans = Record[i]
@@ -216,7 +238,7 @@ export class phib19 extends plugin {
                 ans[i].rks = ans[i].rks.toFixed(2)
                 data[Level[i]] = {
                     ...ans[i],
-                    suggest: get.comsuggest(Number(ans[i].rks), Number(ans[i].difficulty))
+                    suggest: get.comsuggest(Number(minrks.rks) + 0.2, Number(ans[i].difficulty))
                 }
             } else {
                 data[Level[i]] = { pingji: 'NEW' }
