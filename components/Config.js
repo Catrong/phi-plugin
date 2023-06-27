@@ -114,10 +114,10 @@ class Config {
 
     /**
      * @description: 修改设置
-     * @param {String} name 文件名
+     * @param {'config'|'nickconfig'} name 文件名
      * @param {String} key 修改的key值
      * @param {String|Number} value 修改的value值
-     * @param {'config'|'default_config'} type 配置文件或默认
+     * @param {'config'|'default_config'} type 配置文件或默认，默认为配置
      */
     modify(name, key, value, type = 'config') {
         let path = `${Plugin_Path}/config/${type}/${name}.yaml`
@@ -127,7 +127,7 @@ class Config {
 
     /**
      * @description: 修改配置数组
-     * @param {String} name 文件名
+     * @param {'config'|'nickconfig'} name 文件名
      * @param {String|Number} key key值
      * @param {String|Number} value value
      * @param {'add'|'del'} category 类别 add or del
