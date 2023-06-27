@@ -1,7 +1,7 @@
 import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
-import { segment } from "icqq";
+import { segment } from "oicq";
 
 await get.init()
 
@@ -90,7 +90,7 @@ export class phib19 extends plugin {
         }
 
 
-        await e.reply(await get.getb19(e, data), { at: true })
+        await e.reply(segment.at(e.user_id) + `\n` + await get.getb19(e, data))
 
 
 

@@ -3,6 +3,7 @@ import plugin from '../../../lib/plugins/plugin.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
 import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
+import { segment } from 'oicq'
 
 await get.init()
 
@@ -34,19 +35,19 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            await e.reply("请注意保护好自己的sessionToken哦！", { at: true })
+            await e.reply(segment.at(e.user_id) + `\n` + "请注意保护好自己的sessionToken哦！")
             // return true
         }
 
         var sessionToken = e.msg.replace(/(#|\/)phi(\s*)(绑定|bind)(\s*)/g, '')
         sessionToken.replace(" ", '')
 
-        e.reply("正在绑定，请稍等一下哦！\n >_<", { at: true })
+        e.reply("正在绑定，请稍等一下哦！\n >_<")
 
         if (await this.build(e, sessionToken))
             return true
 
-        await e.reply("绑定成功！", { at: true })
+        await e.reply(segment.at(e.user_id) + `\n` + "绑定成功！")
         return true
     }
 
