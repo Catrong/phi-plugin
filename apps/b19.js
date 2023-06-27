@@ -208,7 +208,7 @@ export class phib19 extends plugin {
 
         var data = {}
 
-        data.illustration = ans[i].illustration
+        data.illustration = get.info[song].illustration
 
         for (var i in ans) {
             if (ans[i]) {
