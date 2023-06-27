@@ -202,11 +202,6 @@ export class phib19 extends plugin {
                 if (level == 4) break
                 var tem = Record[song][level]
                 if (!tem) continue
-                if (tem.acc >= 100) {
-                    if (tem.rks > phi.rks) {
-                        phi = tem
-                    }
-                }
                 tem.acc = Number(tem.acc).toFixed(2)
                 tem.rks = Number(tem.rks).toFixed(2)
                 rkslist.push(tem)
