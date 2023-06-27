@@ -1,4 +1,4 @@
-import { _paths } from './utils/paths.js'
+import { _paths } from './model/path.js'
 import Config from './components/Config.js'
 
 // 支持锅巴
