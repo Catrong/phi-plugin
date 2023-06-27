@@ -106,7 +106,7 @@ export class phib19 extends plugin {
 
         var num = e.msg.replace(/[#/]phi(\\s*)(best)(\\s*)/g, '')
 
-        if (Number(num) % 1) {
+        if (Number(num) % 1 != 0) {
             await e.reply(`${num}不是个数字吧！`, true)
             return true
         }
