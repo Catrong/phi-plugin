@@ -149,7 +149,7 @@ export class phisstk extends plugin {
     }
 
     async unbind(e) {
-        if (get.delData(e.user_id, get.userPath)) {
+        if (get.delData(`${e.user_id}.json`, get.userPath)) {
             e.reply('没有找到你的存档哦！', true)
         } else {
             e.reply('解绑成功', true)
