@@ -49,6 +49,7 @@ export class phib19 extends plugin {
 
         phi.rks = 0
 
+
         /**取出信息 */
         var rkslist = []
         for (var song in Record) {
@@ -67,11 +68,14 @@ export class phib19 extends plugin {
             }
         }
 
+        /**考虑屁股肉四舍五入原则 */
+        minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+
         rkslist = rkslist.sort(cmp())
         var illlist = []
         for (var i = 0; i < 21 && i < rkslist.length; ++i) {
             rkslist[i].num = i + 1
-            rkslist[i].suggest = get.comsuggest(Number(rkslist[i].rks) + 0.2, rkslist[i].difficulty)
+            rkslist[i].suggest = get.comsuggest(Number(rkslist[i].rks) + minuprks * 20, rkslist[i].difficulty)
             b19_list.push(rkslist[i])
             illlist.push(rkslist[i].illustration)
         }
@@ -90,7 +94,7 @@ export class phib19 extends plugin {
         }
 
 
-        await e.reply([segment.at(e.user_id) , `\n` , await get.getb19(e, data)])
+        await e.reply([segment.at(e.user_id), `\n`, await get.getb19(e, data)])
 
 
 
@@ -144,6 +148,9 @@ export class phib19 extends plugin {
 
         Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
 
+        /**考虑屁股肉四舍五入原则 */
+        minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+
         if (phi.song) {
             Remsg.push([`Phi:\n`,
                 segment.image(get.getill(phi.song, false)),
@@ -166,7 +173,7 @@ export class phib19 extends plugin {
             `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
             `${rkslist[i].score} ${rkslist[i].pingji}\n` +
             `${rkslist[i].acc} ${rkslist[i].rks}\n` +
-            `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + 0.2, rkslist[i].difficulty)}`])
+            `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
         }
 
         await e.reply(await common.makeForwardMsg(e, Remsg))
@@ -209,8 +216,10 @@ export class phib19 extends plugin {
         }
 
         rkslist = rkslist.sort(cmp())
-
+        /**b19最低rks */
         minrks = rkslist[Math.min(18, rkslist.length)]
+        /**考虑屁股肉四舍五入原则 */
+        minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
 
         for (var i in Record) {
             if (await get.idgetsong(i, false) == song) {
@@ -241,7 +250,7 @@ export class phib19 extends plugin {
                 ans[i].rks = ans[i].rks.toFixed(2)
                 data[Level[i]] = {
                     ...ans[i],
-                    suggest: get.comsuggest(Number(minrks.rks) + 0.2, Number(ans[i].difficulty))
+                    suggest: get.comsuggest(Number(minrks.rks) + minuprks * 20, Number(ans[i].difficulty))
                 }
             } else {
                 data[Level[i]] = { pingji: 'NEW' }
