@@ -11,6 +11,27 @@
     <div class="background">
         <img src="{{illustration}}" alt="曲绘-模糊">
     </div>
+    <div class="playerbox">
+        <div class="player">
+            <div class="playerid-right"></div>
+            <div class="playerid">
+                <p>{{PlayerId}}</p>
+            </div>
+            <div class="avatar">
+                <img src="../avatar/{{avatar}}.png" alt="{{avatar}}">
+            </div>
+            <div class="player-info">
+
+                <div class="Challenge">
+                    <img src="../otherimg/{{ChallengeMode}}.png" alt="{{ChallengeMode}}">
+                    <p>{{Challenge}}</p>
+                </div>
+                <div class="player-rks">
+                    <p>{{rks}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="box">
         <div class="ill-box">
             <img src="{{illustration}}" alt="曲绘">
@@ -159,6 +180,26 @@
                     </div>
                     {{/if}}
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="leave">
+        <div class="leave-box">
+            <div class="leave-at">
+                <p style="margin-left: 3px;">{{AT.difficulty}}</p>
+                <p style="font-size: 15px; margin-right: 13px;">AT</p>
+            </div>
+            <div class="leave-in">
+                <p style="margin-left: 3px;">{{IN.difficulty}}</p>
+                <p style="font-size: 15px; margin-right: 13px;">IN</p>
+            </div>
+            <div class="leave-hd">
+                <p style="margin-left: 3px;">{{HD.difficulty}}</p>
+                <p style="font-size: 15px; margin-right: 13px;">HD</p>
+            </div>
+            <div class="leave-ez">
+                <p style="margin-left: 3px;">{{EZ.difficulty}}</p>
+                <p style="font-size: 15px; margin-right: 13px;">EZ</p>
             </div>
         </div>
     </div>

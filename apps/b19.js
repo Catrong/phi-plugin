@@ -224,7 +224,14 @@ export class phib19 extends plugin {
             return false
         }
 
-        var data = {}
+        var data = {
+            PlayerId: save.saveInfo.PlayerId,
+            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
+            Date: save.saveInfo.updatedAt,
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100
+        }
+
 
         data.illustration = get.info[song].illustration_big
 
