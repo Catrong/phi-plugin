@@ -210,7 +210,7 @@ export class phib19 extends plugin {
 
         rkslist = rkslist.sort(cmp())
 
-        minrks = rkslist[min(18, rkslist.length)]
+        minrks = rkslist[Math.min(18, rkslist.length)]
 
         for (var i in Record) {
             if (await get.idgetsong(i, false) == song) {

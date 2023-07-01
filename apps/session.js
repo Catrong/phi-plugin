@@ -35,7 +35,7 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            await e.reply([segment.at(e.user_id) , `\n` , "请注意保护好自己的sessionToken哦！"])
+            await e.reply([segment.at(e.user_id), `\n`, "请注意保护好自己的sessionToken哦！"])
             // return true
         }
 
@@ -47,7 +47,7 @@ export class phisstk extends plugin {
         if (await this.build(e, sessionToken))
             return true
 
-        await e.reply([segment.at(e.user_id) , `\n` , "绑定成功！"])
+        await e.reply([segment.at(e.user_id), `\n`, "绑定成功！"])
         return true
     }
 
@@ -110,46 +110,39 @@ export class phisstk extends plugin {
             this.e.reply("绑定失败！QAQ\n" + err)
             return true
         }
-        switch (t) {
-            case 1: {
-                /**获得多个存档 */
-                let builder = []
-                builder.push("发现多个存档，请发送 #[序号] 进行选择")
-                var array = this.User.gameRecord
-                for (let key in array) {
-                    let object = array[key];
-                    let str = `#${key}：\nobjectId：${object.objectId}\n创建时间：${object.createdAt}\n更新时间：${object.updatedAt}\nURL：${object.gameFile.url}`
-                    builder.push(str)
-                }
-                builder.push("示例 #1")
-
-                logger.info("[phi-plugin]发现多个存档")
-                console.info(builder)
-                e.reply(common.makeForwardMsg(builder))
-
-                this.setContext('choose')
-
-                if (!this.choosenum)
-                    return true
-
-
-                try {
-                    if (!this.User.chooseSave(this.choosenum)) {
-                        logger.error(`[phi-plugin]未找到 ${this.choosenum} 号存档`)
-                        this.e.reply(`没有找到 ${this.choosenum} 号存档哦！`)
-                        return true
-                    }
-                    this.building()
-                } catch (err) {
-                    logger.error(`[phi-plugin]绑定错误 ${err}`)
-                    this.e.reply(`出错啦！QAQ\n${err}`)
-                    return true
-                }
-
-                break
+        if (t == 1) {
+            /**获得多个存档 */
+            let builder = []
+            builder.push("发现多个存档，请发送 #[序号] 进行选择")
+            var array = this.User.gameRecord
+            for (let key in array) {
+                let object = array[key];
+                let str = `#${key}：\nobjectId：${object.objectId}\n创建时间：${object.createdAt}\n更新时间：${object.updatedAt}\nURL：${object.gameFile.url}`
+                builder.push(str)
             }
-            default: {
-                break
+            builder.push("示例 #1")
+
+            logger.info("[phi-plugin]发现多个存档")
+            console.info(builder)
+            e.reply(common.makeForwardMsg(builder))
+
+            this.setContext('choose')
+
+            if (!this.choosenum)
+                return true
+
+
+            try {
+                if (!this.User.chooseSave(this.choosenum)) {
+                    logger.error(`[phi-plugin]未找到 ${this.choosenum} 号存档`)
+                    this.e.reply(`没有找到 ${this.choosenum} 号存档哦！`)
+                    return true
+                }
+                this.building()
+            } catch (err) {
+                logger.error(`[phi-plugin]绑定错误 ${err}`)
+                this.e.reply(`出错啦！QAQ\n${err}`)
+                return true
             }
         }
         return false

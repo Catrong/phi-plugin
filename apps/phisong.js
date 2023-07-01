@@ -26,6 +26,10 @@ export class phirks extends plugin {
                     reg: '^[#/]phi(\\s*)(删除别名|delnick).*$',
                     fnc: 'delnick'
                 }
+                // {
+                //     reg: '^[#/]phi(\\s*)(随机|rand)(1?)[0-9]?((\\s*)(AT|IN|HD|EZ)(\\s*))*$',
+                //     fnc: 'rand'
+                // }
             ]
         })
 
@@ -130,5 +134,9 @@ export class phirks extends plugin {
         return true
     }
 
+
+    async rand(e) {
+        var msg = e.msg.replace()
+    }
 
 }
