@@ -136,7 +136,7 @@ body p {
     align-items: center;
     margin-left: -100;
     padding-left: 80;
-    clip-path: polygon(100% 0%, 94% 100%, 0 100%,0% 0%);
+    clip-path: polygon(100% 0%, 94% 100%, 0 100%, 0% 0%);
     justify-content: center;
 }
 
@@ -176,6 +176,7 @@ body p {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin-left: 5%;
 }
 
 .ill-box {
@@ -261,7 +262,7 @@ body p {
 
 .pingji img {
     height: 200px;
-    filter: blur(10px);
+    filter: blur(5px);
 }
 
 .rank {
@@ -348,11 +349,11 @@ body p {
     justify-content: center;
     align-items: center;
     text-shadow:
-        0 0 1px #9da07759,
-        1px 0 1px #9da07759,
-        -1px 0 2px #9da07759,
-        1px 0 1px #9da07759,
-        -1px 0 10px #9da07759;
+        0 0 1px #8686864d,
+        1px 0 2px #8686864d,
+        -1px 0 2px #8686864d,
+        1px 0 5px #8686864d,
+        -1px 0 10px #8686864d;
 }
 
 .suggest {
@@ -367,11 +368,12 @@ body p {
 .suggest p {
     font-size: 25px;
     color: #92D050;
-    text-shadow: 0 0 1px #63856b4d,
-        1px 0 2px #63856b4d,
-        -1px 0 2px #63856b4d,
-        1px 0 5px #63856b4d,
-        -1px 0 10px #63856b4d;
+    text-shadow:
+        0 0 1px #8686864d,
+        1px 0 2px #8686864d,
+        -1px 0 2px #8686864d,
+        1px 0 5px #8686864d,
+        -1px 0 10px #8686864d;
 }
 
 .acc p {
@@ -397,6 +399,7 @@ body p {
     height: 0;
     display: flex;
     align-items: center;
+    margin-left: 2.5%;
 }
 
 .leave-box {
