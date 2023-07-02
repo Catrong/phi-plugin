@@ -82,8 +82,8 @@ export class phib19 extends plugin {
         for (var i = 0; i < 21 && i < rkslist.length; ++i) {
             rkslist[i].num = i + 1
             rkslist[i].suggest = get.comsuggest(Number(rkslist[i].rks) + minuprks * 20, rkslist[i].difficulty)
-            rkslist[i].rks = rkslist[i].rks.toFixed(2)
-            rkslist[i].acc = rkslist[i].acc.toFixed(2)
+            rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
+            rkslist[i].acc = Number(rkslist[i].acc).toFixed(2)
             b19_list.push(rkslist[i])
             illlist.push(rkslist[i].illustration)
         }
@@ -178,7 +178,7 @@ export class phib19 extends plugin {
             `\n${rkslist[i].song}\n` +
             `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
             `${rkslist[i].score} ${rkslist[i].pingji}\n` +
-            `${rkslist[i].acc.toFixed(2)} ${rkslist[i].rks.toFixed(2)}\n` +
+            `${Number(rkslist[i].acc).toFixed(2)} ${Number(rkslist[i].rks).toFixed(2)}\n` +
             `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
         }
 
