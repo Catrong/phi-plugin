@@ -75,7 +75,7 @@ export class phib19 extends plugin {
 
 
         /**考虑屁股肉四舍五入原则 */
-        minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
 
         rkslist = rkslist.sort(cmp())
         var illlist = []
@@ -223,7 +223,7 @@ export class phib19 extends plugin {
         /**b19最低rks */
         var minrks = rkslist[Math.min(18, rkslist.length)]
         /**考虑屁股肉四舍五入原则 */
-        minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
 
         for (var i in Record) {
             if (await get.idgetsong(i, false) == song) {
