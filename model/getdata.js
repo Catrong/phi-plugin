@@ -2,7 +2,7 @@
 
 import { _path } from "./path.js";
 import { segment } from "oicq";
-// import atlas from "./picmodle.js";
+import atlas from "./picmodle.js";
 import Film from './Doc.js';
 
 
@@ -11,12 +11,12 @@ class get {
 
     constructor() {
         /**曲绘资源、曲目信息路径 */
-        this.infoPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/resources/info/`
-        // this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
+        // this.infoPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/resources/info/`
+        this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
 
         /**用户数据路径 */
-        this.userPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/data/`
-        // this.userPath = `${_path}/plugins/phi-plugin/data/`
+        // this.userPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/data/`
+        this.userPath = `${_path}/plugins/phi-plugin/data/`
 
         /**用户设置路径 */
         this.configPath = `${_path}/plugins/phi-plugin/config/config/`
