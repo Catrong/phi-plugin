@@ -10,7 +10,7 @@ await get.init()
 export class phisstk extends plugin {
     constructor() {
         super({
-            name: 'phigros sessionToken',
+            name: 'phi-sessionToken',
             dsc: 'sessionToken获取',
             event: 'message',
             priority: 1000,

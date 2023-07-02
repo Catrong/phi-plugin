@@ -28,6 +28,10 @@ export class phib19 extends plugin {
                 {
                     reg: '^[#/]phi(\\s*)(score|单曲成绩).*$',
                     fnc: 'singlescore'
+                },
+                {
+                    reg: '^[#/]phi(\\s*)(suggest|推分(建议)?)$',
+                    fnc: 'suggest'
                 }
 
             ]
@@ -62,11 +66,13 @@ export class phib19 extends plugin {
                         phi = tem
                     }
                 }
-                tem.acc = Number(tem.acc).toFixed(2)
-                tem.rks = Number(tem.rks).toFixed(2)
                 rkslist.push(tem)
             }
         }
+
+        phi.rks = rkslist[i].rks.toFixed(2)
+        phi.acc = rkslist[i].acc.toFixed(2)
+
 
         /**考虑屁股肉四舍五入原则 */
         minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
@@ -76,6 +82,8 @@ export class phib19 extends plugin {
         for (var i = 0; i < 21 && i < rkslist.length; ++i) {
             rkslist[i].num = i + 1
             rkslist[i].suggest = get.comsuggest(Number(rkslist[i].rks) + minuprks * 20, rkslist[i].difficulty)
+            rkslist[i].rks = rkslist[i].rks.toFixed(2)
+            rkslist[i].acc = rkslist[i].acc.toFixed(2)
             b19_list.push(rkslist[i])
             illlist.push(rkslist[i].illustration)
         }
@@ -138,8 +146,6 @@ export class phib19 extends plugin {
                         phi = tem
                     }
                 }
-                tem.acc = Number(tem.acc).toFixed(2)
-                tem.rks = Number(tem.rks).toFixed(2)
                 rkslist.push(tem)
             }
         }
@@ -157,7 +163,7 @@ export class phib19 extends plugin {
                 `\n${phi.song}\n` +
                 `${phi.rank} ${phi.difficulty}\n` +
                 `${phi.score} ${phi.pingji}\n` +
-                `${phi.acc} ${phi.rks}\n` +
+                `${phi.acc.toFixed(2)} ${phi.rks.toFixed(2)}\n` +
                 `Rks+0.01所需acc: ${phi.suggest}`])
         } else {
             Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
@@ -172,7 +178,7 @@ export class phib19 extends plugin {
             `\n${rkslist[i].song}\n` +
             `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
             `${rkslist[i].score} ${rkslist[i].pingji}\n` +
-            `${rkslist[i].acc} ${rkslist[i].rks}\n` +
+            `${rkslist[i].acc.toFixed(2)} ${rkslist[i].rks.toFixed(2)}\n` +
             `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
         }
 
@@ -209,8 +215,6 @@ export class phib19 extends plugin {
                 if (level == 4) break
                 var tem = Record[song][level]
                 if (!tem) continue
-                tem.acc = Number(tem.acc).toFixed(2)
-                tem.rks = Number(tem.rks).toFixed(2)
                 rkslist.push(tem)
             }
         }
@@ -262,9 +266,74 @@ export class phib19 extends plugin {
 
     }
 
+    /**推分建议，建议的是RKS+0.01的所需值 */
+    async suggest(e) {
+
+        var save = await get.getsave(e.user_id)
+        if (!save.session) {
+            e.reply("你还没有绑定sessionToken哦！发送#phi bind xxxx进行绑定哦！", true)
+            return true
+        }
+
+        /**取出信息 */
+        var rkslist = []
+        for (var song in Record) {
+            for (var level in song) {
+                if (level == 4) break
+                var tem = Record[song][level]
+                if (!tem) continue
+                rkslist.push(tem)
+            }
+        }
+
+        rkslist = rkslist.sort(cmp())
+        /**b19最低rks */
+        minrks = rkslist[Math.min(18, rkslist.length)]
+        /**考虑屁股肉四舍五入原则 */
+        minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+
+        /**计算 */
+        var suggestlist = []
+        for (var song in Record) {
+            for (var level in song) {
+                if (level == 4) break
+                var tem = Record[song][level]
+                if (!tem) continue
+                if (typeof get.comsuggest(Number(minrks.rks) + minuprks * 20, Number(tem.difficulty)) == 'number') {
+                    tem.acc = Number(tem.acc).toFixed(2)
+                    tem.rks = Number(tem.rks).toFixed(2)
+                    suggestlist.push(tem)
+                }
+            }
+        }
+
+        
+        suggestlist = suggestlist.sort(cmpsugg())
+
+        var Remsg = []
+        for (var i = 0; i < suggestlist.length; ++i) {
+
+            Remsg.push([`#Best ${i + 1}:\n`,
+            segment.image(get.getill(suggestlist[i].song, false)),
+            `\n${suggestlist[i].song}\n` +
+            `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
+            `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
+            `${suggestlist[i].acc} ${suggestlist[i].rks}\n` +
+            `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? suggestlist[i].rks : suggestlist[18].rks) + minuprks * 20, suggestlist[i].difficulty)}`])
+        }
+
+        await e.reply(await common.makeForwardMsg(e, Remsg))
+    }
+
 }
 
 function cmp() {
+    return function (a, b) {
+        return b.rks - a.rks
+    }
+}
+
+function cmpsugg() {
     return function (a, b) {
         return b.rks - a.rks
     }

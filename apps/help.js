@@ -6,8 +6,8 @@ await get.init()
 export class phirks extends plugin {
     constructor() {
         super({
-            name: '屁股肉帮助',
-            dsc: '屁股肉帮助',
+            name: 'phi-help',
+            dsc: 'phigros屁股肉帮助',
             event: 'message',
             priority: 1000,
             rule: [

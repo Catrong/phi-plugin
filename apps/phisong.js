@@ -9,7 +9,7 @@ await get.init()
 export class phirks extends plugin {
     constructor() {
         super({
-            name: 'phigros图鉴',
+            name: 'phi-图鉴',
             dsc: 'phigros图鉴',
             event: 'message',
             priority: 1000,
