@@ -201,8 +201,8 @@ export class phib19 extends plugin {
             e.reply(`未找到 ${song} 的有关信息哦！`)
             return true
         }
-
         song = await get.songsnick(song)
+        song = song[0]
 
         var Record = save.gameRecord
 
@@ -210,10 +210,10 @@ export class phib19 extends plugin {
 
         /**取出信息 */
         var rkslist = []
-        for (var song in Record) {
-            for (var level in song) {
+        for (var i in Record) {
+            for (var level in i) {
                 if (level == 4) break
-                var tem = Record[song][level]
+                var tem = Record[i][level]
                 if (!tem) continue
                 rkslist.push(tem)
             }
@@ -226,7 +226,8 @@ export class phib19 extends plugin {
         var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
 
         for (var i in Record) {
-            if (await get.idgetsong(i, false) == song) {
+            var now = await get.idgetsong(i, false)
+            if (now == song) {
                 ans = Record[i]
                 break
             }
@@ -239,6 +240,7 @@ export class phib19 extends plugin {
 
         var data = {
             PlayerId: save.saveInfo.PlayerId,
+            avatar: get.idgetavatar(save.saveInfo.summary.avatar),
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
@@ -247,7 +249,7 @@ export class phib19 extends plugin {
 
 
         data.illustration = get.info[song].illustration_big
-
+        var songsinfo = get.info[song]
         for (var i in ans) {
             if (ans[i]) {
                 ans[i].acc = ans[i].acc.toFixed(2)
@@ -257,7 +259,10 @@ export class phib19 extends plugin {
                     suggest: get.comsuggest(Number(minrks.rks) + minuprks * 20, Number(ans[i].difficulty))
                 }
             } else {
-                data[Level[i]] = { pingji: 'NEW' }
+                data[Level[i]] = {
+                    pingji: 'NEW',
+                    difficulty: songsinfo['chart'][Level[i]]['difficulty']
+                }
             }
         }
 
@@ -307,7 +312,7 @@ export class phib19 extends plugin {
             }
         }
 
-        
+
         suggestlist = suggestlist.sort(cmpsugg())
 
         var Remsg = []

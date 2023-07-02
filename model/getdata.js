@@ -2,7 +2,7 @@
 
 import { _path } from "./path.js";
 import { segment } from "oicq";
-import atlas from "./picmodle.js";
+// import atlas from "./picmodle.js";
 import Film from './Doc.js';
 
 
@@ -11,12 +11,12 @@ class get {
 
     constructor() {
         /**曲绘资源、曲目信息路径 */
-        // this.infoPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/resources/info/`
-        this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
+        this.infoPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/resources/info/`
+        // this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
 
         /**用户数据路径 */
-        // this.userPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/data/`
-        this.userPath = `${_path}/plugins/phi-plugin/data/`
+        this.userPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/data/`
+        // this.userPath = `${_path}/plugins/phi-plugin/data/`
 
         /**用户设置路径 */
         this.configPath = `${_path}/plugins/phi-plugin/config/config/`
@@ -34,6 +34,7 @@ class get {
         this.info = await this.getData('infolist.json', this.infoPath)
         this.songsid = await this.getData('songsid.yaml', this.infoPath)
         this.songnick = await this.getData('nicklist.yaml', this.infoPath)
+        this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
     }
 
     /**获取 chos 文件 
@@ -174,6 +175,15 @@ class get {
         return await this.getData(`${id}.json`, `${this.userPath}`)
     }
 
+    /**
+     * 
+     * @param {string} id 
+     * @returns file name
+     */
+    idgetavatar(id) {
+        return this.avatarid[id]
+    }
+
     /**根据曲目id获取曲目信息
      * 
      * @param {String} id 曲目id 
@@ -215,6 +225,8 @@ class get {
         else
             return ans.toFixed(2) + "%"
     }
+
+
 }
 
 export default new get()
