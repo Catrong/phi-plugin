@@ -324,7 +324,7 @@ export class phib19 extends plugin {
             `\n${suggestlist[i].song}\n` +
             `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
             `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
-            `${suggestlist[i].acc} ${suggestlist[i].rks}\n` +
+            `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
             `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
         }
 
