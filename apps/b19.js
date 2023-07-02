@@ -155,7 +155,7 @@ export class phib19 extends plugin {
         Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
 
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
 
         if (phi.song) {
             Remsg.push([`Phi:\n`,
@@ -223,7 +223,7 @@ export class phib19 extends plugin {
         /**b19最低rks */
         var minrks = rkslist[Math.min(18, rkslist.length)]
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
 
         for (var i in Record) {
             var now = await get.idgetsong(i, false)
@@ -295,7 +295,7 @@ export class phib19 extends plugin {
         /**b19最低rks */
         minrks = rkslist[Math.min(18, rkslist.length)]
         /**考虑屁股肉四舍五入原则 */
-        minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+        minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
 
         /**计算 */
         var suggestlist = []
