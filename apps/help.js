@@ -27,7 +27,7 @@ export class phirks extends plugin {
                       `⌈#phi曲xx⌋ 获取曲目图鉴\n`+
                       `⌈#phi bind xxx⌋ ⌈#phi绑定xxx⌋ 绑定sessionToken\n`+
                       `⌈#phi unbind⌋ ⌈#phi解绑⌋ 删除sessionToken和存档记录\n`+
-                      `⌈#phi updata⌋ ⌈#phi更新存档⌋ 更新数据\n`+
+                      `⌈#phi update⌋ ⌈#phi更新存档⌋ 更新数据\n`+
                       `⌈#phi b19⌋ 获取b19图\n`+
                       `⌈#phi score⌋ ⌈#phi单曲成绩⌋ 获取单曲成绩`+
                       `⌈#phi suggest⌋ ⌈#phi推分⌋ 获取单曲成绩`)
