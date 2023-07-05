@@ -406,7 +406,7 @@ body p {
     z-index: 4;
     display: flex;
     filter: drop-shadow(0px 0px 30px #000);
-    margin-left: 3.4%;
+    margin-left: 5%;
 }
 
 .leave-box p {
@@ -420,9 +420,9 @@ body p {
 .leave-hd,
 .leave-ez {
     display: flex;
-    width: 111.358px;
+    width: 120px;
     height: 75px;
-    clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+    clip-path: polygon(100% 0, 80% 100%, 0 100%, 20% 0);
     justify-content: center;
     align-items: center;
     flex-direction: column;
