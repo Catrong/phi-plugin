@@ -44,18 +44,19 @@ class Config {
 
     /** 默认配置和用户配置 
      * @param {'config'|'nickconfig'} name 文件名
-     * @param {string} style key值
+     * @param {'renderScale'|'randerQuality'|'b19size'|'WordB19Img'|'WordSuggImg'} style key值
     */
     getDefOrConfig(name, style) {
         let def = this.getdefSet(name)
         let config = this.getConfig(name)
         if (style) {
-            if (config[style]) {
+            if (typeof config[style] != 'undefined') {
                 return config[style]
             } else {
                 /**对设置进行补全 */
-                if (name == 'config')
+                if (name == 'config') {
                     this.modify(name, style, def[style])
+                }
                 return def[style]
             }
         }

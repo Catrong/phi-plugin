@@ -1,5 +1,6 @@
 import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
+import Config from '../components/Config.js';
 import get from '../model/getdata.js'
 import { segment } from "oicq";
 
@@ -172,15 +173,24 @@ export class phib19 extends plugin {
 
         rkslist = rkslist.sort(cmp())
 
-        for (var i = 0; i < num && i < rkslist.length; ++i) {
-
-            Remsg.push([`#Best ${i + 1}:\n`,
-            segment.image(get.getill(rkslist[i].song, false)),
-            `\n${rkslist[i].song}\n` +
-            `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
-            `${rkslist[i].score} ${rkslist[i].pingji}\n` +
-            `${Number(rkslist[i].acc).toFixed(2)}% ${Number(rkslist[i].rks).toFixed(2)}\n` +
-            `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
+        if (Config.getDefOrConfig('config', 'WordB19Img')) {
+            for (var i = 0; i < num && i < rkslist.length; ++i) {
+                Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n`,
+                segment.image(get.getill(rkslist[i].song, false)),
+                `\n` +
+                `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
+                `${rkslist[i].score} ${rkslist[i].pingji}\n` +
+                `${Number(rkslist[i].acc).toFixed(2)}% ${Number(rkslist[i].rks).toFixed(2)}\n` +
+                `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
+            }
+        } else {
+            for (var i = 0; i < num && i < rkslist.length; ++i) {
+                Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n` +
+                    `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
+                    `${rkslist[i].score} ${rkslist[i].pingji}\n` +
+                    `${Number(rkslist[i].acc).toFixed(2)}% ${Number(rkslist[i].rks).toFixed(2)}\n` +
+                    `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
+            }
         }
 
         await e.reply(await common.makeForwardMsg(e, Remsg))
@@ -317,15 +327,26 @@ export class phib19 extends plugin {
         suggestlist = suggestlist.sort(cmpsugg())
 
         var Remsg = []
-        for (var i = 0; i < suggestlist.length; ++i) {
 
-            Remsg.push([`# ${i + 1}:\n`,
-            segment.image(get.getill(suggestlist[i].song, false)),
-            `\n${suggestlist[i].song}\n` +
-            `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
-            `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
-            `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
-            `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
+        /**判断是否发图 */
+        if (Config.getDefOrConfig('config', 'WordSuggImg')) {
+            for (var i = 0; i < suggestlist.length; ++i) {
+                Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n`,
+                segment.image(get.getill(suggestlist[i].song, false)),
+                `\n` +
+                `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
+                `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
+                `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
+                `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
+            }
+        } else {
+            for (var i = 0; i < suggestlist.length; ++i) {
+                Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n` +
+                    `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
+                    `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
+                    `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
+                    `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
+            }
         }
 
         await e.reply(await common.makeForwardMsg(e, Remsg))

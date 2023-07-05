@@ -45,13 +45,27 @@ export function supportGuoba() {
                         placeholder: '请输入渲染精度',
                     },
                 },
+                {
+                    field: 'WordB19Img',
+                    label: '文字版B19曲绘图片',
+                    bottomHelpMessage: '关闭可大幅度提升发送速度',
+                    component: 'Switch',
+                },
+                {
+                    field: 'WordSuggImg',
+                    label: 'Suggest曲绘图片',
+                    bottomHelpMessage: '关闭可大幅度提升发送速度',
+                    component: 'Switch',
+                },
             ],
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {
                 let config = {
                     b19size: Config.getDefOrConfig('config', 'b19size'),
                     randerQuality: Config.getDefOrConfig('config', 'randerQuality'),
-                    renderScale: Config.getDefOrConfig('config', 'renderScale')
+                    renderScale: Config.getDefOrConfig('config', 'renderScale'),
+                    WordB19Img: Config.getDefOrConfig('config', 'WordB19Img'),
+                    WordSuggImg: Config.getDefOrConfig('config', 'WordSuggImg'),
                 }
                 return config
             },
