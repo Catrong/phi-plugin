@@ -60,7 +60,7 @@ export function supportGuoba() {
                 {
                     field: 'cmdhead',
                     label: '命令头',
-                    bottomHelpMessage: '命令正则匹配开头，不包含#/，支持正则表达式，\'\\\' 请双写( \\s --> \\\\s )',
+                    bottomHelpMessage: '命令正则匹配开头，不包含#/，支持正则表达式，\'\\\' 请双写( \\s --> \\\\s )，多个请加()',
                     component: 'Input',
                     required: true,
                     componentProps: {
