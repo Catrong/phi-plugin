@@ -19,19 +19,19 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^[#/]phi(\\s*)(b19|rks)$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(b19|rks)$`,
                     fnc: 'b19'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)best(\\s*)[1-9]?[1-9]?$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)best(\\s*)[1-9]?[1-9]?$`,
                     fnc: 'bestn'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(score|单曲成绩).*$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(score|单曲成绩).*$`,
                     fnc: 'singlescore'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(suggest|推分(建议)?)$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(suggest|推分(建议)?)$`,
                     fnc: 'suggest'
                 }
 
@@ -117,7 +117,7 @@ export class phib19 extends plugin {
             return true
         }
 
-        var num = e.msg.replace(/[#/]phi(\s*)(best)(\s*)/g, '')
+        var num = e.msg.replace(/[#/](.*)(best)(\s*)/g, '')
 
         if (Number(num) % 1 != 0) {
             await e.reply(`${num}不是个数字吧！`, true)
@@ -205,7 +205,7 @@ export class phib19 extends plugin {
             e.reply("你还没有绑定sessionToken哦！发送#phi bind xxxx进行绑定哦！", true)
             return true
         }
-        var song = e.msg.replace(/[#/]phi(\s*)(score|单曲成绩)(\s*)/g, '')
+        var song = e.msg.replace(/[#/](.*)(score|单曲成绩)(\s*)/g, '')
 
 
 

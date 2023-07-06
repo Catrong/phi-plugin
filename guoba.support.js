@@ -57,6 +57,16 @@ export function supportGuoba() {
                     bottomHelpMessage: '关闭可大幅度提升发送速度',
                     component: 'Switch',
                 },
+                {
+                    field: 'cmdhead',
+                    label: '命令头',
+                    bottomHelpMessage: '命令正则匹配开头，不包含#/，支持正则表达式，\'\\\' 请双写( \\s --> \\\\s )',
+                    component: 'Input',
+                    required: true,
+                    componentProps: {
+                        placeholder: '请输入命令头',
+                    },
+                },
             ],
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {
@@ -66,6 +76,7 @@ export function supportGuoba() {
                     renderScale: Config.getDefOrConfig('config', 'renderScale'),
                     WordB19Img: Config.getDefOrConfig('config', 'WordB19Img'),
                     WordSuggImg: Config.getDefOrConfig('config', 'WordSuggImg'),
+                    cmdhead: Config.getDefOrConfig('config', 'cmdhead'),
                 }
                 return config
             },

@@ -14,3 +14,7 @@ WordB19Img: false
 
 #  文字版suggest是否带图，关闭可以节约大量发送时间
 WordSuggImg: false
+
+#  ************ 【接收设置】 ************* 
+#  命令头
+cmdhead: "phi"

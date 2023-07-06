@@ -4,6 +4,7 @@ import PhigrosUser from '../lib/PhigrosUser.js'
 import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
 import { segment } from 'oicq'
+import Config from '../components/Config.js'
 
 await get.init()
 
@@ -16,15 +17,15 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^[#/]phi(\\s*)(绑定|bind).*$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(绑定|bind).*$`,
                     fnc: 'bind'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(更新存档|update)$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(更新存档|update)$`,
                     fnc: 'update'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(解绑|unbind)',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(解绑|unbind)$`,
                     fnc: 'unbind'
                 }
             ]
@@ -39,7 +40,7 @@ export class phisstk extends plugin {
             // return true
         }
 
-        var sessionToken = e.msg.replace(/(#|\/)phi(\s*)(绑定|bind)(\s*)/g, '')
+        var sessionToken = e.msg.replace(/(#|\/)(.*)(绑定|bind)(\s*)/g, '')
         sessionToken.replace(" ", '')
 
         e.reply("正在绑定，请稍等一下哦！\n >_<")

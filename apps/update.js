@@ -2,6 +2,7 @@ import plugin from "../../../lib/plugins/plugin.js";
 import { createRequire } from "module";
 import lodash from "lodash";
 import { Restart } from '../../other/restart.js'
+import Config from "../components/Config.js";
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
@@ -20,7 +21,7 @@ export class update extends plugin {
             priority: 1009,
             rule: [
                 {
-                    reg: "^[#/](pgr|PGR|屁股肉|phi|Phi)(插件)?(\\s*)(强制)?更新$",
+                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getDefOrConfig('config','cmdhead')}))(插件)?(\\s*)(强制)?更新$`,
                     fnc: "update",
                 },
             ],

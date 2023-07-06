@@ -15,19 +15,19 @@ export class phirks extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: '^[#/]phi(\\s*)(曲|song).*$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(曲|song).*$`,
                     fnc: 'serch'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(设置别名|setnick).*$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(设置别名|setnick).*$`,
                     fnc: 'setnick'
                 },
                 {
-                    reg: '^[#/]phi(\\s*)(删除别名|delnick).*$',
+                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(删除别名|delnick).*$`,
                     fnc: 'delnick'
                 }
                 // {
-                //     reg: '^[#/]phi(\\s*)(随机|rand)(1?)[0-9]?((\\s*)(AT|IN|HD|EZ)(\\s*))*$',
+                //     reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(随机|rand)(1?)[0-9]?((\\s*)(AT|IN|HD|EZ)(\\s*))*$`,
                 //     fnc: 'rand'
                 // }
             ]
@@ -38,7 +38,7 @@ export class phirks extends plugin {
 
     /**歌曲图鉴 */
     async serch(e) {
-        let msg = e.msg.replace(/[#/]phi(\s*)(曲|song)(\s*)/g, "")
+        let msg = e.msg.replace(/[#/](.*)(曲|song)(\s*)/g, "")
         let songs = await get.songsnick(msg)
         if (songs[0]) {
             let msgRes
@@ -67,7 +67,7 @@ export class phirks extends plugin {
         if (!e.isMaster) {
             e.reply("只有主人可以设置别名哦！")
         }
-        let msg = e.msg.replace(/#phi设置别名(\s*)/g, "")
+        let msg = e.msg.replace(/#(.*)设置别名(\s*)/g, "")
         if (msg.includes("--->")) {
             msg = msg.replace(/(\s*)--->(\s*)/g, " ---> ")
             msg = msg.split(" ---> ")
@@ -99,7 +99,7 @@ export class phirks extends plugin {
     }
 
     async delnick(e) {
-        var msg = e.msg.replace(/[#/]phi(\s*)(删除别名|delnick)(\s*)/g, '')
+        var msg = e.msg.replace(/[#/](.*)(删除别名|delnick)(\s*)/g, '')
         var ans = Config.getConfig('nickconfig', msg)
         if (ans) {
             if (ans.length == 1) {
