@@ -76,7 +76,7 @@ export class phib19 extends plugin {
 
 
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.05
+        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
 
         rkslist = rkslist.sort(cmp())
         var illlist = []
