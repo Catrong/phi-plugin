@@ -32,7 +32,7 @@ class atlas {
             /**其他消息（备注） */
             othermsg: info.othermsg,
             /**预处理曲名字号 */
-            fontsize: fLenB(info.song, 39, 28, 19, 58)
+            fontsize: fLenB(info.song, 39, 26, 15, 58)
         }
         // 渲染图片
         return await puppeteer.render('atlas/atlas', {

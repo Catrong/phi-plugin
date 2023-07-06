@@ -4,6 +4,7 @@ import { _path } from "./path.js";
 import { segment } from "oicq";
 import atlas from "./picmodle.js";
 import Film from './Doc.js';
+import Config from "../components/Config.js";
 
 
 class get {
@@ -94,7 +95,7 @@ class get {
 
     /**匹配歌曲名称，根据参数返回原曲名称 */
     async songsnick(mic) {
-        let nickconfig = await this.getData('nickconfig.yaml', this.configPath)
+        let nickconfig = await Config.getDefOrConfig('nickconfig', mic)
         var all = []
 
         if (this.info[mic]) all.push(mic)
@@ -104,12 +105,12 @@ class get {
                 all.push(this.songnick[mic][i])
             }
         }
-        if (nickconfig[mic]) {
-            for (var i in nickconfig[mic]) {
-                all.push(nickconfig[mic][i])
+        if (nickconfig) {
+            for (var i in nickconfig) {
+                all.push(nickconfig[i])
             }
         }
-        if (all) {
+        if (all.length) {
             all = Array.from(new Set(all)) //去重
             return all
         }
