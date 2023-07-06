@@ -15,21 +15,25 @@ export class phirks extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(曲|song).*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(曲|song).*$`,
                     fnc: 'serch'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(设置别名|setnick).*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(设置别名|setnick).*$`,
                     fnc: 'setnick'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(删除别名|delnick).*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(删除别名|delnick).*$`,
                     fnc: 'delnick'
-                }
+                },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(曲绘|ill|Ill).*$`,
+                    fnc: 'ill'
+                },
                 // {
                 //     reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(随机|rand)(1?)[0-9]?((\\s*)(AT|IN|HD|EZ)(\\s*))*$`,
                 //     fnc: 'rand'
-                // }
+                // },
             ]
         })
 
@@ -50,11 +54,10 @@ export class phirks extends plugin {
                 e.reply(msgRes)
             } else {
                 msgRes = []
-                e.reply(`找到了${songs.length}首歌曲！`, true)
                 for (var i in songs) {
                     msgRes[i] = await get.getsongsinfo(e, songs[i])
                 }
-                e.reply(await common.makeForwardMsg(e, msgRes, ""))
+                e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }
         } else {
             e.reply(`未找到${msg}的相关曲目信息QAQ`, true)
@@ -134,6 +137,29 @@ export class phirks extends plugin {
         return true
     }
 
+    async ill(e) {
+        let msg = e.msg.replace(/[#/](.*)(曲绘|ill|Ill)(\s*)/g, "")
+        let songs = await get.songsnick(msg)
+        if (songs[0]) {
+            let msgRes
+
+            if (!songs[1]) {
+                songs = songs[0]
+                msgRes = await get.getillatlas(e, { illustration: get.info[songs]["illustration_big"], illustrator: get.info[songs]["illustrator"] })
+                e.reply(msgRes)
+            } else {
+                msgRes = []
+                for (var i in songs) {
+                    msgRes[i] = await get.getillatlas(e, { illustration: get.info[songs[i]]["illustration_big"], illustrator: get.info[songs[i]]["illustrator"] })
+                }
+                e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
+            }
+        } else {
+            e.reply(`未找到${msg}的相关曲目信息QAQ`, true)
+        }
+        return true
+
+    }
 
     async rand(e) {
         var msg = e.msg.replace()

@@ -50,7 +50,8 @@ pnpm install -P
 | #phi best[1-99]|查询文字版rks，未指定数字默认19|
 | #phi (score\|单曲成绩)xxx|获取单曲成绩及这首歌的推分建议|
 | #phi (suggest\|推分)|获取可以让RKS+0.01的曲目及其所需ACC|
-| #phi曲xxx|查询phigros中某一曲目的图鉴，支持设定别名|
+| #phi (曲\|song) xxx|查询phigros中某一曲目的图鉴，支持设定别名|
+| #phi (曲绘\|ill\|Ill) xxx|查询phigros中某一曲目的曲绘|
 | #phi(设置别名\|setnick) xxx ---> xxx|设置某一歌曲的别名，格式为 原名(或已有别名) ---> 别名（会自动过滤--->两边的空格）|
 | #phi(删除别名\|delnick) xxx|删除某一歌曲的别名|
 | #phi(强制)?更新|更新phi-plugin|

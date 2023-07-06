@@ -71,6 +71,15 @@ class atlas {
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
         })
     }
+
+    async ill(e, data) {
+        return await puppeteer.render('ill/ill', {
+            ...data
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+        })
+    }
 }
 //20 - 30
 //39 - 19    

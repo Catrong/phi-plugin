@@ -1,0 +1,82 @@
+
+@font-face {
+    font-family: 'PHI';
+    src: url("../common/font/Source-Han-Sans.ttf") format('woff'), url("../common/font/Source-Han-Sans.ttf") format('truetype');
+}
+
+body {
+    height: 1080px;
+    width: 2048px;
+    margin: 0;
+}
+
+body p {
+    color: white;
+    font-family: PHI;
+}
+
+.ill {
+    width: 2048px;
+    height: 0px;
+}
+
+.ill img {
+    width: 2048px;
+    height: 1080px;
+}
+
+.box {
+    width: 2048px;
+    height: 1080px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.info-box {
+    height: 5%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.phi {
+    height: 100%;
+    display: flex;
+    margin-left: 1%;
+}
+
+.phi img {
+    height: 100%;
+}
+
+.line {
+    height: 60%;
+    width: 1px;
+    background-color: #ffffff;
+    margin-left: 1%;
+    margin-right: 1%;
+    filter: drop-shadow(0px 0px 3px #ffffff);
+}
+
+.info {
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.up,
+.down {
+    height: 40%;
+    display: flex;
+    align-items: center;
+    text-shadow: 0px 0px 10px #fff;
+}
+
+.info p {
+    font-size: 15px;
+    color: #ffffff;
+    margin: 0;
+}
