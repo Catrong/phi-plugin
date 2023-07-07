@@ -363,7 +363,7 @@ function cmp() {
 
 function cmpsugg() {
     return function (a, b) {
-        return b.rks - a.rks
+        return a.rks - b.rks
     }
 }
 
