@@ -104,6 +104,7 @@ export class phirks extends plugin {
     async delnick(e) {
         var msg = e.msg.replace(/[#/](.*)(删除别名|delnick)(\s*)/g, '')
         var ans = Config.getConfig('nickconfig', msg)
+        ans = ans[msg]
         if (ans) {
             if (ans.length == 1) {
                 Config.modifyarr('nickconfig', msg, ans[0], 'del', 'config')
