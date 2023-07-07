@@ -268,7 +268,7 @@ body p {
 .rank {
     width: 100%;
     height: 0;
-    transform: skew(-10deg);
+    transform: skew(-13deg);
     display: flex;
     align-items: flex-start;
     z-index: 1;
