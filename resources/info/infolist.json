@@ -5657,13 +5657,13 @@
             },
             "HD": {
                 "level": "10",
-                "difficulty": "10.0",
+                "difficulty": "10.2",
                 "combo": "",
                 "charter": ""
             },
             "IN": {
                 "level": "12",
-                "difficulty": "12.0",
+                "difficulty": "12.9",
                 "combo": "",
                 "charter": ""
             }
@@ -5681,19 +5681,19 @@
         "chart": {
             "EZ": {
                 "level": "4",
-                "difficulty": "4.0",
+                "difficulty": "4.5",
                 "combo": "",
                 "charter": ""
             },
             "HD": {
                 "level": "10",
-                "difficulty": "10.0",
+                "difficulty": "10.8",
                 "combo": "",
                 "charter": ""
             },
             "IN": {
                 "level": "14",
-                "difficulty": "14.0",
+                "difficulty": "14.1",
                 "combo": "",
                 "charter": ""
             }
