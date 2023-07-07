@@ -184,6 +184,7 @@ body p {
     height: 45%;
     filter: drop-shadow(0px 0px 30px #000);
     z-index: 2;
+    margin-left: 2.8%;
 }
 
 .ill-box img {
@@ -293,7 +294,8 @@ body p {
 }
 
 .score,
-.acc {
+.acc,
+.rks {
     text-shadow: 1px 1px 5px #84979bd0;
 }
 
@@ -343,8 +345,6 @@ body p {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-shadow:
-        -1px 0 10px #8686864d;
 }
 
 .suggest {
