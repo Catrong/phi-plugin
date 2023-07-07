@@ -1,13 +1,18 @@
 @font-face {
     font-family: 'PHI';
-    src: url("../common/font/Source-Han-Sans.ttf") format('woff'), url("../common/font/Source-Han-Sans.ttf") format('truetype');
+    src: url("../common/font/phi.ttf") format('woff'), url("../common/font/phi.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: 'HIMALAYA';
+    src: url("../common/font/HIMALAYA.TTF") format('woff'), url("./font/HIMALAYA.TTF") format('truetype');
 }
 
 body {
     height: 1080px;
     width: 2048px;
     margin: 0;
-    font-family: PHI;
+    font-family: 'PHI', 'HIMALAYA';
 }
 
 
@@ -209,7 +214,7 @@ body {
     margin-left: 795px;
 }
 
-.leave-box p{
+.leave-box p {
     color: white;
     font-size: 35px;
     margin: 0;
@@ -298,7 +303,7 @@ body {
     align-items: center;
 }
 
-.created p{
+.created p {
     color: white;
     font-size: 24px;
 }

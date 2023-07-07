@@ -1,7 +1,11 @@
-
 @font-face {
     font-family: 'PHI';
-    src: url("../common/font/Source-Han-Sans.ttf") format('woff'), url("../common/font/Source-Han-Sans.ttf") format('truetype');
+    src: url("../common/font/phi.ttf") format('woff'), url("../common/font/phi.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: 'HIMALAYA';
+    src: url("../common/font/HIMALAYA.TTF") format('woff'), url("./font/HIMALAYA.TTF") format('truetype');
 }
 
 body {
@@ -12,7 +16,7 @@ body {
 
 body p {
     color: white;
-    font-family: PHI;
+    font-family: 'PHI', 'HIMALAYA';
 }
 
 .ill {
