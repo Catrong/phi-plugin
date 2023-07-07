@@ -5638,5 +5638,65 @@
                 "charter": "Barbarianerman"
             }
         }
+    },
+    "Rainy Heart": {
+        "song": "Rainy Heart",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "单曲精选集",
+        "bpm": "",
+        "composer": "BelieverInYou(阿卡姆巫师)",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "4",
+                "difficulty": "4.0",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "10",
+                "difficulty": "10.0",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "12",
+                "difficulty": "12.0",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "Realms": {
+        "song": "Realms",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "单曲精选集",
+        "bpm": "",
+        "composer": "Hinkik & AHimitsu",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "4",
+                "difficulty": "4.0",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "10",
+                "difficulty": "10.0",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "14",
+                "difficulty": "14.0",
+                "combo": "",
+                "charter": ""
+            }
+        }
     }
 }
