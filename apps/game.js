@@ -82,10 +82,10 @@ export class phirks extends plugin {
 
             if (gamelist[e.group_id]) {
                 if (gamelist[e.group_id] != songs_info.song) {
-                    break
+                    return true
                 }
             } else {
-                break
+                return true
             }
             switch (fnc[randbt(fnc.length - 1)]) {
                 case 0: {
