@@ -40,6 +40,9 @@ export class phirks extends plugin {
 
     /**猜曲绘 */
     async start(e) {
+        if (gamelist[e.group_id]) {
+            e.reply("请不要重复发起哦！", true)
+        }
         var num = randbt(songsname.length - 2)
         var songs_info = get.info[songsname[num]]
         if (typeof songs_info.illustration_big == 'undefined') {
@@ -112,9 +115,9 @@ export class phirks extends plugin {
             if (song[0]) {
                 song = song[0]
                 if (gamelist[e.group_id] == song) {
+                    e.reply(await get.getsongsinfo(e, gamelist[e.group_id]))
                     delete (gamelist[e.group_id])
                     await e.reply('恭喜你，答对啦！ヾ(≧▽≦*)o', true)
-                    await e.reply(await get.getsongsinfo(e, gamelist[e.group_id]))
                 } else {
                     e.reply(`不是 ${song} 哦！`, true, { recallMsg: 5 })
                 }
@@ -126,9 +129,9 @@ export class phirks extends plugin {
 
     async ans(e) {
         if (gamelist[e.group_id]) {
+            e.reply(await get.getsongsinfo(e, gamelist[e.group_id]))
             delete (gamelist[e.group_id])
             await e.reply('好吧，下面开始公布答案。', true)
-            await e.reply(await get.getsongsinfo(e, gamelist[e.group_id]))
             return true
         }
         return false
