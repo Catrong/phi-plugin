@@ -19,19 +19,19 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(b19|rks)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b19|rks)$`,
                     fnc: 'b19'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)best(\\s*)[1-9]?[1-9]?$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[1-9]?$`,
                     fnc: 'bestn'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(score|单曲成绩).*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(score|单曲成绩).*$`,
                     fnc: 'singlescore'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(suggest|推分(建议)?)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(suggest|推分(建议)?)$`,
                     fnc: 'suggest'
                 }
 
@@ -47,7 +47,7 @@ export class phib19 extends plugin {
             return true
         }
 
-        e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\")
+        e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
         var Record = save.gameRecord
         var phi = {}
         var b19_list = []
@@ -209,7 +209,7 @@ export class phib19 extends plugin {
 
 
 
-        if (! (await get.songsnick(song))) {
+        if (!(await get.songsnick(song))) {
             e.reply(`未找到 ${song} 的有关信息哦！`)
             return true
         }
@@ -363,7 +363,7 @@ function cmp() {
 
 function cmpsugg() {
     return function (a, b) {
-        return Number(a.suggest.replace("%",'')) - Number(b.suggest.replace("%",''))
+        return Number(a.suggest.replace("%", '')) - Number(b.suggest.replace("%", ''))
     }
 }
 
