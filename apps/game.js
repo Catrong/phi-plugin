@@ -42,6 +42,7 @@ export class phirks extends plugin {
     async start(e) {
         if (gamelist[e.group_id]) {
             e.reply("请不要重复发起哦！", true)
+            return true
         }
         var num = randbt(songsname.length - 2)
         var songs_info = get.info[songsname[num]]
@@ -71,12 +72,12 @@ export class phirks extends plugin {
          * 3: 显示区域位置
          */
         var fnc = [0, 1, 2, 3]
+        logger.info(data)
 
         e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 #答案 结束游戏`)
         await e.reply(await get.getguess(e, data))
 
         for (var i = 0; i < 30; ++i) {
-            console.info(data)
 
             await timeout(Config.getDefOrConfig('config', 'GuessTipCd') * 1000)
 
