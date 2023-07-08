@@ -226,7 +226,7 @@ async function gave_a_tip(known_info, remain_info, songs_info, fnc, e, data) {
         if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
         if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
         if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
-        if (!remain_info.length) fnc.splice(fnc.indexOf(1), 2)
+        if (!remain_info.length) fnc.splice(fnc.indexOf(2), 1)
         return remsg
     } else {
         console.error('err')
