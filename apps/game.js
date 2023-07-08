@@ -91,25 +91,29 @@ export class phirks extends plugin {
             switch (fnc[randbt(fnc.length - 1)]) {
                 case 0: {
                     area_increase(100, data, fnc)
-                    await e.reply(await get.getguess(e, data))
                     break
                 }
                 case 1: {
                     blur_down(2, data, fnc)
-                    await e.reply(await get.getguess(e, data))
                     break
                 }
                 case 2: {
-                    await e.reply(await gave_a_tip(known_info, remain_info, songs_info, fnc, e, data))
+                    gave_a_tip(known_info, remain_info, songs_info, fnc)
                     break
                 }
                 case 3: {
                     data.style = 1
                     fnc.splice(fnc.indexOf(3), 1)
-                    await e.reply(await get.getguess(e, data))
                     break
                 }
             }
+            var remsg = [await get.getguess(e, data)]
+            if (known_info.chapter) remsg.push(`\n该曲目隶属于 ${known_info.chapter}`)
+            if (known_info.bpm) remsg.push(`\n该曲目的 BPM 值为 ${known_info.bpm}`)
+            if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
+            if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
+            if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
+            e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
         }
 
         var t = gamelist[e.group_id]
@@ -127,15 +131,16 @@ export class phirks extends plugin {
             var ans = e.msg.replace(/[#/](我)?猜(\s*)/g, '')
             var song = get.songsnick(ans)
             if (song[0]) {
-                song = song[0]
-                if (gamelist[e.group_id] == song) {
-                    var t = gamelist[e.group_id]
-                    delete (gamelist[e.group_id])
-                    await e.reply('恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
-                    await e.reply(await get.getsongsinfo(e, t))
-                } else {
-                    e.reply(`不是 ${song} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                for (var i in song) {
+                    if (gamelist[e.group_id] == song[i]) {
+                        var t = gamelist[e.group_id]
+                        delete (gamelist[e.group_id])
+                        await e.reply('恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
+                        await e.reply(await get.getsongsinfo(e, t))
+                        return true
+                    }
                 }
+                e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
                 return true
             }
         }
@@ -215,23 +220,15 @@ function blur_down(size, data, fnc) {
  * @param {object} known_info 
  * @param {Array} remain_info 
  * @param {object} songs_info 
- * @param {Array} fnc 
- * @returns 消息数组
+ * @param {Array} fnc
  */
-async function gave_a_tip(known_info, remain_info, songs_info, fnc, e, data) {
+function gave_a_tip(known_info, remain_info, songs_info, fnc) {
     if (remain_info.length) {
         var t = randbt(remain_info.length - 1)
         var aim = remain_info[t]
         remain_info.splice(t, 1)
         known_info[aim] = songs_info[aim]
-        var remsg = [await get.getguess(e, data)]
-        if (known_info.chapter) remsg.push(`\n该曲目隶属于 ${known_info.chapter}`)
-        if (known_info.bpm) remsg.push(`\n该曲目的 BPM 值为 ${known_info.bpm}`)
-        if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
-        if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
-        if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
         if (!remain_info.length) fnc.splice(fnc.indexOf(2), 1)
-        return remsg
     } else {
         console.error('err')
     }
