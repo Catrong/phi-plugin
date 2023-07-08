@@ -72,7 +72,7 @@ export class phirks extends plugin {
          */
         var fnc = [0, 1, 2, 3]
 
-        e.reply(`下面开始进行猜曲绘哦！回答请发 #猜... ，每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 #答案 结束游戏`)
+        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 #答案 结束游戏`)
         await e.reply(await get.getguess(e, data))
 
         for (var i = 0; i < 30; ++i) {
