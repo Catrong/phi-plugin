@@ -75,7 +75,7 @@ export class phirks extends plugin {
         logger.info(data)
 
         e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 #答案 结束游戏`)
-        await e.reply(await get.getguess(e, data))
+        await e.reply(await get.getguess(e, data), false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
 
         for (var i = 0; i < 30; ++i) {
 
