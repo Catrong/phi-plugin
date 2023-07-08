@@ -80,7 +80,13 @@ export class phirks extends plugin {
 
             await timeout(Config.getDefOrConfig('config', 'GuessTipCd') * 1000)
 
-            if (!gamelist[e.group_id]) break
+            if (gamelist[e.group_id]) {
+                if (gamelist[e.group_id] != songs_info.song) {
+                    break
+                }
+            } else {
+                break
+            }
             switch (fnc[randbt(fnc.length - 1)]) {
                 case 0: {
                     area_increase(100, data, fnc)
@@ -212,7 +218,7 @@ async function gave_a_tip(known_info, remain_info, songs_info, fnc, e, data) {
         if (known_info.chapter) remsg.push(`\n该曲目隶属于 ${known_info.chapter}`)
         if (known_info.bpm) remsg.push(`\n该曲目的 BPM 值为 ${known_info.bpm}`)
         if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
-        if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.lenght}`)
+        if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
         if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
         if (!remain_info.length) fnc.splice(fnc.indexOf(1), 2)
         return remsg
