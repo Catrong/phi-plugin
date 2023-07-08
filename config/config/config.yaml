@@ -21,4 +21,7 @@ cmdhead: "phi"
 
 #  ************ 【娱乐设置】 ************* 
 #  猜曲绘提示时间间隔(s)
-GuessTipCd: 15
+GuessTipCd: 5
+
+#  猜曲绘是否撤回
+GuessTipRecall: false

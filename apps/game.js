@@ -75,7 +75,11 @@ export class phirks extends plugin {
         logger.info(data)
 
         e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 #答案 结束游戏`)
-        await e.reply(await get.getguess(e, data), false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
+
+        if (Config.getDefOrConfig('config', 'GuessTipRecall'))
+            e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') + 1 })
+        else
+            e.reply(remsg)
 
         for (var i = 0; i < 30; ++i) {
 
@@ -113,7 +117,11 @@ export class phirks extends plugin {
             if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
             if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
             if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
-            e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
+            if (Config.getDefOrConfig('config', 'GuessTipRecall'))
+                e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') + 1 })
+            else
+                e.reply(remsg)
+
         }
 
         var t = gamelist[e.group_id]

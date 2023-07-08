@@ -58,6 +58,12 @@ export function supportGuoba() {
                     component: 'Switch',
                 },
                 {
+                    field: 'GuessTipRecall',
+                    label: '猜曲绘撤回',
+                    bottomHelpMessage: '是否在下一条提示发出的时候撤回上一条',
+                    component: 'Switch',
+                },
+                {
                     field: 'cmdhead',
                     label: '命令头',
                     bottomHelpMessage: '命令正则匹配开头，不包含#/，支持正则表达式，\'\\\' 请双写( \\s --> \\\\s )，最外层可以不加括号',
@@ -89,7 +95,8 @@ export function supportGuoba() {
                     WordB19Img: Config.getDefOrConfig('config', 'WordB19Img'),
                     WordSuggImg: Config.getDefOrConfig('config', 'WordSuggImg'),
                     cmdhead: Config.getDefOrConfig('config', 'cmdhead'),
-                    GuessTipCd: Config.getDefOrConfig('config', 'GuessTipCd')
+                    GuessTipCd: Config.getDefOrConfig('config', 'GuessTipCd'),
+                    GuessTipRecall: Config.getDefOrConfig('config', 'GuessTipRecall'),
                 }
                 return config
             },
