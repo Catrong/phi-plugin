@@ -111,10 +111,11 @@ export class phirks extends plugin {
             }
         }
 
-        e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
-
-        await e.reply(await get.getsongsinfo(e, gamelist[e.group_id]))
+        var t = gamelist[e.group_id]
         delete (gamelist[e.group_id])
+        await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
+
+        await e.reply(await get.getsongsinfo(e, t))
 
         return true
     }
@@ -127,9 +128,10 @@ export class phirks extends plugin {
             if (song[0]) {
                 song = song[0]
                 if (gamelist[e.group_id] == song) {
-                    e.reply(await get.getsongsinfo(e, gamelist[e.group_id]))
+                    var t = gamelist[e.group_id]
                     delete (gamelist[e.group_id])
                     await e.reply('恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
+                    await e.reply(await get.getsongsinfo(e, t))
                 } else {
                     e.reply(`不是 ${song} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
                 }
@@ -141,9 +143,10 @@ export class phirks extends plugin {
 
     async ans(e) {
         if (gamelist[e.group_id]) {
-            e.reply(await get.getsongsinfo(e, gamelist[e.group_id]))
+            var t = gamelist[e.group_id]
             delete (gamelist[e.group_id])
             await e.reply('好吧，下面开始公布答案。', true)
+            await e.reply(await get.getsongsinfo(e, t))
             return true
         }
         return false
