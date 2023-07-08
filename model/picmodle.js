@@ -80,6 +80,15 @@ class atlas {
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
         })
     }
+
+    async guess(e, data) {
+        return await puppeteer.render('guess/guess', {
+            ...data
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+        })
+    }
 }
 //20 - 30
 //39 - 19    

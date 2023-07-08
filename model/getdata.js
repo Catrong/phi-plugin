@@ -155,10 +155,15 @@ class get {
     async getsingle(e, data) {
         return await atlas.score(e, data)
     }
-    
+
     /**获取曲绘图鉴 */
     async getillatlas(e, data) {
         return await atlas.ill(e, data)
+    }
+
+    /**获取猜曲绘图片 */
+    async getguess(e, data) {
+        return await atlas.guess(e, data)
     }
 
     /**获取曲绘，返回地址，原名

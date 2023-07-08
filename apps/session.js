@@ -17,15 +17,15 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(绑定|bind).*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(绑定|bind).*$`,
                     fnc: 'bind'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(更新存档|update)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(更新存档|update)$`,
                     fnc: 'update'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(解绑|unbind)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(解绑|unbind)$`,
                     fnc: 'unbind'
                 }
             ]
@@ -36,14 +36,14 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            await e.reply([segment.at(e.user_id), `\n`, "请注意保护好自己的sessionToken哦！"])
+            await e.reply([segment.at(e.user_id), `\n`, "请注意保护好自己的sessionToken哦！"], false, { recallMsg: 10 })
             // return true
         }
 
         var sessionToken = e.msg.replace(/(#|\/)(.*)(绑定|bind)(\s*)/g, '')
         sessionToken.replace(" ", '')
 
-        e.reply("正在绑定，请稍等一下哦！\n >_<")
+        e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
 
         if (await this.build(e, sessionToken))
             return true
@@ -58,7 +58,7 @@ export class phisstk extends plugin {
             e.reply('没有找到你的存档哦！请先 ⌈#phi bind⌋ 绑定sessionToken！', true)
             return true
         }
-        e.reply("正在更新，请稍等一下哦！\n >_<", true)
+        e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
 
         if (await this.build(e, User.session))
             return true
