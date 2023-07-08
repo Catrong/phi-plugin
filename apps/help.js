@@ -31,8 +31,9 @@ export class phirks extends plugin {
             `⌈#${Config.getDefOrConfig('config', 'cmdhead')} b19⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} rks⌋ 获取b19图\n` +
             `⌈#${Config.getDefOrConfig('config', 'cmdhead')} score⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 单曲成绩⌋ 获取单曲成绩\n` +
             `⌈#${Config.getDefOrConfig('config', 'cmdhead')} suggest⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 推分⌋ 获取推分建议\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} 曲 xx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} song xx⌋获取曲目图鉴\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} ill xxx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 曲绘 xxx⌋ 查看曲目曲绘`)
+            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} 曲 xx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} song xx⌋ 获取曲目图鉴\n` +
+            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} ill xxx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 曲绘 xxx⌋ 查看曲目曲绘\n` +
+            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} guess⌋ ⌈#猜⌋ ⌈#答案⌋ 开始猜曲绘`)
         return true
     }
 }

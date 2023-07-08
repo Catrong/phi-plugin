@@ -94,8 +94,8 @@ class get {
 
 
     /**匹配歌曲名称，根据参数返回原曲名称 */
-    async songsnick(mic) {
-        let nickconfig = await Config.getDefOrConfig('nickconfig', mic)
+    songsnick(mic) {
+        let nickconfig = Config.getDefOrConfig('nickconfig', mic)
         var all = []
 
         if (this.info[mic]) all.push(mic)
@@ -131,8 +131,8 @@ class get {
         this.setData('nickconfig.yaml', nickconfig, this.configPath)
     }
 
-    /**获取歌曲介绍，曲名为原名 */
-    getsongsinfo(e, name, data) {
+    /**获取歌曲图鉴，曲名为原名 */
+    getsongsinfo(e, name, data = undefined) {
 
         if (!data) {
             data = this.info[name]
@@ -188,7 +188,7 @@ class get {
     }
 
     /**
-     * 
+     * 通过id获得头像文件名称
      * @param {string} id 
      * @returns file name
      */
@@ -196,8 +196,8 @@ class get {
         return this.avatarid[id]
     }
 
-    /**根据曲目id获取曲目信息
-     * 
+    /**
+     * 根据曲目id获取曲目信息
      * @param {String} id 曲目id 
      * @param {true|false} info 是否返回info
      * @returnsthis.info
@@ -209,8 +209,8 @@ class get {
             return this.songsid[id]
     }
 
-    /**计算等效rks
-     * 
+    /**
+     * 计算等效rks
      * @param {number} acc 
      * @param {number} difficulty 
      * @returns 

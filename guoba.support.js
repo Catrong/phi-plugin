@@ -67,6 +67,18 @@ export function supportGuoba() {
                         placeholder: '请输入命令头',
                     },
                 },
+                {
+                    field: 'GuessTipCd',
+                    label: '猜曲绘提示间隔时间',
+                    bottomHelpMessage: '单位：秒',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 0,
+                        max: 120,
+                        placeholder: '请输入时间',
+                    },
+                },
             ],
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {
@@ -77,6 +89,7 @@ export function supportGuoba() {
                     WordB19Img: Config.getDefOrConfig('config', 'WordB19Img'),
                     WordSuggImg: Config.getDefOrConfig('config', 'WordSuggImg'),
                     cmdhead: Config.getDefOrConfig('config', 'cmdhead'),
+                    GuessTipCd: Config.getDefOrConfig('config', 'GuessTipCd')
                 }
                 return config
             },
