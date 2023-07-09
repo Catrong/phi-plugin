@@ -93,7 +93,11 @@ class get {
 
 
 
-    /**匹配歌曲名称，根据参数返回原曲名称 */
+    /**
+     * 匹配歌曲名称，根据参数返回原曲名称
+     * @param {string} mic 别名
+     * @returns 原曲名称
+     */
     songsnick(mic) {
         let nickconfig = Config.getDefOrConfig('nickconfig', mic)
         var all = []
@@ -119,16 +123,7 @@ class get {
 
     /**设置别名 原名, 别名 */
     async setnick(mic, nick) {
-        let nickconfig = await this.getData('nickconfig.yaml', this.configPath)
-        if (!nickconfig) {
-            nickconfig = {}
-        }
-        if (!nickconfig[nick]) {
-            nickconfig[nick] = []
-        }
-        nickconfig[nick].push(mic)
-
-        this.setData('nickconfig.yaml', nickconfig, this.configPath)
+        Config.modifyarr('nickconfig', nick, mic, 'add')
     }
 
     /**获取歌曲图鉴，曲名为原名 */

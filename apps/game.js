@@ -147,7 +147,11 @@ export class phirks extends plugin {
                         return true
                     }
                 }
-                e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                if(song[1]) {
+                    e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                } else {
+                    e.reply(`不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                }
                 return true
             }
         }
