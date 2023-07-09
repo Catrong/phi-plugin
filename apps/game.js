@@ -12,7 +12,7 @@ for (let i in get.info) {
 
 var gamelist = {}
 
-export class phirks extends plugin {
+export class phigame extends plugin {
     constructor() {
         super({
             name: 'phi-game',

@@ -1,10 +1,7 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
-import get from '../model/getdata.js'
 
-await get.init()
-
-export class phirks extends plugin {
+export class phihelp extends plugin {
     constructor() {
         super({
             name: 'phi-help',
