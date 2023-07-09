@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import config from '../../lib/config/config.js'
 
 
 

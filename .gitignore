@@ -1,5 +1,6 @@
 /data/*
-/config/config/*
+/config/config/config.yaml
+/config/config/nickconfig.yaml
 /model/233.js
 /lib/tem.js
 /lib/2333.json
