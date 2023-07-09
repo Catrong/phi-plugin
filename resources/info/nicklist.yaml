@@ -16,6 +16,8 @@ EXS:
   - Winter↑cube↓
 冬方: 
   - Winter↑cube↓
+冬方块: 
+  - Winter↑cube↓
 Cipher: 
   - "Cipher: /2&//<|0"
 混乱: 
@@ -378,7 +380,7 @@ mope:
 df:
   - Distorted Fate
 DF:
-  - Distorted Fate
+  - Distorted Fated
 削除:
   - Distorted Fate
 消除:
@@ -408,6 +410,8 @@ now is the time, do it:
 现在是时间了，干他:
   - Now Is The Time, Do It
 现在是时间了，干它:
+  - Now Is The Time, Do It
+是时候了，干他:
   - Now Is The Time, Do It
 Bougainvillea:
   - Bougainvillea
@@ -449,3 +453,9 @@ Final Step:
   - Ad astra per aspera
 华灯爱:
   - 華灯爱
+幽灵:
+  - Doppelganger
+疾病:
+  - Disorder
+偶像鸠:
+  - Believe Light

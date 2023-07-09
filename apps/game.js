@@ -116,6 +116,7 @@ export class phigame extends plugin {
             if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
             if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
             if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
+            if (known_info.chart) remsg.push(known_info.chart)
             if (Config.getDefOrConfig('config', 'GuessTipRecall'))
                 e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
             else
@@ -147,7 +148,7 @@ export class phigame extends plugin {
                         return true
                     }
                 }
-                if(song[1]) {
+                if (song[1]) {
                     e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
                 } else {
                     e.reply(`不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
@@ -240,6 +241,35 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
         remain_info.splice(t, 1)
         known_info[aim] = songs_info[aim]
         if (!remain_info.length) fnc.splice(fnc.indexOf(2), 1)
+
+        if (aim == 'chart') {
+            var t = ['EZ', 'HD', 'IN', 'AT']
+            var t1
+            if (songs_info[aim]['AT']) {
+                t1 = t[randbt(3)]
+            } else {
+                t1 = t[randbt(2)]
+            }
+            known_info[aim] = `\n该曲目的 ${t1} 谱面的`
+            switch (randbt(2)) {
+                case 0: {
+                    /**定数 */
+                    known_info[aim] += `定数为 ${songs_info[aim][t1]['difficulty']}`
+                    break
+                }
+                case 1: {
+                    /**物量 */
+                    known_info[aim] += `物量为 ${songs_info[aim][t1]['combo']}`
+                    break
+
+                }
+                case 2: {
+                    /**谱师 */
+                    known_info[aim] += `谱师为 ${songs_info[aim][t1]['charter']}`
+                    break
+                }
+            }
+        }
     } else {
         console.error('err')
     }
