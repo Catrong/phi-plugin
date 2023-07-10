@@ -194,6 +194,7 @@ function area_increase(size, data, fnc) {
         } else {
             data.height += size
             data.y = Math.max(0, data.y - size / 2)
+            data.y = Math.min(data.y, 1080 - data.height)
         }
     }
     if (data.width < 2048) {
@@ -204,6 +205,7 @@ function area_increase(size, data, fnc) {
         } else {
             data.width += size
             data.x = Math.max(0, data.x - size / 2)
+            data.x = Math.min(data.x, 2048 - data.width)
         }
     } else {
         console.error('err')
