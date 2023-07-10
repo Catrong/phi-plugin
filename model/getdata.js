@@ -32,7 +32,7 @@ class get {
     }
 
     async init() {
-        this.info = await this.getData('infolist.json', this.infoPath)
+        this.info = { ...await this.getData('infolist.json', this.infoPath), ...await this.getData('spinfo.json', this.infoPath) }
         this.songsid = await this.getData('songsid.yaml', this.infoPath)
         this.songnick = await this.getData('nicklist.yaml', this.infoPath)
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)

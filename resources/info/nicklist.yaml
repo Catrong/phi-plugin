@@ -124,8 +124,6 @@ IEO:
   - 萤火虫の怨
 匿名信: 
   - 万吨匿名信
-搓碟: 
-  - Drop It from SOUL NOTES
 撕裂者: 
   - RIPPER
 失语症: 
@@ -231,6 +229,8 @@ BGA:
 火球: 
   - Cthugha
 火神: 
+  - Cthugha
+古神:
   - Cthugha
 克图格亚: 
   - With You
@@ -345,9 +345,17 @@ Rand:
   - 今年も「雪降り、メリクリ」目指して顽张ります！！
 future mind: 
   - Future Mind
-Dash from SOUL NOTES:
+Dash:
   - Dash from SOUL NOTES
-Drop It from SOUL NOTES:
+dash:
+  - Dash from SOUL NOTES
+Drop It:
+  - Drop It from SOUL NOTES
+drop it:
+  - Drop It from SOUL NOTES
+搓碟: 
+  - Drop It from SOUL NOTES
+打碟: 
   - Drop It from SOUL NOTES
 Träne:
   - Träne
@@ -448,7 +456,7 @@ cep:
 final step:
   - Final Step!
 Final Step:
-  - Final Step
+  - Final Step!
 广告:
   - Ad astra per aspera
 华灯爱:
