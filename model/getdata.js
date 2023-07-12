@@ -166,11 +166,16 @@ class get {
      * @param {boolean} [isBig=true] 是否为大图
     */
     getill(name, isBig = true) {
+        var ans
         if (isBig) {
-            return this.info[name].illustration_big
+            ans = this.info[name].illustration_big
         } else {
-            return this.info[name].illustration
+            ans = this.info[name].illustration
         }
+        if(!ans) {
+            ans = `${this.imgPath}/phigros.png`
+        }
+        return ans
     }
 
     /**获取QQ号对应的存档文件
