@@ -15,8 +15,8 @@ var gamelist = {}
 export class phigame extends plugin {
     constructor() {
         super({
-            name: 'phi-game',
-            dsc: 'phi-plugin game',
+            name: 'phi-game 猜曲绘',
+            dsc: 'phi-plugin 猜曲绘',
             event: 'message',
             priority: 1000,
             rule: [

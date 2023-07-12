@@ -55,7 +55,7 @@ export class phisstk extends plugin {
     async update(e) {
         var User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
         if (!User) {
-            e.reply('没有找到你的存档哦！请先 ⌈#phi bind⌋ 绑定sessionToken！', true)
+            e.reply(`没有找到你的存档哦！请先 ⌈#${Config.getDefOrConfig('config','cmdhead')} bind⌋ 绑定sessionToken！`, true)
             return true
         }
         e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
