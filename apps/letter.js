@@ -99,7 +99,7 @@ export class philetter extends plugin {
         var matchResult = msg.match(regex)
         if (matchResult) {
             //匹配成功
-            letter = matchResult[1]
+            letter = matchResult[2]
             reverse_letter = reverseletter(letter)
             var included = false
             for (var i in gamelist[e.group_id]) {
