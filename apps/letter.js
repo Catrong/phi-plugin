@@ -92,7 +92,7 @@ export class philetter extends plugin {
         }
 
         var msg = e.msg
-        var regex = /^[#/]出([a-zA-Z])$/
+        var regex = /^[#/](出|开)([a-zA-Z])$/
         var letter = ''
         var reverse_letter = ''
         var output = ''
