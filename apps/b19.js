@@ -121,7 +121,7 @@ export class phib19 extends plugin {
 
         /**频道模式 */
         if (Config.getDefOrConfig('config', 'isGuild')) {
-            if (e.is_Group) {
+            if (e.isGroup) {
                 e.reply("频道模式中此功能禁止在频道中使用哦", true)
                 return true
             }
@@ -328,7 +328,7 @@ export class phib19 extends plugin {
 
         /**频道模式 */
         if (Config.getDefOrConfig('config', 'isGuild')) {
-            if (e.is_Group) {
+            if (e.isGroup) {
                 e.reply("频道模式中此功能禁止在频道中使用哦", true)
                 return true
             }
