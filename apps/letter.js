@@ -233,7 +233,7 @@ export class philetter extends plugin {
 
 
         } else {
-            e.reply("现在还没有进行的出你字母捏，赶快输入'#phi letter'或'#phi 出你字母'开始新的一局吧！", true)
+            e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
         }
 
 

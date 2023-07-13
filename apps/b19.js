@@ -43,7 +43,7 @@ export class phib19 extends plugin {
     async b19(e) {
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply("你还没有绑定sessionToken哦！发送#phi bind xxxx进行绑定哦！", true)
+            e.reply(`你还没有绑定sessionToken哦！发送 #${Config.getDefOrConfig('config', 'cmdhead')} bind xxxx 进行绑定哦！`, true)
             return true
         }
 
@@ -129,7 +129,7 @@ export class phib19 extends plugin {
 
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply("你还没有绑定sessionToken哦！发送#phi bind xxxx进行绑定哦！", true)
+            e.reply(`你还没有绑定sessionToken哦！发送 #${Config.getDefOrConfig('config', 'cmdhead')} bind xxxx进行绑定哦！`, true)
             return true
         }
 
@@ -237,7 +237,7 @@ export class phib19 extends plugin {
     async singlescore(e) {
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply("你还没有绑定sessionToken哦！发送#phi bind xxxx进行绑定哦！", true)
+            e.reply(`你还没有绑定sessionToken哦！发送 #${Config.getDefOrConfig('config', 'cmdhead')} bind xxxx 进行绑定哦！`, true)
             return true
         }
         var song = e.msg.replace(/[#/](.*)(score|单曲成绩)(\s*)/g, '')
@@ -281,7 +281,7 @@ export class phib19 extends plugin {
         }
 
         if (!ans) {
-            await e.reply("我不知道你这首歌的成绩哦！可以试试⌈#phi update⌋哦！")
+            await e.reply(`我不知道你这首歌的成绩哦！可以试试⌈#${Config.getDefOrConfig('config', 'cmdhead')} update⌋哦！`)
             return false
         }
 
@@ -336,7 +336,7 @@ export class phib19 extends plugin {
 
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply("你还没有绑定sessionToken哦！发送#phi bind xxxx进行绑定哦！", true)
+            e.reply(`你还没有绑定sessionToken哦！发送 #${Config.getDefOrConfig('config', 'cmdhead')} bind xxxx 进行绑定哦！`, true)
             return true
         }
 
