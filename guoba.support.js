@@ -46,6 +46,12 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'isGuild',
+                    label: '频道模式',
+                    bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息，所有@改为回复（频道里回复相当于@）',
+                    component: 'Switch',
+                },
+                {
                     field: 'WordB19Img',
                     label: '文字版B19曲绘图片',
                     bottomHelpMessage: '关闭可大幅度提升发送速度',
@@ -97,11 +103,16 @@ export function supportGuoba() {
                     cmdhead: Config.getDefOrConfig('config', 'cmdhead'),
                     GuessTipCd: Config.getDefOrConfig('config', 'GuessTipCd'),
                     GuessTipRecall: Config.getDefOrConfig('config', 'GuessTipRecall'),
+                    isGuild: Config.getDefOrConfig('config', 'isGuild'),
                 }
                 return config
             },
             // 设置配置的方法（前端点确定后调用的方法）
             setConfigData(data, { Result }) {
+                if (data.isGuild) {
+                    data.WordB19Img = false
+                    data.WordSuggImg = false
+                }
                 for (let [keyPath, value] of Object.entries(data)) {
                     Config.modify('config', keyPath, value)
                 }

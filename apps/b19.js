@@ -104,8 +104,13 @@ export class phib19 extends plugin {
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))]
         }
 
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            /**频道模式变'@'为回复 */
+            await e.reply(await get.getb19(e, data), true)
+        } else {
 
-        await e.reply([segment.at(e.user_id), `\n`, await get.getb19(e, data)])
+            await e.reply([segment.at(e.user_id), `\n`, await get.getb19(e, data)])
+        }
 
 
 
@@ -113,6 +118,15 @@ export class phib19 extends plugin {
 
     /**获取bestn文字版 */
     async bestn(e) {
+
+        /**频道模式 */
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            if (e.is_Group) {
+                e.reply("频道模式中此功能禁止在频道中使用哦", true)
+                return true
+            }
+        }
+
         var save = await get.getsave(e.user_id)
         if (!save.session) {
             e.reply("你还没有绑定sessionToken哦！发送#phi bind xxxx进行绑定哦！", true)
@@ -133,7 +147,6 @@ export class phib19 extends plugin {
 
         var Record = save.gameRecord
         var phi = {}
-        var Remsg = []
 
         phi.rks = 0
 
@@ -155,47 +168,67 @@ export class phib19 extends plugin {
 
         phi.suggest = "已经到顶啦"
 
-        Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
-
         /**考虑屁股肉四舍五入原则 */
         var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
         console.info(minuprks)
 
-        if (phi.song) {
-            Remsg.push([`Phi:\n`,
-                segment.image(get.getill(phi.song, false)),
-                `\n${phi.song}\n` +
-                `${phi.rank} ${phi.difficulty}\n` +
-                `${phi.score} ${phi.pingji}\n` +
-                `${phi.acc.toFixed(2)} ${phi.rks.toFixed(2)}\n` +
-                `Rks+0.01所需acc: ${phi.suggest}`])
-        } else {
-            Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
-        }
-
         rkslist = rkslist.sort(cmp())
 
-        if (Config.getDefOrConfig('config', 'WordB19Img')) {
-            for (var i = 0; i < num && i < rkslist.length; ++i) {
-                Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n`,
-                segment.image(get.getill(rkslist[i].song, false)),
-                `\n` +
-                `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
-                `${rkslist[i].score} ${rkslist[i].pingji}\n` +
-                `${Number(rkslist[i].acc).toFixed(2)}% ${Number(rkslist[i].rks).toFixed(2)}\n` +
-                `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            /**频道模式 */
+
+            var Remsg = ''
+            Remsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
+            if (phi.song) {
+                Remsg += `\nPhi:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.pingji} ${phi.acc.toFixed(2)}% 等效${phi.rks.toFixed(2)} Rks+0.01所需acc: ${phi.suggest}%`
+            } else {
+                Remsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
-        } else {
+
             for (var i = 0; i < num && i < rkslist.length; ++i) {
-                Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n` +
+                Remsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> Lv ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`
+            }
+
+            await e.reply(Remsg, true)
+
+        } else {
+
+            var Remsg = []
+            Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
+            if (phi.song) {
+                Remsg.push([`Phi:\n`,
+                    segment.image(get.getill(phi.song, false)),
+                    `\n${phi.song}\n` +
+                    `${phi.rank} ${phi.difficulty}\n` +
+                    `${phi.score} ${phi.pingji}\n` +
+                    `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
+                    `Rks+0.01所需acc: ${phi.suggest}%`])
+            } else {
+                Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
+            }
+
+            if (Config.getDefOrConfig('config', 'WordB19Img')) {
+                for (var i = 0; i < num && i < rkslist.length; ++i) {
+                    Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n`,
+                    segment.image(get.getill(rkslist[i].song, false)),
+                    `\n` +
                     `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
                     `${rkslist[i].score} ${rkslist[i].pingji}\n` +
                     `${Number(rkslist[i].acc).toFixed(2)}% ${Number(rkslist[i].rks).toFixed(2)}\n` +
-                    `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
+                    `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`])
+                }
+            } else {
+                for (var i = 0; i < num && i < rkslist.length; ++i) {
+                    Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n` +
+                        `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
+                        `${rkslist[i].score} ${rkslist[i].pingji}\n` +
+                        `${Number(rkslist[i].acc).toFixed(2)}% ${Number(rkslist[i].rks).toFixed(2)}\n` +
+                        `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`])
+                }
             }
+            await e.reply(await common.makeForwardMsg(e, Remsg))
         }
 
-        await e.reply(await common.makeForwardMsg(e, Remsg))
 
 
     }
@@ -280,13 +313,26 @@ export class phib19 extends plugin {
             }
         }
 
-        await e.reply(await get.getsingle(e, data))
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            /**频道模式变'@'为回复 */
+            await e.reply(await get.getsingle(e, data), true)
+        } else {
+            await e.reply([segment.at(e.user_id), `\n`, await get.getsingle(e, data)])
+        }
         return true
 
     }
 
     /**推分建议，建议的是RKS+0.01的所需值 */
     async suggest(e) {
+
+        /**频道模式 */
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            if (e.is_Group) {
+                e.reply("频道模式中此功能禁止在频道中使用哦", true)
+                return true
+            }
+        }
 
         var save = await get.getsave(e.user_id)
         if (!save.session) {
@@ -329,30 +375,41 @@ export class phib19 extends plugin {
 
         suggestlist = suggestlist.sort(cmpsugg())
 
-        var Remsg = []
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            /**频道模式 */
+            var Remsg = ''
 
-        /**判断是否发图 */
-        if (Config.getDefOrConfig('config', 'WordSuggImg')) {
             for (var i = 0; i < suggestlist.length; ++i) {
-                Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n`,
-                segment.image(get.getill(suggestlist[i].song, false)),
-                `\n` +
-                `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
-                `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
-                `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
-                `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
+                Remsg += `#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> Lv ${suggestlist[i].difficulty} ${suggestlist[i].score} ${suggestlist[i].pingji} ${suggestlist[i].acc}% 等效${suggestlist[i].rks} Rks+0.01所需acc: ${suggestlist[i].suggest}`
             }
+            await e.reply(Remsg, true)
+
         } else {
-            for (var i = 0; i < suggestlist.length; ++i) {
-                Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n` +
+            var Remsg = []
+
+            /**判断是否发图 */
+            if (Config.getDefOrConfig('config', 'WordSuggImg')) {
+                for (var i = 0; i < suggestlist.length; ++i) {
+                    Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n`,
+                    segment.image(get.getill(suggestlist[i].song, false)),
+                    `\n` +
                     `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
                     `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
                     `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
                     `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
+                }
+            } else {
+                for (var i = 0; i < suggestlist.length; ++i) {
+                    Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n` +
+                        `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
+                        `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
+                        `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
+                        `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
+                }
             }
-        }
 
-        await e.reply(await common.makeForwardMsg(e, Remsg))
+            await e.reply(await common.makeForwardMsg(e, Remsg))
+        }
     }
 
 }

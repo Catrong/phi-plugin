@@ -36,8 +36,15 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            await e.reply([segment.at(e.user_id), `\n`, "请注意保护好自己的sessionToken哦！"], false, { recallMsg: 10 })
-            // return true
+            if (Config.getDefOrConfig('config', 'isGuild')) {
+                /**频道模式变'@'为回复 */
+                await e.reply("请注意保护好自己的sessionToken哦！", true, { recallMsg: 10 })
+
+            } else {
+
+                await e.reply([segment.at(e.user_id), `\n`, "请注意保护好自己的sessionToken哦！"], false, { recallMsg: 10 })
+                // return true
+            }
         }
 
         var sessionToken = e.msg.replace(/(#|\/)(.*)(绑定|bind)(\s*)/g, '')
@@ -45,17 +52,22 @@ export class phisstk extends plugin {
 
         e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
 
-        if (await this.build(e, sessionToken))
-            return true
+        if (await this.build(e, sessionToken)) return true
 
-        await e.reply([segment.at(e.user_id), `\n`, "绑定成功！"])
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+
+            /**频道模式变'@'为回复 */
+            await e.reply("绑定成功！", true)
+        } else {
+            await e.reply([segment.at(e.user_id), `\n`, "绑定成功！"])
+        }
         return true
     }
 
     async update(e) {
         var User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
         if (!User) {
-            e.reply(`没有找到你的存档哦！请先 ⌈#${Config.getDefOrConfig('config','cmdhead')} bind⌋ 绑定sessionToken！`, true)
+            e.reply(`没有找到你的存档哦！请先 ⌈#${Config.getDefOrConfig('config', 'cmdhead')} bind⌋ 绑定sessionToken！`, true)
             return true
         }
         e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
