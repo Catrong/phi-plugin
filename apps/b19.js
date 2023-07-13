@@ -71,8 +71,10 @@ export class phib19 extends plugin {
             }
         }
 
-        phi.rks = phi.rks.toFixed(2)
-        phi.acc = phi.acc.toFixed(2)
+        if (phi.rks) {
+            phi.rks = phi.rks.toFixed(2)
+            phi.acc = phi.acc.toFixed(2)
+        }
 
 
         /**考虑屁股肉四舍五入原则 */

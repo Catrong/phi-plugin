@@ -48,6 +48,7 @@ export class phigame extends plugin {
         var songs_info = get.info[songsname[num]]
         if (typeof songs_info.illustration_big == 'undefined') {
             logger.error(`[phi guess]抽取到无曲绘曲目 ${songs_info.song}`)
+            return true
         }
 
         gamelist[e.group_id] = songs_info.song
