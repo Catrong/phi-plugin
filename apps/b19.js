@@ -47,7 +47,9 @@ export class phib19 extends plugin {
             return true
         }
 
-        e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+        if (!Config.getDefOrConfig('config', 'isGuild'))
+            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            
         var Record = save.gameRecord
         var phi = {}
         var b19_list = []

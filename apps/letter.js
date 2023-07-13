@@ -35,7 +35,7 @@ export class philetter extends plugin {
                     fnc: 'start'
                 },
                 {
-                    reg: `^[#/]出[a-zA-Z]$`,
+                    reg: `^[#/](出|开)[a-zA-Z]$`,
                     fnc: 'reveal'
                 },
                 {
