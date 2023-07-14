@@ -188,7 +188,7 @@ export class phib19 extends plugin {
             }
 
             for (var i = 0; i < num && i < rkslist.length; ++i) {
-                Remsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> Lv ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`
+                Remsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`
             }
 
             await e.reply(Remsg, true)
@@ -380,9 +380,9 @@ export class phib19 extends plugin {
         if (Config.getDefOrConfig('config', 'isGuild')) {
             /**频道模式 */
             var Remsg = ''
-
+            Remsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             for (var i = 0; i < suggestlist.length; ++i) {
-                Remsg += `#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> Lv ${suggestlist[i].difficulty} ${suggestlist[i].score} ${suggestlist[i].pingji} ${suggestlist[i].acc}% 等效${suggestlist[i].rks} Rks+0.01所需acc: ${suggestlist[i].suggest}`
+                Remsg += `\n#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> ${suggestlist[i].difficulty} ${suggestlist[i].acc}% Rks+0.01所需acc: ${suggestlist[i].suggest}`
             }
             await e.reply(Remsg, true)
 
