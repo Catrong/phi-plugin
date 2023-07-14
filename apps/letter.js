@@ -35,11 +35,11 @@ export class philetter extends plugin {
                     fnc: 'start'
                 },
                 {
-                    reg: `^[#/](出|开)[a-zA-Z]$`,
+                    reg: `^[#/](出|开)(\\s*)[a-zA-Z]$`,
                     fnc: 'reveal'
                 },
                 {
-                    reg: `^[#/]第[1-6]个.*$`,
+                    reg: `^[#/]第(\\s*)[1-6](\\s*)(个|首)?.*$`,
                     fnc: 'guess'
                 },
                 {
@@ -91,15 +91,13 @@ export class philetter extends plugin {
             return true
         }
 
-        var msg = e.msg
-        var regex = /^[#/](出|开)([a-zA-Z])$/
-        var letter = ''
-        var reverse_letter = ''
-        var output = ''
-        var matchResult = msg.match(regex)
-        if (matchResult) {
+        var msg = e.msg.replace(/[#/](出|开)(\s*)/g, '')
+
+        if (msg) {
             //匹配成功
-            letter = matchResult[2]
+            var letter = msg
+            var reverse_letter = ''
+            var output = ''
             reverse_letter = reverseletter(letter)
             var included = false
             for (var i in gamelist[e.group_id]) {
@@ -151,9 +149,6 @@ export class philetter extends plugin {
             else {
                 e.reply("这几首曲目中不包含字母[" + letter + ']\n' + output, true)
             }
-        } else {
-            e.reply("匹配失败，请检查你的格式是否正确！", true)
-            return true
         }
         return true
     }
@@ -163,14 +158,12 @@ export class philetter extends plugin {
         //必须已经开始了一局
         if (gamelist[e.group_id]) {
             var msg = e.msg
-            var regex = /^[#/]第([1-6])个(.*)$/
+            var regex = /^[#/]第(\s*)([1-6])(\s*)(个|首)?(\s*)/
             var result = msg.match(regex);
-            var num = ''
-            var content = ''
-            var output = ''
             if (result) {
-                num = result[1]
-                content = result[2]
+                var output = ''
+                var num = Number(result[0].replace(/([#/]|第|个|首|\s)/g, ''))
+                var content = msg.replace(/^[#/]第(\s*)([1-6])(\s*)(个)?(\s*)/, '')
                 var songs = get.songsnick(content)//匹配到的歌曲
                 var standard_song = gamelist[e.group_id][num]
                 //已翻开的
@@ -221,23 +214,23 @@ export class philetter extends plugin {
 
                         }
                     }
-                    e.reply('第' + num + '首不是' + content + 'www，要不再想想捏？≧ ﹏ ≦', true)
+                    if (songs[1]) {
+                        e.reply('第' + num + '首不是' + content + 'www，要不再想想捏？≧ ﹏ ≦', true)
+                    } else {
+                        e.reply('第' + num + '首不是' + songs[0] + 'www，要不再想想捏？≧ ﹏ ≦', true)
+                    }
                     return true
                 }
-                e.reply('第' + num + '首不是' + content + 'www，要不再想想捏？≧ ﹏ ≦', true)
-
-            } else {
-                e.reply('格式匹配错误，请检查格式')
+                e.reply(`没有找到${content}的曲目信息呐QAQ`, true)
                 return true
             }
 
-
-        } else {
-            e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
+            /**格式匹配错误放过命令 */
+            return false
         }
 
-
-        return true
+        /**未进行游戏放过命令 */
+        return false
     }
 
     async ans(e) {
