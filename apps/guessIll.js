@@ -138,7 +138,7 @@ export class phigame extends plugin {
     async guess(e) {
         if (gamelist[e.group_id]) {
             var ans = e.msg.replace(/[#/](我)?猜(\s*)/g, '')
-            var song = get.songsnick(ans)
+            var song = get.fuzzysongsnick(ans)
             if (song[0]) {
                 for (var i in song) {
                     if (gamelist[e.group_id] == song[i]) {

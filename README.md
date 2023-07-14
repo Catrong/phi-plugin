@@ -1,11 +1,11 @@
 # phi-plugin
 
-版本：v0.9.2
+版本：v0.9.3
 
 ---
 
 #### 介绍：
-适用于 Yunzai-Bot V3 的 phigros 辅助插件
+适用于 Yunzai-Bot V3 的 phigros 辅助插件。
 
 本项目云存档由 [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary/tree/v3.1.0) 改写而来，感谢文酱的帮助！
 
@@ -13,7 +13,7 @@
 
 大家能不能帮忙提供一些别名呐QAQ，欢迎提交PR或者来找我！
 
-感谢 [@Afkeru](https://github.com/Afkeru) 提供的猜字母功能
+感谢 [@Afkeru](https://github.com/Afkeru) 提供的猜字母及模糊匹配功能
 
 由于作者学业原因，只有周末可以写代码，所以速度会很慢。非常感谢大家的理解（
 
