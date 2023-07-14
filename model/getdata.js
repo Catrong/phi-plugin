@@ -121,6 +121,53 @@ class get {
         return false
     }
 
+        /**
+     * 根据参数模糊匹配返回原曲名称
+     * @param {string} mic 别名
+     * @returns 原曲名称
+     */
+        fuzzysongsnick(mic) {
+            let nickconfig = Config.getDefOrConfig('nickconfig', mic)
+            var fuzzyMatch=function fuzzyMatch(str1, str2) {
+                // 去除空格和其他符号，并转换为小写
+                const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？]/g
+                const formattedStr1 = str1.replace(pattern, '').toLowerCase()
+                const formattedStr2 = str2.replace(pattern, '').toLowerCase()
+              
+                // 判断两个格式化后的字符串是否一样
+                return formattedStr1 === formattedStr2
+            }
+            var all = []
+
+            for(var i in this.info){
+                if(fuzzyMatch(mic,i))
+                {
+                    all.push(i)
+                }
+            }
+
+            for(var i in this.songnick){
+                if(fuzzyMatch(mic,i))
+                {
+                    for (var ii in this.songnick[i]) {
+                        all.push(this.songnick[i][ii])
+                    }
+                }
+            }
+    
+            if (nickconfig) {
+                for (var i in nickconfig) {
+                    all.push(nickconfig[i])
+                }
+            }
+
+            if (all.length) {
+                all = Array.from(new Set(all)) //去重
+                return all
+            }
+            return false
+        }
+
     /**设置别名 原名, 别名 */
     async setnick(mic, nick) {
         Config.modifyarr('nickconfig', nick, mic, 'add')
