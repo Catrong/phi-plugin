@@ -49,7 +49,7 @@ export class phib19 extends plugin {
 
         if (!Config.getDefOrConfig('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
-            
+
         var Record = save.gameRecord
         var phi = {}
         var b19_list = []
@@ -297,7 +297,7 @@ export class phib19 extends plugin {
         }
 
 
-        data.illustration = get.info[song].illustration_big
+        data.illustration = get.getill(song)
         var songsinfo = get.info[song]
         for (var i in ans) {
             if (ans[i]) {

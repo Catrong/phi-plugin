@@ -92,22 +92,43 @@ export class phigame extends plugin {
             } else {
                 return true
             }
+            
             switch (fnc[randbt(fnc.length - 1)]) {
                 case 0: {
                     area_increase(100, data, fnc)
+                    if (Config.getDefOrConfig('config','isGuild')) {
+                        remsg.push(`[区域扩增!]`)
+                    } else {
+                        remsg.push(`\n[区域扩增!]`)
+                    }
                     break
                 }
                 case 1: {
                     blur_down(2, data, fnc)
+                    if (Config.getDefOrConfig('config','isGuild')) {
+                        remsg.push(`[清晰度上升!]`)
+                    } else {
+                        remsg.push(`\n[清晰度上升!]`)
+                    }
                     break
                 }
                 case 2: {
                     gave_a_tip(known_info, remain_info, songs_info, fnc)
+                    if (Config.getDefOrConfig('config','isGuild')) {
+                        remsg.push(`[追加提示!]`)
+                    } else {
+                        remsg.push(`\n[追加提示!]`)
+                    }
                     break
                 }
                 case 3: {
                     data.style = 1
                     fnc.splice(fnc.indexOf(3), 1)
+                    if (Config.getDefOrConfig('config','isGuild')) {
+                        remsg.push(`[全局视野!]`)
+                    } else {
+                        remsg.push(`\n[全局视野!]`)
+                    }
                     break
                 }
             }
