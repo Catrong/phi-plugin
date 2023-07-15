@@ -93,11 +93,11 @@ export class phigame extends plugin {
             } else {
                 return true
             }
-            
+
             switch (fnc[randbt(fnc.length - 1)]) {
                 case 0: {
                     area_increase(100, data, fnc)
-                    if (Config.getDefOrConfig('config','isGuild')) {
+                    if (Config.getDefOrConfig('config', 'isGuild')) {
                         remsg.push(`[区域扩增!]`)
                     } else {
                         remsg.push(`\n[区域扩增!]`)
@@ -106,7 +106,7 @@ export class phigame extends plugin {
                 }
                 case 1: {
                     blur_down(2, data, fnc)
-                    if (Config.getDefOrConfig('config','isGuild')) {
+                    if (Config.getDefOrConfig('config', 'isGuild')) {
                         remsg.push(`[清晰度上升!]`)
                     } else {
                         remsg.push(`\n[清晰度上升!]`)
@@ -115,7 +115,7 @@ export class phigame extends plugin {
                 }
                 case 2: {
                     gave_a_tip(known_info, remain_info, songs_info, fnc)
-                    if (Config.getDefOrConfig('config','isGuild')) {
+                    if (Config.getDefOrConfig('config', 'isGuild')) {
                         remsg.push(`[追加提示!]`)
                     } else {
                         remsg.push(`\n[追加提示!]`)
@@ -125,7 +125,7 @@ export class phigame extends plugin {
                 case 3: {
                     data.style = 1
                     fnc.splice(fnc.indexOf(3), 1)
-                    if (Config.getDefOrConfig('config','isGuild')) {
+                    if (Config.getDefOrConfig('config', 'isGuild')) {
                         remsg.push(`[全局视野!]`)
                     } else {
                         remsg.push(`\n[全局视野!]`)
@@ -140,7 +140,7 @@ export class phigame extends plugin {
             if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
             if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
             if (known_info.chart) remsg.push(known_info.chart)
-            
+
             if (gamelist[e.group_id]) {
                 if (gamelist[e.group_id] != songs_info.song) {
                     return true

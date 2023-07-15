@@ -46,13 +46,13 @@ export class phisstk extends plugin {
         var sessionToken = e.msg.replace(/(#|\/)(.*)(绑定|bind)(\s*)/g, '')
         sessionToken.replace(" ", '')
 
-        e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
-
         if (!Config.getDefOrConfig('config', 'isGuild')) {
 
-            if (await this.build(e, sessionToken)) return true
+            e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
             // return true
         }
+
+        if (await this.build(e, sessionToken)) return true
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
             /**频道模式'@'取消换行 */
