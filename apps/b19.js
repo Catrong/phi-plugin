@@ -199,25 +199,29 @@ export class phib19 extends plugin {
                 ++tot
             }
 
-            await e.reply(common.makeForwardMsg(e, Remsg), true)
+            Remsg.push(tmsg)
+
+            await e.reply(common.makeForwardMsg(e, Remsg))
 
         } else {
 
             var Remsg = []
             Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
-            if (phi.song) {
-                Remsg.push([`Phi:\n`,
-                    segment.image(get.getill(phi.song, false)),
-                    `\n${phi.song}\n` +
-                    `${phi.rank} ${phi.difficulty}\n` +
-                    `${phi.score} ${phi.pingji}\n` +
-                    `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
-                    `Rks+0.01所需acc: ${phi.suggest}%`])
-            } else {
-                Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
-            }
+
 
             if (Config.getDefOrConfig('config', 'WordB19Img')) {
+
+                if (phi.song) {
+                    Remsg.push([`Phi:\n`,
+                        segment.image(get.getill(phi.song, false)),
+                        `\n${phi.song}\n` +
+                        `${phi.rank} ${phi.difficulty}\n` +
+                        `${phi.score} ${phi.pingji}\n` +
+                        `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
+                        `Rks+0.01所需acc: ${phi.suggest}%`])
+                } else {
+                    Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
+                }
                 for (var i = 0; i < num && i < rkslist.length; ++i) {
                     Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n`,
                     segment.image(get.getill(rkslist[i].song, false)),
@@ -228,6 +232,16 @@ export class phib19 extends plugin {
                     `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`])
                 }
             } else {
+                /**无图模式 */
+                if (phi.song) {
+                    Remsg.push([`Phi: ${phi.song}\n` +
+                        `${phi.rank} ${phi.difficulty}\n` +
+                        `${phi.score} ${phi.pingji}\n` +
+                        `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
+                        `Rks+0.01所需acc: ${phi.suggest}%`])
+                } else {
+                    Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
+                }
                 for (var i = 0; i < num && i < rkslist.length; ++i) {
                     Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n` +
                         `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
@@ -339,14 +353,14 @@ export class phib19 extends plugin {
         /**频道模式 */
         if (Config.getDefOrConfig('config', 'isGuild')) {
             if (e.isGroup) {
-                e.reply("频道模式中此功能禁止在频道中使用哦", true)
+                e.reply("频道模式中此功能禁止在频道中使用哦")
                 return true
             }
         }
 
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply(`你还没有绑定sessionToken哦！发送 #${Config.getDefOrConfig('config', 'cmdhead')} bind xxxx 进行绑定哦！`, true)
+            e.reply([segment.at(e.user_id), `你还没有绑定sessionToken哦！发送 #${Config.getDefOrConfig('config', 'cmdhead')} bind xxxx 进行绑定哦！`])
             return true
         }
 
@@ -403,7 +417,8 @@ export class phib19 extends plugin {
                 }
                 ++tot
             }
-            await e.reply(common.makeForwardMsg(e, Remsg), true)
+            Remsg.push(tmsg)
+            await e.reply(common.makeForwardMsg(e, Remsg))
 
         } else {
             var Remsg = []
@@ -429,7 +444,7 @@ export class phib19 extends plugin {
                 }
             }
 
-            await e.reply(await common.makeForwardMsg(e, Remsg))
+            await e.reply(common.makeForwardMsg(e, Remsg))
         }
     }
 
