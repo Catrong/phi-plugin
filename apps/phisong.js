@@ -43,7 +43,7 @@ export class phirks extends plugin {
     /**歌曲图鉴 */
     async serch(e) {
         let msg = e.msg.replace(/[#/](.*)(曲|song)(\s*)/g, "")
-        let songs = await get.songsnick(msg)
+        let songs = await get.fuzzysongsnick(msg)
         if (songs[0]) {
             let msgRes
 
@@ -140,7 +140,7 @@ export class phirks extends plugin {
 
     async ill(e) {
         let msg = e.msg.replace(/[#/](.*)(曲绘|ill|Ill)(\s*)/g, "")
-        let songs = await get.songsnick(msg)
+        let songs = await get.fuzzysongsnick(msg)
         if (songs[0]) {
             let msgRes
 

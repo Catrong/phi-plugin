@@ -14,13 +14,12 @@ for (let i in get.info) {
     songsname.push(i)
 }
 
-songsname = songsname.filter((song) => {
-    // 判断是否为纯中文或纯英文，其他符号的曲名不太好打
-    return /^[\u4e00-\u9fa5]+$|^[\w\s-+]+$/.test(song);
-});
-
-//对曲目进行洗牌
-shuffleArray(songsname)
+// songsname = songsname.filter((song) => {
+//     // 判断是否为纯中文或纯英文，其他符号的曲名不太好打
+//     //return /^[\u4e00-\u9fa5]+$|^[\w\s-+]+$/.test(song)
+//     //筛选掉日语曲目
+//     //return /^[\u3040-\u309F\u30A0-\u30FF\u3000-\u303F\uFF00-\uFFEF\u4E00-\u9FA5]+$/.test(song)
+// });
 
 var gamelist = {}//存储标准答案曲名
 var blurlist = {}//存储模糊后的曲名
@@ -40,7 +39,7 @@ export class philetter extends plugin {
                     fnc: 'start'
                 },
                 {
-                    reg: `^[#/](出|开|翻|揭|看|翻开|打开|揭开)(\\s*)[a-zA-Z]$`,
+                    reg: `^[#/](出|开|翻|揭|看|翻开|打开|揭开)(\s*)[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\d\S]$`,
                     fnc: 'reveal'
                 },
                 {
@@ -63,22 +62,31 @@ export class philetter extends plugin {
             return true
         }
 
+        //对曲目进行洗牌
+        songsname=shuffleArray(songsname)
+
         alphalist[e.group_id] = alphalist[e.group_id] || {}
         alphalist[e.group_id] = ''
+
+        //存储已经抽到的index
+        var chose = []
 
         //随机抽取8首歌
         for (var i = 1; i <= 8; i++) {
             var num = rand(0,songsname.length - 1)
+            //防止抽到重复的曲目
+            while(chose.includes(num)){
+                num = rand(0,songsname.length - 1)
+            }
             var songName = songsname[num]
             var songs_info = get.info[songName]
+            chose.push(num)
 
             gamelist[e.group_id] = gamelist[e.group_id] || {}
             gamelist[e.group_id][i] = songs_info.song
 
             blurlist[e.group_id] = blurlist[e.group_id] || {}
             blurlist[e.group_id][i] = encrypt_song_name(songs_info.song)//模糊歌名
-
-            songsname.splice(num, 1)//抽中一首就把它移出去，防止抽到重复的
         }
         e.reply(`出你字母开启成功！回复'#第X个XXXX'命令猜歌，例如：#第1个Reimei;发送'#出X'来揭开字母(不区分大小写)，如'#出A';发送'#字母答案'结束并查看答案`)
 
@@ -196,10 +204,9 @@ export class philetter extends plugin {
                                 return true
                             }
 
+                            e.reply([segment.at(e.user_id), `恭喜你ww，答对啦喵,第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o \n`], true)
+                            await e.reply(await get.getsongsinfo(e, standard_song))//发送曲绘
                             delete (blurlist[e.group_id][num])
-
-                            e.reply('恭喜你ww，答对啦喵！ヾ(≧▽≦*)o', true)
-                            e.reply(await get.getsongsinfo(e, standard_song))//猜对发送曲绘
                             
                             var isEmpty = Object.getOwnPropertyNames(blurlist[e.group_id]).length === 0//是否全部猜完
                             if (!isEmpty) {
@@ -211,7 +218,7 @@ export class philetter extends plugin {
                                         output += '【' + m + '】' + gamelist[e.group_id][m] + '\n'
                                     }
                                 }
-                                e.reply(output)
+                                e.reply(output,true)
                                 return true
                             } else {
                                 output = '出你字母已结束，答案如下：\n'
@@ -288,7 +295,7 @@ function timeout(ms) {
 function encrypt_song_name(name) {
     var encryptedName = ''
     //var num = rand(0,Math.min(2, name.length - 2)) + 1//显示多少位
-    var num = 1//将原来的随机位数改为强制只显示一个，毕竟提示太多了就不好玩了qwq()
+    var num = 0//将原来的随机位数改为强制不显示
     var numset = []
     for (var i = 0; i < num; i++) {
         var numToShow = rand(0,name.length - 1)
@@ -326,7 +333,7 @@ function encrypt_song_name(name) {
 
 //将中文数字转为阿拉伯数字
 function NumberToArabic(digit){
-    //只处理到千，再高也根本用不上啊(百都用不到)
+    //只处理到千，再高也根本用不上啊(十位数都用不上的说)
     const numberMap = {一: 1,二: 2,三: 3,四: 4,五: 5,六: 6,七: 7,八: 8,九: 9}    
     const unitMap = {十: 10,百: 100,千: 1000}
 
