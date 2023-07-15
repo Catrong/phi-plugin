@@ -85,10 +85,9 @@ export class phigame extends plugin {
         for (var i = 0; i < 30; ++i) {
 
             var time = Config.getDefOrConfig('config', 'GuessTipCd')
-            logger.mark(time)
+            
             for (var j = 0; j < time; ++j) {
                 await timeout(1000)
-                logger.mark(j)
                 if (gamelist[e.group_id]) {
                     if (gamelist[e.group_id] != songs_info.song) {
                         await gameover(e, data)
@@ -99,6 +98,7 @@ export class phigame extends plugin {
                     return true
                 }
             }
+            var remsg =[]
 
 
             switch (fnc[randbt(fnc.length - 1)]) {
@@ -140,7 +140,7 @@ export class phigame extends plugin {
                     break
                 }
             }
-            var remsg = [await get.getguess(e, data)]
+            remsg = [await get.getguess(e, data)]
             if (known_info.chapter) remsg.push(`\n该曲目隶属于 ${known_info.chapter}`)
             if (known_info.bpm) remsg.push(`\n该曲目的 BPM 值为 ${known_info.bpm}`)
             if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
