@@ -84,7 +84,9 @@ export class phigame extends plugin {
 
         for (var i = 0; i < 30; ++i) {
 
-            for (var j = 0; j < Config.getDefOrConfig('config', 'GuessTipCd'); ++j) {
+            var time = Config.getDefOrConfig('config', 'GuessTipCd')
+            logger.info(time)
+            for (var j = 0; j < time; ++j) {
                 await timeout(1000)
                 if (gamelist[e.group_id]) {
                     if (gamelist[e.group_id] != songs_info.song) {
