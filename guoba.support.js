@@ -81,8 +81,8 @@ export function supportGuoba() {
                 },
                 {
                     field: 'GuessTipCd',
-                    label: '猜曲绘提示间隔时间',
-                    bottomHelpMessage: '单位：秒',
+                    label: '间隔时间',
+                    bottomHelpMessage: '猜曲绘的提示间隔时间，单位：秒',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
