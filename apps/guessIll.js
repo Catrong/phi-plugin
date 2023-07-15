@@ -84,7 +84,7 @@ export class phigame extends plugin {
         for (var i = 0; i < 30; ++i) {
 
             await timeout(Config.getDefOrConfig('config', 'GuessTipCd') * 1000)
-
+            
             if (gamelist[e.group_id]) {
                 if (gamelist[e.group_id] != songs_info.song) {
                     return true
@@ -139,6 +139,15 @@ export class phigame extends plugin {
             if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
             if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
             if (known_info.chart) remsg.push(known_info.chart)
+            
+            if (gamelist[e.group_id]) {
+                if (gamelist[e.group_id] != songs_info.song) {
+                    return true
+                }
+            } else {
+                return true
+            }
+
             if (Config.getDefOrConfig('config', 'GuessTipRecall'))
                 e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
             else
