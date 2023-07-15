@@ -48,7 +48,7 @@ export function supportGuoba() {
                 {
                     field: 'isGuild',
                     label: '频道模式',
-                    bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息，所有@改为回复（频道里回复相当于@）',
+                    bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息',
                     component: 'Switch',
                 },
                 {

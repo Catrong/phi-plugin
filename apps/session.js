@@ -36,11 +36,7 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            if (Config.getDefOrConfig('config', 'isGuild')) {
-                /**频道模式变'@'为回复 */
-                await e.reply("请注意保护好自己的sessionToken哦！", true, { recallMsg: 10 })
-
-            } else {
+            if (!Config.getDefOrConfig('config', 'isGuild')) {
 
                 await e.reply([segment.at(e.user_id), `\n`, "请注意保护好自己的sessionToken哦！"], false, { recallMsg: 10 })
                 // return true
@@ -52,12 +48,15 @@ export class phisstk extends plugin {
 
         e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
 
-        if (await this.build(e, sessionToken)) return true
+        if (!Config.getDefOrConfig('config', 'isGuild')) {
+
+            if (await this.build(e, sessionToken)) return true
+            // return true
+        }
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
-
-            /**频道模式变'@'为回复 */
-            await e.reply("绑定成功！", true)
+            /**频道模式'@'取消换行 */
+            await e.reply([segment.at(e.user_id), "绑定成功！"])
         } else {
             await e.reply([segment.at(e.user_id), `\n`, "绑定成功！"])
         }

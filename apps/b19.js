@@ -107,8 +107,8 @@ export class phib19 extends plugin {
         }
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
-            /**频道模式变'@'为回复 */
-            await e.reply(await get.getb19(e, data), true)
+            /**频道模式'@'取消换行 */
+            await e.reply([segment.at(e.user_id), await get.getb19(e, data)])
         } else {
 
             await e.reply([segment.at(e.user_id), `\n`, await get.getb19(e, data)])
@@ -316,8 +316,8 @@ export class phib19 extends plugin {
         }
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
-            /**频道模式变'@'为回复 */
-            await e.reply(await get.getsingle(e, data), true)
+            /**频道模式'@'取消换行 */
+            await e.reply([segment.at(e.user_id), await get.getsingle(e, data)])
         } else {
             await e.reply([segment.at(e.user_id), `\n`, await get.getsingle(e, data)])
         }

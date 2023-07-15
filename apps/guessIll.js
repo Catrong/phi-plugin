@@ -1,4 +1,5 @@
 
+import { segment } from 'oicq'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
@@ -84,7 +85,7 @@ export class phigame extends plugin {
         for (var i = 0; i < 30; ++i) {
 
             await timeout(Config.getDefOrConfig('config', 'GuessTipCd') * 1000)
-            
+
             if (gamelist[e.group_id]) {
                 if (gamelist[e.group_id] != songs_info.song) {
                     return true
@@ -174,7 +175,7 @@ export class phigame extends plugin {
                     if (gamelist[e.group_id] == song[i]) {
                         var t = gamelist[e.group_id]
                         delete (gamelist[e.group_id])
-                        await e.reply('恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
+                        await e.reply([segment.at(e.user_id), '恭喜你，答对啦喵！ヾ(≧▽≦*)o'], true)
                         await e.reply(await get.getsongsinfo(e, t))
                         return true
                     }
