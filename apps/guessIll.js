@@ -84,15 +84,19 @@ export class phigame extends plugin {
 
         for (var i = 0; i < 30; ++i) {
 
-            await timeout(Config.getDefOrConfig('config', 'GuessTipCd') * 1000)
-
-            if (gamelist[e.group_id]) {
-                if (gamelist[e.group_id] != songs_info.song) {
+            for (var j = 0; j < Config.getDefOrConfig('config', 'GuessTipCd'); ++j) {
+                await timeout(1000)
+                if (gamelist[e.group_id]) {
+                    if (gamelist[e.group_id] != songs_info.song) {
+                        await gameover(e, data)
+                        return true
+                    }
+                } else {
+                    await gameover(e, data)
                     return true
                 }
-            } else {
-                return true
             }
+
 
             switch (fnc[randbt(fnc.length - 1)]) {
                 case 0: {
@@ -143,9 +147,11 @@ export class phigame extends plugin {
 
             if (gamelist[e.group_id]) {
                 if (gamelist[e.group_id] != songs_info.song) {
+                    await gameover(e, data)
                     return true
                 }
             } else {
+                await gameover(e, data)
                 return true
             }
 
@@ -161,6 +167,7 @@ export class phigame extends plugin {
         await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
 
         await e.reply(await get.getsongsinfo(e, t))
+        await gameover(e, data)
 
         return true
     }
@@ -202,6 +209,13 @@ export class phigame extends plugin {
         return false
     }
 
+}
+
+/**游戏结束，发送相应位置 */
+async function gameover(e, data) {
+    data.ans = data.illustration
+    data.style = 1
+    await e.reply(get.getguess(e, data))
 }
 
 /**
@@ -309,6 +323,7 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
     }
     return false
 }
+
 
 function timeout(ms) {
     return new Promise((resolve, reject) => {

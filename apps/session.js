@@ -54,12 +54,9 @@ export class phisstk extends plugin {
 
         if (await this.build(e, sessionToken)) return true
 
-        if (Config.getDefOrConfig('config', 'isGuild')) {
-            /**频道模式'@'取消换行 */
-            await e.reply([segment.at(e.user_id), "绑定成功！"])
-        } else {
-            await e.reply([segment.at(e.user_id), `\n`, "绑定成功！"])
-        }
+
+        GuildSentAt(e, '绑定成功！')
+
         return true
     }
 
@@ -69,12 +66,14 @@ export class phisstk extends plugin {
             e.reply(`没有找到你的存档哦！请先 ⌈#${Config.getDefOrConfig('config', 'cmdhead')} bind⌋ 绑定sessionToken！`, true)
             return true
         }
-        e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
 
+        if (!Config.getDefOrConfig('config', 'isGuild') || !e.isGroup) {
+            e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
+        }
         if (await this.build(e, User.session))
             return true
 
-        await e.reply("更新成功！", true)
+        GuildSentAt(e, '更新成功！')
 
         return true
     }
@@ -162,10 +161,21 @@ export class phisstk extends plugin {
 
     async unbind(e) {
         if (get.delData(`${e.user_id}.json`, get.userPath)) {
-            e.reply('解绑成功', true)
+            GuildSentAt(e, '解绑成功')
         } else {
-            e.reply('没有找到你的存档哦！', true)
+            GuildSentAt(e, '没有找到你的存档哦！')
         }
         return true
+    }
+}
+
+/**如果为频道模式'@'不换行，否则换行 */
+async function GuildSentAt(e, msg) {
+
+    if (Config.getDefOrConfig('config', 'isGuild')) {
+        /**频道模式'@'取消换行 */
+        await e.reply([segment.at(e.user_id), msg])
+    } else {
+        await e.reply([segment.at(e.user_id), `\n`, msg])
     }
 }

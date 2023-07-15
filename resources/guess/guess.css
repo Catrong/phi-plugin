@@ -6,15 +6,28 @@ body {
     justify-content: flex-start;
 }
 
+
 .img {
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    box-sizing: border-box;
 }
 
 .img img {
     width: 2048px;
     height: 1080px;
+}
+
+.ans {
+    height: 0px;
+    display: flex;
+}
+
+.ans img {
+    width: 2048px;
+    height: 1080px;
+    filter: brightness(50%);
 }
