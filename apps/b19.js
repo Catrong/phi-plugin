@@ -179,19 +179,27 @@ export class phib19 extends plugin {
         if (Config.getDefOrConfig('config', 'isGuild')) {
             /**频道模式 */
 
-            var Remsg = ''
-            Remsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
+            var Remsg = []
+            var tmsg = ''
+            tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             if (phi.song) {
-                Remsg += `\nPhi:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.pingji} ${phi.acc.toFixed(2)}% 等效${phi.rks.toFixed(2)} Rks+0.01所需acc: ${phi.suggest}%`
+                tmsg += `\nPhi:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.pingji} ${phi.acc.toFixed(2)}% 等效${phi.rks.toFixed(2)} Rks+0.01所需acc: ${phi.suggest}%`
             } else {
-                Remsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
+                tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
-
+            /**防止消息过长发送失败每条消息20行 */
+            var tot = 2
             for (var i = 0; i < num && i < rkslist.length; ++i) {
-                Remsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`
+                if (tot <= 19) {
+                    tmsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`
+                } else {
+                    Remsg.push(tmsg)
+                    tmsg = `#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`
+                }
+                ++tot
             }
 
-            await e.reply(Remsg, true)
+            await e.reply(common.makeForwardMsg(e, Remsg), true)
 
         } else {
 
@@ -379,12 +387,23 @@ export class phib19 extends plugin {
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
             /**频道模式 */
-            var Remsg = ''
-            Remsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
+            var Remsg = []
+            var tmsg = ''
+
+            /**防止消息过长发送失败每条消息20行 */
+            var tot = 1
+            tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             for (var i = 0; i < suggestlist.length; ++i) {
-                Remsg += `\n#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> ${suggestlist[i].difficulty} ${suggestlist[i].acc}% Rks+0.01所需acc: ${suggestlist[i].suggest}`
+                if (tot <= 19) {
+                    tmsg += `\n#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> ${suggestlist[i].difficulty} ${suggestlist[i].acc}% Rks+0.01所需acc: ${suggestlist[i].suggest}`
+                } else {
+                    Remsg.push(tmsg)
+                    tmsg = `#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> ${suggestlist[i].difficulty} ${suggestlist[i].acc}% Rks+0.01所需acc: ${suggestlist[i].suggest}`
+                    tot = 0
+                }
+                ++tot
             }
-            await e.reply(Remsg, true)
+            await e.reply(common.makeForwardMsg(e, Remsg), true)
 
         } else {
             var Remsg = []
