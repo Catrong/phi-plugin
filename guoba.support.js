@@ -74,7 +74,7 @@ export function supportGuoba() {
                     label: '命令头',
                     bottomHelpMessage: '命令正则匹配开头，不包含#/，支持正则表达式，\'\\\' 请双写( \\s --> \\\\s )，最外层可以不加括号',
                     component: 'Input',
-                    required: true,
+                    required: false,
                     componentProps: {
                         placeholder: '请输入命令头',
                     },
