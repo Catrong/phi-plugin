@@ -29,3 +29,6 @@ GuessTipCd: 15
 
 #  猜曲绘是否撤回
 GuessTipRecall: false
+
+#  猜字母题面是否公布猜对者
+LetterWinner: false

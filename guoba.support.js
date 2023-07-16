@@ -91,6 +91,12 @@ export function supportGuoba() {
                         placeholder: '请输入时间',
                     },
                 },
+                {
+                    field: 'LetterWinner',
+                    label: '@猜对者',
+                    bottomHelpMessage: '开字母是否在答案后@猜对者，会频繁@别人，慎重开启',
+                    component: 'Switch',
+                },
             ],
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {
@@ -104,6 +110,7 @@ export function supportGuoba() {
                     GuessTipCd: Config.getDefOrConfig('config', 'GuessTipCd'),
                     GuessTipRecall: Config.getDefOrConfig('config', 'GuessTipRecall'),
                     isGuild: Config.getDefOrConfig('config', 'isGuild'),
+                    LetterWinner: Config.getDefOrConfig('config', 'LetterWinner'),
                 }
                 return config
             },
