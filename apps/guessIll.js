@@ -85,7 +85,7 @@ export class phigame extends plugin {
         for (var i = 0; i < 30; ++i) {
 
             var time = Config.getDefOrConfig('config', 'GuessTipCd')
-            
+
             for (var j = 0; j < time; ++j) {
                 await timeout(1000)
                 if (gamelist[e.group_id]) {
@@ -98,34 +98,34 @@ export class phigame extends plugin {
                     return true
                 }
             }
-            var remsg =[]
-
+            var remsg = [] //回复内容
+            var tipmsg = '' //这次干了什么
 
             switch (fnc[randbt(fnc.length - 1)]) {
                 case 0: {
                     area_increase(100, data, fnc)
                     if (Config.getDefOrConfig('config', 'isGuild')) {
-                        remsg.push(`[区域扩增!]`)
+                        tipmsg = `[区域扩增!]`
                     } else {
-                        remsg.push(`\n[区域扩增!]`)
+                        tipmsg = `\n[区域扩增!]`
                     }
                     break
                 }
                 case 1: {
                     blur_down(2, data, fnc)
                     if (Config.getDefOrConfig('config', 'isGuild')) {
-                        remsg.push(`[清晰度上升!]`)
+                        tipmsg = `[清晰度上升!]`
                     } else {
-                        remsg.push(`\n[清晰度上升!]`)
+                        tipmsg = `\n[清晰度上升!]`
                     }
                     break
                 }
                 case 2: {
                     gave_a_tip(known_info, remain_info, songs_info, fnc)
                     if (Config.getDefOrConfig('config', 'isGuild')) {
-                        remsg.push(`[追加提示!]`)
+                        tipmsg = `[追加提示!]`
                     } else {
-                        remsg.push(`\n[追加提示!]`)
+                        tipmsg = `\n[追加提示!]`
                     }
                     break
                 }
@@ -133,14 +133,15 @@ export class phigame extends plugin {
                     data.style = 1
                     fnc.splice(fnc.indexOf(3), 1)
                     if (Config.getDefOrConfig('config', 'isGuild')) {
-                        remsg.push(`[全局视野!]`)
+                        tipmsg = `[全局视野!]`
                     } else {
-                        remsg.push(`\n[全局视野!]`)
+                        tipmsg = `\n[全局视野!]`
                     }
                     break
                 }
             }
             remsg = [await get.getguess(e, data)]
+            remsg.push(tipmsg)
             if (known_info.chapter) remsg.push(`\n该曲目隶属于 ${known_info.chapter}`)
             if (known_info.bpm) remsg.push(`\n该曲目的 BPM 值为 ${known_info.bpm}`)
             if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
