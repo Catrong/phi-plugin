@@ -156,12 +156,12 @@ export class philetter extends plugin {
                 alphalist[e.group_id] = alphalist[e.group_id] || {}
                 alphalist[e.group_id] = alphalist[e.group_id] + letter.toUpperCase() + ' ' 
 
-                var opened = '当前所有翻开的字母['+ alphalist[e.group_id].replace(/\[object Object\]/g, '') +']\n'
+                var opened = '当前所有翻开的字母[ '+ alphalist[e.group_id].replace(/\[object Object\]/g, '') +']\n'
 
                 e.reply("成功翻开字母[" + letter + ']\n' + opened + output, true)
             }
             else {
-                var opened = '当前所有翻开的字母['+ alphalist[e.group_id].replace(/\[object Object\]/g, '') +']\n'
+                var opened = '当前所有翻开的字母[ '+ alphalist[e.group_id].replace(/\[object Object\]/g, '') +']\n'
                 e.reply("这几首曲目中不包含字母[" + letter + ']\n' + opened + output, true)
             }
         }
@@ -173,7 +173,7 @@ export class philetter extends plugin {
         //必须已经开始了一局
         if (gamelist[e.group_id]) {
             var msg = e.msg
-            var opened = '所有翻开的字母['+ alphalist[e.group_id].replace(/\[object Object\]/g, '') +']\n'
+            var opened = '所有翻开的字母[ '+ alphalist[e.group_id].replace(/\[object Object\]/g, '') +']\n'
             var regex = /^[#/](\s*)第(\s*)([1-8一二三四五六七八])(\s*)(个|首)?(\s*)/
             var result = msg.match(regex)
             if (result) {
@@ -240,7 +240,7 @@ export class philetter extends plugin {
                     if (songs[1]) {
                         e.reply('第' + num + '首不是[' + content + ']www，要不再想想捏？≧ ﹏ ≦', true)
                     } else {
-                        e.reply('第' + num + '首不是[' + songs[0] + ']ww，要不再想想捏？≧ ﹏ ≦', true)
+                        e.reply('第' + num + '首不是[' + songs[0] + ']www，要不再想想捏？≧ ﹏ ≦', true)
                     }
                     return true
                 }
