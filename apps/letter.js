@@ -5,6 +5,8 @@
  * 玩家可以翻开所有曲目响应的字母获得更多线索
 */
 import { segment } from 'oicq'
+import { pinyin } from 'pinyin-pro'
+
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
@@ -127,8 +129,15 @@ export class philetter extends plugin {
                 var songname = gamelist[e.group_id][i]
                 var blurname = blurlist[e.group_id][i]
                 var winnerid = winnerlist[e.group_id][i]
-                //曲名是否包含这个字母，不包含就不做额外修改操作，直接遍历输出
-                if (!(songname.toLowerCase().includes(letter.toLowerCase()))) {
+                var characters = ''
+                var letters = ''
+
+                if(/[\u4e00-\u9fa5]/.test(songname)) {
+                    characters = (songname.match(/[\u4e00-\u9fa5]/g) || []).join("")
+                    letters = pinyin(characters, { pattern: 'first', toneType: 'none', type: 'string' })
+                }
+                //曲名是否包含这个字母，或者如果为中文则首字母是否包含这个字母，不包含就不做额外修改操作，直接遍历输出
+                if (!(songname.toLowerCase().includes(letter.toLowerCase())) && !letters.includes(letter.toLowerCase())) {
                     //blurlist不存在gamelist里的曲名，说明已经被猜出来然后删除了，直接输出标准答案即可，否则输出加密曲名
                     if (!(blurlist[e.group_id][i])) {
                         output.push(`【${i}】 ${songname} `) //标准答案
@@ -157,6 +166,15 @@ export class philetter extends plugin {
                 //将加密符号是该字母的显示出来，因为每一个字符是只读的，所以不能对单个字符进行修改
                 var newBlurname = ''
                 for (var ii = 0; ii < songname.length; ii++) {
+                    //如果字符是中文，将其首字母与翻开的字母进行匹配
+                    if(/^[\u4E00-\u9FFF]$/.test(songname[ii])){
+                        //若匹配就将该汉字显示出来
+                        if(pinyin(songname[ii], { pattern: 'first', toneType: 'none', type: 'string' }) == letter.toLowerCase()){
+                            newBlurname += songname[ii]
+                            continue
+                        }
+                    }
+
                     if (songname[ii].toLowerCase() == letter.toLowerCase()) {
                         newBlurname += songname[ii]
                     } else {

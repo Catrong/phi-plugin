@@ -22,6 +22,7 @@
   "homepage": "https://github.com/Catrong/phi-plugin#readme",
   "dependencies": {
     "crypto-js": "^4.1.1",
+    "pinyin-pro": "^3.15.4",
     "jszip": "^3.10.1"
   },
   "devDependencies": {},
