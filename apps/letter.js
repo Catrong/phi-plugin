@@ -131,13 +131,13 @@ export class philetter extends plugin {
                 if (!(songname.toLowerCase().includes(letter.toLowerCase()))) {
                     //blurlist不存在gamelist里的曲名，说明已经被猜出来然后删除了，直接输出标准答案即可，否则输出加密曲名
                     if (!(blurlist[e.group_id][i])) {
-                        output.push(`【 ${i} 】 ${songname} `) //标准答案
+                        output.push(`【${i}】 ${songname} `) //标准答案
                         if (Config.getDefOrConfig('config', 'LetterWinner') && winnerid) {
                             output.push(segment.at(winnerid)) //猜对者
                         }
                         output.push('\n')
                     } else {
-                        output.push(`【 ${i} 】 ${blurname}\n`)
+                        output.push(`【${i}】 ${blurname}\n`)
                     }
                     continue
                 }
@@ -146,7 +146,7 @@ export class philetter extends plugin {
 
                 //就算包含，但是被猜出来了也是直接输出标准曲名
                 if (!(blurlist[e.group_id][i])) {
-                    output.push(`【 ${i} 】 ${songname} `) //标准答案
+                    output.push(`【${i}】 ${songname} `) //标准答案
                     if (Config.getDefOrConfig('config', 'LetterWinner') && winnerid) {
                         output.push(segment.at(winnerid)) //猜对者
                     }
@@ -164,7 +164,7 @@ export class philetter extends plugin {
                     }
                 }
                 blurlist[e.group_id][i] = newBlurname
-                output.push(`【 ${i} 】 ${newBlurname}\n`) //标准答案
+                output.push(`【${i}】 ${newBlurname}\n`) //标准答案
             }
 
             //包含该字母，就把该字母拼到alphalist后面去
@@ -238,9 +238,9 @@ export class philetter extends plugin {
                                 output.push(opened)
                                 for (var m in gamelist[e.group_id]) {
                                     if (blurlist[e.group_id][m]) {
-                                        output.push(`【 ${m} 】${blurlist[e.group_id][m]}\n`)
+                                        output.push(`【${m}】${blurlist[e.group_id][m]}\n`)
                                     } else {
-                                        output.push(`【 ${m} 】${gamelist[e.group_id][m]}`)
+                                        output.push(`【${m}】${gamelist[e.group_id][m]}`)
                                         if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
                                             output.push(segment.at(winnerlist[e.group_id][m]))
                                         }
@@ -252,7 +252,7 @@ export class philetter extends plugin {
                             } else {
                                 output.push('出你字母已结束，答案如下：\n')
                                 for (var m in gamelist[e.group_id]) {
-                                    output.push(`【 ${m} 】${gamelist[e.group_id][m]}`)
+                                    output.push(`【${m}】${gamelist[e.group_id][m]}`)
                                     if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
                                         output.push(segment.at(winnerlist[e.group_id][m]))
                                     }
@@ -303,7 +303,7 @@ export class philetter extends plugin {
             for (var m in t) {
                 var correct_name = t[m]
                 var winner_id = winner[m]
-                output.push(`【 ${m} 】${correct_name}`)
+                output.push(`【${m}】${correct_name}`)
                 if (Config.getDefOrConfig('config', 'LetterWinner') && winner_id) {
                     output.push(segment.at(winner_id))
                 }
