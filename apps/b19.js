@@ -272,11 +272,11 @@ export class phib19 extends plugin {
 
 
 
-        if (!(await get.songsnick(song))) {
+        if (!(await get.fuzzysongsnick(song))) {
             e.reply(`未找到 ${song} 的有关信息哦！`)
             return true
         }
-        song = await get.songsnick(song)
+        song = await get.fuzzysongsnick(song)
         song = song[0]
 
         var Record = save.gameRecord
