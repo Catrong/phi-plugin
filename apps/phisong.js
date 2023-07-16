@@ -69,8 +69,9 @@ export class phisong extends plugin {
     async setnick(e) {
         if (!(e.is_admin || e.isMaster)) {
             e.reply("只有管理员可以设置别名哦！")
+            return true
         }
-        let msg = e.msg.replace(/#(.*)设置别名(\s*)/g, "")
+        let msg = e.msg.replace(/[#/](.*)(设置别名|setnic(k?))(\s*)/g, "")
         if (msg.includes("--->")) {
             msg = msg.replace(/(\s*)--->(\s*)/g, " ---> ")
             msg = msg.split(" ---> ")
@@ -105,7 +106,7 @@ export class phisong extends plugin {
         if (!(this.e.is_admin || this.e.isMaster)) {
             this.e.reply("只有管理员可以删除别名哦！")
         }
-        var msg = this.e.msg.replace(/[#/](.*)(删除别名|delnick)(\s*)/g, '')
+        var msg = this.e.msg.replace(/[#/](.*)(删除别名|delnic(k?))(\s*)/g, '')
         var ans = Config.getConfig('nickconfig', msg)
         ans = ans[msg]
         if (ans) {
