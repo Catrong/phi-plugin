@@ -34,6 +34,10 @@ export class phib19 extends plugin {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(suggest|推分(建议)?)$`,
                     fnc: 'suggest'
                 }
+                // {
+                //     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(com|计算).*$`,
+                //     fnc: 'suggest'
+                // }
 
             ]
         })

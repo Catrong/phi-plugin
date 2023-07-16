@@ -6,7 +6,7 @@ import Config from '../components/Config.js'
 
 await get.init()
 
-export class phirks extends plugin {
+export class phisong extends plugin {
     constructor() {
         super({
             name: 'phi-图鉴',
@@ -67,8 +67,8 @@ export class phirks extends plugin {
 
     /**设置别名 */
     async setnick(e) {
-        if (!e.isMaster) {
-            e.reply("只有主人可以设置别名哦！")
+        if (!(e.is_admin || e.isMaster)) {
+            e.reply("只有管理员可以设置别名哦！")
         }
         let msg = e.msg.replace(/#(.*)设置别名(\s*)/g, "")
         if (msg.includes("--->")) {
@@ -101,14 +101,17 @@ export class phirks extends plugin {
         return true
     }
 
-    async delnick(e) {
-        var msg = e.msg.replace(/[#/](.*)(删除别名|delnick)(\s*)/g, '')
+    async delnick() {
+        if (!(this.e.is_admin || this.e.isMaster)) {
+            this.e.reply("只有管理员可以删除别名哦！")
+        }
+        var msg = this.e.msg.replace(/[#/](.*)(删除别名|delnick)(\s*)/g, '')
         var ans = Config.getConfig('nickconfig', msg)
         ans = ans[msg]
         if (ans) {
             if (ans.length == 1) {
                 Config.modifyarr('nickconfig', msg, ans[0], 'del', 'config')
-                await e.reply("删除成功！")
+                await this.reply("删除成功！")
             } else {
                 this.nickConfig = ans
                 this.nick = msg
@@ -117,24 +120,25 @@ export class phirks extends plugin {
                 for (var i in ans) {
                     Remsg.push(`#${i}\n${ans[i]}`)
                 }
-                e.reply(common.makeForwardMsg(e, Remsg, "找到了多个结果！"))
-                this.setContext('choosedelnick', true)
+                this.reply(common.makeForwardMsg(e, Remsg, "找到了多个结果！"))
+                this.setContext('choosedelnick')
 
             }
         } else {
-            await e.reply(`未找到 ${msg} 所对应的别名哦！`)
+            await this.reply(`未找到 ${msg} 所对应的别名哦！`)
         }
         return true
     }
 
-    async choosesdelnick(e) {
-        var msg = e.msg.replace(/[#/](\s*)/g, '')
+    choosesdelnick() {
+        var msg = this.e.message.replace(/[#/](\s*)/g, '')
         if (this.nickConfig.indexOf(msg) != -1) {
             Config.modifyarr('nickconfig', this.nick, msg, 'del', 'config')
-            await e.reply("删除成功！")
+            this.reply("删除成功！")
         } else {
-            e.reply(`未找到 ${msg} 所对应的别名哦！`)
+            this.reply(`未找到 ${msg} 所对应的别名哦！`)
         }
+        this.finish('choosesdelnick')
         return true
     }
 

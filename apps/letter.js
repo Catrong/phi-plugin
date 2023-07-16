@@ -39,7 +39,7 @@ export class philetter extends plugin {
                     fnc: 'start'
                 },
                 {
-                    reg: `^[#/](出|开|翻|揭|看|翻开|打开|揭开)(\s*)[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\d\S]$`,
+                    reg: `^[#/](出|开|翻|揭|看|翻开|打开|揭开)(\\s*)[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\d\S]$`,
                     fnc: 'reveal'
                 },
                 {

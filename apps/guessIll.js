@@ -13,7 +13,7 @@ for (let i in get.info) {
 
 var gamelist = {}
 
-export class phigame extends plugin {
+export class phiguess extends plugin {
     constructor() {
         super({
             name: 'phi-game 猜曲绘',
