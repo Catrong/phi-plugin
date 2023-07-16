@@ -219,7 +219,7 @@ export class phiguess extends plugin {
 async function gameover(e, data) {
     data.ans = data.illustration
     data.style = 1
-    await e.reply(get.getguess(e, data))
+    await e.reply(await get.getguess(e, data))
 }
 
 /**
