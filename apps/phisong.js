@@ -33,10 +33,10 @@ export class phisong extends plugin {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(曲绘|ill|Ill).*$`,
                     fnc: 'ill'
                 },
-                {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(随机|rand).*$`,
-                    fnc: 'rand'
-                },
+                // {
+                //     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(随机|rand).*$`,
+                //     fnc: 'rand'
+                // },
             ]
         })
 
