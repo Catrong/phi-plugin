@@ -148,7 +148,7 @@ export class philetter extends plugin {
                 var characters = ''
                 var letters = ''
 
-                if(alphalist[e.group_id].includes(letter.toUpperCase())){
+                if(alphalist[e.group_id].replace(/\[object Object\]/g, '').includes(letter.toUpperCase())){
                     e.reply(`字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！\n`, true)
                     return true
                 }
