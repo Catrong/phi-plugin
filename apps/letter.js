@@ -17,17 +17,13 @@ for (let i in get.info) {
     songsname.push(i)
 }
 
-// songsname = songsname.filter((song) => {
-//     // 判断是否为纯中文或纯英文，其他符号的曲名不太好打
-//     //return /^[\u4e00-\u9fa5]+$|^[\w\s-+]+$/.test(song)
-//     //筛选掉日语曲目
-//     //return /^[\u3040-\u309F\u30A0-\u30FF\u3000-\u303F\uFF00-\uFFEF\u4E00-\u9FA5]+$/.test(song)
-// });
-
 var gamelist = {}//存储标准答案曲名
 var blurlist = {}//存储模糊后的曲名
 var alphalist = {}//存储翻开的字母
 var winnerlist = {} //存储猜对者
+var lastGuessedTime = {} //存储群聊猜字母全局冷却时间
+var lastRevealedTime = {} //存储群聊翻字母全局冷却时间
+var lastTipTime = {} //存储群聊提示全局冷却时间
 var isfuzzymatch = true
 
 export class philetter extends plugin {
@@ -53,6 +49,10 @@ export class philetter extends plugin {
                 {
                     reg: `^[#/]((字母)?答案|结束)$`,
                     fnc: 'ans'
+                },
+                {
+                    reg: `^[#/](提示|tip)$`,
+                    fnc: 'tip'
                 }
 
             ]
@@ -72,15 +72,19 @@ export class philetter extends plugin {
         alphalist[e.group_id] = alphalist[e.group_id] || {}
         alphalist[e.group_id] = ''
 
+        lastGuessedTime[e.group_id] = lastGuessedTime[e.group_id] || {}
+        lastGuessedTime[e.group_id] = 0
+
+        lastRevealedTime[e.group_id] = lastRevealedTime[e.group_id] || {}
+        lastRevealedTime[e.group_id] = 0
+
 
         //预开猜对者数组
         winnerlist[e.group_id] = {}
 
-
-        //存储已经抽到的index
+        //存储单局抽到的曲目下标
         var chose = []
 
-        //随机抽取8首歌
         for (var i = 1; i <= 8; i++) {
             var num = rand(0, songsname.length - 1)
             //防止抽到重复的曲目
@@ -118,6 +122,18 @@ export class philetter extends plugin {
             return true
         }
 
+        var time = Config.getDefOrConfig('config', 'LetterRevealCd')
+        var currentTime = Date.now()
+        var timetik = currentTime - lastRevealedTime[e.group_id]
+        var timeleft = Math.floor((1000 * time - timetik)/1000)
+        //上一轮翻开的Cd没结束
+        if(timetik < 1000 * time) {
+            e.reply(`翻字符的全局冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true) 
+            return true
+        }
+        //上一轮Cd结束，更新新一轮的时间戳
+        lastRevealedTime[e.group_id] = currentTime
+
         var msg = e.msg.replace(/[#/](出|开|翻|揭|看|翻开|打开|揭开)(\s*)/g, '')
 
         if (msg) {
@@ -131,6 +147,11 @@ export class philetter extends plugin {
                 var winnerid = winnerlist[e.group_id][i]
                 var characters = ''
                 var letters = ''
+
+                if(alphalist[e.group_id].includes(letter.toUpperCase())){
+                    e.reply(`字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！\n`, true)
+                    return true
+                }
 
                 if(/[\u4e00-\u9fa5]/.test(songname)) {
                     characters = (songname.match(/[\u4e00-\u9fa5]/g) || []).join("")
@@ -209,10 +230,21 @@ export class philetter extends plugin {
         return true
     }
 
-
     async guess(e) {
         //必须已经开始了一局
         if (gamelist[e.group_id]) {
+            var time = Config.getDefOrConfig('config', 'LetterGuessCd')
+            var currentTime = Date.now()
+            var timetik = currentTime - lastGuessedTime[e.group_id]
+            var timeleft = Math.floor((1000 * time - timetik)/1000)
+            //上一轮猜测的Cd还没过
+            if(timetik < 1000*time) {
+                e.reply(`猜测的冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true) 
+                return true
+            }
+            //上一轮Cd结束，更新新一轮的时间戳
+            lastGuessedTime[e.group_id] = currentTime
+
             var msg = e.msg
             var opened = '所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']\n'
             var regex = /^[#/](\s*)第(\s*)([1-8一二三四五六七八])(\s*)(个|首)?(\s*)/
@@ -290,9 +322,9 @@ export class philetter extends plugin {
                         }
                     }
                     if (songs[1]) {
-                        e.reply('第' + num + '首不是[' + content + ']www，要不再想想捏？≧ ﹏ ≦', true)
+                        e.reply('第' + num + '首不是[' + content + ']www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦', true)
                     } else {
-                        e.reply('第' + num + '首不是[' + songs[0] + ']www，要不再想想捏？≧ ﹏ ≦', true)
+                        e.reply('第' + num + '首不是[' + songs[0] + ']www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦', true)
                     }
                     return true
                 }
@@ -334,6 +366,94 @@ export class philetter extends plugin {
         return false
     }
 
+    async tip(e){
+        if (!gamelist[e.group_id]) {
+            e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
+            return true
+        }
+
+        var time = Config.getDefOrConfig('config', 'LetterTipCd')
+        var currentTime = Date.now()
+        var timetik = currentTime - lastTipTime[e.group_id]
+        var timeleft = Math.floor((1000 * time - timetik)/1000)
+        //上一轮翻开的Cd没结束
+        if(timetik < 1000 * time) {
+            e.reply(`使用提示的全局冷却时间还有${timeleft}s呐，还请先耐心等下哇QAQ`, true) 
+            return true
+        }
+        //上一轮Cd结束，更新新一轮的时间戳
+        lastTipTime[e.group_id] = currentTime
+
+        var commonKeys = []
+        for(var key in gamelist[e.group_id]){
+            // 检查该键是否也存在于blurlist中
+            if(key in blurlist[e.group_id]){
+                //如果键在两个对象中都存在,将该键值对添加到commonKeys数组中
+                commonKeys.push(key)
+            }
+        }
+
+        var randsymbol //存储随机抽出的字符
+        while(typeof randsymbol === 'undefined' || randsymbol === '*'){
+            var key = commonKeys[rand(0,commonKeys.length - 1)] //随机从通键值数组里取一个键值
+            var songname = gamelist[e.group_id][key] //获取该下标存储的曲名
+            randsymbol = getRandCharacter(songname) //随机从曲名中取一个非空白字符
+        }
+
+        var output = []
+
+        for (var i in gamelist[e.group_id]) {
+            var songname = gamelist[e.group_id][i]
+            var blurname = blurlist[e.group_id][i]
+            var winnerid = winnerlist[e.group_id][i]
+            var characters = ''
+            var letters = ''
+
+            //被猜出来了的直接输出标准曲名
+            if (!(blurlist[e.group_id][i])) {
+                output.push(`【${i}】 ${songname} `) //标准答案
+                if (Config.getDefOrConfig('config', 'LetterWinner') && winnerid) {
+                    output.push(segment.at(winnerid)) //猜对者
+                }
+                output.push('\n')
+                continue
+            }
+
+            //将加密符号是该字符的未猜曲名显示出来
+            var newBlurname = ''
+            for (var ii = 0; ii < songname.length; ii++) {
+                //如果字符是中文，将其首字母与随机字符进行匹配
+                if(/^[\u4E00-\u9FFF]$/.test(songname[ii])){
+                    //若匹配就将该汉字显示出来
+                    if(pinyin(songname[ii], { pattern: 'first', toneType: 'none', type: 'string' }) == randsymbol.toLowerCase()){
+                        newBlurname += songname[ii]
+                        continue
+                    }
+                }
+
+                if (songname[ii].toLowerCase() == randsymbol.toLowerCase()) {
+                    newBlurname += songname[ii]
+                } else {
+                    newBlurname += blurname[ii]
+                }
+            }
+            blurlist[e.group_id][i] = newBlurname
+            output.push(`【${i}】 ${newBlurname}\n`) //标准答案
+        }
+
+        //将该随机拼到alphalist后面去
+        alphalist[e.group_id] = alphalist[e.group_id] || {}
+        alphalist[e.group_id] = alphalist[e.group_id] + randsymbol.toUpperCase() + ' '
+
+        var opened = '当前所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']\n'
+
+        output.unshift(opened)
+
+        output.unshift(`已经帮你随机翻开一个字符[ ${randsymbol} ]了捏 ♪（＾∀＾●）ﾉ\n`)
+        e.reply(output, true)
+        return true
+
+    }
 
 }
 
@@ -426,8 +546,21 @@ function shuffleArray(des) {
 }
 
 function rand(min, max) {
-    min = Math.ceil(min)
-    max = Math.floor(max)
-    return Math.floor(Math.random() * (max - min + 1)) + min
+    var range = max - min + 1
+    var randomOffset = Math.floor(Math.random() * range)
+    return (randomOffset + min) % range + min
 }
 
+function getRandCharacter(str) {
+    // 去除空白字符
+    var trimmedStr = str.replace(/\s/g, '')
+  
+    // 获取字符串长度
+    var length = trimmedStr.length
+  
+    // 生成随机索引
+    var randomIndex = rand(0,length.length - 1)
+  
+    // 返回随机字符
+    return trimmedStr.charAt(randomIndex)
+}
