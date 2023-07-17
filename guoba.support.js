@@ -105,7 +105,7 @@ export function supportGuoba() {
                 },
                 {
                     field: 'LetterGuessCd',
-                    label: '字母猜测间隔',
+                    label: '字母开启间隔',
                     bottomHelpMessage: '开字母的全局开启间隔时间，单位：秒',
                     component: 'InputNumber',
                     required: true,
