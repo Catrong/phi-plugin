@@ -3,8 +3,11 @@ import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
 import Config from '../components/Config.js'
+import { segment } from 'oicq'
 
 await get.init()
+
+const Level = ['EZ', 'HD', 'IN', 'AT', null] //难度映射
 
 export class phisong extends plugin {
     constructor() {
@@ -30,10 +33,10 @@ export class phisong extends plugin {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(曲绘|ill|Ill).*$`,
                     fnc: 'ill'
                 },
-                // {
-                //     reg: `^[#/](${Config.getDefOrConfig('config','cmdhead')})(\\s*)(随机|rand)(1?)[0-9]?((\\s*)(AT|IN|HD|EZ)(\\s*))*$`,
-                //     fnc: 'rand'
-                // },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(随机|rand).*$`,
+                    fnc: 'rand'
+                },
             ]
         })
 
@@ -167,8 +170,56 @@ export class phisong extends plugin {
 
     }
 
-    async rand(e) {
-        var msg = e.msg.replace()
+    /**随机定级范围内曲目 */
+    async randmic(e) {
+        let msg = e.msg.replace(/^[#/](.*)(随机|rand)(\s*)/, "")
+        let isask = [1, 1, 1, 1]
+        if (e.msg.includes('AT') || e.msg.includes('IN') || e.msg.includes('HD') || e.msg.includes('EZ')) {
+            isask = [0, 0, 0, 0]
+            if (e.msg.includes('EZ')) { isask[0] = 1 }
+            if (e.msg.includes('HD')) { isask[1] = 1 }
+            if (e.msg.includes('IN')) { isask[2] = 1 }
+            if (e.msg.includes('AT')) { isask[3] = 1 }
+        }
+        msg = msg.replace(/(\s*)|AT|IN|HD|EZ/g, "")
+        var rank = msg.split('-')
+
+        if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
+            e.reply([segment.at(e.user_id), `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`])
+            return true
+        }
+
+        var top = max(rank[0], rank[1])
+        var bottom = min(rank[0], rank[1])
+        var songsname = []
+        for (let i in get.info) {
+            for (var level in Level) {
+                if (isask[level] && get.info[i]['chart'][Level[level]]) {
+                    var difficulty = get.info[i]['chart'][Level[level]]['difficulty']
+                    if (difficulty >= bottom && difficulty <= top) {
+                        songsname.push(i)
+                    }
+                }
+            }
+        }
+
+        if (!songsname) {
+            e.reply([segment.at(e.user_id), `未找到 ${rank[0]} - ${rank[1]} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''} 谱面QAQ!`])
+            return true
+        }
+
+        var result = songsname[randbt(songsname.length)]
+
+        
+
     }
 
+}
+
+/**
+ * RandBetween
+ * @param {number} top 随机值上界
+ */
+function randbt(top, bottom = 0) {
+    return Number((Math.random() * (top - bottom)).toFixed(0)) + bottom
 }
