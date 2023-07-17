@@ -109,7 +109,7 @@ export class philetter extends plugin {
         var output = '出你字母进行中：\n'
         for (var i in blurlist[e.group_id]) {
             var blur_name = blurlist[e.group_id][i]
-            output += '【' + i + '】' + blur_name + '\n'
+            output += '【' + i + '】' + blur_name + `\n`
         }
         await e.reply(output, true)
 
@@ -161,13 +161,12 @@ export class philetter extends plugin {
                 if (!(songname.toLowerCase().includes(letter.toLowerCase())) && !letters.includes(letter.toLowerCase())) {
                     //blurlist不存在gamelist里的曲名，说明已经被猜出来然后删除了，直接输出标准答案即可，否则输出加密曲名
                     if (!(blurlist[e.group_id][i])) {
-                        output.push(`【${i}】 ${songname} `) //标准答案
+                        output.push(`\n【${i}】 ${songname} `) //标准答案
                         if (Config.getDefOrConfig('config', 'LetterWinner') && winnerid) {
                             output.push(segment.at(winnerid)) //猜对者
                         }
-                        output.push('\n')
                     } else {
-                        output.push(`【${i}】 ${blurname}\n`)
+                        output.push(`\n【${i}】 ${blurname}`)
                     }
                     continue
                 }
@@ -176,11 +175,10 @@ export class philetter extends plugin {
 
                 //就算包含，但是被猜出来了也是直接输出标准曲名
                 if (!(blurlist[e.group_id][i])) {
-                    output.push(`【${i}】 ${songname} `) //标准答案
+                    output.push(`\n【${i}】 ${songname} `) //标准答案
                     if (Config.getDefOrConfig('config', 'LetterWinner') && winnerid) {
                         output.push(segment.at(winnerid)) //猜对者
                     }
-                    output.push('\n')
                     continue
                 }
 
@@ -203,7 +201,7 @@ export class philetter extends plugin {
                     }
                 }
                 blurlist[e.group_id][i] = newBlurname
-                output.push(`【${i}】 ${newBlurname}\n`) //标准答案
+                output.push(`\n【${i}】 ${newBlurname}`) //标准答案
             }
 
             //包含该字母，就把该字母拼到alphalist后面去
@@ -211,7 +209,7 @@ export class philetter extends plugin {
                 alphalist[e.group_id] = alphalist[e.group_id] || {}
                 alphalist[e.group_id] = alphalist[e.group_id] + letter.toUpperCase() + ' '
 
-                var opened = '当前所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']\n'
+                var opened = '当前所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']'
 
                 output.unshift(opened)
 
@@ -219,7 +217,7 @@ export class philetter extends plugin {
                 e.reply(output, true)
             }
             else {
-                var opened = '当前所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']\n'
+                var opened = '当前所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']'
 
                 output.unshift(opened)
 
@@ -277,24 +275,23 @@ export class philetter extends plugin {
                                 return true
                             }
 
-                            e.reply([segment.at(e.user_id), `恭喜你ww，答对啦喵,第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o \n`], true)
+                            e.reply([segment.at(e.user_id), `恭喜你ww，答对啦喵,第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `], true)
                             await e.reply(await get.getsongsinfo(e, standard_song))//发送曲绘
                             delete (blurlist[e.group_id][num])
                             winnerlist[e.group_id][num] = e.user_id //记录猜对者
                             var isEmpty = Object.getOwnPropertyNames(blurlist[e.group_id]).length === 0//是否全部猜完
                             if (!isEmpty) {
 
-                                output.push('出你字母进行中：\n')
+                                output.push('出你字母进行中：')
                                 output.push(opened)
                                 for (var m in gamelist[e.group_id]) {
                                     if (blurlist[e.group_id][m]) {
-                                        output.push(`【${m}】${blurlist[e.group_id][m]}\n`)
+                                        output.push(`\n【${m}】${blurlist[e.group_id][m]}`)
                                     } else {
-                                        output.push(`【${m}】${gamelist[e.group_id][m]}`)
+                                        output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
                                         if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
                                             output.push(segment.at(winnerlist[e.group_id][m]))
                                         }
-                                        output.push('\n')
                                     }
                                 }
                                 e.reply(output, true)
@@ -302,11 +299,10 @@ export class philetter extends plugin {
                             } else {
                                 output.push('出你字母已结束，答案如下：\n')
                                 for (var m in gamelist[e.group_id]) {
-                                    output.push(`【${m}】${gamelist[e.group_id][m]}`)
+                                    output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
                                     if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
                                         output.push(segment.at(winnerlist[e.group_id][m]))
                                     }
-                                    output.push('\n')
                                 }
                                 output.push(opened)
 
@@ -349,15 +345,14 @@ export class philetter extends plugin {
             delete (blurlist[e.group_id])
             delete (winnerlist[e.group_id])
             await e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
-            var output = ['出你字母已结束，答案如下：\n']
+            var output = ['出你字母已结束，答案如下：']
             for (var m in t) {
                 var correct_name = t[m]
                 var winner_id = winner[m]
-                output.push(`【${m}】${correct_name}`)
+                output.push(`\n【${m}】${correct_name}`)
                 if (Config.getDefOrConfig('config', 'LetterWinner') && winner_id) {
                     output.push(segment.at(winner_id))
                 }
-                output.push('\n')
             }
             await e.reply(output)
             return true
@@ -411,11 +406,10 @@ export class philetter extends plugin {
 
             //被猜出来了的直接输出标准曲名
             if (!(blurlist[e.group_id][i])) {
-                output.push(`【${i}】 ${songname} `) //标准答案
+                output.push(`\n【${i}】 ${songname} `) //标准答案
                 if (Config.getDefOrConfig('config', 'LetterWinner') && winnerid) {
                     output.push(segment.at(winnerid)) //猜对者
                 }
-                output.push('\n')
                 continue
             }
 
@@ -438,14 +432,14 @@ export class philetter extends plugin {
                 }
             }
             blurlist[e.group_id][i] = newBlurname
-            output.push(`【${i}】 ${newBlurname}\n`) //标准答案
+            output.push(`\n【${i}】 ${newBlurname}`) //标准答案
         }
 
         //将该随机拼到alphalist后面去
         alphalist[e.group_id] = alphalist[e.group_id] || {}
         alphalist[e.group_id] = alphalist[e.group_id] + randsymbol.toUpperCase() + ' '
 
-        var opened = '当前所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']\n'
+        var opened = '当前所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']'
 
         output.unshift(opened)
 
