@@ -27,6 +27,15 @@ cmdhead: "phi"
 #  猜曲绘提示时间间隔(s)
 GuessTipCd: 15
 
+#  猜字母群聊全局猜测冷却时间间隔(s)
+LetterGuessCd: 3
+
+#  猜字母群聊全局翻开字母冷却时间间隔(s)
+LetterRevealCd: 12
+
+#  猜字母群聊全局提示冷却时间间隔(s)
+LetterTipCd: 30
+
 #  猜曲绘是否撤回
 GuessTipRecall: false
 
