@@ -176,12 +176,12 @@ export class phisong extends plugin {
         let isask = [1, 1, 1, 1]
 
         msg = msg.toUpperCase()
-        if (e.msg.includes('AT') || e.msg.includes('IN') || e.msg.includes('HD') || e.msg.includes('EZ')) {
+        if (msg.includes('AT') || msg.includes('IN') || msg.includes('HD') || msg.includes('EZ')) {
             isask = [0, 0, 0, 0]
-            if (e.msg.includes('EZ')) { isask[0] = 1 }
-            if (e.msg.includes('HD')) { isask[1] = 1 }
-            if (e.msg.includes('IN')) { isask[2] = 1 }
-            if (e.msg.includes('AT')) { isask[3] = 1 }
+            if (msg.includes('EZ')) { isask[0] = 1 }
+            if (msg.includes('HD')) { isask[1] = 1 }
+            if (msg.includes('IN')) { isask[2] = 1 }
+            if (msg.includes('AT')) { isask[3] = 1 }
         }
         msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
         var rank = msg.split('-')
@@ -234,7 +234,7 @@ export class phisong extends plugin {
         }
 
         if (!songsname[0]) {
-            e.reply([segment.at(e.user_id), `未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''} 谱面QAQ!`])
+            e.reply([segment.at(e.user_id), `未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''}谱面QAQ!`])
             return true
         }
 
