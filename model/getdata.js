@@ -128,7 +128,7 @@ class get {
      */
     fuzzysongsnick(mic) {
         let nickconfig = Config.getDefOrConfig('nickconfig', mic)
-        var fuzzyMatch = function(str1, str2) {
+        var fuzzyMatch = function (str1, str2) {
             // 去除空格和其他符号，并转换为小写
             const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？]/g
             const formattedStr1 = str1.replace(pattern, '').toLowerCase()
@@ -204,6 +204,11 @@ class get {
     /**获取猜曲绘图片 */
     async getguess(e, data) {
         return await atlas.guess(e, data)
+    }
+
+    /**获取随机曲目图片 */
+    async getrand(e, data) {
+        return await atlas.rand(e, data)
     }
 
     /**获取曲绘，返回地址，原名

@@ -33,10 +33,10 @@ export class phisong extends plugin {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(曲绘|ill|Ill).*$`,
                     fnc: 'ill'
                 },
-                // {
-                //     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(随机|rand).*$`,
-                //     fnc: 'rand'
-                // },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(随机|rand(om)?).*$`,
+                    fnc: 'randmic'
+                },
             ]
         })
 
@@ -174,6 +174,8 @@ export class phisong extends plugin {
     async randmic(e) {
         let msg = e.msg.replace(/^[#/](.*)(随机|rand)(\s*)/, "")
         let isask = [1, 1, 1, 1]
+        
+        msg = msg.toUpperCase()
         if (e.msg.includes('AT') || e.msg.includes('IN') || e.msg.includes('HD') || e.msg.includes('EZ')) {
             isask = [0, 0, 0, 0]
             if (e.msg.includes('EZ')) { isask[0] = 1 }
@@ -183,34 +185,63 @@ export class phisong extends plugin {
         }
         msg = msg.replace(/(\s*)|AT|IN|HD|EZ/g, "")
         var rank = msg.split('-')
+        var top
+        var bottom
 
-        if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
-            e.reply([segment.at(e.user_id), `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`])
-            return true
+        /**是否指定范围 */
+        if (rank[0]) {
+            console.info(rank)
+            rank[0] = Number(rank[0])
+            if (rank[1]) {
+                rank[1] = Number(rank[1])
+                if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
+                    e.reply([segment.at(e.user_id), `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`])
+                    return true
+                }
+                top = Math.max(rank[0], rank[1])
+                bottom = Math.min(rank[0], rank[1])
+            } else {
+                if (rank[0] == NaN) {
+                    e.reply([segment.at(e.user_id), `${rank[0]} 不是一个定级哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数> <难度(可多选)>`])
+                    return true
+                } else {
+                    top = bottom = rank[0]
+                }
+            }
+        } else {
+            top = 100
+            bottom = 0
         }
 
-        var top = max(rank[0], rank[1])
-        var bottom = min(rank[0], rank[1])
         var songsname = []
         for (let i in get.info) {
             for (var level in Level) {
                 if (isask[level] && get.info[i]['chart'][Level[level]]) {
                     var difficulty = get.info[i]['chart'][Level[level]]['difficulty']
                     if (difficulty >= bottom && difficulty <= top) {
-                        songsname.push(i)
+                        songsname.push({
+                            ...get.info[i]['chart'][Level[level]],
+                            rank: Level[level],
+                            illustration: get.info[i]['illustration_big'],
+                            song: get.info[i]['song'],
+                            illustrator: get.info[i]['illustrator'],
+                            composer: get.info[i]['composer'],
+                        })
                     }
                 }
             }
         }
 
         if (!songsname) {
-            e.reply([segment.at(e.user_id), `未找到 ${rank[0]} - ${rank[1]} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''} 谱面QAQ!`])
+            e.reply([segment.at(e.user_id), `未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''} 谱面QAQ!`])
             return true
         }
 
         var result = songsname[randbt(songsname.length)]
 
-        
+        console.info(result)
+
+        await e.reply(await get.getrand(e, result))
 
     }
 

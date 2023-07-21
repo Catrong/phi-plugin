@@ -89,6 +89,15 @@ class atlas {
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
         })
     }
+
+    async rand(e, data) {
+        return await puppeteer.render('rand/rand', {
+            ...data
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+        })
+    }
 }
 //20 - 30
 //39 - 19    

@@ -167,10 +167,6 @@ export class philetter extends plugin {
 
                 //就算包含，但是被猜出来了也是直接输出标准曲名
                 if (!(blurlist[e.group_id][i])) {
-                    output.push(`\n【${i}】 ${songname} `) //标准答案
-                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerid) {
-                        output.push(segment.at(winnerid)) //猜对者
-                    }
                     continue
                 }
 
@@ -203,9 +199,7 @@ export class philetter extends plugin {
             if (included) {
                 alphalist[e.group_id] = alphalist[e.group_id] || {}
                 alphalist[e.group_id] = alphalist[e.group_id] + letter.toUpperCase() + ' '
-
                 output.push(`成功翻开字母[ ${letter} ]\n`)
-                e.reply(output, true)
             }
             else {
                 output.push(`这几首曲目中不包含字母[ ${letter} ]\n`)
