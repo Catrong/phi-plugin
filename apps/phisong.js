@@ -7,7 +7,7 @@ import { segment } from 'oicq'
 
 await get.init()
 
-const Level = ['EZ', 'HD', 'IN', 'AT', null] //难度映射
+const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 
 export class phisong extends plugin {
     constructor() {
@@ -174,7 +174,7 @@ export class phisong extends plugin {
     async randmic(e) {
         let msg = e.msg.replace(/^[#/](.*)(随机|rand)(\s*)/, "")
         let isask = [1, 1, 1, 1]
-        
+
         msg = msg.toUpperCase()
         if (e.msg.includes('AT') || e.msg.includes('IN') || e.msg.includes('HD') || e.msg.includes('EZ')) {
             isask = [0, 0, 0, 0]
@@ -212,6 +212,8 @@ export class phisong extends plugin {
             bottom = 0
         }
 
+        if (top % 1 == 0) top += 0.9
+
         var songsname = []
         for (let i in get.info) {
             for (var level in Level) {
@@ -237,7 +239,7 @@ export class phisong extends plugin {
         }
 
         var result = songsname[randbt(songsname.length)]
-        
+
         await e.reply(await get.getrand(e, result))
 
     }
