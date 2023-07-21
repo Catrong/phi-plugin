@@ -233,7 +233,7 @@ export class phisong extends plugin {
             }
         }
 
-        if (!songsname) {
+        if (!songsname[0]) {
             e.reply([segment.at(e.user_id), `未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''} 谱面QAQ!`])
             return true
         }
