@@ -183,14 +183,13 @@ export class phisong extends plugin {
             if (e.msg.includes('IN')) { isask[2] = 1 }
             if (e.msg.includes('AT')) { isask[3] = 1 }
         }
-        msg = msg.replace(/(\s*)|AT|IN|HD|EZ/g, "")
+        msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
         var rank = msg.split('-')
         var top
         var bottom
 
         /**是否指定范围 */
         if (rank[0]) {
-            console.info(rank)
             rank[0] = Number(rank[0])
             if (rank[1]) {
                 rank[1] = Number(rank[1])
@@ -238,9 +237,7 @@ export class phisong extends plugin {
         }
 
         var result = songsname[randbt(songsname.length)]
-
-        console.info(result)
-
+        
         await e.reply(await get.getrand(e, result))
 
     }
