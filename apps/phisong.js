@@ -240,8 +240,12 @@ export class phisong extends plugin {
 
         var result = songsname[randbt(songsname.length)]
 
-        await e.reply(await get.getrand(e, result))
-
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            await e.reply([segment.at(e.user_id), await get.getrand(e, result)])
+        } else {
+            await e.reply(await get.getrand(e, result), true)
+        }
+        return true
     }
 
 }
