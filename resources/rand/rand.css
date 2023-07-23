@@ -67,16 +67,16 @@ body p {
 }
 
 .name-left p1 {
-    font-size: 50px;
-    height: 50px;
+    font-size: 55px;
+    height: 60px;
     display: flex;
     color: #fff;
     align-items: center;
 }
 
 .name-left p2 {
-    font-size: 25px;
-    height: 30px;
+    font-size: 30px;
+    height: 40px;
     display: flex;
     color: #fff;
     align-items: center;

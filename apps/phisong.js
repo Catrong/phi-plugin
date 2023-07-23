@@ -190,21 +190,41 @@ export class phisong extends plugin {
 
         /**是否指定范围 */
         if (rank[0]) {
-            rank[0] = Number(rank[0])
-            if (rank[1]) {
-                rank[1] = Number(rank[1])
-                if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
-                    e.reply([segment.at(e.user_id), `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`])
-                    return true
-                }
-                top = Math.max(rank[0], rank[1])
-                bottom = Math.min(rank[0], rank[1])
-            } else {
-                if (rank[0] == NaN) {
-                    e.reply([segment.at(e.user_id), `${rank[0]} 不是一个定级哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数> <难度(可多选)>`])
+            if (rank[0].includes('+')) {
+                if (rank[1]) {
+                    e.reply([segment.at(e.user_id), ` 含有 '+' 的难度不支持指定范围哦！\n#${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`], true)
                     return true
                 } else {
-                    top = bottom = rank[0]
+                    rank[0] = Number(rank[0].replace('+', ''))
+                    bottom = rank[0]
+                    top = 100
+                }
+            } else if (rank[0].includes('-')) {
+                if (rank[1]) {
+                    e.reply([segment.at(e.user_id), ` 含有 '-' 的难度不支持指定范围哦！\n#${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>- <难度(可多选)>`], true)
+                    return true
+                } else {
+                    rank[0] = Number(rank[0].replace('-', ''))
+                    bottom = 0
+                    top = rank[0]
+                }
+            } else {
+                rank[0] = Number(rank[0])
+                if (rank[1]) {
+                    rank[1] = Number(rank[1])
+                    if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
+                        e.reply([segment.at(e.user_id), ` ${rank[0]} - ${rank[1]} 不是一个定级范围哦\n#${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`], true)
+                        return true
+                    }
+                    top = Math.max(rank[0], rank[1])
+                    bottom = Math.min(rank[0], rank[1])
+                } else {
+                    if (rank[0] == NaN) {
+                        e.reply([segment.at(e.user_id), ` ${rank[0]} 不是一个定级哦\n#/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数> <难度(可多选)>`], true)
+                        return true
+                    } else {
+                        top = bottom = rank[0]
+                    }
                 }
             }
         } else {
@@ -234,11 +254,11 @@ export class phisong extends plugin {
         }
 
         if (!songsname[0]) {
-            e.reply([segment.at(e.user_id), `未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''}谱面QAQ!`])
+            e.reply([segment.at(e.user_id), ` 未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''}谱面QAQ!`])
             return true
         }
 
-        var result = songsname[randbt(songsname.length)]
+        var result = songsname[randbt(songsname.length - 1)]
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
             await e.reply([segment.at(e.user_id), await get.getrand(e, result)])
