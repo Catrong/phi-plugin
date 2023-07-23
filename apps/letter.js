@@ -47,7 +47,7 @@ export class philetter extends plugin {
                     fnc: 'guess'
                 },
                 {
-                    reg: `^[#/]((字母)?答案|结束)$`,
+                    reg: `^[#/](字母)?(ans|答案|结束)$`,
                     fnc: 'ans'
                 },
                 {
