@@ -208,7 +208,7 @@ export class philetter extends plugin {
             output.push(`当前所有翻开的字母[ ${alphalist[e.group_id].replace(/\[object Object\]/g, '')}]`)
 
             /**检查是否翻完 */
-            
+
             var isEmpty = Object.getOwnPropertyNames(blurlist[e.group_id]).length === 0//是否全部猜完
             if (!isEmpty) {
 
@@ -289,9 +289,9 @@ export class philetter extends plugin {
                                 return true
                             }
 
+                            delete (blurlist[e.group_id][num])
                             e.reply([segment.at(e.user_id), `恭喜你ww，答对啦喵,第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `], true)
                             await e.reply(await get.getsongsinfo(e, standard_song))//发送曲绘
-                            delete (blurlist[e.group_id][num])
                             winnerlist[e.group_id][num] = e.user_id //记录猜对者
                             var isEmpty = Object.getOwnPropertyNames(blurlist[e.group_id]).length === 0//是否全部猜完
                             if (!isEmpty) {
