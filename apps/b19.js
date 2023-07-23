@@ -222,7 +222,7 @@ export class phib19 extends plugin {
                         `${phi.rank} ${phi.difficulty}\n` +
                         `${phi.score} ${phi.pingji}\n` +
                         `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
-                        `Rks+0.01所需acc: ${phi.suggest}%`])
+                        `Rks+0.01所需acc: ${phi.suggest}`])
                 } else {
                     Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
                 }
@@ -233,7 +233,7 @@ export class phib19 extends plugin {
                     `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
                     `${rkslist[i].score} ${rkslist[i].pingji}\n` +
                     `${Number(rkslist[i].acc).toFixed(2)}% ${Number(rkslist[i].rks).toFixed(2)}\n` +
-                    `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`])
+                    `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
                 }
             } else {
                 /**无图模式 */
@@ -251,7 +251,7 @@ export class phib19 extends plugin {
                         `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
                         `${rkslist[i].score} ${rkslist[i].pingji}\n` +
                         `${Number(rkslist[i].acc).toFixed(2)}% ${Number(rkslist[i].rks).toFixed(2)}\n` +
-                        `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`])
+                        `Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`])
                 }
             }
             await e.reply(await common.makeForwardMsg(e, Remsg))
