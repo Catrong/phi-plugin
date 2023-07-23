@@ -130,7 +130,7 @@ export function supportGuoba() {
                 {
                     field: 'LetterWinner',
                     label: '@猜对者',
-                    bottomHelpMessage: '开字母是否在答案后@猜对者，会频繁@别人，慎重开启',
+                    bottomHelpMessage: '开字母是否在答案后附带猜对者，不会@人',
                     component: 'Switch',
                 },
             ],
