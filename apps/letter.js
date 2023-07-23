@@ -197,7 +197,16 @@ export class philetter extends plugin {
             //包含该字母，就把该字母拼到alphalist后面去
             if (included) {
                 alphalist[e.group_id] = alphalist[e.group_id] || {}
-                alphalist[e.group_id] = alphalist[e.group_id] + letter.toUpperCase() + ' '
+
+                var reg = /^[A-Za-z]+$/g
+                if (reg.test(randsymbol)) {
+                    /**如果为英文字母则进行大小写转换 */
+                    alphalist[e.group_id] = alphalist[e.group_id] + randsymbol.toUpperCase() + ' '
+                } else {
+                    alphalist[e.group_id] = alphalist[e.group_id] + randsymbol + ' '
+                }
+
+
                 output.push(`成功翻开字母[ ${letter} ]\n`)
             }
             else {
@@ -451,7 +460,14 @@ export class philetter extends plugin {
 
         //将该随机拼到alphalist后面去
         alphalist[e.group_id] = alphalist[e.group_id] || {}
-        alphalist[e.group_id] = alphalist[e.group_id] + randsymbol.toUpperCase() + ' '
+
+        var reg = /^[A-Za-z]+$/g
+        if (reg.test(randsymbol)) {
+            /**如果为英文字母则进行大小写转换 */
+            alphalist[e.group_id] = alphalist[e.group_id] + randsymbol.toUpperCase() + ' '
+        } else {
+            alphalist[e.group_id] = alphalist[e.group_id] + randsymbol + ' '
+        }
 
         output.push(`已经帮你随机翻开一个字符[ ${randsymbol} ]了捏 ♪（＾∀＾●）ﾉ\n`)
 
