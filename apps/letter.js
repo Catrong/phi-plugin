@@ -284,7 +284,10 @@ export class philetter extends plugin {
                     num = Number(result[3])
                 }
                 var content = msg.replace(regex, '')
-
+                if(num > Config.getDefOrConfig('config','LetterNum')) {
+                    e.reply(`没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
+                    return true
+                }
                 var songs
                 if (!isfuzzymatch) {
                     var songs = get.songsnick(content)//通过别名匹配全名
