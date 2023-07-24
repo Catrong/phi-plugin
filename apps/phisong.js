@@ -199,15 +199,10 @@ export class phisong extends plugin {
                     bottom = rank[0]
                     top = 100
                 }
-            } else if (rank[0].includes('-')) {
-                if (rank[1]) {
-                    e.reply([segment.at(e.user_id), ` 含有 '-' 的难度不支持指定范围哦！\n#${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>- <难度(可多选)>`], true)
-                    return true
-                } else {
-                    rank[0] = Number(rank[0].replace('-', ''))
-                    bottom = 0
-                    top = rank[0]
-                }
+            } else if (rank[0].includes('-') && !rank[1]) {
+                rank[0] = Number(rank[0].replace('-', ''))
+                bottom = 0
+                top = rank[0]
             } else {
                 rank[0] = Number(rank[0])
                 if (rank[1]) {
