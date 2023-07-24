@@ -52,6 +52,10 @@ export class phiguess extends plugin {
             e.reply('当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
             return true
         }
+
+        //抽取之前洗个牌
+        shuffleArray(songsname)
+
         var num = randbt(songsname.length - 1)
         var songs_info = get.info()[songsname[num]]
         if (typeof songs_info.illustration_big == 'undefined') {
@@ -340,4 +344,12 @@ function timeout(ms) {
     return new Promise((resolve, reject) => {
         setTimeout(resolve, ms, 'done');
     });
+}
+
+//将数组顺序打乱
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
+    }
 }
