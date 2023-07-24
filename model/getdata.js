@@ -181,7 +181,7 @@ class get {
             all = Array.from(new Set(all)) //去重
             return all
         }
-        return false
+        return []
     }
 
     /**设置别名 原名, 别名 */

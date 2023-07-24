@@ -90,7 +90,7 @@ export class phisong extends plugin {
             } else {
                 e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
             }
-            if (get.fuzzysongsnick(msg[1]).includes(mic)) {
+            if (mic in get.fuzzysongsnick(msg[1])) {
                 /**已经添加过该别名 */
                 e.reply(`${mic} 已经有 ${msg[1]} 这个别名了哦！`)
                 return true
