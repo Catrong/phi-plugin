@@ -82,7 +82,7 @@ export class phisong extends plugin {
         }
         if (msg[1]) {
             let mic = get.fuzzysongsnick(msg[0])
-            if (mic) {
+            if (mic[0]) {
                 if (mic[1]) {
                     e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
                     return true
@@ -147,7 +147,7 @@ export class phisong extends plugin {
 
     async ill(e) {
         let msg = e.msg.replace(/[#/](.*)(曲绘|ill|Ill)(\s*)/g, "")
-        let songs = await get.fuzzysongsnick(msg)
+        let songs = get.fuzzysongsnick(msg)
         if (songs[0]) {
             let msgRes
 
