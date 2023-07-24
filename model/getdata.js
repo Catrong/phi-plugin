@@ -27,15 +27,33 @@ class get {
         this.defaultPath = `${_path}/plugins/phi-plugin/config/default_config/`
         this.default = 0
 
+        /**默认图片路径 */
         this.imgPath = `${_path}/plugins/phi-plugin/resources/otherimg/`
+
+        /**用户图片路径 */
+        this.orillPath = `${_path}/plugins/phi-plugin/resources/otherill/`
 
     }
 
     async init() {
-        this.info = { ...await this.getData('infolist.json', this.infoPath), ...await this.getData('spinfo.json', this.infoPath) }
+        this.ori_info = { ...await this.getData('infolist.json', this.infoPath), ...await this.getData('spinfo.json', this.infoPath) }
         this.songsid = await this.getData('songsid.yaml', this.infoPath)
         this.songnick = await this.getData('nicklist.yaml', this.infoPath)
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
+    }
+
+    info() {
+        switch (Config.getDefOrConfig('config', 'otherinfo')) {
+            case 0: {
+                return this.ori_info
+            }
+            case 1: {
+                return { ...this.ori_info, ...Config.getDefOrConfig('otherinfo') }
+            }
+            case 2: {
+                return Config.getDefOrConfig('otherinfo')
+            }
+        }
     }
 
     /**获取 chos 文件 
@@ -102,7 +120,7 @@ class get {
         let nickconfig = Config.getDefOrConfig('nickconfig', mic)
         var all = []
 
-        if (this.info[mic]) all.push(mic)
+        if (this.info()[mic]) all.push(mic)
 
         if (this.songnick[mic]) {
             for (var i in this.songnick[mic]) {
@@ -139,7 +157,7 @@ class get {
         }
         var all = []
 
-        for (var i in this.info) {
+        for (var i in this.info()) {
             if (fuzzyMatch(mic, i)) {
                 all.push(i)
             }
@@ -175,7 +193,7 @@ class get {
     getsongsinfo(e, name, data = undefined) {
 
         if (!data) {
-            data = this.info[name]
+            data = this.info()[name]
         }
         if (data) {
             data.illustration = this.getill(name)
@@ -218,12 +236,16 @@ class get {
     getill(name, isBig = true) {
         var ans
         if (isBig) {
-            ans = this.info[name].illustration_big
+            ans = this.info()[name].illustration_big
         } else {
-            ans = this.info[name].illustration
+            ans = this.info()[name].illustration
+        }
+        var reg = /^(?:(http|https|ftp):\/\/)?((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
+        if (ans && !reg.test(ans)) {
+            ans = `${this.orillPath}${ans}`
         }
         if (!ans) {
-            ans = `${this.imgPath}/phigros.png`
+            ans = `${this.imgPath}phigros.png`
         }
         return ans
     }
@@ -254,7 +276,7 @@ class get {
      */
     async idgetsong(id, info = true) {
         if (info)
-            return this.info[this.songsid[id]]
+            return this.ori_info[this.songsid[id]]
         else
             return this.songsid[id]
     }

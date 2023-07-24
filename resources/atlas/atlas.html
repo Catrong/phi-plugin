@@ -42,54 +42,28 @@
                         <p>Charts:</p>
                     </div>
                     <div class="chart">
-                        {{if or}}
+                        {{each chart}}
+
                         <div class="up">
-                            <p style="color: rgb({{or.r}}, {{or.g}}, {{or.b}});">{{or.chart}}&ensp;</p>
-                            <p>&ensp;{{or.difficulty}}&ensp;</p>
-                            <p>&ensp;{{or.combo}}&ensp;Notes</p>
-                        </div>
-                        <p>Charter:&ensp;{{or.charter}}</p>
-                        {{/if}}
-                        {{if SP}}
-                        <div class="up">
+                        {{if $index == 'SP'}}
                             <p style="color: rgb(0, 0, 0);">SP&ensp;</p>
-                            <p>&ensp;{{SP.difficulty}}&ensp;</p>
-                            <p>&ensp;{{SP.combo}}&ensp;Notes</p>
-                        </div>
-                        <p>Charter:&ensp;{{SP.charter}}</p>
-                        {{/if}}
-                        {{if AT}}
-                        <div class="up">
-                            <p style="color: rgb(213, 213, 213);">AT&ensp;</p>
-                            <p>&ensp;{{AT.difficulty}}&ensp;</p>
-                            <p>&ensp;{{AT.combo}}&ensp;Notes</p>
-                        </div>
-                        <p>Charter:&ensp;{{AT.charter}}</p>
-                        {{/if}}
-                        {{if IN}}
-                        <div class="up">
+                        {{else if $index == 'AT'}}
+                        <p style="color: rgb(213, 213, 213);">AT&ensp;</p>
+                        {{else if $index == 'IN'}}
                             <p style="color: rgb(255, 159, 159);">IN&ensp;</p>
-                            <p>&ensp;{{IN.difficulty}}&ensp;</p>
-                            <p>&ensp;{{IN.combo}}&ensp;Notes</p>
-                        </div>
-                        <p>Charter:&ensp;{{IN.charter}}</p>
-                        {{/if}}
-                        {{if HD}}
-                        <div class="up">
+                        {{else if $index == 'HD'}}
                             <p style="color: rgb(165, 187, 227);">HD&ensp;</p>
-                            <p>&ensp;{{HD.difficulty}}&ensp;</p>
-                            <p>&ensp;{{HD.combo}}&ensp;Notes</p>
-                        </div>
-                        <p>Charter:&ensp;{{HD.charter}}</p>
-                        {{/if}}
-                        {{if EZ}}
-                        <div class="up">
+                        {{else if $index == 'EZ'}}
                             <p style="color: rgb(192, 221, 173);">EZ&ensp;</p>
-                            <p>&ensp;{{EZ.difficulty}}&ensp;</p>
-                            <p>&ensp;{{EZ.combo}}&ensp;Notes</p>
-                        </div>
-                        <p>Charter:&ensp;{{EZ.charter}}</p>
+                        {{else}}
+                            <p style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</p>
                         {{/if}}
+                            <p>&ensp;{{$value.difficulty}}&ensp;</p>
+                            <p>&ensp;{{$value.combo}}&ensp;Notes</p>
+                        </div>
+                        <p>Charter:&ensp;{{$value.charter}}</p>
+                        {{/each}}
+
                         
                     </div>
                     {{if othermsg}}
@@ -105,36 +79,26 @@
         </div>
         <div class="leave">
             <div class="leave-box">
-                {{if EZ}}
+                {{each chart}}
+
+                {{if $index == 'EZ'}}
                 <div class="leave-ez">
-                    <p style="margin-left: 3px;">{{EZ.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">EZ</p>
-                </div>
-                {{/if}}
-                {{if HD}}
+                {{else if $index == 'HD'}}
                 <div class="leave-hd">
-                    <p style="margin-left: 3px;">{{HD.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">HD</p>
-                </div>
-                {{/if}}
-                {{if IN}}
+                {{else if $index == 'IN'}}
                 <div class="leave-in">
-                    <p style="margin-left: 3px;">{{IN.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">IN</p>
-                </div>
-                {{/if}}
-                {{if AT}}
+                {{else if $index == 'AT'}}
                 <div class="leave-at">
-                    <p style="margin-left: 3px;">{{AT.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">AT</p>
-                </div>
-                {{/if}}
-                {{if SP}}
+                {{else if $index == 'SP'}}
                 <div class="leave-sp">
-                    <p style="margin-left: 3px;">?</p>
-                    <p style="font-size: 15px; margin-right: 13px;">SP</p>
-                </div>
+                {{else}}
+                <div class="leave-sp" style="background-color: rgba({{$value.rgba}});">
                 {{/if}}
+                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                </div>
+
+                {{/each}}
             </div>
         </div>
     </div>

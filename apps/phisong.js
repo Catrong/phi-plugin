@@ -46,10 +46,9 @@ export class phisong extends plugin {
     /**歌曲图鉴 */
     async serch(e) {
         let msg = e.msg.replace(/[#/](.*)(曲|song)(\s*)/g, "")
-        let songs = await get.fuzzysongsnick(msg)
+        let songs = get.fuzzysongsnick(msg)
         if (songs[0]) {
             let msgRes
-
             if (!songs[1]) {
                 songs = songs[0]
                 // get.getsongsinfo(e, songs)
@@ -154,12 +153,12 @@ export class phisong extends plugin {
 
             if (!songs[1]) {
                 songs = songs[0]
-                msgRes = await get.getillatlas(e, { illustration: get.info[songs]["illustration_big"], illustrator: get.info[songs]["illustrator"] })
+                msgRes = await get.getillatlas(e, { illustration: get.info()[songs]["illustration_big"], illustrator: get.info()[songs]["illustrator"] })
                 e.reply(msgRes)
             } else {
                 msgRes = []
                 for (var i in songs) {
-                    msgRes[i] = await get.getillatlas(e, { illustration: get.info[songs[i]]["illustration_big"], illustrator: get.info[songs[i]]["illustrator"] })
+                    msgRes[i] = await get.getillatlas(e, { illustration: get.info()[songs[i]]["illustration_big"], illustrator: get.info()[songs[i]]["illustrator"] })
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }
@@ -230,18 +229,18 @@ export class phisong extends plugin {
         if (top % 1 == 0) top += 0.9
 
         var songsname = []
-        for (let i in get.info) {
+        for (let i in get.info()) {
             for (var level in Level) {
-                if (isask[level] && get.info[i]['chart'][Level[level]]) {
-                    var difficulty = get.info[i]['chart'][Level[level]]['difficulty']
+                if (isask[level] && get.info()[i]['chart'][Level[level]]) {
+                    var difficulty = get.info()[i]['chart'][Level[level]]['difficulty']
                     if (difficulty >= bottom && difficulty <= top) {
                         songsname.push({
-                            ...get.info[i]['chart'][Level[level]],
+                            ...get.info()[i]['chart'][Level[level]],
                             rank: Level[level],
-                            illustration: get.info[i]['illustration_big'],
-                            song: get.info[i]['song'],
-                            illustrator: get.info[i]['illustrator'],
-                            composer: get.info[i]['composer'],
+                            illustration: get.info()[i]['illustration_big'],
+                            song: get.info()[i]['song'],
+                            illustrator: get.info()[i]['illustrator'],
+                            composer: get.info()[i]['composer'],
                         })
                     }
                 }

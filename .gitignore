@@ -1,9 +1,9 @@
 /data/*
-/config/config/config.yaml
-/config/config/nickconfig.yaml
+/config/config/*
 /model/233.js
 /lib/tem.js
 /lib/2333.json
 /node_modules
 /resources/info/songsurl.yaml
+/resources/otherill/*
 /apps/guessName.js

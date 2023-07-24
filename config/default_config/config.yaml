@@ -24,8 +24,14 @@ WordSuggImg: true
 cmdhead: "phi"
 
 #  ************ 【娱乐设置】 ************* 
+#  是否启用额外曲库 0:原本 1:原本+额外 2:仅额外
+otherinfo: 0
+
 #  猜曲绘提示时间间隔(s)
 GuessTipCd: 15
+
+#  猜字母条数
+LetterNum: 8
 
 #  猜字母群聊全局猜测冷却时间间隔(s)
 LetterGuessCd: 3

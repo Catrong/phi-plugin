@@ -221,54 +221,10 @@ body {
 }
 
 
-.leave-ez {
-    display: flex;
-    width: 100px;
-    height: 75px;
-    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-color: #92D050;
-    margin-right: 20px;
-}
-
-.leave-hd {
-    display: flex;
-    width: 100px;
-    height: 75px;
-    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-color: #00B0F0;
-    margin-right: 20px;
-}
-
-.leave-in {
-    display: flex;
-    width: 100px;
-    height: 75px;
-    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-color: #FF0000;
-    margin-right: 20px;
-}
-
-.leave-at {
-    display: flex;
-    width: 100px;
-    height: 75px;
-    clip-path: polygon(17% 0px, 100% 0px, 83% 100%, 0px 100%, 17% 0px);
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-color: #A6A6A6;
-    margin-right: 20px;
-}
-
+.leave-ez,
+.leave-hd,
+.leave-in,
+.leave-at,
 .leave-sp {
     display: flex;
     width: 100px;
@@ -277,8 +233,27 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: #000000;
     margin-right: 20px;
+}
+
+.leave-ez {
+    background-color: #92D050;
+}
+
+.leave-hd {
+    background-color: #00B0F0;
+}
+
+.leave-in {
+    background-color: #FF0000;
+}
+
+.leave-at {
+    background-color: #A6A6A6;
+}
+
+.leave-sp {
+    background-color: #000000;
 }
 
 .createdbox {

@@ -80,6 +80,28 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'otherinfo',
+                    label: '曲库',
+                    bottomHelpMessage: '使用曲库的模式，若启用自定义则重名的以自定义为准',
+                    component: 'Select',
+                    componentProps: {
+                        options: [
+                            {
+                                label: '原版曲库',
+                                value: 0
+                            },
+                            {
+                                label: '原版+自定义',
+                                value: 1
+                            },
+                            {
+                                label: '仅自定义',
+                                value: 2
+                            }
+                        ]
+                    }
+                },
+                {
                     field: 'GuessTipCd',
                     label: '曲绘提示间隔',
                     bottomHelpMessage: '猜曲绘的提示间隔时间，单位：秒',
@@ -89,6 +111,18 @@ export function supportGuoba() {
                         min: 0,
                         max: 120,
                         placeholder: '请输入时间',
+                    },
+                },
+                {
+                    field: 'LetterNum',
+                    label: '字母条数',
+                    bottomHelpMessage: '开字母的条数，最大为8最小为1',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 1,
+                        max: 8,
+                        placeholder: '请输入数量',
                     },
                 },
                 {
@@ -147,9 +181,11 @@ export function supportGuoba() {
                     GuessTipRecall: Config.getDefOrConfig('config', 'GuessTipRecall'),
                     isGuild: Config.getDefOrConfig('config', 'isGuild'),
                     LetterWinner: Config.getDefOrConfig('config', 'LetterWinner'),
-                    LetterRevealCd: Config.getDefOrConfig('config','LetterRevealCd'),
-                    LetterGuessCd: Config.getDefOrConfig('config','LetterGuessCd'),
-                    LetterTipCd: Config.getDefOrConfig('config','LetterTipCd'),
+                    LetterRevealCd: Config.getDefOrConfig('config', 'LetterRevealCd'),
+                    LetterGuessCd: Config.getDefOrConfig('config', 'LetterGuessCd'),
+                    LetterTipCd: Config.getDefOrConfig('config', 'LetterTipCd'),
+                    otherinfo: Config.getDefOrConfig('config','otherinfo'),
+                    LetterNum: Config.getDefOrConfig('config','LetterNum'),
                 }
                 return config
             },

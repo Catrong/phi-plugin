@@ -7,7 +7,7 @@ import get from '../model/getdata.js'
 await get.init()
 
 var songsname = []
-for (let i in get.info) {
+for (let i in get.info()) {
     songsname.push(i)
 }
 
@@ -46,7 +46,7 @@ export class phiguess extends plugin {
             return true
         }
         var num = randbt(songsname.length - 2)
-        var songs_info = get.info[songsname[num]]
+        var songs_info = get.info()[songsname[num]]
         if (typeof songs_info.illustration_big == 'undefined') {
             logger.error(`[phi guess]抽取到无曲绘曲目 ${songs_info.song}`)
             return true
@@ -55,7 +55,7 @@ export class phiguess extends plugin {
         gamelist[e.group_id] = songs_info.song
 
         var data = {
-            illustration: songs_info.illustration_big,
+            illustration: get.getill(songs_info.song),
             width: 100,
             height: 100,
             x: randbt(2048 - 100),

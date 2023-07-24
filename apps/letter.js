@@ -1,5 +1,5 @@
 /**Phigros出字母猜曲名游戏
- * 会随机抽选8首歌曲
+ * 会随机抽选 n 首歌曲
  * 每首曲目的名字只显示一部分，剩下的部分隐藏
  * 通过给出的字母猜出响应的歌曲
  * 玩家可以翻开所有曲目响应的字母获得更多线索
@@ -13,7 +13,7 @@ import get from '../model/getdata.js'
 
 await get.init()
 var songsname = []
-for (let i in get.info) {
+for (let i in get.info()) {
     songsname.push(i)
 }
 
@@ -66,6 +66,11 @@ export class philetter extends plugin {
             return true
         }
 
+        if (songsname.length < Config.getDefOrConfig('config','LetterNum')) {
+            e.reply("曲库中曲目的数量小于开字母的条数哦！更改曲库后需要重启哦！")
+            return true
+        }
+
         //对曲目进行洗牌
         songsname = shuffleArray(songsname)
 
@@ -85,14 +90,14 @@ export class philetter extends plugin {
         //存储单局抽到的曲目下标
         var chose = []
 
-        for (var i = 1; i <= 8; i++) {
+        for (var i = 1; i <= Config.getDefOrConfig('config', 'LetterNum'); i++) {
             var num = rand(0, songsname.length - 1)
             //防止抽到重复的曲目
             while (chose.includes(num)) {
                 num = rand(0, songsname.length - 1)
             }
             var songName = songsname[num]
-            var songs_info = get.info[songName]
+            var songs_info = get.info()[songName]
             chose.push(num)
 
             gamelist[e.group_id] = gamelist[e.group_id] || {}

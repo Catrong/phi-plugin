@@ -9,30 +9,30 @@ class atlas {
         let data = {
             ...info,
             /**曲名 */
-            song: info.song,
+            // song: info.song,
             /**曲绘 */
-            illustration: info.illustration_big,
+            // illustration: info.illustration_big,
             /**章节 */
-            chapter: info.chapter,
+            // chapter: info.chapter,
             /**bpm */
-            bpm: info.bpm,
+            // bpm: info.bpm,
             /**曲师 */
-            composer: info.composer,
+            // composer: info.composer,
             /**时长 */
             length: info.length.replace(':', "'") + "''",
             /**画师 */
-            illustrator: info.illustrator,
+            // illustrator: info.illustrator,
             /**谱面 */
-            or: info.chart.or,
-            SP: info.chart.SP,
-            AT: info.chart.AT,
-            IN: info.chart.IN,
-            HD: info.chart.HD,
-            EZ: info.chart.EZ,
+            // or: info.chart.or,
+            // SP: info.chart.SP,
+            // AT: info.chart.AT,
+            // IN: info.chart.IN,
+            // HD: info.chart.HD,
+            // EZ: info.chart.EZ,
             /**其他消息（备注） */
-            othermsg: info.othermsg,
+            // othermsg: info.othermsg,
             /**预处理曲名字号 */
-            fontsize: fLenB(info.song, 39, 20, 15, 58)
+            fontsize: info.fontsize ? info.fontsize : fLenB(info.song, 39, 20, 15, 58)
         }
         // 渲染图片
         return await puppeteer.render('atlas/atlas', {

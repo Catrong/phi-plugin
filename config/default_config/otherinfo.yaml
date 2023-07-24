@@ -1,0 +1,45 @@
+#在这里自定义的内容如果和原版有重合将会覆盖原版
+#曲名
+"今年も「雪降り、メリクリ」目指して顽张ります！！":
+  #曲名
+  song: "今年も「雪降り、メリクリ」目指して顽张ります！！"
+  #曲名字号，可以不写，为零则由系统算法计算（很不靠谱）
+  fontsize: 22
+  #缩小版曲绘，一般用不到
+  illustration: "雪降SP.png"
+  #原版曲绘，推荐大小2048*1080，或是相同比例也可以，其他大小我没做适配
+  illustration_big: "雪降SP.png"
+  #所属章节
+  chapter: "SP"
+  #BPM
+  bpm: "156~234"
+  #作曲
+  composer: "AiSS vs. 华牧狸 w/ 夜轮 ft.結月ゆかり"
+  #曲目时长
+  length: "3:45"
+  #画师
+  illustrator: "Vios.NoFurry.git"
+  #谱面信息
+  chart:
+    # SP AT IN HD EZ 为关键字，不支持自定义颜色
+    IN:
+      # 整数定级，用于随机曲目
+      level: "?"
+      # 具体定级
+      difficulty: "|2"
+      # 物量
+      combo: "2500"
+      # 谱师
+      charter: "今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\\\リンコ*198食べ放題//"
+    # 其余为自定义类型，需要指定颜色
+    lN:
+      # 颜色（图鉴上显示用），使用 rgba 格式，透明度 1 为不透明，0 为透明
+      rgba: "0, 0, 0, 1" # red, green, blue, alpha
+      # 整数定级，用于随机曲目
+      level: "?"
+      # 具体定级
+      difficulty: "26℃"
+      # 物量
+      combo: "2500"
+      # 谱师
+      charter: "今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\\\リンコ*198食べ放題//"

@@ -176,7 +176,6 @@ export class phib19 extends plugin {
 
         /**考虑屁股肉四舍五入原则 */
         var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
-        console.info(minuprks)
 
         rkslist = rkslist.sort(cmp())
 
@@ -324,7 +323,7 @@ export class phib19 extends plugin {
 
 
         data.illustration = get.getill(song)
-        var songsinfo = get.info[song]
+        var songsinfo = get.ori_info[song]
         for (var i in ans) {
             if (ans[i]) {
                 ans[i].acc = ans[i].acc.toFixed(2)
