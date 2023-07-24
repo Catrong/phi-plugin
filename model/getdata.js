@@ -240,7 +240,7 @@ class get {
         } else {
             ans = this.info()[name].illustration
         }
-        var reg = /^(?:(http|https|ftp):\/\/)?((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
+        var reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans)) {
             ans = `${this.orillPath}${ans}`
         }
