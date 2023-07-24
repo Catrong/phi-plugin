@@ -186,7 +186,11 @@ class get {
 
     /**设置别名 原名, 别名 */
     async setnick(mic, nick) {
-        Config.modifyarr('nickconfig', nick, mic, 'add')
+        if (!Config.getDefOrConfig('nickconfig', mic)) {
+            Config.modify('nickconfig',mic,[nick])
+        } else {
+            Config.modifyarr('nickconfig', nick, mic, 'add')
+        }
     }
 
     /**获取歌曲图鉴，曲名为原名 */
