@@ -7,8 +7,11 @@ import get from '../model/getdata.js'
 await get.init()
 
 var songsname = []
-for (let i in get.info()) {
-    songsname.push(i)
+var info = get.info()
+for (let i in info) {
+    if(info[i]['illustration_big']) {
+        songsname.push(i)
+    }
 }
 
 var gamelist = {}
@@ -45,7 +48,11 @@ export class phiguess extends plugin {
             e.reply("请不要重复发起哦！", true)
             return true
         }
-        var num = randbt(songsname.length - 2)
+        if (songsname.length == 0) {
+            e.reply('当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
+            return true
+        }
+        var num = randbt(songsname.length - 1)
         var songs_info = get.info()[songsname[num]]
         if (typeof songs_info.illustration_big == 'undefined') {
             logger.error(`[phi guess]抽取到无曲绘曲目 ${songs_info.song}`)

@@ -308,7 +308,10 @@ export class philetter extends plugin {
 
                             delete (blurlist[e.group_id][num])
                             e.reply([segment.at(e.user_id), `恭喜你ww，答对啦喵,第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `], true)
-                            await e.reply(await get.getsongsinfo(e, standard_song))//发送曲绘
+                            if(get.info()[standard_song].illustration) { //如果有曲绘文件
+                                await e.reply(await get.getsongsinfo(e, standard_song)) //发送曲目图鉴
+                            }
+
                             winnerlist[e.group_id][num] = e.sender.card //记录猜对者
                             var isEmpty = Object.getOwnPropertyNames(blurlist[e.group_id]).length === 0//是否全部猜完
                             if (!isEmpty) {
