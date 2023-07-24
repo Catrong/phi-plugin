@@ -187,7 +187,7 @@ class get {
     /**设置别名 原名, 别名 */
     async setnick(mic, nick) {
         if (!Config.getDefOrConfig('nickconfig', mic)) {
-            Config.modify('nickconfig',mic,[nick])
+            Config.modify('nickconfig', nick, [mic])
         } else {
             Config.modifyarr('nickconfig', nick, mic, 'add')
         }
