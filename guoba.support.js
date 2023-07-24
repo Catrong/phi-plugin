@@ -116,12 +116,12 @@ export function supportGuoba() {
                 {
                     field: 'LetterNum',
                     label: '字母条数',
-                    bottomHelpMessage: '开字母的条数，最大为8最小为1',
+                    bottomHelpMessage: '开字母的条数，最大为99999最小为1',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
                         min: 1,
-                        max: 8,
+                        max: 99999,
                         placeholder: '请输入数量',
                     },
                 },

@@ -43,7 +43,7 @@ export class philetter extends plugin {
                     fnc: 'reveal'
                 },
                 {
-                    reg: `^[#/](\\s*)第(\\s*)[1-8一二三四五六七八](\\s*)(个|首)?.*$`,
+                    reg: `^[#/](\\s*)第(\\s*)[1-9一二三四五六七八九十百千万](\\s*)(个|首)?.*$`,
                     fnc: 'guess'
                 },
                 {
@@ -72,7 +72,7 @@ export class philetter extends plugin {
         }
 
         //对曲目进行洗牌
-        songsname = shuffleArray(songsname)
+        shuffleArray(songsname)
 
         alphalist[e.group_id] = alphalist[e.group_id] || {}
         alphalist[e.group_id] = ''
@@ -204,11 +204,11 @@ export class philetter extends plugin {
                 alphalist[e.group_id] = alphalist[e.group_id] || {}
 
                 var reg = /^[A-Za-z]+$/g
-                if (reg.test(randsymbol)) {
+                if (reg.test(letter)) {
                     /**如果为英文字母则进行大小写转换 */
-                    alphalist[e.group_id] = alphalist[e.group_id] + randsymbol.toUpperCase() + ' '
+                    alphalist[e.group_id] = alphalist[e.group_id] + letter.toUpperCase() + ' '
                 } else {
-                    alphalist[e.group_id] = alphalist[e.group_id] + randsymbol + ' '
+                    alphalist[e.group_id] = alphalist[e.group_id] + letter + ' '
                 }
 
 
@@ -273,17 +273,17 @@ export class philetter extends plugin {
 
             var msg = e.msg
             var opened = '所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']\n'
-            var regex = /^[#/](\s*)第(\s*)([1-8一二三四五六七八])(\s*)(个|首)?(\s*)/
+            var regex = /^[#/]\s*第\s*(\d+|[一二三四五六七八九十百千万]+)\s*(个|首)?(.*)$/
             var result = msg.match(regex)
             if (result) {
                 var output = []
                 var num = 0
-                if (isNaN(result[3])) {
-                    num = NumberToArabic(result[3])
+                if (isNaN(result[1])) {
+                    num = NumberToArabic(result[1])
                 } else {
-                    num = Number(result[3])
+                    num = Number(result[1])
                 }
-                var content = msg.replace(regex, '')
+                var content = result[3]
                 if(num > Config.getDefOrConfig('config','LetterNum')) {
                     e.reply(`没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
                     return true
@@ -309,7 +309,7 @@ export class philetter extends plugin {
                             delete (blurlist[e.group_id][num])
                             e.reply([segment.at(e.user_id), `恭喜你ww，答对啦喵,第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `], true)
                             if(get.info()[standard_song].illustration) { //如果有曲绘文件
-                                await e.reply(await get.getsongsinfo(e, standard_song)) //发送曲目图鉴
+                                e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
                             }
 
                             winnerlist[e.group_id][num] = e.sender.card //记录猜对者
@@ -599,15 +599,11 @@ function NumberToArabic(digit) {
 }
 
 //将数组顺序打乱
-function shuffleArray(des) {
-    var len = des.length;
-    for (var i = 0; i < len - 1; i++) {
-        var index = parseInt(Math.random() * (len - i))
-        var temp = des[index]
-        des[index] = des[len - i - 1]
-        des[len - i - 1] = temp
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
     }
-    return des
 }
 
 function rand(min, max) {
