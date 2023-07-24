@@ -11,34 +11,48 @@
         <img src="{{illustration}}" alt="曲绘">
     </div>
     <div class="box">
-        <div class="name-box">
-            <div class="name-left">
-                <p1>{{song}}</p1>
-                <p2>{{composer}}</p2>
-            </div>
-            <div class="leave">
-                <div class="leave-diff">
-                    <p>{{level}}</p>
-                </div>
-                <div class="leave-rank">
-                    <p>{{rank}}</p>
+        <div class="box-left">
+            <div class="name-box">
+                <div class="name-left">
+                    <p1>{{song}}</p1>
+                    <p2>{{composer}}</p2>
                 </div>
             </div>
-            <div class="name-right"></div>
+            <div class="info-box">
+                <div class="info-left">
+                    <div class="part">
+                        <p1>Chart</p1>
+                        <p2>{{charter}}</p2>
+                    </div>
+                    <div class="part">
+                        <p1>Illustration</p1>
+                        <p2>{{illustrator}}</p2>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="info-box">
-            <div class="info-left">
-                <div class="part">
-                    <p1>Chart</p1>
-                    <p2>{{charter}}</p2>
+        <div class="box-mid">
+            <div class="mid-up"></div>
+            <div class="mid-down"></div>
+        </div>
+        <div class="box-right">
+            <div class="name-box">
+                <div class="right-up"></div>
+                <div class="leave">
+                    <div class="leave-diff">
+                        <p>{{level}}</p>
+                    </div>
+                    <div class="leave-rank">
+                        <p>{{rank}}</p>
+                    </div>
                 </div>
-                <div class="part">
-                    <p1>Illustration</p1>
-                    <p2>{{illustrator}}</p2>
-                </div>
+                <div class="name-right"></div>
             </div>
-            <div class="info-mid"></div>
-            <div class="info-right"></div>
+            <div class="info-box">
+                <div class="info-mid"></div>
+                <div class="info-right"></div>
+            </div>
+
         </div>
     </div>
     <div class="createdbox">
@@ -50,4 +64,5 @@
         </div>
     </div>
 </body>
+
 {{/block}}
