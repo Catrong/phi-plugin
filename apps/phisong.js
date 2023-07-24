@@ -153,7 +153,7 @@ export class phisong extends plugin {
 
             if (!songs[1]) {
                 songs = songs[0]
-                msgRes = await get.getillatlas(e, { illustration: get.getill(songs[0]), illustrator: get.info()[songs]["illustrator"] })
+                msgRes = await get.getillatlas(e, { illustration: get.getill(songs), illustrator: get.info()[songs]["illustrator"] })
                 e.reply(msgRes)
             } else {
                 msgRes = []
