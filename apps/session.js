@@ -154,43 +154,66 @@ export class phisstk extends plugin {
         var illlist = []
 
         for (var song in now.gameRecord) {
+            illlist.push(get.getill(get.idgetsong(song, false)))
             if (old && song in old.gameRecord) {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (!oldRecord || (nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score)) {
-                            illlist.push(get.getill(get.idgetsong(song, false)))
-                            pluginData.update.push({
-                                "song": song,
-                                "rank": Level[i],
-                                "illustration": get.getill(get.idgetsong(song, false)),
-                                "rks_old": oldRecord.rks,
-                                "rks_new": nowRecord.rks,
-                                "acc_old": oldRecord.acc,
-                                "acc_new": nowRecord.acc,
-                                "score_old": oldRecord.score,
-                                "score_new": nowRecord.score
-                            })
+                            if (i != 4) {
+                                pluginData.update.push({
+                                    "song": song,
+                                    "rank": Level[i],
+                                    "illustration": get.getill(get.idgetsong(song, false)),
+                                    "rks_old": oldRecord.rks,
+                                    "rks_new": nowRecord.rks,
+                                    "acc_old": oldRecord.acc,
+                                    "acc_new": nowRecord.acc,
+                                    "score_old": oldRecord.score,
+                                    "score_new": nowRecord.score
+                                })
+                            } else {
+                                pluginData.update.push({
+                                    "song": song,
+                                    "rank": Level[i],
+                                    "illustration": get.getill(get.idgetsong(song, false)),
+                                    "acc_old": oldRecord.acc,
+                                    "acc_new": nowRecord.acc,
+                                    "score_old": oldRecord.score,
+                                    "score_new": nowRecord.score
+                                })
+                            }
                         }
                     }
                 }
             } else {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
-                        illlist.push(get.getill(get.idgetsong(song, false)))
                         var nowRecord = now['gameRecord'][song][i]
-                        pluginData.update.push({
-                            "song": song,
-                            "illustration": get.getill(get.idgetsong(song, false)),
-                            "rank": Level[i],
-                            "rks_old": 0,
-                            "rks_new": nowRecord.rks,
-                            "acc_old": 0,
-                            "acc_new": nowRecord.acc,
-                            "score_old": 0,
-                            "score_new": nowRecord.score
-                        })
+                        if (i != 4) {
+                            pluginData.update.push({
+                                "song": song,
+                                "illustration": get.getill(get.idgetsong(song, false)),
+                                "rank": Level[i],
+                                "rks_old": 0,
+                                "rks_new": nowRecord.rks,
+                                "acc_old": 0,
+                                "acc_new": nowRecord.acc,
+                                "score_old": 0,
+                                "score_new": nowRecord.score
+                            })
+                        } else {
+                            pluginData.update.push({
+                                "song": song,
+                                "illustration": get.getill(get.idgetsong(song, false)),
+                                "rank": Level[i],
+                                "acc_old": 0,
+                                "acc_new": nowRecord.acc,
+                                "score_old": 0,
+                                "score_new": nowRecord.score
+                            })
+                        }
                     }
                 }
             }
