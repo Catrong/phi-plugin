@@ -156,9 +156,6 @@ export class phisstk extends plugin {
         var now = this.User
         var date = new Date()
 
-        console.info(old)
-        console.info(now)
-
         for (var id in now.gameRecord) {
             var song = get.idgetsong(id, false)
             if (old && song in old.gameRecord) {
