@@ -1,4 +1,3 @@
-
 import { segment } from 'oicq'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
@@ -7,12 +6,16 @@ import get from '../model/getdata.js'
 await get.init()
 
 var songsname = []
+var songweights = {} //存储每首歌曲被抽取的权重
 var info = get.info()
 for (let i in info) {
     if(info[i]['illustration_big']) {
         songsname.push(i)
     }
 }
+
+//曲目初始洗牌
+shuffleArray(songsname)
 
 var gamelist = {}
 
@@ -56,8 +59,17 @@ export class phiguess extends plugin {
         //抽取之前洗个牌
         shuffleArray(songsname)
 
-        var num = randbt(songsname.length - 1)
-        var songs_info = get.info()[songsname[num]]
+        if (!songweights[e.group_id]){
+            songweights[e.group_id] = {}
+            
+            //将每一首曲目的权重初始化为1
+            songsname.forEach(song => {
+                songweights[e.group_id][song] = 1
+            })           
+        }
+
+        var song = getRandomSong(e)
+        var songs_info = get.info()[song]
         if (typeof songs_info.illustration_big == 'undefined') {
             logger.error(`[phi guess]抽取到无曲绘曲目 ${songs_info.song}`)
             return true
@@ -67,8 +79,8 @@ export class phiguess extends plugin {
 
         var data = {
             illustration: get.getill(songs_info.song),
-            width: 100,
-            height: 100,
+            width: 160,
+            height: 160,
             x: randbt(2048 - 100),
             y: randbt(1080 - 100),
             blur: 10,
@@ -348,8 +360,50 @@ function timeout(ms) {
 
 //将数组顺序打乱
 function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
+    var len = arr.length
+    for (var i = 0; i < len - 1; i++) {
+        var index = randint(0,len - i)
+        var temp = arr[index]
+        arr[index] = arr[len - i - 1]
+        arr[len - i - 1] = temp
     }
+    return arr
+}
+
+//定义生成指定区间带有指定小数位数随机数的函数
+function randfloat(min, max, precision = 0) {
+    var range = max - min
+    var randomOffset = Math.random() * range
+    var randomNumber = (randomOffset + min) + range * Math.pow(10, -precision)
+  
+    return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
+}
+
+//定义生成指定区间整数随机数的函数
+function randint(min, max) {
+    var range = max - min + 1
+    var randomOffset = Math.floor(Math.random() * range)
+    return (randomOffset + min) % range + min
+}
+
+//定义随机抽取曲目的函数
+function getRandomSong(e) {
+    //计算曲目的总权重
+    var totalWeight = Object.values(songweights[e.group_id]).reduce((total, weight) => total + weight, 0)
+  
+    //生成一个0到总权重之间带有16位小数的随机数
+    var randomWeight = randfloat(0, totalWeight, 16)
+  
+    var accumulatedWeight = 0
+    for (const song of songsname) {
+      accumulatedWeight += songweights[e.group_id][song]
+      //当累积权重超过随机数时，选择当前歌曲
+      if (accumulatedWeight >= randomWeight) {
+        songweights[e.group_id][song] *= 0.4 // 权重每次衰减60%
+        return song
+      }
+    }
+  
+    //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
+    return songsname[randint(0,songsname.length - 1)]
 }
