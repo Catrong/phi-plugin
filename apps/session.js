@@ -160,11 +160,11 @@ export class phisstk extends plugin {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (!oldRecord || (nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score)) {
-                            illlist.push(get.getill(song))
+                            illlist.push(get.getill(get.idgetsong(song, false)))
                             pluginData.update.push({
                                 "song": song,
                                 "rank": Level[i],
-                                "illustration": get.getill(song),
+                                "illustration": get.getill(get.idgetsong(song, false)),
                                 "rks_old": oldRecord.rks,
                                 "rks_new": nowRecord.rks,
                                 "acc_old": oldRecord.acc,
@@ -178,11 +178,11 @@ export class phisstk extends plugin {
             } else {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
-                        illlist.push(get.getill(song))
+                        illlist.push(get.getill(get.idgetsong(song, false)))
                         var nowRecord = now['gameRecord'][song][i]
                         pluginData.update.push({
                             "song": song,
-                            "illustration": get.getill(song),
+                            "illustration": get.getill(get.idgetsong(song, false)),
                             "rank": Level[i],
                             "rks_old": 0,
                             "rks_new": nowRecord.rks,
