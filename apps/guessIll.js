@@ -79,8 +79,8 @@ export class phiguess extends plugin {
 
         var data = {
             illustration: get.getill(songs_info.song),
-            width: 160,
-            height: 160,
+            width: 100,
+            height: 100,
             x: randbt(2048 - 100),
             y: randbt(1080 - 100),
             blur: 10,
