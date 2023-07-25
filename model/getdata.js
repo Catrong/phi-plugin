@@ -2,8 +2,8 @@
 
 import { _path } from "./path.js";
 import { segment } from "oicq";
-import atlas from "./picmodle.js";
 import Film from './Doc.js';
+import atlas from "./picmodle.js";
 import Config from "../components/Config.js";
 
 
@@ -12,12 +12,15 @@ class get {
 
     constructor() {
         /**曲绘资源、曲目信息路径 */
-        // this.infoPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/resources/info/`
+        // this.infoPath = `E:/bot/233/Miao-Yunzai/plugins/phi-plugin/resources/info/`
         this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
 
         /**用户数据路径 */
-        // this.userPath = `E:/bot/miao2/Miao-Yunzai/plugins/phi-plugin/data/`
+        // this.userPath = `E:/bot/233/Miao-Yunzai/plugins/phi-plugin/data/`
         this.userPath = `${_path}/plugins/phi-plugin/data/`
+
+        /**用户娱乐数据路径 */
+        this.pluginDataPath = `${_path}/plugins/phi-plugin/data/pluginData/`
 
         /**用户设置路径 */
         this.configPath = `${_path}/plugins/phi-plugin/config/config/`
@@ -254,13 +257,56 @@ class get {
         return ans
     }
 
-    /**获取QQ号对应的存档文件
-     * 
-     * @param {String} user_id 
+    /**
+     * 获取QQ号对应的存档文件
+     * @param {String} id user_id
      * @returns save
      */
     async getsave(id) {
         return await this.getData(`${id}.json`, `${this.userPath}`)
+    }
+
+    /**
+     * 保存QQ号对应的存档文件
+     * @param {String} id user_id
+     * @param {Object} data 
+     */
+    async putsave(id, data) {
+        return await this.setData(`${id}.json`, data, `${this.userPath}`)
+    }
+
+    /**
+         * 删除QQ号对应的存档文件
+         * @param {String} id user_id
+         */
+    async delsave(id) {
+        return this.delData(`${id}.json`, this.userPath)
+    }
+
+    /**
+     * 获取QQ号对应的娱乐数据
+     * @param {String} user_id 
+     * @returns save
+     */
+    async getpluginData(id) {
+        return await this.getData(`${id}_.json`, `${this.pluginDataPath}`)
+    }
+
+    /**
+     * 保存QQ号对应的娱乐数据
+     * @param {String} id user_id
+     * @param {Object} data 
+     */
+    async putpluginData(id, data) {
+        return await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
+    }
+
+    /**
+     * 删除QQ号对应的娱乐数据
+     * @param {String} id user_id
+     */
+    async delpluginData(id) {
+        return this.delData(`${id}_.json`,`${this.pluginDataPath}`)
     }
 
     /**
@@ -278,7 +324,7 @@ class get {
      * @param {true|false} info 是否返回info
      * @returnsthis.info
      */
-    async idgetsong(id, info = true) {
+    idgetsong(id, info = true) {
         if (info)
             return this.ori_info[this.songsid[id]]
         else

@@ -347,7 +347,7 @@ export class philetter extends plugin {
                                 delete (alphalist[e.group_id])
                                 delete (blurlist[e.group_id])
 
-                                output.push('\n出你字母已结束，答案如下：\n')
+                                output.push('出你字母已结束，答案如下：\n')
                                 for (var m in gamelist[e.group_id]) {
                                     output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
                                     if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {

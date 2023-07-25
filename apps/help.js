@@ -31,6 +31,7 @@ export class phihelp extends plugin {
             `⌈#${Config.getDefOrConfig('config', 'cmdhead')} song xx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 曲 xx⌋ 获取曲目图鉴\n` +
             `⌈#${Config.getDefOrConfig('config', 'cmdhead')} rand <条件>⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 随机 <条件>⌋ 随机曲目\n` +
             `⌈#${Config.getDefOrConfig('config', 'cmdhead')} ill xxx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 曲绘 xxx⌋ 查看曲目曲绘\n` +
+            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} data⌋ 查询data数量\n` +
             `⌈#${Config.getDefOrConfig('config', 'cmdhead')} letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
             `⌈#${Config.getDefOrConfig('config', 'cmdhead')} guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束`)
         return true
