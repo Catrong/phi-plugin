@@ -148,7 +148,7 @@ class get {
         let nickconfig = Config.getDefOrConfig('nickconfig', mic)
         var fuzzyMatch = function (str1, str2) {
             // 去除空格和其他符号，并转换为小写
-            const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？]/g
+            const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？↑↓←→]/g
             const formattedStr1 = str1.replace(pattern, '').toLowerCase()
             const formattedStr2 = str2.replace(pattern, '').toLowerCase()
 
