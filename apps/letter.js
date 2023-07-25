@@ -13,9 +13,18 @@ import get from '../model/getdata.js'
 
 await get.init()
 var songsname = []
+var songweights = {} //存储每首歌曲被抽取的权重
 for (let i in get.info()) {
     songsname.push(i)
 }
+
+//曲目初始洗牌
+shuffleArray(songsname)
+
+//将每一首曲目的权重初始化为1
+songsname.forEach(song => {
+    songweights[song] = 1
+})
 
 var gamelist = {}//存储标准答案曲名
 var blurlist = {}//存储模糊后的曲名
@@ -91,14 +100,14 @@ export class philetter extends plugin {
         var chose = []
 
         for (var i = 1; i <= Config.getDefOrConfig('config', 'LetterNum'); i++) {
-            var num = rand(0, songsname.length - 1)
+            //根据曲目权重随机返回一首曲目名称
+            var randsong = getRandomSong()
             //防止抽到重复的曲目
-            while (chose.includes(num)) {
-                num = rand(0, songsname.length - 1)
+            while (chose.includes(randsong)) {
+                randsong = getRandomSong()
             }
-            var songName = songsname[num]
-            var songs_info = get.info()[songName]
-            chose.push(num)
+            var songs_info = get.info()[randsong]
+            chose.push(randsong)
 
             gamelist[e.group_id] = gamelist[e.group_id] || {}
             gamelist[e.group_id][i] = songs_info.song
@@ -385,8 +394,10 @@ export class philetter extends plugin {
                 var correct_name = t[m]
                 var winner_card = winner[m]
                 output.push(`\n【${m}】${correct_name}`)
-                if (Config.getDefOrConfig('config', 'LetterWinner') && winner_card) {
-                    output.push(` @${winner_card[e.group_id][m]}`)
+                if (Config.getDefOrConfig('config', 'LetterWinner')) {
+                    if (typeof winner_card === 'object' && winner_card !== null && typeof winner_card[e.group_id] === 'object'){
+                        output.push(` @${winner_card[e.group_id][m]}`)
+                    }
                 }
             }
             await e.reply(output)
@@ -425,7 +436,7 @@ export class philetter extends plugin {
 
         var randsymbol //存储随机抽出的字符
         while (typeof randsymbol === 'undefined' || randsymbol === '*') {
-            var key = commonKeys[rand(0, commonKeys.length - 1)] //随机从通键值数组里取一个键值
+            var key = commonKeys[randint(0, commonKeys.length - 1)] //随机从通键值数组里取一个键值
             var songname = gamelist[e.group_id][key] //获取该下标存储的曲名
             randsymbol = getRandCharacter(songname, blurlist[e.group_id][key]) //随机从曲名中取一个非翻开字符
         }
@@ -530,6 +541,44 @@ function randbt(top, bottom = 0) {
     return Number((Math.random() * (top - bottom)).toFixed(0)) + bottom
 }
 
+//定义生成指定区间整数随机数的函数
+function randint(min, max) {
+    var range = max - min + 1
+    var randomOffset = Math.floor(Math.random() * range)
+    return (randomOffset + min) % range + min
+}
+
+//定义生成指定区间带有指定小数位数随机数的函数
+function randfloat(min, max, precision = 0) {
+    var range = max - min
+    var randomOffset = Math.random() * range
+    var randomNumber = (randomOffset + min) + range * Math.pow(10, -precision)
+  
+    return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
+}
+
+//定义随机抽取曲目的函数
+function getRandomSong() {
+    //计算曲目的总权重
+    var totalWeight = Object.values(songweights).reduce((total, weight) => total + weight, 0)
+  
+    //生成一个0到总权重之间带有16位小数的随机数
+    var randomWeight = randfloat(0, totalWeight, 16)
+  
+    var accumulatedWeight = 0
+    for (const song of songsname) {
+      accumulatedWeight += songweights[song]
+      //当累积权重超过随机数时，选择当前歌曲
+      if (accumulatedWeight >= randomWeight) {
+        songweights[song] *= 0.7 // 权重每次衰减30%
+        return song
+      }
+    }
+  
+    //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
+    return songsname[randint(0,songsname.length - 1)]
+}
+
 function timeout(ms) {
     return new Promise((resolve, reject) => {
         setTimeout(resolve, ms, 'done');
@@ -542,9 +591,9 @@ function encrypt_song_name(name) {
     var num = 0//将原来的随机位数改为强制不显示
     var numset = []
     for (var i = 0; i < num; i++) {
-        var numToShow = rand(0, name.length - 1)
+        var numToShow = randint(0, name.length - 1)
         while (name[numToShow] == ' ') {
-            numToShow = rand(0, name.length - 1)
+            numToShow = randint(0, name.length - 1)
         }
         numset[i] = numToShow
     }
@@ -600,16 +649,14 @@ function NumberToArabic(digit) {
 
 //将数组顺序打乱
 function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
+    var len = arr.length
+    for (var i = 0; i < len - 1; i++) {
+        var index = randint(0,len - i)
+        var temp = arr[index]
+        arr[index] = arr[len - i - 1]
+        arr[len - i - 1] = temp
     }
-}
-
-function rand(min, max) {
-    var range = max - min + 1
-    var randomOffset = Math.floor(Math.random() * range)
-    return (randomOffset + min) % range + min
+    return arr
 }
 
 function getRandCharacter(str, blur) {
@@ -622,7 +669,7 @@ function getRandCharacter(str, blur) {
     }
 
     // 生成随机索引
-    var randomIndex = rand(0, temlist.length - 1)
+    var randomIndex = randint(0, temlist.length - 1)
 
 
     // 返回随机字符
