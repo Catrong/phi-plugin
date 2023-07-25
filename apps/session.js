@@ -163,7 +163,7 @@ export class phisstk extends plugin {
                         if (!oldRecord || (nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score)) {
                             if (i != 4) {
                                 pluginData.update.push({
-                                    "song": song,
+                                    "song": get.idgetsong(song, false),
                                     "rank": Level[i],
                                     "illustration": get.getill(get.idgetsong(song, false)),
                                     "rks_old": oldRecord.rks,
@@ -175,7 +175,7 @@ export class phisstk extends plugin {
                                 })
                             } else {
                                 pluginData.update.push({
-                                    "song": song,
+                                    "song": get.idgetsong(song, false),
                                     "rank": Level[i],
                                     "illustration": get.getill(get.idgetsong(song, false)),
                                     "acc_old": oldRecord.acc,
@@ -193,7 +193,7 @@ export class phisstk extends plugin {
                         var nowRecord = now['gameRecord'][song][i]
                         if (i != 4) {
                             pluginData.update.push({
-                                "song": song,
+                                "song": get.idgetsong(song, false),
                                 "illustration": get.getill(get.idgetsong(song, false)),
                                 "rank": Level[i],
                                 "rks_old": 0,
@@ -205,7 +205,7 @@ export class phisstk extends plugin {
                             })
                         } else {
                             pluginData.update.push({
-                                "song": song,
+                                "song": get.idgetsong(song, false),
                                 "illustration": get.getill(get.idgetsong(song, false)),
                                 "rank": Level[i],
                                 "acc_old": 0,
