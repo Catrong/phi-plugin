@@ -21,11 +21,6 @@ for (let i in get.info()) {
 //曲目初始洗牌
 shuffleArray(songsname)
 
-//将每一首曲目的权重初始化为1
-songsname.forEach(song => {
-    songweights[song] = 1
-})
-
 var gamelist = {}//存储标准答案曲名
 var blurlist = {}//存储模糊后的曲名
 var alphalist = {}//存储翻开的字母
@@ -92,6 +87,15 @@ export class philetter extends plugin {
         lastRevealedTime[e.group_id] = lastRevealedTime[e.group_id] || {}
         lastRevealedTime[e.group_id] = 0
 
+        if (!songweights[e.group_id]){
+            songweights[e.group_id] = {}
+            
+            //将每一首曲目的权重初始化为1
+            songsname.forEach(song => {
+                songweights[e.group_id][song] = 1
+            })           
+        }
+
 
         //预开猜对者数组
         winnerlist[e.group_id] = {}
@@ -101,10 +105,10 @@ export class philetter extends plugin {
 
         for (var i = 1; i <= Config.getDefOrConfig('config', 'LetterNum'); i++) {
             //根据曲目权重随机返回一首曲目名称
-            var randsong = getRandomSong()
+            var randsong = getRandomSong(e)
             //防止抽到重复的曲目
             while (chose.includes(randsong)) {
-                randsong = getRandomSong()
+                randsong = getRandomSong(e)
             }
             var songs_info = get.info()[randsong]
             chose.push(randsong)
@@ -558,19 +562,19 @@ function randfloat(min, max, precision = 0) {
 }
 
 //定义随机抽取曲目的函数
-function getRandomSong() {
+function getRandomSong(e) {
     //计算曲目的总权重
-    var totalWeight = Object.values(songweights).reduce((total, weight) => total + weight, 0)
+    var totalWeight = Object.values(songweights[e.group_id]).reduce((total, weight) => total + weight, 0)
   
     //生成一个0到总权重之间带有16位小数的随机数
     var randomWeight = randfloat(0, totalWeight, 16)
   
     var accumulatedWeight = 0
     for (const song of songsname) {
-      accumulatedWeight += songweights[song]
+      accumulatedWeight += songweights[e.group_id][song]
       //当累积权重超过随机数时，选择当前歌曲
       if (accumulatedWeight >= randomWeight) {
-        songweights[song] *= 0.7 // 权重每次衰减30%
+        songweights[e.group_id][song] *= 0.7 // 权重每次衰减30%
         return song
       }
     }

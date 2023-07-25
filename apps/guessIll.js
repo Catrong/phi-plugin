@@ -17,11 +17,6 @@ for (let i in info) {
 //曲目初始洗牌
 shuffleArray(songsname)
 
-//将每一首曲目的权重初始化为1
-songsname.forEach(song => {
-    songweights[song] = 1
-})
-
 var gamelist = {}
 
 export class phiguess extends plugin {
@@ -64,7 +59,16 @@ export class phiguess extends plugin {
         //抽取之前洗个牌
         shuffleArray(songsname)
 
-        var song = getRandomSong()
+        if (!songweights[e.group_id]){
+            songweights[e.group_id] = {}
+            
+            //将每一首曲目的权重初始化为1
+            songsname.forEach(song => {
+                songweights[e.group_id][song] = 1
+            })           
+        }
+
+        var song = getRandomSong(e)
         var songs_info = get.info()[song]
         if (typeof songs_info.illustration_big == 'undefined') {
             logger.error(`[phi guess]抽取到无曲绘曲目 ${songs_info.song}`)
@@ -75,8 +79,8 @@ export class phiguess extends plugin {
 
         var data = {
             illustration: get.getill(songs_info.song),
-            width: 100,
-            height: 100,
+            width: 160,
+            height: 160,
             x: randbt(2048 - 100),
             y: randbt(1080 - 100),
             blur: 10,
@@ -383,19 +387,19 @@ function randint(min, max) {
 }
 
 //定义随机抽取曲目的函数
-function getRandomSong() {
+function getRandomSong(e) {
     //计算曲目的总权重
-    var totalWeight = Object.values(songweights).reduce((total, weight) => total + weight, 0)
+    var totalWeight = Object.values(songweights[e.group_id]).reduce((total, weight) => total + weight, 0)
   
     //生成一个0到总权重之间带有16位小数的随机数
     var randomWeight = randfloat(0, totalWeight, 16)
   
     var accumulatedWeight = 0
     for (const song of songsname) {
-      accumulatedWeight += songweights[song]
+      accumulatedWeight += songweights[e.group_id][song]
       //当累积权重超过随机数时，选择当前歌曲
       if (accumulatedWeight >= randomWeight) {
-        songweights[song] *= 0.4 // 权重每次衰减60%
+        songweights[e.group_id][song] *= 0.4 // 权重每次衰减60%
         return song
       }
     }
