@@ -1,3 +1,4 @@
+import { segment } from 'oicq'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
@@ -28,7 +29,7 @@ export class phiuser extends plugin {
         if (User) {
             if (User.gameProgress) {
                 var data = User.gameProgress.money
-                e.reply(`您的data数为：${data[4] ? `${data[4]}PiB ` : ''}${data[3] ? `${data[3]}TiB ` : ''}${data[2] ? `${data[2]}GiB ` : ''}${data[1] ? `${data[1]}MiB ` : ''}${data[0] ? `${data[0]}KiB ` : ''}`)
+                e.reply([segment.at(e.user_id), `您的data数为：${data[4] ? `${data[4]}PiB ` : ''}${data[3] ? `${data[3]}TiB ` : ''}${data[2] ? `${data[2]}GiB ` : ''}${data[1] ? `${data[1]}MiB ` : ''}${data[0] ? `${data[0]}KiB ` : ''}`])
             } else {
                 e.reply(`请先更新数据哦！\n#${Config.getDefOrConfig('config', 'cmdhead')} update`)
             }
