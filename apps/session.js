@@ -60,10 +60,8 @@ export class phisstk extends plugin {
             }
         }
 
-        if (await this.build(e, sessionToken)) return true
+        await this.build(e, sessionToken)
 
-
-        GuildSentAt(e, '绑定成功！')
 
         return true
     }
@@ -78,10 +76,7 @@ export class phisstk extends plugin {
         if (!Config.getDefOrConfig('config', 'isGuild') || !e.isGroup) {
             e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
         }
-        if (await this.build(e, User.session))
-            return true
-
-        GuildSentAt(e, '更新成功！')
+        await this.build(e, User.session)
 
         return true
     }
@@ -156,17 +151,20 @@ export class phisstk extends plugin {
         var now = this.User
         var date = new Date()
 
-        for (var id in now.gameRecord) {
-            var song = get.idgetsong(id, false)
+        var illlist = []
+
+        for (var song in now.gameRecord) {
             if (old && song in old.gameRecord) {
-                for (var i in now['gameRecord'][id]) {
-                    if (now['gameRecord'][id][i]) {
-                        var nowRecord = now['gameRecord'][id][i]
+                for (var i in now['gameRecord'][song]) {
+                    if (now['gameRecord'][song][i]) {
+                        var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (!oldRecord || (nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score)) {
+                            illlist.push(get.getill(song))
                             pluginData.update.push({
                                 "song": song,
                                 "rank": Level[i],
+                                "illustration": get.getill(song),
                                 "rks_old": oldRecord.rks,
                                 "rks_new": nowRecord.rks,
                                 "acc_old": oldRecord.acc,
@@ -178,11 +176,13 @@ export class phisstk extends plugin {
                     }
                 }
             } else {
-                for (var i in now['gameRecord'][id]) {
-                    if (now['gameRecord'][id][i]) {
-                        var nowRecord = now['gameRecord'][id][i]
+                for (var i in now['gameRecord'][song]) {
+                    if (now['gameRecord'][song][i]) {
+                        illlist.push(get.getill(song))
+                        var nowRecord = now['gameRecord'][song][i]
                         pluginData.update.push({
                             "song": song,
+                            "illustration": get.getill(song),
                             "rank": Level[i],
                             "rks_old": 0,
                             "rks_new": nowRecord.rks,
@@ -197,7 +197,7 @@ export class phisstk extends plugin {
         }
 
         pluginData.update.sort(cmp())
-        pluginData.update = pluginData.update.slice(0, 10)
+        pluginData.update = pluginData.update.slice(0, 15)
 
         pluginData.data.push({
             "date": date,
@@ -210,6 +210,16 @@ export class phisstk extends plugin {
 
         get.putpluginData(this.e.user_id, pluginData)
 
+        var data = {
+            PlayerId: now.saveInfo.PlayerId,
+            Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
+            Date: now.saveInfo.updatedAt,
+            ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
+            background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
+            update: pluginData.update,
+        }
+        await GuildSentAt(this.e, await get.getupdate(this.e, data))
         return false
     }
 

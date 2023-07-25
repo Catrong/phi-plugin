@@ -215,6 +215,11 @@ class get {
     async getb19(e, data) {
         return await atlas.b19(e, data)
     }
+    
+    /**获取update图片 */
+    async getupdate(e, data) {
+        return await atlas.update(e, data)
+    }
 
     /**获取单曲成绩 */
     async getsingle(e, data) {

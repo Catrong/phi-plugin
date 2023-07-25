@@ -1,0 +1,82 @@
+<head>
+    <link rel="stylesheet" href="{{_res_path}}update/update.css">
+</head>
+
+<body style="scale: {{size}};">
+    <div class="background">
+        {{if background}}
+        <img src="{{background}}" alt="曲绘-模糊">
+        {{else}}
+        <img src="{{_res_path}}otherimg/phigros.png" alt="曲绘-模糊">
+        {{/if}}
+    </div>
+    <div class="tatle">
+        <div class="l">
+            <img src="{{_res_path}}/otherimg/Phigros_Icon_3.0.0.png" alt="icon">
+            <div class="doc">
+                <p>Phigros 更新成功</p>
+                <p>UpDate结果</p>
+            </div>
+        </div>
+        <div class="m"></div>
+        <div class="r">
+            <p>Player: {{PlayerId}}</p>
+            <p>RankingScore: {{Rks}}</p>
+            <div class="Challenge">
+                <p>ChallengeMode:</p>
+                <div class="Challenge-r">
+                    <img src="{{_res_path}}otherimg/{{ChallengeMode}}.png" alt="{{ChallengeMode}}">
+                    <p>{{ChallengeModeRank}}</p>
+                </div>
+            </div>
+            <p>Date: {{Date}}</p>
+        </div>
+    </div>
+    <div class="box">
+        {{if update[0]}}
+        {{each update song}}
+        <div class="abox">
+            <div class="imgbox">
+                <img src="{{song.illustration}}" alt="{{song.song}}">
+            </div>
+            <div class="infobox">
+                <div class="songsname">
+                    <p>{{song.song}}</p>
+                </div>
+                <div class="songsinfo">
+                    <p>{{song.score_old}} >> {{song.score_new}}</p>
+                    <p>{{song.acc_old.toFixed(2)}}% >>
+                        {{song.acc_new.toFixed(2)}}%&ensp;&ensp;{{song.rks_old.toFixed(2)}} >>
+                        {{song.rks_new.toFixed(2)}}</p>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{else}}
+        <div class="Nosignal">
+            <div class="border_corner border_corner_left_top"></div>
+            <div class="border_corner border_corner_right_top"></div>
+            <div class="border_corner border_corner_left_bottom"></div>
+            <div class="border_corner border_corner_right_bottom"></div>
+            <div class="line"></div>
+            <div class="timeout">
+                <p>TIME_OUT</p>
+            </div>
+            <div class="client">
+                <p>>>> PhigrOS Client Finding NewScore</p>
+            </div>
+            <div class="sqrt">
+                <p>////////////////////////////////////////////////////////////////////////////////////////</p>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+    <div class="createdbox">
+        <div class="created">
+            <p style="float: left;">Created By Yunzai-Bot &nbsp; </p>
+            <p style="float: left; color: yellow;">{{Version.yunzai}}</p>
+            <p style="float: left;"> &nbsp; &amp; phi-Plugin &nbsp;</p>
+            <p style="float: left; color: yellow;">{{Version.ver}}</p>
+        </div>
+    </div>
+</body>
