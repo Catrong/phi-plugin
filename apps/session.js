@@ -165,6 +165,7 @@ export class phisstk extends plugin {
                                 "song": get.idgetsong(song, false),
                                 "rank": Level[i],
                                 "illustration": get.getill(get.idgetsong(song, false)),
+                                "pingji": nowRecord.pingji,
                                 "rks_old": oldRecord.rks,
                                 "rks_new": nowRecord.rks,
                                 "acc_old": oldRecord.acc,
@@ -177,6 +178,7 @@ export class phisstk extends plugin {
                                 "song": get.idgetsong(song, false),
                                 "illustration": get.getill(get.idgetsong(song, false)),
                                 "rank": Level[i],
+                                "pingji": 'NEW',
                                 "rks_old": 0,
                                 "rks_new": nowRecord.rks,
                                 "acc_old": 0,
@@ -195,6 +197,7 @@ export class phisstk extends plugin {
                             "song": get.idgetsong(song, false),
                             "illustration": get.getill(get.idgetsong(song, false)),
                             "rank": Level[i],
+                            "pingji": 'NEW',
                             "rks_old": 0,
                             "rks_new": nowRecord.rks,
                             "acc_old": 0,
@@ -206,6 +209,8 @@ export class phisstk extends plugin {
                 }
             }
         }
+
+        var newnum = pluginData.update.length
 
         pluginData.update.sort(cmp())
         pluginData.update = pluginData.update.slice(0, 15)
@@ -229,6 +234,7 @@ export class phisstk extends plugin {
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             update: pluginData.update,
+            update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
         }
         await GuildSentAt(this.e, await get.getupdate(this.e, data))
         return false
@@ -236,7 +242,16 @@ export class phisstk extends plugin {
 
     async unbind(e) {
         if (get.delsave(e.user_id)) {
-            get.delpluginData(e.user_id)
+
+            var pluginData = await get.getpluginData(e.user_id)
+
+            if (pluginData) {
+                pluginData.update = []
+                pluginData.rks = []
+                pluginData.data = []
+                await get.putpluginData(e.user_id, pluginData)
+            }
+
             GuildSentAt(e, '解绑成功')
         } else {
             GuildSentAt(e, '没有找到你的存档哦！')

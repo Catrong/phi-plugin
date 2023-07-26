@@ -14,7 +14,7 @@
         <div class="l">
             <img src="{{_res_path}}/otherimg/Phigros_Icon_3.0.0.png" alt="icon">
             <div class="doc">
-                <p>存档更新成功</p>
+                <p>{{update_ans}}</p>
                 <p>Update 结果</p>
             </div>
         </div>
@@ -41,9 +41,9 @@
             </div>
             <div class="infobox">
                 <div class="namebox">
-                    {{if !song.score_old}}
+                    {{if song.pingji}}
                     <div class="new-box">
-                        <img src="{{_res_path}}otherimg/NEW.png" alt="NEW">
+                        <img src="{{_res_path}}otherimg/{{song.pingji}}.png" alt="{{song.pingji}}">
                     </div>
                     {{/if}}
                     <div class="songsname">
