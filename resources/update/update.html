@@ -40,8 +40,15 @@
                 <img src="{{song.illustration}}" alt="{{song.song}}">
             </div>
             <div class="infobox">
-                <div class="songsname">
-                    <p>{{song.song}}</p>
+                <div class="namebox">
+                    {{if !song.score_old}}
+                    <div class="new-box">
+                        <img src="{{_res_path}}otherimg/NEW.png" alt="NEW">
+                    </div>
+                    {{/if}}
+                    <div class="songsname">
+                        <p>{{song.song}}</p>
+                    </div>
                 </div>
                 <div class="songsinfo">
                     <p>{{song.rank}} {{song.score_old}} >> {{song.score_new}}</p>
