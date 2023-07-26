@@ -1,7 +1,7 @@
 /**Phigros出字母猜曲名游戏
  * 会随机抽选 n 首歌曲
  * 每首曲目的名字只显示一部分，剩下的部分隐藏
- * 通过给出的字母猜出响应的歌曲
+ * 通过给出的字母猜出相应的歌曲
  * 玩家可以翻开所有曲目响应的字母获得更多线索
 */
 import { segment } from 'oicq'
@@ -57,8 +57,11 @@ export class philetter extends plugin {
                 {
                     reg: `^[#/](提示|tip)$`,
                     fnc: 'tip'
-                }
-
+                },
+                {
+                    reg: `^[#/](字母洗牌|lettermix)$`,
+                    fnc: 'mix'
+                },
             ]
         })
 
@@ -75,8 +78,8 @@ export class philetter extends plugin {
             return true
         }
 
-        //对曲目进行洗牌
-        shuffleArray(songsname)
+        // //对曲目进行洗牌
+        // shuffleArray(songsname)
 
         alphalist[e.group_id] = alphalist[e.group_id] || {}
         alphalist[e.group_id] = ''
@@ -534,7 +537,26 @@ export class philetter extends plugin {
         return true
 
     }
+    
+    async mix(e) {
+        if (gamelist[e.group_id]) {
+            e.reply(` 当前有正在进行的游戏，请等待游戏结束再执行该指令 `, true)
+            return false
+        }
 
+        //曲目初始洗牌
+        shuffleArray(songsname)
+
+        songweights[e.group_id] = songweights[e.group_id] || {}
+
+        //将权重归1
+        songsname.forEach(song => {
+            songweights[e.group_id][song] = 1
+        }) 
+
+        e.reply(` 洗牌成功了www `, true)
+        return true
+    }
 }
 
 /**

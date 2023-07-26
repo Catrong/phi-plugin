@@ -38,8 +38,11 @@ export class phiguess extends plugin {
                 {
                     reg: `^[#/](曲绘)?(ans|答案|结束)$`,
                     fnc: 'ans'
-                }
-
+                },
+                {
+                    reg: `^[#/](曲绘洗牌|illmix)$`,
+                    fnc: 'mix'
+                },
             ]
         })
 
@@ -55,9 +58,6 @@ export class phiguess extends plugin {
             e.reply('当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
             return true
         }
-
-        //抽取之前洗个牌
-        shuffleArray(songsname)
 
         if (!songweights[e.group_id]){
             songweights[e.group_id] = {}
@@ -77,13 +77,17 @@ export class phiguess extends plugin {
 
         gamelist[e.group_id] = songs_info.song
 
+        var w_ = randint(100,140)
+        var h_ = randint(100,140)
+        var blur_ = randint(9,14)
+
         var data = {
             illustration: get.getill(songs_info.song),
-            width: 100,
-            height: 100,
-            x: randbt(2048 - 100),
-            y: randbt(1080 - 100),
-            blur: 10,
+            width: w_,
+            height: h_,
+            x: randint(0,2048 - w_),
+            y: randint(0,1080 - h_),
+            blur: blur_,
             style: 0,
         }
 
@@ -123,8 +127,9 @@ export class phiguess extends plugin {
             }
             var remsg = [] //回复内容
             var tipmsg = '' //这次干了什么
+            var index = randint(0,fnc.length - 1)
 
-            switch (fnc[randbt(fnc.length - 1)]) {
+            switch (fnc[index]) {
                 case 0: {
                     area_increase(100, data, fnc)
                     if (Config.getDefOrConfig('config', 'isGuild')) {
@@ -236,7 +241,28 @@ export class phiguess extends plugin {
         return false
     }
 
+    async mix(e) {
+        if (gamelist[e.group_id]) {
+            e.reply(` 当前有正在进行的游戏，请等待游戏结束再执行该指令 `, true)
+            return false
+        }
+
+        //曲目初始洗牌
+        shuffleArray(songsname)
+
+        songweights[e.group_id] = songweights[e.group_id] || {}
+
+        //将权重归1
+        songsname.forEach(song => {
+            songweights[e.group_id][song] = 1
+        }) 
+
+        e.reply(` 洗牌成功了www `, true)
+        return true
+    }
 }
+
+
 
 /**游戏结束，发送相应位置 */
 async function gameover(e, data) {
