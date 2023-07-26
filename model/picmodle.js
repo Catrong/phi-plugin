@@ -56,7 +56,8 @@ class atlas {
         }
 
         return await puppeteer.render('b19/b19', {
-            ...data
+            ...data,
+            b19size: Config.getDefOrConfig('config','b19size') / 100,
         }, {
             e,
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
@@ -65,7 +66,8 @@ class atlas {
 
     async update(e, data) {
         return await puppeteer.render('update/update', {
-            ...data
+            ...data,
+            size: Config.getDefOrConfig('config','b19size') / 100,
         }, {
             e,
             scale: Config.getDefOrConfig('config', 'renderScale') / 100

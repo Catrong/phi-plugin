@@ -11,8 +11,8 @@ export function supportGuoba() {
                 {
                     field: 'b19size',
                     label: '渲染体积',
-                    helpMessage: '标准（100）值的宽度为1800px，按照百分比进行缩放，图片越大渲染越慢，100渲染需要约80秒',
-                    bottomHelpMessage: '选择b19图片的渲染体积，以缩减渲染所需时间，太大可能会炸掉 Chromium ',
+                    helpMessage: '标准（100）值的宽度为1800px，按照百分比进行缩放，图片越大渲染越慢',
+                    bottomHelpMessage: '选择b19和update图片的渲染体积，以缩减渲染所需时间，太大可能会炸掉 Chromium ',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
