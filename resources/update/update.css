@@ -41,7 +41,7 @@ body p {
     position: absolute;
     overflow: hidden;
     height: 110%;
-    filter: blur(40px) brightness(75%);
+    filter: blur(20px) brightness(75%);
     z-index: 0;
 }
 
@@ -55,7 +55,6 @@ body p {
     justify-content: space-between;
     flex-direction: column;
     margin-bottom: 100px;
-    filter: drop-shadow(2px 4px 100px #bdf7ff2d);
 }
 
 .tatle img {
@@ -65,7 +64,13 @@ body p {
     border-radius: 58px;
 }
 
-.tatle .l {
+.l,
+.r {
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+}
+
+.l {
     width: 60%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
@@ -78,12 +83,12 @@ body p {
     align-items: center;
 }
 
-.tatle .l .doc p {
+.l .doc p {
     font-size: 70;
     margin: 10;
 }
 
-.tatle .m {
+.m {
     background-color: white;
     clip-path: polygon(100% 0%, 5% 100%, 0% 100%, 95% 0px);
     height: 100%;
@@ -92,7 +97,7 @@ body p {
     margin: 0;
 }
 
-.tatle .r {
+.r {
     background-color: rgba(0, 0, 0, 0.5);
     clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 11% 0px);
     height: 90%;
@@ -104,20 +109,20 @@ body p {
     margin-left: -33%;
 }
 
-.tatle .r p {
+.r p {
     margin-top: 2;
     margin-bottom: 2;
     font-size: 40;
     margin-left: 15%;
 }
 
-.tatle .r .Challenge {
+.r .Challenge {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.tatle .r .Challenge-r {
+.r .Challenge-r {
     width: 95px;
     display: flex;
     align-items: center;
@@ -127,7 +132,7 @@ body p {
     margin-left: 3%;
 }
 
-.tatle .r .Challenge-r img {
+.r .Challenge-r img {
     width: 100%;
     height: auto;
     margin-right: 0;
@@ -136,7 +141,7 @@ body p {
     margin-bottom: -60px;
 }
 
-.tatle .r .Challenge-r p {
+.r .Challenge-r p {
     margin: 0;
 }
 
@@ -155,13 +160,15 @@ body p {
     display: flex;
     filter: drop-shadow(0px 0px 5px black);
     flex-direction: column;
-    clip-path: polygon(100% 0%, 85% 100%, 0% 100%, 15% 0px);
     margin-bottom: 5%;
+    align-items: flex-start;
 }
+
 
 .imgbox {
     width: 100%;
     height: 0;
+    clip-path: none;
 }
 
 .imgbox img {
@@ -176,36 +183,56 @@ body p {
     justify-content: space-between;
 }
 
-.songsname {
-    width: 86%;
-    height: 15%;
+.namebox {
     display: flex;
+    width: 100%;
+    height: 15%;
     background: linear-gradient(#000000aa 25%, #ffffff00);
+}
+
+.songsname {
+    width: 100%;
+    height: 100%;
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 14%;
 }
 
 .songsname p {
-    font-size: 18px;
+    font-size: 23.5px;
+    filter: drop-shadow(0px 0px 5px #000000aa);
+}
+
+.new-box {
+    width: 16%;
+    height: 100%;
+    display: flex;
+    z-index: 1;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(0px 04px 5px black);
+}
+
+.new-box img {
+    height: 140%;
 }
 
 .songsinfo {
-    width: 86%;
-    height: 20%;
+    width: 100%;
+    height: 30%;
     display: flex;
     background: linear-gradient(#ffffff00, #000000aa 75%);
     align-items: center;
-    justify-content: center;
-    padding-right: 14%;
+    justify-content: flex-end;
     flex-direction: column;
 }
 
 .songsinfo p {
-    font-size: 25px;
-    height: 40%;
+    font-size: 27px;
+    height: 35%;
     display: flex;
     align-items: center;
+    filter: drop-shadow(0px 0px 5px #000000aa);
 }
 
 
@@ -219,6 +246,8 @@ body p {
     justify-content: center;
     background-color: rgba(112, 112, 112, 0.4);
     margin-bottom: 5%;
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
 }
 
 .border_corner {
@@ -293,8 +322,8 @@ body p {
         0 0 1px #8eeeff,
         1px 0 2px #8eeeff,
         -1px 0 2px #8eeeff,
-        1px 0 5px #8eeeff,
-        -1px 0 10px #8eeeff;
+        1px 0 5px #8eeeff88,
+        -1px 0 10px #8eeeff88;
     margin-left: 5%;
     font-size: 25px;
     color: #00B0F0;

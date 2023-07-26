@@ -36,8 +36,12 @@ body p {
     position: relative;
     overflow: hidden;
     transform: scale(1.2);
-    filter: blur(40px);
+    filter: blur(10px);
     z-index: 0;
+}
+
+.player-info, .playerid-right, .playerid, .avatar {
+    background-color: #0000007a;
 }
 
 .playerbox {
@@ -65,9 +69,10 @@ body p {
     width: 250px;
     height: 250px;
     z-index: 2;
-    clip-path: polygon(100% 24%, 85% 76%, 0 76%, 15% 24%);
+    clip-path: polygon(100% 24%, 86% 77%, 0 76%, 13% 24%);
     justify-content: center;
     align-items: center;
+    background-color: #fff;
 }
 
 .avatar img {
@@ -79,7 +84,6 @@ body p {
     display: flex;
     height: 100%;
     align-items: center;
-    background-color: #0000007a;
     padding-right: 100px;
     margin-right: -90px;
     justify-content: flex-end;
@@ -91,9 +95,8 @@ body p {
 }
 
 .playerid-right {
-    width: 30px;
+    width: 25px;
     height: 100%;
-    background-color: #0000007a;
     clip-path: polygon(100% 0%, 100% 100%, 0 100%);
 }
 
@@ -103,7 +106,6 @@ body p {
     padding-left: 100;
     margin-left: -80;
     padding-right: 30;
-    background-color: #0000007a;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -142,12 +144,12 @@ body p {
     align-items: center;
     margin-left: -100;
     padding-left: 80;
-    clip-path: polygon(100% 0%, 94% 100%, 0 100%, 0% 0%);
+    clip-path: polygon(100% 0%, 96% 100%, 0 100%, 0% 0%);
     justify-content: center;
 }
 
 .player-rks p {
-    font-size: 25px;
+    font-size: 30px;
     color: #000;
     margin-right: 15;
 }
@@ -229,36 +231,45 @@ body p {
     width: 37.5%;
     height: 90%;
     padding-left: 7.5%;
-    filter: drop-shadow(2px 4px 6px black);
     display: flex;
     flex-direction: row;
     align-items: center;
     writing-mode: vertical-lr;
+    justify-content: center;
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+}
+
+.rank-AT p,
+.rank-IN p,
+.rank-HD p,
+.rank-EZ p {
+    font-size: 70px;
 }
 
 .rank-AT {
-    background-color: #d5d5d5ad;
+    background-color: #d5d5d588;
 }
 
 .rank-IN {
-    background-color: #ff0000ad;
+    background-color: #ff000088;
 }
 
 .rank-HD {
-    background-color: #00B0F0ad;
+    background-color: #00B0F088;
 }
 
 .rank-EZ {
-    background-color: #92D050ad;
+    background-color: #92D05088;
 }
 
 .pingji {
-    height: 100%;
-    width: 100%;
-    margin-bottom: -100%;
-    margin-left: -33%;
+    height: 40%;
+    width: 40%;
+    margin-bottom: -40%;
+    margin-left: -140%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -268,8 +279,7 @@ body p {
 }
 
 .pingji img {
-    height: 200px;
-    filter: blur(5px);
+    height: 100%;
 }
 
 .rank {
@@ -302,16 +312,16 @@ body p {
 .score,
 .acc,
 .rks {
-    text-shadow: 1px 1px 5px #84979bd0;
+    text-shadow: 1px 1px 5px #676767;
 }
 
 .score {
-    width: 100%;
+    width: 85%;
     height: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -7%;
+    margin-left: 4%;
     margin-bottom: 5%;
 }
 
@@ -365,8 +375,7 @@ body p {
 .suggest p {
     font-size: 25px;
     color: #92D050;
-    text-shadow:
-        0 0 3px rgba(63, 63, 63, 0.8);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 1);
 }
 
 .acc p {
@@ -406,6 +415,7 @@ body p {
     color: white;
     font-size: 35px;
     margin: 0;
+    text-shadow: 0 0 5px #000000ab;
 }
 
 .leave-at,
@@ -420,22 +430,24 @@ body p {
     align-items: center;
     flex-direction: column;
     margin-right: 20px;
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
 }
 
 .leave-ez {
-    background-color: #92D050;
+    background-color: #92D050ab;
 }
 
 .leave-hd {
-    background-color: #00B0F0;
+    background-color: #00B0F0ab;
 }
 
 .leave-in {
-    background-color: #FF0000;
+    background-color: #FF0000ab;
 }
 
 .leave-at {
-    background-color: #A6A6A6;
+    background-color: #A6A6A6ab;
 }
 
 .createdbox {
@@ -458,6 +470,8 @@ body p {
     position: relative;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
 }
 
 .created p {

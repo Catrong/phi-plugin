@@ -41,9 +41,13 @@
                 <div class="box-up">
                     <div class="rank-AT">
                         {{if AT}}
+                        {{if AT.pingji == 'NEW'}}
+                        <img src="{{_res_path}}/otherimg/{{AT.pingji}}.png" alt="pingji" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        {{else}}
                         <div class="pingji">
                             <img src="{{_res_path}}/otherimg/{{AT.pingji}}.png" alt="{{AT.pingji}}">
                         </div>
+                        {{/if}}
                         <div class="rank">
                             <p>AT</p>
                         </div>
@@ -69,16 +73,18 @@
 
                         {{/if}}
                         {{else}}
-                        <div class="pingji">
-                            <p>NO_INFO</p>
-                        </div>
+                        <p style="margin-left: -35%;">NO_INFO</p>
                         {{/if}}
                     </div>
                     <div class="rank-IN">
                         {{if IN}}
+                        {{if IN.pingji == 'NEW'}}
+                        <img src="{{_res_path}}/otherimg/{{IN.pingji}}.png" alt="pingji" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        {{else}}
                         <div class="pingji">
                             <img src="{{_res_path}}/otherimg/{{IN.pingji}}.png" alt="{{IN.pingji}}">
                         </div>
+                        {{/if}}
                         <div class="rank">
                             <p>IN</p>
                         </div>
@@ -104,18 +110,20 @@
 
                         {{/if}}
                         {{else}}
-                        <div class="pingji">
-                            <p>NO_INFO</p>
-                        </div>
+                        <p style="margin-left: -35%;">NO_INFO</p>
                         {{/if}}
                     </div>
                 </div>
                 <div class="box-down">
                     <div class="rank-HD">
                         {{if HD}}
+                        {{if HD.pingji == 'NEW'}}
+                        <img src="{{_res_path}}/otherimg/{{HD.pingji}}.png" alt="pingji" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        {{else}}
                         <div class="pingji">
                             <img src="{{_res_path}}/otherimg/{{HD.pingji}}.png" alt="{{HD.pingji}}">
                         </div>
+                        {{/if}}
                         <div class="rank">
                             <p>HD</p>
                         </div>
@@ -141,16 +149,18 @@
 
                         {{/if}}
                         {{else}}
-                        <div class="pingji">
-                            <p>NO_INFO</p>
-                        </div>
+                        <p style="margin-left: -35%;">NO_INFO</p>
                         {{/if}}
                     </div>
                     <div class="rank-EZ">
                         {{if EZ}}
+                        {{if EZ.pingji == 'NEW'}}
+                        <img src="{{_res_path}}/otherimg/{{EZ.pingji}}.png" alt="pingji" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        {{else}}
                         <div class="pingji">
                             <img src="{{_res_path}}/otherimg/{{EZ.pingji}}.png" alt="{{EZ.pingji}}">
                         </div>
+                        {{/if}}
                         <div class="rank">
                             <p>EZ</p>
                         </div>
@@ -176,9 +186,7 @@
 
                         {{/if}}
                         {{else}}
-                        <div class="pingji">
-                            <p>NO_INFO</p>
-                        </div>
+                        <p style="margin-left: -35%;">NO_INFO</p>
                         {{/if}}
                     </div>
                 </div>

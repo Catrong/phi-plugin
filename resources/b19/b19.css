@@ -41,8 +41,14 @@ body p {
     position: absolute;
     overflow: hidden;
     height: 110%;
-    filter: blur(40px) brightness(75%);
+    filter: blur(20px) brightness(75%);
     z-index: 0;
+}
+
+.tatle .l,
+.tatle .r {
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
 }
 
 .tatle {
@@ -55,7 +61,6 @@ body p {
     justify-content: space-between;
     flex-direction: column;
     margin-bottom: 100px;
-    filter: drop-shadow(2px 4px 100px #bdf7ff2d);
 }
 
 .tatle img {
@@ -186,6 +191,7 @@ body p {
     justify-content: center;
     flex-direction: row;
     writing-mode: vertical-lr;
+    z-index: 1;
 }
 
 .num {
@@ -292,6 +298,8 @@ body p {
     border-right: 3px solid;
     width: 49%;
     height: 80%;
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
 }
 
 .info-AT {
@@ -405,6 +413,8 @@ body p {
     align-items: flex-start;
     justify-content: center;
     background-color: rgba(112, 112, 112, 0.4);
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
 }
 
 .border_corner {
@@ -475,12 +485,7 @@ body p {
 }
 
 .Nosignal .client p {
-    text-shadow:
-        0 0 1px #8eeeff,
-        1px 0 2px #8eeeff,
-        -1px 0 2px #8eeeff,
-        1px 0 5px #8eeeff,
-        -1px 0 10px #8eeeff;
+    text-shadow: 0 0 1px #8eeeff, 1px 0 2px #8eeeff, -1px 0 2px #8eeeff, 1px 0 5px #8eeeff88, -1px 0 5px #8eeeff88;
     margin-left: 5%;
     font-size: 25px;
     color: #00B0F0;
@@ -536,6 +541,8 @@ body p {
     position: relative;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
 }
 
 .created p {
