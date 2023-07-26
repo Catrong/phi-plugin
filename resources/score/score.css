@@ -36,7 +36,7 @@ body p {
     position: relative;
     overflow: hidden;
     transform: scale(1.2);
-    filter: blur(10px);
+    filter: blur(10px) brightness(0.5);
     z-index: 0;
 }
 
