@@ -209,24 +209,24 @@ export class phiguess extends plugin {
         if (gamelist[e.group_id]) {
             var ans = e.msg.replace(/[#/](我)?猜(\s*)/g, '')
             var song = get.fuzzysongsnick(ans)
-                if (song[0]) {
+            if (song[0]) {
                 for (var i in song) {
                     if (gamelist[e.group_id] == song[i]) {
                         var t = gamelist[e.group_id]
                         delete (gamelist[e.group_id])
                         await e.reply([segment.at(e.user_id), '恭喜你，答对啦喵！ヾ(≧▽≦*)o'], true)
-                            await e.reply(await get.getsongsinfo(e, t))
-                            return true
-                        }
+                        await e.reply(await get.getsongsinfo(e, t))
+                        return true
                     }
-                    if (song[1]) {
-                        e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
-                    } else {
-                        e.reply(`不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
-                    }
-                    return true
                 }
+                if (song[1]) {
+                    e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                } else {
+                    e.reply(`不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                }
+                return true
             }
+        }
         return false
     }
 
