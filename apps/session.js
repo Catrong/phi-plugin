@@ -161,29 +161,17 @@ export class phisstk extends plugin {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (oldRecord && (nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score)) {
-                            if (i != 4) {
-                                pluginData.update.push({
-                                    "song": get.idgetsong(song, false),
-                                    "rank": Level[i],
-                                    "illustration": get.getill(get.idgetsong(song, false)),
-                                    "rks_old": oldRecord.rks,
-                                    "rks_new": nowRecord.rks,
-                                    "acc_old": oldRecord.acc,
-                                    "acc_new": nowRecord.acc,
-                                    "score_old": oldRecord.score,
-                                    "score_new": nowRecord.score
-                                })
-                            } else {
-                                pluginData.update.push({
-                                    "song": get.idgetsong(song, false),
-                                    "rank": Level[i],
-                                    "illustration": get.getill(get.idgetsong(song, false)),
-                                    "acc_old": oldRecord.acc,
-                                    "acc_new": nowRecord.acc,
-                                    "score_old": oldRecord.score,
-                                    "score_new": nowRecord.score
-                                })
-                            }
+                            pluginData.update.push({
+                                "song": get.idgetsong(song, false),
+                                "rank": Level[i],
+                                "illustration": get.getill(get.idgetsong(song, false)),
+                                "rks_old": oldRecord.rks,
+                                "rks_new": nowRecord.rks,
+                                "acc_old": oldRecord.acc,
+                                "acc_new": nowRecord.acc,
+                                "score_old": oldRecord.score,
+                                "score_new": nowRecord.score
+                            })
                         } else if (!oldRecord) {
                             pluginData.update.push({
                                 "song": get.idgetsong(song, false),
@@ -203,29 +191,17 @@ export class phisstk extends plugin {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
-                        if (i != 4) {
-                            pluginData.update.push({
-                                "song": get.idgetsong(song, false),
-                                "illustration": get.getill(get.idgetsong(song, false)),
-                                "rank": Level[i],
-                                "rks_old": 0,
-                                "rks_new": nowRecord.rks,
-                                "acc_old": 0,
-                                "acc_new": nowRecord.acc,
-                                "score_old": 0,
-                                "score_new": nowRecord.score
-                            })
-                        } else {
-                            pluginData.update.push({
-                                "song": get.idgetsong(song, false),
-                                "illustration": get.getill(get.idgetsong(song, false)),
-                                "rank": Level[i],
-                                "acc_old": 0,
-                                "acc_new": nowRecord.acc,
-                                "score_old": 0,
-                                "score_new": nowRecord.score
-                            })
-                        }
+                        pluginData.update.push({
+                            "song": get.idgetsong(song, false),
+                            "illustration": get.getill(get.idgetsong(song, false)),
+                            "rank": Level[i],
+                            "rks_old": 0,
+                            "rks_new": nowRecord.rks,
+                            "acc_old": 0,
+                            "acc_new": nowRecord.acc,
+                            "score_old": 0,
+                            "score_new": nowRecord.score
+                        })
                     }
                 }
             }
