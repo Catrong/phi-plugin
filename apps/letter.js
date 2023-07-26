@@ -66,9 +66,11 @@ export class philetter extends plugin {
         })
 
     }
-    /**发起出字母猜歌 */
+    /**发起出字母猜歌 **/
     async start(e) {
-        if (gamelist[e.group_id]) {
+        const { group_id } = e // 使用对象解构提取group_id
+
+        if (gamelist[group_id]) {
             e.reply("喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'#第X个XXXX'来猜曲名或者'#出X'来揭开字母吧！", true)
             return true
         }
@@ -78,485 +80,514 @@ export class philetter extends plugin {
             return true
         }
 
-        // //对曲目进行洗牌
-        // shuffleArray(songsname)
+        alphalist[group_id] = alphalist[group_id] || {}
+        lastGuessedTime[group_id] = lastGuessedTime[group_id] || {}
+        lastRevealedTime[group_id] = lastRevealedTime[group_id] || {}
 
-        alphalist[e.group_id] = alphalist[e.group_id] || {}
-        alphalist[e.group_id] = ''
+        alphalist[group_id] = ''
+        lastGuessedTime[group_id] = 0
+        lastRevealedTime[group_id] = 0
 
-        lastGuessedTime[e.group_id] = lastGuessedTime[e.group_id] || {}
-        lastGuessedTime[e.group_id] = 0
+        if (!songweights[group_id]) {
+            songweights[group_id] = {}
 
-        lastRevealedTime[e.group_id] = lastRevealedTime[e.group_id] || {}
-        lastRevealedTime[e.group_id] = 0
-
-        if (!songweights[e.group_id]){
-            songweights[e.group_id] = {}
-            
-            //将每一首曲目的权重初始化为1
+            // 将每一首曲目的权重初始化为1
             songsname.forEach(song => {
-                songweights[e.group_id][song] = 1
-            })           
+                songweights[group_id][song] = 1
+            })
         }
 
 
-        //预开猜对者数组
-        winnerlist[e.group_id] = {}
+        // 预开猜对者数组
+        winnerlist[group_id] = {}
 
-        //存储单局抽到的曲目下标
+        // 存储单局抽到的曲目下标
         var chose = []
 
-        for (var i = 1; i <= Config.getDefOrConfig('config', 'LetterNum'); i++) {
-            //根据曲目权重随机返回一首曲目名称
-            var randsong = getRandomSong(e)
-            //防止抽到重复的曲目
+        for (let i = 1; i <= Config.getDefOrConfig('config', 'LetterNum'); i++) {
+            // 根据曲目权重随机返回一首曲目名称
+            let randsong = getRandomSong(e)
+
+            // 防止抽到重复的曲目
             while (chose.includes(randsong)) {
                 randsong = getRandomSong(e)
             }
-            var songs_info = get.info()[randsong]
+
+            const songs_info = get.info()[randsong]
             chose.push(randsong)
 
-            gamelist[e.group_id] = gamelist[e.group_id] || {}
-            gamelist[e.group_id][i] = songs_info.song
+            gamelist[group_id] = gamelist[group_id] || {}
+            blurlist[group_id] = blurlist[group_id] || {}
 
-            blurlist[e.group_id] = blurlist[e.group_id] || {}
-            blurlist[e.group_id][i] = encrypt_song_name(songs_info.song)//模糊歌名
+            gamelist[group_id][i] = songs_info.song
+            blurlist[group_id][i] = encrypt_song_name(songs_info.song)
+
         }
-        e.reply(`出你字母开启成功！回复'#第X个XXXX'命令猜歌，例如：#第1个Reimei;发送'#出X'来揭开字母(不区分大小写)，如'#出A';发送'#字母答案'结束并查看答案`)
 
-        //延时1s
+        // 输出提示信息
+        e.reply(`出你字母开启成功！回复'#第X个XXXX'命令猜歌，例如：#第1个Reimei;发送'#出X'来揭开字母(不区分大小写)，如'#出A';发送'#字母答案'结束并查看答案`)
+        
+        // 延时1s
         await timeout(1 * 1000)
 
-        var output = '出你字母进行中：\n'
-        for (var i in blurlist[e.group_id]) {
-            var blur_name = blurlist[e.group_id][i]
-            output += '【' + i + '】' + blur_name + `\n`
+        let output = '出你字母进行中：\n'
+        for (const i of Object.keys(blurlist[group_id])) {
+            const blur_name = blurlist[group_id][i]
+            output += `【${i}】${blur_name}\n`
         }
         await e.reply(output, true)
 
         return true
     }
 
+    /** 翻开字母 **/
     async reveal(e) {
-        if (!gamelist[e.group_id]) {
+        const { group_id: groupId, msg } = e
+    
+        if (!gamelist[groupId]) {
             e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
             return false
         }
-
-        var time = Config.getDefOrConfig('config', 'LetterRevealCd')
-        var currentTime = Date.now()
-        var timetik = currentTime - lastRevealedTime[e.group_id]
-        var timeleft = Math.floor((1000 * time - timetik) / 1000)
-        //上一轮翻开的Cd没结束
+    
+        const time = Config.getDefOrConfig('config', 'LetterRevealCd')
+        const currentTime = Date.now()
+        const timetik = currentTime - lastRevealedTime[groupId]
+        const timeleft = Math.floor((1000 * time - timetik) / 1000)
+    
         if (timetik < 1000 * time) {
             e.reply(`翻字符的全局冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
             return true
         }
-        //上一轮Cd结束，更新新一轮的时间戳
-        lastRevealedTime[e.group_id] = currentTime
-
-        var msg = e.msg.replace(/[#/](出|开|翻|揭|看|翻开|打开|揭开)(\s*)/g, '')
-
-        if (msg) {
-            //匹配成功
-            var letter = msg
-            var output = []
-            var included = false
-
-            if (alphalist[e.group_id].replace(/\[object Object\]/g, '').includes(letter.toUpperCase())) {
+    
+        lastRevealedTime[groupId] = currentTime
+    
+        const newMsg = msg.replace(/[#/](出|开|翻|揭|看|翻开|打开|揭开)(\s*)/g, '')
+    
+        if (newMsg) {
+            const letter = newMsg.toLowerCase()
+            let output = []
+            let included = false
+    
+            if (alphalist[groupId].replace(/\[object Object\]/g, '').includes(letter.toUpperCase())) {
                 e.reply(`字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！\n`, true)
                 return true
             }
-
-            for (var i in gamelist[e.group_id]) {
-                var songname = gamelist[e.group_id][i]
-                var blurname = blurlist[e.group_id][i]
-                var characters = ''
-                var letters = ''
-
+    
+            for (let i in gamelist[groupId]) {
+                const songname = gamelist[groupId][i]
+                const blurname = blurlist[groupId][i]
+                let characters = ''
+                let letters = ''
+    
                 if (/[\u4e00-\u9fa5]/.test(songname)) {
-                    characters = (songname.match(/[\u4e00-\u9fa5]/g) || []).join("")
+                    characters = [...songname].filter(char => /[\u4e00-\u9fa5]/.test(char)).join("")
                     letters = pinyin(characters, { pattern: 'first', toneType: 'none', type: 'string' })
                 }
-                //曲名是否包含这个字母，或者如果为中文则首字母是否包含这个字母，不包含就不做额外修改操作
-                if (!(songname.toLowerCase().includes(letter.toLowerCase())) && !letters.includes(letter.toLowerCase())) {
+    
+                if (!songname.toLowerCase().includes(letter) && !letters.includes(letter)) {
                     continue
                 }
-                //包含字母
+    
                 included = true
-
-                //就算包含，但是被猜出来了也是直接输出标准曲名
-                if (!(blurlist[e.group_id][i])) {
+    
+                if (!blurlist[groupId][i]) {
                     continue
                 }
-
-                //将加密符号是该字母的显示出来，因为每一个字符是只读的，所以不能对单个字符进行修改
-                var newBlurname = ''
-                for (var ii = 0; ii < songname.length; ii++) {
-                    //如果字符是中文，将其首字母与翻开的字母进行匹配
-                    if (/^[\u4E00-\u9FFF]$/.test(songname[ii])) {
-                        //若匹配就将该汉字显示出来
-                        if (pinyin(songname[ii], { pattern: 'first', toneType: 'none', type: 'string' }) == letter.toLowerCase()) {
-                            newBlurname += songname[ii]
-                            continue
-                        }
+    
+                let newBlurname = [...songname].map((char, index) => {
+                    if (/^[\u4E00-\u9FFF]$/.test(char)) {
+                        return pinyin(char, { pattern: 'first', toneType: 'none', type: 'string' }) === letter ? char : blurname[index]
                     }
-
-                    if (songname[ii].toLowerCase() == letter.toLowerCase()) {
-                        newBlurname += songname[ii]
-                    } else {
-                        newBlurname += blurname[ii]
-                    }
-                }
-                blurlist[e.group_id][i] = newBlurname
+    
+                    return char.toLowerCase() === letter ? char : blurname[index]
+                }).join('');
+    
+                blurlist[groupId][i] = newBlurname
+    
                 if (!newBlurname.includes('*')) {
-                    /**被翻开完了，自动改为无人猜对 */
-                    delete blurlist[e.group_id][i]
+                    delete blurlist[groupId][i]
                 }
             }
-
-            //包含该字母，就把该字母拼到alphalist后面去
+    
             if (included) {
-                alphalist[e.group_id] = alphalist[e.group_id] || {}
-
-                var reg = /^[A-Za-z]+$/g
-                if (reg.test(letter)) {
-                    /**如果为英文字母则进行大小写转换 */
-                    alphalist[e.group_id] = alphalist[e.group_id] + letter.toUpperCase() + ' '
-                } else {
-                    alphalist[e.group_id] = alphalist[e.group_id] + letter + ' '
-                }
-
-
+                alphalist[groupId] = alphalist[groupId] || ''
+                alphalist[groupId] += /^[A-Za-z]+$/g.test(letter) ? letter.toUpperCase() + ' ' : letter + ' '
                 output.push(`成功翻开字母[ ${letter} ]\n`)
-            }
-            else {
+            } else {
                 output.push(`这几首曲目中不包含字母[ ${letter} ]\n`)
             }
-
-            output.push(`当前所有翻开的字母[ ${alphalist[e.group_id].replace(/\[object Object\]/g, '')}]`)
-
-            /**检查是否翻完 */
-
-            var isEmpty = Object.getOwnPropertyNames(blurlist[e.group_id]).length === 0//是否全部猜完
-            if (!isEmpty) {
-
-                for (var m in gamelist[e.group_id]) {
-                    if (blurlist[e.group_id][m]) {
-                        output.push(`\n【${m}】${blurlist[e.group_id][m]}`)
+    
+            output.push(`当前所有翻开的字母[ ${alphalist[groupId].replace(/\[object Object\]/g, '')}]`)
+    
+            let isEmpty = Object.getOwnPropertyNames(blurlist[groupId]).length === 0
+    
+            output = output.concat(Object.keys(gamelist[groupId]).map(m => {
+                if (!isEmpty && blurlist[groupId][m]) {
+                    return `\n【${m}】${blurlist[groupId][m]                    }`
                     } else {
-                        output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
-                        if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
-                            output.push(` @${winnerlist[e.group_id][m]}`)
+                        let result = `\n【${m}】${gamelist[groupId][m]}`
+    
+                        if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[groupId][m]) {
+                            result += ` @${winnerlist[groupId][m]}`
                         }
+    
+                        return result
                     }
+                }));
+    
+                if (isEmpty) {
+                    output.unshift('\n所有字母已翻开，答案如下：\n')
+                    delete alphalist[groupId]
+                    delete blurlist[groupId]
+                    delete gamelist[groupId]
+                    delete winnerlist[groupId]
                 }
-            } else {
-                output.push('\n所有字母已翻开，答案如下：\n')
-                delete (alphalist[e.group_id])
-                delete (blurlist[e.group_id])
-
-                for (var m in gamelist[e.group_id]) {
-                    output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
-                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
-                        output.push(` @${winnerlist[e.group_id][m]}`)
-                    }
-                }
-                delete (gamelist[e.group_id])
-                delete (winnerlist[e.group_id])
-
+    
+                e.reply(output, true)
+    
+                return true
             }
-            e.reply(output, true)
-            return true
-        }
-        return false
+            return false
     }
 
+    /** 猜测 **/
     async guess(e) {
+        const { group_id, msg, user_id, sender } = e //使用对象解构提取group_id,msg,user_id和sender
+
         //必须已经开始了一局
-        if (gamelist[e.group_id]) {
-            var time = Config.getDefOrConfig('config', 'LetterGuessCd')
-            var currentTime = Date.now()
-            var timetik = currentTime - lastGuessedTime[e.group_id]
-            var timeleft = Math.floor((1000 * time - timetik) / 1000)
+        if (gamelist[group_id]) {
+            const time = Config.getDefOrConfig('config', 'LetterGuessCd')
+            const currentTime = Date.now()
+            const timetik = currentTime - lastGuessedTime[group_id]
+            const timeleft = Math.floor((1000 * time - timetik) / 1000)
+    
             //上一轮猜测的Cd还没过
             if (timetik < 1000 * time) {
                 e.reply(`猜测的冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
                 return true
             }
+    
             //上一轮Cd结束，更新新一轮的时间戳
-            lastGuessedTime[e.group_id] = currentTime
-
-            var msg = e.msg
-            var opened = '所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']\n'
-            var regex = /^[#/]\s*第\s*(\d+|[一二三四五六七八九十百千万]+)\s*(个|首)?(.*)$/
-            var result = msg.match(regex)
+            lastGuessedTime[group_id] = currentTime
+    
+            const opened = `所有翻开的字母[ ${alphalist[group_id].replace(/\[object Object\]/g, '')}]\n`
+            const regex = /^[#/]\s*第\s*(\d+|[一二三四五六七八九十百千万]+)\s*(个|首)?(.*)$/
+            const result = msg.match(regex)
+    
             if (result) {
-                var output = []
-                var num = 0
+                const output = []
+                let num = 0
+    
                 if (isNaN(result[1])) {
                     num = NumberToArabic(result[1])
                 } else {
                     num = Number(result[1])
                 }
-                var content = result[3]
-                if(num > Config.getDefOrConfig('config','LetterNum')) {
+    
+                const content = result[3]
+    
+                if (num > Config.getDefOrConfig('config','LetterNum')) {
                     e.reply(`没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
                     return true
                 }
-                var songs
-                if (!isfuzzymatch) {
-                    var songs = get.songsnick(content)//通过别名匹配全名
-                } else {
-                    var songs = get.fuzzysongsnick(content)//通过别名模糊匹配全名
-                }
-                var standard_song = gamelist[e.group_id][num]//标准答案
-
-
+    
+                const songs = !isfuzzymatch ? get.songsnick(content) : get.fuzzysongsnick(content)
+                const standard_song = gamelist[group_id][num] // 标准答案
+    
                 if (songs[0]) {
-                    for (var i in songs) {
-                        if (standard_song == songs[i]) {
+                    for (const song of songs) {
+                        if (standard_song === song) {
                             //已经猜完移除掉的曲目不能再猜
-                            if (!blurlist[e.group_id][num]) {
-                                e.reply('曲目[' + standard_song + ']已经猜过了，要不咱们换一个吧uwu')
+                            if (!blurlist[group_id][num]) {
+                                e.reply(`曲目[${standard_song}]已经猜过了，要不咱们换一个吧uwu`)
                                 return true
                             }
-
-                            delete (blurlist[e.group_id][num])
-                            e.reply([segment.at(e.user_id), `恭喜你ww，答对啦喵,第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `], true)
-                            if(get.info()[standard_song].illustration) { //如果有曲绘文件
+    
+                            delete blurlist[group_id][num]
+                            e.reply([segment.at(user_id), `恭喜你ww，答对啦喵，第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `], true)
+    
+                            if (get.info()[standard_song].illustration) { //如果有曲绘文件
                                 e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
                             }
-
-                            winnerlist[e.group_id][num] = e.sender.card //记录猜对者
-                            var isEmpty = Object.getOwnPropertyNames(blurlist[e.group_id]).length === 0//是否全部猜完
+    
+                            winnerlist[group_id][num] = sender.card //记录猜对者
+                            const isEmpty = Object.getOwnPropertyNames(blurlist[group_id]).length === 0 //是否全部猜完
+    
                             if (!isEmpty) {
-
                                 output.push('出你字母进行中：')
                                 output.push(opened)
-                                for (var m in gamelist[e.group_id]) {
-                                    if (blurlist[e.group_id][m]) {
-                                        output.push(`\n【${m}】${blurlist[e.group_id][m]}`)
+    
+                                for (const m of Object.keys(gamelist[group_id])) {
+                                    if (blurlist[group_id][m]) {
+                                        output.push(`\n【${m}】${blurlist[group_id][m]}`)
                                     } else {
-                                        output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
-                                        if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
-                                            output.push(` @${winnerlist[e.group_id][m]}`)
+                                        output.push(`\n【${m}】${gamelist[group_id][m]}`)
+    
+                                        if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][m]) {
+                                            output.push(` @${winnerlist[group_id][m]}`)
                                         }
                                     }
                                 }
+    
                                 e.reply(output, true)
                                 return true
                             } else {
-                                delete (alphalist[e.group_id])
-                                delete (blurlist[e.group_id])
-
+                                delete alphalist[group_id]
+                                delete blurlist[group_id]
+    
                                 output.push('出你字母已结束，答案如下：\n')
-                                for (var m in gamelist[e.group_id]) {
-                                    output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
-                                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
-                                        output.push(` @${winnerlist[e.group_id][m]}`)
+    
+                                for (const m of Object.keys(gamelist[group_id])) {
+                                    output.push(`\n【${m}】${gamelist[group_id][m]}`)
+    
+                                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][m]) {
+                                        output.push(` @${winnerlist[group_id][m]}`)
                                     }
                                 }
+    
                                 output.push(opened)
-
-                                delete (gamelist[e.group_id])
-                                delete (winnerlist[e.group_id])
-
+                                delete gamelist[group_id]
+                                delete winnerlist[group_id]
+    
                                 e.reply(output)
                                 return true
                             }
-
                         }
                     }
+    
                     if (songs[1]) {
-                        e.reply('第' + num + '首不是[' + content + ']www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦', true)
+                        e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦`, true)
                     } else {
-                        e.reply('第' + num + '首不是[' + songs[0] + ']www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦', true)
+                        e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦`, true)
                     }
+    
                     return true
                 }
+    
                 e.reply(`没有找到[${content}]的曲目信息呐QAQ`, true)
                 return true
             }
-
+    
             /**格式匹配错误放过命令 */
             return false
         }
-
+    
         /**未进行游戏放过命令 */
         return false
     }
 
+    /** 答案 **/
     async ans(e) {
-        if (gamelist[e.group_id]) {
-            var t = gamelist[e.group_id]
-            var winner = winnerlist[e.group_id]
-            delete (alphalist[e.group_id])
-            delete (gamelist[e.group_id])
-            delete (blurlist[e.group_id])
-            delete (winnerlist[e.group_id])
-            await e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
-            var output = ['出你字母已结束，答案如下：']
-            for (var m in t) {
-                var correct_name = t[m]
-                var winner_card = winner[m]
+        const { group_id } = e//使用对象解构提取group_id
+
+        if (gamelist[group_id]) {
+            e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
+
+            const t = gamelist[group_id]
+            const winner = winnerlist[group_id]
+
+            delete alphalist[group_id]
+            delete gamelist[group_id]
+            delete blurlist[group_id]
+            delete winnerlist[group_id]
+
+            const output = ['出你字母已结束，答案如下：']
+
+            for (const m of Object.keys(t)) {
+                const correct_name = t[m]
+                const winner_card = winner[m]
                 output.push(`\n【${m}】${correct_name}`)
+
                 if (Config.getDefOrConfig('config', 'LetterWinner')) {
-                    if (typeof winner_card === 'object' && winner_card !== null && typeof winner_card[e.group_id] === 'object'){
-                        output.push(` @${winner_card[e.group_id][m]}`)
+                    if (typeof winner_card === 'object' && winner_card !== null && typeof winner_card[group_id] === 'object') {
+                        output.push(` @${winner_card[group_id][m]}`)
                     }
                 }
             }
-            await e.reply(output)
+
+            e.reply(output)
             return true
         }
-        await e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
+
+        e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
         return false
     }
 
+    /** 提示 **/
     async tip(e) {
-        if (!gamelist[e.group_id]) {
+        const { group_id } = e
+    
+        if (!gamelist[group_id]) {
             e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
             return true
         }
-
-        var time = Config.getDefOrConfig('config', 'LetterTipCd')
-        var currentTime = Date.now()
-        var timetik = currentTime - lastTipTime[e.group_id]
-        var timeleft = Math.floor((1000 * time - timetik) / 1000)
-        //上一轮翻开的Cd没结束
+    
+        const time = Config.getDefOrConfig('config', 'LetterTipCd')
+        const currentTime = Date.now()
+        const timetik = currentTime - lastTipTime[group_id]
+        const timeleft = Math.floor((1000 * time - timetik) / 1000)
+    
         if (timetik < 1000 * time) {
             e.reply(`使用提示的全局冷却时间还有${timeleft}s呐，还请先耐心等下哇QAQ`, true)
             return true
         }
-        //上一轮Cd结束，更新新一轮的时间戳
-        lastTipTime[e.group_id] = currentTime
-
-        var commonKeys = []
-        for (var key in gamelist[e.group_id]) {
-            // 检查该键是否也存在于blurlist中
-            if (key in blurlist[e.group_id]) {
-                //如果键在两个对象中都存在,将该键值对添加到commonKeys数组中
-                commonKeys.push(key)
-            }
-        }
-
-        var randsymbol //存储随机抽出的字符
+    
+        lastTipTime[group_id] = currentTime
+    
+        const commonKeys = Object.keys(gamelist[group_id]).filter(key => key in blurlist[group_id])
+    
+        let randsymbol
         while (typeof randsymbol === 'undefined' || randsymbol === '*') {
-            var key = commonKeys[randint(0, commonKeys.length - 1)] //随机从通键值数组里取一个键值
-            var songname = gamelist[e.group_id][key] //获取该下标存储的曲名
-            randsymbol = getRandCharacter(songname, blurlist[e.group_id][key]) //随机从曲名中取一个非翻开字符
+            const key = commonKeys[randint(0, commonKeys.length - 1)]
+            const songname = gamelist[group_id][key]
+            randsymbol = getRandCharacter(songname, blurlist[group_id][key])
         }
-
-        var output = []
-
-        for (var i in gamelist[e.group_id]) {
-            /**首先处理一遍 */
-            var songname = gamelist[e.group_id][i]
-            var blurname = blurlist[e.group_id][i]
-
-            //被猜出来了的直接输出标准曲名
-            if (!(blurlist[e.group_id][i])) {
+    
+        const output = []
+    
+        for (const key of Object.keys(gamelist[group_id])) {
+            const songname = gamelist[group_id][key]
+            let blurname = blurlist[group_id][key]
+    
+            if (!blurname) {
                 continue
             }
+    
+            let newBlurname = ''
+            for (let i = 0; i < songname.length; i++) {
+                if (/^[\u4E00-\u9FFF]$/.test(songname[i]) && pinyin(songname[i], { pattern: 'first', toneType: 'none', type: 'string' }) == randsymbol.toLowerCase()) {
+                    newBlurname += songname[i]
+                    continue
+                }
+    
+                if (songname[i].toLowerCase() == randsymbol.toLowerCase()) {
+                    newBlurname += songname[i]
+                } else {
+                    newBlurname += blurname[i]
+                }
+            }
+    
+            blurlist[group_id][key] = newBlurname
+            if (!newBlurname.includes('*')) {
+                delete blurlist[group_id][key]
+            }
+        }
+    
+        alphalist[group_id] = alphalist[group_id] || {}
+    
+        const reg = /^[A-Za-z]+$/g
+        if (reg.test(randsymbol)) {
+            alphalist[group_id] += randsymbol.toUpperCase() + ' '
+        } else {
+            alphalist[group_id] += randsymbol + ' '
+        }
+    
+        output.push(`已经帮你随机翻开一个字符[ ${randsymbol} ]了捏 ♪（＾∀＾●）ﾉ`)
+    
+        const opened = '当前所有翻开的字符[ ' + alphalist[group_id].replace(/\[object Object\]/g, '') + ']'
+    
+        output.push(opened)
+    
+        const isEmpty = Object.getOwnPropertyNames(blurlist[group_id]).length === 0
+        if (!isEmpty) {
+            for (const key of Object.keys(gamelist[group_id])) {
+                if (blurlist[group_id][key]) {
+                    output.push(`【${key}】${blurlist[group_id][key]}`)
+                } else {
+                    output.push(`【${key}】${gamelist[group_id][key]}`)
+                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][key]) {
+                        output.push(` @${winnerlist[group_id][key]}`)
+                    }
+                }
+            }
+        }else{
+            delete (alphalist[group_id])
+            delete (blurlist[group_id])
+            output.push('\n字母已被全部翻开，答案如下：')
+            for (const key of Object.keys(gamelist[group_id])) {
+                if (blurlist[group_id][key]) {
+                    output.push(`\n【${key}】${blurlist[group_id][key]}`)
+                } else {
+                    output.push(`\n【${key}】${gamelist[group_id][key]}`)
+                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][key]) {
+                        output.push(` @${winnerlist[group_id][key]}`)
+                    }
+                }
+            }
 
-            //将加密符号是该字符的未猜曲名显示出来
-            var newBlurname = ''
-            for (var ii = 0; ii < songname.length; ii++) {
-                //如果字符是中文，将其首字母与随机字符进行匹配
+            delete (gamelist[e.group_id])
+            delete (winnerlist[e.group_id])
+        }
+    
+        e.reply(output.join('\n'), true)
+        return true
+    }
+    
+    /** 洗牌 **/
+    async mix(e) {
+        const { group_id } = e
+
+        if (gamelist[group_id]) {
+            await e.reply(`当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
+            return false
+        }
+
+        // 曲目初始洗牌
+        shuffleArray(songsname)
+
+        songweights[group_id] = songweights[group_id] || {}
+
+        // 将权重归1
+        songsname.forEach(song => {
+            songweights[group_id][song] = 1
+        }) 
+
+        await e.reply(`洗牌成功了www`, true)
+        return true
+    }
+
+    // 检查字母是否包含在曲目中
+    checkLetterInSongs(group_id, letter) {
+        const songs_info = get.info()
+
+        for (const i of Object.keys(gamelist[group_id])) {
+            const songname = gamelist[group_id][i]
+            const blurname = blurlist[group_id][i]
+            const characters = (songname.match(/[\u4e00-\u9fa5]/g) || []).join("")
+            const letters = pinyin(characters, { pattern: 'first', toneType: 'none', type: 'string' })
+    
+            if (!(songname.toLowerCase().includes(letter.toLowerCase())) && !letters.includes(letter.toLowerCase())) {
+                continue
+            }
+    
+            if (!(blurname)) {
+                continue
+            }
+    
+            let newBlurname = ''
+            for (let ii = 0; ii < songname.length; ii++) {
                 if (/^[\u4E00-\u9FFF]$/.test(songname[ii])) {
-                    //若匹配就将该汉字显示出来
-                    if (pinyin(songname[ii], { pattern: 'first', toneType: 'none', type: 'string' }) == randsymbol.toLowerCase()) {
+                    if (pinyin(songname[ii], { pattern: 'first', toneType: 'none', type: 'string' }) === letter.toLowerCase()) {
                         newBlurname += songname[ii]
                         continue
                     }
                 }
-
-                if (songname[ii].toLowerCase() == randsymbol.toLowerCase()) {
+    
+                if (songname[ii].toLowerCase() === letter.toLowerCase()) {
                     newBlurname += songname[ii]
                 } else {
                     newBlurname += blurname[ii]
                 }
             }
-            blurlist[e.group_id][i] = newBlurname
+            blurlist[group_id][i] = newBlurname
             if (!newBlurname.includes('*')) {
-                /**被开完了 */
-                delete blurlist[e.group_id][i]
+                delete blurlist[group_id][i]
             }
         }
-
-        /**如果刚好被开完就结束 */
-
-        //将该随机拼到alphalist后面去
-        alphalist[e.group_id] = alphalist[e.group_id] || {}
-
-        var reg = /^[A-Za-z]+$/g
-        if (reg.test(randsymbol)) {
-            /**如果为英文字母则进行大小写转换 */
-            alphalist[e.group_id] = alphalist[e.group_id] + randsymbol.toUpperCase() + ' '
-        } else {
-            alphalist[e.group_id] = alphalist[e.group_id] + randsymbol + ' '
-        }
-
-        output.push(`已经帮你随机翻开一个字符[ ${randsymbol} ]了捏 ♪（＾∀＾●）ﾉ\n`)
-
-        var opened = '当前所有翻开的字母[ ' + alphalist[e.group_id].replace(/\[object Object\]/g, '') + ']'
-
-        output.push(opened)
-
-
-        var isEmpty = Object.getOwnPropertyNames(blurlist[e.group_id]).length === 0//是否全部猜完
-        if (!isEmpty) {
-            for (var m in gamelist[e.group_id]) {
-                if (blurlist[e.group_id][m]) {
-                    output.push(`\n【${m}】${blurlist[e.group_id][m]}`)
-                } else {
-                    output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
-                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
-                        output.push(` @${winnerlist[e.group_id][m]}`)
-                    }
-                }
-            }
-        } else {
-            delete (alphalist[e.group_id])
-            delete (blurlist[e.group_id])
-            output.push('\n字母已被全部翻开，答案如下：')
-            for (var m in gamelist[e.group_id]) {
-                output.push(`\n【${m}】${gamelist[e.group_id][m]}`)
-                if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[e.group_id][m]) {
-                    output.push(` @${winnerlist[e.group_id][m]}`)
-                }
-            }
-
-            delete (gamelist[e.group_id])
-            delete (winnerlist[e.group_id])
-
-        }
-
-        e.reply(output, true)
-        return true
-
-    }
     
-    async mix(e) {
-        if (gamelist[e.group_id]) {
-            e.reply(` 当前有正在进行的游戏，请等待游戏结束再执行该指令 `, true)
-            return false
-        }
-
-        //曲目初始洗牌
-        shuffleArray(songsname)
-
-        songweights[e.group_id] = songweights[e.group_id] || {}
-
-        //将权重归1
-        songsname.forEach(song => {
-            songweights[e.group_id][song] = 1
-        }) 
-
-        e.reply(` 洗牌成功了www `, true)
-        return true
+        return Object.keys(blurlist[group_id]).length > 0
     }
+
 }
 
 /**
@@ -569,8 +600,8 @@ function randbt(top, bottom = 0) {
 
 //定义生成指定区间整数随机数的函数
 function randint(min, max) {
-    var range = max - min + 1
-    var randomOffset = Math.floor(Math.random() * range)
+    const range = max - min + 1
+    const randomOffset = Math.floor(Math.random() * range)
     return (randomOffset + min) % range + min
 }
 
@@ -578,31 +609,33 @@ function randint(min, max) {
 function randfloat(min, max, precision = 0) {
     var range = max - min
     var randomOffset = Math.random() * range
-    var randomNumber = (randomOffset + min) + range * Math.pow(10, -precision)
+    var randomNumber = randomOffset + min + range * 10 ** -precision
   
     return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
 }
 
 //定义随机抽取曲目的函数
 function getRandomSong(e) {
+    //对象解构提取groupid
+    const { group_id } = e
+
     //计算曲目的总权重
-    var totalWeight = Object.values(songweights[e.group_id]).reduce((total, weight) => total + weight, 0)
+    const totalWeight = Object.values(songweights[group_id]).reduce((total, weight) => total + weight, 0)
   
     //生成一个0到总权重之间带有16位小数的随机数
-    var randomWeight = randfloat(0, totalWeight, 16)
+    const randomWeight = randfloat(0, totalWeight, 16)
   
-    var accumulatedWeight = 0
-    for (const song of songsname) {
-      accumulatedWeight += songweights[e.group_id][song]
-      //当累积权重超过随机数时，选择当前歌曲
-      if (accumulatedWeight >= randomWeight) {
-        songweights[e.group_id][song] *= 0.7 // 权重每次衰减30%
-        return song
-      }
+    let accumulatedWeight = 0
+    for (const [song, weight] of Object.entries(songweights[group_id])) {
+        accumulatedWeight += weight
+        if (accumulatedWeight >= randomWeight) {
+            songweights[group_id][song] *= 0.7 //权重每次衰减30%
+            return song
+        }
     }
-  
+
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
-    return songsname[randint(0,songsname.length - 1)]
+    return songsname[randint(0, songsname.length - 1)]
 }
 
 function timeout(ms) {
@@ -611,93 +644,78 @@ function timeout(ms) {
     });
 }
 
+// 定义加密曲目名称滴函数
 function encrypt_song_name(name) {
-    var encryptedName = ''
-    //var num = rand(0,Math.min(2, name.length - 2)) + 1//显示多少位
-    var num = 0//将原来的随机位数改为强制不显示
-    var numset = []
-    for (var i = 0; i < num; i++) {
-        var numToShow = randint(0, name.length - 1)
+    const num = 0
+    const numset = Array.from({ length: num }, () => {
+        let numToShow = randint(0, name.length - 1)
         while (name[numToShow] == ' ') {
             numToShow = randint(0, name.length - 1)
         }
-        numset[i] = numToShow
-    }
+        return numToShow
+    })
 
-    for (var i = 0; i < name.length; i++) {
-        if (numset.includes(i)) {
-            encryptedName += name[i]
-            continue
-        } else if (name[i] == ' ') {
-            encryptedName += ' '
-            continue
+    let encryptedName = Array.from(name, (char, index) => {
+        if (numset.includes(index)) {
+            return char
+        } else if (char === ' ') {
+            return ' '
         } else {
-            ////////////为了美观现全部隐藏字符都用'*'号表示
-            // //判断这个字符是什么格式，中文就用'*'，英文就用'#'，其他就用'@'
-            // if(/^[\u4e00-\u9fa5]+$/.test(name[i])){
-            //     //中文
-            //     encryptedName+='*'
-            // }else if(/^[a-zA-Z]+$/.test(name[i])){
-            //     //English
-            //     encryptedName+='#'
-            // }else{
-            //     //others
-            //     encryptedName+='@'
-            // }
-            encryptedName += '*'
+            return '*'
         }
-    }
+    }).join('')
+
     return encryptedName
 }
 
 //将中文数字转为阿拉伯数字
 function NumberToArabic(digit) {
-    //只处理到千，再高也根本用不上啊(十位数都用不上的说)
+    //只处理到千，再高也根本用不上的www(十位数都用不上的说)
     const numberMap = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9 }
     const unitMap = { 十: 10, 百: 100, 千: 1000 }
 
-    var total = 0;
-    var currentUnit = 1;
-
-    for (let i = 0; i < digit.length; i++) {
-        const character = digit[i];
-        if (numberMap[character] !== undefined) {
-            currentUnit = numberMap[character];
-        } else if (unitMap[character] !== undefined) {
-            currentUnit *= unitMap[character];
-            total += currentUnit;
-            currentUnit = 0;
+    const total = digit.split('').reduce((acc, character) => {
+        const { [character]: numberValue } = numberMap
+        const { [character]: unitValue } = unitMap
+        
+        if (numberValue !== undefined) {
+            acc.currentUnit = numberValue
+        } else if (unitValue !== undefined) {
+            acc.currentUnit *= unitValue
+            acc.total += acc.currentUnit
+            acc.currentUnit = 0
         }
-    }
-    total += currentUnit;
-    return total;
+        
+        return acc
+    }, { total: 0, currentUnit: 1 })
+
+    return total.total + total.currentUnit
 }
 
 //将数组顺序打乱
 function shuffleArray(arr) {
-    var len = arr.length
-    for (var i = 0; i < len - 1; i++) {
-        var index = randint(0,len - i)
-        var temp = arr[index]
-        arr[index] = arr[len - i - 1]
-        arr[len - i - 1] = temp
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = randint(0,i) 
+        const temp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = temp //交换位置
     }
     return arr
 }
 
+//随机取字符
 function getRandCharacter(str, blur) {
     // 寻找未打开的位置
-    var temlist = [] //存放*的下标
-    for (var i in blur) {
-        if (blur[i] == '*') {
+    const temlist = [] // 存放*的下标
+    for (let i = 0; i < blur.length; i++) {
+        if (blur[i] === '*') {
             temlist.push(i)
         }
     }
 
     // 生成随机索引
-    var randomIndex = randint(0, temlist.length - 1)
-
+    const randomIndex = randint(0,temlist.length - 1)
 
     // 返回随机字符
-    return str.charAt(temlist[randomIndex])
+    return str.charAt(temlist[randomIndex]);
 }

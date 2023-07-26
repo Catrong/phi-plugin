@@ -50,7 +50,8 @@ export class phiguess extends plugin {
 
     /**猜曲绘 */
     async start(e) {
-        if (gamelist[e.group_id]) {
+        const { group_id } = e
+        if (gamelist[group_id]) {
             e.reply("请不要重复发起哦！", true)
             return true
         }
@@ -59,40 +60,42 @@ export class phiguess extends plugin {
             return true
         }
 
-        if (!songweights[e.group_id]){
-            songweights[e.group_id] = {}
+        if (!songweights[group_id]){
+            songweights[group_id] = {}
             
             //将每一首曲目的权重初始化为1
             songsname.forEach(song => {
-                songweights[e.group_id][song] = 1
+                songweights[group_id][song] = 1
             })           
         }
 
-        var song = getRandomSong(e)
-        var songs_info = get.info()[song]
+        const song = getRandomSong(e)
+        const songs_info = get.info()[song]
         if (typeof songs_info.illustration_big == 'undefined') {
             logger.error(`[phi guess]抽取到无曲绘曲目 ${songs_info.song}`)
             return true
         }
 
-        gamelist[e.group_id] = songs_info.song
+        gamelist[group_id] = songs_info.song
 
-        var w_ = randint(100,140)
-        var h_ = randint(100,140)
-        var blur_ = randint(9,14)
+        const w_ = randint(100,140)
+        const h_ = randint(100,140)
+        const x_ = randint(0,2048 - w_)
+        const y_ = randint(0,1080 - h_)
+        const blur_ = randint(9,14)
 
-        var data = {
+        let data = {
             illustration: get.getill(songs_info.song),
             width: w_,
             height: h_,
-            x: randint(0,2048 - w_),
-            y: randint(0,1080 - h_),
+            x: x_,
+            y: y_,
             blur: blur_,
             style: 0,
         }
 
-        var known_info = {}
-        var remain_info = ['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']
+        const known_info = {}
+        const remain_info = ['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']
         /**
          * 随机给出提示
          * 0: 区域扩大
@@ -100,7 +103,7 @@ export class phiguess extends plugin {
          * 2: 给出一条文字信息
          * 3: 显示区域位置
          */
-        var fnc = [0, 1, 2, 3]
+        let fnc = [0, 1, 2, 3]
         logger.info(data)
 
         e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 #答案 结束游戏`)
@@ -109,14 +112,14 @@ export class phiguess extends plugin {
         else
             await e.reply(await get.getguess(e, data))
 
-        for (var i = 0; i < 30; ++i) {
+        for (let i = 0; i < 30; ++i) {
 
-            var time = Config.getDefOrConfig('config', 'GuessTipCd')
+            const time = Config.getDefOrConfig('config', 'GuessTipCd')
 
-            for (var j = 0; j < time; ++j) {
+            for (let j = 0; j < time; ++j) {
                 await timeout(1000)
-                if (gamelist[e.group_id]) {
-                    if (gamelist[e.group_id] != songs_info.song) {
+                if (gamelist[group_id]) {
+                    if (gamelist[group_id] != songs_info.song) {
                         await gameover(e, data)
                         return true
                     }
@@ -125,9 +128,9 @@ export class phiguess extends plugin {
                     return true
                 }
             }
-            var remsg = [] //回复内容
-            var tipmsg = '' //这次干了什么
-            var index = randint(0,fnc.length - 1)
+            let remsg = [] //回复内容
+            let tipmsg = '' //这次干了什么
+            const index = randint(0,fnc.length - 1)
 
             switch (fnc[index]) {
                 case 0: {
@@ -177,8 +180,8 @@ export class phiguess extends plugin {
             if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
             if (known_info.chart) remsg.push(known_info.chart)
 
-            if (gamelist[e.group_id]) {
-                if (gamelist[e.group_id] != songs_info.song) {
+            if (gamelist[group_id]) {
+                if (gamelist[group_id] != songs_info.song) {
                     await gameover(e, data)
                     return true
                 }
@@ -194,8 +197,8 @@ export class phiguess extends plugin {
 
         }
 
-        var t = gamelist[e.group_id]
-        delete (gamelist[e.group_id])
+        const t = gamelist[group_id]
+        delete (gamelist[group_id])
         await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
 
         await e.reply(await get.getsongsinfo(e, t))
@@ -206,34 +209,38 @@ export class phiguess extends plugin {
 
     /**玩家猜测 */
     async guess(e) {
-        if (gamelist[e.group_id]) {
-            var ans = e.msg.replace(/[#/](我)?猜(\s*)/g, '')
-            var song = get.fuzzysongsnick(ans)
-            if (song[0]) {
-                for (var i in song) {
-                    if (gamelist[e.group_id] == song[i]) {
-                        var t = gamelist[e.group_id]
-                        delete (gamelist[e.group_id])
-                        await e.reply([segment.at(e.user_id), '恭喜你，答对啦喵！ヾ(≧▽≦*)o'], true)
-                        await e.reply(await get.getsongsinfo(e, t))
-                        return true
+        const { group_id , msg , user_id} = e
+        if (gamelist[group_id]) {
+            if (typeof msg === 'string') {
+                const ans = msg.replace(/[#/](我)?猜(\s*)/g, '')
+                const song = get.fuzzysongsnick(ans)
+                if (song[0]) {
+                    for (let i in song) {
+                        if (gamelist[group_id] == song[i]) {
+                            const t = gamelist[group_id]
+                            delete (gamelist[group_id])
+                            await e.reply([segment.at(user_id), '恭喜你，答对啦喵！ヾ(≧▽≦*)o'], true)
+                            await e.reply(await get.getsongsinfo(e, t))
+                            return true
+                        }
                     }
+                    if (song[1]) {
+                        e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                    } else {
+                        e.reply(`不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                    }
+                    return true
                 }
-                if (song[1]) {
-                    e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
-                } else {
-                    e.reply(`不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
-                }
-                return true
             }
         }
         return false
     }
 
     async ans(e) {
-        if (gamelist[e.group_id]) {
-            var t = gamelist[e.group_id]
-            delete (gamelist[e.group_id])
+        const { group_id } = e
+        if (gamelist[group_id]) {
+            const t = gamelist[group_id]
+            delete gamelist[group_id]
             await e.reply('好吧，下面开始公布答案。', true)
             await e.reply(await get.getsongsinfo(e, t))
             return true
@@ -241,23 +248,26 @@ export class phiguess extends plugin {
         return false
     }
 
+    /** 洗牌 **/
     async mix(e) {
-        if (gamelist[e.group_id]) {
-            e.reply(` 当前有正在进行的游戏，请等待游戏结束再执行该指令 `, true)
+        const { group_id } = e
+
+        if (gamelist[group_id]) {
+            await e.reply(`当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
             return false
         }
 
-        //曲目初始洗牌
+        // 曲目初始洗牌
         shuffleArray(songsname)
 
-        songweights[e.group_id] = songweights[e.group_id] || {}
+        songweights[group_id] = songweights[group_id] || {}
 
-        //将权重归1
+        // 将权重归1
         songsname.forEach(song => {
-            songweights[e.group_id][song] = 1
+            songweights[group_id][song] = 1
         }) 
 
-        e.reply(` 洗牌成功了www `, true)
+        await e.reply(`洗牌成功了www`, true)
         return true
     }
 }
@@ -337,22 +347,26 @@ function blur_down(size, data, fnc) {
  */
 function gave_a_tip(known_info, remain_info, songs_info, fnc) {
     if (remain_info.length) {
-        var t = randbt(remain_info.length - 1)
-        var aim = remain_info[t]
+        const t = randbt(remain_info.length - 1)
+        const aim = remain_info[t]
         remain_info.splice(t, 1)
         known_info[aim] = songs_info[aim]
+
         if (!remain_info.length) fnc.splice(fnc.indexOf(2), 1)
 
-        if (aim == 'chart') {
-            var t = ['EZ', 'HD', 'IN', 'AT']
-            var t1
+        if (aim === 'chart') {
+            const t = ['EZ', 'HD', 'IN', 'AT']
+            let t1
+
             if (songs_info[aim]['AT']) {
                 t1 = t[randbt(3)]
             } else {
                 t1 = t[randbt(2)]
             }
+
             known_info[aim] = `\n该曲目的 ${t1} 谱面的`
-            switch (randbt(2)) {
+
+            switch (randint(0,2)) {
                 case 0: {
                     /**定数 */
                     known_info[aim] += `定数为 ${songs_info[aim][t1]['difficulty']}`
@@ -362,7 +376,6 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
                     /**物量 */
                     known_info[aim] += `物量为 ${songs_info[aim][t1]['combo']}`
                     break
-
                 }
                 case 2: {
                     /**谱师 */
@@ -372,7 +385,8 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
             }
         }
     } else {
-        console.error('err')
+        console.error('Error: remaining info is empty')
+        return true
     }
     return false
 }
@@ -386,12 +400,11 @@ function timeout(ms) {
 
 //将数组顺序打乱
 function shuffleArray(arr) {
-    var len = arr.length
-    for (var i = 0; i < len - 1; i++) {
-        var index = randint(0,len - i)
-        var temp = arr[index]
-        arr[index] = arr[len - i - 1]
-        arr[len - i - 1] = temp
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = randint(0,i) 
+        const temp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = temp //交换位置
     }
     return arr
 }
@@ -400,36 +413,38 @@ function shuffleArray(arr) {
 function randfloat(min, max, precision = 0) {
     var range = max - min
     var randomOffset = Math.random() * range
-    var randomNumber = (randomOffset + min) + range * Math.pow(10, -precision)
+    var randomNumber = randomOffset + min + range * 10 ** -precision
   
     return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
 }
 
 //定义生成指定区间整数随机数的函数
 function randint(min, max) {
-    var range = max - min + 1
-    var randomOffset = Math.floor(Math.random() * range)
+    const range = max - min + 1
+    const randomOffset = Math.floor(Math.random() * range)
     return (randomOffset + min) % range + min
 }
 
 //定义随机抽取曲目的函数
 function getRandomSong(e) {
+    //对象解构提取groupid
+    const { group_id } = e
+
     //计算曲目的总权重
-    var totalWeight = Object.values(songweights[e.group_id]).reduce((total, weight) => total + weight, 0)
+    const totalWeight = Object.values(songweights[group_id]).reduce((total, weight) => total + weight, 0)
   
     //生成一个0到总权重之间带有16位小数的随机数
-    var randomWeight = randfloat(0, totalWeight, 16)
+    const randomWeight = randfloat(0, totalWeight, 16)
   
-    var accumulatedWeight = 0
-    for (const song of songsname) {
-      accumulatedWeight += songweights[e.group_id][song]
-      //当累积权重超过随机数时，选择当前歌曲
-      if (accumulatedWeight >= randomWeight) {
-        songweights[e.group_id][song] *= 0.4 // 权重每次衰减60%
-        return song
-      }
+    let accumulatedWeight = 0
+    for (const [song, weight] of Object.entries(songweights[group_id])) {
+        accumulatedWeight += weight
+        if (accumulatedWeight >= randomWeight) {
+            songweights[group_id][song] *= 0.4 //权重每次衰减60%
+            return song
+        }
     }
-  
+
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
-    return songsname[randint(0,songsname.length - 1)]
+    return songsname[randint(0, songsname.length - 1)]
 }
