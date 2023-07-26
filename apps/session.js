@@ -160,7 +160,7 @@ export class phisstk extends plugin {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
-                        if (oldRecord && (nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score)) {
+                        if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
                             pluginData.update.push({
                                 "song": get.idgetsong(song, false),
                                 "rank": Level[i],
