@@ -9,7 +9,7 @@ var songsname = []
 var songweights = {} //存储每首歌曲被抽取的权重
 var info = get.info()
 for (let i in info) {
-    if(info[i]['illustration_big']) {
+    if (info[i]['illustration_big']) {
         songsname.push(i)
     }
 }
@@ -59,13 +59,13 @@ export class phiguess extends plugin {
             return true
         }
 
-        if (!songweights[e.group_id]){
+        if (!songweights[e.group_id]) {
             songweights[e.group_id] = {}
-            
+
             //将每一首曲目的权重初始化为1
             songsname.forEach(song => {
                 songweights[e.group_id][song] = 1
-            })           
+            })
         }
 
         var song = getRandomSong(e)
@@ -77,16 +77,16 @@ export class phiguess extends plugin {
 
         gamelist[e.group_id] = songs_info.song
 
-        var w_ = randint(100,140)
-        var h_ = randint(100,140)
-        var blur_ = randint(9,14)
+        var w_ = randint(100, 140)
+        var h_ = randint(100, 140)
+        var blur_ = randint(9, 14)
 
         var data = {
             illustration: get.getill(songs_info.song),
             width: w_,
             height: h_,
-            x: randint(0,2048 - w_),
-            y: randint(0,1080 - h_),
+            x: randint(0, 2048 - w_),
+            y: randint(0, 1080 - h_),
             blur: blur_,
             style: 0,
         }
@@ -127,7 +127,7 @@ export class phiguess extends plugin {
             }
             var remsg = [] //回复内容
             var tipmsg = '' //这次干了什么
-            var index = randint(0,fnc.length - 1)
+            var index = randint(0, fnc.length - 1)
 
             switch (fnc[index]) {
                 case 0: {
@@ -255,7 +255,7 @@ export class phiguess extends plugin {
         //将权重归1
         songsname.forEach(song => {
             songweights[e.group_id][song] = 1
-        }) 
+        })
 
         e.reply(` 洗牌成功了www `, true)
         return true
@@ -344,13 +344,11 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
         if (!remain_info.length) fnc.splice(fnc.indexOf(2), 1)
 
         if (aim == 'chart') {
-            var t = ['EZ', 'HD', 'IN', 'AT']
-            var t1
-            if (songs_info[aim]['AT']) {
-                t1 = t[randbt(3)]
-            } else {
-                t1 = t[randbt(2)]
+            var charts = []
+            for (var i in songs_info[aim]) {
+                charts.push(i)
             }
+            var t1 = charts[randbt(charts.length - 1)]
             known_info[aim] = `\n该曲目的 ${t1} 谱面的`
             switch (randbt(2)) {
                 case 0: {
@@ -388,7 +386,7 @@ function timeout(ms) {
 function shuffleArray(arr) {
     var len = arr.length
     for (var i = 0; i < len - 1; i++) {
-        var index = randint(0,len - i)
+        var index = randint(0, len - i)
         var temp = arr[index]
         arr[index] = arr[len - i - 1]
         arr[len - i - 1] = temp
@@ -401,7 +399,7 @@ function randfloat(min, max, precision = 0) {
     var range = max - min
     var randomOffset = Math.random() * range
     var randomNumber = (randomOffset + min) + range * Math.pow(10, -precision)
-  
+
     return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
 }
 
@@ -416,20 +414,20 @@ function randint(min, max) {
 function getRandomSong(e) {
     //计算曲目的总权重
     var totalWeight = Object.values(songweights[e.group_id]).reduce((total, weight) => total + weight, 0)
-  
+
     //生成一个0到总权重之间带有16位小数的随机数
     var randomWeight = randfloat(0, totalWeight, 16)
-  
+
     var accumulatedWeight = 0
     for (const song of songsname) {
-      accumulatedWeight += songweights[e.group_id][song]
-      //当累积权重超过随机数时，选择当前歌曲
-      if (accumulatedWeight >= randomWeight) {
-        songweights[e.group_id][song] *= 0.4 // 权重每次衰减60%
-        return song
-      }
+        accumulatedWeight += songweights[e.group_id][song]
+        //当累积权重超过随机数时，选择当前歌曲
+        if (accumulatedWeight >= randomWeight) {
+            songweights[e.group_id][song] *= 0.4 // 权重每次衰减60%
+            return song
+        }
     }
-  
+
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
-    return songsname[randint(0,songsname.length - 1)]
+    return songsname[randint(0, songsname.length - 1)]
 }

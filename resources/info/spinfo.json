@@ -23,5 +23,119 @@
                 "charter": "今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\\\リンコ*198食べ放題//"
             }
         }
+    },
+    "Christmas": {
+        "song": "Christmas",
+        "illustration": "https://static.wikia.nocookie.net/phigros/images/0/00/Christmas_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200317102705",
+        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/0/00/Christmas_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200317102705",
+        "chapter": "SP",
+        "bpm": "125",
+        "composer": "姜米條",
+        "length": "1:05",
+        "illustrator": "knife美工刀",
+        "chart": {
+            "圣诞快乐": {
+                "rgba": "244,179,169,1",
+                "level": "?",
+                "difficulty": "0℃",
+                "combo": "177",
+                "charter": "Catcats"
+            }
+        }
+    },
+    "Spasmodic(Haocore Mix)": {
+        "song": "Spasmodic(Haocore Mix)",
+        "illustration": "https://static.wikia.nocookie.net/phigros/images/a/a1/Spasmodic%28Haocore_Mix%29_jacket.png/revision/latest/scale-to-width-down/1000?cb=20210331232836",
+        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/a/a1/Spasmodic%28Haocore_Mix%29_jacket.png/revision/latest/scale-to-width-down/1000?cb=20210331232836",
+        "chapter": "SP",
+        "bpm": "200",
+        "composer": "Daily天利",
+        "length": "2:24",
+        "illustrator": "笔记RE",
+        "chart": {
+            "一库呦": {
+                "rgba": "244,110,113,1",
+                "level": "?",
+                "difficulty": "❤",
+                "combo": "2500",
+                "charter": "Phigros Spasming Team “無極病院”"
+            }
+        }
+    },
+    "Burn(Haocore Mix)": {
+        "song": "Burn(Haocore Mix)",
+        "illustration": "https://static.wikia.nocookie.net/phigros/images/a/ab/Burn_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200329131134",
+        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/a/ab/Burn_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200329131134",
+        "chapter": "SP",
+        "bpm": "200",
+        "composer": "Daily天利",
+        "length": "2:24",
+        "illustrator": "knife美工刀",
+        "chart": {
+            "哈？": {
+                "rgba": "155,38,30,1",
+                "level": "?",
+                "difficulty": "🚫",
+                "combo": "1515",
+                "charter": "Catcats"
+            }
+        }
+    },
+    "Winter♂cube": {
+        "song": "Winter♂cube",
+        "illustration": "https://static.wikia.nocookie.net/phigros/images/3/3a/Winter_%E2%86%91cube%E2%86%93_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200319022503",
+        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/3/3a/Winter_%E2%86%91cube%E2%86%93_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200319022503",
+        "chapter": "SP",
+        "bpm": "208",
+        "composer": "Ctymax feat. NceS",
+        "length": "2:40",
+        "illustrator": "翠冷兮",
+        "chart": {
+            "♂": {
+                "rgba": "203,199,214,1",
+                "level": "?",
+                "difficulty": "♂",
+                "combo": "924",
+                "charter": "小鹏"
+            }
+        }
+    },
+    "Sigma(Haocore Mix)～105秒の伝説～": {
+        "song": "Sigma(Haocore Mix)～105秒の伝説～",
+        "illustration": "https://static.wikia.nocookie.net/phigros/images/7/77/Sigma_%28Haocore_Mix%29_~_105%E7%A7%92%E3%81%AE%E4%BC%9D%E8%AA%AC_~_jacket.png/revision/latest/scale-to-width-down/1000?cb=20220407024853",
+        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/7/77/Sigma_%28Haocore_Mix%29_~_105%E7%A7%92%E3%81%AE%E4%BC%9D%E8%AA%AC_~_jacket.png/revision/latest/scale-to-width-down/1000?cb=20220407024853",
+        "chapter": "SP",
+        "bpm": "200",
+        "composer": "Daily天利",
+        "length": "1:45",
+        "illustrator": "~天利利利利利利~",
+        "chart": {
+            "嘿！": {
+                "rgba": "3,166,55,1",
+                "level": "?",
+                "difficulty": "嘿！",
+                "combo": "1152",
+                "charter": "Barbari...太长了后面不写了"
+            }
+        }
+    },
+    "Sigma(Haocore Mix)～Regrets of The Yellow Tulip～": {
+        "song": "Sigma(Haocore Mix)～Regrets of The Yellow Tulip～",
+        "illustration": "https://static.wikia.nocookie.net/phigros/images/3/3a/Winter_%E2%86%91cube%E2%86%93_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200319022503",
+        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/3/3a/Winter_%E2%86%91cube%E2%86%93_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200319022503",
+        "chapter": "SP",
+        "bpm": "201",
+        "composer": "Daily天利",
+        "length": "2:37",
+        "illustrator": "Viosgit",
+        "chart": {
+            "踏平星空": {
+                "rgba": "203,199,214,1",
+                "level": "?",
+                "difficulty": "exe",
+                "combo": "4000",
+                "charter": "Σ as Nαrcατυs"
+            }
+        }
     }
 }
