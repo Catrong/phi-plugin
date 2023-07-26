@@ -124,13 +124,13 @@
         "illustration": "https://static.wikia.nocookie.net/phigros/images/9/9f/Sigma_%28Haocore_Mix%29_~_Regrets_of_the_Yellow_Tulip_~_jacket.png/revision/latest/scale-to-width-down/1000?cb=20220407024308",
         "illustration_big": "https://static.wikia.nocookie.net/phigros/images/9/9f/Sigma_%28Haocore_Mix%29_~_Regrets_of_the_Yellow_Tulip_~_jacket.png/revision/latest/scale-to-width-down/1000?cb=20220407024308",
         "chapter": "SP",
-        "bpm": "201",
+        "bpm": "200",
         "composer": "Daily天利",
         "length": "2:37",
         "illustrator": "Viosgit",
         "chart": {
             "踏平星空": {
-                "rgba": "203,199,214,1",
+                "rgba": "216,195,156,1",
                 "level": "?",
                 "difficulty": "exe",
                 "combo": "4000",
