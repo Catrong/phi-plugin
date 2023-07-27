@@ -482,7 +482,7 @@ export class philetter extends plugin {
             alphalist[group_id] += randsymbol + ' '
         }
 
-        output.push(`已经帮你随机翻开一个字符[ ${randsymbol} ]了捏 ♪（＾∀＾●）ﾉ`)
+        output.push(`已经帮你随机翻开一个字符[ ${randsymbol} ]了捏 ♪（＾∀＾●）ﾉ\n`)
 
         const opened = '当前所有翻开的字符[ ' + alphalist[group_id].replace(/\[object Object\]/g, '') + ']'
 
