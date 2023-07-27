@@ -76,114 +76,62 @@ export class phisong extends plugin {
             e.reply('频道模式下检索功能在群聊禁用，请私聊使用')
             return true
         }
-        var msg = e.msg.replace(/[#/](.*)(查找|检索|search)(\s*)/g, "")
-        msg = msg.toLowerCase()
-        const regbpm = /bpm([\s:：,，/|~是为])*([0-9])+(\s*-\s*[0-9]+)?/
-        const regdifficulty = /(difficulty|dif|难度|定级)([\s:：,，/|~是为])*([0-9.])+(\s*-\s*[0-9.]+)?/
-        const regcombo = /(combo|cmb|物量|连击)([\s:：,，/|~是为])*([0-9])+(\s*-\s*[0-9]+)?/
-        var bpm = msg.match(regbpm)
-        var difficulty = msg.match(regdifficulty)
-        var combo = msg.match(regcombo)
-        var remain = get.info()
-        var result = {}
-        if (bpm) {
-            bpm = bpm[0].replace(/(bpm|[:：,，/|~是为]|\s)*/g, '')
-            var top = 0
-            var bottom = 0
-            if (bpm.includes('-')) {
-                /**考虑bpm区间 */
-                bpm = bpm.split('-')
-                if (Number(bpm[0]) > Number(bpm[1])) {
-                    var tem = bpm[0]
-                    bpm[1] = bpm[0]
-                    bpm[0] = tem
-                }
-                top = Number(bpm[1])
-                bottom = Number(bpm[0])
-            } else {
-                top = bottom = Number(bpm)
-                bpm = [bpm] //变成数组方便结尾输出时判断
+        let msg = e.msg.replace(/[#/](.*)(查找|检索|search)(\s*)/g, "").toLowerCase()
 
+        const patterns = {
+            'bpm': {
+                'regex': /bpm([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
+                'predicate': (item, bottom, top) => bottom <= item['bpm'] && item['bpm'] <= top
+            },
+            'difficulty': {
+                'regex': /(difficulty|dif|难度|定级)([\s:：,，/|~是为]*)([0-9.]+(\s*-\s*[0-9.]+)?)/,
+                'predicate': (item, bottom, top) => Object.values(item['chart']).some(level => bottom <= level['difficulty'] && level['difficulty'] <= top)
+            },
+            'combo': {
+                'regex': /(combo|cmb|物量|连击)([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
+                'predicate': (item, bottom, top) => Object.values(item['chart']).some(level => bottom <= level['combo'] && level['combo'] <= top)
             }
-            for (var i in remain) {
-                if (bottom <= remain[i]['bpm'] && remain[i]['bpm'] <= top) {
-                    result[i] = remain[i]
-                }
-            }
-            remain = result
-            result = {}
         }
-        if (difficulty) {
-            difficulty = difficulty[0].replace(/(difficulty|dif|难度|定级|[:：,，/|~是为]|\s)*/g, '')
-            var top = 0
-            var bottom = 0
-            if (difficulty.includes('-')) {
-                /**考虑区间 */
-                difficulty = difficulty.split('-')
-                if (Number(difficulty[0]) > Number(difficulty[1])) {
-                    var tem = difficulty[0]
-                    difficulty[1] = difficulty[0]
-                    difficulty[0] = tem
+
+        let remain = get.info()
+        let result = {}
+        let filters = {}
+
+        for (let key in patterns) {
+            let { regex, predicate } = patterns[key]
+            let match = msg.match(regex)
+            if (match) {
+                match = match[0].replace(/((bpm|difficulty|dif|难度|定级|combo|cmb|物量|连击)([\s:：,，/|~是为]*))(\d)/g, '$1 $4')
+                match = match.replace(/((bpm|difficulty|dif|难度|定级|combo|cmb|物量|连击)([\s:：,，/|~是为]*))|\s/g, '')
+                let [bottom, top] = match.includes('-') ? match.split('-').sort((a, b) => a - b) : [match, match]
+                bottom = Number(bottom)
+                top = Number(top)
+                if (key === 'difficulty' && !match.includes('.0') && top % 1 === 0) {
+                    top += 0.9
                 }
-                top = Number(difficulty[1])
-                bottom = Number(difficulty[0])
-            } else {
-                top = bottom = Number(difficulty)
-                difficulty = [difficulty]
-            }
-            if (!difficulty[1].includes('.0') && top % 1 == 0) {
-                top += 0.9
-            }
-            for (var i in remain) {
-                for (var level in remain[i]['chart']) {
-                    if (bottom <= remain[i]['chart'][level]['difficulty'] && remain[i]['chart'][level]['difficulty'] <= top) {
+                filters[key] = [bottom, top]
+                for (let i in remain) {
+                    if (predicate(remain[i], bottom, top)) {
                         result[i] = remain[i]
                     }
                 }
+                remain = result
+                result = {}
             }
-            remain = result
-            result = []
-        }
-        if (combo) {
-            combo = combo[0].replace(/(combo|cmb|物量|连击|[:：,，/|~是为]|\s)*/g, '')
-            var top = 0
-            var bottom = 0
-            if (combo.includes('-')) {
-                /**考虑combo区间 */
-                combo = combo.split('-')
-                if (Number(combo[0]) > Number(combo[1])) {
-                    var tem = combo[0]
-                    combo[1] = combo[0]
-                    combo[0] = tem
-                }
-                top = Number(combo[1])
-                bottom = Number(combo[0])
-            } else {
-                top = bottom = Number(combo)
-                combo = [combo]
-            }
-            for (var i in remain) {
-                for (var level in remain[i]['chart']) {
-                    if (bottom <= remain[i]['chart'][level]['combo'] && remain[i]['chart'][level]['combo'] <= top) {
-                        result[i] = remain[i]
-                    }
-                }
-            }
-            remain = result
-            result = {}
         }
 
-        var Resmsg = [`当前筛选：${bpm ? `BPM:${bpm[0]}${bpm[1] ? `-${bpm[1]}` : ''} ` : ''}${difficulty ? `定级:${difficulty[0]}${difficulty[1] ? `-${difficulty[1]}` : ''} ` : ''}${combo ? `物量:${combo[0]}${combo[1] ? `-${combo[1]}` : ''} ` : ''}\n`]
-        for (var i in remain) {
-            var song = remain[i]
-            var msg = `${i}\nBPM:${song.bpm}`
-            for (var level in song.chart) {
+        let Resmsg = [`当前筛选：${filters.bpm ? `BPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''} ` : ''}${filters.difficulty ? `定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? `物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`]
+        for (let i in remain) {
+            let song = remain[i]
+            let msg = `${i}\nBPM:${song.bpm}`
+            for (let level in song.chart) {
                 msg += `\n${level} ${song['chart'][level]['difficulty']} ${song['chart'][level]['combo']}`
             }
             Resmsg.push(msg)
         }
         e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目！`))
     }
+
 
     /**设置别名 */
     async setnick(e) {
