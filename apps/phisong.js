@@ -72,7 +72,7 @@ export class phisong extends plugin {
     }
 
     async serch(e) {
-        if (Config.getDefOrConfig('config', 'isGuild')) {
+        if (Config.getDefOrConfig('config', 'isGuild') && e.isGroup) {
             e.reply('频道模式下检索功能在群聊禁用，请私聊使用')
             return true
         }
