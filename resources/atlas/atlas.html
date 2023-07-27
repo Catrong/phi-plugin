@@ -1,6 +1,4 @@
-
 {{block 'css'}}
-
 
 <head>
     <link rel="stylesheet" href="{{_res_path}}atlas/atlas.css">
@@ -18,7 +16,7 @@
             <div class="info-box">
                 <div class="name-box">
                     <div class="song">
-                        <p style="font-size: {{fontsize}}px;">{{song}}</p>
+                        <p id="song-name" style="font-size: 20px;">{{song}}</p>
                         <!-- <p style="font-size: 45px;">{{song}}</p> -->
                     </div>
                     <div class="composer">
@@ -111,4 +109,38 @@
         </div>
 
     </div>
+
+    <!-- 曲目名称自适应name-box的宽度 -->
+    <script>
+        function adjustFontSize() {
+            //获取song-name和composer滴元素
+            var songName = document.getElementById('song-name')
+
+            /*调整曲目名称字体大小*/
+            var parentWidth = songName.parentNode.offsetWidth
+            var maxFontSize = 49 //设置最大字体大小
+    
+            //如果字体宽度小于父元素宽度，则增大字体大小
+            while (songName.scrollWidth < parentWidth) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style)
+    
+                //检查是否已经达到最大字体大小
+                if (fontSize >= maxFontSize) {
+                    break
+                }
+    
+                songName.style.fontSize = (fontSize + 1) + "px"
+            }
+    
+            // 如果字体宽度大于父元素宽度，则减小字体大小
+            while (songName.scrollWidth > parentWidth) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style);
+                songName.style.fontSize = (fontSize - 1) + "px";
+            }
+
+        }
+        adjustFontSize()
+    </script>
 {{/block}}
