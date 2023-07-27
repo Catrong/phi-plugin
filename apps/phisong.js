@@ -136,7 +136,7 @@ export class phisong extends plugin {
             }
             for (var i in remain) {
                 for (var level in remain[i]['chart']) {
-                    if (bottom <= remain[i]['chart']['difficulty'] && remain[i]['chart']['difficulty'] <= top) {
+                    if (bottom <= remain[i]['chart'][level]['difficulty'] && remain[i]['chart'][level]['difficulty'] <= top) {
                         result[i] = remain[i]
                     }
                 }
@@ -164,7 +164,7 @@ export class phisong extends plugin {
             }
             for (var i in remain) {
                 for (var level in remain[i]['chart']) {
-                    if (bottom <= remain[i]['chart']['combo'] && remain[i]['chart']['combo'] <= top) {
+                    if (bottom <= remain[i]['chart'][level]['combo'] && remain[i]['chart'][level]['combo'] <= top) {
                         result[i] = remain[i]
                     }
                 }
