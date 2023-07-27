@@ -74,6 +74,7 @@ export class phisong extends plugin {
     async serch(e) {
         if (Config.getDefOrConfig('config', 'isGuild')) {
             e.reply('频道模式下检索功能在群聊禁用，请私聊使用')
+            return true
         }
         var msg = e.msg.replace(/[#/](.*)(查找|检索|serch)(\s*)/g, "")
         msg = msg.toLowerCase()
