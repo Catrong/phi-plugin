@@ -184,19 +184,20 @@ body p {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-left: 5%;
 }
 
 .ill-box {
     display: flex;
-    height: 45%;
+    width: 45.5%;
     filter: drop-shadow(0px 0px 30px #000);
     z-index: 2;
-    margin-left: 2.8%;
+    margin-left: 7.8%;
+    justify-content: center;
+    align-items: center;
 }
 
 .ill-box img {
-    height: 100%;
+    width: 100%;
     clip-path: polygon(100% 0, 86.9% 100%, 0 100%, 13.1% 0);
     z-index: 2;
 }
@@ -396,19 +397,18 @@ body p {
 
 
 .leave {
-    width: 2040;
+    width: 100%;
     margin-top: -10%;
     height: 0;
     display: flex;
     align-items: center;
-    margin-left: 2.5%;
 }
 
 .leave-box {
     z-index: 4;
     display: flex;
     filter: drop-shadow(0px 0px 30px #000);
-    margin-left: 5%;
+    margin-left: 7.5%;
 }
 
 .leave-box p {

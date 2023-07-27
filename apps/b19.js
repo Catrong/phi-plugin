@@ -392,8 +392,8 @@ export class phib19 extends plugin {
             var tem = rkslist[i]
             var suggest = get.comsuggest(Number((i < 18) ? tem.rks : minrks.rks) + minuprks * 20, Number(tem.difficulty))
             if (suggest.includes("%")) {
-                tem.acc = Number(tem.acc).toFixed(4)
-                tem.rks = Number(tem.rks).toFixed(2)
+                tem.acc = tem.acc
+                tem.rks = tem.rks
                 tem.suggest = suggest
                 suggestlist.push(tem)
             }
@@ -434,7 +434,7 @@ export class phib19 extends plugin {
                     `\n` +
                     `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
                     `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
-                    `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
+                    `${suggestlist[i].acc.toFixed(4)}% ${suggestlist[i].rks.toFixed(2)}\n` +
                     `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
                 }
             } else {
@@ -442,7 +442,7 @@ export class phib19 extends plugin {
                     Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n` +
                         `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
                         `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
-                        `${suggestlist[i].acc}% ${suggestlist[i].rks}\n` +
+                        `${suggestlist[i].acc.toFixed(4)}% ${suggestlist[i].rks.toFixed(2)}\n` +
                         `Rks+0.01所需acc: ${suggestlist[i].suggest}`])
                 }
             }
@@ -461,7 +461,7 @@ function cmp() {
 
 function cmpsugg() {
     return function (a, b) {
-        return Number(a.suggest.replace("%", '')) - Number(b.suggest.replace("%", ''))
+        return (Number(a.suggest.replace("%", '')) - a.rks) - (Number(b.suggest.replace("%", '')) - b.rks)
     }
 }
 

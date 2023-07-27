@@ -75,7 +75,7 @@ export class philetter extends plugin {
             return true
         }
 
-        if (songsname.length < Config.getDefOrConfig('config','LetterNum')) {
+        if (songsname.length < Config.getDefOrConfig('config', 'LetterNum')) {
             e.reply("曲库中曲目的数量小于开字母的条数哦！更改曲库后需要重启哦！")
             return true
         }
@@ -126,7 +126,7 @@ export class philetter extends plugin {
 
         // 输出提示信息
         e.reply(`出你字母开启成功！回复'#第X个XXXX'命令猜歌，例如：#第1个Reimei;发送'#出X'来揭开字母(不区分大小写)，如'#出A';发送'#字母答案'结束并查看答案`)
-        
+
         // 延时1s
         await timeout(1 * 1000)
 
@@ -143,72 +143,72 @@ export class philetter extends plugin {
     /** 翻开字母 **/
     async reveal(e) {
         const { group_id: groupId, msg } = e
-    
+
         if (!gamelist[groupId]) {
             e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
             return false
         }
-    
+
         const time = Config.getDefOrConfig('config', 'LetterRevealCd')
         const currentTime = Date.now()
         const timetik = currentTime - lastRevealedTime[groupId]
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
-    
+
         if (timetik < 1000 * time) {
             e.reply(`翻字符的全局冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
             return true
         }
-    
+
         lastRevealedTime[groupId] = currentTime
-    
+
         const newMsg = msg.replace(/[#/](出|开|翻|揭|看|翻开|打开|揭开)(\s*)/g, '')
-    
+
         if (newMsg) {
             const letter = newMsg.toLowerCase()
             let output = []
             let included = false
-    
+
             if (alphalist[groupId].replace(/\[object Object\]/g, '').includes(letter.toUpperCase())) {
                 e.reply(`字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！\n`, true)
                 return true
             }
-    
+
             for (let i in gamelist[groupId]) {
                 const songname = gamelist[groupId][i]
                 const blurname = blurlist[groupId][i]
                 let characters = ''
                 let letters = ''
-    
+
                 if (/[\u4e00-\u9fa5]/.test(songname)) {
                     characters = [...songname].filter(char => /[\u4e00-\u9fa5]/.test(char)).join("")
                     letters = pinyin(characters, { pattern: 'first', toneType: 'none', type: 'string' })
                 }
-    
+
                 if (!songname.toLowerCase().includes(letter) && !letters.includes(letter)) {
                     continue
                 }
-    
+
                 included = true
-    
+
                 if (!blurlist[groupId][i]) {
                     continue
                 }
-    
+
                 let newBlurname = [...songname].map((char, index) => {
                     if (/^[\u4E00-\u9FFF]$/.test(char)) {
                         return pinyin(char, { pattern: 'first', toneType: 'none', type: 'string' }) === letter ? char : blurname[index]
                     }
-    
+
                     return char.toLowerCase() === letter ? char : blurname[index]
                 }).join('');
-    
+
                 blurlist[groupId][i] = newBlurname
-    
+
                 if (!newBlurname.includes('*')) {
                     delete blurlist[groupId][i]
                 }
             }
-    
+
             if (included) {
                 alphalist[groupId] = alphalist[groupId] || ''
                 alphalist[groupId] += /^[A-Za-z]+$/g.test(letter) ? letter.toUpperCase() + ' ' : letter + ' '
@@ -216,38 +216,38 @@ export class philetter extends plugin {
             } else {
                 output.push(`这几首曲目中不包含字母[ ${letter} ]\n`)
             }
-    
+
             output.push(`当前所有翻开的字母[ ${alphalist[groupId].replace(/\[object Object\]/g, '')}]`)
-    
+
             let isEmpty = Object.getOwnPropertyNames(blurlist[groupId]).length === 0
-    
+
             output = output.concat(Object.keys(gamelist[groupId]).map(m => {
                 if (!isEmpty && blurlist[groupId][m]) {
-                    return `\n【${m}】${blurlist[groupId][m]                    }`
-                    } else {
-                        let result = `\n【${m}】${gamelist[groupId][m]}`
-    
-                        if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[groupId][m]) {
-                            result += ` @${winnerlist[groupId][m]}`
-                        }
-    
-                        return result
+                    return `\n【${m}】${blurlist[groupId][m]}`
+                } else {
+                    let result = `\n【${m}】${gamelist[groupId][m]}`
+
+                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[groupId][m]) {
+                        result += ` @${winnerlist[groupId][m]}`
                     }
-                }));
-    
-                if (isEmpty) {
-                    output.unshift('\n所有字母已翻开，答案如下：\n')
-                    delete alphalist[groupId]
-                    delete blurlist[groupId]
-                    delete gamelist[groupId]
-                    delete winnerlist[groupId]
+
+                    return result
                 }
-    
-                e.reply(output, true)
-    
-                return true
+            }));
+
+            if (isEmpty) {
+                output.unshift('\n所有字母已翻开，答案如下：\n')
+                delete alphalist[groupId]
+                delete blurlist[groupId]
+                delete gamelist[groupId]
+                delete winnerlist[groupId]
             }
-            return false
+
+            e.reply(output, true)
+
+            return true
+        }
+        return false
     }
 
     /** 猜测 **/
@@ -260,40 +260,40 @@ export class philetter extends plugin {
             const currentTime = Date.now()
             const timetik = currentTime - lastGuessedTime[group_id]
             const timeleft = Math.floor((1000 * time - timetik) / 1000)
-    
+
             //上一轮猜测的Cd还没过
             if (timetik < 1000 * time) {
                 e.reply(`猜测的冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
                 return true
             }
-    
+
             //上一轮Cd结束，更新新一轮的时间戳
             lastGuessedTime[group_id] = currentTime
-    
+
             const opened = `所有翻开的字母[ ${alphalist[group_id].replace(/\[object Object\]/g, '')}]\n`
             const regex = /^[#/]\s*第\s*(\d+|[一二三四五六七八九十百千万]+)\s*(个|首)?(.*)$/
             const result = msg.match(regex)
-    
+
             if (result) {
                 const output = []
                 let num = 0
-    
+
                 if (isNaN(result[1])) {
                     num = NumberToArabic(result[1])
                 } else {
                     num = Number(result[1])
                 }
-    
+
                 const content = result[3]
-    
-                if (num > Config.getDefOrConfig('config','LetterNum')) {
+
+                if (num > Config.getDefOrConfig('config', 'LetterNum')) {
                     e.reply(`没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
                     return true
                 }
-    
+
                 const songs = !isfuzzymatch ? get.songsnick(content) : get.fuzzysongsnick(content)
                 const standard_song = gamelist[group_id][num] // 标准答案
-    
+
                 if (songs[0]) {
                     for (const song of songs) {
                         if (standard_song === song) {
@@ -302,76 +302,76 @@ export class philetter extends plugin {
                                 e.reply(`曲目[${standard_song}]已经猜过了，要不咱们换一个吧uwu`)
                                 return true
                             }
-    
+
                             delete blurlist[group_id][num]
                             e.reply([segment.at(user_id), `恭喜你ww，答对啦喵，第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `], true)
-    
+
                             if (get.info()[standard_song].illustration) { //如果有曲绘文件
                                 e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
                             }
-    
+
                             winnerlist[group_id][num] = sender.card //记录猜对者
                             const isEmpty = Object.getOwnPropertyNames(blurlist[group_id]).length === 0 //是否全部猜完
-    
+
                             if (!isEmpty) {
                                 output.push('出你字母进行中：')
                                 output.push(opened)
-    
+
                                 for (const m of Object.keys(gamelist[group_id])) {
                                     if (blurlist[group_id][m]) {
                                         output.push(`\n【${m}】${blurlist[group_id][m]}`)
                                     } else {
                                         output.push(`\n【${m}】${gamelist[group_id][m]}`)
-    
+
                                         if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][m]) {
                                             output.push(` @${winnerlist[group_id][m]}`)
                                         }
                                     }
                                 }
-    
+
                                 e.reply(output, true)
                                 return true
                             } else {
                                 delete alphalist[group_id]
                                 delete blurlist[group_id]
-    
+
                                 output.push('出你字母已结束，答案如下：\n')
-    
+
                                 for (const m of Object.keys(gamelist[group_id])) {
                                     output.push(`\n【${m}】${gamelist[group_id][m]}`)
-    
+
                                     if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][m]) {
                                         output.push(` @${winnerlist[group_id][m]}`)
                                     }
                                 }
-    
+
                                 output.push(opened)
                                 delete gamelist[group_id]
                                 delete winnerlist[group_id]
-    
+
                                 e.reply(output)
                                 return true
                             }
                         }
                     }
-    
+
                     if (songs[1]) {
                         e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦`, true)
                     } else {
                         e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦`, true)
                     }
-    
+
                     return true
                 }
-    
+
                 e.reply(`没有找到[${content}]的曲目信息呐QAQ`, true)
                 return true
             }
-    
+
             /**格式匹配错误放过命令 */
             return false
         }
-    
+
         /**未进行游戏放过命令 */
         return false
     }
@@ -416,78 +416,78 @@ export class philetter extends plugin {
     /** 提示 **/
     async tip(e) {
         const { group_id } = e
-    
+
         if (!gamelist[group_id]) {
             e.reply(`现在还没有进行的出你字母捏，赶快输入'#${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '#${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
             return true
         }
-    
+
         const time = Config.getDefOrConfig('config', 'LetterTipCd')
         const currentTime = Date.now()
         const timetik = currentTime - lastTipTime[group_id]
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
-    
+
         if (timetik < 1000 * time) {
             e.reply(`使用提示的全局冷却时间还有${timeleft}s呐，还请先耐心等下哇QAQ`, true)
             return true
         }
-    
+
         lastTipTime[group_id] = currentTime
-    
+
         const commonKeys = Object.keys(gamelist[group_id]).filter(key => key in blurlist[group_id])
-    
+
         let randsymbol
         while (typeof randsymbol === 'undefined' || randsymbol === '*') {
             const key = commonKeys[randint(0, commonKeys.length - 1)]
             const songname = gamelist[group_id][key]
             randsymbol = getRandCharacter(songname, blurlist[group_id][key])
         }
-    
+
         const output = []
-    
+
         for (const key of Object.keys(gamelist[group_id])) {
             const songname = gamelist[group_id][key]
             let blurname = blurlist[group_id][key]
-    
+
             if (!blurname) {
                 continue
             }
-    
+
             let newBlurname = ''
             for (let i = 0; i < songname.length; i++) {
                 if (/^[\u4E00-\u9FFF]$/.test(songname[i]) && pinyin(songname[i], { pattern: 'first', toneType: 'none', type: 'string' }) == randsymbol.toLowerCase()) {
                     newBlurname += songname[i]
                     continue
                 }
-    
+
                 if (songname[i].toLowerCase() == randsymbol.toLowerCase()) {
                     newBlurname += songname[i]
                 } else {
                     newBlurname += blurname[i]
                 }
             }
-    
+
             blurlist[group_id][key] = newBlurname
             if (!newBlurname.includes('*')) {
                 delete blurlist[group_id][key]
             }
         }
-    
+
         alphalist[group_id] = alphalist[group_id] || {}
-    
+
         const reg = /^[A-Za-z]+$/g
         if (reg.test(randsymbol)) {
             alphalist[group_id] += randsymbol.toUpperCase() + ' '
         } else {
             alphalist[group_id] += randsymbol + ' '
         }
-    
+
         output.push(`已经帮你随机翻开一个字符[ ${randsymbol} ]了捏 ♪（＾∀＾●）ﾉ`)
-    
+
         const opened = '当前所有翻开的字符[ ' + alphalist[group_id].replace(/\[object Object\]/g, '') + ']'
-    
+
         output.push(opened)
-    
+
         const isEmpty = Object.getOwnPropertyNames(blurlist[group_id]).length === 0
         if (!isEmpty) {
             for (const key of Object.keys(gamelist[group_id])) {
@@ -500,29 +500,23 @@ export class philetter extends plugin {
                     }
                 }
             }
-        }else{
+        } else {
             delete (alphalist[group_id])
             delete (blurlist[group_id])
             output.push('\n字母已被全部翻开，答案如下：')
-            for (const key of Object.keys(gamelist[group_id])) {
-                if (blurlist[group_id][key]) {
-                    output.push(`\n【${key}】${blurlist[group_id][key]}`)
-                } else {
-                    output.push(`\n【${key}】${gamelist[group_id][key]}`)
-                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][key]) {
-                        output.push(` @${winnerlist[group_id][key]}`)
-                    }
-                }
+            output.push(`\n【${key}】${gamelist[group_id][key]}`)
+            if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][key]) {
+                output.push(` @${winnerlist[group_id][key]}`)
             }
 
             delete (gamelist[e.group_id])
             delete (winnerlist[e.group_id])
         }
-    
+
         e.reply(output.join('\n'), true)
         return true
     }
-    
+
     /** 洗牌 **/
     async mix(e) {
         const { group_id } = e
@@ -540,7 +534,7 @@ export class philetter extends plugin {
         // 将权重归1
         songsname.forEach(song => {
             songweights[group_id][song] = 1
-        }) 
+        })
 
         await e.reply(`洗牌成功了www`, true)
         return true
@@ -555,15 +549,15 @@ export class philetter extends plugin {
             const blurname = blurlist[group_id][i]
             const characters = (songname.match(/[\u4e00-\u9fa5]/g) || []).join("")
             const letters = pinyin(characters, { pattern: 'first', toneType: 'none', type: 'string' })
-    
+
             if (!(songname.toLowerCase().includes(letter.toLowerCase())) && !letters.includes(letter.toLowerCase())) {
                 continue
             }
-    
+
             if (!(blurname)) {
                 continue
             }
-    
+
             let newBlurname = ''
             for (let ii = 0; ii < songname.length; ii++) {
                 if (/^[\u4E00-\u9FFF]$/.test(songname[ii])) {
@@ -572,7 +566,7 @@ export class philetter extends plugin {
                         continue
                     }
                 }
-    
+
                 if (songname[ii].toLowerCase() === letter.toLowerCase()) {
                     newBlurname += songname[ii]
                 } else {
@@ -584,7 +578,7 @@ export class philetter extends plugin {
                 delete blurlist[group_id][i]
             }
         }
-    
+
         return Object.keys(blurlist[group_id]).length > 0
     }
 
@@ -610,7 +604,7 @@ function randfloat(min, max, precision = 0) {
     var range = max - min
     var randomOffset = Math.random() * range
     var randomNumber = randomOffset + min + range * 10 ** -precision
-  
+
     return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
 }
 
@@ -621,10 +615,10 @@ function getRandomSong(e) {
 
     //计算曲目的总权重
     const totalWeight = Object.values(songweights[group_id]).reduce((total, weight) => total + weight, 0)
-  
+
     //生成一个0到总权重之间带有16位小数的随机数
     const randomWeight = randfloat(0, totalWeight, 16)
-  
+
     let accumulatedWeight = 0
     for (const [song, weight] of Object.entries(songweights[group_id])) {
         accumulatedWeight += weight
@@ -677,7 +671,7 @@ function NumberToArabic(digit) {
     const total = digit.split('').reduce((acc, character) => {
         const { [character]: numberValue } = numberMap
         const { [character]: unitValue } = unitMap
-        
+
         if (numberValue !== undefined) {
             acc.currentUnit = numberValue
         } else if (unitValue !== undefined) {
@@ -685,7 +679,7 @@ function NumberToArabic(digit) {
             acc.total += acc.currentUnit
             acc.currentUnit = 0
         }
-        
+
         return acc
     }, { total: 0, currentUnit: 1 })
 
@@ -695,7 +689,7 @@ function NumberToArabic(digit) {
 //将数组顺序打乱
 function shuffleArray(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
-        const j = randint(0,i) 
+        const j = randint(0, i)
         const temp = arr[i]
         arr[i] = arr[j]
         arr[j] = temp //交换位置
@@ -714,7 +708,7 @@ function getRandCharacter(str, blur) {
     }
 
     // 生成随机索引
-    const randomIndex = randint(0,temlist.length - 1)
+    const randomIndex = randint(0, temlist.length - 1)
 
     // 返回随机字符
     return str.charAt(temlist[randomIndex]);

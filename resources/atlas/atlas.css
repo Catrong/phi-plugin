@@ -195,11 +195,13 @@ body {
     width: 1063px;
     height: 560px;
     filter: drop-shadow(0px 0px 30px #000);
+    justify-content: center;
+    align-items: center;
     z-index: 2;
 }
 
 .ill-box img {
-    height: 100%;
+    width: 100%;
     clip-path: polygon(139px 0px, 1063px 0px, 924px 560px, 0px 560px, 139px 0px);
     z-index: 2;
 }

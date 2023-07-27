@@ -19,6 +19,10 @@ export class phisong extends plugin {
             rule: [
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(曲|song).*$`,
+                    fnc: 'song'
+                },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(查找|检索|serch).*$`,
                     fnc: 'serch'
                 },
                 {
@@ -44,7 +48,7 @@ export class phisong extends plugin {
 
 
     /**歌曲图鉴 */
-    async serch(e) {
+    async song(e) {
         let msg = e.msg.replace(/[#/](.*)(曲|song)(\s*)/g, "")
         let songs = get.fuzzysongsnick(msg)
         if (songs[0]) {
@@ -65,6 +69,119 @@ export class phisong extends plugin {
             e.reply(`未找到${msg}的相关曲目信息QAQ`, true)
         }
         return true
+    }
+
+    async serch(e) {
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            e.reply('频道模式下检索功能在群聊禁用，请私聊使用')
+        }
+        var msg = e.msg.replace(/[#/](.*)(查找|检索|serch)(\s*)/g, "")
+        msg = msg.toLowerCase()
+        const regbpm = /bpm([\s:：,，/|~是为])*([0-9])+(\s*-\s*[0-9]+)?/
+        const regdifficulty = /(difficulty|dif|难度|定级)([\s:：,，/|~是为])*([0-9.])+(\s*-\s*[0-9.]+)?/
+        const regcombo = /(combo|cmb|物量|连击)([\s:：,，/|~是为])*([0-9])+(\s*-\s*[0-9]+)?/
+        var bpm = msg.match(regbpm)
+        var difficulty = msg.match(regdifficulty)
+        var combo = msg.match(regcombo)
+        var remain = get.info()
+        var result = {}
+        if (bpm) {
+            bpm = bpm[0].replace(/(bpm([\s:：,，/|~是为])|\s)*/g, '')
+            var top = 0
+            var bottom = 0
+            if (bpm.includes('-')) {
+                /**考虑bpm区间 */
+                bpm = bpm.split('-')
+                if (Number(bpm[0]) > Number(bpm[1])) {
+                    var tem = bpm[0]
+                    bpm[1] = bpm[0]
+                    bpm[0] = tem
+                }
+                top = Number(bpm[1])
+                bottom = Number(bpm[0])
+            } else {
+                top = bottom = Number(bpm)
+                bpm = [bpm] //变成数组方便结尾输出时判断
+
+            }
+            for (var i in remain) {
+                if (bottom <= remain[i]['bpm'] && remain[i]['bpm'] <= top) {
+                    result[i] = remain[i]
+                }
+            }
+            remain = result
+            result = {}
+        }
+        if (difficulty) {
+            difficulty = difficulty[0].replace(/((difficulty|dif|难度|定级)([\s:：,，/|~是为])|\s)*/g, '')
+            var top = 0
+            var bottom = 0
+            if (difficulty.includes('-')) {
+                /**考虑区间 */
+                difficulty = difficulty.split('-')
+                if (Number(difficulty[0]) > Number(difficulty[1])) {
+                    var tem = difficulty[0]
+                    difficulty[1] = difficulty[0]
+                    difficulty[0] = tem
+                }
+                top = Number(difficulty[1])
+                bottom = Number(difficulty[0])
+            } else {
+                top = bottom = Number(difficulty)
+                difficulty = [difficulty]
+            }
+            if (!difficulty[1].includes('.0') && top % 1 == 0) {
+                top += 0.9
+            }
+            for (var i in remain) {
+                for (var level in remain[i]['chart']) {
+                    if (bottom <= remain[i]['chart']['difficulty'] && remain[i]['chart']['difficulty'] <= top) {
+                        result[i] = remain[i]
+                    }
+                }
+            }
+            remain = result
+            result = []
+        }
+        if (combo) {
+            combo = combo[0].replace(/((combo|cmb|物量|连击)([\s:：,，/|~是为]))|\s)*/g, '')
+            var top = 0
+            var bottom = 0
+            if (combo.includes('-')) {
+                /**考虑combo区间 */
+                combo = combo.split('-')
+                if (Number(combo[0]) > Number(combo[1])) {
+                    var tem = combo[0]
+                    combo[1] = combo[0]
+                    combo[0] = tem
+                }
+                top = Number(combo[1])
+                bottom = Number(combo[0])
+            } else {
+                top = bottom = Number(combo)
+                combo = [combo]
+            }
+            for (var i in remain) {
+                for (var level in remain[i]['chart']) {
+                    if (bottom <= remain[i]['chart']['combo'] && remain[i]['chart']['combo'] <= top) {
+                        result[i] = remain[i]
+                    }
+                }
+            }
+            remain = result
+            result = {}
+        }
+
+        var Resmsg = [`当前筛选：${bpm ? `BPM:${bpm[0]}${bpm[1] ? `-${bpm[1]}` : ''} ` : ''}${difficulty ? `定级:${difficulty[0]}${difficulty[1] ? `-${difficulty[1]}` : ''} ` : ''}${combo ? `物量:${combo[0]}${combo[1] ? `-${combo[1]}` : ''} ` : ''}\n`]
+        for (var i in remain) {
+            var song = remain[i]
+            var msg = `${i}\nBPM:${song.bpm}`
+            for (var level in song.chart) {
+                msg += `\n${level} ${song['chart'][level]['difficulty']} ${song['chart'][level]['combo']}`
+            }
+            Resmsg.push(msg)
+        }
+        e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目！`))
     }
 
     /**设置别名 */
@@ -200,8 +317,13 @@ export class phisong extends plugin {
                 }
             } else if (rank[0].includes('-') && !rank[1]) {
                 rank[0] = Number(rank[0].replace('-', ''))
-                bottom = 0
-                top = rank[0]
+                if (rank[0] == NaN) {
+                    e.reply([segment.at(e.user_id), ` ${rank[0]} 不是一个定级哦\n#/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>- <难度(可多选)>`], true)
+                    return true
+                } else {
+                    bottom = 0
+                    top = rank[0]
+                }
             } else {
                 rank[0] = Number(rank[0])
                 if (rank[1]) {
@@ -226,7 +348,7 @@ export class phisong extends plugin {
             bottom = 0
         }
 
-        if (top % 1 == 0) top += 0.9
+        if (top % 1 == 0 && !msg.includes(".0")) top += 0.9
 
         var songsname = []
         for (let i in get.info()) {
