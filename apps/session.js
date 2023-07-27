@@ -236,7 +236,7 @@ export class phisstk extends plugin {
             update: pluginData.update,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
         }
-        await GuildSentAt(this.e, await get.getupdate(this.e, data))
+        GuildSentAt(this.e, await get.getupdate(this.e, data))
         return false
     }
 
