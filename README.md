@@ -58,7 +58,7 @@ pnpm install -P
 | #phi (song\|曲) xxx|查询phigros中某一曲目的图鉴，支持设定别名|
 | #phi (rand\|随机) <条件>|根据条件随机曲目，条件支持难度、定数，难度可以多选，定数以-作为分隔|
 | #phi (曲绘\|ill\|Ill) xxx|查询phigros中某一曲目的曲绘|
-| #phi (serch\|查询\|检索) <条件 值>|检索曲库中的曲目，支持BPM 定数 物量，条件 bpm dif cmb，值可以为区间，以 - 间隔|
+| #phi (search\|查询\|检索) <条件 值>|检索曲库中的曲目，支持BPM 定数 物量，条件 bpm dif cmb，值可以为区间，以 - 间隔|
 | #phi(设置别名\|setnick) xxx ---> xxx|设置某一歌曲的别名，格式为 原名(或已有别名) ---> 别名（会自动过滤--->两边的空格）|
 | #phi(删除别名\|delnick) xxx|删除某一歌曲的别名|
 | #phi(强制)?更新|更新phi-plugin|

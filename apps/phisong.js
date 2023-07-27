@@ -22,8 +22,8 @@ export class phisong extends plugin {
                     fnc: 'song'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(查找|检索|serch).*$`,
-                    fnc: 'serch'
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(查找|检索|search).*$`,
+                    fnc: 'search'
                 },
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(设置别名|setnic(k?)).*$`,
@@ -71,12 +71,12 @@ export class phisong extends plugin {
         return true
     }
 
-    async serch(e) {
+    async search(e) {
         if (Config.getDefOrConfig('config', 'isGuild') && e.isGroup) {
             e.reply('频道模式下检索功能在群聊禁用，请私聊使用')
             return true
         }
-        var msg = e.msg.replace(/[#/](.*)(查找|检索|serch)(\s*)/g, "")
+        var msg = e.msg.replace(/[#/](.*)(查找|检索|search)(\s*)/g, "")
         msg = msg.toLowerCase()
         const regbpm = /bpm([\s:：,，/|~是为])*([0-9])+(\s*-\s*[0-9]+)?/
         const regdifficulty = /(difficulty|dif|难度|定级)([\s:：,，/|~是为])*([0-9.])+(\s*-\s*[0-9.]+)?/
