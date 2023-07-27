@@ -492,9 +492,9 @@ export class philetter extends plugin {
         if (!isEmpty) {
             for (const key of Object.keys(gamelist[group_id])) {
                 if (blurlist[group_id][key]) {
-                    output.push(`【${key}】${blurlist[group_id][key]}`)
+                    output.push(`\n【${key}】${blurlist[group_id][key]}`)
                 } else {
-                    output.push(`【${key}】${gamelist[group_id][key]}`)
+                    output.push(`\n【${key}】${gamelist[group_id][key]}`)
                     if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][key]) {
                         output.push(` @${winnerlist[group_id][key]}`)
                     }
@@ -513,7 +513,7 @@ export class philetter extends plugin {
             delete (winnerlist[e.group_id])
         }
 
-        e.reply(output.join('\n'), true)
+        e.reply(output, true)
         return true
     }
 
