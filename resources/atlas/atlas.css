@@ -74,27 +74,30 @@ body {
 }
 
 .name-box .song {
-    height: 88px;
-    width: 555px;
+    height: 72px;
+    width: 535px;
     margin-left: 51px;
-    margin-top: 5px;
+    margin-top: 13px;
     display: flex;
     align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .name-box .song p {
-    color: white;
+    color: rgb(255, 255, 255, 0.93);
     font-size: 15px;
 }
 
 .name-box .composer {
     height: 50px;
-    width: 538px;
-    margin-left: 53px;
+    width: 542px;
+    margin-left: 49px;
 }
 
 .name-box .composer p {
-    color: white;
+    color: rgb(255, 255, 255, 0.83);
     font-size: 25px;
 }
 
