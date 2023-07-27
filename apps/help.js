@@ -22,19 +22,19 @@ export class phihelp extends plugin {
     /**暂行帮助 */
     async help(e) {
         await e.reply(`⌈phi-plugin 帮助⌋ (所有#均可用/代替,空格均可省略)\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} bind xxx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 绑定xxx⌋ 绑定sessionToken\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 解绑⌋ 删除sessionToken和存档记录\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} update⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 更新存档⌋ 更新数据\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} b19⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} rks⌋ 获取b19图\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} score⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 单曲成绩⌋ 获取单曲成绩\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} suggest⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 推分⌋ 获取推分建议\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} song xx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 曲 xx⌋ 获取曲目图鉴\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} rand <条件>⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 随机 <条件>⌋ 随机曲目\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} ill xxx⌋ ⌈#${Config.getDefOrConfig('config', 'cmdhead')} 曲绘 xxx⌋ 查看曲目曲绘\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} data⌋ 查询data数量\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} serch <条件 值>⌋ 检索曲目，支持BPM 定数(dif) 物量(cmb)\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
-            `⌈#${Config.getDefOrConfig('config', 'cmdhead')} guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束`)
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} bind xxx⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} 绑定xxx⌋ 绑定sessionToken\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} 解绑⌋ 删除sessionToken和存档记录\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} update⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} 更新存档⌋ 更新数据\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} b19⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} rks⌋ 获取b19图\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} score⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} 单曲成绩⌋ 获取单曲成绩\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} suggest⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} 推分⌋ 获取推分建议\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} song xx⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} 曲 xx⌋ 获取曲目图鉴\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} rand <条件>⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} 随机 <条件>⌋ 随机曲目\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} ill xxx⌋ ⌈/${Config.getDefOrConfig('config', 'cmdhead')} 曲绘 xxx⌋ 查看曲目曲绘\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} data⌋ 查询data数量\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} serch <条件 值>⌋ 检索曲目，支持BPM 定数(dif) 物量(cmb)\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束`)
         return true
     }
 }

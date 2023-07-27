@@ -237,7 +237,7 @@ export class phisong extends plugin {
                 this.nickConfig = ans
                 this.nick = msg
                 var Remsg = []
-                Remsg.push("找到了多个别名！请发送 #序号 进行选择！")
+                Remsg.push("找到了多个别名！请发送 /序号 进行选择！")
                 for (var i in ans) {
                     Remsg.push(`#${i}\n${ans[i]}`)
                 }
@@ -309,7 +309,7 @@ export class phisong extends plugin {
         if (rank[0]) {
             if (rank[0].includes('+')) {
                 if (rank[1]) {
-                    e.reply([segment.at(e.user_id), ` 含有 '+' 的难度不支持指定范围哦！\n#${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`], true)
+                    e.reply([segment.at(e.user_id), ` 含有 '+' 的难度不支持指定范围哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`], true)
                     return true
                 } else {
                     rank[0] = Number(rank[0].replace('+', ''))
@@ -330,7 +330,7 @@ export class phisong extends plugin {
                 if (rank[1]) {
                     rank[1] = Number(rank[1])
                     if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
-                        e.reply([segment.at(e.user_id), ` ${rank[0]} - ${rank[1]} 不是一个定级范围哦\n#${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`], true)
+                        e.reply([segment.at(e.user_id), ` ${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`], true)
                         return true
                     }
                     top = Math.max(rank[0], rank[1])

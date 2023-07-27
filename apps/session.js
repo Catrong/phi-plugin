@@ -55,7 +55,7 @@ export class phisstk extends plugin {
         if (User) {
             if (User.session) {
                 if (User.session == sessionToken) {
-                    GuildSentAt(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈#${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
+                    GuildSentAt(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
                 }
             }
         }
@@ -69,7 +69,7 @@ export class phisstk extends plugin {
     async update(e) {
         var User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
         if (!User) {
-            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n#${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
+            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
             return true
         }
 
@@ -88,7 +88,7 @@ export class phisstk extends plugin {
 
         } catch (err) {
             logger.error("[phi-plugin]绑定sessionToken错误")
-            await e.reply(`绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n#${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            await e.reply(`绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
 
