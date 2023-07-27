@@ -87,7 +87,7 @@ export class phisong extends plugin {
         var remain = get.info()
         var result = {}
         if (bpm) {
-            bpm = bpm[0].replace(/((bpm([\s:：,，/|~是为]))|\s)*/g, '')
+            bpm = bpm[0].replace(/(bpm|[:：,，/|~是为]|\s)*/g, '')
             var top = 0
             var bottom = 0
             if (bpm.includes('-')) {
@@ -114,7 +114,7 @@ export class phisong extends plugin {
             result = {}
         }
         if (difficulty) {
-            difficulty = difficulty[0].replace(/(((difficulty|dif|难度|定级)([\s:：,，/|~是为]))|\s)*/g, '')
+            difficulty = difficulty[0].replace(/(difficulty|dif|难度|定级|[:：,，/|~是为]|\s)*/g, '')
             var top = 0
             var bottom = 0
             if (difficulty.includes('-')) {
@@ -145,7 +145,7 @@ export class phisong extends plugin {
             result = []
         }
         if (combo) {
-            combo = combo[0].replace(/(((combo|cmb|物量|连击)([\s:：,，/|~是为]))|\s)*/g, '')
+            combo = combo[0].replace(/(combo|cmb|物量|连击|[:：,，/|~是为]|\s)*/g, '')
             var top = 0
             var bottom = 0
             if (combo.includes('-')) {
