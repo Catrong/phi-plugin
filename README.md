@@ -13,7 +13,7 @@
 
 大家能不能帮忙提供一些别名呐QAQ，欢迎提交PR或者来找我！
 
-特别鸣谢 [@KeluIsAfkeru](https://github.com/KeluIsAfkeru) 
+特别鸣谢 [屑克鲁](https://github.com/KeluIsAfkeru) 
 
 作者马上就要高三开学啦，周末也不一定能写代码，所以近一年可能不会有较大的功能更新，只会进行新曲目的维护。非常感谢大家的理解（
 
