@@ -140,19 +140,26 @@ export class phimoney extends plugin {
         var time5 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
         var Remsg = ''
+        var Remsg1 = ''
 
         if (now_time < time1) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！\n(∪.∪ )...zzz`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！`
+            Remsg1 = `(∪.∪ )...zzz`
         } else if (now_time < time2) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，早安呐！\nヾ(≧▽≦*)o`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，早安呐！`
+            Remsg1 = `ヾ(≧▽≦*)o`
         } else if (now_time < time3) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，午好嗷！\n(╹ڡ╹ )`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，午好嗷！`
+            Remsg1 = `(╹ڡ╹ )`
         } else if (now_time < time4) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，下午好哇！\n(≧∀≦)ゞ`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，下午好哇！`
+            Remsg1 = `(≧∀≦)ゞ`
         } else if (now_time < time5) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，晚上好！\n( •̀ ω •́ )✧`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，晚上好！`
+            Remsg1 = `( •̀ ω •́ )✧`
         } else {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，\n注意休息哦！(∪.∪ )...zzz`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！`
+            Remsg1 = `(∪.∪ )...zzz`
         }
 
 
@@ -165,6 +172,7 @@ export class phimoney extends plugin {
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             task: data.task,
             task_ans: Remsg,
+            task_ans1: Remsg1,
             Notes: data.money,
         }
 
@@ -194,19 +202,26 @@ export class phimoney extends plugin {
         var time5 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
         var Remsg = ''
+        var Remsg1 = ''
 
         if (now_time < time1) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！\n(∪.∪ )...zzz`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！`
+            Remsg1 = `(∪.∪ )...zzz`
         } else if (now_time < time2) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，早安呐！\nヾ(≧▽≦*)o`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，早安呐！`
+            Remsg1 = `ヾ(≧▽≦*)o`
         } else if (now_time < time3) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，午好嗷！\n(╹ڡ╹ )`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，午好嗷！`
+            Remsg1 = `(╹ڡ╹ )`
         } else if (now_time < time4) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，下午好哇！\n(≧∀≦)ゞ`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，下午好哇！`
+            Remsg1 = `(≧∀≦)ゞ`
         } else if (now_time < time5) {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，晚上好！\n( •̀ ω •́ )✧`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，晚上好！`
+            Remsg1 = `( •̀ ω •́ )✧`
         } else {
-            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，\n注意休息哦！(∪.∪ )...zzz`
+            Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！`
+            Remsg1 = `(∪.∪ )...zzz`
         }
 
 
@@ -219,6 +234,7 @@ export class phimoney extends plugin {
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             task: data.task,
             task_ans: Remsg,
+            task_ans1: Remsg1,
             Notes: data.money,
         }
 
