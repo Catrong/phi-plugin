@@ -5734,15 +5734,15 @@
         "illustrator": "",
         "chart": {
             "EZ": {
-                "level": "0",
-                "difficulty": "0",
+                "level": "5",
+                "difficulty": "5.0",
                 "combo": "0",
                 "charter": "0"
             },
             "HD": {
-                "level": "0",
-                "difficulty": "0",
-                "combo": "0",
+                "level": "11",
+                "difficulty": "11.3",
+                "combo": "1290",
                 "charter": "0"
             },
             "IN": {
