@@ -205,7 +205,7 @@ export class phisstk extends plugin {
             update: pluginData.update,
             task_update: pluginData.task_update,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
-            Notes: pluginData.plugin_data.money,
+            Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
         }
 
         GuildSentAt(this.e, await get.getupdate(this.e, data))
