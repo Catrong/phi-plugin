@@ -194,15 +194,16 @@ body p {
 .coinbox_ed p,
 .coinbox_un p {
     font-size: 25px;
-    filter: drop-shadow(0px 0px 5px #000000aa);
 }
 
 .coinbox_ed p {
     color: #ffef00;
+    filter: drop-shadow(0px 0px 5px #000000aa);
 }
 
 .coinbox_un p {
     color: #ff4800;
+    filter: drop-shadow(0px 0px 5px #ffffffaa);
 }
 
 .namebox {
