@@ -259,7 +259,11 @@ function cmp() {
  * @param {Object} oldRecord 旧成绩
  */
 function add_new_score(pluginData, level, song, nowRecord, oldRecord = { rks: 0, acc: 0, score: 0 }) {
-    var task = pluginData.plugin_data.task
+
+    var task
+    if (pluginData.plugin_data) {
+        task = pluginData.plugin_data.task
+    }
     if (task) {
         for (var i in task) {
             if (!task[i].finished && song == task[i].song && level == task[i].request.rank) {
