@@ -98,234 +98,6 @@ class get {
     }
 
 
-    /**获取本地图片,带后缀
-     * @param {string} img 文件名
-     * @param {string} style 文件格式，默认为png
-     */
-    getimg(img, style = 'png') {
-        // name = 'phi'
-        var url = `${this.imgPath}/${img}.${style}`
-        if (url) {
-            return segment.image(url)
-        }
-        logger.info('未找到 ' + `${img}.${style}`)
-        return false
-    }
-
-
-
-    /**
-     * 匹配歌曲名称，根据参数返回原曲名称
-     * @param {string} mic 别名
-     * @returns 原曲名称
-     */
-    songsnick(mic) {
-        let nickconfig = Config.getDefOrConfig('nickconfig', mic)
-        var all = []
-
-        if (this.info()[mic]) all.push(mic)
-
-        if (this.songnick[mic]) {
-            for (var i in this.songnick[mic]) {
-                all.push(this.songnick[mic][i])
-            }
-        }
-        if (nickconfig) {
-            for (var i in nickconfig) {
-                all.push(nickconfig[i])
-            }
-        }
-        if (all.length) {
-            all = Array.from(new Set(all)) //去重
-            return all
-        }
-        return false
-    }
-
-    //采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)
-    jaroWinklerDistance(s1, s2) {
-        var m = 0 //匹配的字符数量
-    
-        //如果任任一字符串为空则距离为0
-        if (s1.length === 0 || s2.length === 0) {
-            return 0
-        }
-    
-        //字符串完全匹配，距离为1
-        if (s1 === s2) {
-            return 1
-        }
-    
-        var range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
-            s1Matches = new Array(s1.length),
-            s2Matches = new Array(s2.length)
-    
-        //查找匹配的字符
-        for (var i = 0; i < s1.length; i++) {
-            var low = (i >= range) ? i - range : 0,
-                high = (i + range <= (s2.length - 1)) ? (i + range) : (s2.length - 1)
-    
-            for (var j = low; j <= high; j++) {
-                if (s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j]) {
-                    ++m
-                    s1Matches[i] = s2Matches[j] = true
-                    break
-                }
-            }
-        }
-    
-        //如果没有匹配的字符，那么捏Jaro距离为0
-        if (m === 0) {
-            return 0
-        }
-    
-        //计算转置的数量
-        var k = 0, n_trans = 0
-        for (var i = 0; i < s1.length; i++) {
-            if (s1Matches[i] === true) {
-                var j
-                for (j = k; j < s2.length; j++) {
-                    if (s2Matches[j] === true) {
-                        k = j + 1
-                        break
-                    }
-                }
-    
-                if (s1[i] !== s2[j]) {
-                    ++n_trans
-                }
-            }
-        }
-    
-        //计算Jaro距离
-        var weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
-            l = 0,
-            p = 0.1
-    
-        //如果Jaro距离大于0.7，计算Jaro-Winkler距离
-        if (weight > 0.7) {
-            while (s1[l] === s2[l] && l < 4) {
-                ++l
-            }
-    
-            weight = weight + l * p * (1 - weight)
-        }
-    
-        return weight
-    }
-
-    /**
-    * 根据参数模糊匹配返回原曲名称
-    * @param {string} mic 别名
-    * @returns 原曲名称
-    */
-    fuzzysongsnick(mic) {
-        const nickconfig = Config.getDefOrConfig('nickconfig', mic)
-    
-        const fuzzyMatch = (str1, str2) => {
-            //首先第一次去除空格和其他符号，并转换为小写
-            const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？↑↓←→]/g
-            const formattedStr1 = str1.replace(pattern, '').toLowerCase()
-            const formattedStr2 = str2.replace(pattern, '').toLowerCase()
-        
-            //第二次再计算str1和str2之间的JaroWinkler距离
-            const distance = this.jaroWinklerDistance(formattedStr1, formattedStr2)
-        
-            //如果距离大于等于某个阈值，则认为匹配
-            //可以根据实际情况调整这个阈值
-            return distance >= 0.85
-        }
-    
-        const infoKeys = Object.keys(this.info()).filter(key => fuzzyMatch(mic, key))
-        const songnickKeys = Object.keys(this.songnick).filter(key => fuzzyMatch(mic, key))
-        const songnickValues = songnickKeys.flatMap(key => this.songnick[key])
-    
-        let all = [...infoKeys, ...songnickValues]
-    
-        if (nickconfig) {
-            all = [...all, ...Object.values(nickconfig)]
-        }
-    
-        //使用 Set 对象去重
-        return [...new Set(all)]
-    }
-    
-
-    /**设置别名 原名, 别名 */
-    async setnick(mic, nick) {
-        if (!Config.getDefOrConfig('nickconfig', mic)) {
-            Config.modify('nickconfig', nick, [mic])
-        } else {
-            Config.modifyarr('nickconfig', nick, mic, 'add')
-        }
-    }
-
-    /**获取歌曲图鉴，曲名为原名 */
-    getsongsinfo(e, name, data = undefined) {
-
-        if (!data) {
-            data = this.info()[name]
-        }
-        if (data) {
-            data.illustration = this.getill(name)
-            return atlas.atlas(e, data)
-        } else {
-            /**未找到曲目 */
-            return `未找到${name}的相关曲目信息!QAQ`
-        }
-    }
-
-    /**获取best19图片 */
-    async getb19(e, data) {
-        return await atlas.b19(e, data)
-    }
-    
-    /**获取update图片 */
-    async getupdate(e, data) {
-        return await atlas.update(e, data)
-    }
-
-    /**获取单曲成绩 */
-    async getsingle(e, data) {
-        return await atlas.score(e, data)
-    }
-
-    /**获取曲绘图鉴 */
-    async getillatlas(e, data) {
-        return await atlas.ill(e, data)
-    }
-
-    /**获取猜曲绘图片 */
-    async getguess(e, data) {
-        return await atlas.guess(e, data)
-    }
-
-    /**获取随机曲目图片 */
-    async getrand(e, data) {
-        return await atlas.rand(e, data)
-    }
-
-    /**获取曲绘，返回地址，原名
-     * @param {string} name 原名
-     * @param {boolean} [isBig=true] 是否为大图
-    */
-    getill(name, isBig = true) {
-        var ans
-        if (isBig) {
-            ans = this.info()[name].illustration_big
-        } else {
-            ans = this.info()[name].illustration
-        }
-        var reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
-        if (ans && !reg.test(ans)) {
-            ans = `${this.orillPath}${ans}`
-        }
-        if (!ans) {
-            ans = `${this.imgPath}phigros.png`
-        }
-        return ans
-    }
-
     /**
      * 获取QQ号对应的存档文件
      * @param {String} id user_id
@@ -375,7 +147,272 @@ class get {
      * @param {String} id user_id
      */
     async delpluginData(id) {
-        return this.delData(`${id}_.json`,`${this.pluginDataPath}`)
+        return this.delData(`${id}_.json`, `${this.pluginDataPath}`)
+    }
+
+    /**
+     * 获取 id 货币相关数据
+     * @param {String} id 
+     */
+    async getmoneydata(id) {
+        var data = await this.getpluginData(id)
+        if (!data) {
+            data = {}
+        }
+        if (!data.plugin_data) {
+            data.plugin_data = {
+                money: 0,
+                sign_in: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
+                task_time: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
+                task: []
+            }
+            this.putpluginData(id, data)
+        }
+        return data.plugin_data
+    }
+
+    /**
+     * 存储用户货币数据
+     * @param {String} id 
+     * @param {Object} plugin_data 
+     */
+    async putmoneydata(id, plugin_data) {
+        var data = await this.getpluginData(id)
+        data.plugin_data = plugin_data
+        await this.putpluginData(id, data)
+    }
+
+    /**获取本地图片,带后缀
+     * @param {string} img 文件名
+     * @param {string} style 文件格式，默认为png
+     */
+    getimg(img, style = 'png') {
+        // name = 'phi'
+        var url = `${this.imgPath}/${img}.${style}`
+        if (url) {
+            return segment.image(url)
+        }
+        logger.info('未找到 ' + `${img}.${style}`)
+        return false
+    }
+
+
+
+    /**
+     * 匹配歌曲名称，根据参数返回原曲名称
+     * @param {string} mic 别名
+     * @returns 原曲名称
+     */
+    songsnick(mic) {
+        let nickconfig = Config.getDefOrConfig('nickconfig', mic)
+        var all = []
+
+        if (this.info()[mic]) all.push(mic)
+
+        if (this.songnick[mic]) {
+            for (var i in this.songnick[mic]) {
+                all.push(this.songnick[mic][i])
+            }
+        }
+        if (nickconfig) {
+            for (var i in nickconfig) {
+                all.push(nickconfig[i])
+            }
+        }
+        if (all.length) {
+            all = Array.from(new Set(all)) //去重
+            return all
+        }
+        return false
+    }
+
+    //采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)
+    jaroWinklerDistance(s1, s2) {
+        var m = 0 //匹配的字符数量
+
+        //如果任任一字符串为空则距离为0
+        if (s1.length === 0 || s2.length === 0) {
+            return 0
+        }
+
+        //字符串完全匹配，距离为1
+        if (s1 === s2) {
+            return 1
+        }
+
+        var range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
+            s1Matches = new Array(s1.length),
+            s2Matches = new Array(s2.length)
+
+        //查找匹配的字符
+        for (var i = 0; i < s1.length; i++) {
+            var low = (i >= range) ? i - range : 0,
+                high = (i + range <= (s2.length - 1)) ? (i + range) : (s2.length - 1)
+
+            for (var j = low; j <= high; j++) {
+                if (s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j]) {
+                    ++m
+                    s1Matches[i] = s2Matches[j] = true
+                    break
+                }
+            }
+        }
+
+        //如果没有匹配的字符，那么捏Jaro距离为0
+        if (m === 0) {
+            return 0
+        }
+
+        //计算转置的数量
+        var k = 0, n_trans = 0
+        for (var i = 0; i < s1.length; i++) {
+            if (s1Matches[i] === true) {
+                var j
+                for (j = k; j < s2.length; j++) {
+                    if (s2Matches[j] === true) {
+                        k = j + 1
+                        break
+                    }
+                }
+
+                if (s1[i] !== s2[j]) {
+                    ++n_trans
+                }
+            }
+        }
+
+        //计算Jaro距离
+        var weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
+            l = 0,
+            p = 0.1
+
+        //如果Jaro距离大于0.7，计算Jaro-Winkler距离
+        if (weight > 0.7) {
+            while (s1[l] === s2[l] && l < 4) {
+                ++l
+            }
+
+            weight = weight + l * p * (1 - weight)
+        }
+
+        return weight
+    }
+
+    /**
+    * 根据参数模糊匹配返回原曲名称
+    * @param {string} mic 别名
+    * @returns 原曲名称
+    */
+    fuzzysongsnick(mic) {
+        const nickconfig = Config.getDefOrConfig('nickconfig', mic)
+
+        const fuzzyMatch = (str1, str2) => {
+            //首先第一次去除空格和其他符号，并转换为小写
+            const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？↑↓←→]/g
+            const formattedStr1 = str1.replace(pattern, '').toLowerCase()
+            const formattedStr2 = str2.replace(pattern, '').toLowerCase()
+
+            //第二次再计算str1和str2之间的JaroWinkler距离
+            const distance = this.jaroWinklerDistance(formattedStr1, formattedStr2)
+
+            //如果距离大于等于某个阈值，则认为匹配
+            //可以根据实际情况调整这个阈值
+            return distance >= 0.85
+        }
+
+        const infoKeys = Object.keys(this.info()).filter(key => fuzzyMatch(mic, key))
+        const songnickKeys = Object.keys(this.songnick).filter(key => fuzzyMatch(mic, key))
+        const songnickValues = songnickKeys.flatMap(key => this.songnick[key])
+
+        let all = [...infoKeys, ...songnickValues]
+
+        if (nickconfig) {
+            all = [...all, ...Object.values(nickconfig)]
+        }
+
+        //使用 Set 对象去重
+        return [...new Set(all)]
+    }
+
+
+    /**设置别名 原名, 别名 */
+    async setnick(mic, nick) {
+        if (!Config.getDefOrConfig('nickconfig', mic)) {
+            Config.modify('nickconfig', nick, [mic])
+        } else {
+            Config.modifyarr('nickconfig', nick, mic, 'add')
+        }
+    }
+
+    /**获取歌曲图鉴，曲名为原名 */
+    getsongsinfo(e, name, data = undefined) {
+
+        if (!data) {
+            data = this.info()[name]
+        }
+        if (data) {
+            data.illustration = this.getill(name)
+            return atlas.atlas(e, data)
+        } else {
+            /**未找到曲目 */
+            return `未找到${name}的相关曲目信息!QAQ`
+        }
+    }
+
+    /**获取best19图片 */
+    async getb19(e, data) {
+        return await atlas.b19(e, data)
+    }
+
+    /**获取update图片 */
+    async getupdate(e, data) {
+        return await atlas.update(e, data)
+    }
+
+    /**获取任务列表图片 */
+    async gettasks(e, data) {
+        return await atlas.tasks(e, data)
+    }
+
+    /**获取单曲成绩 */
+    async getsingle(e, data) {
+        return await atlas.score(e, data)
+    }
+
+    /**获取曲绘图鉴 */
+    async getillatlas(e, data) {
+        return await atlas.ill(e, data)
+    }
+
+    /**获取猜曲绘图片 */
+    async getguess(e, data) {
+        return await atlas.guess(e, data)
+    }
+
+    /**获取随机曲目图片 */
+    async getrand(e, data) {
+        return await atlas.rand(e, data)
+    }
+
+    /**获取曲绘，返回地址，原名
+     * @param {string} name 原名
+     * @param {boolean} [isBig=true] 是否为大图
+    */
+    getill(name, isBig = true) {
+        var ans
+        if (isBig) {
+            ans = this.info()[name].illustration_big
+        } else {
+            ans = this.info()[name].illustration
+        }
+        var reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
+        if (ans && !reg.test(ans)) {
+            ans = `${this.orillPath}${ans}`
+        }
+        if (!ans) {
+            ans = `${this.imgPath}phigros.png`
+        }
+        return ans
     }
 
     /**

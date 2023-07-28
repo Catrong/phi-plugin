@@ -29,11 +29,12 @@
                     <p>{{ChallengeModeRank}}</p>
                 </div>
             </div>
+            <p>Notes: {{Notes}}</p>
             <p>Date: {{Date}}</p>
         </div>
     </div>
     <div class="box">
-        {{if update[0]}}
+        {{if update[0]||task_update[0]}}
         {{each update song}}
         <div class="abox">
             <div class="imgbox">
@@ -63,31 +64,75 @@
             </div>
         </div>
         {{/each}}
-        {{else}}
-        <div class="Nosignal">
-            <div class="border_corner border_corner_left_top"></div>
-            <div class="border_corner border_corner_right_top"></div>
-            <div class="border_corner border_corner_left_bottom"></div>
-            <div class="border_corner border_corner_right_bottom"></div>
-            <div class="line"></div>
-            <div class="timeout">
-                <p>NOT_FOUND</p>
+        {{each task_update song}}
+        <div class="abox">
+            <div class="imgbox">
+                <img src="{{song.illustration}}" alt="{{song.song}}">
             </div>
-            <div class="client">
-                <p>>>> PhigrOS Client Finding NewScore</p>
+            {{if song.reward}}
+            <div class="coinbox">
+                <p>+{{song.reward}} Notes</p>
             </div>
-            <div class="sqrt">
-                <p>////////////////////////////////////////////////////////////////////////////////////////</p>
+            {{/if}}
+
+            <div class="infobox">
+                {{if song.finished}}
+                <div class="namebox_ed">
+                    {{else}}
+                    <div class="namebox_un">
+                        {{/if}}
+                        {{if song.pingji}}
+                        <div class="new-box">
+                            <img src="{{_res_path}}otherimg/{{song.pingji}}.png" alt="{{song.pingji}}">
+                        </div>
+                        {{/if}}
+                        <div class="songsname">
+                            <p>{{song.song}}</p>
+                        </div>
+                    </div>
+                    {{if song.finished}}
+                    <div class="songsinfo_ed">
+                        {{else}}
+                        <div class="songsinfo_un">
+                            {{/if}}
+                            <p>{{song.rank}}&ensp;&ensp;{{song.score_old}} >>
+                                {{song.score_new}}&ensp;&ensp;RQ:{{song.request}}</p>
+                            <p>{{song.acc_old.toFixed(2)}}% >>
+                                {{song.acc_new.toFixed(2)}}%
+                                {{if song.rks_new}}
+                                &ensp;&ensp;{{song.rks_old.toFixed(2)}} >>
+                                {{song.rks_new.toFixed(2)}}
+                                {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{else}}
+                <div class="Nosignal">
+                    <div class="border_corner border_corner_left_top"></div>
+                    <div class="border_corner border_corner_right_top"></div>
+                    <div class="border_corner border_corner_left_bottom"></div>
+                    <div class="border_corner border_corner_right_bottom"></div>
+                    <div class="line"></div>
+                    <div class="timeout">
+                        <p>NOT_FOUND</p>
+                    </div>
+                    <div class="client">
+                        <p>>>> PhigrOS Client Finding NewScore</p>
+                    </div>
+                    <div class="sqrt">
+                        <p>////////////////////////////////////////////////////////////////////////////////////////</p>
+                    </div>
+                </div>
+                {{/if}}
             </div>
-        </div>
-        {{/if}}
-    </div>
-    <div class="createdbox">
-        <div class="created">
-            <p style="float: left;">Created By Yunzai-Bot &nbsp; </p>
-            <p style="float: left; color: yellow;">{{Version.yunzai}}</p>
-            <p style="float: left;"> &nbsp; &amp; phi-Plugin &nbsp;</p>
-            <p style="float: left; color: yellow;">{{Version.ver}}</p>
-        </div>
-    </div>
+            <div class="createdbox">
+                <div class="created">
+                    <p style="float: left;">Created By Yunzai-Bot &nbsp; </p>
+                    <p style="float: left; color: yellow;">{{Version.yunzai}}</p>
+                    <p style="float: left;"> &nbsp; &amp; phi-Plugin &nbsp;</p>
+                    <p style="float: left; color: yellow;">{{Version.ver}}</p>
+                </div>
+            </div>
 </body>

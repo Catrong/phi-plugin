@@ -1,0 +1,100 @@
+<head>
+    <link rel="stylesheet" href="{{_res_path}}tasks/tasks.css">
+</head>
+
+<body style="scale: {{size}};">
+    <div class="background">
+        {{if background}}
+        <img src="{{background}}" alt="曲绘-模糊">
+        {{else}}
+        <img src="{{_res_path}}otherimg/phigros.png" alt="曲绘-模糊">
+        {{/if}}
+    </div>
+    <div class="tatle">
+        <div class="l">
+            <img src="{{_res_path}}/otherimg/Phigros_Icon_3.0.0.png" alt="icon">
+            <div class="doc">
+                <p>Phi-Plugin任务列表</p>
+                <p style="font-size: 45;">{{task_ans}}</p>
+            </div>
+        </div>
+        <div class="m"></div>
+        <div class="r">
+            <p>Player: {{PlayerId}}</p>
+            <p>RankingScore: {{Rks}}</p>
+            <div class="Challenge">
+                <p>ChallengeMode:</p>
+                <div class="Challenge-r">
+                    <img src="{{_res_path}}otherimg/{{ChallengeMode}}.png" alt="{{ChallengeMode}}">
+                    <p>{{ChallengeModeRank}}</p>
+                </div>
+            </div>
+            <p>Notes: {{Notes}}</p>
+            <p>Date: {{Date}}</p>
+        </div>
+    </div>
+    <div class="box">
+        {{if task[0]}}
+        {{each task song}}
+        <div class="abox">
+            <div class="imgbox">
+                <img src="{{song.illustration}}" alt="{{song.song}}">
+            </div>
+            {{if song.finished}}
+            <div class="coinbox_ed">
+                <p>+{{song.reward}} Notes</p>
+            </div>
+            {{else}}
+            <div class="coinbox_un">
+                <p>+{{song.reward}} Notes</p>
+            </div>
+            {{/if}}
+
+            <div class="infobox">
+                {{if song.finished}}
+                <div class="namebox_ed">
+                {{else}}
+                <div class="namebox_un">
+                {{/if}}
+                    <div class="songsname">
+                        <p>{{song.song}}</p>
+                    </div>
+                </div>
+                {{if song.finished}}
+                <div class="songsinfo_ed">
+                {{else}}
+                <div class="songsinfo_un">
+                {{/if}}
+                    <p>{{song.request.rank}}&ensp;&ensp;{{song.request.type.toUpperCase()}}&ensp;&ensp;{{song.request.value}}</p>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{else}}
+        <div class="Nosignal">
+            <div class="border_corner border_corner_left_top"></div>
+            <div class="border_corner border_corner_right_top"></div>
+            <div class="border_corner border_corner_left_bottom"></div>
+            <div class="border_corner border_corner_right_bottom"></div>
+            <div class="line"></div>
+            <div class="timeout">
+                <p>NOT_FOUND</p>
+            </div>
+            <div class="client">
+                <p>>>> PhigrOS Client Finding Tasks</p>
+            </div>
+            <div class="sqrt">
+                <p>////////////////////////////////////////////////////////////////////////////////////////</p>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+    <div class="createdbox">
+        <div class="created">
+            <p style="float: left;">Created By Yunzai-Bot &nbsp; </p>
+            <p style="float: left; color: yellow;">{{Version.yunzai}}</p>
+            <p style="float: left;"> &nbsp; &amp; phi-Plugin &nbsp;</p>
+            <p style="float: left; color: yellow;">{{Version.ver}}</p>
+        </div>
+    </div>
+</body>

@@ -5723,69 +5723,33 @@
             }
         }
     },
-    "Anomaly": {
-        "song": "Anomaly(Removed)",
-        "illustration": "https://static.wikia.nocookie.net/phigros/images/a/a3/Anomaly_jacket.png/revision/latest/scale-to-width-down/1000?cb=20210305094754",
-        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/a/a3/Anomaly_jacket.png/revision/latest/scale-to-width-down/1000?cb=20210305094754",
-        "chapter": "Chapter EX-姜米條 精选集",
-        "bpm": "200",
-        "composer": "姜米條 & RocketLant",
-        "length": "2:27",
-        "illustrator": "姜米條",
+    "ぱぴぷぴぷぴぱ": {
+        "song": "ぱぴぷぴぷぴぱ",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "单曲精选集",
+        "bpm": "",
+        "composer": "ころねぽちWith立秋",
+        "length": "",
+        "illustrator": "",
         "chart": {
             "EZ": {
-                "level": "7",
-                "difficulty": "7.5",
-                "combo": "873",
-                "charter": "NerSAN"
+                "level": "0",
+                "difficulty": "0",
+                "combo": "0",
+                "charter": "0"
             },
             "HD": {
-                "level": "7",
-                "difficulty": "7.9",
-                "combo": "269",
-                "charter": "NerSAN"
+                "level": "0",
+                "difficulty": "0",
+                "combo": "0",
+                "charter": "0"
             },
             "IN": {
-                "level": "14",
-                "difficulty": "14.6",
-                "combo": "1212",
-                "charter": "NerSAN"
-            }
-        }
-    },
-    "Destination": {
-        "song": "Destination(Removed)",
-        "illustration": "https://static.wikia.nocookie.net/phigros/images/9/9b/Destination_jacket.png/revision/latest/scale-to-width-down/1000?cb=20210305094835",
-        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/9/9b/Destination_jacket.png/revision/latest/scale-to-width-down/1000?cb=20210305094835",
-        "chapter": "Chapter EX-姜米條 精选集",
-        "bpm": "200",
-        "composer": "姜米條 & RocketLant",
-        "length": "2:49",
-        "illustrator": "Rallxkurara",
-        "chart": {
-            "EZ": {
-                "level": "3",
-                "difficulty": "3.6",
-                "combo": "253",
-                "charter": "阿爽"
-            },
-            "HD": {
-                "level": "9",
-                "difficulty": "9.4",
-                "combo": "491",
-                "charter": "阿爽"
-            },
-            "IN": {
-                "level": "13",
-                "difficulty": "13.6",
-                "combo": "545",
-                "charter": "阿爽 vs JKy"
-            },
-            "AT": {
-                "level": "15",
-                "difficulty": "15.4",
-                "combo": "965",
-                "charter": "Journey's End"
+                "level": "0",
+                "difficulty": "0",
+                "combo": "0",
+                "charter": "0"
             }
         }
     }

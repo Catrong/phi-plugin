@@ -74,6 +74,16 @@ class atlas {
         })
     }
 
+    async tasks(e, data) {
+        return await puppeteer.render('tasks/tasks', {
+            ...data,
+            size: Config.getDefOrConfig('config','b19size') / 100,
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+        })
+    }
+
     async score(e, data) {
         return await puppeteer.render('score/score', {
             ...data

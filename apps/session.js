@@ -139,6 +139,8 @@ export class phisstk extends plugin {
 
         /**新增曲目成绩 */
         pluginData.update = []
+        /**任务相关成绩 */
+        pluginData.task_update = []
         /**data历史记录 */
         if (!pluginData.data) {
             pluginData.data = []
@@ -161,31 +163,9 @@ export class phisstk extends plugin {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
-                            pluginData.update.push({
-                                "song": get.idgetsong(song, false),
-                                "rank": Level[i],
-                                "illustration": get.getill(get.idgetsong(song, false)),
-                                "pingji": nowRecord.pingji,
-                                "rks_old": oldRecord.rks,
-                                "rks_new": nowRecord.rks,
-                                "acc_old": oldRecord.acc,
-                                "acc_new": nowRecord.acc,
-                                "score_old": oldRecord.score,
-                                "score_new": nowRecord.score
-                            })
+                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, oldRecord)
                         } else if (!oldRecord) {
-                            pluginData.update.push({
-                                "song": get.idgetsong(song, false),
-                                "illustration": get.getill(get.idgetsong(song, false)),
-                                "rank": Level[i],
-                                "pingji": 'NEW',
-                                "rks_old": 0,
-                                "rks_new": nowRecord.rks,
-                                "acc_old": 0,
-                                "acc_new": nowRecord.acc,
-                                "score_old": 0,
-                                "score_new": nowRecord.score
-                            })
+                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord)
                         }
                     }
                 }
@@ -193,24 +173,13 @@ export class phisstk extends plugin {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
-                        pluginData.update.push({
-                            "song": get.idgetsong(song, false),
-                            "illustration": get.getill(get.idgetsong(song, false)),
-                            "rank": Level[i],
-                            "pingji": 'NEW',
-                            "rks_old": 0,
-                            "rks_new": nowRecord.rks,
-                            "acc_old": 0,
-                            "acc_new": nowRecord.acc,
-                            "score_old": 0,
-                            "score_new": nowRecord.score
-                        })
+                        add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord)
                     }
                 }
             }
         }
 
-        var newnum = pluginData.update.length
+        var newnum = pluginData.update.length + pluginData.task_update.length
 
         pluginData.update.sort(cmp())
         pluginData.update = pluginData.update.slice(0, 15)
@@ -234,8 +203,11 @@ export class phisstk extends plugin {
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             update: pluginData.update,
+            task_update: pluginData.task_update,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
+            Notes: pluginData.plugin_data.money,
         }
+
         GuildSentAt(this.e, await get.getupdate(this.e, data))
         return false
     }
@@ -249,6 +221,7 @@ export class phisstk extends plugin {
                 pluginData.update = []
                 pluginData.rks = []
                 pluginData.data = []
+                pluginData.plugin_data.task = []
                 await get.putpluginData(e.user_id, pluginData)
             }
 
@@ -276,4 +249,73 @@ function cmp() {
     return function (a, b) {
         return (b.rks_new - b.rks_old) - (a.rks_new - a.rks_old)
     }
+}
+
+/**
+ * 处理新成绩
+ * @param {Object} pluginData 
+ * @param {String} song 原曲名称
+ * @param {Object} nowRecord 当前成绩
+ * @param {Object} oldRecord 旧成绩
+ */
+function add_new_score(pluginData, level, song, nowRecord, oldRecord = { rks: 0, acc: 0, score: 0 }) {
+    var task = pluginData.plugin_data.task
+    if (task) {
+        for (var i in task) {
+            if (!task[i].finished && song == task[i].song && level == task[i].request.rank) {
+                var isfinished = false
+                var reward = 0
+                switch (task[i].request.type) {
+                    case 'acc': {
+                        if (nowRecord.acc >= task[i].request.value) {
+                            isfinished = true
+                            pluginData.plugin_data.task[i].finished = true
+                            pluginData.plugin_data.money += task[i].reward
+                            reward = task[i].reward
+                        }
+                        break
+                    }
+                    case 'score': {
+                        if (nowRecord.score >= task[i].request.value) {
+                            isfinished = true
+                            pluginData.plugin_data.task[i].finished = true
+                            pluginData.plugin_data.money += task[i].reward
+                            reward = task[i].reward
+                        }
+                        break
+                    }
+                }
+                pluginData.task_update.push({
+                    "song": song,
+                    "rank": level,
+                    "illustration": get.getill(song),
+                    "pingji": nowRecord.pingji,
+                    "rks_old": oldRecord.rks,
+                    "rks_new": nowRecord.rks,
+                    "acc_old": oldRecord.acc,
+                    "acc_new": nowRecord.acc,
+                    "score_old": oldRecord.score,
+                    "score_new": nowRecord.score,
+                    "finished": isfinished,
+                    "request": task[i].request.value,
+                    "reward": reward,
+                })
+                return false
+            }
+        }
+
+    }
+    pluginData.update.push({
+        "song": song,
+        "rank": level,
+        "illustration": get.getill(song),
+        "pingji": nowRecord.pingji,
+        "rks_old": oldRecord.rks,
+        "rks_new": nowRecord.rks,
+        "acc_old": oldRecord.acc,
+        "acc_new": nowRecord.acc,
+        "score_old": oldRecord.score,
+        "score_new": nowRecord.score
+    })
+    return false
 }
