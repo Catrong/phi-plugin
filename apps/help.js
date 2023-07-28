@@ -35,7 +35,7 @@ export class phihelp extends plugin {
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} search <条件 值>⌋ 检索曲目，支持BPM 定数(dif) 物量(cmb)\n` +
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束\n` +
-            `---------` +
+            `---------\n` +
             `⌈sign/签到⌋ 每日签到获取Notes\n` +
             `⌈task/我的任务⌋ 查看自己的任务\n` +
             `⌈retask/刷新任务⌋ 刷新任务，需要花费20Notes`
