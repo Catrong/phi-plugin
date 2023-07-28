@@ -226,29 +226,29 @@ class get {
         return false
     }
 
-    //采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)
+    //采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)=>n为较长的那个字符出的长度
     jaroWinklerDistance(s1, s2) {
         var m = 0 //匹配的字符数量
-
+    
         //如果任任一字符串为空则距离为0
         if (s1.length === 0 || s2.length === 0) {
             return 0
         }
-
+    
         //字符串完全匹配，距离为1
         if (s1 === s2) {
             return 1
         }
-
+    
         var range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
             s1Matches = new Array(s1.length),
             s2Matches = new Array(s2.length)
-
+    
         //查找匹配的字符
         for (var i = 0; i < s1.length; i++) {
             var low = (i >= range) ? i - range : 0,
                 high = (i + range <= (s2.length - 1)) ? (i + range) : (s2.length - 1)
-
+    
             for (var j = low; j <= high; j++) {
                 if (s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j]) {
                     ++m
@@ -257,12 +257,12 @@ class get {
                 }
             }
         }
-
+    
         //如果没有匹配的字符，那么捏Jaro距离为0
         if (m === 0) {
             return 0
         }
-
+    
         //计算转置的数量
         var k = 0, n_trans = 0
         for (var i = 0; i < s1.length; i++) {
@@ -274,27 +274,27 @@ class get {
                         break
                     }
                 }
-
+    
                 if (s1[i] !== s2[j]) {
                     ++n_trans
                 }
             }
         }
-
+    
         //计算Jaro距离
         var weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
             l = 0,
             p = 0.1
-
+    
         //如果Jaro距离大于0.7，计算Jaro-Winkler距离
         if (weight > 0.7) {
             while (s1[l] === s2[l] && l < 4) {
                 ++l
             }
-
+    
             weight = weight + l * p * (1 - weight)
         }
-
+    
         return weight
     }
 
