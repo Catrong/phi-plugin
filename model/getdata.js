@@ -241,15 +241,33 @@ class get {
             //检测输入字符串的语言，并选择相应的阈值
             //不同语言的歌曲可能需要不同的阈值
             //中文曲目由于每个汉字代表的信息量比较大，需要更高的阈值
+
+            const chinesePattern = /[\u4e00-\u9fa5]/g
+            const englishPattern = /[a-zA-Z]/g
+            const japanesePattern = /[\u3040-\u309F\u30A0-\u30FF\uFF66-\uFF9F\u4E00-\u9FBF]/g
+
             let patternThresholdMap = [
                 { pattern: chinesePattern, threshold: 0.9 },
-                { pattern: isMixedChineseEnglish, threshold: 0.86 },
                 { pattern: englishPattern, threshold: 0.82 },
                 { pattern: japanesePattern, threshold: 0.76 }
             ]
+            
+            let mixedLanguageThresholdMap = [
+                { checker: isMixedChineseEnglish, threshold: 0.86 }
+                //这里可以添加其他的混合语言嗷，我这里只加了中英文
+            ]
 
-            let threshold = patternThresholdMap.find(item => item.pattern.test(formattedStr1))?.threshold ?? 0.8 //其他语言默认0.8
-        
+            let threshold //阈值
+            //处理混合语言
+            let mixedLanguageThreshold = mixedLanguageThresholdMap.find(item => item.checker(formattedStr1))?.threshold
+            
+            if (mixedLanguageThreshold) {
+                threshold = mixedLanguageThreshold
+            } else {
+                //处理非混合语言
+                threshold = patternThresholdMap.find(item => item.pattern.test(formattedStr1))?.threshold ?? 0.8 //其他中日英以外的语言默认0.8阈值
+            }
+
             //如果距离大于等于某个阈值，则认为匹配
             //可以根据实际情况调整这个阈值
             return distance >= threshold
