@@ -316,9 +316,9 @@ function randtask(save, task = []) {
             old_score = gameRecord[song][level].score
         }
         if (type) {
-            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_score + level * 10000, 1e6), 1e6 - old_score, 1).toFixed(0)), 1e6)
+            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_score + level * 1000, 1e6), 1e6 - Math.min(old_score + level * 1000, 1e6), 1).toFixed(0)), 1e6)
         } else {
-            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_acc + level * 0.2, 100), 100 - old_acc, 1).toFixed(2)), 100)
+            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_acc + level * 0.05, 100), 100 - Math.min(old_acc + level * 0.05, 100), 1).toFixed(2)), 100)
         }
         task[i] = {
             song: song,
