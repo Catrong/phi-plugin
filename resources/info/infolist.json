@@ -5725,31 +5725,31 @@
     },
     "ぱぴぷぴぷぴぱ": {
         "song": "ぱぴぷぴぷぴぱ",
-        "illustration": "",
-        "illustration_big": "",
+        "illustration": "https://raw.githubusercontent.com/Walkersifolia/illustration/main/%E3%81%B1%E3%81%B4%E3%81%B7%E3%81%B4%E3%81%B7%E3%81%B4%E3%81%B1.%E3%81%93%E3%82%8D%E3%81%AD%E3%81%BD%E3%81%A1With%E7%AB%8B%E7%A7%8B.png",
+        "illustration_big": "https://raw.githubusercontent.com/Walkersifolia/illustration/main/%E3%81%B1%E3%81%B4%E3%81%B7%E3%81%B4%E3%81%B7%E3%81%B4%E3%81%B1.%E3%81%93%E3%82%8D%E3%81%AD%E3%81%BD%E3%81%A1With%E7%AB%8B%E7%A7%8B.png",
         "chapter": "单曲精选集",
-        "bpm": "",
+        "bpm": "200",
         "composer": "ころねぽちWith立秋",
-        "length": "",
-        "illustrator": "",
+        "length": "2:58",
+        "illustrator": "上倉エク",
         "chart": {
             "EZ": {
                 "level": "5",
                 "difficulty": "5.0",
-                "combo": "0",
-                "charter": "0"
+                "combo": "637",
+                "charter": "ParParianerman"
             },
             "HD": {
                 "level": "11",
                 "difficulty": "11.3",
                 "combo": "1290",
-                "charter": "0"
+                "charter": "ParParianerman"
             },
             "IN": {
                 "level": "15",
                 "difficulty": "15.3",
                 "combo": "1243",
-                "charter": "0"
+                "charter": "さるふるふるさ"
             }
         }
     }
