@@ -39,7 +39,8 @@ class get {
     }
 
     async init() {
-        this.ori_info = { ...await this.getData('infolist.json', this.infoPath), ...await this.getData('spinfo.json', this.infoPath) }
+        this.ori_info = await this.getData('infolist.json', this.infoPath)
+        this.sp_info = await this.getData('spinfo.json', this.infoPath)
         this.songsid = await this.getData('songsid.yaml', this.infoPath)
         this.songnick = await this.getData('nicklist.yaml', this.infoPath)
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
@@ -48,10 +49,10 @@ class get {
     info() {
         switch (Config.getDefOrConfig('config', 'otherinfo')) {
             case 0: {
-                return this.ori_info
+                return {...this.ori_info, ...this.sp_info}
             }
             case 1: {
-                return { ...this.ori_info, ...Config.getDefOrConfig('otherinfo') }
+                return { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
             }
             case 2: {
                 return Config.getDefOrConfig('otherinfo')
