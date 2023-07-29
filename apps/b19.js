@@ -186,7 +186,7 @@ export class phib19 extends plugin {
             var tmsg = ''
             tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             if (phi.song) {
-                tmsg += `\nPhi:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.pingji} ${phi.acc.toFixed(2)}% 等效${phi.rks.toFixed(2)} Rks+0.01所需acc: ${phi.suggest}%`
+                tmsg += `\nPhi:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.pingji} ${phi.acc.toFixed(2)}% 等效${phi.rks.toFixed(2)} Rks+0.01所需acc: ${phi.suggest}`
             } else {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
@@ -194,10 +194,11 @@ export class phib19 extends plugin {
             var tot = 2
             for (var i = 0; i < num && i < rkslist.length; ++i) {
                 if (tot <= 19) {
-                    tmsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`
+                    tmsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`
                 } else {
                     Remsg.push(tmsg)
-                    tmsg = `#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}%`
+                    tmsg = `#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(2)}% 等效${rkslist[i].rks.toFixed(2)} Rks+0.01所需acc: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty)}`
+                    tot = 0
                 }
                 ++tot
             }
@@ -241,7 +242,7 @@ export class phib19 extends plugin {
                         `${phi.rank} ${phi.difficulty}\n` +
                         `${phi.score} ${phi.pingji}\n` +
                         `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
-                        `Rks+0.01所需acc: ${phi.suggest}%`])
+                        `Rks+0.01所需acc: ${phi.suggest}`])
                 } else {
                     Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
                 }
