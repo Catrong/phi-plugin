@@ -26,6 +26,7 @@ export class phihelp extends plugin {
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 删除sessionToken和存档记录\n` +
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} update⌋ 更新数据\n` +
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} b19⌋ 获取b19图\n` +
+            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} best1-99⌋ 获取文字版成绩，未指定默认b19\n` +          
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} score⌋ 获取单曲成绩\n` +
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} suggest⌋ 获取推分建议\n` +
             `⌈/${Config.getDefOrConfig('config', 'cmdhead')} song xx⌋ 获取曲目图鉴\n` +
