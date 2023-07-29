@@ -54,7 +54,7 @@ export class phimoney extends plugin {
 
 
 
-            get.putmoneydata(e.user_id, data)
+            await get.putmoneydata(e.user_id, data)
             /**判断时间段 */
             var time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '04:00:00'))
             var time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '10:00:00'))
