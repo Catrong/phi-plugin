@@ -9,7 +9,7 @@ const illlist = []
 
 for (var i in get.ori_info) {
     if (get.ori_info[i]['illustration_big']) {
-        illlist.push(get.ori_info[i]['illustration_big'])
+        illlist.push(get.getill(i))
     }
 }
 
@@ -323,7 +323,7 @@ function randtask(save, task = []) {
         task[i] = {
             song: song,
             reward: randint(reward[Number(i) + 1], reward[i]),
-            illustration: info[song]['illustration'],
+            illustration: get.getill(song),
             finished: false,
             request: {
                 rank: Level[level],
