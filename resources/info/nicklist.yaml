@@ -48,6 +48,8 @@ NMR:
   - Bonus Time
 ESM: 
   - ENERGY SYNERGY MATRIX
+ESM跑: 
+  - ENERGY SYNERGY MATRIX  
 NYA: 
   - NYA!!!(Phigros ver.)
 nya: 
@@ -285,6 +287,8 @@ jingle bell:
   - ジングルベル(Jingle Bell)
 Jingle Bell: 
   - ジングルベル(Jingle Bell)
+叙利亚圣诞节: 
+  - ジングルベル(Jingle Bell)  
 TTNS: 
   - Time to Night Sky (feat. Lee Yu Jin)
 牛角: 
@@ -358,6 +362,10 @@ cthugha:
   - Feast远东之宴
 远东: 
   - Feast远东之宴
+feast: 
+  - Feast远东之宴  
+Feast: 
+  - Feast远东之宴    
 灵车:
   - 零號車輛
 零车:
@@ -508,6 +516,14 @@ Final Step:
   - Final Step!
 广告:
   - Ad astra per aspera
+Ad:
+  - Ad astra per aspera
+ad:
+  - Ad astra per aspera
+aapa:
+  - Ad astra per aspera
+Aapa:
+  - Ad astra per aspera
 华灯爱:
   - 華灯爱
 幽灵:
@@ -581,4 +597,6 @@ sigmaSP2:
 圣诞快乐:
   - Christmas
 小心立秋:
+  - ぱぴぷぴぷぴぱ
+立秋:
   - ぱぴぷぴぷぴぱ
