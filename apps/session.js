@@ -221,7 +221,8 @@ export class phisstk extends plugin {
                 pluginData.update = []
                 pluginData.rks = []
                 pluginData.data = []
-                pluginData.plugin_data.task = []
+                if (pluginData.plugin_data)
+                    pluginData.plugin_data.task = []
                 await get.putpluginData(e.user_id, pluginData)
             }
 
@@ -266,6 +267,7 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord = { rks: 0,
     }
     if (task) {
         for (var i in task) {
+            if (!task[i]) continue
             if (!task[i].finished && song == task[i].song && level == task[i].request.rank) {
                 var isfinished = false
                 var reward = 0
