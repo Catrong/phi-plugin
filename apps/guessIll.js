@@ -106,7 +106,7 @@ export class phiguess extends plugin {
         let fnc = [0, 1, 2, 3]
         logger.info(data)
 
-        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 #答案 结束游戏`)
+        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 /答案 结束游戏`)
         if (Config.getDefOrConfig('config', 'GuessTipRecall'))
             await e.reply(await get.getguess(e, data), false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
         else

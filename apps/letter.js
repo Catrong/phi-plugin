@@ -71,7 +71,7 @@ export class philetter extends plugin {
         const { group_id } = e // 使用对象解构提取group_id
 
         if (gamelist[group_id]) {
-            e.reply("喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'#第X个XXXX'来猜曲名或者'#出X'来揭开字母吧！", true)
+            e.reply("喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'/第X个XXXX'来猜曲名或者'/出X'来揭开字母吧！", true)
             return true
         }
 
@@ -125,7 +125,7 @@ export class philetter extends plugin {
         }
 
         // 输出提示信息
-        e.reply(`出你字母开启成功！回复'#第X个XXXX'命令猜歌，例如：#第1个Reimei;发送'#出X'来揭开字母(不区分大小写)，如'#出A';发送'#字母答案'结束并查看答案`)
+        e.reply(`出你字母开启成功！回复'/X个XXXX'命令猜歌，例如：/第1个Reimei;发送'/出X'来揭开字母(不区分大小写)，如'/出A';发送'/字母答案'结束并查看答案`)
 
         // 延时1s
         await timeout(1 * 1000)
@@ -356,9 +356,9 @@ export class philetter extends plugin {
                     }
 
                     if (songs[1]) {
-                        e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦`, true)
+                        e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/提示]呐≧ ﹏ ≦`, true)
                     } else {
-                        e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[#提示]呐≧ ﹏ ≦`, true)
+                        e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/提示]呐≧ ﹏ ≦`, true)
                     }
 
                     return true
