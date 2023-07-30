@@ -273,8 +273,8 @@ function randtask(save, task = []) {
         rank_line.push(rks + 0.5)
         rank_line.push(rks + 0.6)
     } else {
-        rank_line.push(rks - 0.5)
-        rank_line.push(rks - 0.2)
+        rank_line.push(rks - 1)
+        rank_line.push(rks - 0.4)
         rank_line.push(rks)
         rank_line.push(rks + 0.1)
     }
@@ -305,6 +305,9 @@ function randtask(save, task = []) {
             continue
         }
         var aim = ranked_songs[i][randint(ranked_songs[i].length - 1)]
+        if(!aim) {
+            continue
+        }
         var song = aim.song
         var level = aim.level
         var type = randint(1) //0 acc, 1 score
