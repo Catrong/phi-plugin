@@ -35,8 +35,9 @@
         </div>
     </div>
     <div class="box">
-        {{if task[0]}}
+        {{if task[0]|task[1]|task[2]|task[3]|task[4]}}
         {{each task song}}
+        {{if song}}
         <div class="abox">
             <div class="imgbox">
                 <img src="{{song.illustration}}" alt="{{song.song}}">
@@ -70,6 +71,7 @@
                 </div>
             </div>
         </div>
+        {{/if}}
         {{/each}}
         {{else}}
         <div class="Nosignal">
