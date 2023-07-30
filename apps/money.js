@@ -129,6 +129,20 @@ export class phimoney extends plugin {
 
         data.task_time = now_time
         data.task = randtask(save, oldtask)
+
+        var vis = false
+        for (var i in data.task) {
+            if (data.task) {
+                vis = true
+                break
+            }
+        }
+
+        if(!vis) {
+            e.reply(`哇塞，您已经把所有曲目全部满分了呢！没有办法为您布置任务了呢！敬请期待其他玩法哦！`)
+            return true
+        }
+        
         get.putmoneydata(e.user_id, data)
 
         now_time = new Date()
