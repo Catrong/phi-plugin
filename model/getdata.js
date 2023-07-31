@@ -6,6 +6,7 @@ import Film from './Doc.js';
 import atlas from "./picmodle.js";
 import Config from "../components/Config.js";
 
+var lock = []
 
 class get {
 
@@ -49,7 +50,7 @@ class get {
     info() {
         switch (Config.getDefOrConfig('config', 'otherinfo')) {
             case 0: {
-                return {...this.ori_info, ...this.sp_info}
+                return { ...this.ori_info, ...this.sp_info }
             }
             case 1: {
                 return { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
@@ -130,7 +131,14 @@ class get {
      * @param {String} user_id 
      * @returns save
      */
-    async getpluginData(id) {
+    async getpluginData(id, islock = false) {
+        while (lock.indexOf(id) != -1) {
+            await timeout(500)
+            logger.info(`[phi-plugin][${id}]文件读取等待中`)
+        }
+        if (islock) {
+            lock.push(id)
+        }
         return await this.getData(`${id}_.json`, `${this.pluginDataPath}`)
     }
 
@@ -140,7 +148,11 @@ class get {
      * @param {Object} data 
      */
     async putpluginData(id, data) {
-        return await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
+        var returns = await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
+        if (lock.indexOf(id) != -1) {
+            delete lock[lock.indexOf(id)]
+        }
+        return returns
     }
 
     /**
@@ -155,19 +167,22 @@ class get {
      * 获取 id 货币相关数据
      * @param {String} id 
      */
-    async getmoneydata(id) {
+    async getmoneydata(id, islock) {
         var data = await this.getpluginData(id)
         if (!data) {
             data = {}
         }
-        if (!data.plugin_data) {
+        if (!data.plugin_data || !data.plugin_data.money) {
             data.plugin_data = {
                 money: 0,
                 sign_in: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
                 task_time: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
                 task: []
             }
-            this.putpluginData(id, data)
+            await this.putpluginData(id, data)
+            //if (islock) {
+            //    this.getpluginData(id, islock)
+            //}
         }
         return data.plugin_data
     }
@@ -230,26 +245,26 @@ class get {
     //采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)=>n为较长的那个字符出的长度
     jaroWinklerDistance(s1, s2) {
         var m = 0 //匹配的字符数量
-    
+
         //如果任任一字符串为空则距离为0
         if (s1.length === 0 || s2.length === 0) {
             return 0
         }
-    
+
         //字符串完全匹配，距离为1
         if (s1 === s2) {
             return 1
         }
-    
+
         var range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
             s1Matches = new Array(s1.length),
             s2Matches = new Array(s2.length)
-    
+
         //查找匹配的字符
         for (var i = 0; i < s1.length; i++) {
             var low = (i >= range) ? i - range : 0,
                 high = (i + range <= (s2.length - 1)) ? (i + range) : (s2.length - 1)
-    
+
             for (var j = low; j <= high; j++) {
                 if (s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j]) {
                     ++m
@@ -258,12 +273,12 @@ class get {
                 }
             }
         }
-    
+
         //如果没有匹配的字符，那么捏Jaro距离为0
         if (m === 0) {
             return 0
         }
-    
+
         //计算转置的数量
         var k = 0, n_trans = 0
         for (var i = 0; i < s1.length; i++) {
@@ -275,27 +290,27 @@ class get {
                         break
                     }
                 }
-    
+
                 if (s1[i] !== s2[j]) {
                     ++n_trans
                 }
             }
         }
-    
+
         //计算Jaro距离
         var weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
             l = 0,
             p = 0.1
-    
+
         //如果Jaro距离大于0.7，计算Jaro-Winkler距离
         if (weight > 0.7) {
             while (s1[l] === s2[l] && l < 4) {
                 ++l
             }
-    
+
             weight = weight + l * p * (1 - weight)
         }
-    
+
         return weight
     }
 
@@ -468,6 +483,12 @@ class get {
     }
 
 
+}
+
+function timeout(ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms, 'done');
+    });
 }
 
 export default new get()
