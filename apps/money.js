@@ -288,6 +288,14 @@ export class phimoney extends plugin {
             return true
         }
 
+        try {
+            await e.group.pickMember(target)
+        } catch {
+            e.reply(`这个QQ号……好像没有见过呢……`)
+            return true
+        }
+
+
         var sender_data = await get.getmoneydata(e.user_id, true)
         if (sender_data.plugin_data.money < num) {
             e.reply([segment.at(e.user_id), ` 你当前的Note数量不够哦！\n当前Notes: ${sender_data.plugin_data.money}`])
@@ -300,7 +308,7 @@ export class phimoney extends plugin {
         var target_data = await get.getmoneydata(target, true)
         target_data.plugin_data.money += num
         await get.putpluginData(target, target_data)
-        var target_card = await e.group.pickMember(e.at).renew()
+        var target_card = await e.group.pickMember(target).renew()
         e.reply([segment.at(e.user_id), ` 转账成功！\n你当前的Notes: ${sender_data.plugin_data.money}\n${target_card.card}的Notes: ${target_data.plugin_data.money}`])
     }
 }
