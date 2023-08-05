@@ -99,6 +99,7 @@ export class phimoney extends plugin {
             await e.reply(Remsg)
 
         } else {
+            get.delLock(e.user_id)
             e.reply(`您在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n您现在的Note数量: ${data.plugin_data.money}`)
         }
         return true
@@ -127,6 +128,7 @@ export class phimoney extends plugin {
                 oldtask = data.plugin_data.task
             } else {
                 e.reply([segment.at(e.user_id), ` 刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.plugin_data.money}`])
+                get.delLock(e.user_id)
                 return false
             }
         }
@@ -144,6 +146,7 @@ export class phimoney extends plugin {
 
         if (!vis) {
             e.reply(`哇塞，您已经把所有曲目全部满分了呢！没有办法为您布置任务了呢！敬请期待其他玩法哦！`)
+            get.delLock(e.user_id)
             return true
         }
 
