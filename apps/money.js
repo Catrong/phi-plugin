@@ -35,6 +35,10 @@ export class phimoney extends plugin {
                     reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})?(retask|刷新任务)$`,
                     fnc: 'gettask'
                 },
+                {
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(send|送|转)(.*)$`,
+                    fnc: 'send'
+                },
 
             ]
         })
@@ -43,18 +47,18 @@ export class phimoney extends plugin {
 
     /**签到 */
     async sign(e) {
-        var data = await get.getmoneydata(e.user_id)
-        var last_sign = new Date(data.sign_in)
+        var data = await get.getmoneydata(e.user_id, true)
+        var last_sign = new Date(data.plugin_data.sign_in)
         var now_time = new Date().toString()
         var request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
         if (request_time > last_sign) {
             var getnum = randint(20, 5)
-            data.money += getnum
-            data.sign_in = now_time
+            data.plugin_data.money += getnum
+            data.plugin_data.sign_in = now_time
 
 
 
-            await get.putmoneydata(e.user_id, data)
+            await get.putpluginData(e.user_id, data)
             /**判断时间段 */
             var time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '04:00:00'))
             var time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '10:00:00'))
@@ -79,23 +83,23 @@ export class phimoney extends plugin {
                 Remsg.push(`，签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！(∪.∪ )...zzz\n`)
             }
 
-            Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.money}\n`)
+            Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}\n`)
             Remsg.push(`祝您今日愉快呐！（￣︶￣）↗　`)
 
             var save = await get.getsave(e.user_id)
-            var last_task = new Date(data.task_time)
+            var last_task = new Date(data.plugin_data.task_time)
 
             if (save && last_task < request_time) {
                 /**如果有存档并且没有刷新过任务自动刷新 */
                 this.gettask(e)
-                Remsg.push(`您今日份的任务如下：（update自动检测哦！）`)
+                Remsg.push(`\n您今日份的任务如下：（update自动检测哦！）`)
             } else {
-                Remsg.push(`您当前没有绑定sessionToken呐！任务需要绑定sessionToken后才能获取哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+                Remsg.push(`\n您当前没有绑定sessionToken呐！任务需要绑定sessionToken后才能获取哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             }
             await e.reply(Remsg)
 
         } else {
-            e.reply(`您在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n您现在的Note数量: ${data.money}`)
+            e.reply(`您在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n您现在的Note数量: ${data.plugin_data.money}`)
         }
         return true
     }
@@ -109,8 +113,8 @@ export class phimoney extends plugin {
             return false
         }
 
-        var data = await get.getmoneydata(e.user_id)
-        var last_task = new Date(data.task_time)
+        var data = await get.getmoneydata(e.user_id, true)
+        var last_task = new Date(data.plugin_data.task_time)
         var now_time = new Date().toString()
         var request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
         var oldtask = []
@@ -118,32 +122,32 @@ export class phimoney extends plugin {
             /**每天一次免费刷新任务 */
         } else {
             /**花费20Notes刷新 */
-            if (data.money >= 20) {
-                data.money -= 20
-                oldtask = data.task
+            if (data.plugin_data.money >= 20) {
+                data.plugin_data.money -= 20
+                oldtask = data.plugin_data.task
             } else {
-                e.reply([segment.at(e.user_id), ` 刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.money}`])
+                e.reply([segment.at(e.user_id), ` 刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.plugin_data.money}`])
                 return false
             }
         }
 
-        data.task_time = now_time
-        data.task = randtask(save, oldtask)
+        data.plugin_data.task_time = now_time
+        data.plugin_data.task = randtask(save, oldtask)
 
         var vis = false
-        for (var i in data.task) {
-            if (data.task) {
+        for (var i in data.plugin_data.task) {
+            if (data.plugin_data.task) {
                 vis = true
                 break
             }
         }
 
-        if(!vis) {
+        if (!vis) {
             e.reply(`哇塞，您已经把所有曲目全部满分了呢！没有办法为您布置任务了呢！敬请期待其他玩法哦！`)
             return true
         }
-        
-        get.putmoneydata(e.user_id, data)
+
+        get.putpluginData(e.user_id, data)
 
         now_time = new Date()
         /**判断时间段 */
@@ -184,10 +188,10 @@ export class phimoney extends plugin {
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
-            task: data.task,
+            task: data.plugin_data.task,
             task_ans: Remsg,
             task_ans1: Remsg1,
-            Notes: data.money,
+            Notes: data.plugin_data.money,
         }
 
 
@@ -206,7 +210,6 @@ export class phimoney extends plugin {
             e.reply([segment.at(e.user_id), `该功能需要绑定后才能使用哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
             return false
         }
-        var data = await get.getmoneydata(e.user_id)
         var now_time = new Date()
         /**判断时间段 */
         var time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '04:00:00'))
@@ -239,6 +242,7 @@ export class phimoney extends plugin {
         }
 
 
+        var data = await get.getmoneydata(e.user_id)
         var picdata = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
@@ -246,10 +250,10 @@ export class phimoney extends plugin {
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
-            task: data.task,
+            task: data.plugin_data.task,
             task_ans: Remsg,
             task_ans1: Remsg1,
-            Notes: data.money,
+            Notes: data.plugin_data.money,
         }
 
 
@@ -259,6 +263,43 @@ export class phimoney extends plugin {
         return true
     }
 
+    /**转账 */
+    async send(e) {
+        var msg = e.msg.replace(/[#/](.*)(send|送|转)(\s*)/g, "")
+        var target = e.at
+        var num
+        if (!e.at) {
+            if (msg.includes(' ')) {
+                msg = msg.split(' ')
+                target = msg[0]
+                num = Number(msg[1])
+            } else {
+                e.reply(`格式错误！请指定目标\n${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
+                return true
+            }
+        } else {
+            num = Number(msg)
+        }
+        if (num == NaN) {
+            e.reply(`非法数字：${msg}\n${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
+            return true
+        }
+
+        var sender_data = await get.getmoneydata(e.user_id, true)
+        if (sender_data.plugin_data.money < num) {
+            e.reply([segment.at(e.user_id), ` 你当前的Note数量不够哦！\n当前Notes: ${sender_data.plugin_data.money}`])
+            get.delLock(e.user_id)
+            return true
+        }
+        sender_data.plugin_data.money -= num
+        await get.putpluginData(e.user_id, sender_data)
+
+        var target_data = await get.getmoneydata(target, true)
+        target_data.plugin_data.money += num
+        await get.putpluginData(target, target_data)
+        var target_card = await e.group.pickMember(e.at).renew()
+        e.reply([segment.at(e.user_id), ` 转账成功！\n你当前的Notes: ${sender_data.plugin_data.money}\n${target_card.card}的Notes: ${target_data.plugin_data.money}`])
+    }
 }
 
 
@@ -319,7 +360,7 @@ function randtask(save, task = []) {
             continue
         }
         var aim = ranked_songs[i][randint(ranked_songs[i].length - 1)]
-        if(!aim) {
+        if (!aim) {
             continue
         }
         var song = aim.song

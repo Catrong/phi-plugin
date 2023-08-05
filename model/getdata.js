@@ -129,13 +129,23 @@ class get {
     /**
      * 获取QQ号对应的娱乐数据
      * @param {String} user_id 
+     * @param {boolean} [islock=false] 是否锁定文件
      * @returns save
      */
     async getpluginData(id, islock = false) {
-        while (lock.indexOf(id) != -1) {
-            await timeout(500)
+        if (lock.indexOf(id) != -1) {
             logger.info(`[phi-plugin][${id}]文件读取等待中`)
+            var tot = 0
+            while (lock.indexOf(id) != -1 && tot < 20) {
+                await timeout(500)
+                ++tot
+            }
+            if (tot == 20) {
+                logger.error(`[phi-plugin][${id}]文件读取失败！`)
+                throw new Error(`[phi-plugin][${id}]文件读取失败！`)
+            }
         }
+
         if (islock) {
             lock.push(id)
         }
@@ -143,7 +153,7 @@ class get {
     }
 
     /**
-     * 保存QQ号对应的娱乐数据
+     * 保存QQ号对应的娱乐数据，并解锁文件
      * @param {String} id user_id
      * @param {Object} data 
      */
@@ -156,6 +166,16 @@ class get {
     }
 
     /**
+     * 取消对id文件的锁定
+     * @param {String} id 用户id
+     */
+    async delLock(id) {
+        if (lock.indexOf(id) != -1) {
+            delete lock[lock.indexOf(id)]
+        }
+    }
+
+    /**
      * 删除QQ号对应的娱乐数据
      * @param {String} id user_id
      */
@@ -164,11 +184,13 @@ class get {
     }
 
     /**
-     * 获取 id 货币相关数据
+     * 获取并初始化 id 货币相关数据
      * @param {String} id 
+     * @param {boolean} [islock=false] 是否锁定
+     * @returns 整个data对象
      */
-    async getmoneydata(id, islock) {
-        var data = await this.getpluginData(id)
+    async getmoneydata(id, islock = false) {
+        var data = await this.getpluginData(id, islock)
         if (!data) {
             data = {}
         }
@@ -179,23 +201,8 @@ class get {
                 task_time: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
                 task: []
             }
-            await this.putpluginData(id, data)
-            //if (islock) {
-            //    this.getpluginData(id, islock)
-            //}
         }
-        return data.plugin_data
-    }
-
-    /**
-     * 存储用户货币数据
-     * @param {String} id 
-     * @param {Object} plugin_data 
-     */
-    async putmoneydata(id, plugin_data) {
-        var data = await this.getpluginData(id)
-        data.plugin_data = plugin_data
-        await this.putpluginData(id, data)
+        return data
     }
 
     /**获取本地图片,带后缀
@@ -317,9 +324,10 @@ class get {
     /**
     * 根据参数模糊匹配返回原曲名称
     * @param {string} mic 别名
+    * @param {number} [Distance=0.85] 阈值
     * @returns 原曲名称
     */
-    fuzzysongsnick(mic) {
+    fuzzysongsnick(mic, Distance = 0.85) {
         const nickconfig = Config.getDefOrConfig('nickconfig', mic)
 
         const fuzzyMatch = (str1, str2) => {
@@ -333,7 +341,7 @@ class get {
 
             //如果距离大于等于某个阈值，则认为匹配
             //可以根据实际情况调整这个阈值
-            return distance >= 0.85
+            return distance >= Distance
         }
 
         const infoKeys = Object.keys(this.info()).filter(key => fuzzyMatch(mic, key))

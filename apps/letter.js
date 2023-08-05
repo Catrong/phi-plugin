@@ -291,7 +291,7 @@ export class philetter extends plugin {
                     return true
                 }
 
-                const songs = !isfuzzymatch ? get.songsnick(content) : get.fuzzysongsnick(content)
+                const songs = !isfuzzymatch ? get.songsnick(content) : get.fuzzysongsnick(content, 0.95)
                 const standard_song = gamelist[group_id][num] // 标准答案
 
                 if (songs[0]) {

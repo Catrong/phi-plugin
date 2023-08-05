@@ -213,7 +213,7 @@ export class phiguess extends plugin {
         if (gamelist[group_id]) {
             if (typeof msg === 'string') {
                 const ans = msg.replace(/[#/](我)?猜(\s*)/g, '')
-                const song = get.fuzzysongsnick(ans)
+                const song = get.fuzzysongsnick(ans, 0.95)
                 if (song[0]) {
                     for (let i in song) {
                         if (gamelist[group_id] == song[i]) {

@@ -147,7 +147,7 @@ export class phisong extends plugin {
             msg = msg.split("\n")
         }
         if (msg[1]) {
-            let mic = get.fuzzysongsnick(msg[0])
+            let mic = get.fuzzysongsnick(msg[0], 1)
             if (mic[0]) {
                 if (mic[1]) {
                     e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
@@ -156,7 +156,7 @@ export class phisong extends plugin {
             } else {
                 e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
             }
-            if (mic in get.fuzzysongsnick(msg[1])) {
+            if (mic in get.fuzzysongsnick(msg[1], 1)) {
                 /**已经添加过该别名 */
                 e.reply(`${mic} 已经有 ${msg[1]} 这个别名了哦！`)
                 return true

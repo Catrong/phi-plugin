@@ -21,21 +21,23 @@ export class phihelp extends plugin {
 
     /**暂行帮助 */
     async help(e) {
+        var head = Config.getDefOrConfig('config', 'cmdhead')
+        head.replace('|','或')
         await e.reply(`⌈phi-plugin 帮助⌋ (所有#均可用/代替,空格均可省略)\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>⌋ 绑定sessionToken\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 删除sessionToken和存档记录\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} update⌋ 更新数据\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} b19⌋ 获取b19图\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} best1-99⌋ 获取文字版rks，未指定默认b19\n` +          
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} score⌋ 获取单曲成绩\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} suggest⌋ 获取推分建议\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} song xx⌋ 获取曲目图鉴\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} rand <条件>⌋ 随机曲目\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} ill <曲名>⌋ 查看曲目曲绘\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} data⌋ 查询data数量\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} search <条件 值>⌋ 检索曲目，支持BPM 定数(dif) 物量(cmb)\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
-            `⌈/${Config.getDefOrConfig('config', 'cmdhead')} guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束\n` +
+            `⌈/${head} bind <sessionToken>⌋ 绑定sessionToken\n` +
+            `⌈/${head} unbind⌋ 删除sessionToken和存档记录\n` +
+            `⌈/${head} update⌋ 更新数据\n` +
+            `⌈/${head} b19⌋ 获取b19图\n` +
+            `⌈/${head} best1-99⌋ 获取文字版rks，未指定默认b19\n` +          
+            `⌈/${head} score⌋ 获取单曲成绩\n` +
+            `⌈/${head} suggest⌋ 获取推分建议\n` +
+            `⌈/${head} song xx⌋ 获取曲目图鉴\n` +
+            `⌈/${head} rand <条件>⌋ 随机曲目\n` +
+            `⌈/${head} ill <曲名>⌋ 查看曲目曲绘\n` +
+            `⌈/${head} data⌋ 查询data数量\n` +
+            `⌈/${head} search <条件 值>⌋ 检索曲目，支持BPM 定数(dif) 物量(cmb)\n` +
+            `⌈/${head} letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
+            `⌈/${head} guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束\n` +
             `---------------------\n` +
             `⌈sign/签到⌋ 每日签到获取Notes\n` +
             `⌈task/我的任务⌋ 查看自己的任务\n` +

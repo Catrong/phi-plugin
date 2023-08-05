@@ -131,16 +131,24 @@ export class phisstk extends plugin {
             return true
         }
         var old = await get.getsave(this.e.user_id)
-        var pluginData = await get.getpluginData(this.e.user_id)
+        var pluginData = await get.getpluginData(this.e.user_id, true)
 
         if (!pluginData) {
             pluginData = {}
         }
 
         /**新增曲目成绩 */
-        pluginData.update = []
+        var common_update = []
         /**任务相关成绩 */
-        pluginData.task_update = []
+        var task_update = []
+
+        /**取消对当次更新内容的存储 */
+        if (pluginData.update) {
+            delete pluginData.update
+        }
+        if (pluginData.task_update) {
+            delete pluginData.task_update
+        }
         /**data历史记录 */
         if (!pluginData.data) {
             pluginData.data = []
@@ -163,9 +171,9 @@ export class phisstk extends plugin {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
-                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, oldRecord)
+                            add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord, oldRecord)
                         } else if (!oldRecord) {
-                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord)
+                            add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord)
                         }
                     }
                 }
@@ -173,27 +181,34 @@ export class phisstk extends plugin {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
-                        add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord)
+                        add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord)
                     }
                 }
             }
         }
 
-        var newnum = pluginData.update.length + pluginData.task_update.length
+        var newnum = common_update.length + task_update.length
 
-        pluginData.update.sort(cmp())
-        pluginData.update = pluginData.update.slice(0, 15)
+        common_update.sort(cmp())
 
-        pluginData.data.push({
-            "date": date,
-            "value": now.gameProgress.money
-        })
-        pluginData.rks.push({
-            "date": date,
-            "value": now.saveInfo.summary.rankingScore
-        })
+        common_update = common_update.slice(0, 15)
+
+        if (now.gameProgress.money != pluginData.data[pluginData.data.length]) {
+            pluginData.data.push({
+                "date": date,
+                "value": now.gameProgress.money
+            })
+        }
+
+        if (now.saveInfo.summary.rankingScore != pluginData.rks[pluginData.rks.length]) {
+            pluginData.rks.push({
+                "date": date,
+                "value": now.saveInfo.summary.rankingScore
+            })
+        }
 
         get.putpluginData(this.e.user_id, pluginData)
+
 
         var data = {
             PlayerId: now.saveInfo.PlayerId,
@@ -202,8 +217,8 @@ export class phisstk extends plugin {
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
-            update: pluginData.update,
-            task_update: pluginData.task_update,
+            update: common_update,
+            task_update: task_update,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
         }
@@ -215,10 +230,9 @@ export class phisstk extends plugin {
     async unbind(e) {
         if (get.delsave(e.user_id)) {
 
-            var pluginData = await get.getpluginData(e.user_id)
+            var pluginData = await get.getpluginData(e.user_id, true)
 
             if (pluginData) {
-                pluginData.update = []
                 pluginData.rks = []
                 pluginData.data = []
                 if (pluginData.plugin_data)
@@ -252,14 +266,18 @@ function cmp() {
     }
 }
 
+
 /**
  * 处理新成绩
  * @param {Object} pluginData 
+ * @param {Array} common_update 
+ * @param {Array} task_update 
+ * @param {EZ|HD|IN|AT|LEGACY} level 
  * @param {String} song 原曲名称
  * @param {Object} nowRecord 当前成绩
  * @param {Object} oldRecord 旧成绩
  */
-function add_new_score(pluginData, level, song, nowRecord, oldRecord = { rks: 0, acc: 0, score: 0 }) {
+function add_new_score(pluginData, common_update, task_update, level, song, nowRecord, oldRecord = { rks: 0, acc: 0, score: 0 }) {
 
     var task
     if (pluginData.plugin_data) {
@@ -291,7 +309,7 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord = { rks: 0,
                         break
                     }
                 }
-                pluginData.task_update.push({
+                task_update.push({
                     "song": song,
                     "rank": level,
                     "illustration": get.getill(song),
@@ -311,7 +329,7 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord = { rks: 0,
         }
 
     }
-    pluginData.update.push({
+    common_update.push({
         "song": song,
         "rank": level,
         "illustration": get.getill(song),
