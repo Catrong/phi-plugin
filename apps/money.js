@@ -289,8 +289,8 @@ export class phimoney extends plugin {
         }
 
         try {
-            await e.group.pickMember(target)
-        } catch {
+            await e.group.pickMember(target).renew()
+        } catch (err) {
             e.reply(`这个QQ号……好像没有见过呢……`)
             return true
         }
