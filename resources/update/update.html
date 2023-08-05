@@ -67,8 +67,7 @@
                 <div class="songsinfo_un">
                     {{/if}}
                     <p>{{song.rank}}&ensp;&ensp;{{if song.score_old}}{{song.score_old}} >> {{/if}}{{song.score_new}}&ensp;&ensp;RQ:{{song.request}}</p>
-                    <p>{{song.acc_old.toFixed(2)}}% >>
-                        {{song.acc_new.toFixed(2)}}%
+                    <p>{{if song.acc_old}}{{song.acc_old.toFixed(2)}}% >> {{/if}}{{song.acc_new.toFixed(2)}}%
                         {{if song.rks_new}}
                         &ensp;&ensp;{{if song.rks_old}}{{song.rks_old.toFixed(2)}} >> {{/if}}{{song.rks_new.toFixed(2)}}
                         {{/if}}
