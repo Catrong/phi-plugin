@@ -480,14 +480,25 @@ class get {
         }
     }
 
-    /**计算所需acc */
-    comsuggest(rks, difficulty) {
+    /**
+     * 计算所需acc
+     * @param {Number} rks 目标rks
+     * @param {Number} difficulty 定数
+     * @param {Number} [count=undefined] 保留位数
+     * @returns 所需acc
+     */
+    comsuggest(rks, difficulty, count = undefined) {
         var ans = 45 * Math.sqrt(Number(rks.toFixed(2)) / difficulty) + 55
 
         if (ans >= 100)
-            return "已经到顶啦"
-        else
-            return ans.toFixed(2) + "%"
+            return "无推分"
+        else {
+            if (count != undefined) {
+                return `${ans.toFixed(count)}%`
+            } else {
+                return ans
+            }
+        }
     }
 
 

@@ -270,7 +270,7 @@ export class philetter extends plugin {
             //上一轮Cd结束，更新新一轮的时间戳
             lastGuessedTime[group_id] = currentTime
 
-            const opened = `所有翻开的字母[ ${alphalist[group_id].replace(/\[object Object\]/g, '')}]\n`
+            const opened = `\n所有翻开的字母[ ${alphalist[group_id].replace(/\[object Object\]/g, '')}]\n`
             const regex = /^[#/]\s*第\s*(\d+|[一二三四五六七八九十百千万]+)\s*(个|首)?(.*)$/
             const result = msg.match(regex)
 

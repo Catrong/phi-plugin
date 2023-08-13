@@ -32,6 +32,9 @@
                     <p>{{ChallengeModeRank}}</p>
                 </div>
             </div>
+            {{if data}}
+            <p>Data: {{data}}</p>
+            {{/if}}
             <p>Date: {{Date}}</p>
         </div>
     </div>
@@ -76,7 +79,7 @@
                                     <p>{{phi.acc}}%</p>
                                 </div>
                                 <div class="suggest">
-                                    <p>>> {{phi.suggest}}</p>
+                                    <p>>> 无推分</p>
                                 </div>
                             </div>
                         </div>

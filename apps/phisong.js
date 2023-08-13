@@ -72,10 +72,6 @@ export class phisong extends plugin {
     }
 
     async search(e) {
-        if (Config.getDefOrConfig('config', 'isGuild') && e.isGroup) {
-            e.reply('频道模式下检索功能在群聊禁用，请私聊使用')
-            return true
-        }
         let msg = e.msg.replace(/[#/](.*)(查找|检索|search)(\s*)/g, "").toLowerCase()
 
         const patterns = {
@@ -120,16 +116,49 @@ export class phisong extends plugin {
             }
         }
 
-        let Resmsg = [`当前筛选：${filters.bpm ? `\nBPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `\n定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? `\n物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`]
-        for (let i in remain) {
-            let song = remain[i]
-            let msg = `${i}\nBPM:${song.bpm}`
-            for (let level in song.chart) {
-                msg += `\n${level} ${song['chart'][level]['difficulty']} ${song['chart'][level]['combo']}`
+        if (Config.getDefOrConfig('config', 'isGuild')) {
+            let Resmsg = []
+            var tot = 1
+            var single = `当前筛选：${filters.bpm ? `BPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? ` 物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`
+            for (let i in remain) {
+                let song = remain[i]
+                let msg
+                if (tot) {
+                    msg = `\n${i} BPM:${song.bpm}`
+                } else {
+                    msg = `${i} BPM:${song.bpm}`
+                }
+                for (let level in song.chart) {
+                    msg += `<${level}> ${song['chart'][level]['difficulty']} ${song['chart'][level]['combo']}`
+                }
+                single += msg
+                ++tot
+                if (tot == 20) {
+                    Resmsg.push(single)
+                    single = ''
+                    tot = 0
+                }
             }
-            Resmsg.push(msg)
+            if (e.isGroup) {
+                e.reply(`消息过长，自动转为私聊发送`, true)
+
+                Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Resmsg))
+            } else {
+                e.reply(await common.makeForwardMsg(e, Resmsg))
+            }
+        } else {
+            let Resmsg = [`当前筛选：${filters.bpm ? `\nBPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `\n定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? `\n物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`]
+            for (let i in remain) {
+                let song = remain[i]
+                let msg = `${i}\nBPM:${song.bpm}`
+                for (let level in song.chart) {
+                    msg += `\n${level} ${song['chart'][level]['difficulty']} ${song['chart'][level]['combo']}`
+                }
+                Resmsg.push(msg)
+            }
+            e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目！`))
         }
-        e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目！`))
+
     }
 
 

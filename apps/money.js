@@ -241,12 +241,12 @@ export class phimoney extends plugin {
             Remsg1 = `(∪.∪ )...zzz`
         }
 
-
         var data = await get.getmoneydata(e.user_id)
+        var task_time = data.plugin_data.task_time.split(' ')
         var picdata = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
-            Date: now.saveInfo.updatedAt,
+            Date: `${task_time[3]} ${task_time[1]}.${task_time[2]} ${task_time[4]}`,
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
@@ -274,14 +274,14 @@ export class phimoney extends plugin {
                 target = msg[0]
                 num = Number(msg[1])
             } else {
-                e.reply(`格式错误！请指定目标\n${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
+                e.reply(`格式错误！请指定目标\n/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
                 return true
             }
         } else {
             num = Number(msg)
         }
         if (num == NaN) {
-            e.reply(`非法数字：${msg}\n${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
+            e.reply(`非法数字：${msg}\n/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
             return true
         }
 
