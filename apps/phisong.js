@@ -140,6 +140,7 @@ export class phisong extends plugin {
                 }
             }
             if (e.isGroup) {
+                console.info(e)
                 e.reply(`消息过长，自动转为私聊发送`, true)
 
                 Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Resmsg))
