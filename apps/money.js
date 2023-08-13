@@ -289,7 +289,7 @@ export class phimoney extends plugin {
         }
 
         try {
-            await e.group.pickMember(target).renew()
+            await Bot.pickMember(e.group_id, target).renew()
         } catch (err) {
             e.reply(`这个QQ号……好像没有见过呢……`)
             return true

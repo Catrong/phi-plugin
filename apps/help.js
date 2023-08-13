@@ -22,13 +22,16 @@ export class phihelp extends plugin {
     /**暂行帮助 */
     async help(e) {
         var head = Config.getDefOrConfig('config', 'cmdhead')
-        head.replace('|','或')
+        if (head.includes('|')) {
+            head = head.match(/\(\|.*\|/g)[0]
+            head = head.replace(/(\||\(\|)/g, '')
+        }
         await e.reply(`⌈phi-plugin 帮助⌋ (所有#均可用/代替,空格均可省略)\n` +
             `⌈/${head} bind <sessionToken>⌋ 绑定sessionToken\n` +
             `⌈/${head} unbind⌋ 删除sessionToken和存档记录\n` +
             `⌈/${head} update⌋ 更新数据\n` +
             `⌈/${head} b19⌋ 获取b19图\n` +
-            `⌈/${head} best1-99⌋ 获取文字版rks，未指定默认b19\n` +          
+            `⌈/${head} best1-99⌋ 获取文字版rks，未指定默认b19\n` +
             `⌈/${head} score⌋ 获取单曲成绩\n` +
             `⌈/${head} suggest⌋ 获取推分建议\n` +
             `⌈/${head} song xx⌋ 获取曲目图鉴\n` +
@@ -41,7 +44,9 @@ export class phihelp extends plugin {
             `---------------------\n` +
             `⌈sign/签到⌋ 每日签到获取Notes\n` +
             `⌈task/我的任务⌋ 查看自己的任务\n` +
+            `⌈${head} send/送 <目标> <数量>⌋ 给某人转账，支持QQ号或@\n` +
             `⌈retask/刷新任务⌋ 刷新任务，需要花费20Notes`
+
         )
         return true
     }
