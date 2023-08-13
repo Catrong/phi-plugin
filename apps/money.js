@@ -289,10 +289,8 @@ export class phimoney extends plugin {
         }
 
         try {
-            console.info(Bot.pickMember(e.group_id, target))
             await Bot.pickMember(e.group_id, target)
         } catch (err) {
-            console.info(err)
             e.reply(`这个QQ号……好像没有见过呢……`)
             return true
         }
