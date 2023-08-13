@@ -84,8 +84,11 @@ pnpm install -P
 
 ·点phi的歌
 
-·...
+·频道模式部分功能转发到私聊
 
+·频道模式禁用私聊生成b19图及娱乐功能
+
+·...
 ---
 
 #### B19效果图
@@ -93,10 +96,9 @@ pnpm install -P
 ![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/b19.jpg)
 
 #### 单曲成绩效果图
-![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/score.jpg)
+![image](https://github.com/112121212167987534524/phi-plugin/assets/117198625/1bc10ea2-37d9-415b-9526-eb91479770f5)
 
 #### 图鉴效果图
-
 ![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/atlas.jpg)
 
 ---
