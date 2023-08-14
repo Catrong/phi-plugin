@@ -39,27 +39,27 @@ export class philetter extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(letter|出你字母|猜曲名|开字母|猜字母)$`,
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(letter|出你字母|猜曲名|开字母|猜字母)$`,
                     fnc: 'start'
                 },
                 {
-                    reg: `^[#/](出|开|翻|揭|看|翻开|打开|揭开)(\\s*)[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\d\S]$`,
+                    reg: `^[#/]?(出|开|翻|揭|看|翻开|打开|揭开)(\\s*)[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\d\S]$`,
                     fnc: 'reveal'
                 },
                 {
-                    reg: `^[#/](\\s*)第(\\s*)[1-9一二三四五六七八九十百千万](\\s*)(个|首)?.*$`,
+                    reg: `^[#/]?(\\s*)第(\\s*)[1-9一二三四五六七八九十百千万](\\s*)(个|首)?.*$`,
                     fnc: 'guess'
                 },
                 {
-                    reg: `^[#/](字母)?(ans|答案|结束)$`,
+                    reg: `^[#/]?(字母)?(ans|答案|结束)$`,
                     fnc: 'ans'
                 },
                 {
-                    reg: `^[#/](提示|tip)$`,
+                    reg: `^[#/]?(提示|tip)$`,
                     fnc: 'tip'
                 },
                 {
-                    reg: `^[#/](字母洗牌|lettermix)$`,
+                    reg: `^[#/]?(字母洗牌|lettermix)$`,
                     fnc: 'mix'
                 },
             ]
