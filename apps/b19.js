@@ -97,7 +97,7 @@ export class phib19 extends plugin {
             illlist.push(rkslist[i].illustration)
         }
 
-        phi.suggest = "无推分"
+        phi.suggest = "无法推分"
 
         var data = {
             phi,
@@ -169,7 +169,7 @@ export class phib19 extends plugin {
             }
         }
 
-        phi.suggest = "已经到顶啦"
+        phi.suggest = "无法推分"
 
         /**考虑屁股肉四舍五入原则 */
         var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
@@ -387,7 +387,7 @@ export class phib19 extends plugin {
         for (var i in rkslist) {
             var tem = rkslist[i]
             var suggest = get.comsuggest(Number((i < 18) ? tem.rks : minrks.rks) + minuprks * 20, Number(tem.difficulty), 4)
-            if (!suggest.includes("无推分")) {
+            if (!suggest.includes("无法推分")) {
                 tem.acc = tem.acc
                 tem.rks = tem.rks
                 tem.suggest = suggest
