@@ -333,7 +333,7 @@ export class phib19 extends plugin {
                 ans[i].rks = ans[i].rks.toFixed(2)
                 data[Level[i]] = {
                     ...ans[i],
-                    suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty, 4))
+                    suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4)
                 }
             } else {
                 data[Level[i]] = {
