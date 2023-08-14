@@ -88,7 +88,7 @@ export class phisstk extends plugin {
 
         } catch (err) {
             logger.error("[phi-plugin]绑定sessionToken错误")
-            await e.reply(`绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            await e.reply(`绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
 
