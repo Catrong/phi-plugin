@@ -118,12 +118,13 @@ export class phisong extends plugin {
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
             let Resmsg = []
-            var tot = 1
+            var tot = 0
+            var count = 1
             var single = `当前筛选：${filters.bpm ? `BPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? ` 物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`
             for (let i in remain) {
                 let song = remain[i]
                 let msg
-                if (tot) {
+                if (count) {
                     msg = `\n${i} BPM:${song.bpm}`
                 } else {
                     msg = `${i} BPM:${song.bpm}`
@@ -133,14 +134,19 @@ export class phisong extends plugin {
                 }
                 single += msg
                 ++tot
-                if (tot == 20) {
+                ++count
+                if (count == 20) {
                     Resmsg.push(single)
                     single = ''
-                    tot = 0
+                    count = 0
                 }
             }
+            if (count) {
+                Resmsg.push(single)
+                count = 0
+            }
             if (e.isGroup) {
-                e.reply(`消息过长，自动转为私聊发送`, true)
+                e.reply(`找到了${tot}个结果，自动转为私聊发送`, true)
                 Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Resmsg))
 
             } else {
