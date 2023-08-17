@@ -146,7 +146,7 @@ export class phisong extends plugin {
                 count = 0
             }
             if (e.isGroup) {
-                e.reply(`找到了${tot}个结果，自动转为私聊发送`, true)
+                e.reply(`找到了${tot}个结果，自动转为私聊发送喵～`, true)
                 Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Resmsg))
 
             } else {
@@ -162,7 +162,7 @@ export class phisong extends plugin {
                 }
                 Resmsg.push(msg)
             }
-            e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目！`))
+            e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目喵！`))
         }
 
     }
