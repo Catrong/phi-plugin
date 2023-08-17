@@ -387,7 +387,7 @@ export class phib19 extends plugin {
         for (var i in rkslist) {
             var tem = rkslist[i]
             var suggest = get.comsuggest(Number((i < 18) ? tem.rks : minrks.rks) + minuprks * 20, Number(tem.difficulty), 4)
-            if (!suggest.includes("无法推分")) {
+            if (!suggest.includes("无")) {
                 tem.acc = tem.acc
                 tem.rks = tem.rks
                 tem.suggest = suggest
