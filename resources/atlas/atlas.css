@@ -1,18 +1,9 @@
-@font-face {
-    font-family: 'PHI';
-    src: url("../common/font/phi.ttf") format('woff'), url("../common/font/phi.ttf") format('truetype');
-}
-
-@font-face {
-    font-family: 'HIMALAYA';
-    src: url("../common/font/HIMALAYA.TTF") format('woff'), url("./font/HIMALAYA.TTF") format('truetype');
-}
+@import "../common/common.css";
 
 body {
     height: 1080px;
     width: 2048px;
     margin: 0;
-    font-family: 'PHI', 'HIMALAYA';
 }
 
 
@@ -264,26 +255,38 @@ body {
 .createdbox {
     width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: -80;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    writing-mode: horizontal-tb;
+    justify-content: center;
 }
 
-.created {
-    height: 50px;
-    width: 1000px;
+.createdbox p {
+    color: white;
+    font-size: 70px;
+    font-family: 'Aldrich', 'PHI';
+}
+
+.phi-plugin {
     display: flex;
-    background-color: rgba(0, 183, 240, 0.3);
-    border-left: 6px solid;
-    border-right: 6px solid;
-    border-color: rgb(0, 183, 240);
     z-index: 1;
-    position: relative;
     justify-content: center;
     align-items: center;
 }
 
-.created p {
-    color: white;
-    font-size: 24px;
+.ver {
+    display: flex;
+    z-index: 1;
+}
+
+.phi-plugin p {
+    font-size: 80px;
+    text-shadow: 0 0 20px rgb(0 186 255);
+}
+
+.ver p {
+    font-size: 40px;
+    text-shadow: 0 0 20px #fff700;
 }

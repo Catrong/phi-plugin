@@ -1,12 +1,4 @@
-@font-face {
-    font-family: 'PHI';
-    src: url("../common/font/phi.ttf") format('woff'), url("../common/font/phi.ttf") format('truetype');
-}
-
-@font-face {
-    font-family: 'HIMALAYA';
-    src: url("../common/font/HIMALAYA.TTF") format('woff'), url("./font/HIMALAYA.TTF") format('truetype');
-}
+@import "../common/common.css";
 
 body {
     margin: 0;

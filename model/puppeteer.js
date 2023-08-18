@@ -45,7 +45,6 @@ export default new class newPuppeteer {
             pluResPath: resPath,
             _res_path: resPath,
             _layout_path: layoutPath,
-            _tpl_path: process.cwd() + `/plugins/${Plugin_Name}/resources/common/tpl/`,
             defaultLayout: layoutPath + 'default.html',
             elemLayout: layoutPath + 'elem.html',
             pageGotoParams: {

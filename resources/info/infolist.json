@@ -5752,5 +5752,36 @@
                 "charter": "さるふるふるさ"
             }
         }
+    },
+    "Triumph & Regret": {
+        "song": "Triumph & Regret",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "单曲精选集",
+        "bpm": "",
+        "composer": "typeMARS",
+        "length": "",
+        "illustrator": "何呵",
+        "chart": {
+            "EZ": {
+                "level": "5",
+                "difficulty": "5.0",
+                "combo": "",
+                "charter": "Barbarianerman & Regret"
+            },
+            "HD": {
+                "level": "9",
+                "difficulty": "9.4",
+                "combo": "",
+                "charter": "Barbarianerman & Regret"
+            },
+            "IN": {
+                "level": "14",
+                "difficulty": "14.7",
+                "combo": "",
+                "charter": "TimiTini & HaraKuma"
+            }
+        }
+        
     }
 }
