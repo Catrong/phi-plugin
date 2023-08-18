@@ -47,7 +47,7 @@ export class phib19 extends plugin {
     async b19(e) {
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply([segment.at(e.user_id), `你还没有绑定sessionToken哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`], true)
+            e.reply([segment.at(e.user_id), `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`], true)
             return true
         }
 
