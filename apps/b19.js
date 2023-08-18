@@ -80,6 +80,7 @@ export class phib19 extends plugin {
         if (phi.rks) {
             phi.rks = phi.rks.toFixed(2)
             phi.acc = phi.acc.toFixed(2)
+            phi.illustration = get.getill(phi.song)
         }
 
 
@@ -93,8 +94,9 @@ export class phib19 extends plugin {
             rkslist[i].suggest = get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
             rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
             rkslist[i].acc = Number(rkslist[i].acc).toFixed(2)
+            rkslist[i].illustration = get.getill(rkslist[i].song)
             b19_list.push(rkslist[i])
-            illlist.push(rkslist[i].illustration)
+            illlist.push(get.getill(rkslist[i].song))
         }
 
         phi.suggest = "无法推分"
