@@ -5,5 +5,6 @@
 /lib/2333.json
 /node_modules
 /resources/info/songsurl.yaml
-/resources/otherill/*
+/resources/otherill/chu.png
+/resources/otherill/wen.png
 /apps/guessName.js

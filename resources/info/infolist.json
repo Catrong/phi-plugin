@@ -5755,8 +5755,8 @@
     },
     "Triumph & Regret": {
         "song": "Triumph & Regret",
-        "illustration": "",
-        "illustration_big": "",
+        "illustration": "TriumphRegret.typeMARS.png",
+        "illustration_big": "TriumphRegret.typeMARS.png",
         "chapter": "单曲精选集",
         "bpm": "",
         "composer": "typeMARS",
