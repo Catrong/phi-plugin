@@ -60,10 +60,10 @@ export class phimoney extends plugin {
 
             await get.putpluginData(e.user_id, data)
             /**判断时间段 */
-            var time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '04:00:00'))
-            var time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '10:00:00'))
-            var time3 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '14:00:00'))
-            var time4 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:00:00'))
+            var time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
+            var time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
+            var time3 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
+            var time4 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
             var time5 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
             var Remsg = [segment.at(e.user_id)]
@@ -110,7 +110,7 @@ export class phimoney extends plugin {
         var save = await get.getsave(e.user_id)
 
         if (!save) {
-            e.reply([segment.at(e.user_id), `该功能需要绑定后才能使用哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
+            e.reply([segment.at(e.user_id), `该功能需要绑定后才能使用哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
             return false
         }
 
@@ -154,10 +154,10 @@ export class phimoney extends plugin {
 
         now_time = new Date()
         /**判断时间段 */
-        var time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '04:00:00'))
-        var time2 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '10:00:00'))
-        var time3 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '14:00:00'))
-        var time4 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:00:00'))
+        var time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
+        var time2 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
+        var time3 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
+        var time4 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
         var time5 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
         var Remsg = ''
@@ -210,15 +210,15 @@ export class phimoney extends plugin {
         var now = await get.getsave(e.user_id)
 
         if (!now) {
-            e.reply([segment.at(e.user_id), `该功能需要绑定后才能使用哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
+            e.reply([segment.at(e.user_id), `该功能需要绑定后才能使用哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
             return false
         }
         var now_time = new Date()
         /**判断时间段 */
-        var time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '04:00:00'))
-        var time2 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '10:00:00'))
-        var time3 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '14:00:00'))
-        var time4 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:00:00'))
+        var time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
+        var time2 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
+        var time3 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
+        var time4 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
         var time5 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
         var Remsg = ''
