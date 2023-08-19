@@ -256,7 +256,7 @@ body p {
     background-color: #92D05088;
 }
 
-.pingji {
+.Rating {
     height: 40%;
     width: 40%;
     margin-bottom: -40%;
@@ -267,12 +267,12 @@ body p {
     z-index: 2;
 }
 
-.pingji p {
+.Rating p {
     font-size: 60px;
     text-shadow: 0 0 20px #ffffff;
 }
 
-.pingji img {
+.Rating img {
     height: 100%;
 }
 
@@ -286,6 +286,12 @@ body p {
     writing-mode: horizontal-tb;
 }
 
+.rank p {
+    font-size: 75px;
+    color: rgba(255, 255, 255, 0.2);
+    margin-top: -5%;
+}
+
 .info {
     width: 100%;
     height: 100%;
@@ -295,12 +301,6 @@ body p {
     align-items: center;
     z-index: 1;
     writing-mode: horizontal-tb;
-}
-
-.rank p {
-    font-size: 75px;
-    color: rgba(255, 255, 255, 0.2);
-    margin-top: -5%;
 }
 
 .score,

@@ -26,7 +26,7 @@ export class phihelp extends plugin {
             head = head.match(/\(\|.*\|/g)[0]
             head = head.replace(/(\||\(\|)/g, '')
         }
-        await e.reply(`⌈phi-plugin 帮助⌋ (所有#均可用/代替,空格均可省略)\n` +
+        await e.reply(`⌈phi-plugin 帮助⌋ (所有/均可用#代替,空格均可省略)\n` +
             `⌈/${head} bind <sessionToken>⌋ 绑定sessionToken\n` +
             `⌈/${head} unbind⌋ 删除sessionToken和存档记录\n` +
             `⌈/${head} update⌋ 更新数据\n` +

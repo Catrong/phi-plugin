@@ -184,7 +184,7 @@ export class phimoney extends plugin {
         }
 
 
-        var task_time = now_time.split(' ')
+        var task_time = now_time.toString().split(' ')
 
         var picdata = {
             PlayerId: save.saveInfo.PlayerId,

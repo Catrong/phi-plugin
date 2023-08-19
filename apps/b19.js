@@ -185,7 +185,7 @@ export class phib19 extends plugin {
             var tmsg = ''
             tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             if (phi.song) {
-                tmsg += `\nPhi:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.pingji} ${phi.acc.toFixed(4)}% 等效${phi.rks.toFixed(4)} 推分: ${phi.suggest}`
+                tmsg += `\nPhi:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.Rating} ${phi.acc.toFixed(4)}% 等效${phi.rks.toFixed(4)} 推分: ${phi.suggest}`
             } else {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
@@ -193,10 +193,10 @@ export class phib19 extends plugin {
             var tot = 1
             for (var i = 0; i < num && i < rkslist.length; ++i) {
                 if (tot <= 19) {
-                    tmsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(4)}% 等效${rkslist[i].rks.toFixed(4)} 推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
+                    tmsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}% 等效${rkslist[i].rks.toFixed(4)} 推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                 } else {
                     Remsg.push(tmsg)
-                    tmsg = `#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].pingji} ${rkslist[i].acc.toFixed(4)}% 等效${rkslist[i].rks.toFixed(4)} 推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
+                    tmsg = `#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}% 等效${rkslist[i].rks.toFixed(4)} 推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                     tot = 0
                 }
                 ++tot
@@ -224,7 +224,7 @@ export class phib19 extends plugin {
                         segment.image(get.getill(phi.song, false)),
                         `\n${phi.song}\n` +
                         `${phi.rank} ${phi.difficulty}\n` +
-                        `${phi.score} ${phi.pingji}\n` +
+                        `${phi.score} ${phi.Rating}\n` +
                         `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
                         `推分: ${phi.suggest}`])
                 } else {
@@ -235,7 +235,7 @@ export class phib19 extends plugin {
                     segment.image(get.getill(rkslist[i].song, false)),
                     `\n` +
                     `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
-                    `${rkslist[i].score} ${rkslist[i].pingji}\n` +
+                    `${rkslist[i].score} ${rkslist[i].Rating}\n` +
                     `${Number(rkslist[i].acc).toFixed(4)}% ${Number(rkslist[i].rks).toFixed(4)}\n` +
                     `推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`])
                 }
@@ -244,7 +244,7 @@ export class phib19 extends plugin {
                 if (phi.song) {
                     Remsg.push([`Phi: ${phi.song}\n` +
                         `${phi.rank} ${phi.difficulty}\n` +
-                        `${phi.score} ${phi.pingji}\n` +
+                        `${phi.score} ${phi.Rating}\n` +
                         `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
                         `推分: ${phi.suggest}`])
                 } else {
@@ -253,7 +253,7 @@ export class phib19 extends plugin {
                 for (var i = 0; i < num && i < rkslist.length; ++i) {
                     Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n` +
                         `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
-                        `${rkslist[i].score} ${rkslist[i].pingji}\n` +
+                        `${rkslist[i].score} ${rkslist[i].Rating}\n` +
                         `${Number(rkslist[i].acc).toFixed(4)}% ${Number(rkslist[i].rks).toFixed(4)}\n` +
                         `推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`])
                 }
@@ -339,7 +339,7 @@ export class phib19 extends plugin {
                 }
             } else {
                 data[Level[i]] = {
-                    pingji: 'NEW',
+                    Rating: 'NEW',
                     difficulty: songsinfo['chart'][Level[i]]['difficulty']
                 }
             }
@@ -437,7 +437,7 @@ export class phib19 extends plugin {
                     segment.image(get.getill(suggestlist[i].song, false)),
                     `\n` +
                     `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
-                    `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
+                    `${suggestlist[i].score} ${suggestlist[i].Rating}\n` +
                     `${suggestlist[i].acc.toFixed(4)}% ${suggestlist[i].rks.toFixed(4)}\n` +
                     `推分: ${suggestlist[i].suggest}`])
                 }
@@ -445,7 +445,7 @@ export class phib19 extends plugin {
                 for (var i = 0; i < suggestlist.length; ++i) {
                     Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n` +
                         `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
-                        `${suggestlist[i].score} ${suggestlist[i].pingji}\n` +
+                        `${suggestlist[i].score} ${suggestlist[i].Rating}\n` +
                         `${suggestlist[i].acc.toFixed(4)}% ${suggestlist[i].rks.toFixed(4)}\n` +
                         `推分: ${suggestlist[i].suggest}`])
                 }

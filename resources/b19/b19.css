@@ -318,13 +318,13 @@ body p {
     flex-direction: row;
 }
 
-.pingji {
+.Rating {
     width: 75px;
     height: 75px;
     display: flex;
 }
 
-.pingji img {
+.Rating img {
     width: 100%;
 }
 
