@@ -354,7 +354,17 @@ class get {
         for (var std in usernick) {
             var dis = fuzzyMatch(mic, std)
             if (dis >= Distance) {
-                result.push({ song: usernick[std], dis: dis })
+                for (var i in usernick[std]) {
+                    result.push({ song: usernick[std][i], dis: dis })
+                }
+            }
+        }
+        for (var std in this.songnick) {
+            var dis = fuzzyMatch(mic, std)
+            if (dis >= Distance) {
+                for (var i in this.songnick[std]) {
+                    result.push({ song: this.songnick[std][i], dis: dis })
+                }
             }
         }
         for (var std in allinfo) {
@@ -363,13 +373,7 @@ class get {
                 result.push({ song: allinfo[std]['song'], dis: dis })
             }
         }
-        for (var std in this.songnick) {
-            var dis = fuzzyMatch(mic, std)
-            if (dis >= Distance) {
-                result.push({ song: this.songnick[std], dis: dis })
-            }
-        }
-        
+
         result = result.sort((a, b) => b.dis - a.dis)
 
         var all = []
