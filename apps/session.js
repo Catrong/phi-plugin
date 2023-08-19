@@ -69,7 +69,7 @@ export class phisstk extends plugin {
     async update(e) {
         var User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
         if (!User) {
-            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
+            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
             return true
         }
 
