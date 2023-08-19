@@ -145,7 +145,7 @@ export class phimoney extends plugin {
         }
 
         if (!vis) {
-            e.reply(`哇塞，您已经把所有曲目全部满分了呢！没有办法为您布置任务了呢！敬请期待其他玩法哦！`)
+            e.reply([segment.at(e.user_id), ` 哇塞，您已经把所有曲目全部满分了呢！没有办法为您布置任务了呢！敬请期待其他玩法哦！`])
             get.delLock(e.user_id)
             return true
         }
@@ -183,7 +183,7 @@ export class phimoney extends plugin {
             Remsg1 = `(∪.∪ )...zzz`
         }
 
-        
+
         var task_time = now_time.split(' ')
 
         var picdata = {

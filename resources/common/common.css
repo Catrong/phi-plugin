@@ -1,23 +1,28 @@
 @font-face {
     font-family: '吞弥恰俊';
-    src: url("./font/吞弥恰俊.ttf") format('woff'), url("./font/吞弥恰俊.ttf") format('truetype');
+    src: url("./font/吞弥恰俊.ttf") format('truetype');
 }
 
 @font-face {
     font-family: 'PHI';
-    src: url("./font/phi.ttf") format('woff'), url("./font/phi.ttf") format('truetype');
+    src: url("./font/phi.ttf") format('truetype');
 }
 
 @font-face {
     font-family: 'HIMALAYA';
-    src: url("./font/HIMALAYA.TTF") format('woff'), url("./font/HIMALAYA.TTF") format('truetype');
+    src: url("./font/HIMALAYA.TTF") format('truetype');
 }
 
 @font-face {
     font-family: 'Aldrich';
-    src: url("./font/Aldrich-Regular.ttf") format('woff'), url("./font/Aldrich-Regular.ttf") format('truetype');
+    src: url("./font/Aldrich-Regular.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: 'NOTO';
+    src: url("./font/NotoSans-Regular.ttf") format('truetype');
 }
 
 body {
-    font-family: 'PHI', 'HIMALAYA', 'Aldrich', PingFangSC-Medium, "PingFang SC", sans-serif, '吞弥恰俊';
+    font-family: 'PHI', 'HIMALAYA', 'Aldrich', PingFangSC-Medium, "PingFang SC", sans-serif, 'NOTO', '吞弥恰俊';
 }
