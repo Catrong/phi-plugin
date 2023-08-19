@@ -5,6 +5,7 @@ import { segment } from "oicq";
 import Film from './Doc.js';
 import atlas from "./picmodle.js";
 import Config from "../components/Config.js";
+import LevelRecord from "./LevelRecord.js";
 
 var lock = []
 
@@ -328,6 +329,7 @@ class get {
     * @returns 原曲名称
     */
     fuzzysongsnick(mic, Distance = 0.85) {
+
         const nickconfig = Config.getDefOrConfig('nickconfig', mic)
 
         const fuzzyMatch = (str1, str2) => {
@@ -341,21 +343,42 @@ class get {
 
             //如果距离大于等于某个阈值，则认为匹配
             //可以根据实际情况调整这个阈值
-            return distance >= Distance
+            return distance
         }
 
-        const infoKeys = Object.keys(this.info()).filter(key => fuzzyMatch(mic, key))
-        const songnickKeys = Object.keys(this.songnick).filter(key => fuzzyMatch(mic, key))
-        const songnickValues = songnickKeys.flatMap(key => this.songnick[key])
+        /**按照匹配程度排序 */
+        var result = []
 
-        let all = [...infoKeys, ...songnickValues]
+        const usernick = Config.getDefOrConfig('nickconfig')
+        const allinfo = this.info()
+        for (var std in usernick) {
+            var dis = fuzzyMatch(mic, std)
+            if (dis >= Distance) {
+                result.push({ song: usernick[std], dis: dis })
+            }
+        }
+        for (var std in allinfo) {
+            var dis = fuzzyMatch(mic, std)
+            if (dis >= Distance) {
+                result.push({ song: allinfo[std]['song'], dis: dis })
+            }
+        }
+        for (var std in this.songnick) {
+            var dis = fuzzyMatch(mic, std)
+            if (dis >= Distance) {
+                result.push({ song: this.songnick[std], dis: dis })
+            }
+        }
+        
+        result = result.sort((a, b) => b.dis - a.dis)
 
-        if (nickconfig) {
-            all = [...all, ...Object.values(nickconfig)]
+        var all = []
+        for (var i in result) {
+            if (all.includes(result[i].song)) continue //去重
+            all.push(result[i].song)
         }
 
-        //使用 Set 对象去重
-        return [...new Set(all)]
+        return all
     }
 
 
@@ -423,11 +446,12 @@ class get {
      * @param {boolean} [isBig=true] 是否为大图
     */
     getill(name, isBig = true) {
+        const totinfo = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
         var ans
         if (isBig) {
-            ans = this.info()[name].illustration_big
+            ans = totinfo[name].illustration_big
         } else {
-            ans = this.info()[name].illustration
+            ans = totinfo[name].illustration
         }
         var reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans)) {
@@ -455,10 +479,12 @@ class get {
      * @returnsthis.info
      */
     idgetsong(id, info = true) {
-        if (info)
+        if (info) {
             return this.ori_info[this.songsid[id]]
-        else
+        }
+        else {
             return this.songsid[id]
+        }
     }
 
     /**
@@ -501,7 +527,9 @@ class get {
         }
     }
 
-    
+    init_Record(Record) {
+
+    }
 
 }
 

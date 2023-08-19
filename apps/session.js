@@ -6,7 +6,7 @@ import { segment } from 'oicq'
 import Config from '../components/Config.js'
 
 await get.init()
-const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
+const Level = ['EZ', 'HD', 'IN', 'AT']
 export class phisstk extends plugin {
     constructor() {
         super({
@@ -159,7 +159,7 @@ export class phisstk extends plugin {
         }
 
         var now = this.User
-        var date = new Date()
+        var date = this.User.saveInfo.modifiedAt.iso
 
         var illlist = []
 
@@ -193,18 +193,28 @@ export class phisstk extends plugin {
 
         common_update = common_update.slice(0, 15)
 
-        if (now.gameProgress.money != pluginData.data[pluginData.data.length]) {
+        if (now.gameProgress.money != pluginData.data[pluginData.data.length - 1]) {
             pluginData.data.push({
                 "date": date,
                 "value": now.gameProgress.money
             })
+        } else {
+            pluginData.data[pluginData.data.length - 1] = {
+                "date": date,
+                "value": now.gameProgress.money
+            }
         }
 
-        if (now.saveInfo.summary.rankingScore != pluginData.rks[pluginData.rks.length]) {
+        if (now.saveInfo.summary.rankingScore != pluginData.rks[pluginData.rks.length - 1]) {
             pluginData.rks.push({
                 "date": date,
                 "value": now.saveInfo.summary.rankingScore
             })
+        } else {
+            pluginData.rks[pluginData.rks.length - 1] = {
+                "date": date,
+                "value": now.saveInfo.summary.rankingScore
+            }
         }
 
         get.putpluginData(this.e.user_id, pluginData)

@@ -4,6 +4,7 @@ import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
 import Config from '../components/Config.js'
 import { segment } from 'oicq'
+import send from '../model/send.js'
 
 await get.init()
 
@@ -50,6 +51,10 @@ export class phisong extends plugin {
     /**歌曲图鉴 */
     async song(e) {
         let msg = e.msg.replace(/[#/](.*)(曲|song)(\s*)/g, "")
+        if (!msg) {
+            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} song <曲名>`)
+            return true
+        }
         let songs = get.fuzzysongsnick(msg)
         if (songs[0]) {
             let msgRes
