@@ -161,6 +161,12 @@ export class phib19 extends plugin {
             for (var level in song) {
                 if (level == 4) break
                 var tem = Record[song][level]
+
+                /**适配旧存档 */
+                if(!tem.Rating) {
+                    tem.Rating = tem.pingji
+                }
+
                 if (!tem) continue
                 if (tem.acc >= 100) {
                     if (tem.rks > phi.rks) {

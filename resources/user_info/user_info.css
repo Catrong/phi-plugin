@@ -217,7 +217,8 @@ body p {
 }
 
 #tow {
-    top: 150;
+    top: 120;
+    width: 100%;
 }
 
 .stats-group-real {
