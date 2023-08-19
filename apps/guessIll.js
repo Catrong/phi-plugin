@@ -28,7 +28,7 @@ export class phiguess extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(guess|猜曲目|猜曲绘)$`,
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(guess|猜曲目|猜曲绘)$`,
                     fnc: 'start'
                 },
                 {
@@ -36,11 +36,11 @@ export class phiguess extends plugin {
                     fnc: 'guess'
                 },
                 {
-                    reg: `^[#/](曲绘)?(ans|答案|结束)$`,
+                    reg: `^[#/]?(曲绘)?(ans|答案|结束)$`,
                     fnc: 'ans'
                 },
                 {
-                    reg: `^[#/](曲绘洗牌|illmix)$`,
+                    reg: `^[#/]?(曲绘洗牌|illmix)$`,
                     fnc: 'mix'
                 },
             ]
