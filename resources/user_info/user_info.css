@@ -216,6 +216,10 @@ body p {
     left: 120px;
 }
 
+#tow {
+    top: 150;
+}
+
 .stats-group-real {
     height: 100%;
     display: flex;
