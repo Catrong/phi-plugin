@@ -18,6 +18,6 @@
     src: url("./font/Aldrich-Regular.ttf") format('woff'), url("./font/Aldrich-Regular.ttf") format('truetype');
 }
 
-body p {
+body {
     font-family: 'PHI', 'HIMALAYA', 'Aldrich', PingFangSC-Medium, "PingFang SC", sans-serif, '吞弥恰俊';
 }

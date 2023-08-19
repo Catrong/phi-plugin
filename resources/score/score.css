@@ -231,8 +231,6 @@ body p {
     align-items: center;
     writing-mode: vertical-lr;
     justify-content: center;
-    backdrop-filter: blur(100px);
-    -webkit-backdrop-filter: blur(100px);
 }
 
 .rank-AT p,
@@ -266,6 +264,7 @@ body p {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    z-index: 2;
 }
 
 .pingji p {
@@ -370,7 +369,7 @@ body p {
 .suggest p {
     font-size: 25px;
     color: #92D050;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 1);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
 }
 
 .acc p {
@@ -424,8 +423,6 @@ body p {
     align-items: center;
     flex-direction: column;
     margin-right: 20px;
-    backdrop-filter: blur(100px);
-    -webkit-backdrop-filter: blur(100px);
 }
 
 .leave-ez {
@@ -450,16 +447,17 @@ body p {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    margin-top: 0px;
-    margin-bottom: 100px;
     writing-mode: horizontal-tb;
     justify-content: center;
+    position: absolute;
+    bottom: 100px;
 }
 
 .createdbox p {
     color: white;
     font-size: 70px;
     font-family: 'Aldrich', 'PHI';
+    margin: 0;
 }
 
 .phi-plugin {

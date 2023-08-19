@@ -403,7 +403,6 @@ body p {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    margin-top: 100px;
     margin-bottom: 100px;
     writing-mode: horizontal-tb;
     justify-content: center;

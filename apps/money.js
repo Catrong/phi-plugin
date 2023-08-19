@@ -183,11 +183,13 @@ export class phimoney extends plugin {
             Remsg1 = `(∪.∪ )...zzz`
         }
 
+        
+        var task_time = now_time.split(' ')
 
         var picdata = {
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
-            Date: save.saveInfo.updatedAt,
+            Date: `${task_time[3]} ${task_time[1]}.${task_time[2]} ${task_time[4]}`,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
@@ -246,6 +248,7 @@ export class phimoney extends plugin {
 
         var data = await get.getmoneydata(e.user_id)
         var task_time = data.plugin_data.task_time.split(' ')
+
         var picdata = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
@@ -385,9 +388,9 @@ function randtask(save, task = []) {
             old_score = gameRecord[song][level].score
         }
         if (type) {
-            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_score + level * 1000, 1e6), 1e6 - Math.min(old_score + level * 1000, 1e6), 1).toFixed(0)), 1e6)
+            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_score + 1, 1e6), 1e6 - Math.min(old_score + 1, 1e6), 1).toFixed(0)), 1e6)
         } else {
-            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_acc + level * 0.05, 100), 100 - Math.min(old_acc + level * 0.05, 100), 1).toFixed(2)), 100)
+            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_acc + 0.01, 100), 100 - Math.min(old_acc + 0.01, 100), 1).toFixed(2)), 100)
         }
         task[i] = {
             song: song,

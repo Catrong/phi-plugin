@@ -491,7 +491,7 @@ class get {
         var ans = 45 * Math.sqrt(Number(rks.toFixed(2)) / difficulty) + 55
 
         if (ans >= 100)
-            return "无推分"
+            return "无法推分"
         else {
             if (count != undefined) {
                 return `${ans.toFixed(count)}%`
