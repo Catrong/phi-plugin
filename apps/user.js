@@ -40,6 +40,10 @@ export class phiuser extends plugin {
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(info)$`,
                     fnc: 'info'
+                },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(lvsco(re)?)(.*)$`,
+                    fnc: 'lvscore'
                 }
             ]
         })
@@ -64,6 +68,12 @@ export class phiuser extends plugin {
 
     async info(e) {
         const save = await get.getsave(e.user_id)
+
+        if (!save) {
+            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            return true
+        }
+
         if (!save.Recordver || save.Recordver < 1.0) {
             send.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
             return true
@@ -233,6 +243,105 @@ export class phiuser extends plugin {
         }
 
         send.send_with_At(e, await get.getuser_info(e, data))
+    }
+
+    async lvscore(e) {
+
+        const save = await get.getsave(e.user_id)
+
+        if (!save) {
+            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            return true
+        }
+
+
+        let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
+
+        var range = [0, 0]
+        if (msg.includes('-')) {
+            range = msg.split(/\s*-\s*/g)
+            range[0] = Number(range[0])
+            range[1] = Number(range[1])
+            if (range[0] > range[1]) {
+                var tem = range[1]
+                range[1] = range[0]
+                range[0] = tem
+            }
+        } else {
+            range[0] = range[1] = Number(msg)
+        }
+
+        if (range[1] % 1 == 0 && !msg.includes(".0")) range[1] += 0.9
+
+        var totunlock = 0
+        var totreal_score = 0
+        var totacc = 0
+        var totnum = 0
+        var totcleared = 0
+        var totfc = 0
+        var totphi = 0
+        var tottot_score = 0
+        var tothighest = 0
+        var totlowest = 0
+        var totRating = {
+            F: 0,
+            C: 0,
+            B: 0,
+            A: 0,
+            S: 0,
+            V: 0,
+            FC: 0,
+            PHI: 0,
+        }
+
+        var Record = save.gameRecord
+
+        for (var song in get.ori_info) {
+            var info = get.ori_info[song]
+            for (var i in info.chart) {
+                var difficulty = info['chart'][i].difficulty
+                if (range[0] <= difficulty && difficulty <= range[1]) {
+                    ++totnum
+                }
+            }
+        }
+
+
+        for (var id in Record) {
+            const info = get.idgetsong(id, true)
+            const record = Record[id]
+            for (var lv in [0, 1, 2, 3]) {
+                // console.info(info)
+                if (!info.chart[Level[lv]]) continue
+                var difficulty = info.chart[Level[lv]].difficulty
+                if (range[0] <= difficulty && difficulty <= range[1]) {
+
+                    if (!record[lv]) continue
+
+                    ++totunlock
+
+                    if (record[lv].score >= 700000) {
+                        ++totcleared
+                    }
+                    if (record[lv].fc) {
+                        ++totfc
+                    }
+                    if (record[lv].score == 1000000) {
+                        ++totphi
+                    }
+                    ++totRating[record[lv].Rating]
+                    totacc += record[lv].acc
+                    totreal_score += record[lv].score
+                    tottot_score += 1000000
+
+                    tothighest = Math.max(record[lv].rks, tothighest)
+                    totlowest = Math.min(record[lv].rks, totlowest)
+                }
+            }
+        }
+
+        send.send_with_At(e, `${range[0]}-${range[1]}\nTot: ${totunlock}/${totnum}\nclear:${totcleared} fc:${totfc} phi:${totphi}\nscore: ${totreal_score}/${tottot_score}\nhighest: ${tothighest} lowest:${totlowest}\nPHI:${totRating['PHI']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`)
+
     }
 
 }
