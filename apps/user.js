@@ -138,7 +138,7 @@ export class phiuser extends plugin {
 
         for (var lv in [0, 1, 2, 3]) {
             if (stats[lv].real_score == stats[lv].tot_score) {
-                stats[lv].Rating = 'PHI'
+                stats[lv].Rating = 'phi'
             } else if (stats[lv].fc == stats[lv].unlock) {
                 stats[lv].Rating = 'FC'
             } else if (stats[lv].real_score >= stats[lv].tot_score * 0.96) {
@@ -282,7 +282,7 @@ export class phiuser extends plugin {
         var totphi = 0
         var tottot_score = 0
         var tothighest = 0
-        var totlowest = 0
+        var totlowest = 17
         var totRating = {
             F: 0,
             C: 0,
@@ -291,7 +291,7 @@ export class phiuser extends plugin {
             S: 0,
             V: 0,
             FC: 0,
-            PHI: 0,
+            phi: 0,
         }
 
         var Record = save.gameRecord
@@ -340,7 +340,7 @@ export class phiuser extends plugin {
             }
         }
 
-        send.send_with_At(e, `${range[0]}-${range[1]}\nTot: ${totunlock}/${totnum}\nclear:${totcleared} fc:${totfc} phi:${totphi}\nscore: ${totreal_score}/${tottot_score}\nhighest: ${tothighest} lowest:${totlowest}\nPHI:${totRating['PHI']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`)
+        send.send_with_At(e, `${range[0]}-${range[1]}\nTot: ${totunlock}/${totnum} acc: ${(totacc / totnum).toFixed(4)}\nclear:${totcleared} fc:${totfc} phi:${totphi}\nscore: ${totreal_score}/${tottot_score}\nhighest: ${tothighest.toFixed(4)} lowest:${totlowest.toFixed(4)}\nPHI:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`)
 
     }
 
