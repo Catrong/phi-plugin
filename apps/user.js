@@ -373,6 +373,6 @@ function progress_bar(value, length) {
     for (var i = 1; i <= (length - Number((value * length).toFixed(0))); ++i) {
         result += ' '
     }
-    result += ']'
+    result += `] ${(value * 100).toFixed(2)}%`
     return result
 }
