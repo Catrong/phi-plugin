@@ -340,10 +340,18 @@ export class phiuser extends plugin {
             }
         }
 
-        send.send_with_At(e, `${range[0]}-${range[1]}\nTot: ${totunlock}/${totnum} acc: ${(totacc / totnum).toFixed(4)}\nclear:${totcleared} fc:${totfc} phi:${totphi}\nscore: ${totreal_score}/${tottot_score}\nhighest: ${tothighest.toFixed(4)} lowest:${totlowest.toFixed(4)}\nPHI:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`)
 
+        var remsg = ''
+        remsg += `${range[0]}-${range[1]}\n`
+        remsg += `${progress_bar(totphi / totnum, 20)} ${totphi}/${totnum}\n`
+        remsg += `Tot: ${totunlock}/${totnum} acc: ${(totacc / totnum).toFixed(4)}\n`
+        remsg += `clear:${totcleared} fc:${totfc} phi:${totphi}\n`
+        remsg += `score: ${totreal_score}/${tottot_score}\n`
+        remsg += `highest: ${tothighest.toFixed(4)} lowest:${totlowest.toFixed(4)}\n`
+        remsg += `φ:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`
+        
+        send.send_with_At(e, remsg)
     }
-
 }
 
 /**
@@ -354,4 +362,17 @@ export class phiuser extends plugin {
  */
 function range(value, range) {
     return (value - range[0]) / (range[1] - range[0]) * 100
+}
+
+/**进度条 */
+function progress_bar(value, length) {
+    var result = '['
+    for (var i = 1; i <= Number((value * length).toFixed(0)); ++i) {
+        result += '|'
+    }
+    for (var i = 1; i <= (length - Number((value * length).toFixed(0))); ++i) {
+        result += ' '
+    }
+    result += ']'
+    return result
 }
