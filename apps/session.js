@@ -44,6 +44,7 @@ export class phisstk extends plugin {
 
         var sessionToken = e.msg.replace(/(#|\/)(.*)(绑定|bind)(\s*)/g, '')
         sessionToken = sessionToken.replace(" ", '')
+        sessionToken = sessionToken.replace(/[\<\>]/g, '')
 
         if (!Config.getDefOrConfig('config', 'isGuild')) {
 
