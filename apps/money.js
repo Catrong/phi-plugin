@@ -313,8 +313,7 @@ export class phimoney extends plugin {
         target_data.plugin_data.money += num
         await get.putpluginData(target, target_data)
         var target_card = await Bot.pickMember(e.group_id, target)
-        console.info(target_card)
-        e.reply([segment.at(e.user_id), ` 转账成功！\n你当前的Notes: ${sender_data.plugin_data.money}\n${target_card.nickname}的Notes: ${target_data.plugin_data.money}`])
+        e.reply([segment.at(e.user_id), ` 转账成功！\n你当前的Notes: ${sender_data.plugin_data.money}\n${target_card.nickname ? target_card.nickname : target_card.card}的Notes: ${target_data.plugin_data.money}`])
     }
 }
 
