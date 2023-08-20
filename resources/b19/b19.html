@@ -5,7 +5,7 @@
 </head>
 {{/block}}
 
-<body style="scale: {{b19size}};">
+<body style="scale: {{size}};">
     <div class="background">
         {{if background}}
         <img src="{{background}}" alt="曲绘-模糊">
@@ -190,7 +190,7 @@
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
-                            <img src="{{_res_path}}otherimg/{{song.Rating}}.png" alt="Rating">
+                            <img src="{{_res_path}}otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
                         </div>
                         <div class="chengji">
                             <div class="score">

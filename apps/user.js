@@ -2,8 +2,28 @@ import { segment } from 'oicq'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
+import send from '../model/send.js'
 
 await get.init()
+
+const tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
+const Level = ['EZ', 'HD', 'IN', 'AT']
+
+for (var song in get.ori_info) {
+    var info = get.ori_info[song]
+    if (info['AT']) {
+        ++tot[3]
+    }
+    if (info['IN']) {
+        ++tot[2]
+    }
+    if (info['HD']) {
+        ++tot[1]
+    }
+    if (info['EZ']) {
+        ++tot[0]
+    }
+}
 
 export class phiuser extends plugin {
     constructor() {
@@ -16,6 +36,10 @@ export class phiuser extends plugin {
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(data)$`,
                     fnc: 'data'
+                },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(info)$`,
+                    fnc: 'info'
                 }
 
             ]
@@ -38,4 +62,175 @@ export class phiuser extends plugin {
         }
         return true
     }
+
+    async info(e) {
+        const save = await get.getsave(e.user_id)
+        const Record = save.gameRecord
+
+        const stats_ = {
+            tatle: '',
+            Rating: '',
+            unlock: 0,
+            tot: 0,
+            cleared: 0,
+            fc: 0,
+            phi: 0,
+            real_score: 0,
+            tot_score: 0,
+            highest: 0,
+            lowest: 17,
+        }
+
+        const stats = [stats_, stats_, stats_, stats_]
+
+        stats[0].tot = tot[0]
+        stats[0].tatle = Level[0]
+
+        stats[1].tot = tot[1]
+        stats[1].tatle = Level[1]
+
+        stats[2].tot = tot[2]
+        stats[2].tatle = Level[2]
+
+        stats[3].tot = tot[3]
+        stats[3].tatle = Level[3]
+
+        for (var id in Record) {
+            const info = get.idgetsong(id, true)
+            const record = Record[id]
+            for (var lv in [0, 1, 2, 3]) {
+                if (!record[lv]) continue
+
+                ++stats[lv].unlock
+
+                if (record[lv].score >= 700000) {
+                    ++stats[lv].cleared
+                }
+                if (record[lv].fc) {
+                    ++stats[lv].fc
+                }
+                if (record[lv].score == 1000000) {
+                    ++stats[lv].phi
+                }
+
+
+                stats[lv].real_score += record[lv].score
+                stats[lv].tot_score += 1000000
+
+                stats[lv].highest = Math.max(record[lv].rks, stats[lv].highest)
+                stats[lv].lowest = Math.min(record[lv].rks, stats[lv].lowest)
+            }
+        }
+
+        for (var lv in [0, 1, 2, 3]) {
+            if (stats[lv].real_score == stats[lv].tot_score) {
+                stats[lv].Rating = 'PHI'
+            } else if (stats[lv].fc == stats[lv].unlock) {
+                stats[lv].Rating = 'FC'
+            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.96) {
+                stats[lv].Rating = 'V'
+            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.92) {
+                stats[lv].Rating = 'S'
+            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.88) {
+                stats[lv].Rating = 'A'
+            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.82) {
+                stats[lv].Rating = 'B'
+            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.70) {
+                stats[lv].Rating = 'C'
+            } else {
+                stats[lv].Rating = 'F'
+            }
+        }
+
+        const money = save.gameProgress.money
+        var userbackground = ''
+        try {
+            userbackground = get.getill(save.gameuser.background)
+        } catch (err) {
+            e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
+            console.error(`未找到${save.gameuser.background}的曲绘！`)
+        }
+
+        const gameuser = {
+            avatar: save.gameuser.avatar,
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save.saveInfo.summary.rankingScore,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: save.gameuser.selfIntro,
+            backgroundurl: userbackground,
+        }
+
+        const user_data = await get.getpluginData(e.user_id)
+
+        const rks_history_ = []
+        const data_history_ = []
+        const user_rks_data = user_data.rks
+        const user_data_data = user_data.data
+        const rks_range = [17, 0]
+        const data_range = [1e9, 0]
+
+        for (var i in user_rks_data) {
+            if (i == 0 || user_rks_data[i].value != rks_history_[rks_history_.length - 1].value) {
+                rks_history_.push(user_rks_data[i])
+                rks_range[0] = Math.min(rks_range[0], user_rks_data[i].value)
+                rks_range[1] = Math.max(rks_range[1], user_rks_data[i].value)
+            } else {
+                rks_history_[rks_history_.length - 1].date = user_rks_data[i].date
+            }
+        }
+
+        for (var i in user_data_data) {
+            const value = user_data_data[i]['value']
+            user_data_data.value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
+            if (i == 0 || user_data_data[i].value != data_history_[data_history_.length - 1].value) {
+                data_history_.push(user_data_data[i])
+                data_range[0] = Math.min(data_range[0], user_data_data[i].value)
+                data_range[1] = Math.max(data_range[1], user_data_data[i].value)
+            } else {
+                data_history_[data_history_.length - 1].date = user_data_data[i].date
+            }
+        }
+
+        const rks_history = []
+        const data_history = []
+
+        for (var i in rks_history_) {
+            if (!rks_history_[i + 1]) break
+            const x1 = 100 / (rks_history_.length - 1) * i
+            const y1 = range(rks_history_[i].value, rks_range)
+            const x2 = 100 / (rks_history_.length - 1) * (i + 1)
+            const y2 = range(rks_history_[i + 1].value, rks_range)
+            rks_history.push([x1, y1, x2, y2])
+        }
+
+        for (var i in data_history) {
+            if (!data_history[i + 1]) break
+            const x1 = 100 / (data_history.length - 1) * i
+            const y1 = range(data_history[i].value, data_range)
+            const x2 = 100 / (data_history.length - 1) * (i + 1)
+            const y2 = range(data_history[i + 1].value, data_range)
+            rks_history.push([x1, y1, x2, y2])
+        }
+
+        var data = {
+            gameuser: gameuser,
+            stats: stats,
+            rks_history: rks_history,
+            data_history: data_history,
+        }
+        await get.getuser_info(e, data)
+        send.send_with_At(e, '233')
+    }
+
+}
+
+/**
+ * 计算百分比
+ * @param {Number} value 值
+ * @param {Array} range 区间数组
+ * @returns 百分数，单位%
+ */
+function range(value, range) {
+    return (value - range[0]) / (range[1] - range[0]) * 100
 }

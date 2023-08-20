@@ -57,7 +57,7 @@ class atlas {
 
         return await puppeteer.render('b19/b19', {
             ...data,
-            b19size: Config.getDefOrConfig('config','b19size') / 100,
+            size: Config.getDefOrConfig('config', 'b19size') / 100,
         }, {
             e,
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
@@ -67,7 +67,7 @@ class atlas {
     async update(e, data) {
         return await puppeteer.render('update/update', {
             ...data,
-            size: Config.getDefOrConfig('config','b19size') / 100,
+            size: Config.getDefOrConfig('config', 'b19size') / 100,
         }, {
             e,
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
@@ -77,7 +77,18 @@ class atlas {
     async tasks(e, data) {
         return await puppeteer.render('tasks/tasks', {
             ...data,
-            size: Config.getDefOrConfig('config','b19size') / 100,
+            size: Config.getDefOrConfig('config', 'b19size') / 100,
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+        })
+    }
+
+    async user_info(e, data) {
+        console.info(data)
+        return await puppeteer.render('userinfo/userinfo', {
+            ...data,
+            size: Config.getDefOrConfig('config', 'b19size') / 100,
         }, {
             e,
             scale: Config.getDefOrConfig('config', 'renderScale') / 100

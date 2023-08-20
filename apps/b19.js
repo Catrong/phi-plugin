@@ -3,6 +3,7 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js';
 import get from '../model/getdata.js'
 import { segment } from "oicq";
+import send from '../model/send.js'
 
 await get.init()
 
@@ -284,7 +285,10 @@ export class phib19 extends plugin {
         }
         var song = e.msg.replace(/[#/](.*)(score|单曲成绩)(\s*)/g, '')
 
-
+        if(!song) {
+            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} song <曲名>`)
+            return true
+        }
 
         if (!(get.fuzzysongsnick(song)[0])) {
             e.reply(`未找到 ${song} 的有关信息哦！`)

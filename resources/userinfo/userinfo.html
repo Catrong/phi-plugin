@@ -1,0 +1,186 @@
+<head>
+    <link rel="stylesheet" href="{{_res_path}}/userinfo/userinfo.css">
+    <style>
+        .basis-box {
+            background-image: url('{{gameuser.backgroundurl}}');
+            background-size: cover;
+            background-position: top;
+            display: flex;
+            width: 98.5%;
+        }
+    </style>
+</head>
+
+<body style="scale: {{size}};">
+    <div class="basis-box">
+        <div class="basis-box-out">
+            <div class="box-in">
+                <div class="box-tatle">
+                    <p>Basis-Info</p>
+                </div>
+                <div class="basis-info">
+                    <div class="avatar"> <img src="{{_res_path}}/avatar/{{gameuser.avatar}}.png"
+                            alt="{{gameuser.avatar}}"> </div>
+                    <div class="name">
+                        <div class="user-info-line">
+                            <div class="user-info-box">
+                                <div class="name-tatle">
+                                    <p>Player ID</p>
+                                </div>
+                                <div class="name-value">
+                                    <p>{{PlayerId}}</p>
+                                </div>
+                            </div>
+                            <div class="Challenge"> <img src="{{_res_path}}/otherimg/{{gameuser.ChallengeMode}}.png"
+                                    alt="{{gameuser.ChallengeMode}}">
+                                <p>{{gameuser.ChallengeModeRank}}</p>
+                            </div>
+                        </div>
+                        <div class="user-info-line">
+                            <div class="user-info-box">
+                                <div class="name-tatle">
+                                    <p>RankingScore</p>
+                                </div>
+                                <div class="name-value">
+                                    <p>{{gameuser.rks}}</p>
+                                </div>
+                            </div>
+                            <div class="user-info-box">
+                                <div class="name-tatle">
+                                    <p>Data</p>
+                                </div>
+                                <div class="name-value">
+                                    <p>{{gameuser.data}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-tatle">
+                    <p>Profile</p>
+                </div>
+                <div class="profile">
+                    {{each gameuser.selfIntro.split('\r\n') p}}
+                    <p>{{p}}</p>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box-out">
+        <div class="box-in">
+            <div class="box-tatle">
+                <p>Stats</p>
+            </div>
+            <div class="stats-box">
+                {{each stats}}
+                <div class="one-stats-box">
+                    <div class="rank">
+                        <p>{{$value.tatle}}</p>
+                    </div>
+                    <div class="stats-up">
+                        <div class="Rating"> <img src="{{_res_path}}otherimg/{{$value.Rating}}.png"
+                                alt="{{$value.Rating}}"> </div>
+                        <div class="stats-group">
+                            <div class="stats-group-real">
+                                <p>{{$value.unlock}}</p>
+                            </div>
+                            <div class="stats-group-tot">
+                                <p>/{{$value.tot}}</p>
+                            </div>
+                        </div>
+                        <div class="stats-rating-group">
+                            <div class="rating-group">
+                                <div class="rating-value">
+                                    <p>{{$value.cleared}}</p>
+                                </div>
+                                <div class="rating-tatle">
+                                    <p>Cleared</p>
+                                </div>
+                            </div>
+                            <div class="rating-group">
+                                <div class="rating-value">
+                                    <p>{{$value.fc}}</p>
+                                </div>
+                                <div class="rating-tatle">
+                                    <p>FC</p>
+                                </div>
+                            </div>
+                            <div class="rating-group">
+                                <div class="rating-value">
+                                    <p>{{$value.phi}}</p>
+                                </div>
+                                <div class="rating-tatle">
+                                    <p>PHI</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stats-group">
+                        <div class="stats-group-real">
+                            <p>{{$value.real_score}}</p>
+                        </div>
+                        <div class="stats-group-tot">
+                            <p>/{{$value.tot_score}}</p>
+                        </div>
+                    </div>
+                    <div class="stats-score">
+                        <div class="stats-group">
+                            <div class="stats-group-real">
+                                <p>{{$value.highest}}</p>
+                            </div>
+                            <div class="stats-group-tot">
+                                <p>Highest</p>
+                            </div>
+                        </div>
+                        <div class="stats-group">
+                            <div class="stats-group-real">
+                                <p>{{$value.lowest}}</p>
+                            </div>
+                            <div class="stats-group-tot">
+                                <p>Lowest</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/stats}}
+            </div>
+        </div>
+    </div>
+    <div class="box-out">
+        <div class="box-in">
+            <div class="box-tatle">
+                <p>RKS History</p>
+            </div>
+            <div class="svg-box">
+                <div class="line"> <svg>
+                        <defs>
+                            <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="4" refY="4">
+                                <circle cx="4" cy="4" r="2.5"></circle>
+                            </marker>
+                        </defs>
+                        {{each rks_history}}
+                        <line x1="{{$value[0]}}%" y1="{{$value[1]}}%" x2="{{$value[2]}}%" y2="{{$value[3]}}%"></line>
+                        {{/each}}
+                    </svg>
+                </div>
+            </div>
+            <div class="box-tatle">
+                <p>DATA History</p>
+            </div>
+            <div class="svg-box">
+                <div class="line"> <svg>
+                        <defs>
+                            <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="4" refY="4">
+                                <circle cx="4" cy="4" r="2.5"></circle>
+                            </marker>
+                        </defs>
+                        {{each data_history}}
+                        <line x1="{{$value[0]}}%" y1="{{$value[1]}}%" x2="{{$value[2]}}%" y2="{{$value[3]}}%"></line>
+                        {{/each}}
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

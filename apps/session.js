@@ -193,7 +193,7 @@ export class phisstk extends plugin {
 
         common_update = common_update.slice(0, 15)
 
-        if (now.gameProgress.money != pluginData.data[pluginData.data.length - 1]) {
+        if (now.gameProgress.money != pluginData.data[pluginData.data.length - 1]['value']) {
             pluginData.data.push({
                 "date": date,
                 "value": now.gameProgress.money
@@ -205,7 +205,7 @@ export class phisstk extends plugin {
             }
         }
 
-        if (now.saveInfo.summary.rankingScore != pluginData.rks[pluginData.rks.length - 1]) {
+        if (now.saveInfo.summary.rankingScore != pluginData.rks[pluginData.rks.length - 1]['value']) {
             pluginData.rks.push({
                 "date": date,
                 "value": now.saveInfo.summary.rankingScore

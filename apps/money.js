@@ -272,6 +272,7 @@ export class phimoney extends plugin {
     /**转账 */
     async send(e) {
         var msg = e.msg.replace(/[#/](.*)(send|送|转)(\s*)/g, "")
+        msg = msg.replace(/[\<\>]/g, "")
         var target = e.at
         var num
         if (!e.at) {
@@ -280,14 +281,14 @@ export class phimoney extends plugin {
                 target = msg[0]
                 num = Number(msg[1])
             } else {
-                e.reply(`格式错误！请指定目标\n/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
+                e.reply(`格式错误！请指定目标\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
                 return true
             }
         } else {
             num = Number(msg)
         }
         if (num == NaN) {
-            e.reply(`非法数字：${msg}\n/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
+            e.reply(`非法数字：${msg}\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
             return true
         }
 
@@ -312,6 +313,7 @@ export class phimoney extends plugin {
         target_data.plugin_data.money += num
         await get.putpluginData(target, target_data)
         var target_card = await Bot.pickMember(e.group_id, target)
+        console.info(target_card)
         e.reply([segment.at(e.user_id), ` 转账成功！\n你当前的Notes: ${sender_data.plugin_data.money}\n${target_card.card}的Notes: ${target_data.plugin_data.money}`])
     }
 }

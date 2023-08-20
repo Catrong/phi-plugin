@@ -38,6 +38,9 @@ class get {
         /**用户图片路径 */
         this.orillPath = `${_path}/plugins/phi-plugin/resources/otherill/`
 
+
+        this.Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
+
     }
 
     async init() {
@@ -326,7 +329,7 @@ class get {
     * 根据参数模糊匹配返回原曲名称
     * @param {string} mic 别名
     * @param {number} [Distance=0.85] 阈值
-    * @returns 原曲名称
+    * @returns 原曲名称数组，按照匹配程度降序
     */
     fuzzysongsnick(mic, Distance = 0.85) {
 
@@ -423,6 +426,11 @@ class get {
     /**获取任务列表图片 */
     async gettasks(e, data) {
         return await atlas.tasks(e, data)
+    }
+
+    /**获取个人信息图片 */
+    async getuser_info(e, data) {
+        return await atlas.user_info(e, data)
     }
 
     /**获取单曲成绩 */
