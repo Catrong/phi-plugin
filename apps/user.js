@@ -343,7 +343,7 @@ export class phiuser extends plugin {
 
         var remsg = ''
         remsg += `${range[0]}-${range[1]}\n`
-        remsg += `${progress_bar(totphi / totnum, 20)} ${totphi}/${totnum}\n`
+        remsg += `${progress_bar(totphi / totnum, 50)} ${totphi}/${totnum}\n`
         remsg += `Tot: ${totunlock}/${totnum} acc: ${(totacc / totnum).toFixed(4)}\n`
         remsg += `clear:${totcleared} fc:${totfc} phi:${totphi}\n`
         remsg += `score: ${totreal_score}/${tottot_score}\n`
