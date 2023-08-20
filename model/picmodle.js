@@ -85,7 +85,6 @@ class atlas {
     }
 
     async user_info(e, data) {
-        console.info(data)
         return await puppeteer.render('userinfo/userinfo', {
             ...data,
             size: Config.getDefOrConfig('config', 'b19size') / 100,

@@ -196,7 +196,6 @@ export class phiuser extends plugin {
             }
         }
 
-        console.info(data_history_)
 
         var rks_history = []
         var data_history = []
