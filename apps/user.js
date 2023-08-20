@@ -6,21 +6,21 @@ import send from '../model/send.js'
 
 await get.init()
 
-const tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
+var tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
 const Level = ['EZ', 'HD', 'IN', 'AT']
 
 for (var song in get.ori_info) {
     var info = get.ori_info[song]
-    if (info['AT']) {
+    if (info.chart['AT']) {
         ++tot[3]
     }
-    if (info['IN']) {
+    if (info.chart['IN']) {
         ++tot[2]
     }
-    if (info['HD']) {
+    if (info.chart['HD']) {
         ++tot[1]
     }
-    if (info['EZ']) {
+    if (info.chart['EZ']) {
         ++tot[0]
     }
 }
@@ -81,7 +81,7 @@ export class phiuser extends plugin {
             lowest: 17,
         }
 
-        const stats = [stats_, stats_, stats_, stats_]
+        var stats = [{ ...stats_ }, { ...stats_ }, { ...stats_ }, { ...stats_ }]
 
         stats[0].tot = tot[0]
         stats[0].tatle = Level[0]
@@ -159,14 +159,15 @@ export class phiuser extends plugin {
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: save.gameuser.selfIntro,
             backgroundurl: userbackground,
+            PlayerId: save.saveInfo.PlayerId,
         }
 
         const user_data = await get.getpluginData(e.user_id)
 
-        const rks_history_ = []
-        const data_history_ = []
+        var rks_history_ = []
+        var data_history_ = []
         const user_rks_data = user_data.rks
-        const user_data_data = user_data.data
+        var user_data_data = user_data.data
         const rks_range = [17, 0]
         const data_range = [1e9, 0]
 
@@ -182,7 +183,7 @@ export class phiuser extends plugin {
 
         for (var i in user_data_data) {
             const value = user_data_data[i]['value']
-            user_data_data.value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
+            user_data_data[i].value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
             if (i == 0 || user_data_data[i].value != data_history_[data_history_.length - 1].value) {
                 data_history_.push(user_data_data[i])
                 data_range[0] = Math.min(data_range[0], user_data_data[i].value)
@@ -192,35 +193,43 @@ export class phiuser extends plugin {
             }
         }
 
-        const rks_history = []
-        const data_history = []
+        console.info(data_history_)
+
+        var rks_history = []
+        var data_history = []
 
         for (var i in rks_history_) {
+
+            i = Number(i)
+
             if (!rks_history_[i + 1]) break
-            const x1 = 100 / (rks_history_.length - 1) * i
+            const x1 = 100 / (rks_history_.length + 1) * (i + 1)
             const y1 = range(rks_history_[i].value, rks_range)
-            const x2 = 100 / (rks_history_.length - 1) * (i + 1)
+            const x2 = 100 / (rks_history_.length + 1) * (i + 2)
             const y2 = range(rks_history_[i + 1].value, rks_range)
             rks_history.push([x1, y1, x2, y2])
         }
 
-        for (var i in data_history) {
-            if (!data_history[i + 1]) break
-            const x1 = 100 / (data_history.length - 1) * i
-            const y1 = range(data_history[i].value, data_range)
-            const x2 = 100 / (data_history.length - 1) * (i + 1)
-            const y2 = range(data_history[i + 1].value, data_range)
-            rks_history.push([x1, y1, x2, y2])
+        for (var i in data_history_) {
+
+            i = Number(i)
+
+            if (!data_history_[i + 1]) break
+            const x1 = 100 / (data_history_.length + 1) * (i + 1)
+            const y1 = range(data_history_[i].value, data_range)
+            const x2 = 100 / (data_history_.length + 1) * (i + 2)
+            const y2 = range(data_history_[i + 1].value, data_range)
+            data_history.push([x1, y1, x2, y2])
         }
 
         var data = {
             gameuser: gameuser,
-            stats: stats,
+            userstats: stats,
             rks_history: rks_history,
             data_history: data_history,
         }
-        await get.getuser_info(e, data)
-        send.send_with_At(e, '233')
+
+        send.send_with_At(e, await get.getuser_info(e, data))
     }
 
 }

@@ -6,7 +6,7 @@ body {
     width: 1800px;
     justify-content: center;
     align-items: center;
-    background: url('https://img.moegirl.org.cn/common/7/7c/Winter_Cube_Phigros.png');
+    background: url('https://img.moegirl.org.cn/common/7/7c/Winter_Cube_Phigros.png') center;
     background-size: cover;
 }
 
@@ -23,14 +23,15 @@ body p {
 
 .box-out,
 .basis-box {
-    width: 98.5%;
+    width: 95%;
     margin-top: 1%;
+    margin-bottom: 1%;
 }
 
 .box-out,
 .basis-box-out {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,8 +47,8 @@ body p {
 }
 
 .box-in {
-    width: 97.5%;
-    border: 4px solid;
+    width: 95.5%;
+    border: 10px solid;
     border-color: rgba(0, 0, 0, 0.5);
     display: flex;
     padding-top: 5px;
@@ -338,6 +339,7 @@ body p {
     stroke: currentColor;
     stroke-width: 5;
     overflow: visible;
+    transform: scaleX(-1);
 }
 
 circle {
@@ -362,4 +364,6 @@ circle {
     border-radius: 20px;
     width: 96%;
     height: 300px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

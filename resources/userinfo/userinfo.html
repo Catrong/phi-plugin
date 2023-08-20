@@ -28,7 +28,7 @@
                                     <p>Player ID</p>
                                 </div>
                                 <div class="name-value">
-                                    <p>{{PlayerId}}</p>
+                                    <p>{{gameuser.PlayerId}}</p>
                                 </div>
                             </div>
                             <div class="Challenge"> <img src="{{_res_path}}/otherimg/{{gameuser.ChallengeMode}}.png"
@@ -42,7 +42,7 @@
                                     <p>RankingScore</p>
                                 </div>
                                 <div class="name-value">
-                                    <p>{{gameuser.rks}}</p>
+                                    <p>{{gameuser.rks.toFixed(4)}}</p>
                                 </div>
                             </div>
                             <div class="user-info-box">
@@ -73,26 +73,26 @@
                 <p>Stats</p>
             </div>
             <div class="stats-box">
-                {{each stats}}
+                {{each userstats e}}
                 <div class="one-stats-box">
                     <div class="rank">
-                        <p>{{$value.tatle}}</p>
+                        <p>{{e.tatle}}</p>
                     </div>
                     <div class="stats-up">
-                        <div class="Rating"> <img src="{{_res_path}}otherimg/{{$value.Rating}}.png"
-                                alt="{{$value.Rating}}"> </div>
+                        <div class="Rating"> <img src="{{_res_path}}otherimg/{{e.Rating}}.png"
+                                alt="{{e.Rating}}"> </div>
                         <div class="stats-group">
                             <div class="stats-group-real">
-                                <p>{{$value.unlock}}</p>
+                                <p>{{e.unlock}}</p>
                             </div>
                             <div class="stats-group-tot">
-                                <p>/{{$value.tot}}</p>
+                                <p>/{{e.tot}}</p>
                             </div>
                         </div>
                         <div class="stats-rating-group">
                             <div class="rating-group">
                                 <div class="rating-value">
-                                    <p>{{$value.cleared}}</p>
+                                    <p>{{e.cleared}}</p>
                                 </div>
                                 <div class="rating-tatle">
                                     <p>Cleared</p>
@@ -100,7 +100,7 @@
                             </div>
                             <div class="rating-group">
                                 <div class="rating-value">
-                                    <p>{{$value.fc}}</p>
+                                    <p>{{e.fc}}</p>
                                 </div>
                                 <div class="rating-tatle">
                                     <p>FC</p>
@@ -108,7 +108,7 @@
                             </div>
                             <div class="rating-group">
                                 <div class="rating-value">
-                                    <p>{{$value.phi}}</p>
+                                    <p>{{e.phi}}</p>
                                 </div>
                                 <div class="rating-tatle">
                                     <p>PHI</p>
@@ -118,16 +118,16 @@
                     </div>
                     <div class="stats-group">
                         <div class="stats-group-real">
-                            <p>{{$value.real_score}}</p>
+                            <p>{{e.real_score}}</p>
                         </div>
                         <div class="stats-group-tot">
-                            <p>/{{$value.tot_score}}</p>
+                            <p>/{{e.tot_score}}</p>
                         </div>
                     </div>
                     <div class="stats-score">
                         <div class="stats-group">
                             <div class="stats-group-real">
-                                <p>{{$value.highest}}</p>
+                                <p>{{e.highest.toFixed(2)}}</p>
                             </div>
                             <div class="stats-group-tot">
                                 <p>Highest</p>
@@ -135,7 +135,7 @@
                         </div>
                         <div class="stats-group">
                             <div class="stats-group-real">
-                                <p>{{$value.lowest}}</p>
+                                <p>{{e.lowest.toFixed(2)}}</p>
                             </div>
                             <div class="stats-group-tot">
                                 <p>Lowest</p>
@@ -143,7 +143,7 @@
                         </div>
                     </div>
                 </div>
-                {{/stats}}
+                {{/each}}
             </div>
         </div>
     </div>
@@ -169,7 +169,8 @@
                 <p>DATA History</p>
             </div>
             <div class="svg-box">
-                <div class="line"> <svg>
+                <div class="line">
+                    <svg>
                         <defs>
                             <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="4" refY="4">
                                 <circle cx="4" cy="4" r="2.5"></circle>
