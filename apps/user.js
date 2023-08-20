@@ -41,7 +41,6 @@ export class phiuser extends plugin {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(info)$`,
                     fnc: 'info'
                 }
-
             ]
         })
 
@@ -55,16 +54,20 @@ export class phiuser extends plugin {
                 var data = User.gameProgress.money
                 e.reply([segment.at(e.user_id), `您的data数为：${data[4] ? `${data[4]}PiB ` : ''}${data[3] ? `${data[3]}TiB ` : ''}${data[2] ? `${data[2]}GiB ` : ''}${data[1] ? `${data[1]}MiB ` : ''}${data[0] ? `${data[0]}KiB ` : ''}`])
             } else {
-                e.reply(`请先更新数据哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} update`)
+                send.send_with_At(e, `请先更新数据哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} update`)
             }
         } else {
-            e.reply(`没有找到你的数据哦！请先绑定！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
         }
         return true
     }
 
     async info(e) {
         const save = await get.getsave(e.user_id)
+        if (!save.Recordver || save.Recordver < 1.0) {
+            send.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
+        }
+
         const Record = save.gameRecord
 
         const stats_ = {

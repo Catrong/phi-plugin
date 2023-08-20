@@ -153,6 +153,7 @@
                 <p>RKS History</p>
             </div>
             <div class="svg-box">
+            {{if rks_history[0]}}
                 <div class="line"> <svg>
                         <defs>
                             <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="4" refY="4">
@@ -164,11 +165,15 @@
                         {{/each}}
                     </svg>
                 </div>
+            {{else}}
+            <p>NO_INFO</p>
+            {{/if}}
             </div>
             <div class="box-tatle">
                 <p>DATA History</p>
             </div>
             <div class="svg-box">
+                {{if data_history[0]}}
                 <div class="line">
                     <svg>
                         <defs>
@@ -181,6 +186,9 @@
                         {{/each}}
                     </svg>
                 </div>
+                {{else}}
+                <p>NO_INFO</p>
+                {{/if}}
             </div>
         </div>
     </div>

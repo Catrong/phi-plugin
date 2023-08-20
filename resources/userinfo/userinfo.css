@@ -329,7 +329,6 @@ body p {
 .line {
     width: calc(100% - 102px);
     height: 200px;
-    margin-bottom: 1000;
 }
 
 .line svg {
@@ -357,8 +356,6 @@ circle {
 }
 
 .svg-box {
-    margin-top: 5px;
-    margin-bottom: 5px;
     padding: 30px;
     border: #ababab 5px solid;
     border-radius: 20px;
@@ -366,6 +363,21 @@ circle {
     height: 300px;
     margin-top: 10px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.svg-box p {
+    text-shadow:
+        0 0 1px #d8f9ffab,
+        1px 0 2px #d8f9ffab,
+        -1px 0 2px #d8f9ffab,
+        1px 0 5px #d8f9ffab,
+        -1px 0 10px #d8f9ffab;
+    margin-left: 5%;
+    font-size: 100px;
+    color: white;
 }
 
 .createdbox {

@@ -1,6 +1,6 @@
 # phi-plugin
 
-版本：v0.9.4
+版本：v0.9.5
 
 ---
 
@@ -53,6 +53,7 @@ pnpm install -P
 | #phi (unbind\|解绑)                  | 删除sessionToken和存档记录                                                                     |
 | #phi (update\|更新存档)              | 更新存档                                                                                       |
 | #phi (rks\|b19)                      | 查询rks，会提供得出的b21结果                                                                   |
+| #phi info                            | 查询个人统计信息                                                                               |
 | #phi best[1-99]                      | 查询文字版rks，未指定数字默认19                                                                |
 | #phi (score\|单曲成绩)xxx            | 获取单曲成绩及这首歌的推分建议                                                                 |
 | #phi (suggest\|推分)                 | 获取可以让RKS+0.01的曲目及其所需ACC                                                            |
@@ -84,8 +85,6 @@ pnpm install -P
 ·加入收集品、头像等的图鉴
 
 ·点phi的歌
-
-·频道模式部分功能转发到私聊
 
 ·频道模式禁用私聊生成b19图及娱乐功能
 
