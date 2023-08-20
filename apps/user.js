@@ -342,10 +342,10 @@ export class phiuser extends plugin {
 
 
         var remsg = ''
-        remsg += `${range[0]}-${range[1]}\n`
+        remsg += `\n${range[0]}-${range[1]}`
+        remsg += `clear:${totcleared} fc:${totfc} phi:${totphi}\n`
         remsg += `${progress_bar(totphi / totnum, 30)} ${totphi}/${totnum}\n`
         remsg += `Tot: ${totunlock}/${totnum} acc: ${(totacc / totnum).toFixed(4)}\n`
-        remsg += `clear:${totcleared} fc:${totfc} phi:${totphi}\n`
         remsg += `score: ${totreal_score}/${tottot_score}\n`
         remsg += `highest: ${tothighest.toFixed(4)} lowest:${totlowest.toFixed(4)}\n`
         remsg += `φ:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`
