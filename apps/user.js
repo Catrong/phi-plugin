@@ -66,6 +66,7 @@ export class phiuser extends plugin {
         const save = await get.getsave(e.user_id)
         if (!save.Recordver || save.Recordver < 1.0) {
             send.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
+            return true
         }
 
         const Record = save.gameRecord
@@ -155,7 +156,7 @@ export class phiuser extends plugin {
         }
 
         const gameuser = {
-            avatar: save.gameuser.avatar,
+            avatar: get.idgetavatar(save.gameuser.avatar),
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
