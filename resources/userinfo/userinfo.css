@@ -338,7 +338,7 @@ body p {
     stroke: currentColor;
     stroke-width: 5;
     overflow: visible;
-    transform: scaleX(-1);
+    transform: scaleY(-1);
 }
 
 circle {
