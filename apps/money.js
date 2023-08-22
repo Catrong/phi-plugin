@@ -89,10 +89,15 @@ export class phimoney extends plugin {
             var save = await get.getsave(e.user_id)
             var last_task = new Date(data.plugin_data.task_time)
 
-            if (save && last_task < request_time) {
-                /**如果有存档并且没有刷新过任务自动刷新 */
-                this.gettask(e)
-                Remsg.push(`\n您今日份的任务如下：（update自动检测哦！）`)
+            if (save) {
+                if (last_task < request_time) {
+                    /**如果有存档并且没有刷新过任务自动刷新 */
+                    this.gettask(e)
+                    Remsg.push(`\n已自动为您刷新任务！您今日份的任务如下：`)
+                } else {
+                    this.tasks(e)
+                    Remsg.push(`\n您今日已经领取过任务了哦！您今日份的任务如下：`)
+                }
             } else {
                 Remsg.push(`\n您当前没有绑定sessionToken呐！任务需要绑定sessionToken后才能获取哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             }
