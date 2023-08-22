@@ -92,7 +92,7 @@ export class phiuser extends plugin {
             real_score: 0,
             tot_score: 0,
             highest: 0,
-            lowest: 17,
+            lowest: 18,
         }
 
         var stats = [{ ...stats_ }, { ...stats_ }, { ...stats_ }, { ...stats_ }]
@@ -137,7 +137,9 @@ export class phiuser extends plugin {
         }
 
         for (var lv in [0, 1, 2, 3]) {
-            if (stats[lv].real_score == stats[lv].tot_score) {
+            if (!stats[lv].real_score) {
+                stats[lv].Rating = 'F'
+            } else if (stats[lv].real_score == stats[lv].tot_score) {
                 stats[lv].Rating = 'phi'
             } else if (stats[lv].fc == stats[lv].unlock) {
                 stats[lv].Rating = 'FC'
@@ -153,6 +155,9 @@ export class phiuser extends plugin {
                 stats[lv].Rating = 'C'
             } else {
                 stats[lv].Rating = 'F'
+            }
+            if (stats[lv].lowest == 18) {
+                stats[lv].lowest = 0
             }
         }
 
