@@ -286,7 +286,7 @@ export class phib19 extends plugin {
         var song = e.msg.replace(/[#/](.*)(score|单曲成绩)(\s*)/g, '')
 
         if(!song) {
-            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} song <曲名>`)
+            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} score <曲名>`)
             return true
         }
 
