@@ -338,23 +338,23 @@ function randtask(save, task = []) {
 
 
     if (rks < 15) {
-        rank_line.push(rks)
-        rank_line.push(rks + 0.7)
-        rank_line.push(rks + 1)
-        rank_line.push(rks + 1.2)
-    } else if (rks < 16) {
-        rank_line.push(rks)
-        rank_line.push(rks + 0.3)
-        rank_line.push(rks + 0.5)
-        rank_line.push(rks + 0.6)
-    } else {
         rank_line.push(rks - 1)
-        rank_line.push(rks - 0.4)
-        rank_line.push(rks)
-        rank_line.push(rks + 0.1)
+        rank_line.push(rks - 0.5)
+        rank_line.push(rks + 0)
+        rank_line.push(rks + 1)
+    } else if (rks < 16) {
+        rank_line.push(rks - 1.5)
+        rank_line.push(rks - 0.3)
+        rank_line.push(rks + 0)
+        rank_line.push(rks + 0.5)
+    } else {
+        rank_line.push(rks - 2)
+        rank_line.push(rks - 1)
+        rank_line.push(rks - 0.5)
+        rank_line.push(rks + 0)
     }
 
-    rank_line.push(17)
+    rank_line.push(18)
 
     /**将曲目分级并处理 */
     for (var song in info) {
