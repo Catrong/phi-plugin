@@ -194,28 +194,28 @@ export class phisstk extends plugin {
 
         common_update = common_update.slice(0, 15)
 
-        if (pluginData.data.length && now.gameProgress.money != pluginData.data[pluginData.data.length - 1]['value']) {
-            pluginData.data.push({
-                "date": date,
-                "value": now.gameProgress.money
-            })
-        } else {
+        if (pluginData.data.length >=2 && now.gameProgress.money == pluginData.data[pluginData.data.length - 2]['value']) {
             pluginData.data[pluginData.data.length - 1] = {
                 "date": date,
                 "value": now.gameProgress.money
             }
+        } else {
+            pluginData.data.push({
+                "date": date,
+                "value": now.gameProgress.money
+            })
         }
 
-        if (pluginData.rks.length && now.saveInfo.summary.rankingScore != pluginData.rks[pluginData.rks.length - 1]['value']) {
-            pluginData.rks.push({
-                "date": date,
-                "value": now.saveInfo.summary.rankingScore
-            })
-        } else {
+        if (pluginData.rks.length >= 2 && now.saveInfo.summary.rankingScore == pluginData.rks[pluginData.rks.length - 2]['value']) {
             pluginData.rks[pluginData.rks.length - 1] = {
                 "date": date,
                 "value": now.saveInfo.summary.rankingScore
             }
+        } else {
+            pluginData.rks.push({
+                "date": date,
+                "value": now.saveInfo.summary.rankingScore
+            })
         }
 
         get.putpluginData(this.e.user_id, pluginData)
