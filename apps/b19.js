@@ -104,7 +104,12 @@ export class phib19 extends plugin {
             illlist.push(get.getill(rkslist[i].song))
         }
 
-        phi.suggest = "无法推分"
+        if (save.saveInfo.summary.rankingScore < 14) {
+            phi.suggest = "已经到顶啦"
+        } else {
+            phi.suggest = "无法推分"
+        }
+        
 
         var data = {
             phi,
