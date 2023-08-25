@@ -298,6 +298,18 @@ export class phiuser extends plugin {
             FC: 0,
             phi: 0,
         }
+        var totRank = {
+            AT: 0,
+            IN: 0,
+            HD: 0,
+            EZ: 0,
+        }
+        var unlockRank = {
+            AT: 0,
+            IN: 0,
+            HD: 0,
+            EZ: 0,
+        }
 
         var Record = save.gameRecord
 
@@ -307,6 +319,7 @@ export class phiuser extends plugin {
                 var difficulty = info['chart'][i].difficulty
                 if (range[0] <= difficulty && difficulty <= range[1]) {
                     ++totnum
+                    ++totRank[i]
                 }
             }
         }
@@ -324,6 +337,7 @@ export class phiuser extends plugin {
                     if (!record[lv]) continue
 
                     ++totunlock
+                    ++unlockRank[Level[lv]]
 
                     if (record[lv].score >= 700000) {
                         ++totcleared
