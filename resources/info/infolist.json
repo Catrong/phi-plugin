@@ -5758,27 +5758,27 @@
         "illustration": "TriumphRegret.typeMARS.png",
         "illustration_big": "TriumphRegret.typeMARS.png",
         "chapter": "单曲精选集",
-        "bpm": "",
+        "bpm": "175",
         "composer": "typeMARS",
-        "length": "",
+        "length": "2:06",
         "illustrator": "何呵",
         "chart": {
             "EZ": {
                 "level": "5",
                 "difficulty": "5.0",
-                "combo": "",
+                "combo": "423",
                 "charter": "Barbarianerman & Regret"
             },
             "HD": {
                 "level": "9",
                 "difficulty": "9.4",
-                "combo": "",
+                "combo": "694",
                 "charter": "Barbarianerman & Regret"
             },
             "IN": {
                 "level": "14",
                 "difficulty": "14.7",
-                "combo": "",
+                "combo": "1014",
                 "charter": "TimiTini & HaraKuma"
             }
         }
