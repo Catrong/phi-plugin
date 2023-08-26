@@ -38,7 +38,7 @@ export default new class newPuppeteer {
         let [app, tpl] = path.split('/')
         let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
         let resPath = process.cwd() + `/plugins/${Plugin_Name}/resources/`
-        if (e.runtime) {
+        if (e.runtime && false) {
             return e.runtime.render(`${Plugin_Name}`, path, params, {
                 ...cfg,
                 beforeRender ({ data }) {
