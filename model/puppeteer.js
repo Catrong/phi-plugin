@@ -42,6 +42,7 @@ export default new class newPuppeteer {
             return e.runtime.render(`${Plugin_Name}`, path, params, {
                 ...cfg,
                 beforeRender ({ data }) {
+                    let resPath = data.pluResPath
                     return {
                         ...params,
                         Version: Version,
