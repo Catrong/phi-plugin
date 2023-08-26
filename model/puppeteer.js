@@ -35,9 +35,10 @@ export default new class newPuppeteer {
        */
     async render(path, params, cfg) {
         let { e } = cfg
+        let [app, tpl] = path.split('/')
+        let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
+        let resPath = `../../../../../plugins/${Plugin_Name}/resources/`
         if (e.runtime) {
-            let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
-            let resPath = `../../../../../plugins/${Plugin_Name}/resources/`
             return e.runtime.render(`${Plugin_Name}/${app}/${tpl}`, path, params, {
                 ...cfg,
                 beforeRender ({ data }) {
@@ -66,9 +67,7 @@ export default new class newPuppeteer {
                 console.log('未找到e.runtime，请升级至最新版Yunzai，自动选用puppteer')
                 consvis = true
             }
-            let [app, tpl] = path.split('/')
-            let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
-            let resPath = `../../../../../plugins/${Plugin_Name}/resources/`
+            
             Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
             let data = {
                 ...params,
