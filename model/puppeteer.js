@@ -5,6 +5,8 @@ import pet from '../../../lib/puppeteer/puppeteer.js'
 import { Data, Version, Plugin_Name, Config } from '../components/index.js'
 
 const _path = process.cwd()
+let consvis = false
+
 export default new class newPuppeteer {
     constructor() {
         this.devices = {
@@ -32,51 +34,84 @@ export default new class newPuppeteer {
        * @param {Object} cfg
        */
     async render(path, params, cfg) {
-        let [app, tpl] = path.split('/')
         let { e } = cfg
-        let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
-        let resPath = `../../../../../plugins/${Plugin_Name}/resources/`
-        Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
-        let data = {
-            ...params,
-            _plugin: Plugin_Name,
-            saveId: params.saveId || params.save_id || tpl,
-            tplFile: `./plugins/${Plugin_Name}/resources/${app}/${tpl}.html`,
-            pluResPath: resPath,
-            _res_path: resPath,
-            _layout_path: layoutPath,
-            defaultLayout: layoutPath + 'default.html',
-            elemLayout: layoutPath + 'elem.html',
-            pageGotoParams: {
-                waitUntil: 'networkidle0'
-            },
-            sys: {
-                scale: `style=transform:scale(${cfg.scale || 1})`,
-                copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
-            },
-            Version: Version,
-            quality: Config.getDefOrConfig('config','randerQuality')
-        }
-
-        if (process.argv.includes('web-debug')) {
-            // debug下保存当前页面的渲染数据，方便模板编写与调试
-            // 由于只用于调试，开发者只关注自己当时开发的文件即可，暂不考虑app及plugin的命名冲突
-            let saveDir = _path + '/data/ViewData/'
-            if (!fs.existsSync(saveDir)) {
-                fs.mkdirSync(saveDir)
+        if (e.runtime) {
+            let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
+            let resPath = `../../../../../plugins/${Plugin_Name}/resources/`
+            return e.runtime.render(`${Plugin_Name}`, path, params, {
+                ...cfg,
+                beforeRender ({ data }) {
+                    return {
+                        ...data,
+                        _res_path: resPath,
+                        _layout_path: layoutPath,
+                        defaultLayout: layoutPath + 'default.html',
+                        elemLayout: layoutPath + 'elem.html',
+                        sys: {
+                            scale: `style=transform:scale(${cfg.scale || 1})`,
+                            copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & Phi-Plugin<span class="version">${Version.ver}</span>`,
+                            createdby: `Created By Phi-Plugin`,
+                        },
+                        pageGotoParams: {
+                            timeout: 10000,
+                            waitUntil: 'networkidle0'
+                        },
+                        quality: 100
+                    }
+                }
+            })
+        } else {
+            if (!consvis) {
+                console.log('未找到e.runtime，请升级至最新版Yunzai，自动选用puppteer')
+                consvis = true
             }
-            let file = saveDir + tpl + '.json'
-            data._app = app
-            fs.writeFileSync(file, JSON.stringify(data))
+            let [app, tpl] = path.split('/')
+            let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
+            let resPath = `../../../../../plugins/${Plugin_Name}/resources/`
+            Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
+            let data = {
+                ...params,
+                _plugin: Plugin_Name,
+                saveId: params.saveId || params.save_id || tpl,
+                tplFile: `./plugins/${Plugin_Name}/resources/${app}/${tpl}.html`,
+                pluResPath: resPath,
+                _res_path: resPath,
+                _layout_path: layoutPath,
+                defaultLayout: layoutPath + 'default.html',
+                elemLayout: layoutPath + 'elem.html',
+                pageGotoParams: {
+                    timeout: 10000,
+                    waitUntil: 'networkidle0'
+                },
+                sys: {
+                    scale: `style=transform:scale(${cfg.scale || 1})`,
+                    copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
+                },
+                Version: Version,
+                quality: Config.getDefOrConfig('config','randerQuality')
+            }
+    
+            if (process.argv.includes('web-debug')) {
+                // debug下保存当前页面的渲染数据，方便模板编写与调试
+                // 由于只用于调试，开发者只关注自己当时开发的文件即可，暂不考虑app及plugin的命名冲突
+                let saveDir = _path + '/data/ViewData/'
+                if (!fs.existsSync(saveDir)) {
+                    fs.mkdirSync(saveDir)
+                }
+                let file = saveDir + tpl + '.json'
+                data._app = app
+                fs.writeFileSync(file, JSON.stringify(data))
+            }
+    
+            /**返回图片信息 */
+    
+            let base64 = await pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
+            let ret = true
+            if (base64) {
+                return base64
+            }
+            return cfg.retMsgId ? ret : true
         }
-
-        /**返回图片信息 */
-
-        let base64 = await pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
-        let ret = true
-        if (base64) {
-            return base64
-        }
-        return cfg.retMsgId ? ret : true
+        
     }
 }()
