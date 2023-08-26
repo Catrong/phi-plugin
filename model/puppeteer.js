@@ -56,7 +56,7 @@ export default new class newPuppeteer {
                             createdby: `Created By Phi-Plugin`,
                         },
                         pageGotoParams: {
-                            timeout: 10000,
+                            
                             waitUntil: 'networkidle0'
                         },
                         quality: Config.getDefOrConfig('config','randerQuality')
