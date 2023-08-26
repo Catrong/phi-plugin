@@ -64,10 +64,10 @@ export default new class newPuppeteer {
                 }
             })
         } else {
-            if (!consvis) {
-                console.log('未找到e.runtime，请升级至最新版Yunzai，自动选用puppteer')
-                consvis = true
-            }
+            //if (!consvis) {
+            //    console.log('未找到e.runtime，请升级至最新版Yunzai，自动选用puppteer')
+            //    consvis = true
+            //}
             
             Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
             let data = {
