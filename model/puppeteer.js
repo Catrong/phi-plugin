@@ -42,7 +42,8 @@ export default new class newPuppeteer {
                 ...cfg,
                 beforeRender ({ data }) {
                     return {
-                        ...data,
+                        ...params,
+                        Version: Version,
                         _res_path: resPath,
                         _layout_path: layoutPath,
                         defaultLayout: layoutPath + 'default.html',
@@ -56,7 +57,7 @@ export default new class newPuppeteer {
                             timeout: 10000,
                             waitUntil: 'networkidle0'
                         },
-                        quality: 100
+                        quality: Config.getDefOrConfig('config','randerQuality')
                     }
                 }
             })
