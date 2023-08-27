@@ -61,8 +61,7 @@
                     <p>Profile</p>
                 </div>
                 <div class="profile">
-                    {{gameuser.selfIntro = gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}
-                    <font>{{gameuser.selfIntro}}</font>
+                    <font>{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
                 </div>
                 {{/if}}
             </div>

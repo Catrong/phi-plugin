@@ -59,12 +59,35 @@
         </div>
         <div class="left-up">
             <div class="left-top">
-                <img src="https://img.moegirl.org.cn/common/8/81/Class_Memories_Phigros.png" alt="{{illustration}}">
+                <div class="illustration">
+                    <img src="https://img.moegirl.org.cn/common/8/81/Class_Memories_Phigros.png" alt="{{illustration}}">
+                </div>
+                <div class="user_info">
+                    <div class="info_up">
+                        <div class="avatar">
+                            <img src="../avatar/Aphasia.png" alt="{{avatar}}">
+                        </div>
+                        <div class="basic_info">
+                            <div class="user_name">
+                                <p id="user-name" style="font-size: 30px;">就是不会告诉你 aasfdsadgfagasdfgasdgasdfgdafdfdsafdgds</p>
+                            </div>
+                            <div class="user_rks">
+                                <div class="player_rks">
+                                    14.5678
+                                </div>
+                                <div class="Challenge">
+                                    <img src="../otherimg/5.png" alt="Challenge">
+                                    <p>54</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user_info_right"></div>
+                    </div>
+                </div>
             </div>
             <div class="left-content">
                 <div class="left-content-left">
                     <p>CONTENT</p>
-
                 </div>
                 <div class="left-content-right"></div>
             </div>
@@ -246,4 +269,37 @@
             </div>
         </div>
     </div>
+    <script>
+        function adjustFontSize() {
+            //获取user_name和composer滴元素
+            var songName = document.getElementById('user-name')
+
+            /*调整曲目名称字体大小*/
+            var parentWidth = songName.parentNode.offsetWidth
+            var maxFontSize = 30 //设置最大字体大小
+
+            //如果字体宽度小于父元素宽度，则增大字体大小
+            while (songName.scrollWidth < parentWidth) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style)
+
+                //检查是否已经达到最大字体大小
+                if (fontSize >= maxFontSize) {
+                    break
+                }
+
+                songName.style.fontSize = (fontSize + 1) + "px"
+            }
+
+            // 如果字体宽度大于父元素宽度，则减小字体大小
+            while (songName.scrollWidth > parentWidth) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style);
+                songName.style.fontSize = (fontSize - 1) + "px";
+            }
+
+        }
+        window.onload = adjustFontSize
+        window.onresize = adjustFontSize
+    </script>
 </body>

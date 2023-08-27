@@ -61,14 +61,141 @@ body p {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     overflow: hidden;
+    flex-direction: column;
 }
 
-.left-top img {
+.illustration {
+    width: 100%;
     height: 100%;
-    /* width: 100%; */
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.illustration img {
+    height: 100%;
+}
+
+.user_info {
+    position: absolute;
+    display: flex;
+    top: 20;
+    filter: drop-shadow(-4px 4px 0px #00000088);
+}
+
+.info_up {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.avatar {
+    width: 100px;
+    display: flex;
+    border: 5px solid;
+    border-color: grey;
+    height: min-content;
+    flex-direction: row;
+    align-items: center;
+    z-index: 2;
+}
+
+.avatar img {
+    width: 100%;
+}
+
+.basic_info,
+.user_info_right {
+    background-color: #000000aa;
+    margin: 0;
+    height: 80%;
+}
+
+.basic_info {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    width: 250px;
+}
+
+.user_name {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 45.6;
+    word-break: break-all;
+}
+
+.user_name p {
+    font-size: 30px;
+    line-height: 1;
+}
+
+.user_rks {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 90%;
+    align-items: center;
+}
+
+.player_rks {
+    width: 90px;
+    height: 20px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    margin-left: -10;
+    padding-left: 10;
+    clip-path: polygon(100% 0%, 96% 100%, 0 100%, 0% 0%);
+    justify-content: center;
+}
+
+.player_rks p {
+    font-size: 30px;
+    color: #000;
+    margin-right: 15;
+}
+
+.Challenge {
+    width: 80px;
+    height: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.Challenge p {
+    font-size: 25px;
+    text-shadow: 0 0 20px #ffffff;
+    margin-top: -45;
+}
+
+.Challenge img {
+    width: 100%;
+    height: auto;
+    margin-right: 0;
+    margin-left: 0;
+    border-radius: 0px;
+    margin-bottom: -0px;
+}
+
+.user_info_right {
+    width: 20px;
+    clip-path: polygon(100% 0%, 0% 100%, 0% 0%);
+}
+
+.difficulty_box {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    background-color: linear-gradient();
 }
 
 .left-content {
@@ -257,6 +384,7 @@ body p {
     border-color: #fff;
     background: repeating-linear-gradient(-45deg, rgba(170, 164, 85, 0.5), rgba(170, 164, 85, 0.5) 1.5px, rgba(170, 164, 85, 0.75) 0, rgba(170, 164, 85, 0.75) 6px);
     align-items: center;
+    justify-content: flex-end;
 }
 
 .progress_bar-in-fc {
@@ -266,6 +394,7 @@ body p {
     border-color: #fff;
     background: repeating-linear-gradient(-45deg, rgba(85, 136, 170, 0.5), rgba(85, 136, 170, 0.5) 1.5px, rgba(85, 136, 170, 0.75) 0, rgba(85, 136, 170, 0.75) 6px);
     align-items: center;
+    justify-content: flex-end;
 }
 
 .progress_bar-in-fc p,
@@ -274,6 +403,10 @@ body p {
     font-size: 20px;
     margin-left: 0.5%;
     white-space: nowrap;
+}
+
+.progress_bar-in-fc p {
+    margin-top: -60;
 }
 
 .right_title {
