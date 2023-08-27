@@ -6,7 +6,7 @@ import { segment } from 'oicq'
 import Config from '../components/Config.js'
 
 await get.init()
-const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGAYC']
+const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
 export class phisstk extends plugin {
     constructor() {
         super({
