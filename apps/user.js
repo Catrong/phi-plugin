@@ -242,9 +242,21 @@ export class phiuser extends plugin {
 
         let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
 
-        msg = msg.toLowerCase()
+        var isask = [true, true, true, true]
+        msg = msg.toUpperCase()
+        if (msg.includes('AT') || msg.includes('IN') || msg.includes('HD') || msg.includes('EZ')) {
+            isask = [0, 0, 0, 0]
+            if (msg.includes('EZ')) { isask[0] = 1 }
+            if (msg.includes('HD')) { isask[1] = 1 }
+            if (msg.includes('IN')) { isask[2] = 1 }
+            if (msg.includes('AT')) { isask[3] = 1 }
+        }
+        msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
 
         var range = [0, 0]
+
+
+
 
         if (!msg || msg == 'all') {
             range[0] = 0
@@ -268,8 +280,8 @@ export class phiuser extends plugin {
 
         }
 
-        range[1] = Math.max(range[1], 16.9)
-        range[0] = Math.min(range[0], 0)
+        range[1] = Math.min(range[1], 16.9)
+        range[0] = Math.max(range[0], 0)
 
         var illustration = ''
         try {
@@ -322,7 +334,7 @@ export class phiuser extends plugin {
             var vis = false
             for (var i in info.chart) {
                 var difficulty = info['chart'][i].difficulty
-                if (range[0] <= difficulty && difficulty <= range[1]) {
+                if (range[0] <= difficulty && difficulty <= range[1] && isask[Level.indexOf(i)]) {
                     ++totcharts
                     ++totRank[i]
                     if (!vis) {
@@ -342,7 +354,7 @@ export class phiuser extends plugin {
                 // console.info(info)
                 if (!info.chart[Level[lv]]) continue
                 var difficulty = info.chart[Level[lv]].difficulty
-                if (range[0] <= difficulty && difficulty <= range[1]) {
+                if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
 
                     if (!record[lv]) continue
 
