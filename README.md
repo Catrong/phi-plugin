@@ -54,7 +54,7 @@ pnpm install -P
 | #phi (update\|更新存档)              | 更新存档                                                                                       |
 | #phi (rks\|b19)                      | 查询rks，会提供得出的b21结果                                                                   |
 | #phi info                            | 查询个人统计信息                                                                               |
-| #phi lvsco <定数范围>                | 获取区间成绩                                                                                   |
+| #phi (lvsco\|lvscore) <定数范围>     | 获取区间成绩                                                                                   |
 | #phi best[1-99]                      | 查询文字版rks，未指定数字默认19                                                                |
 | #phi (score\|单曲成绩)xxx            | 获取单曲成绩及这首歌的推分建议                                                                 |
 | #phi (suggest\|推分)                 | 获取可以让RKS+0.01的曲目及其所需ACC                                                            |
@@ -93,14 +93,16 @@ pnpm install -P
 ---
 
 #### B19效果图
-
-![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/b19.jpg)
+![image](https://github.com/Catrong/phi-plugin/assets/117198625/e0c5606f-9332-48df-bfc9-43b342db3248)
 
 #### 单曲成绩效果图
-![image](https://github.com/112121212167987534524/phi-plugin/assets/117198625/1bc10ea2-37d9-415b-9526-eb91479770f5)
+![image](https://github.com/Catrong/phi-plugin/assets/117198625/d5d3e8bf-ef24-47a4-ab10-3c09c6f4f92f)
+
+### 范围成绩效果图
+![image](https://github.com/Catrong/phi-plugin/assets/117198625/266510c3-85b2-4bf6-bf03-267498e7b2df)
 
 #### 图鉴效果图
-![image](https://github.com/Catrong/phi-plugin/blob/main/resources/readmeimg/atlas.jpg)
+![image](https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b)
 
 ---
 
