@@ -137,25 +137,7 @@ export class phiuser extends plugin {
         }
 
         for (var lv in [0, 1, 2, 3]) {
-            if (!stats[lv].real_score) {
-                stats[lv].Rating = 'F'
-            } else if (stats[lv].real_score == stats[lv].tot_score) {
-                stats[lv].Rating = 'phi'
-            } else if (stats[lv].fc == stats[lv].unlock) {
-                stats[lv].Rating = 'FC'
-            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.96) {
-                stats[lv].Rating = 'V'
-            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.92) {
-                stats[lv].Rating = 'S'
-            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.88) {
-                stats[lv].Rating = 'A'
-            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.82) {
-                stats[lv].Rating = 'B'
-            } else if (stats[lv].real_score >= stats[lv].tot_score * 0.70) {
-                stats[lv].Rating = 'C'
-            } else {
-                stats[lv].Rating = 'F'
-            }
+            stats[lv].Rating = Rate(stats[lv].real_score, stats[lv].tot_score, stats[lv].fc == stats[lv].unlock)
             if (stats[lv].lowest == 18) {
                 stats[lv].lowest = 0
             }
@@ -252,13 +234,11 @@ export class phiuser extends plugin {
 
     async lvscore(e) {
 
-        const save = await get.getsave(e.user_id)
+        const save = await send.getsave_result(e, 1.0)
 
         if (!save) {
-            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
-
 
         let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
 
@@ -278,16 +258,27 @@ export class phiuser extends plugin {
 
         if (range[1] % 1 == 0 && !msg.includes(".0")) range[1] += 0.9
 
-        var totunlock = 0
+
+        var illustration = ''
+        try {
+            illustration = get.getill(save.gameuser.background)
+        } catch (err) {
+            e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
+            console.error(`未找到${save.gameuser.background}的曲绘！`)
+        }
+
+
+        var unlockcharts = 0
         var totreal_score = 0
         var totacc = 0
-        var totnum = 0
+        var totcharts = 0
         var totcleared = 0
         var totfc = 0
         var totphi = 0
         var tottot_score = 0
         var tothighest = 0
         var totlowest = 17
+        var totsongs = 0
         var totRating = {
             F: 0,
             C: 0,
@@ -310,16 +301,22 @@ export class phiuser extends plugin {
             HD: 0,
             EZ: 0,
         }
+        var unlocksongs = 0
 
         var Record = save.gameRecord
 
         for (var song in get.ori_info) {
             var info = get.ori_info[song]
+            var vis = false
             for (var i in info.chart) {
                 var difficulty = info['chart'][i].difficulty
                 if (range[0] <= difficulty && difficulty <= range[1]) {
-                    ++totnum
+                    ++totcharts
                     ++totRank[i]
+                    if (!vis) {
+                        ++totsongs
+                        vis = true
+                    }
                 }
             }
         }
@@ -328,6 +325,7 @@ export class phiuser extends plugin {
         for (var id in Record) {
             const info = get.idgetsong(id, true)
             const record = Record[id]
+            var vis = false
             for (var lv in [0, 1, 2, 3]) {
                 // console.info(info)
                 if (!info.chart[Level[lv]]) continue
@@ -336,9 +334,13 @@ export class phiuser extends plugin {
 
                     if (!record[lv]) continue
 
-                    ++totunlock
+                    ++unlockcharts
                     ++unlockRank[Level[lv]]
 
+                    if (!vis) {
+                        ++unlocksongs
+                        vis = true
+                    }
                     if (record[lv].score >= 700000) {
                         ++totcleared
                     }
@@ -359,17 +361,64 @@ export class phiuser extends plugin {
             }
         }
 
+        var date = new Date(save.saveInfo.modifiedAt.iso)
 
-        var remsg = ''
-        remsg += `\n${range[0]}-${range[1]} `
-        remsg += `clear:${totcleared} fc:${totfc} phi:${totphi}\n`
-        remsg += `${progress_bar(totphi / totnum, 30)} ${totphi}/${totnum}\n`
-        remsg += `Tot: ${totunlock}/${totnum} acc: ${(totacc / totnum).toFixed(4)}\n`
-        remsg += `score: ${totreal_score}/${tottot_score}\n`
-        remsg += `highest: ${tothighest.toFixed(4)} lowest:${totlowest.toFixed(4)}\n`
-        remsg += `φ:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`
-        
-        send.send_with_At(e, remsg)
+        var data = {
+            tot: {
+                at: totRank.AT,
+                in: totRank.IN,
+                hd: totRank.HD,
+                ez: totRank.EZ,
+                songs: totsongs,
+                charts: totcharts,
+                score: tottot_score,
+            },
+            real: {
+                at: unlockRank.AT,
+                in: unlockRank.IN,
+                hd: unlockRank.HD,
+                ez: unlockRank.EZ,
+                songs: unlocksongs,
+                charts: unlockcharts,
+                score: totreal_score,
+            },
+            rating: {
+                tot: Rate(tottot_score, totreal_score, totfc == totcharts),
+                ...totRating,
+            },
+            range: {
+                bottom: range[0],
+                top: range[1],
+                left: range[0] / 16.9 * 100,
+                length: (range[1] - range[0]) / 16.9 * 100
+            },
+            illustration: illustration,
+            highest: tothighest,
+            lowest: totlowest,
+            tot_cleared: totcleared,
+            tot_fc: totfc,
+            tot_phi: totphi,
+            date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${(save.saveInfo.updatedAt).match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`,
+            progress_phi: Number((totphi / totcharts * 100).toFixed(2)),
+            progress_fc: Number((totfc / totcharts * 100).toFixed(2)),
+            avatar: get.idgetavatar(save.gameuser.avatar),
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save.saveInfo.summary.rankingScore,
+            PlayerId: save.saveInfo.PlayerId,
+        }
+
+        // var remsg = ''
+        // remsg += `\n${range[0]}-${range[1]} `
+        // remsg += `clear:${totcleared} fc:${totfc} phi:${totphi}\n`
+        // remsg += `${progress_bar(totphi / totcharts, 30)} ${totphi}/${totcharts}\n`
+        // remsg += `Tot: ${unlockcharts}/${totcharts} acc: ${(totacc / totcharts).toFixed(4)}\n`
+        // remsg += `score: ${totreal_score}/${tottot_score}\n`
+        // remsg += `highest: ${tothighest.toFixed(4)} lowest:${totlowest.toFixed(4)}\n`
+        // remsg += `φ:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`
+
+
+        send.send_with_At(e, await get.getlvsco(e, data))
     }
 }
 
@@ -394,4 +443,28 @@ function progress_bar(value, length) {
     }
     result += `] ${(value * 100).toFixed(2)}%`
     return result
+}
+
+
+function Rate(real_score, tot_score, fc) {
+
+    if (!real_score) {
+        return 'F'
+    } else if (real_score == tot_score) {
+        return 'phi'
+    } else if (fc) {
+        return 'FC'
+    } else if (real_score >= tot_score * 0.96) {
+        return 'V'
+    } else if (real_score >= tot_score * 0.92) {
+        return 'S'
+    } else if (real_score >= tot_score * 0.88) {
+        return 'A'
+    } else if (real_score >= tot_score * 0.82) {
+        return 'B'
+    } else if (real_score >= tot_score * 0.70) {
+        return 'C'
+    } else {
+        return 'F'
+    }
 }

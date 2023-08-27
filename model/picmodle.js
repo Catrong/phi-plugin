@@ -94,6 +94,15 @@ class atlas {
         })
     }
 
+    async lvsco(e, data) {
+        return await puppeteer.render('lvsco/lvsco', {
+            ...data
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+        })
+    }
+
     async score(e, data) {
         return await puppeteer.render('score/score', {
             ...data

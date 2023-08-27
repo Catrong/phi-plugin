@@ -1,6 +1,6 @@
 # phi-plugin
 
-版本：v0.9.5
+版本：v0.9.6
 
 ---
 
@@ -54,6 +54,7 @@ pnpm install -P
 | #phi (update\|更新存档)              | 更新存档                                                                                       |
 | #phi (rks\|b19)                      | 查询rks，会提供得出的b21结果                                                                   |
 | #phi info                            | 查询个人统计信息                                                                               |
+| #phi lvsco <定数范围>                | 获取区间成绩                                                                                   |
 | #phi best[1-99]                      | 查询文字版rks，未指定数字默认19                                                                |
 | #phi (score\|单曲成绩)xxx            | 获取单曲成绩及这首歌的推分建议                                                                 |
 | #phi (suggest\|推分)                 | 获取可以让RKS+0.01的曲目及其所需ACC                                                            |

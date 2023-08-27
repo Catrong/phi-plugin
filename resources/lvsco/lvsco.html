@@ -1,16 +1,13 @@
 <head>
-    <link rel="stylesheet" href="./lvsco.css">
+    <link rel="stylesheet" href="{{_res_path}}lvsco/lvsco.css">
 
 </head>
 
 <body>
-    <div class="demo">
-        <img src="./demo.jpg" alt="233">
-    </div>
     <div class="full-box">
         <div class="left">
             <div class="left-top">
-                <img src="https://img.moegirl.org.cn/common/8/81/Class_Memories_Phigros.png" alt="{{illustration}}">
+                <img src="{{illustration}}" alt="{{illustration}}">
             </div>
             <div class="left-content">
                 <div class="left-content-left">
@@ -18,37 +15,49 @@
                 <div class="left-content-right"></div>
             </div>
             <div class="left-mid">
-                <div class="left-mid-box-true">
+                <div class="left-mid-box-{{tot.at ? 'true' : 'false'}}">
                     <div class="rank-left">
                         <p>AT</p>
                     </div>
+                    {{if tot.at}}
                     <div class="rank-right">
-                        <p>250 charts</p>
+                        <p>{{tot.at}} charts</p>
+                        <p>{{real.at}} unlocked</p>
                     </div>
+                    {{/if}}
                 </div>
-                <div class="left-mid-box-false">
+                <div class="left-mid-box-{{tot.in ? 'true' : 'false'}}">
                     <div class="rank-left">
                         <p>IN</p>
                     </div>
-                    <!-- <div class="rank-right">
-                        <p>250 charts</p>
-                    </div> -->
+                    {{if tot.in}}
+                    <div class="rank-right">
+                        <p>{{tot.in}} charts</p>
+                        <p>{{real.in}} unlocked</p>
+                    </div>
+                    {{/if}}
                 </div>
-                <div class="left-mid-box-true">
+                <div class="left-mid-box-{{tot.hd ? 'true' : 'false'}}">
                     <div class="rank-left">
                         <p>HD</p>
                     </div>
+                    {{if tot.hd}}
                     <div class="rank-right">
-                        <p>250 charts</p>
+                        <p>{{tot.hd}} charts</p>
+                        <p>{{real.hd}} unlocked</p>
                     </div>
+                    {{/if}}
                 </div>
-                <div class="left-mid-box-false">
+                <div class="left-mid-box-{{tot.ez ? 'true' : 'false'}}">
                     <div class="rank-left">
                         <p>EZ</p>
                     </div>
-                    <!-- <div class="rank-right">
-                        <p>250 charts</p>
-                    </div> -->
+                    {{if tot.ez}}
+                    <div class="rank-right">
+                        <p>{{tot.ez}} charts</p>
+                        <p>{{real.ez}} unlocked</p>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
             <div class="left-mid-bottom"></div>
@@ -56,24 +65,24 @@
         <div class="left-up">
             <div class="left-top">
                 <div class="illustration">
-                    <img src="https://img.moegirl.org.cn/common/8/81/Class_Memories_Phigros.png" alt="{{illustration}}">
+                    <img src="{{illustration}}" alt="{{illustration}}">
                 </div>
                 <div class="user_info">
                     <div class="info_up">
                         <div class="avatar">
-                            <img src="../avatar/Aphasia.png" alt="{{avatar}}">
+                            <img src="{{_res_path}}/avatar/{{avatar}}.png" alt="{{avatar}}">
                         </div>
                         <div class="basic_info">
                             <div class="user_name">
-                                <p id="user-name" style="font-size: 30px;">就是不会告诉你 aasfdsadgfagasdfgasdgasdfgdafdfdsafdgds</p>
+                                <p id="user-name" style="font-size: 30px;">{{PlayerId}}</p>
                             </div>
                             <div class="user_rks">
                                 <div class="player_rks">
-                                    14.5678
+                                    {{rks.toFixed(4)}}
                                 </div>
-                                <div class="Challenge">
-                                    <img src="../otherimg/5.png" alt="Challenge">
-                                    <p>54</p>
+                                <div class="Challenge"><img src="{{_res_path}}/otherimg/{{ChallengeMode}}.png"
+                                        alt="{{ChallengeMode}}">
+                                    <p>{{ChallengeModeRank}}</p>
                                 </div>
                             </div>
                         </div>
@@ -81,14 +90,14 @@
                     </div>
                 </div>
                 <div class="difficulty_box">
-                    <div class="difficulty_value" style="margin-left: 25%;">
-                        <p>1.8</p>
+                    <div class="difficulty_value" style="margin-left: {{range.left}}%;">
+                        <p>{{range.bottom}}</p>
                     </div>
                     <div class="difficulty_bar-out">
-                        <div class="difficulty_bar-in" style="margin-left: 25%;width: 10%;"></div>
+                        <div class="difficulty_bar-in" style="margin-left: {{range.left}}%;width: {{range.length}}%;"></div>
                     </div>
-                    <div class="difficulty_value" style="margin-left: 35%;">
-                        <p>2.8</p>
+                    <div class="difficulty_value" style="margin-left: {{range.left + range.length}}%;">
+                        <p>{{range.top}}</p>
                     </div>
                 </div>
             </div>
@@ -99,37 +108,49 @@
                 <div class="left-content-right"></div>
             </div>
             <div class="left-mid">
-                <div class="left-up-mid-box-true">
+                <div class="left-up-mid-box-{{tot.at ? 'true' : 'false'}}">
                     <div class="rank-left">
                         <p>AT</p>
                     </div>
+                    {{if tot.at}}
                     <div class="rank-right">
-                        <p>250 charts</p>
+                        <p>{{tot.at}} charts</p>
+                        <p>{{real.at}} unlocked</p>
                     </div>
+                    {{/if}}
                 </div>
-                <div class="left-up-mid-box-false">
+                <div class="left-up-mid-box-{{tot.in ? 'true' : 'false'}}">
                     <div class="rank-left">
                         <p>IN</p>
                     </div>
-                    <!-- <div class="rank-right">
-                        <p>250 charts</p>
-                    </div> -->
+                    {{if tot.in}}
+                    <div class="rank-right">
+                        <p>{{tot.in}} charts</p>
+                        <p>{{real.in}} unlocked</p>
+                    </div>
+                    {{/if}}
                 </div>
-                <div class="left-up-mid-box-true">
+                <div class="left-up-mid-box-{{tot.hd ? 'true' : 'false'}}">
                     <div class="rank-left">
                         <p>HD</p>
                     </div>
+                    {{if tot.hd}}
                     <div class="rank-right">
-                        <p>250 charts</p>
+                        <p>{{tot.hd}} charts</p>
+                        <p>{{real.hd}} unlocked</p>
                     </div>
+                    {{/if}}
                 </div>
-                <div class="left-up-mid-box-false">
+                <div class="left-up-mid-box-{{tot.ez ? 'true' : 'false'}}">
                     <div class="rank-left">
                         <p>EZ</p>
                     </div>
-                    <!-- <div class="rank-right">
-                        <p>250 charts</p>
-                    </div> -->
+                    {{if tot.ez}}
+                    <div class="rank-right">
+                        <p>{{tot.ez}} charts</p>
+                        <p>{{real.ez}} unlocked</p>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
             <div class="left-up-mid-bottom"></div>
@@ -141,12 +162,11 @@
                     <p>FILE_CONTENT</p>
                 </div>
                 <div class="progress_bar-out">
-                    <!-- <div class="progress_bar-in-phi" style="width: 20%;"> -->
-                    <div class="progress_bar-in-phi">
-                        <p>29% PHI.</p>
+                    <div class="progress_bar-in-phi" style="width: {{progress_phi}}%;">
+                        <p>{{progress_phi}}% PHI.</p>
                     </div>
-                    <div class="progress_bar-in-fc">
-                        <p>32% FullCombo.</p>
+                    <div class="progress_bar-in-fc" style="width: {{progress_fc - progress_phi}}%;">
+                        <p>{{progress_fc}}% FullCombo.</p>
                     </div>
                 </div>
             </div>
@@ -154,18 +174,18 @@
                 <p>TOT</p>
                 <div class="title_group">
                     <div class="title_group-real">
-                        <p>255</p>
+                        <p>{{real.songs}}</p>
                     </div>
                     <div class="title_group-tot">
-                        <p>/360 songs</p>
+                        <p>/{{tot.songs}} songs</p>
                     </div>
                 </div>
                 <div class="title_group">
                     <div class="title_group-real">
-                        <p>255</p>
+                        <p>{{real.charts}}</p>
                     </div>
                     <div class="title_group-tot">
-                        <p>/360 charts</p>
+                        <p>/{{tot.charts}} charts</p>
                     </div>
                 </div>
             </div>
@@ -173,30 +193,30 @@
                 <div class="right_content-title">
                     <p>收集日期</p>
                 </div>
-                <p>2023/8/26 23:14</p>
+                <p>{{date}}</p>
                 <div class="right_content-title">
                     <p>保管单位</p>
                 </div>
-                <p>胡桃世界第一可爱</p>
+                <p>{{PlayerId}}</p>
                 <div class="right_content-title">
                     <p>等级</p>
                 </div>
                 <p>您</p>
             </div>
             <div class="tot_Rating">
-                <img src="../otherimg/phi.png" alt="{{tot_Rating}}">
+                <img src="{{_res_path}}otherimg/{{rating.tot}}.png" alt="{{rating.tot}}">
             </div>
             <div class="title_group" id="score">
                 <div class="title_group-real" id="real-score">
-                    <p>105569861</p>
+                    <p>{{real.score}}</p>
                 </div>
                 <div class="title_group-tot" id="tot-score">
-                    <p>/113000000</p>
+                    <p>/{{tot.score}}</p>
                 </div>
             </div>
             <div class="title_group" id="highest">
                 <div class="title_group-real" id="real-highlow">
-                    <p>14.0000</p>
+                    <p>{{highest.toFixed(4)}}</p>
                 </div>
                 <div class="title_group-tot" id="tot-highlow">
                     <p>Highest</p>
@@ -204,7 +224,7 @@
             </div>
             <div class="title_group" id="lowest">
                 <div class="title_group-real" id="real-highlow">
-                    <p>14.0000</p>
+                    <p>{{lowest.toFixed(4)}}</p>
                 </div>
                 <div class="title_group-tot" id="tot-highlow">
                     <p>Lowest</p>
@@ -213,7 +233,7 @@
             <div class="stats-rating-group">
                 <div class="rating-group">
                     <div class="rating-value">
-                        <p>189</p>
+                        <p>{{tot_cleared}}</p>
                     </div>
                     <div class="rating-tatle">
                         <p>Cleared</p>
@@ -221,7 +241,7 @@
                 </div>
                 <div class="rating-group">
                     <div class="rating-value">
-                        <p>189</p>
+                        <p>{{tot_fc}}</p>
                     </div>
                     <div class="rating-tatle">
                         <p>FC</p>
@@ -229,7 +249,7 @@
                 </div>
                 <div class="rating-group">
                     <div class="rating-value">
-                        <p>189</p>
+                        <p>{{tot_phi}}</p>
                     </div>
                     <div class="rating-tatle">
                         <p>PHI</p>
@@ -238,36 +258,36 @@
             </div>
             <div class="rating_stats">
                 <div class="rating_stats_group">
-                    <img src="../otherimg/phi.png" alt="phi">
-                    <p>20</p>
+                    <img src="{{_res_path}}otherimg/phi.png" alt="phi">
+                    <p>{{rating.phi}}</p>
                 </div>
                 <div class="rating_stats_group">
-                    <img src="../otherimg/FC.png" alt="FC">
-                    <p>20</p>
+                    <img src="{{_res_path}}otherimg/FC.png" alt="FC">
+                    <p>{{rating.FC}}</p>
                 </div>
                 <div class="rating_stats_group">
-                    <img src="../otherimg/V.png" alt="V">
-                    <p>20</p>
+                    <img src="{{_res_path}}otherimg/V.png" alt="V">
+                    <p>{{rating.V}}</p>
                 </div>
                 <div class="rating_stats_group">
-                    <img src="../otherimg/S.png" alt="S">
-                    <p>20</p>
+                    <img src="{{_res_path}}otherimg/S.png" alt="S">
+                    <p>{{rating.S}}</p>
                 </div>
                 <div class="rating_stats_group">
-                    <img src="../otherimg/A.png" alt="A">
-                    <p>20</p>
+                    <img src="{{_res_path}}otherimg/A.png" alt="A">
+                    <p>{{rating.A}}</p>
                 </div>
                 <div class="rating_stats_group">
-                    <img src="../otherimg/B.png" alt="B">
-                    <p>20</p>
+                    <img src="{{_res_path}}otherimg/B.png" alt="B">
+                    <p>{{rating.B}}</p>
                 </div>
                 <div class="rating_stats_group">
-                    <img src="../otherimg/C.png" alt="C">
-                    <p>20</p>
+                    <img src="{{_res_path}}otherimg/C.png" alt="C">
+                    <p>{{rating.C}}</p>
                 </div>
                 <div class="rating_stats_group">
-                    <img src="../otherimg/F.png" alt="F">
-                    <p>20</p>
+                    <img src="{{_res_path}}otherimg/F.png" alt="F">
+                    <p>{{rating.F}}</p>
                 </div>
             </div>
         </div>
@@ -279,7 +299,7 @@
 
             /*调整曲目名称字体大小*/
             var parentElement = songName.parentElement
-            
+
             var maxFontSize = 30 //设置最大字体大小
 
             //如果字体宽度小于父元素宽度，则增大字体大小

@@ -433,6 +433,11 @@ class get {
         return await atlas.user_info(e, data)
     }
 
+    /**获取定级区间成绩 */
+    async getlvsco(e, data) {
+        return await atlas.lvsco(e, data)
+    }
+
     /**获取单曲成绩 */
     async getsingle(e, data) {
         return await atlas.score(e, data)

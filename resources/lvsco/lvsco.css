@@ -195,7 +195,39 @@ body p {
     position: absolute;
     display: flex;
     width: 100%;
-    background-color: linear-gradient();
+    height: 100px;
+    background: linear-gradient(#00000000 0, #000000c7 100%);
+    top: 139;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.difficulty_bar-in,
+.difficulty_bar-out {
+    height: 3px;
+}
+
+.difficulty_bar-out {
+    width: 100%;
+    background-color: #ffffff80;
+}
+
+.difficulty_bar-in {
+    margin-left: 5%;
+    width: 25%;
+    background-color: #ffffff;
+}
+
+.difficulty_value {
+    width: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.difficulty_value p {
+    font-size: 20px;
 }
 
 .left-content {
@@ -223,6 +255,7 @@ body p {
 
 .left-content-left p {
     font-size: 20px;
+    color: #002633;
 }
 
 .left-content-right {
@@ -258,7 +291,7 @@ body p {
 }
 
 .left-up-mid-box-false {
-    background-color: rgba(0, 191, 255, 0.329);
+    background-color: rgb(0 191 255 / 17%);
     margin-left: -1.18%;
     margin-top: 0.5%;
     margin-bottom: 1%;
@@ -266,7 +299,7 @@ body p {
 }
 
 .left-mid-box-false {
-    background-color: rgba(0, 191, 255, 0.2);
+    background-color: rgba(0, 191, 255, 0.1);
 }
 
 .left-mid-box-true {
@@ -279,7 +312,7 @@ body p {
 
 .left-mid-box-true p,
 .left-mid-box-false p {
-    color: #8f8f8f8f;
+    color: #8f8f8f33;
 }
 
 .rank-left {
@@ -346,6 +379,7 @@ body p {
     display: flex;
     margin-top: -0.4%;
     z-index: 1;
+    filter: drop-shadow(8px 7px 0px #ababab33);
 }
 
 .file-content-left {
@@ -377,19 +411,19 @@ body p {
 
 .progress_bar-in-phi {
     display: flex;
-    width: 29%;
+    width: 100%;
     margin-left: -1%;
     padding-left: 1%;
     border-right: 3.5px solid;
     border-color: #fff;
     background: repeating-linear-gradient(-45deg, rgba(170, 164, 85, 0.5), rgba(170, 164, 85, 0.5) 1.5px, rgba(170, 164, 85, 0.75) 0, rgba(170, 164, 85, 0.75) 6px);
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .progress_bar-in-fc {
     display: flex;
-    width: 3%;
+    width: 0%;
     border-right: 3.5px solid;
     border-color: #fff;
     background: repeating-linear-gradient(-45deg, rgba(85, 136, 170, 0.5), rgba(85, 136, 170, 0.5) 1.5px, rgba(85, 136, 170, 0.75) 0, rgba(85, 136, 170, 0.75) 6px);
@@ -403,6 +437,9 @@ body p {
     font-size: 20px;
     margin-left: 0.5%;
     white-space: nowrap;
+    z-index: 2;
+    text-align: right;
+    width: 99%;
 }
 
 .progress_bar-in-fc p {
@@ -415,6 +452,7 @@ body p {
     display: flex;
     align-items: flex-end;
     flex-direction: row;
+    filter: drop-shadow(4px 4px 0px #ababab33);
 }
 
 .right_title p {
@@ -458,6 +496,7 @@ body p {
     height: 3.8%;
     border-bottom: 3px solid #fff;
     display: flex;
+    filter: drop-shadow(4px 4px 0px #ababab33);
 }
 
 .right_content p {
