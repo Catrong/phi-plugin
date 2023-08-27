@@ -242,22 +242,34 @@ export class phiuser extends plugin {
 
         let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
 
+        msg = msg.toLowerCase()
+
         var range = [0, 0]
-        if (msg.includes('-')) {
-            range = msg.split(/\s*-\s*/g)
-            range[0] = Number(range[0])
-            range[1] = Number(range[1])
-            if (range[0] > range[1]) {
-                var tem = range[1]
-                range[1] = range[0]
-                range[0] = tem
-            }
+
+        if (!msg || msg == 'all') {
+            range[0] = 0
+            range[1] = 16.9
         } else {
-            range[0] = range[1] = Number(msg)
+
+            if (msg.includes('-')) {
+                range = msg.split(/\s*-\s*/g)
+                range[0] = Number(range[0])
+                range[1] = Number(range[1])
+                if (range[0] > range[1]) {
+                    var tem = range[1]
+                    range[1] = range[0]
+                    range[0] = tem
+                }
+            } else {
+                range[0] = range[1] = Number(msg)
+            }
+
+            if (range[1] % 1 == 0 && !msg.includes(".0")) range[1] += 0.9
+
         }
 
-        if (range[1] % 1 == 0 && !msg.includes(".0")) range[1] += 0.9
-
+        range[1] = Math.max(range[1], 16.9)
+        range[0] = Math.min(range[0], 0)
 
         var illustration = ''
         try {
