@@ -15,6 +15,14 @@ body p {
     color: white;
 }
 
+.profile font {
+    color: white;
+    font-size: 30px;
+    margin: 0;
+    width: 100%;
+    word-break: break-word;
+}
+
 .profile,
 .one-stats-box,
 .svg-box {

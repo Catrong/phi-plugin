@@ -56,14 +56,15 @@
                         </div>
                     </div>
                 </div>
+                {{if gameuser.selfIntro}}
                 <div class="box-tatle">
                     <p>Profile</p>
                 </div>
                 <div class="profile">
-                    {{each gameuser.selfIntro.split('\r\n') p}}
-                    <p>{{p}}</p>
-                    {{/each}}
+                    {{gameuser.selfIntro = gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}
+                    <font>{{gameuser.selfIntro}}</font>
                 </div>
+                {{/if}}
             </div>
         </div>
     </div>
