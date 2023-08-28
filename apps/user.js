@@ -263,7 +263,7 @@ export class phiuser extends plugin {
             range[1] = 16.9
         } else {
 
-            if (msg.match(/[～-~]/g)[0]) {
+            if (msg.match(/[-～~]/g)[0]) {
                 msg = msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)[0]
                 range = msg.split(/\s*[-～~]\s*/g)
                 range[0] = Number(range[0])
