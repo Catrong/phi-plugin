@@ -258,12 +258,13 @@ export class phiuser extends plugin {
 
 
 
-        if (!msg || msg == 'all') {
+        if (!msg || msg == 'ALL') {
             range[0] = 0
             range[1] = 16.9
         } else {
 
-            if (msg.includes('-')) {
+            if (msg.includes(/[-~到至]/g)) {
+                msg = msg.match(/[0-9]+(.[0-9]+)?(\s*[-~到至]\s*[0-9]+(.[0-9]+)?)?/g)[0]
                 range = msg.split(/\s*-\s*/g)
                 range[0] = Number(range[0])
                 range[1] = Number(range[1])
