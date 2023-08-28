@@ -21,7 +21,7 @@
 
 作者已经高三开学啦，周末也不一定能写代码，所以近一年可能不会有较大的功能更新，只会进行新曲目的维护。非常感谢大家的理解（
 
-如果只想用功能的话可以加频道 [7rhuu82ayf](https://pd.qq.com/s/dhkqitdm8) 或者[pnj25q0p4p](https://pd.qq.com/s/e3z86q6bw)，机器人可以添加到其他频道，有什么建议也可以来频道找我
+插件官方频道 [pnj25q0p4p](https://pd.qq.com/s/e3z86q6bw)，机器人可以添加到其他频道，有什么问题也可以来频道反馈
 
 ---
 
@@ -54,7 +54,7 @@ pnpm install -P
 | #phi (update\|更新存档)              | 更新存档                                                                                       |
 | #phi (rks\|b19)                      | 查询rks，会提供得出的b21结果                                                                   |
 | #phi info                            | 查询个人统计信息                                                                               |
-| #phi (lvsco\|lvscore) <定数范围>     | 获取区间成绩                                                                                   |
+| #phi (lvsco(re)\|scolv) <定数范围>     | 获取区间成绩                                                                                   |
 | #phi best[1-99]                      | 查询文字版rks，未指定数字默认19                                                                |
 | #phi (score\|单曲成绩)xxx            | 获取单曲成绩及这首歌的推分建议                                                                 |
 | #phi (suggest\|推分)                 | 获取可以让RKS+0.01的曲目及其所需ACC                                                            |
