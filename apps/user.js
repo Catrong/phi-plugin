@@ -42,7 +42,7 @@ export class phiuser extends plugin {
                     fnc: 'info'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(lvsco(re)?)(.*)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)((lvsco(re)?)|scolv)(.*)$`,
                     fnc: 'lvscore'
                 }
             ]
