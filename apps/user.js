@@ -253,19 +253,16 @@ export class phiuser extends plugin {
         }
         msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
 
-        var range = [0, 0]
+        var range = [0, 16.9]
 
 
 
 
-        if (!msg || msg == 'ALL') {
-            range[0] = 0
-            range[1] = 16.9
-        } else {
-
+        
+        if (msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)) {
             msg = msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)[0]
             if (msg.match(/[-～~]/g)) {
-                
+            
                 range = msg.split(/\s*[-～~]\s*/g)
                 range[0] = Number(range[0])
                 range[1] = Number(range[1])
@@ -277,10 +274,13 @@ export class phiuser extends plugin {
             } else {
                 range[0] = range[1] = Number(msg)
             }
-
-            if (range[1] % 1 == 0 && !msg.includes(".0")) range[1] += 0.9
-
+            if (range[1] % 1 == 0 && !e.msg.includes(".0")) range[1] += 0.9
         }
+            
+            
+
+        
+        
 
         range[1] = Math.min(range[1], 16.9)
         range[0] = Math.max(range[0], 0)
