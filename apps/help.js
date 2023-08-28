@@ -32,7 +32,7 @@ export class phihelp extends plugin {
             `⌈/${head} update⌋ 更新数据\n` +
             `⌈/${head} b19⌋ 获取b19图\n` +
             `⌈/${head} info⌋ 获取个人信息统计\n` +
-            `⌈/${head} lvsco <定数范围>⌋ 获取范围成绩图\n` +
+            `⌈/${head} lvsco(scolv) <定数> <难度（可选）>⌋ 获取范围成绩图\n` +
             `⌈/${head} best1-99⌋ 获取文字版rks，未指定默认b19\n` +
             `⌈/${head} score <曲名>⌋ 获取单曲成绩\n` +
             `⌈/${head} suggest⌋ 获取推分建议\n` +
