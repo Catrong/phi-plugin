@@ -93,16 +93,24 @@ pnpm install -P
 ---
 
 #### B19效果图
-![image](https://github.com/Catrong/phi-plugin/assets/117198625/e0c5606f-9332-48df-bfc9-43b342db3248)
+![image](https://github.com/Catrong/phi-plugin/assets/117198625/7c93bef3-d9f7-4494-84f9-dd15e507bd11)
 
+效果图来自@东城Eastown
 #### 单曲成绩效果图
-![image](https://github.com/Catrong/phi-plugin/assets/117198625/d5d3e8bf-ef24-47a4-ab10-3c09c6f4f92f)
+![image](https://github.com/Catrong/phi-plugin/assets/117198625/540012e0-aac5-4faf-8b08-b90e20405627)
 
-### 范围成绩效果图
-![image](https://github.com/Catrong/phi-plugin/assets/117198625/266510c3-85b2-4bf6-bf03-267498e7b2df)
+效果图来自[@Steve喵~]([https://github.com/KeluIsAfkeru](https://github.com/112121212167987534524)) 
+#### 范围成绩效果图
+![image](https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65)
 
+效果图来自@东城Eastown
 #### 图鉴效果图
 ![image](https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b)
+
+#### 个人信息效果图 
+![image](https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488)
+
+效果图来自@东城Eastown
 
 ---
 
