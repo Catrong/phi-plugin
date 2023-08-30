@@ -444,7 +444,7 @@ export class phib19 extends plugin {
             if (e.isGroup) {
                 /**频道模式群聊自动转发私聊 */
                 send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Resmsg))
+                Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Remsg))
             } else {
                 await e.reply(common.makeForwardMsg(e, Remsg))
             }
