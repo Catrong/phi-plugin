@@ -1,5 +1,6 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
+import send from '../model/send.js'
 
 export class phihelp extends plugin {
     constructor() {
@@ -12,6 +13,10 @@ export class phihelp extends plugin {
                 {
                     reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getDefOrConfig('config', 'cmdhead')}))(\\s*)(命令|帮助|菜单|help|说明|功能|指令|使用说明)$`,
                     fnc: 'help'
+                },
+                {
+                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getDefOrConfig('config', 'cmdhead')}))(\\s*)to?k(en)?(\\s*)(命令|帮助|菜单|help|说明|功能|指令|使用说明)$`,
+                    fnc: 'tkhelp'
                 }
 
             ]
@@ -43,6 +48,7 @@ export class phihelp extends plugin {
             `⌈/${head} search <条件 值>⌋ 检索曲目，支持BPM 定数(dif) 物量(cmb)\n` +
             `⌈/${head} letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
             `⌈/${head} guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束\n` +
+            `⌈/${head} tk help⌋ 获取有关sessionToken的帮助\n` +
             `---------------------\n` +
             `⌈sign/签到⌋ 每日签到获取Notes和任务\n` +
             `⌈task/我的任务⌋ 查看自己的任务\n` +
@@ -51,5 +57,9 @@ export class phihelp extends plugin {
 
         )
         return true
+    }
+
+    async tkhelp(e) {
+        send.send_with_At(e, `sessionToken有关帮助：\n敬请期待\n绑定sessionToken指令：\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
     }
 }
