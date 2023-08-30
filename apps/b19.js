@@ -24,7 +24,7 @@ export class phib19 extends plugin {
                     fnc: 'b19'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[1-9]?$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
                     fnc: 'bestn'
                 },
                 {
