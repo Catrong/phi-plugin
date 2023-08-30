@@ -89,7 +89,7 @@
             },
             "AT": {
                 "level": "",
-                "difficulty": "",
+                "difficulty": "-",
                 "combo": "",
                 "charter": ""
             }
@@ -1768,22 +1768,22 @@
         "illustrator": "",
         "chart": {
             "EZ": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "HD": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "IN": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             }
         }
     },
@@ -1798,22 +1798,22 @@
         "illustrator": "",
         "chart": {
             "EZ": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "HD": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "IN": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             }
         }
     },
@@ -1828,22 +1828,22 @@
         "illustrator": "",
         "chart": {
             "EZ": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "HD": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "IN": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             }
         }
     },
@@ -1858,22 +1858,22 @@
         "illustrator": "",
         "chart": {
             "EZ": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "HD": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "IN": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             }
         }
     },
@@ -1888,22 +1888,22 @@
         "illustrator": "",
         "chart": {
             "EZ": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "HD": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             },
             "IN": {
-                "level": "",
-                "difficulty": "",
-                "combo": "",
-                "charter": ""
+                "level": "-",
+                "difficulty": "-",
+                "combo": "-",
+                "charter": "-"
             }
         }
     },
