@@ -202,7 +202,7 @@ export class phib19 extends plugin {
             var tmsg = ''
             tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             if (phi.song) {
-                tmsg += `\nPhi:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.Rating} ${phi.acc.toFixed(4)}% 等效${phi.rks.toFixed(4)} 推分: ${phi.suggest}`
+                tmsg += `\n#φ:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.Rating} ${phi.acc.toFixed(4)}% 等效${phi.rks.toFixed(4)} 推分: ${phi.suggest}`
             } else {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
@@ -223,7 +223,14 @@ export class phib19 extends plugin {
 
             if (e.isGroup) {
                 /**频道模式群聊发送缩略版 */
-                e.reply(Remsg[0], true)
+                if (Remsg[1]) {
+                    send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
+                    Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Resmsg))
+
+                } else {
+                    e.reply(Remsg[0], true)
+                }
+                
             } else {
                 e.reply(common.makeForwardMsg(e, Remsg))
             }
@@ -237,7 +244,7 @@ export class phib19 extends plugin {
             if (Config.getDefOrConfig('config', 'WordB19Img')) {
 
                 if (phi.song) {
-                    Remsg.push([`Phi:\n`,
+                    Remsg.push([`#φ:\n`,
                         segment.image(get.getill(phi.song, false)),
                         `\n${phi.song}\n` +
                         `${phi.rank} ${phi.difficulty}\n` +
@@ -259,7 +266,7 @@ export class phib19 extends plugin {
             } else {
                 /**无图模式 */
                 if (phi.song) {
-                    Remsg.push([`Phi: ${phi.song}\n` +
+                    Remsg.push([`#φ: ${phi.song}\n` +
                         `${phi.rank} ${phi.difficulty}\n` +
                         `${phi.score} ${phi.Rating}\n` +
                         `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
@@ -297,7 +304,7 @@ export class phib19 extends plugin {
         }
 
         if (!(get.fuzzysongsnick(song)[0])) {
-            e.reply(`未找到 ${song} 的有关信息哦！`)
+            send.send_with_At(e, `未找到 ${song} 的有关信息哦！`)
             return true
         }
         song = get.fuzzysongsnick(song)
@@ -333,7 +340,7 @@ export class phib19 extends plugin {
         }
 
         if (!ans) {
-            await e.reply(`我不知道你这首歌的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config','cmdhead')} update`)
+            send.send_with_At(e, `我不知道你这首歌的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config','cmdhead')} update`)
             return false
         }
 
