@@ -86,6 +86,12 @@
                 "difficulty": "13.7",
                 "combo": "535",
                 "charter": "Ctymax"
+            },
+            "AT": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
             }
         }
     },
@@ -1748,6 +1754,156 @@
                 "difficulty": "13.6",
                 "combo": "564",
                 "charter": "NerSAN"
+            }
+        }
+    },
+    "S.A.T.E.L.L.I.T.E": {
+        "song": "S.A.T.E.L.L.I.T.E",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Extra Story Chapter-极星卫",
+        "bpm": "",
+        "composer": "かめりあ",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "Dance with Silence": {
+        "song": "Dance with Silence",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Extra Story Chapter-极星卫",
+        "bpm": "",
+        "composer": "かめりあ",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "Labyrinth in Kowloon: Walled World": {
+        "song": "Labyrinth in Kowloon: Walled World",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Extra Story Chapter-极星卫",
+        "bpm": "",
+        "composer": "かめりあ",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "Compute It With Some Devilish Alcoholic Steampunk Engines": {
+        "song": "Compute It With Some Devilish Alcoholic Steampunk Engines",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Extra Story Chapter-极星卫",
+        "bpm": "",
+        "composer": "かめりあ",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "+ERABY+E CONNEC+10N": {
+        "song": "+ERABY+E CONNEC+10N",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Extra Story Chapter-极星卫",
+        "bpm": "",
+        "composer": "かめりあ",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
             }
         }
     },
@@ -5782,6 +5938,5 @@
                 "charter": "TimiTini & HaraKuma"
             }
         }
-        
     }
 }
