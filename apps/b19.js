@@ -225,7 +225,7 @@ export class phib19 extends plugin {
                 /**频道模式群聊发送缩略版 */
                 if (Remsg[1]) {
                     send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                    Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Resmsg))
+                    Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Remsg))
 
                 } else {
                     e.reply(Remsg[0], true)
