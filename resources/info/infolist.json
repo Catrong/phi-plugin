@@ -1770,19 +1770,19 @@
             "EZ": {
                 "level": "5",
                 "difficulty": "5.0",
-                "combo": "-",
+                "combo": "345",
                 "charter": "MT wishing upon a satellite"
             },
             "HD": {
                 "level": "9",
                 "difficulty": "9.9",
-                "combo": "-",
+                "combo": "600",
                 "charter": "B.A.R.B.A.R.I.A.N.E.R.M.A.N."
             },
             "IN": {
                 "level": "14",
                 "difficulty": "14.6",
-                "combo": "-",
+                "combo": "897",
                 "charter": "L.I.K.E.Y."
             },
             "AT": {
@@ -1806,19 +1806,19 @@
             "EZ": {
                 "level": "7",
                 "difficulty": "7.0",
-                "combo": "-",
+                "combo": "170",
                 "charter": "Su1fuR"
             },
             "HD": {
                 "level": "10",
                 "difficulty": "10.9",
-                "combo": "-",
+                "combo": "552",
                 "charter": "Su1fuR"
             },
             "IN": {
                 "level": "15",
                 "difficulty": "15.2",
-                "combo": "-",
+                "combo": "1125",
                 "charter": "晨_鉄"
             }
         }
@@ -1836,19 +1836,19 @@
             "EZ": {
                 "level": "6",
                 "difficulty": "6.0",
-                "combo": "-",
+                "combo": "491",
                 "charter": "VikingNexus"
             },
             "HD": {
                 "level": "11",
                 "difficulty": "11.6",
-                "combo": "-",
+                "combo": "968",
                 "charter": "VikingNexus"
             },
             "IN": {
                 "level": "15",
                 "difficulty": "15.4",
-                "combo": "-",
+                "combo": "1150",
                 "charter": "198 in Kowloon"
             }
         }
@@ -1866,19 +1866,19 @@
             "EZ": {
                 "level": "5",
                 "difficulty": "5.5",
-                "combo": "-",
+                "combo": "330",
                 "charter": "Clutter"
             },
             "HD": {
                 "level": "10",
                 "difficulty": "10.6",
-                "combo": "-",
+                "combo": "723",
                 "charter": "Clutter"
             },
             "IN": {
                 "level": "15",
                 "difficulty": "15.6",
-                "combo": "-",
+                "combo": "1213",
                 "charter": "Gausbon vs. XMT小咩兔"
             }
         }
@@ -1896,25 +1896,25 @@
             "EZ": {
                 "level": "5",
                 "difficulty": "5.5",
-                "combo": "-",
+                "combo": "492",
                 "charter": "4B314C3042592B45"
             },
             "HD": {
                 "level": "11",
                 "difficulty": "11.5",
-                "combo": "-",
+                "combo": "904",
                 "charter": "4D45474142592B45"
             },
             "IN": {
                 "level": "15",
                 "difficulty": "15.8",
-                "combo": "-",
+                "combo": "1530",
                 "charter": "4731474142592B45"
             },
             "AT": {
                 "level": "16",
                 "difficulty": "16.5",
-                "combo": "-",
+                "combo": "1493",
                 "charter": "2B45524142592B45"
             }
         }
