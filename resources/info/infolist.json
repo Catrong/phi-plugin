@@ -88,10 +88,10 @@
                 "charter": "Ctymax"
             },
             "AT": {
-                "level": "",
-                "difficulty": "-",
-                "combo": "",
-                "charter": ""
+                "level": "15",
+                "difficulty": "15.5",
+                "combo": "638",
+                "charter": "_鉄 (Isotope 59)"
             }
         }
     },
@@ -1762,28 +1762,34 @@
         "illustration": "",
         "illustration_big": "",
         "chapter": "Extra Story Chapter-极星卫",
-        "bpm": "",
+        "bpm": "150",
         "composer": "かめりあ",
-        "length": "",
-        "illustrator": "",
+        "length": "3:12",
+        "illustrator": "青鸟",
         "chart": {
             "EZ": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "5",
+                "difficulty": "5.0",
                 "combo": "-",
-                "charter": "-"
+                "charter": "MT wishing upon a satellite"
             },
             "HD": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "9",
+                "difficulty": "9.9",
                 "combo": "-",
-                "charter": "-"
+                "charter": "B.A.R.B.A.R.I.A.N.E.R.M.A.N."
             },
             "IN": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "14",
+                "difficulty": "14.6",
                 "combo": "-",
-                "charter": "-"
+                "charter": "L.I.K.E.Y."
+            },
+            "AT": {
+                "level": "15",
+                "difficulty": "15.8",
+                "combo": "1098",
+                "charter": "N.E.R.1.9.8."
             }
         }
     },
@@ -1792,28 +1798,28 @@
         "illustration": "",
         "illustration_big": "",
         "chapter": "Extra Story Chapter-极星卫",
-        "bpm": "",
+        "bpm": "128",
         "composer": "かめりあ",
-        "length": "",
-        "illustrator": "",
+        "length": "2:59",
+        "illustrator": "林语",
         "chart": {
             "EZ": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "7",
+                "difficulty": "7.0",
                 "combo": "-",
-                "charter": "-"
+                "charter": "Su1fuR"
             },
             "HD": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "10",
+                "difficulty": "10.9",
                 "combo": "-",
-                "charter": "-"
+                "charter": "Su1fuR"
             },
             "IN": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "15",
+                "difficulty": "15.2",
                 "combo": "-",
-                "charter": "-"
+                "charter": "晨_鉄"
             }
         }
     },
@@ -1822,28 +1828,28 @@
         "illustration": "",
         "illustration_big": "",
         "chapter": "Extra Story Chapter-极星卫",
-        "bpm": "",
+        "bpm": "190",
         "composer": "かめりあ",
-        "length": "",
-        "illustrator": "",
+        "length": "3:00",
+        "illustrator": "鲸弑",
         "chart": {
             "EZ": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "6",
+                "difficulty": "6.0",
                 "combo": "-",
-                "charter": "-"
+                "charter": "VikingNexus"
             },
             "HD": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "11",
+                "difficulty": "11.6",
                 "combo": "-",
-                "charter": "-"
+                "charter": "VikingNexus"
             },
             "IN": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "15",
+                "difficulty": "15.4",
                 "combo": "-",
-                "charter": "-"
+                "charter": "198 in Kowloon"
             }
         }
     },
@@ -1852,28 +1858,28 @@
         "illustration": "",
         "illustration_big": "",
         "chapter": "Extra Story Chapter-极星卫",
-        "bpm": "",
+        "bpm": "165",
         "composer": "かめりあ",
-        "length": "",
-        "illustrator": "",
+        "length": "2:51",
+        "illustrator": "山崎团",
         "chart": {
             "EZ": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "5",
+                "difficulty": "5.5",
                 "combo": "-",
-                "charter": "-"
+                "charter": "Clutter"
             },
             "HD": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "10",
+                "difficulty": "10.6",
                 "combo": "-",
-                "charter": "-"
+                "charter": "Clutter"
             },
             "IN": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "15",
+                "difficulty": "15.6",
                 "combo": "-",
-                "charter": "-"
+                "charter": "Gausbon vs. XMT小咩兔"
             }
         }
     },
@@ -1882,28 +1888,34 @@
         "illustration": "",
         "illustration_big": "",
         "chapter": "Extra Story Chapter-极星卫",
-        "bpm": "",
+        "bpm": "230",
         "composer": "かめりあ",
-        "length": "",
-        "illustrator": "",
+        "length": "2:48",
+        "illustrator": "猫箱Catbox feat. 祈莲",
         "chart": {
             "EZ": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "5",
+                "difficulty": "5.5",
                 "combo": "-",
-                "charter": "-"
+                "charter": "4B314C3042592B45"
             },
             "HD": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "11",
+                "difficulty": "11.5",
                 "combo": "-",
-                "charter": "-"
+                "charter": "4D45474142592B45"
             },
             "IN": {
-                "level": "-",
-                "difficulty": "-",
+                "level": "15",
+                "difficulty": "15.8",
                 "combo": "-",
-                "charter": "-"
+                "charter": "4731474142592B45"
+            },
+            "AT": {
+                "level": "16",
+                "difficulty": "16.5",
+                "combo": "-",
+                "charter": "2B45524142592B45"
             }
         }
     },
