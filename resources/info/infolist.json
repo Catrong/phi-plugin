@@ -1885,8 +1885,8 @@
     },
     "+ERABY+E CONNEC+10N": {
         "song": "+ERABY+E CONNEC+10N",
-        "illustration": "ERABYECONNEC10N.かめりあ.png",
-        "illustration_big": "ERABYECONNEC10N.かめりあ.png",
+        "illustration": "https://raw.githubusercontent.com/Walkersifolia/illustration/main/ERABYECONNEC10N.%E3%81%8B%E3%82%81%E3%82%8A%E3%81%82.png",
+        "illustration_big": "https://raw.githubusercontent.com/Walkersifolia/illustration/main/ERABYECONNEC10N.%E3%81%8B%E3%82%81%E3%82%8A%E3%81%82.png",
         "chapter": "Extra Story Chapter-极星卫",
         "bpm": "230",
         "composer": "かめりあ",
