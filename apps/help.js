@@ -60,6 +60,6 @@ export class phihelp extends plugin {
     }
 
     async tkhelp(e) {
-        send.send_with_At(e, `sessionToken有关帮助：\n敬请期待\n绑定sessionToken指令：\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+        send.send_with_At(e, `sessionToken有关帮助：\nhttps://potent-cartwheel-e81.notion.site/Phigros-Bot-f154a4b0ea6446c28f62149587cd5f31\n绑定sessionToken指令：\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
     }
 }
