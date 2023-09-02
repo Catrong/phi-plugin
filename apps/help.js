@@ -48,7 +48,7 @@ export class phihelp extends plugin {
             `⌈/${head}rand <条件>⌋ 随机曲目\n` +
             `⌈/${head}ill <曲名>⌋ 查看曲目曲绘\n` +
             `⌈/${head}data⌋ 查询data数量\n` +
-            `⌈/${head}re8⌋ 查询data数量\n` +
+            `⌈/${head}re8⌋ 重置第八章\n` +
             `⌈/${head}search <条件 值>⌋ 检索曲目，支持BPM 定数(dif) 物量(cmb)\n` +
             `⌈/${head}letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
             `⌈/${head}guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束\n` +
