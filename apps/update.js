@@ -131,12 +131,14 @@ export class phiupdate extends plugin {
             if (str[1].includes("Merge branch")) continue;
             log.push(str[1]);
         }
+
+        log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
+        
         let line = log.length;
         log = log.join("\n\n");
 
-        if (log.length <= 0) return "";
+        if (line <= 1) return "";
 
-        log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
 
         log = await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line}条`)
         return log;
