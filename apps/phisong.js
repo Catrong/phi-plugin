@@ -211,6 +211,7 @@ export class phisong extends plugin {
     async delnick() {
         if (!(this.e.is_admin || this.e.isMaster)) {
             this.e.reply("只有管理员可以删除别名哦！")
+            return true
         }
         var msg = this.e.msg.replace(/[#/](.*)(删除别名|delnic(k?))(\s*)/g, '')
         var ans = Config.getConfig('nickconfig', msg)
@@ -227,7 +228,7 @@ export class phisong extends plugin {
                 for (var i in ans) {
                     Remsg.push(`#${i}\n${ans[i]}`)
                 }
-                this.reply(common.makeForwardMsg(e, Remsg, "找到了多个结果！"))
+                this.reply(common.makeForwardMsg(this.e, Remsg, "找到了多个结果！"))
                 this.setContext('choosedelnick')
 
             }
