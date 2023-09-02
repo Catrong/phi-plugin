@@ -3,8 +3,8 @@
 body {
     width: 2400px;
     height: 1080px;
-    background-color: #000;
     color: #fff;
+    background: #000;
 }
 
 body p {
