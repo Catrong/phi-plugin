@@ -1,11 +1,10 @@
-
 import plugin from '../../../lib/plugins/plugin.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
 import get from '../model/getdata.js'
-import { segment } from 'oicq'
 import Config from '../components/Config.js'
+import send from '../model/send.js'
 
-await get.init()
+
 const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
 export class phisstk extends plugin {
     constructor() {
@@ -37,7 +36,7 @@ export class phisstk extends plugin {
         if (e.isGroup) {
             if (!Config.getDefOrConfig('config', 'isGuild')) {
 
-                await e.reply([segment.at(e.user_id), `\n`, "请注意保护好自己的sessionToken哦！"], false, { recallMsg: 10 })
+                send.send_with_At(e, `\n请注意保护好自己的sessionToken哦！`, false, { recallMsg: 10 })
                 // return true
             }
         }
@@ -56,7 +55,7 @@ export class phisstk extends plugin {
         if (User) {
             if (User.session) {
                 if (User.session == sessionToken) {
-                    GuildSentAt(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
+                    send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
                 }
             }
         }
@@ -194,7 +193,7 @@ export class phisstk extends plugin {
 
         common_update = common_update.slice(0, 15)
 
-        if (pluginData.data.length >=2 && now.gameProgress.money == pluginData.data[pluginData.data.length - 2]['value']) {
+        if (pluginData.data.length >= 2 && now.gameProgress.money == pluginData.data[pluginData.data.length - 2]['value']) {
             pluginData.data[pluginData.data.length - 1] = {
                 "date": date,
                 "value": now.gameProgress.money
@@ -234,7 +233,7 @@ export class phisstk extends plugin {
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
         }
 
-        GuildSentAt(this.e, await get.getupdate(this.e, data))
+        send.send_with_At(e, await get.getupdate(this.e, data))
         return false
     }
 
@@ -251,22 +250,11 @@ export class phisstk extends plugin {
                 await get.putpluginData(e.user_id, pluginData)
             }
 
-            GuildSentAt(e, '解绑成功')
+            send.send_with_At(e, '解绑成功')
         } else {
-            GuildSentAt(e, '没有找到你的存档哦！')
+            send.send_with_At(e, '没有找到你的存档哦！')
         }
         return true
-    }
-}
-
-/**如果为频道模式'@'不换行，否则换行 */
-async function GuildSentAt(e, msg) {
-
-    if (Config.getDefOrConfig('config', 'isGuild')) {
-        /**频道模式'@'取消换行 */
-        await e.reply([segment.at(e.user_id), msg])
-    } else {
-        await e.reply([segment.at(e.user_id), `\n`, msg])
     }
 }
 

@@ -29,7 +29,7 @@ export class phiupdate extends plugin {
     }
 
     /**
-     * rule - 更新ap
+     * rule - 更新phi-plugin
      * @returns
      */
     async update() {

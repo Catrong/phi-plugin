@@ -4,16 +4,22 @@ import get from "./getdata.js";
 
 class send {
 
-    /**私聊省略@ */
-    send_with_At(e, msg) {
+    /**
+     * 私聊省略@
+     * @param {*} e 
+     * @param {*} msg 
+     * @param {boolean} [quote=false] 是否引用回复
+     * @param {{}} [data={}] recallMsg等
+     */
+    send_with_At(e, msg, quote = false, data = {}) {
         if (e.isGroup) {
             if (typeof msg == 'string') {
-                e.reply([segment.at(e.user_id), ` ${msg}`])
+                e.reply([segment.at(e.user_id), ` ${msg}`], quote, data)
             } else {
-                e.reply([segment.at(e.user_id), msg])
+                e.reply([segment.at(e.user_id), msg], quote, data)
             }
         } else {
-            e.reply(msg)
+            e.reply(msg, quote)
         }
     }
 

@@ -1,4 +1,3 @@
-import { segment } from 'oicq'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
@@ -56,7 +55,7 @@ export class phiuser extends plugin {
         if (User) {
             if (User.gameProgress) {
                 var data = User.gameProgress.money
-                e.reply([segment.at(e.user_id), `您的data数为：${data[4] ? `${data[4]}PiB ` : ''}${data[3] ? `${data[3]}TiB ` : ''}${data[2] ? `${data[2]}GiB ` : ''}${data[1] ? `${data[1]}MiB ` : ''}${data[0] ? `${data[0]}KiB ` : ''}`])
+                send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PiB ` : ''}${data[3] ? `${data[3]}TiB ` : ''}${data[2] ? `${data[2]}GiB ` : ''}${data[1] ? `${data[1]}MiB ` : ''}${data[0] ? `${data[0]}KiB ` : ''}`)
             } else {
                 send.send_with_At(e, `请先更新数据哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} update`)
             }
@@ -67,15 +66,9 @@ export class phiuser extends plugin {
     }
 
     async info(e) {
-        const save = await get.getsave(e.user_id)
+        const save = await send.getsave_result(e, 1.0)
 
         if (!save) {
-            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
-            return true
-        }
-
-        if (!save.Recordver || save.Recordver < 1.0) {
-            send.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
             return true
         }
 
@@ -258,11 +251,11 @@ export class phiuser extends plugin {
 
 
 
-        
+
         if (msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)) {
             msg = msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)[0]
             if (msg.match(/[-～~]/g)) {
-            
+
                 range = msg.split(/\s*[-～~]\s*/g)
                 range[0] = Number(range[0])
                 range[1] = Number(range[1])
@@ -276,21 +269,31 @@ export class phiuser extends plugin {
             }
             if (range[1] % 1 == 0 && !e.msg.includes(".0")) range[1] += 0.9
         }
-            
-            
 
-        
-        
+
+
+
+
 
         range[1] = Math.min(range[1], 16.9)
         range[0] = Math.max(range[0], 0)
 
         var illustration = ''
+        var save_background = save.gameuser.background
         try {
-            illustration = get.getill(save.gameuser.background)
+            save_background = save.gameuser.background
+            switch (save_background) {
+                case 'Another Me ': {
+                    save_background = 'Another Me (KALPA)'
+                }
+                default: {
+                    save_background = save.gameuser.background
+                }
+            }
+            illustration = get.getill(save_background)
         } catch (err) {
-            e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
-            console.error(`未找到${save.gameuser.background}的曲绘！`)
+            e.reply(`ERROR: 未找到[${save_background}]的有关信息！`)
+            console.error(`未找到${save_background}的曲绘！`)
         }
 
 
@@ -424,6 +427,7 @@ export class phiuser extends plugin {
             tot_cleared: totcleared,
             tot_fc: totfc,
             tot_phi: totphi,
+            tot_acc: (totacc / totcharts).toFixed(2),
             date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${(save.saveInfo.updatedAt).match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`,
             progress_phi: Number((totphi / totcharts * 100).toFixed(2)),
             progress_fc: Number((totfc / totcharts * 100).toFixed(2)),

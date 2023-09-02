@@ -4,12 +4,12 @@
  * 通过给出的字母猜出相应的歌曲
  * 玩家可以翻开所有曲目响应的字母获得更多线索
 */
-import { segment } from 'oicq'
 import { pinyin } from 'pinyin-pro'
 
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
+import send from '../model/send.js'
 
 await get.init()
 var songsname = []
@@ -304,7 +304,7 @@ export class philetter extends plugin {
                             }
 
                             delete blurlist[group_id][num]
-                            e.reply([segment.at(user_id), `恭喜你ww，答对啦喵，第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `], true)
+                            send.send_with_At(e, `恭喜你ww，答对啦喵，第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `, true)
 
                             if (get.info()[standard_song].illustration) { //如果有曲绘文件
                                 e.reply(get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))

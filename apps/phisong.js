@@ -1,9 +1,7 @@
-
 import plugin from '../../../lib/plugins/plugin.js'
 import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
 import Config from '../components/Config.js'
-import { segment } from 'oicq'
 import send from '../model/send.js'
 
 await get.init()
@@ -297,7 +295,7 @@ export class phisong extends plugin {
         if (rank[0]) {
             if (rank[0].includes('+')) {
                 if (rank[1]) {
-                    e.reply([segment.at(e.user_id), ` 含有 '+' 的难度不支持指定范围哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`], true)
+                    send.send_with_At(e, `含有 '+' 的难度不支持指定范围哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`, true)
                     return true
                 } else {
                     rank[0] = Number(rank[0].replace('+', ''))
@@ -307,7 +305,7 @@ export class phisong extends plugin {
             } else if (rank[0].includes('-') && !rank[1]) {
                 rank[0] = Number(rank[0].replace('-', ''))
                 if (rank[0] == NaN) {
-                    e.reply([segment.at(e.user_id), ` ${rank[0]} 不是一个定级哦\n#/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>- <难度(可多选)>`], true)
+                    send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>- <难度(可多选)>`, true)
                     return true
                 } else {
                     bottom = 0
@@ -318,14 +316,14 @@ export class phisong extends plugin {
                 if (rank[1]) {
                     rank[1] = Number(rank[1])
                     if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
-                        e.reply([segment.at(e.user_id), ` ${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`], true)
+                        send.send_with_At(e, `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`, true)
                         return true
                     }
                     top = Math.max(rank[0], rank[1])
                     bottom = Math.min(rank[0], rank[1])
                 } else {
                     if (rank[0] == NaN) {
-                        e.reply([segment.at(e.user_id), ` ${rank[0]} 不是一个定级哦\n#/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数> <难度(可多选)>`], true)
+                        send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数> <难度(可多选)>`, true)
                         return true
                     } else {
                         top = bottom = rank[0]
@@ -348,7 +346,7 @@ export class phisong extends plugin {
                         songsname.push({
                             ...get.info()[i]['chart'][Level[level]],
                             rank: Level[level],
-                            illustration: get.info()[i]['illustration_big'],
+                            illustration: get.getill(i),
                             song: get.info()[i]['song'],
                             illustrator: get.info()[i]['illustrator'],
                             composer: get.info()[i]['composer'],
@@ -359,17 +357,13 @@ export class phisong extends plugin {
         }
 
         if (!songsname[0]) {
-            e.reply([segment.at(e.user_id), ` 未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''}谱面QAQ!`])
+            send.send_with_At(e, `未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''}谱面QAQ!`)
             return true
         }
 
         var result = songsname[randbt(songsname.length - 1)]
 
-        if (Config.getDefOrConfig('config', 'isGuild')) {
-            await e.reply([segment.at(e.user_id), await get.getrand(e, result)])
-        } else {
-            await e.reply(await get.getrand(e, result), true)
-        }
+        send.send_with_At(e, await get.getrand(e, result))
         return true
     }
 

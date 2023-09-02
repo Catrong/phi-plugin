@@ -98,11 +98,15 @@
                     </div>
                 </div>
                 <div class="difficulty_box">
+                    <div class="difficulty_box_p">
+                        <p>已选定数区间</p>
+                    </div>
                     <div class="difficulty_value" style="margin-left: {{range.left}}%;">
                         <p>{{range.bottom}}</p>
                     </div>
                     <div class="difficulty_bar-out">
-                        <div class="difficulty_bar-in" style="margin-left: {{range.left}}%;width: {{range.length}}%;"></div>
+                        <div class="difficulty_bar-in" style="margin-left: {{range.left}}%;width: {{range.length}}%;">
+                        </div>
                     </div>
                     <div class="difficulty_value" style="margin-left: {{range.left + range.length}}%;">
                         <p>{{range.top}}</p>
@@ -236,6 +240,20 @@
                 </div>
                 <div class="title_group-tot" id="tot-highlow">
                     <p>Lowest</p>
+                </div>
+            </div>
+            <div class="title_group" id="acc">
+                <div class="title_group-real" id="real-acc">
+                    {{if tot_Rating == 'phi'}}
+                    <p style="color: rgb(255, 253, 44);">{{tot_acc}}%</p>
+                    {{else if tot_Rating == 'FC'}}
+                    <p style="color: rgb(0, 132, 255);">{{tot_acc}}%</p>
+                    {{else}}
+                    <p>{{tot_acc}}%</p>
+                    {{/if}}
+                </div>
+                <div class="title_group-tot" id="tot-acc">
+                    <p>ACC</p>
                 </div>
             </div>
             <div class="stats-rating-group">

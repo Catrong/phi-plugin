@@ -177,6 +177,7 @@ body p {
     flex-direction: row;
     writing-mode: vertical-lr;
     z-index: 1;
+    filter: drop-shadow(2px 4px 10px black);
 }
 
 .num {
@@ -206,6 +207,7 @@ body p {
     margin-bottom: -42%;
     margin-top: -15%;
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+    overflow: hidden;
 }
 
 .ill img {
@@ -283,6 +285,7 @@ body p {
     border-right: 3px solid;
     width: 49%;
     height: 80%;
+    filter: drop-shadow(2px 4px 10px #00000055);
 }
 
 .info-AT {
@@ -298,16 +301,19 @@ body p {
 }
 
 .songname {
-    width: auto;
-    height: 15%;
+    width: 90%;
+    height: 25%;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: -2.5%;
+    margin-top: -2.5%;
 }
 
 .songname p {
     font-size: 30px;
     margin: 0;
+    text-align: center;
 }
 
 .songinfo {

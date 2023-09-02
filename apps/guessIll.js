@@ -1,18 +1,11 @@
-import { segment } from 'oicq'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
+import send from '../model/send.js'
 
-await get.init()
-
-var songsname = []
+var songsname = get.illlist
 var songweights = {} //存储每首歌曲被抽取的权重
 var info = get.info()
-for (let i in info) {
-    if(info[i]['illustration_big']) {
-        songsname.push(i)
-    }
-}
 
 //曲目初始洗牌
 shuffleArray(songsname)
@@ -60,13 +53,13 @@ export class phiguess extends plugin {
             return true
         }
 
-        if (!songweights[group_id]){
+        if (!songweights[group_id]) {
             songweights[group_id] = {}
-            
+
             //将每一首曲目的权重初始化为1
             songsname.forEach(song => {
                 songweights[group_id][song] = 1
-            })           
+            })
         }
 
         const song = getRandomSong(e)
@@ -78,11 +71,11 @@ export class phiguess extends plugin {
 
         gamelist[group_id] = songs_info.song
 
-        const w_ = randint(100,140)
-        const h_ = randint(100,140)
-        const x_ = randint(0,2048 - w_)
-        const y_ = randint(0,1080 - h_)
-        const blur_ = randint(9,14)
+        const w_ = randint(100, 140)
+        const h_ = randint(100, 140)
+        const x_ = randint(0, 2048 - w_)
+        const y_ = randint(0, 1080 - h_)
+        const blur_ = randint(9, 14)
 
         let data = {
             illustration: get.getill(songs_info.song),
@@ -130,7 +123,7 @@ export class phiguess extends plugin {
             }
             let remsg = [] //回复内容
             let tipmsg = '' //这次干了什么
-            const index = randint(0,fnc.length - 1)
+            const index = randint(0, fnc.length - 1)
 
             switch (fnc[index]) {
                 case 0: {
@@ -209,7 +202,7 @@ export class phiguess extends plugin {
 
     /**玩家猜测 */
     async guess(e) {
-        const { group_id , msg , user_id} = e
+        const { group_id, msg, user_id } = e
         if (gamelist[group_id]) {
             if (typeof msg === 'string') {
                 const ans = msg.replace(/[#/](我)?猜(\s*)/g, '')
@@ -219,7 +212,7 @@ export class phiguess extends plugin {
                         if (gamelist[group_id] == song[i]) {
                             const t = gamelist[group_id]
                             delete (gamelist[group_id])
-                            await e.reply([segment.at(user_id), '恭喜你，答对啦喵！ヾ(≧▽≦*)o'], true)
+                            send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
                             await e.reply(await get.getsongsinfo(e, t))
                             return true
                         }
@@ -265,7 +258,7 @@ export class phiguess extends plugin {
         // 将权重归1
         songsname.forEach(song => {
             songweights[group_id][song] = 1
-        }) 
+        })
 
         await e.reply(`洗牌成功了www`, true)
         return true
@@ -398,7 +391,7 @@ function timeout(ms) {
 //将数组顺序打乱
 function shuffleArray(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
-        const j = randint(0,i) 
+        const j = randint(0, i)
         const temp = arr[i]
         arr[i] = arr[j]
         arr[j] = temp //交换位置
@@ -411,7 +404,7 @@ function randfloat(min, max, precision = 0) {
     var range = max - min
     var randomOffset = Math.random() * range
     var randomNumber = randomOffset + min + range * 10 ** -precision
-  
+
     return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
 }
 
@@ -429,10 +422,10 @@ function getRandomSong(e) {
 
     //计算曲目的总权重
     const totalWeight = Object.values(songweights[group_id]).reduce((total, weight) => total + weight, 0)
-  
+
     //生成一个0到总权重之间带有16位小数的随机数
     const randomWeight = randfloat(0, totalWeight, 16)
-  
+
     let accumulatedWeight = 0
     for (const [song, weight] of Object.entries(songweights[group_id])) {
         accumulatedWeight += weight

@@ -189,6 +189,7 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 2;
+    overflow: hidden;
 }
 
 .ill-box img {

@@ -1,7 +1,7 @@
-import { segment } from 'oicq'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
+import send from '../model/send.js'
 
 await get.init()
 
@@ -66,21 +66,21 @@ export class phimoney extends plugin {
             var time4 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
             var time5 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
-            var Remsg = [segment.at(e.user_id)]
+            var Remsg = []
 
             now_time = new Date()
             if (now_time < time1) {
-                Remsg.push(`，签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！(∪.∪ )...zzz\n`)
+                Remsg.push(`签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！(∪.∪ )...zzz\n`)
             } else if (now_time < time2) {
-                Remsg.push(`，签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，早安呐！ヾ(≧▽≦*)o\n`)
+                Remsg.push(`签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，早安呐！ヾ(≧▽≦*)o\n`)
             } else if (now_time < time3) {
-                Remsg.push(`，签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，午好嗷！(╹ڡ╹ )\n`)
+                Remsg.push(`签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，午好嗷！(╹ڡ╹ )\n`)
             } else if (now_time < time4) {
-                Remsg.push(`，签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，下午好哇！(≧∀≦)ゞ\n`)
+                Remsg.push(`签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，下午好哇！(≧∀≦)ゞ\n`)
             } else if (now_time < time5) {
-                Remsg.push(`，签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，晚上好！( •̀ ω •́ )✧\n`)
+                Remsg.push(`签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，晚上好！( •̀ ω •́ )✧\n`)
             } else {
-                Remsg.push(`，签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！(∪.∪ )...zzz\n`)
+                Remsg.push(`签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！(∪.∪ )...zzz\n`)
             }
 
             Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}\n`)
@@ -101,11 +101,11 @@ export class phimoney extends plugin {
             } else {
                 Remsg.push(`\n您当前没有绑定sessionToken呐！任务需要绑定sessionToken后才能获取哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             }
-            await e.reply(Remsg)
+            send.send_with_At(e, Remsg)
 
         } else {
             get.delLock(e.user_id)
-            e.reply(`您在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n您现在的Note数量: ${data.plugin_data.money}`)
+            send.send_with_At(e, `您在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n您现在的Note数量: ${data.plugin_data.money}`)
         }
         return true
     }
@@ -115,7 +115,7 @@ export class phimoney extends plugin {
         var save = await get.getsave(e.user_id)
 
         if (!save) {
-            e.reply([segment.at(e.user_id), `该功能需要绑定后才能使用哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
+            send.send_with_At(e, `该功能需要绑定后才能使用哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
 
@@ -132,7 +132,7 @@ export class phimoney extends plugin {
                 data.plugin_data.money -= 20
                 oldtask = data.plugin_data.task
             } else {
-                e.reply([segment.at(e.user_id), ` 刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.plugin_data.money}`])
+                send.send_with_At(e, `刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.plugin_data.money}`)
                 get.delLock(e.user_id)
                 return false
             }
@@ -150,7 +150,7 @@ export class phimoney extends plugin {
         }
 
         if (!vis) {
-            e.reply([segment.at(e.user_id), ` 哇塞，您已经把所有曲目全部满分了呢！没有办法为您布置任务了呢！敬请期待其他玩法哦！`])
+            send.send_with_At(e, `哇塞，您已经把所有曲目全部满分了呢！没有办法为您布置任务了呢！敬请期待其他玩法哦！`)
             get.delLock(e.user_id)
             return true
         }
@@ -206,7 +206,7 @@ export class phimoney extends plugin {
 
 
 
-        await e.reply([segment.at(e.user_id), await get.gettasks(e, picdata)])
+        send.send_with_At(e, await get.gettasks(e, picdata))
 
         return true
 
@@ -217,7 +217,7 @@ export class phimoney extends plugin {
         var now = await get.getsave(e.user_id)
 
         if (!now) {
-            e.reply([segment.at(e.user_id), `该功能需要绑定后才能使用哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
+            send.send_with_At(e, `该功能需要绑定后才能使用哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
         var now_time = new Date()
@@ -269,7 +269,7 @@ export class phimoney extends plugin {
 
 
 
-        await e.reply([segment.at(e.user_id), await get.gettasks(e, picdata)])
+        send.send_with_At(e, await get.gettasks(e, picdata))
 
         return true
     }
@@ -307,7 +307,7 @@ export class phimoney extends plugin {
 
         var sender_data = await get.getmoneydata(e.user_id, true)
         if (sender_data.plugin_data.money < num) {
-            e.reply([segment.at(e.user_id), ` 你当前的Note数量不够哦！\n当前Notes: ${sender_data.plugin_data.money}`])
+            send.send_with_At(e, `你当前的Note数量不够哦！\n当前Notes: ${sender_data.plugin_data.money}`)
             get.delLock(e.user_id)
             return true
         }
@@ -318,7 +318,7 @@ export class phimoney extends plugin {
         target_data.plugin_data.money += num
         await get.putpluginData(target, target_data)
         var target_card = await Bot.pickMember(e.group_id, target)
-        e.reply([segment.at(e.user_id), ` 转账成功！\n你当前的Notes: ${sender_data.plugin_data.money}\n${target_card.nickname ? target_card.nickname : target_card.card}的Notes: ${target_data.plugin_data.money}`])
+        send.send_with_At(e, `转账成功！\n你当前的Notes: ${sender_data.plugin_data.money}\n${target_card.nickname ? target_card.nickname : target_card.card}的Notes: ${target_data.plugin_data.money}`)
     }
 }
 

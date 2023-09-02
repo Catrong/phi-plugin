@@ -1,5 +1,5 @@
 
-
+import fs from 'node:fs'
 import { _path } from "./path.js";
 import { segment } from "oicq";
 import Film from './Doc.js';
@@ -9,7 +9,7 @@ import LevelRecord from "./LevelRecord.js";
 
 var lock = []
 
-class get {
+class getdata {
 
 
     constructor() {
@@ -38,17 +38,41 @@ class get {
         /**用户图片路径 */
         this.orillPath = `${_path}/plugins/phi-plugin/resources/otherill/`
 
+        /**资源路径 */
+        this.resPath = `${_path}/plugins/phi-plugin/resources/`
+
 
         this.Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 
     }
 
     async init() {
+        /**原版信息 */
         this.ori_info = await this.getData('infolist.json', this.infoPath)
+        /**SP信息 */
         this.sp_info = await this.getData('spinfo.json', this.infoPath)
+        /**id映射曲名 */
         this.songsid = await this.getData('songsid.yaml', this.infoPath)
+        /**默认别名 */
         this.songnick = await this.getData('nicklist.yaml', this.infoPath)
+        /**头像id */
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
+
+        /**含有曲绘的曲目列表 */
+        this.illlist = []
+        var info = this.info()
+        for (var i in info) {
+            if (info[i]['illustration_big']) {
+                this.illlist.push(i)
+            }
+        }
+
+        /**原曲名称映射id */
+        this.idssong = {}
+
+        for (let id in this.songsid) {
+            this.idssong[this.songsid[id]] = id
+        }
     }
 
     info() {
@@ -477,6 +501,11 @@ class get {
         if (!ans) {
             ans = `${this.imgPath}phigros.png`
         }
+        if (this.ori_info[name]) {
+            if (fs.existsSync(`${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
+                ans = `${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+            }
+        }
         return ans
     }
 
@@ -502,6 +531,15 @@ class get {
         else {
             return this.songsid[id]
         }
+    }
+
+    /**
+     * 通过原曲曲目获取曲目id
+     * @param {String} song 原曲曲名
+     * @returns 曲目id
+     */
+    SongGetId(song) {
+        return this.idssong[song]
     }
 
     /**
@@ -550,10 +588,7 @@ class get {
 
 }
 
-function timeout(ms) {
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms, 'done');
-    });
-}
+var get = new getdata()
+await get.init()
 
-export default new get()
+export default get

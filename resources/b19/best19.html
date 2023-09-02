@@ -68,7 +68,7 @@
                 </div>
                 <div class="info-AT">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p id="0">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -91,7 +91,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="song">
                 <div class="ill-box">
                     <div class="num">
@@ -111,7 +111,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p id="2">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -449,7 +449,7 @@
                 </div>
                 <div class="info-IN">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p id="0">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -491,11 +491,12 @@
                 </div>
                 <div class="info-EZ">
                     <div class="songname">
-                        <p>JunXion Between Life And Death(VIP Mix)</p>
+                        <p id="20" style="font-size: 30px;">Compute It With Some Devilish Alcoholic Steampunk Engines
+                        </p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
-                            <img src="./res/phi.png" alt="Rating">
+                            <img src="../otherimg/phi.png" alt="Rating">
                         </div>
                         <div class="chengji">
                             <div class="score">
@@ -524,4 +525,47 @@
             <p>v0.9.4</p>
         </div>
     </div>
+
+    <!-- 曲目名称自适应name-box的宽度 -->
+    <script>
+        function adjustFontSize() {
+            for (let i = 0; i <= 22; ++i) {
+
+                //获取song-name和composer滴元素
+                var songName = document.getElementById(`${i}`)
+
+                if (!songName) continue
+
+                console.info(i)
+
+
+                /*调整曲目名称字体大小*/
+                var parentElement = songName.parentElement
+
+                var maxFontSize = 30 //设置最大字体大小
+
+                //如果字体宽度小于父元素宽度，则增大字体大小
+                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
+                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                    var fontSize = parseFloat(style)
+
+                    //检查是否已经达到最大字体大小
+                    if (fontSize >= maxFontSize) {
+                        break
+                    }
+
+                    songName.style.fontSize = (fontSize + 1) + "px"
+                }
+
+                // 如果字体宽度大于父元素宽度，则减小字体大小
+                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
+                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                    var fontSize = parseFloat(style);
+                    songName.style.fontSize = (fontSize - 1) + "px";
+                }
+            }
+        }
+        window.onload = adjustFontSize
+        window.onresize = adjustFontSize
+    </script>
 </body>

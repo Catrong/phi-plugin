@@ -204,6 +204,10 @@ body p {
     justify-content: center;
 }
 
+.difficulty_box_p p {
+    font-size: 25;
+}
+
 .difficulty_bar-in,
 .difficulty_bar-out {
     height: 3px;
@@ -545,6 +549,23 @@ body p {
     font-size: 45px;
 }
 
+#acc {
+    margin: 0;
+    position: absolute;
+    width: 800px;
+    top: 550;
+    left: 0;
+}
+
+#real-acc p {
+    font-size: 150px;
+}
+
+#tot-acc p {
+    font-size: 45px;
+}
+
+
 #highest {
     margin: 0;
     position: absolute;
@@ -572,7 +593,7 @@ body p {
     width: 500px;
     height: 100px;
     left: 100px;
-    top: 680;
+    top: 800;
     align-items: center;
     justify-content: space-around;
     position: absolute;

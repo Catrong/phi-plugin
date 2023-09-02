@@ -5,7 +5,6 @@ import get from '../model/getdata.js'
 import { segment } from "oicq";
 import send from '../model/send.js'
 
-await get.init()
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
@@ -48,7 +47,7 @@ export class phib19 extends plugin {
     async b19(e) {
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply([segment.at(e.user_id), `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
+            send.send_with_At(e, `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
 
@@ -128,10 +127,10 @@ export class phib19 extends plugin {
         }
         if (Config.getDefOrConfig('config', 'isGuild')) {
             /**频道模式'@'取消换行 */
-            await e.reply([segment.at(e.user_id), await get.getb19(e, data)])
+            send.send_with_At(e, await get.getb19(e, data))
         } else {
 
-            await e.reply([segment.at(e.user_id), `\n`, await get.getb19(e, data)])
+            send.send_with_At(e, `\n`, await get.getb19(e, data))
         }
 
 
@@ -144,7 +143,7 @@ export class phib19 extends plugin {
 
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply([segment.at(e.user_id), `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
+            send.send_with_At(e, `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
 
@@ -287,7 +286,7 @@ export class phib19 extends plugin {
     async singlescore(e) {
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply([segment.at(e.user_id), `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
+            send.send_with_At(e, `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
         var song = e.msg.replace(/[#/](.*)(score|单曲成绩)(\s*)/g, '')
@@ -368,9 +367,9 @@ export class phib19 extends plugin {
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
             /**频道模式'@'取消换行 */
-            await e.reply([segment.at(e.user_id), await get.getsingle(e, data)])
+            await send.send_with_At(e, await get.getsingle(e, data))
         } else {
-            await e.reply([segment.at(e.user_id), `\n`, await get.getsingle(e, data)])
+            await send.send_with_At(e, `\n`, await get.getsingle(e, data))
         }
         return true
 
@@ -382,7 +381,7 @@ export class phib19 extends plugin {
 
         var save = await get.getsave(e.user_id)
         if (!save.session) {
-            e.reply([segment.at(e.user_id), `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`])
+            send.send_with_At(e, `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
 
