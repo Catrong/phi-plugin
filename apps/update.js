@@ -3,6 +3,7 @@ import { createRequire } from "module";
 import lodash from "lodash";
 import { Restart } from '../../other/restart.js'
 import Config from "../components/Config.js";
+import common from "../../../lib/common/common.js"
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
@@ -139,8 +140,7 @@ export class phiupdate extends plugin {
         end =
             "更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin";
 
-        log = await this.makeForwardMsg(`phi-plugin更新日志，共${line}条`, log, end);
-
+        log = await common.makeForwardMsg(e,log,`phi-plugin更新日志，共${line}条`)
         return log;
     }
 
