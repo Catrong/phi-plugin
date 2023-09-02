@@ -233,7 +233,7 @@ export class phisstk extends plugin {
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
         }
 
-        send.send_with_At(e, await get.getupdate(this.e, data))
+        send.send_with_At(this.e, await get.getupdate(this.e, data))
         return false
     }
 
