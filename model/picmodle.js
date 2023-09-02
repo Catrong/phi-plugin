@@ -114,7 +114,8 @@ class atlas {
 
     async ill(e, data) {
         return await puppeteer.render('ill/ill', {
-            ...data
+            ...data,
+            waitUntil: 'networkidle0'
         }, {
             e,
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
