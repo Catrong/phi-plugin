@@ -123,7 +123,8 @@ class atlas {
 
     async guess(e, data) {
         return await puppeteer.render('guess/guess', {
-            ...data
+            ...data,
+            waitUntil: 'networkidle0'
         }, {
             e,
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
@@ -132,10 +133,11 @@ class atlas {
 
     async rand(e, data) {
         return await puppeteer.render('rand/rand', {
-            ...data
+            ...data,
+            waitUntil: 'networkidle0'
         }, {
             e,
-            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100,
         })
     }
 }

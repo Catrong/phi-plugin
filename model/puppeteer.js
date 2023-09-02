@@ -52,7 +52,7 @@ export default new class newPuppeteer {
             defaultLayout: layoutPath + 'default.html',
             elemLayout: layoutPath + 'elem.html',
             pageGotoParams: {
-                waitUntil: 'networkidle2'
+                waitUntil: params.waitUntil || 'networkidle2'
             },
             sys: {
                 scale: `style=transform:scale(${cfg.scale || 1})`,
