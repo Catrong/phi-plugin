@@ -4,6 +4,7 @@ import lodash from "lodash";
 import { Restart } from '../../other/restart.js'
 import Config from "../components/Config.js";
 import common from "../../../lib/common/common.js";
+import fs from 'node:fs'
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
@@ -47,8 +48,15 @@ export class phiupdateIll extends plugin {
 
         const isForce = 1
 
-        /** 执行更新 */
-        await this.runUpdate(isForce);
+
+        if (!fs.existsSync('./plugins/phi-plugin/resources/original_ill/.git')) {
+            /**执行安装 */
+            await this.clone()
+        } else {
+            /** 执行更新 */
+            await this.runUpdate(isForce);
+        }
+
 
         /** 是否成功 */
         if (this.isUp) {
@@ -60,13 +68,46 @@ export class phiupdateIll extends plugin {
         new Restart(this.e).restart()
     }
 
+    async clone() {
+        let command = "git clone https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill ./plugins/phi-plugin/resources/original_ill/";
+        
+        this.e.reply("正在更新曲绘文件，请勿重复执行");
+        
+        uping = true;
+        let ret = await this.execSync(command);
+        uping = false;
+        if (ret.error) {
+            logger.mark(`${this.e.logFnc} 曲绘文件更新失败QAQ!`);
+            this.gitErr(ret.error, ret.stdout);
+            return false;
+        }
+
+        /** 获取插件提交的最新时间 */
+        let time = await this.getTime();
+
+        if (/(Already up[ -]to[ -]date|已经是最新的)/.test(ret.stdout)) {
+            await this.reply(`曲绘文件已经是最新版本\n最后更新时间：${time}`);
+        } else {
+            await this.reply(`phi-plugin-ill\n最后更新时间：${time}`);
+            this.isUp = true;
+            /** 获取phi-plugin-ill的更新日志 */
+            let log = await this.getLog();
+            await this.reply(log);
+        }
+
+        logger.mark(`${this.e.logFnc} 最后更新时间：${time}`);
+
+        return true;
+
+    }
+
     /**
      * 更新
      * @param {boolean} isForce 是否为强制更新
      * @returns
      */
     async runUpdate(isForce) {
-        let command = "git clone https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill ./plugins/phi-plugin/resources/original_ill/ pull --no-rebase";
+        let command = "git -C ./plugins/phi-plugin/resources/original_ill/ pull --no-rebase";
         command = `git -C ./plugins/phi-plugin/resources/original_ill/ checkout . && ${command}`;
         this.e.reply("正在更新曲绘文件，请勿重复执行");
 
