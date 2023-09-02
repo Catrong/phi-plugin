@@ -229,7 +229,7 @@ export class phisong extends plugin {
                     Remsg.push(`#${i}\n${ans[i]}`)
                 }
                 this.reply(common.makeForwardMsg(this.e, Remsg, "找到了多个结果！"))
-                this.setContext('choosedelnick')
+                this.setContext('choosesdelnick', true, 30)
 
             }
         } else {
