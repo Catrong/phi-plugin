@@ -66,7 +66,7 @@ export class phiupdateIll extends plugin {
      * @returns
      */
     async runUpdate(isForce) {
-        let command = "git -C ./plugins/phi-plugin/resources/original_ill/ pull --no-rebase";
+        let command = "git clone https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill ./plugins/phi-plugin/resources/original_ill/ pull --no-rebase";
         command = `git -C ./plugins/phi-plugin/resources/original_ill/ checkout . && ${command}`;
         this.e.reply("正在更新曲绘文件，请勿重复执行");
 
