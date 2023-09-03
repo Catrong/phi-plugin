@@ -190,10 +190,7 @@ export class phisong extends plugin {
         if (msg[1]) {
             let mic = get.fuzzysongsnick(msg[0], 1)
             if (mic[0]) {
-                if (mic[1]) {
-                    e.reply(`${msg[0]} 这个别名有多个匹配对象哦！试试用其他的名字吧！`)
-                    return true
-                }
+                mic = mic[0]
             } else {
                 e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
                 return true
@@ -244,7 +241,7 @@ export class phisong extends plugin {
 
     choosesdelnick() {
         var msg = this.e.msg.match(/\/\s*[0-9]+/g, '')[0]
-        msg = Number(msg.replace('/',''))
+        msg = Number(msg.replace('/', ''))
         if (wait_to_del_list[msg]) {
             Config.modifyarr('nickconfig', wait_to_del_nick, wait_to_del_list[msg], 'del', 'config')
             this.reply("删除成功！")
