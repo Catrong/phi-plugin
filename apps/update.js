@@ -135,7 +135,6 @@ export class phiupdate extends plugin {
         log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
         
         let line = log.length;
-        log = log.join("\n\n");
 
         if (line <= 1) return "";
 
