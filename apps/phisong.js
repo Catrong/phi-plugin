@@ -196,6 +196,7 @@ export class phisong extends plugin {
                 }
             } else {
                 e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
+                return true
             }
             if (mic in get.fuzzysongsnick(msg[1], 1)) {
                 /**已经添加过该别名 */
