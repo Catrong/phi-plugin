@@ -7,6 +7,9 @@ import send from '../model/send.js'
 await get.init()
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
+var wait_to_del_list
+var wait_to_del_nick
+
 
 export class phisong extends plugin {
     constructor() {
@@ -221,8 +224,8 @@ export class phisong extends plugin {
                 Config.modifyarr('nickconfig', msg, ans[0], 'del', 'config')
                 await this.reply("删除成功！")
             } else {
-                this.nickConfig = ans
-                this.nick = msg
+                wait_to_del_list = ans
+                wait_to_del_nick = msg
                 var Remsg = []
                 Remsg.push("找到了多个别名！请发送 /序号 进行选择！")
                 for (var i in ans) {
@@ -239,14 +242,15 @@ export class phisong extends plugin {
     }
 
     choosesdelnick() {
-        var msg = this.e.message.replace(/[#/](\s*)/g, '')
-        if (this.nickConfig.indexOf(msg) != -1) {
-            Config.modifyarr('nickconfig', this.nick, msg, 'del', 'config')
+        var msg = this.e.msg.match(/\/\s*[0-9]+/g, '')[0]
+        msg = Number(msg.replace('/',''))
+        if (wait_to_del_list[msg]) {
+            Config.modifyarr('nickconfig', wait_to_del_nick, wait_to_del_list[msg], 'del', 'config')
             this.reply("删除成功！")
         } else {
             this.reply(`未找到 ${msg} 所对应的别名哦！`)
         }
-        this.finish('choosesdelnick')
+        this.finish('choosesdelnick', true)
         return true
     }
 

@@ -177,7 +177,7 @@ body p {
     flex-direction: row;
     writing-mode: vertical-lr;
     z-index: 1;
-    filter: drop-shadow(2px 4px 10px black);
+    filter: drop-shadow(2px 4px 10px #00000055);
 }
 
 .num {
