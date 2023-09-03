@@ -71,7 +71,7 @@ export class phiupdateIll extends plugin {
     async clone() {
         let command = "git clone https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill ./plugins/phi-plugin/resources/original_ill/";
         
-        this.e.reply("正在更新曲绘文件，请勿重复执行");
+        this.e.reply("正在下载曲绘文件，请勿重复执行");
         
         uping = true;
         let ret = await this.execSync(command);
@@ -168,17 +168,15 @@ export class phiupdateIll extends plugin {
             if (str[1].includes("Merge branch")) continue;
             log.push(str[1]);
         }
+
+        log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin-ill");
+        
         let line = log.length;
-        log = log.join("\n\n");
 
-        if (log.length <= 0) return "";
+        if (line <= 1) return "";
 
-        let end = "";
-        end =
-            "更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin-ill";
 
-        log = await common.makeForwardMsg(`phi-plugin-ill更新日志，共${line}条`, log, end);
-
+        log = await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line}条`)
         return log;
     }
 
