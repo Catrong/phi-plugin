@@ -137,10 +137,9 @@ export class phiuser extends plugin {
         }
 
         const money = save.gameProgress.money
-        var userbackground = ''
-        try {
-            userbackground = get.getill(save.gameuser.background)
-        } catch (err) {
+        var userbackground = getbackground(save.gameuser.background)
+
+        if (!userbackground) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
             console.error(`未找到${save.gameuser.background}的曲绘！`)
         }
@@ -297,31 +296,12 @@ export class phiuser extends plugin {
             if (range[1] % 1 == 0 && !e.msg.includes(".0")) range[1] += 0.9
         }
 
-
-
-
-
+        
 
         range[1] = Math.min(range[1], 16.9)
         range[0] = Math.max(range[0], 0)
 
-        var illustration = ''
-        var save_background = save.gameuser.background
-        try {
-            save_background = save.gameuser.background
-            switch (save_background) {
-                case 'Another Me ': {
-                    save_background = 'Another Me (KALPA)'
-                }
-                default: {
-                    save_background = save.gameuser.background
-                }
-            }
-            illustration = get.getill(save_background)
-        } catch (err) {
-            e.reply(`ERROR: 未找到[${save_background}]的有关信息！`)
-            console.error(`未找到${save_background}的曲绘！`)
-        }
+        
 
 
         var unlockcharts = 0
@@ -417,7 +397,13 @@ export class phiuser extends plugin {
             }
         }
 
+        illustration = getbackground(save.gameuser.background)
 
+        if (!illustration) {
+            e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
+            console.error(`未找到${save.gameuser.background}的曲绘！`)
+        }
+        
         var data = {
             tot: {
                 at: totRank.AT,
@@ -533,4 +519,22 @@ function Rate(real_score, tot_score, fc) {
 function date_to_string(date) {
     date = new Date(date)
     return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
+}
+
+function getbackground(name) {
+    var save_background = name
+    try {
+        save_background = name
+        switch (save_background) {
+            case 'Another Me ': {
+                save_background = 'Another Me (KALPA)'
+            }
+            default: {
+                save_background = name
+            }
+        }
+        return get.getill(save_background)
+    } catch (err) {
+        return false
+    }
 }
