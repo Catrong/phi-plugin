@@ -220,8 +220,6 @@ export class phiuser extends plugin {
             data_history.push([x1, y1, x2, y2])
         }
 
-        rks_range[0] = rks_range[0].toFixed(2)
-        rks_range[1] = rks_range[1].toFixed(2)
 
         const unit = ["KiB", "MiB", "GiB", "TiB", "Pib"]
 
