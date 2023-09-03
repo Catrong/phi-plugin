@@ -52,7 +52,8 @@ export default new class newPuppeteer {
             defaultLayout: layoutPath + 'default.html',
             elemLayout: layoutPath + 'elem.html',
             pageGotoParams: {
-                waitUntil: params.waitUntil || 'networkidle2'
+                waitUntil: params.waitUntil || 'networkidle2',
+                timeout: Config.getDefOrConfig('config', 'timeout'),
             },
             sys: {
                 scale: `style=transform:scale(${cfg.scale || 1})`,

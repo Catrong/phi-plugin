@@ -306,8 +306,7 @@ body p {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: -2.5%;
-    margin-top: -2.5%;
+    margin-top: ;
 }
 
 .songname p {

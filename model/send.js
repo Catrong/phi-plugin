@@ -15,7 +15,7 @@ class send {
         if (e.isGroup) {
             if (typeof msg == 'string') {
                 e.reply([segment.at(e.user_id), ` ${msg}`], quote, data)
-            } else if (typeof msg == 'array') {
+            } else if (Object.prototype.toString.call(msg) == '[object Array]') {
                 e.reply([segment.at(e.user_id), ...msg], quote, data)
             } else {
                 e.reply([segment.at(e.user_id), msg], quote, data)

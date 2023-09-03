@@ -46,6 +46,18 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'timeout',
+                    label: '渲染超时时间',
+                    bottomHelpMessage: '对所有的图片生效，超时后重启puppeteer，单位ms',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 1000,
+                        max: 120000,
+                        placeholder: '请输入渲染超时时间',
+                    },
+                },
+                {
                     field: 'isGuild',
                     label: '频道模式',
                     bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息',
@@ -186,6 +198,7 @@ export function supportGuoba() {
                     LetterTipCd: Config.getDefOrConfig('config', 'LetterTipCd'),
                     otherinfo: Config.getDefOrConfig('config','otherinfo'),
                     LetterNum: Config.getDefOrConfig('config','LetterNum'),
+                    timeout: Config.getDefOrConfig('config','timeout'),
                 }
                 return config
             },

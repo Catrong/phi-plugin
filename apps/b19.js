@@ -205,10 +205,10 @@ export class phib19 extends plugin {
             } else {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
-            /**防止消息过长发送失败每条消息20行 */
+            /**防止消息过长发送失败每条消息15行 */
             var tot = 1
             for (var i = 0; i < num && i < rkslist.length; ++i) {
-                if (tot <= 19) {
+                if (tot <= 15) {
                     tmsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}% 等效${rkslist[i].rks.toFixed(4)} 推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                 } else {
                     Remsg.push(tmsg)
@@ -429,7 +429,7 @@ export class phib19 extends plugin {
             var tot = 1
             tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             for (var i = 0; i < suggestlist.length; ++i) {
-                if (tot <= 19) {
+                if (tot <= 15) {
                     tmsg += `\n#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> ${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% 推分: ${suggestlist[i].suggest}`
                 } else {
                     Remsg.push(tmsg)

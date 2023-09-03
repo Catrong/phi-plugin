@@ -16,7 +16,6 @@ body p {
 }
 
 .profile font {
-    color: white;
     font-size: 30px;
     margin: 0;
     width: 100%;
@@ -64,7 +63,7 @@ body p {
     padding-left: 0.5%;
     padding-right: 0.5%;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
 }
 
@@ -87,6 +86,10 @@ body p {
     margin-bottom: 5px;
     width: 100%;
     justify-content: center;
+}
+
+#basis {
+    min-height: 900;
 }
 
 .avatar {
@@ -335,8 +338,9 @@ body p {
 }
 
 .line {
-    width: calc(100% - 102px);
+    width: 100%;
     height: 200px;
+    filter: drop-shadow(0px 0px 2px white);
 }
 
 .line svg {
@@ -351,8 +355,8 @@ body p {
 
 circle {
     stroke: currentColor;
-    stroke-width: 1;
-    fill: grey;
+    stroke-width: 0.5;
+    fill: #dbdada;
 }
 
 .line line {
@@ -373,7 +377,7 @@ circle {
     margin-bottom: 10px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
 }
 
 .svg-box p {
@@ -386,6 +390,40 @@ circle {
     margin-left: 5%;
     font-size: 100px;
     color: white;
+}
+
+.line-box {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    align-items: center;
+}
+
+.value_box {
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 60;
+}
+
+.value_box p {
+    font-size: 35px;
+}
+
+.date_box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    bottom: 20;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.date_box p {
+    font-size: 35px;
+    margin: 0;
 }
 
 .createdbox {

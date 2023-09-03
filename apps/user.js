@@ -160,33 +160,38 @@ export class phiuser extends plugin {
 
         var rks_history_ = []
         var data_history_ = []
-        const user_rks_data = user_data.rks
+        var user_rks_data = user_data.rks
         var user_data_data = user_data.data
         const rks_range = [17, 0]
         const data_range = [1e9, 0]
+        const rks_date = [new Date(user_rks_data[0].date).getTime(), 0]
+        const data_date = [new Date(user_data_data[0].date).getTime(), 0]
 
         for (var i in user_rks_data) {
-            if (i == 0 || user_rks_data[i].value != rks_history_[rks_history_.length - 1].value) {
+            user_rks_data[i].date = new Date(user_rks_data[i].date)
+            if (i <= 1 || user_rks_data[i].value != rks_history_[rks_history_.length - 2].value) {
                 rks_history_.push(user_rks_data[i])
                 rks_range[0] = Math.min(rks_range[0], user_rks_data[i].value)
                 rks_range[1] = Math.max(rks_range[1], user_rks_data[i].value)
             } else {
                 rks_history_[rks_history_.length - 1].date = user_rks_data[i].date
             }
+            rks_date[1] = user_rks_data[i].date.getTime()
         }
 
         for (var i in user_data_data) {
             const value = user_data_data[i]['value']
             user_data_data[i].value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
-            if (i == 0 || user_data_data[i].value != data_history_[data_history_.length - 1].value) {
+            user_data_data[i].date = new Date(user_data_data[i].date)
+            if (i <= 1 || user_data_data[i].value != data_history_[data_history_.length - 2].value) {
                 data_history_.push(user_data_data[i])
                 data_range[0] = Math.min(data_range[0], user_data_data[i].value)
                 data_range[1] = Math.max(data_range[1], user_data_data[i].value)
             } else {
                 data_history_[data_history_.length - 1].date = user_data_data[i].date
             }
+            data_date[1] = user_data_data[i].date.getTime()
         }
-
 
         var rks_history = []
         var data_history = []
@@ -196,9 +201,9 @@ export class phiuser extends plugin {
             i = Number(i)
 
             if (!rks_history_[i + 1]) break
-            const x1 = 100 / (rks_history_.length + 1) * (i + 1)
+            const x1 = range(rks_history_[i].date, rks_date)
             const y1 = range(rks_history_[i].value, rks_range)
-            const x2 = 100 / (rks_history_.length + 1) * (i + 2)
+            const x2 = range(rks_history_[i + 1].date, rks_date)
             const y2 = range(rks_history_[i + 1].value, rks_range)
             rks_history.push([x1, y1, x2, y2])
         }
@@ -208,18 +213,42 @@ export class phiuser extends plugin {
             i = Number(i)
 
             if (!data_history_[i + 1]) break
-            const x1 = 100 / (data_history_.length + 1) * (i + 1)
+            const x1 = range(data_history_[i].date, data_date)
             const y1 = range(data_history_[i].value, data_range)
-            const x2 = 100 / (data_history_.length + 1) * (i + 2)
+            const x2 = range(data_history_[i + 1].date, data_date)
             const y2 = range(data_history_[i + 1].value, data_range)
             data_history.push([x1, y1, x2, y2])
         }
+
+        rks_range[0] = rks_range[0].toFixed(2)
+        rks_range[1] = rks_range[1].toFixed(2)
+
+        const unit = ["KiB", "MiB", "GiB", "TiB", "Pib"]
+
+        for (var i in [1, 2, 3, 4]) {
+            if (Math.floor(data_range[0] / (Math.pow(1024, i))) < 1024) {
+                data_range[0] = `${Math.floor(data_range[0] / (Math.pow(1024, i)))}${unit[i]}`
+            }
+        }
+
+        for (var i in [1, 2, 3, 4]) {
+            if (Math.floor(data_range[1] / (Math.pow(1024, i))) < 1024) {
+                data_range[1] = `${Math.floor(data_range[1] / (Math.pow(1024, i)))}${unit[i]}`
+            }
+        }
+
+
+
 
         var data = {
             gameuser: gameuser,
             userstats: stats,
             rks_history: rks_history,
             data_history: data_history,
+            rks_range: rks_range,
+            data_range: data_range,
+            data_date: [date_to_string(data_date[0]), date_to_string(data_date[1])],
+            rks_date: [date_to_string(rks_date[0]), date_to_string(rks_date[1])],
         }
 
         send.send_with_At(e, await get.getuser_info(e, data))
@@ -390,7 +419,6 @@ export class phiuser extends plugin {
             }
         }
 
-        var date = new Date(save.saveInfo.modifiedAt.iso)
 
         var data = {
             tot: {
@@ -428,7 +456,7 @@ export class phiuser extends plugin {
             tot_fc: totfc,
             tot_phi: totphi,
             tot_acc: (totacc / totcharts).toFixed(2),
-            date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${(save.saveInfo.updatedAt).match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`,
+            date: date_to_string(save.saveInfo.modifiedAt.iso),
             progress_phi: Number((totphi / totcharts * 100).toFixed(2)),
             progress_fc: Number((totfc / totcharts * 100).toFixed(2)),
             avatar: get.idgetavatar(save.gameuser.avatar),
@@ -497,4 +525,14 @@ function Rate(real_score, tot_score, fc) {
     } else {
         return 'F'
     }
+}
+
+/**
+ * 转换时间格式
+ * @param {Date|string} date 时间
+ * @returns 2020/10/8 10:08:08
+ */
+function date_to_string(date) {
+    date = new Date(date)
+    return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
 }
