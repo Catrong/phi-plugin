@@ -397,7 +397,7 @@ export class phiuser extends plugin {
             }
         }
 
-        illustration = getbackground(save.gameuser.background)
+        var illustration = getbackground(save.gameuser.background)
 
         if (!illustration) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
