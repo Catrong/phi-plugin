@@ -307,7 +307,7 @@ export class philetter extends plugin {
                             send.send_with_At(e, `恭喜你ww，答对啦喵，第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `, true)
 
                             if (get.info()[standard_song].illustration) { //如果有曲绘文件
-                                e.reply(get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
+                                e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
                             }
 
                             winnerlist[group_id][num] = sender.card //记录猜对者
