@@ -176,7 +176,7 @@ export class phiupdateIll extends plugin {
         if (line <= 1) return "";
 
 
-        log = await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line}条`)
+        log = await common.makeForwardMsg(this.e, log, `phi-plugin-ill更新日志，共${line - 1}条`)
         return log;
     }
 
