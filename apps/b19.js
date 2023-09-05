@@ -125,13 +125,7 @@ export class phib19 extends plugin {
             var money = save.gameProgress.money
             data.data = `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`
         }
-        if (Config.getDefOrConfig('config', 'isGuild')) {
-            /**频道模式'@'取消换行 */
-            send.send_with_At(e, await get.getb19(e, data))
-        } else {
-
-            send.send_with_At(e, `\n`, await get.getb19(e, data))
-        }
+        send.send_with_At(e, await get.getb19(e, data))
 
 
 
@@ -364,13 +358,7 @@ export class phib19 extends plugin {
                 }
             }
         }
-
-        if (Config.getDefOrConfig('config', 'isGuild')) {
-            /**频道模式'@'取消换行 */
-            await send.send_with_At(e, await get.getsingle(e, data))
-        } else {
-            await send.send_with_At(e, `\n`, await get.getsingle(e, data))
-        }
+        await send.send_with_At(e, await get.getsingle(e, data))
         return true
 
     }
