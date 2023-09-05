@@ -36,7 +36,8 @@ class atlas {
         }
         // 渲染图片
         return await puppeteer.render('atlas/atlas', {
-            ...data
+            ...data,
+            waitUntil: 'networkidle0'
         }, {
             e,
             scale: Config.getDefOrConfig('config', 'renderScale') / 100
