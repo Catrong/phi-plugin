@@ -23,8 +23,18 @@
     src: url("./font/NotoSans-Regular.ttf") format('truetype');
 }
 
+@font-face {
+    font-family: 'CONSOLA';
+    src: url("./font/CONSOLA.TTF") format('truetype');
+}
+
+@font-face {
+    font-family: 'KacstScreen';
+    src: url("./font/KacstScreen.ttf") format('truetype');
+}
+
 body {
-    font-family: 'PHI', 'HIMALAYA', 'Aldrich', PingFangSC-Medium, "PingFang SC", sans-serif, 'NOTO', '吞弥恰俊';
+    font-family: 'PHI', 'HIMALAYA', 'Aldrich', 'PingFangSC-Medium', "PingFang SC", 'sans-serif', 'NOTO', '吞弥恰俊', 'CONSOLA', 'KacstScreen';
     margin: 0;
     background: url('../otherimg/phigros.png') center no-repeat;
     background-size: cover;

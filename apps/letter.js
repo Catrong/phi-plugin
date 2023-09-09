@@ -271,7 +271,7 @@ export class philetter extends plugin {
             lastGuessedTime[group_id] = currentTime
 
             const opened = `\n所有翻开的字母[ ${alphalist[group_id].replace(/\[object Object\]/g, '')}]\n`
-            const regex = /^[#/]\s*第\s*(\d+|[一二三四五六七八九十百千万]+)\s*(个|首)?(.*)$/
+            const regex = /^[#/]\s*第\s*(\d+|[一二三四五六七八九十百]+)\s*(个|首)?(.*)$/
             const result = msg.match(regex)
 
             if (result) {

@@ -440,6 +440,22 @@ class getdata {
         }
     }
 
+    /**
+     * 通过曲目获取曲目图鉴
+     * @param {*} e 消息e
+     * @param {string} name 原曲名称
+     * @param {{illustration:string,illustration:string}} data 自定义数据
+     * @returns 
+     */
+    async getsongsill(e, name, data = undefined) {
+        if (data) {
+            return await get.getillatlas(e, { illustration: data.illustration, illustrator: data.illustrator })
+        } else {
+            return await get.getillatlas(e, { illustration: get.getill(name), illustrator: get.info()[songs]["illustrator"] })
+        }
+
+    }
+
     /**获取best19图片 */
     async getb19(e, data) {
         return await atlas.b19(e, data)
