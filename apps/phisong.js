@@ -265,7 +265,7 @@ export class phisong extends plugin {
             } else {
                 msgRes = []
                 for (var i in songs) {
-                    get.getsongsill(e, songs[i])
+                    msgRes.push(await get.getsongsill(e, songs[i]))
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }
