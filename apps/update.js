@@ -52,7 +52,7 @@ export class phiupdate extends plugin {
 
         /** 是否需要重启 */
         if (this.isUp) {
-            if(ifrestart) {
+            if (ifrestart) {
                 await this.reply("更新完毕，正在重启云崽以应用更新")
                 setTimeout(() => this.restart(), 2000)
             } else {
@@ -137,11 +137,9 @@ export class phiupdate extends plugin {
             log.push(str[1]);
         }
 
-        log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
-
         let line = log.length;
 
-        if (line <= 1) return "";
+        if (line <= 1) return false;
 
         /**检测是否需要重启 */
         var ifrestart = false
@@ -151,6 +149,8 @@ export class phiupdate extends plugin {
                 break
             }
         }
+
+        log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
 
 
         this.reply(await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line - 1}条`))
