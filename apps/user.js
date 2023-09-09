@@ -264,11 +264,11 @@ export class phiuser extends plugin {
         var isask = [true, true, true, true]
         msg = msg.toUpperCase()
         if (msg.includes('AT') || msg.includes('IN') || msg.includes('HD') || msg.includes('EZ')) {
-            isask = [0, 0, 0, 0]
-            if (msg.includes('EZ')) { isask[0] = 1 }
-            if (msg.includes('HD')) { isask[1] = 1 }
-            if (msg.includes('IN')) { isask[2] = 1 }
-            if (msg.includes('AT')) { isask[3] = 1 }
+            isask = [false, false, false, false]
+            if (msg.includes('EZ')) { isask[0] = true }
+            if (msg.includes('HD')) { isask[1] = true }
+            if (msg.includes('IN')) { isask[2] = true }
+            if (msg.includes('AT')) { isask[3] = true }
         }
         msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
 
