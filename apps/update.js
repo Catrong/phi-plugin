@@ -153,7 +153,7 @@ export class phiupdate extends plugin {
         log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
 
 
-        this.reply(await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line - 1}条`))
+        this.reply(await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line}条`))
         return ifrestart;
     }
 

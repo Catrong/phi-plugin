@@ -89,7 +89,7 @@
                     </div>
                     {{/if}}
                     <div class="songsname">
-                        <p>{{song.song}}</p>
+                        <p id="{{$index + task_update.length}}">{{song.song}}</p>
                     </div>
                 </div>
                 <div class="songsinfo">
@@ -130,6 +130,7 @@
             <p>{{Version.ver}}</p>
         </div>
     </div>
+
     <!-- 曲目名称自适应name-box的宽度 -->
     <script>
         function adjustFontSize() {
