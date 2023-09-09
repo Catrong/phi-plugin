@@ -70,7 +70,7 @@ export class phib19 extends plugin {
                 if (!tem) continue
 
                 /**兼容旧存档 */
-                if(!tem.Rating) tem.Rating = tem.pingji
+                if (!tem.Rating) tem.Rating = tem.pingji
 
                 if (tem.acc >= 100) {
                     if (tem.rks > phi.rks) {
@@ -108,7 +108,7 @@ export class phib19 extends plugin {
         } else {
             phi.suggest = "无法推分"
         }
-        
+
 
         var data = {
             phi,
@@ -167,7 +167,7 @@ export class phib19 extends plugin {
 
                 if (!tem) continue
                 /**适配旧存档 */
-                if(!tem.Rating) {
+                if (!tem.Rating) {
                     tem.Rating = tem.pingji
                 }
 
@@ -217,7 +217,7 @@ export class phib19 extends plugin {
             if (e.isGroup) {
                 /**频道模式群聊自动转发私聊 */
                 send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Remsg))
+                send.pick_send(e, Remsg)
             } else {
                 e.reply(common.makeForwardMsg(e, Remsg))
             }
@@ -285,7 +285,7 @@ export class phib19 extends plugin {
         }
         var song = e.msg.replace(/[#/](.*)(score|单曲成绩)(\s*)/g, '')
 
-        if(!song) {
+        if (!song) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} score <曲名>`)
             return true
         }
@@ -327,7 +327,7 @@ export class phib19 extends plugin {
         }
 
         if (!ans) {
-            send.send_with_At(e, `我不知道你这首歌的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config','cmdhead')} update`)
+            send.send_with_At(e, `我不知道你这首歌的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
             return false
         }
 
@@ -431,7 +431,7 @@ export class phib19 extends plugin {
             if (e.isGroup) {
                 /**频道模式群聊自动转发私聊 */
                 send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                Bot.pickMember(e.group_id, e.user_id).sendMsg(await common.makeForwardMsg(e, Remsg))
+                send.pick_send(e, Remsg)
             } else {
                 await e.reply(common.makeForwardMsg(e, Remsg))
             }

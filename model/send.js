@@ -48,6 +48,20 @@ class send {
         return save
     }
 
+    /**
+     * 转发到私聊
+     * @param {*} e 消息数组e
+     * @param {any} msg 发送内容
+     */
+    async pick_send(e, msg) {
+        try {
+            await Bot.pickMember(e.group_id, e.user_id).sendMsg(msg)
+        } catch (err) {
+            logger.error(err)
+            this.send_with_At(e, `转发失败QAQ！请尝试在私聊触发命令！`)
+        }
+    }
+
 }
 
 export default new send()
