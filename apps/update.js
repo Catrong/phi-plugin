@@ -145,7 +145,7 @@ export class phiupdate extends plugin {
         var ifrestart = false
         if (log.includes('√') || log.includes('✓')) {
             for (var i in log) {
-                if (!(i.includes('√') || log.includes('✓'))) {
+                if (!(i.includes('√') || i.includes('✓'))) {
                     ifrestart = true
                     break
                 }
