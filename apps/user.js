@@ -528,9 +528,15 @@ function getbackground(name) {
         switch (save_background) {
             case 'Another Me ': {
                 save_background = 'Another Me (KALPA)'
+                break
+            }
+            case 'Another Me': {
+                save_background = 'Another Me (Rising Sun Traxx)'
+                break
             }
             default: {
                 save_background = name
+                break
             }
         }
         return get.getill(save_background)

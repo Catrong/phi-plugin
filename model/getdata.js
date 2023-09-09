@@ -444,7 +444,7 @@ class getdata {
      * 通过曲目获取曲目图鉴
      * @param {*} e 消息e
      * @param {string} name 原曲名称
-     * @param {{illustration:string,illustration:string}} data 自定义数据
+     * @param { {illustration:string, illustrator:string} } data 自定义数据
      * @returns 
      */
     async getsongsill(e, name, data = undefined) {
