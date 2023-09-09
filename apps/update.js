@@ -48,12 +48,16 @@ export class phiupdate extends plugin {
         const isForce = this.e.msg.includes("强制");
 
         /** 执行更新 */
-        await this.runUpdate(isForce);
+        var ifrestart = await this.runUpdate(isForce);
 
         /** 是否需要重启 */
         if (this.isUp) {
-            await this.reply("更新完毕，正在重启云崽以应用更新")
-            setTimeout(() => this.restart(), 2000)
+            if(ifrestart) {
+                await this.reply("更新完毕，正在重启云崽以应用更新")
+                setTimeout(() => this.restart(), 2000)
+            } else {
+                await this.reply("更新完毕，本次更新不需要进行重启")
+            }
         }
     }
 
@@ -89,19 +93,20 @@ export class phiupdate extends plugin {
         /** 获取插件提交的最新时间 */
         let time = await this.getTime("phi-plugin");
 
+        var ifrestart = false
+
         if (/(Already up[ -]to[ -]date|已经是最新的)/.test(ret.stdout)) {
             await this.reply(`phi-plugin已经是最新版本\n最后更新时间：${time}`);
         } else {
             await this.reply(`phi-plugin\n最后更新时间：${time}`);
             this.isUp = true;
             /** 获取phi-plugin的更新日志 */
-            let log = await this.getLog("phi-plugin");
-            await this.reply(log);
+            ifrestart = await this.getLog("phi-plugin");
         }
 
         logger.mark(`${this.e.logFnc} 最后更新时间：${time}`);
 
-        return true;
+        return ifrestart;
     }
 
     /**
@@ -133,14 +138,23 @@ export class phiupdate extends plugin {
         }
 
         log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
-        
+
         let line = log.length;
 
         if (line <= 1) return "";
 
+        /**检测是否需要重启 */
+        var ifrestart = false
+        for (var i in log) {
+            if (!i.includes('√')) {
+                ifrestart = true
+                break
+            }
+        }
 
-        log = await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line - 1}条`)
-        return log;
+
+        this.reply(await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line - 1}条`))
+        return ifrestart;
     }
 
     /**
