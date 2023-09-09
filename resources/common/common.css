@@ -14,27 +14,27 @@
 }
 
 @font-face {
-    font-family: 'Aldrich';
-    src: url("./font/Aldrich-Regular.ttf") format('truetype');
-}
-
-@font-face {
     font-family: 'NOTO';
     src: url("./font/NotoSans-Regular.ttf") format('truetype');
 }
 
 @font-face {
-    font-family: 'CONSOLA';
-    src: url("./font/CONSOLA.TTF") format('truetype');
+    font-family: 'NotoSansSymbols2';
+    src: url("./font/NotoSansSymbols2.ttf") format('truetype');
 }
 
 @font-face {
-    font-family: 'KacstScreen';
-    src: url("./font/KacstScreen.ttf") format('truetype');
+    font-family: 'NotoSansArabic';
+    src: url("./font/NotoSansArabic.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: 'NotoSansJP';
+    src: url("./font/NotoSansJP.ttf") format('truetype');
 }
 
 body {
-    font-family: 'PHI', 'HIMALAYA', 'Aldrich', 'PingFangSC-Medium', "PingFang SC", 'sans-serif', 'NOTO', '吞弥恰俊', 'CONSOLA', 'KacstScreen';
+    font-family: 'PHI', 'HIMALAYA', 'NotoSansArabic', 'NotoSansSymbols2', 'NOTO', '吞弥恰俊', 'NotoSansJP';
     margin: 0;
     background: url('../otherimg/phigros.png') center no-repeat;
     background-size: cover;
