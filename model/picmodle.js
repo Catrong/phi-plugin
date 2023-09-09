@@ -8,31 +8,7 @@ class atlas {
         // 渲染数据
         let data = {
             ...info,
-            /**曲名 */
-            // song: info.song,
-            /**曲绘 */
-            // illustration: info.illustration_big,
-            /**章节 */
-            // chapter: info.chapter,
-            /**bpm */
-            // bpm: info.bpm,
-            /**曲师 */
-            // composer: info.composer,
-            /**时长 */
             length: info.length.replace(':', "'") + "''",
-            /**画师 */
-            // illustrator: info.illustrator,
-            /**谱面 */
-            // or: info.chart.or,
-            // SP: info.chart.SP,
-            // AT: info.chart.AT,
-            // IN: info.chart.IN,
-            // HD: info.chart.HD,
-            // EZ: info.chart.EZ,
-            /**其他消息（备注） */
-            // othermsg: info.othermsg,
-            /**预处理曲名字号 */
-            fontsize: info.fontsize ? info.fontsize : fLenB(info.song, 39, 20, 15, 58)
         }
         // 渲染图片
         return await puppeteer.render('atlas/atlas', {
@@ -143,35 +119,7 @@ class atlas {
         })
     }
 }
-//20 - 30
-//39 - 19    
 
 
-/**计算字符大小 
- * 
- * @param {string} character 曲名
- * @param {number} max_num 最大字符数
- * @param {number} min_size 最小高度
- * @param {number} min_num 最小字符数
- * @param {number} max_size 最大高度
- * @returns 
- */
-function fLenB(character, max_num, min_size, min_num, max_size) {
-    /**判断字符长度 */
-    var count = 0;
-    character = String(character)
-    for (var i = 0; i < character.length; i++) {
-        if ((character.charCodeAt(i) > 0 && character.charCodeAt(i) < 127)
-            || (character.charCodeAt(i) > 65376 && character.charCodeAt(i) < 65440)) {
-            count++;
-        } else {
-            count += 2;
-        }
-    }
-
-    /**计算字符大小 */
-    var single = (max_size - min_size) / (max_num - min_num)
-    return Math.min(max_size, max_num * single - count * single + min_size)
-}
 
 export default new atlas()

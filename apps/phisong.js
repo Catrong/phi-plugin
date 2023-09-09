@@ -260,12 +260,12 @@ export class phisong extends plugin {
 
             if (!songs[1]) {
                 songs = songs[0]
-                msgRes = await get.getillatlas(e, { illustration: get.getill(songs), illustrator: get.info()[songs]["illustrator"] })
+                msgRes = await get.getsongsill(e, songs)
                 e.reply(msgRes)
             } else {
                 msgRes = []
                 for (var i in songs) {
-                    msgRes[i] = await get.getillatlas(e, { illustration: get.info()[songs[i]]["illustration_big"], illustrator: get.info()[songs[i]]["illustrator"] })
+                    get.getsongsill(e, songs[i])
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }
