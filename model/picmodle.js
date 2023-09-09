@@ -22,16 +22,6 @@ class atlas {
 
 
     async b19(e, data) {
-
-        if (data.phi) {
-            data.phi.size = fLenB(data.phi.song, 39, 19, 20, 30)
-        }
-
-        for (var i in data.b19_list) {
-
-            data.b19_list[i].size = fLenB(data.b19_list[i].song, 39, 19, 20, 30)
-        }
-
         return await puppeteer.render('b19/b19', {
             ...data,
             size: Config.getDefOrConfig('config', 'b19size') / 100,
