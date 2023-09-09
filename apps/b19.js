@@ -217,9 +217,9 @@ export class phib19 extends plugin {
             if (e.isGroup) {
                 /**频道模式群聊自动转发私聊 */
                 send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                send.pick_send(e, Remsg)
+                send.pick_send(e, await common.makeForwardMsg(e, Remsg))
             } else {
-                e.reply(common.makeForwardMsg(e, Remsg))
+                e.reply(await common.makeForwardMsg(e, Remsg))
             }
 
         } else {
@@ -431,9 +431,9 @@ export class phib19 extends plugin {
             if (e.isGroup) {
                 /**频道模式群聊自动转发私聊 */
                 send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                send.pick_send(e, Remsg)
+                send.pick_send(e, await common.makeForwardMsg(e, Remsg))
             } else {
-                await e.reply(common.makeForwardMsg(e, Remsg))
+                await e.reply(await common.makeForwardMsg(e, Remsg))
             }
 
         } else {

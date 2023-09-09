@@ -153,7 +153,7 @@ export class phisong extends plugin {
             }
             if (e.isGroup) {
                 send.send_with_At(e, `找到了${tot}个结果，自动转为私聊发送喵～`, true)
-                send.pick_send(e, Resmsg)
+                send.pick_send(e, await common.makeForwardMsg(e, Resmsg))
 
             } else {
                 e.reply(await common.makeForwardMsg(e, Resmsg))
