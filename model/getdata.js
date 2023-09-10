@@ -451,7 +451,7 @@ class getdata {
         if (data) {
             return await get.getillatlas(e, { illustration: data.illustration, illustrator: data.illustrator })
         } else {
-            return await get.getillatlas(e, { illustration: get.getill(name), illustrator: get.info()[songs]["illustrator"] })
+            return await get.getillatlas(e, { illustration: get.getill(name), illustrator: get.info()[name]["illustrator"] })
         }
 
     }

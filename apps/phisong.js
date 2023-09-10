@@ -86,7 +86,7 @@ export class phisong extends plugin {
                 'predicate': (item, bottom, top) => bottom <= item['bpm'] && item['bpm'] <= top
             },
             'difficulty': {
-                'regex': /(difficulty|dif|难度|定级)([\s:：,，/|~是为]*)([0-9.]+(\s*-\s*[0-9.]+)?)/,
+                'regex': /(difficulty|dif|定数|难度|定级)([\s:：,，/|~是为]*)([0-9.]+(\s*-\s*[0-9.]+)?)/,
                 'predicate': (item, bottom, top) => Object.values(item['chart']).some(level => bottom <= level['difficulty'] && level['difficulty'] <= top)
             },
             'combo': {
@@ -103,8 +103,8 @@ export class phisong extends plugin {
             let { regex, predicate } = patterns[key]
             let match = msg.match(regex)
             if (match) {
-                match = match[0].replace(/((bpm|difficulty|dif|难度|定级|combo|cmb|物量|连击)([\s:：,，/|~是为]*))(\d)/g, '$1 $4')
-                match = match.replace(/((bpm|difficulty|dif|难度|定级|combo|cmb|物量|连击)([\s:：,，/|~是为]*))|\s/g, '')
+                match = match[0].replace(/((bpm|difficulty|dif|难度|定级|定数|combo|cmb|物量|连击)([\s:：,，/|~是为]*))(\d)/g, '$1 $4')
+                match = match.replace(/((bpm|difficulty|dif|难度|定级|定数|combo|cmb|物量|连击)([\s:：,，/|~是为]*))|\s/g, '')
                 let [bottom, top] = match.includes('-') ? match.split('-').sort((a, b) => a - b) : [match, match]
                 bottom = Number(bottom)
                 top = Number(top)
@@ -265,7 +265,7 @@ export class phisong extends plugin {
             } else {
                 msgRes = []
                 for (var i in songs) {
-                    get.getsongsill(e, songs[i])
+                    msgRes.push(await get.getsongsill(e, songs[i]))
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }

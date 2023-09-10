@@ -143,9 +143,9 @@ export class phiupdate extends plugin {
 
         /**检测是否需要重启 */
         var ifrestart = false
-        if (log.includes('√')) {
+        if (log.includes('√') || log.includes('✓')) {
             for (var i in log) {
-                if (!i.includes('√')) {
+                if (!(i.includes('√') || i.includes('✓'))) {
                     ifrestart = true
                     break
                 }

@@ -33,6 +33,11 @@
     src: url("./font/NotoSansJP.ttf") format('truetype');
 }
 
+@font-face {
+    font-family: 'Aldrich';
+    src: url("./font/Aldrich-Regular.ttf") format('truetype');
+}
+
 body {
     font-family: 'PHI', 'HIMALAYA', 'NotoSansArabic', 'NotoSansSymbols2', 'NOTO', '吞弥恰俊', 'NotoSansJP';
     margin: 0;
