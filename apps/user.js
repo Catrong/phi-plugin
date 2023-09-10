@@ -534,6 +534,10 @@ function getbackground(name) {
                 save_background = 'Another Me (Rising Sun Traxx)'
                 break
             }
+            case 'Re_Nascence (Psystyle Ver.) ': {
+                save_background = 'Re_Nascence (Psystyle Ver.)'
+                break
+            }
             default: {
                 save_background = name
                 break
