@@ -474,7 +474,8 @@ function cmp() {
 
 function cmpsugg() {
     return function (a, b) {
-        return (Number(a.suggest.replace("%", '')) - a.rks) - (Number(b.suggest.replace("%", '')) - b.rks)
+        return a.difficulty * Number(a.suggest.replace("%", '')) - b.difficulty * Number(b.suggest.replace("%", ''))
+        // return (Number(a.suggest.replace("%", '')) - a.rks) - (Number(b.suggest.replace("%", '')) - b.rks)
     }
 }
 
