@@ -49,7 +49,7 @@ export class phire8 extends plugin {
 
         session[e.user_id] = save.session
 
-        this.setContext('dore8', true, 30)
+        this.setContext('dore8', false, 30)
 
         send.send_with_At(e, `本功能暂处于实验阶段，不保证存档的安全性，继续重置请发送 [确认] 进行确认`)
 
@@ -76,7 +76,7 @@ export class phire8 extends plugin {
 
         delete session[e.user_id]
 
-        this.finish('dore8', true)
+        this.finish('dore8', false)
         return true
     }
 
