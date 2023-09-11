@@ -59,7 +59,6 @@ export class phire8 extends plugin {
     async dore8(e) {
 
         e = this.e
-        logger.info(e.msg)
         if (e.msg.includes('确认')) {
 
             var stk = session[e.user_id]
