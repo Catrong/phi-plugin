@@ -139,7 +139,7 @@ export class phiupdate extends plugin {
 
         let line = log.length;
 
-        if (line <= 1) return false;
+        if (line <= 0) return false;
 
         /**检测是否需要重启 */
         var ifrestart = false
