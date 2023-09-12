@@ -4,7 +4,7 @@
 
 ---
 
-#### 介绍：
+### 介绍：
 适用于 Yunzai-Bot V3 的 phigros 辅助插件。
 
 本项目云存档由 [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary/tree/v3.1.0) 改写而来，感谢 [文酱](https://github.com/7aGiven) 的帮助！
@@ -13,19 +13,22 @@
 
 大家能不能帮忙提供一些别名呐QAQ，欢迎提交PR或者来找我！
 
-特别鸣谢
+作者已经高三开学啦，周末也不一定能写代码，所以近一年可能不会有较大的功能更新，只会进行新曲目的维护。非常感谢大家的理解（
+
+插件官方频道 [Hutao114Pgr939](https://pd.qq.com/s/e3z86q6bw)，机器人可以添加到其他频道，有什么问题也可以来频道反馈
+
+### 特别鸣谢
 
 [屑克鲁](https://github.com/KeluIsAfkeru) 
 
 [圈圈](https://github.com/Walkersifolia)
 
-作者已经高三开学啦，周末也不一定能写代码，所以近一年可能不会有较大的功能更新，只会进行新曲目的维护。非常感谢大家的理解（
+[Steve喵~](https://github.com/112121212167987534524)
 
-插件官方频道 [Hutao114Pgr939](https://pd.qq.com/s/e3z86q6bw)，机器人可以添加到其他频道，有什么问题也可以来频道反馈
 
 ---
 
-#### 安装：
+### 安装：
 在云崽目录下运行
 
 使用github
@@ -44,7 +47,7 @@ pnpm install -P
 
 ---
 
-#### 功能
+### 功能
 以下#均可用/代替
 | 功能名称                             | 功能说明                                                                                       |
 | ------------------------------------ | ---------------------------------------------------------------------------------------------- |
@@ -100,7 +103,7 @@ pnpm install -P
 #### 单曲成绩效果图
 ![image](https://github.com/Catrong/phi-plugin/assets/117198625/540012e0-aac5-4faf-8b08-b90e20405627)
 
-效果图来自[@Steve喵~]([https://github.com/KeluIsAfkeru](https://github.com/112121212167987534524)) 
+效果图来自[@Steve喵~](https://github.com/112121212167987534524)
 #### 范围成绩效果图
 ![image](https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65)
 
