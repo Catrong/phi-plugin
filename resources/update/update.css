@@ -286,8 +286,6 @@ body p {
     justify-content: center;
     background-color: rgba(112, 112, 112, 0.4);
     margin-bottom: 5%;
-    backdrop-filter: blur(100px);
-    -webkit-backdrop-filter: blur(100px);
 }
 
 .border_corner {
