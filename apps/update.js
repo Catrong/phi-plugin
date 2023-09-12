@@ -143,15 +143,11 @@ export class phiupdate extends plugin {
 
         /**检测是否需要重启 */
         var ifrestart = false
-        if (log.includes('√') || log.includes('✓')) {
-            for (var i in log) {
-                if (!(i.includes('√') || i.includes('✓'))) {
-                    ifrestart = true
-                    break
-                }
+        for (var i in log) {
+            if (!(i.includes('√') || i.includes('✓'))) {
+                ifrestart = true
+                break
             }
-        } else {
-            ifrestart = true
         }
 
         log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
