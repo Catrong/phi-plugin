@@ -15,6 +15,10 @@ body p {
     margin-inline: 0;
 }
 
+.background img {
+    height: 100%;
+}
+
 .tatle {
     width: 100%;
     margin-top: 100px;

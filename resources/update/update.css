@@ -9,6 +9,10 @@ body {
     font-family: 'PHI', 'HIMALAYA', '吞弥恰俊';
 }
 
+.background img {
+    height: 100%;
+}
+
 body p {
     color: white;
     margin: 0px;
