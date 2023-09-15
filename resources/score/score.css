@@ -14,21 +14,12 @@ body p {
 
 
 .background {
-    display: flex;
     height: 1080px;
     width: 2048px;
-    margin-bottom: -1080px;
-    overflow: hidden;
-    z-index: 0;
 }
 
 .background img {
     width: 100%;
-    position: relative;
-    overflow: hidden;
-    transform: scale(1.2);
-    filter: blur(40px) brightness(75%);
-    z-index: 0;
 }
 
 .player-info,

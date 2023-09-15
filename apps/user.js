@@ -439,7 +439,7 @@ export class phiuser extends plugin {
             tot_cleared: totcleared,
             tot_fc: totfc,
             tot_phi: totphi,
-            tot_acc: (totacc / totcharts).toFixed(2),
+            tot_acc: (totacc / totcharts),
             date: date_to_string(save.saveInfo.modifiedAt.iso),
             progress_phi: Number((totphi / totcharts * 100).toFixed(2)),
             progress_fc: Number((totfc / totcharts * 100).toFixed(2)),

@@ -129,7 +129,6 @@ body p {
     display: flex;
     align-items: center;
     height: 45.6;
-    word-break: break-all;
 }
 
 .user_name p {
@@ -141,7 +140,7 @@ body p {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
-    width: 90%;
+    width: 81%;
     align-items: center;
 }
 
@@ -201,11 +200,11 @@ body p {
     top: 139;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
 .difficulty_box_p p {
-    font-size: 25;
+    font-size: 20;
 }
 
 .difficulty_bar-in,
@@ -229,6 +228,8 @@ body p {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 20%;
+    justify-content: center;
 }
 
 .difficulty_value p {
@@ -312,7 +313,7 @@ body p {
 }
 
 .left-up-mid-box-true p {
-    color: #000;
+    color: #002633;
 }
 
 .left-mid-box-true p,
@@ -549,19 +550,31 @@ body p {
     font-size: 45px;
 }
 
-#acc {
+.tot_acc-box {
     margin: 0;
     position: absolute;
     width: 800px;
-    top: 550;
+    top: 500;
     left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-#real-acc p {
-    font-size: 150px;
+.tot_acc-left {
+    font-size: 200px;
 }
 
-#tot-acc p {
+.tot_acc-right {
+    display: flex;
+    font-size: 100px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+#acc_word {
+    color: #d5d5d5;
     font-size: 45px;
 }
 

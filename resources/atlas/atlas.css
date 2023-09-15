@@ -6,23 +6,9 @@ body {
     margin: 0;
 }
 
-
 .background {
-    display: flex;
     height: 1080px;
     width: 2048px;
-    margin-bottom: -1080px;
-    overflow: hidden;
-    z-index: 0;
-}
-
-.background img {
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    transform: scale(1.2);
-    filter: blur(40px) brightness(75%);
-    z-index: 0;
 }
 
 .big-box {
@@ -94,7 +80,7 @@ body {
 
 .charts-box {
     height: 359px;
-    width: 1014px;
+    width: 760;
     background-color: rgba(0, 183, 240, 0.3);
     border-left: 12px solid;
     border-color: rgb(0, 183, 240);
@@ -105,7 +91,7 @@ body {
 }
 
 .charts-box p {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .charts-box .length {
@@ -142,24 +128,45 @@ body {
 }
 
 .charts-box .txt .line {
-    height: 32px;
+    height: 80px;
     width: 567px;
+    display: flex;
     border-bottom: 2px solid;
     border-color: rgba(209, 209, 209, 0.75);
+    align-items: flex-end;
+    font-size: 200;
 }
 
 .charts-box .txt .line p {
     color: #FFFFFF;
     font-size: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    width: 95%;
 }
 
 .charts-box .common {
     margin-left: 20px;
     width: 590px;
     height: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .charts-box .common p {
+    color: white;
+}
+
+.chart-info-box {
+    width: 87%;
+    height: 73%;
+    display: flex;
+}
+
+.chart-info {
+    display: flex;
+    flex-direction: column;
     color: white;
 }
 

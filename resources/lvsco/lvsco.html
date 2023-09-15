@@ -242,18 +242,25 @@
                     <p>Lowest</p>
                 </div>
             </div>
-            <div class="title_group" id="acc">
-                <div class="title_group-real" id="real-acc">
+            <div class="tot_acc-box">
+                <div class="tot_acc-left">
                     {{if rating.tot == 'phi'}}
-                    <p style="color: rgb(255, 253, 44);">{{tot_acc}}%</p>
+                    <span style="color: rgb(255, 253, 44);">{{tot_acc - (tot_acc % 1)}}</span>
                     {{else if rating.tot == 'FC'}}
-                    <p style="color: rgb(0, 132, 255);">{{tot_acc}}%</p>
+                    <span style="color: rgb(0, 132, 255);">{{tot_acc - (tot_acc % 1)}}</span>
                     {{else}}
-                    <p>{{tot_acc}}%</p>
+                    <span>{{tot_acc - (tot_acc % 1)}}</span>
                     {{/if}}
                 </div>
-                <div class="title_group-tot" id="tot-acc">
-                    <p>ACC</p>
+                <div class="tot_acc-right">
+                    <span id="acc_word">ACC</span>
+                    {{if rating.tot == 'phi'}}
+                    <span style="color: rgb(255, 253, 44);">.{{((tot_acc % 1) * 1e4).toFixed(0)}}%</span>
+                    {{else if rating.tot == 'FC'}}
+                    <span style="color: rgb(0, 132, 255);">.{{((tot_acc % 1) * 1e4).toFixed(0)}}%</span>
+                    {{else}}
+                    <span>.{{((tot_acc % 1) * 1e4).toFixed(0)}}%</span>
+                    {{/if}}
                 </div>
             </div>
             <div class="stats-rating-group">

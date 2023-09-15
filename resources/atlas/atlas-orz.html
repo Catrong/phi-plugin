@@ -1,0 +1,166 @@
+<head>
+    <link rel="stylesheet" href="./atlas.css">
+
+</head>
+
+<body>
+    <div class="background" style="background: url(../original_ill/996.李化禹.png) no-repeat; background-size: cover;">
+        <img src="../original_ill/996.李化禹.png" alt="曲绘-模糊">
+    </div>
+    <div class="big-box">
+        <div class="box">
+            <div class="info-box">
+                <div class="name-box">
+                    <div class="song">
+                        <p id="song-name">{{song}}</p>
+                    </div>
+                    <div class="composer">
+                        <p>{{composer}}</p>
+                    </div>
+                </div>
+                <div class="charts-box">
+                    <div class="length">
+                        <p>{{length}}</p>
+                    </div>
+                    <div class="txt">
+                        <div class="sqrt">
+                            <p>SONG'S_INFO</p>
+                        </div>
+                        <div class="line">
+                            <p id="other-info">aaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+                        </div>
+                    </div>
+                    <div class="chart-info-box">
+                        <div class="chart-info" id="song-info">
+                            <div class="common">
+                                <span>Illustrator: {{illustrator}}</span>
+                                <span>Bpm:&ensp;{{bpm}}&ensp;&ensp;&ensp;&ensp;Chapter:&ensp;{{chapter}}</span>
+                                <span>Charts:</span>
+                            </div>
+                            <div class="chart">
+                                <div class="up">
+                                    <span style="color: rgb(0, 0, 0);">SP&ensp;</span>
+                                    <span style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</span>
+                                    <span>&ensp;{{$value.difficulty}}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&ensp;</span>
+                                    <span>&ensp;{{$value.combo}}&ensp;Notes</span>
+                                </div>
+                                <span>Charter:&ensp;{{$value.charter}}</span>
+                                <div class="up">
+                                    <span style="color: rgb(213, 213, 213);">AT&ensp;</span>
+                                    <span style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</span>
+                                    <span>&ensp;{{$value.difficulty}}&ensp;</span>
+                                    <span>&ensp;{{$value.combo}}&ensp;Notes</span>
+                                </div>
+                                <span>Charter:&ensp;{{$value.charter}}</span>
+                                <div class="up">
+                                    <span style="color: rgb(255, 159, 159);">IN&ensp;</span>
+                                    <span style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</span>
+                                    <span>&ensp;{{$value.difficulty}}&ensp;</span>
+                                    <span>&ensp;{{$value.combo}}&ensp;Notes</span>
+                                </div>
+                                <span>Charter:&ensp;{{$value.charter}}</span>
+                                <div class="up">
+                                    <span style="color: rgb(165, 187, 227);">HD&ensp;</span>
+                                    <span style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</span>
+                                    <span>&ensp;{{$value.difficulty}}&ensp;</span>
+                                    <span>&ensp;{{$value.combo}}&ensp;Notes</span>
+                                </div>
+                                <span>Charter:&ensp;{{$value.charter}}</span>
+                                <div class="up">
+                                    <span style="color: rgb(192, 221, 173);">EZ&ensp;</span>
+                                    <span style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</span>
+                                    <span>&ensp;{{$value.difficulty}}&ensp;</span>
+                                    <span>&ensp;{{$value.combo}}&ensp;Notes</span>
+                                </div>
+                                <span>Charter:&ensp;{{$value.charter}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ill-box">
+                <img src="../original_ill/996.李化禹.png" alt="曲绘">
+            </div>
+        </div>
+        <div class="leave">
+            <div class="leave-box">
+                <div class="leave-ez">
+                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                </div>
+                <div class="leave-hd">
+                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                </div>
+                <div class="leave-in">
+                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                </div>
+                <div class="leave-at">
+                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                </div>
+                <div class="leave-sp" style="background-color: rgb(0, 255, 149);">
+                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>Phi-Plugin</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
+
+    <!-- 曲目名称自适应name-box的宽度 -->
+    <script>
+        function adjustFontSize() {
+
+            /**
+             * @param {string} id id
+             * @param {number} maxFontSize 最大字体大小
+             */
+            function work(id, maxFontSize = 50) {
+
+                //获取song-name和composer滴元素
+                var songName = document.getElementById(id)
+
+                /*调整曲目名称字体大小*/
+                var parentElement = songName.parentElement
+
+
+                //如果字体宽度小于父元素宽度，则增大字体大小
+                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
+                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                    var fontSize = parseFloat(style)
+
+                    //检查是否已经达到最大字体大小
+                    if (fontSize >= maxFontSize) {
+                        break
+                    }
+
+                    songName.style.fontSize = (fontSize + 1) + "px"
+                }
+
+                // 如果字体宽度大于父元素宽度，则减小字体大小
+                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
+                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                    var fontSize = parseFloat(style);
+                    songName.style.fontSize = (fontSize - 1) + "px";
+                }
+            }
+
+            work('song-name')
+            work('song-info', 25)
+            work('other-info', 25)
+
+        }
+        window.onload = adjustFontSize
+        window.onresize = adjustFontSize
+    </script>
+
+</body>

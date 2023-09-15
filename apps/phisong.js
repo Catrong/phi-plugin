@@ -377,5 +377,5 @@ export class phisong extends plugin {
  * @param {number} top 随机值上界
  */
 function randbt(top, bottom = 0) {
-    return Number((Math.random() * (top - bottom)).toFixed(0)) + bottom
+    return Math.floor((Math.random() * (top - bottom + 1))) + bottom
 }

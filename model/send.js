@@ -1,4 +1,4 @@
-import { segment } from "oicq";
+import { segment } from "icqq";
 import Config from '../components/Config.js'
 import get from "./getdata.js";
 

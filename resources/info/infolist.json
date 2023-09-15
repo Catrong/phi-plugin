@@ -3254,6 +3254,7 @@
         "composer": "LeaF",
         "length": "1:50",
         "illustrator": "Cycats",
+        "spinfo": "SP谱面已于 v1.4.1 版本后移除\n愚人节在 もぺもぺ 选曲界面点击小花花进入SP谱面",
         "chart": {
             "EZ": {
                 "level": "3",
@@ -3938,6 +3939,7 @@
         "composer": "Ctymax vs. NceS",
         "length": "2:46",
         "illustrator": "knife美工刀",
+        "spinfo": "SP谱面已于 v1.4.1 版本后移除\n愚人节在 Rubbish Sorting 选曲界面从左到右依次点击垃圾桶进入SP谱面",
         "chart": {
             "EZ": {
                 "level": "3",
@@ -3974,6 +3976,7 @@
         "composer": "Sound Souler",
         "length": "2:27",
         "illustrator": "Photonskyto",
+        "spinfo": "SP谱面已于 v1.4.1 版本后移除\n愚人节在 Dead Soul 选曲界面重复点击 EZ 难度进入SP谱面",
         "chart": {
             "EZ": {
                 "level": "4",
@@ -4520,6 +4523,7 @@
         "composer": "Frums",
         "length": "2:41",
         "illustrator": "百九十八",
+        "spinfo": "SP谱面已于 v1.6.6 版本后移除\n愚人节在 Wavetapper 选曲界面按照音乐节奏点击曲绘 14 次进入SP谱面",
         "chart": {
             "EZ": {
                 "level": "4",
