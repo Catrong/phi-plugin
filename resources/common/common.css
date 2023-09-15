@@ -60,7 +60,7 @@ body {
     position: relative;
     overflow: hidden;
     transform: scale(1.2);
-    filter: blur(100px) brightness(75%);
+    filter: blur(40px) brightness(75%);
     z-index: 0;
 }
 
