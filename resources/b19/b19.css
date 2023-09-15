@@ -15,8 +15,7 @@ body p {
     margin-inline: 0;
 }
 
-.background {
-    width: 100%;
+.background img {
     height: 100%;
 }
 
