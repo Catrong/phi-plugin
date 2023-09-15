@@ -87,8 +87,8 @@ export class phisstk extends plugin {
             this.User = new PhigrosUser(sessionToken)
 
         } catch (err) {
-            logger.error("[phi-plugin]绑定sessionToken错误")
-            await e.reply(`绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            logger.error(`[phi-plugin]绑定sessionToken错误 ${sessionToken}`)
+            send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
 
@@ -127,7 +127,7 @@ export class phisstk extends plugin {
         try {
             await this.User.buildRecord()
         } catch (err) {
-            this.e.reply("绑定失败！QAQ\n" + err)
+            send.send_with_At(this.e, "绑定失败！QAQ\n" + err)
             return true
         }
         var old = await get.getsave(this.e.user_id)
