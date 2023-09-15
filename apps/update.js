@@ -129,26 +129,23 @@ export class phiupdate extends plugin {
 
         logAll = logAll.split("\n");
 
+        /**检测是否需要重启 */
+        var ifrestart = false
+
         let log = [];
         for (let str of logAll) {
             str = str.split("||");
             if (str[0] == this.oldCommitId) break;
             if (str[1].includes("Merge branch")) continue;
             log.push(str[1]);
+            if (!(str[1].includes('√') || str[1].includes('✓'))) {
+                ifrestart = true
+            }
         }
 
         let line = log.length;
 
         if (line <= 0) return false;
-
-        /**检测是否需要重启 */
-        var ifrestart = false
-        for (var i in log) {
-            if (!(i.includes('√') || i.includes('✓'))) {
-                ifrestart = true
-                break
-            }
-        }
 
         log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
 
