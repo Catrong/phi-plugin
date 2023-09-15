@@ -1,7 +1,7 @@
 
 import fs from 'node:fs'
 import { _path } from "./path.js";
-import { segment } from "icqq";
+import { segment } from "oicq";
 import Film from './Doc.js';
 import atlas from "./picmodle.js";
 import Config from "../components/Config.js";

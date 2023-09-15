@@ -2,7 +2,7 @@ import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js';
 import get from '../model/getdata.js'
-import { segment } from "icqq";
+import { segment } from "oicq";
 import send from '../model/send.js'
 
 
