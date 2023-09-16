@@ -24,7 +24,7 @@ export default class LevelRecordInfo {
         } else {
             this.difficulty = 0
             this.rks = 0
-            this.rating = 0
+            this.Rating = undefined
         }
 
 

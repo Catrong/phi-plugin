@@ -3,6 +3,7 @@ import PhigrosUser from '../lib/PhigrosUser.js'
 import get from '../model/getdata.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
+import Save from '../model/class/Save.js'
 
 
 const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
@@ -95,12 +96,6 @@ export class phisstk extends plugin {
         if (await this.building())
             return true
 
-        try {
-            await get.putsave(e.user_id, this.User)
-        } catch (err) {
-            e.reply(`保存存档失败！\n${err}`)
-            return true
-        }
 
 
 
@@ -133,6 +128,16 @@ export class phisstk extends plugin {
         var old = await get.getsave(this.e.user_id)
         var pluginData = await get.getpluginData(this.e.user_id, true)
 
+        try {
+            await get.putsave(this.e.user_id, this.User)
+        } catch (err) {
+            this.reply(`保存存档失败！\n${err}`)
+            return true
+        }
+
+
+
+
         if (!pluginData) {
             pluginData = {}
         }
@@ -158,7 +163,7 @@ export class phisstk extends plugin {
             pluginData.rks = []
         }
 
-        var now = this.User
+        var now = new Save(this.User)
         var date = this.User.saveInfo.modifiedAt.iso
 
         var illlist = []
