@@ -93,7 +93,8 @@ export default class Save {
         }
         this.saveUrl = data.saveUrl
         this.Recordver = data.Recordver
-                if(data.data.gameProgress) {
+        this.gameProgress = null
+        if(data.data.gameProgress) {
             this.gameProgress = {
                 isFirstRun: data.gameProgress.isFirstRun, //首次运行
                 legacyChapterFinished: data.gameProgress.legacyChapterFinished, //过去的章节已完成
@@ -114,6 +115,7 @@ export default class Save {
                 chapter8SongUnlocked: data.gameProgress.chapter8SongUnlocked //第八章各曲目解锁
             }
         }
+        this.gameuser = null
         if(data.gameuser) {
             this.gameuser = {
                 name: data.gameuser.name,
