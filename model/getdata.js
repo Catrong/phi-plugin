@@ -149,7 +149,13 @@ class getdata {
      * @returns save
      */
     async getsave(id) {
-        return new Save(await this.getData(`${id}.json`, `${this.userPath}`))
+        var result = await this.getData(`${id}.json`, `${this.userPath}`)
+        if(result) {
+            return new Save(result)
+        } else {
+            return null
+        }
+        
     }
 
     /**

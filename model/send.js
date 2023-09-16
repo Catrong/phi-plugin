@@ -34,7 +34,7 @@ class send {
 
         const save = await get.getsave(e.user_id)
 
-        if (!save.session) {
+        if (!save) {
             this.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
