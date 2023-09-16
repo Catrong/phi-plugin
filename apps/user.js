@@ -7,6 +7,7 @@ await get.init()
 
 var tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
 const Level = ['EZ', 'HD', 'IN', 'AT']
+const tot_rating_info = {}
 
 for (var song in get.ori_info) {
     var info = get.ori_info[song]
@@ -21,6 +22,13 @@ for (var song in get.ori_info) {
     }
     if (info.chart['EZ']) {
         ++tot[0]
+    }
+    for (var i in info.chart) {
+        var rating = info.chart[i].difficulty
+        if (!tot_rating_info[rating]) {
+            tot_rating_info[rating] = []
+        }
+        tot_rating_info[rating].push([info.song, i, false])
     }
 }
 
@@ -272,11 +280,11 @@ export class phiuser extends plugin {
         }
         msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
 
-        var range = [0, 16.9]
+        var range = [0, get.MAX_DIFFICULTY]
 
 
 
-
+        // match_range(msg, range)
 
         if (msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)) {
             msg = msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)[0]
@@ -296,12 +304,12 @@ export class phiuser extends plugin {
             if (range[1] % 1 == 0 && !e.msg.includes(".0")) range[1] += 0.9
         }
 
-        
+
 
         range[1] = Math.min(range[1], 16.9)
         range[0] = Math.max(range[0], 0)
 
-        
+
 
 
         var unlockcharts = 0
@@ -403,7 +411,7 @@ export class phiuser extends plugin {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
             console.error(`未找到${save.gameuser.background}的曲绘！`)
         }
-        
+
         var data = {
             tot: {
                 at: totRank.AT,
@@ -462,6 +470,23 @@ export class phiuser extends plugin {
 
         send.send_with_At(e, await get.getlvsco(e, data))
     }
+
+    async tot_phi(e) {
+
+        const save = await send.getsave_result(e)
+
+        if (!save) {
+            return true
+        }
+
+        var phi = { ...tot_rating_info }
+
+        var range = [0, get.MAX_DIFFICULTY]
+
+        match_range(e.msg, range)
+
+    }
+
 }
 
 /**
@@ -546,5 +571,41 @@ function getbackground(name) {
         return get.getill(save_background)
     } catch (err) {
         return false
+    }
+}
+
+/**
+ * 捕获消息中的范围
+ * @param {string} msg 消息字符串
+ * @param {Array} range 范围数组
+ */
+function match_range(msg, range) {
+    range = [0, get.MAX_DIFFICULTY]
+    if (msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)) {
+        /**0-16.9 */
+        msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)[0]
+        var result = msg.split(/\s*[-～~]\s*/g)
+        range[0] = Number(result[0])
+        range[1] = Number(result[1])
+        if (range[0] > range[1]) {
+            var tem = range[1]
+            range[1] = range[0]
+            range[0] = tem
+        }
+        if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
+    } else if (msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)) {
+        /**16.9- 15+ */
+        msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)[0]
+        var result = msg.replace(/\s*[-+]/g, '')
+        if (msg.includes('+')) {
+            range[0] = result
+        } else {
+            range[1] = result
+            if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
+        }
+    } else if (msg.match(/[0-9]+(.[0-9]+)?/g)) {
+        /**15 */
+        msg = msg.match(/[0-9]+(.[0-9]+)?/g)[0]
+        range[0] = range[1] = Number(msg)
     }
 }

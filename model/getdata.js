@@ -44,6 +44,7 @@ class getdata {
 
         this.Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 
+        this.MAX_DIFFICULTY = 16.9
     }
 
     async init() {
@@ -508,7 +509,7 @@ class getdata {
     getill(name, isBig = true) {
         const totinfo = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
         var ans
-        if(!totinfo[name]){
+        if (!totinfo[name]) {
             throw new Error(`未找到[${name}]的曲目资料！`)
         }
         if (isBig) {
