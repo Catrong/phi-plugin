@@ -445,7 +445,6 @@ class getdata {
 
         if (!data) {
             data = this.info()[name]
-            console.info(this.info())
         }
         if (data) {
             data.illustration = this.getill(name)
