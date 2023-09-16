@@ -94,7 +94,7 @@ export default class Save {
         this.saveUrl = data.saveUrl
         this.Recordver = data.Recordver
         this.gameProgress = null
-        if(data.data.gameProgress) {
+        if(data.gameProgress) {
             this.gameProgress = {
                 isFirstRun: data.gameProgress.isFirstRun, //首次运行
                 legacyChapterFinished: data.gameProgress.legacyChapterFinished, //过去的章节已完成
