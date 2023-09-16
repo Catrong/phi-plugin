@@ -1,0 +1,19 @@
+@import "../common/common.css";
+
+body {
+    width: 1920px;
+    height: 2000px;
+}
+
+.title {
+    width: 80%;
+    margin-top: 10%;
+    height: 20%;
+    background-color: #ffffffaa;
+    z-index: 1;
+    position: relative;
+}
+
+.title p {
+    font-size: 25px;
+}
