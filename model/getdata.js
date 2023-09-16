@@ -86,12 +86,15 @@ class getdata {
         switch (Config.getDefOrConfig('config', 'otherinfo')) {
             case 0: {
                 result = { ...this.ori_info, ...this.sp_info }
+                break;
             }
             case 1: {
                 result = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
+                break;
             }
             case 2: {
                 result = Config.getDefOrConfig('otherinfo')
+                break;
             }
         }
         if (song) {
@@ -442,6 +445,7 @@ class getdata {
 
         if (!data) {
             data = this.info()[name]
+            console.info(this.info())
         }
         if (data) {
             data.illustration = this.getill(name)
