@@ -5,7 +5,9 @@ import { segment } from "oicq";
 import Film from './Doc.js';
 import atlas from "./picmodle.js";
 import Config from "../components/Config.js";
-import LevelRecord from "./LevelRecord.js";
+import LevelRecord from "./class/LevelRecordInfo.js";
+import SongsInfo from './class/SongsInfo.js';
+import Save from './class/Save.js';
 
 var lock = []
 
@@ -76,22 +78,31 @@ class getdata {
         }
     }
 
-    info() {
+    /**
+     * @param {string} [song=undefined] 原曲曲名
+     */
+    info(song = undefined) {
+        var result
         switch (Config.getDefOrConfig('config', 'otherinfo')) {
             case 0: {
-                return { ...this.ori_info, ...this.sp_info }
+                result = { ...this.ori_info, ...this.sp_info }
             }
             case 1: {
-                return { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
+                result = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
             }
             case 2: {
-                return Config.getDefOrConfig('otherinfo')
+                result = Config.getDefOrConfig('otherinfo')
             }
+        }
+        if (song) {
+            return result[song]
+        } else {
+            return result
         }
     }
 
     /**获取 chos 文件 
-     * @param {string}  chos 文件名称 含后缀
+     * @param {string}  chos 文件名称 含后缀 yaml json
      * @param {string}  kind 路径
     */
     async getData(chos, path) {
@@ -103,7 +114,7 @@ class getdata {
     }
 
     /**修改 chos 文件为 data 
-     * @param {string} chos 文件名称 含后缀
+     * @param {string} chos 文件名称 含后缀 yaml json
      * @param {string} data 覆写内容
      * @param {string} path 路径
     */
@@ -116,7 +127,7 @@ class getdata {
     }
 
     /**删除 chos.yaml 文件
-     * @param {string} chos 文件名称 含后缀
+     * @param {string} chos 文件名称 含后缀 yaml json
      * @param {string} path 路径
     */
     delData(chos, path) {
@@ -135,7 +146,7 @@ class getdata {
      * @returns save
      */
     async getsave(id) {
-        return await this.getData(`${id}.json`, `${this.userPath}`)
+        return new Save(await this.getData(`${id}.json`, `${this.userPath}`))
     }
 
     /**
@@ -427,7 +438,7 @@ class getdata {
     }
 
     /**获取歌曲图鉴，曲名为原名 */
-    getsongsinfo(e, name, data = undefined) {
+    GetSongsInfoAtlas(e, name, data = undefined) {
 
         if (!data) {
             data = this.info()[name]
@@ -448,7 +459,7 @@ class getdata {
      * @param { {illustration:string, illustrator:string} } data 自定义数据
      * @returns 
      */
-    async getsongsill(e, name, data = undefined) {
+    async GetSongsIllAtlas(e, name, data = undefined) {
         if (data) {
             return await get.getillatlas(e, { illustration: data.illustration, illustrator: data.illustrator })
         } else {
@@ -504,19 +515,15 @@ class getdata {
 
     /**获取曲绘，返回地址，原名
      * @param {string} name 原名
-     * @param {boolean} [isBig=true] 是否为大图
+     * @return 网址或文件地址
     */
-    getill(name, isBig = true) {
+    getill(name) {
         const totinfo = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
         var ans
         if (!totinfo[name]) {
             throw new Error(`未找到[${name}]的曲目资料！`)
         }
-        if (isBig) {
-            ans = totinfo[name].illustration_big
-        } else {
-            ans = totinfo[name].illustration
-        }
+        ans = totinfo[name].illustration_big
         var reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans)) {
             ans = `${this.orillPath}${ans}`
@@ -542,18 +549,12 @@ class getdata {
     }
 
     /**
-     * 根据曲目id获取曲目信息
-     * @param {String} id 曲目id 
-     * @param {true|false} info 是否返回info
-     * @returnsthis.info
+     * 根据曲目id获取原名
+     * @param {String} id 曲目id
+     * @returns 原名
      */
-    idgetsong(id, info = true) {
-        if (info) {
-            return this.ori_info[this.songsid[id]]
-        }
-        else {
-            return this.songsid[id]
-        }
+    idgetsong(id) {
+        return this.songsid[id]
     }
 
     /**
@@ -605,8 +606,27 @@ class getdata {
         }
     }
 
-    init_Record(Record) {
+    /**
+     * 根据原曲曲名获取结构化的曲目信息
+     * @param {string} song 原曲曲名
+     * @param {boolean} [ori=false] 是否只启用原版
+     */
+    init_info(song, ori = false) {
+        if (ori) {
+            return new SongsInfo(this.ori_info[song])
+        } else {
+            return new SongsInfo(this.info(song))
+        }
+    }
 
+    /**
+     * 结构化存档数组
+     * @param {Array} Record 单曲存档数组
+     */
+    init_Record(Record, id) {
+        for (var i in Record) {
+            Record[i] = new LevelRecord(Record[i], id, this.Level[i])
+        }
     }
 
 }

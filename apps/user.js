@@ -111,7 +111,7 @@ export class phiuser extends plugin {
         stats[3].tatle = Level[3]
 
         for (var id in Record) {
-            const info = get.idgetsong(id, true)
+            const info = get.init_info(get.idgetsong(id), true)
             const record = Record[id]
             for (var lv in [0, 1, 2, 3]) {
                 if (!record[lv]) continue
@@ -367,7 +367,7 @@ export class phiuser extends plugin {
 
 
         for (var id in Record) {
-            const info = get.idgetsong(id, true)
+            const info = get.init_info(get.idgetsong(id), true)
             const record = Record[id]
             var vis = false
             for (var lv in [0, 1, 2, 3]) {

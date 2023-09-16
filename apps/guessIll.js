@@ -1,3 +1,4 @@
+import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
@@ -110,7 +111,7 @@ export class phiguess extends plugin {
             const time = Config.getDefOrConfig('config', 'GuessTipCd')
 
             for (let j = 0; j < time; ++j) {
-                await timeout(1000)
+                await common.sleep(1000)
                 if (gamelist[group_id]) {
                     if (gamelist[group_id] != songs_info.song) {
                         await gameover(e, data)
@@ -194,7 +195,7 @@ export class phiguess extends plugin {
         delete (gamelist[group_id])
         await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
 
-        await e.reply(await get.getsongsinfo(e, t))
+        await e.reply(await get.GetSongsInfoAtlas(e, t))
         await gameover(e, data)
 
         return true
@@ -213,7 +214,7 @@ export class phiguess extends plugin {
                             const t = gamelist[group_id]
                             delete (gamelist[group_id])
                             send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
-                            await e.reply(await get.getsongsinfo(e, t))
+                            await e.reply(await get.GetSongsInfoAtlas(e, t))
                             return true
                         }
                     }
@@ -235,7 +236,7 @@ export class phiguess extends plugin {
             const t = gamelist[group_id]
             delete gamelist[group_id]
             await e.reply('好吧，下面开始公布答案。', true)
-            await e.reply(await get.getsongsinfo(e, t))
+            await e.reply(await get.GetSongsInfoAtlas(e, t))
             return true
         }
         return false
@@ -381,12 +382,6 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
     return false
 }
 
-
-function timeout(ms) {
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms, 'done');
-    });
-}
 
 //将数组顺序打乱
 function shuffleArray(arr) {

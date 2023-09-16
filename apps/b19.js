@@ -19,7 +19,7 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b19|rks)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b19|rks|pgr)$`,
                     fnc: 'b19'
                 },
                 {
@@ -45,9 +45,9 @@ export class phib19 extends plugin {
     }
 
     async b19(e) {
-        var save = await get.getsave(e.user_id)
-        if (!save.session) {
-            send.send_with_At(e, `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+        const save = await send.getsave_result(e)
+
+        if (!save) {
             return true
         }
 
@@ -68,9 +68,6 @@ export class phib19 extends plugin {
                 if (level == 4) break
                 var tem = Record[song][level]
                 if (!tem) continue
-
-                /**兼容旧存档 */
-                if (!tem.Rating) tem.Rating = tem.pingji
 
                 if (tem.acc >= 100) {
                     if (tem.rks > phi.rks) {
@@ -135,9 +132,9 @@ export class phib19 extends plugin {
     async bestn(e) {
 
 
-        var save = await get.getsave(e.user_id)
-        if (!save.session) {
-            send.send_with_At(e, `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+        const save = await send.getsave_result(e)
+
+        if (!save) {
             return true
         }
 
@@ -166,10 +163,7 @@ export class phib19 extends plugin {
                 var tem = Record[song][level]
 
                 if (!tem) continue
-                /**适配旧存档 */
-                if (!tem.Rating) {
-                    tem.Rating = tem.pingji
-                }
+                
 
                 if (!tem) continue
                 if (tem.acc >= 100) {
@@ -278,9 +272,9 @@ export class phib19 extends plugin {
 
 
     async singlescore(e) {
-        var save = await get.getsave(e.user_id)
-        if (!save.session) {
-            send.send_with_At(e, `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+        const save = await send.getsave_result(e)
+
+        if (!save) {
             return true
         }
         var song = e.msg.replace(/[#/](.*)(score|单曲成绩)(\s*)/g, '')
@@ -319,7 +313,7 @@ export class phib19 extends plugin {
         var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
 
         for (var i in Record) {
-            var now = await get.idgetsong(i, false)
+            var now = await get.idgetsong(i)
             if (now == song) {
                 ans = Record[i]
                 break
@@ -366,10 +360,9 @@ export class phib19 extends plugin {
     /**推分建议，建议的是RKS+0.01的所需值 */
     async suggest(e) {
 
+        const save = await send.getsave_result(e)
 
-        var save = await get.getsave(e.user_id)
-        if (!save.session) {
-            send.send_with_At(e, `你还没有绑定sessionToken哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+        if (!save) {
             return true
         }
 

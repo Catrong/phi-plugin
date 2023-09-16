@@ -62,12 +62,12 @@ export class phisong extends plugin {
             if (!songs[1]) {
                 songs = songs[0]
                 // get.getsongsinfo(e, songs)
-                msgRes = await get.getsongsinfo(e, songs)
+                msgRes = await get.GetSongsInfoAtlas(e, songs)
                 e.reply(msgRes)
             } else {
                 msgRes = []
                 for (var i in songs) {
-                    msgRes[i] = await get.getsongsinfo(e, songs[i])
+                    msgRes[i] = await get.GetSongsInfoAtlas(e, songs[i])
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }
@@ -260,12 +260,12 @@ export class phisong extends plugin {
 
             if (!songs[1]) {
                 songs = songs[0]
-                msgRes = await get.getsongsill(e, songs)
+                msgRes = await get.GetSongsIllAtlas(e, songs)
                 e.reply(msgRes)
             } else {
                 msgRes = []
                 for (var i in songs) {
-                    msgRes.push(await get.getsongsill(e, songs[i]))
+                    msgRes.push(await get.GetSongsIllAtlas(e, songs[i]))
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }

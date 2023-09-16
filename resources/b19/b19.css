@@ -17,6 +17,8 @@ body p {
 
 .background img {
     height: 100%;
+    width: auto;
+    filter: blur(200px) brightness(75%);
 }
 
 .tatle .l,
