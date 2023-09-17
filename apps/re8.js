@@ -1,6 +1,7 @@
-import { createRequire } from 'module';
+
 import send from '../model/send.js';
 import Config from '../components/Config.js';
+import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 var PhigrosRe8
 switch (process.platform) {
@@ -17,7 +18,7 @@ switch (process.platform) {
         break;
     }
     default: {
-        console.info(process.platform)
+        console.error(process.platform)
     }
 }
 

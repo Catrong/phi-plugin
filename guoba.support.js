@@ -46,6 +46,19 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'maxRandering',
+                    label: '同时渲染量',
+                    helpMessage: '渲染时会将任务加入到队列中，超过同时渲染量的任务将会等待到未完成的任务完成',
+                    bottomHelpMessage: '同时渲染的最大数量，建议小于等于核心数',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 0,
+                        max: 100,
+                        placeholder: '请输入最大同时渲染数量',
+                    },
+                },
+                {
                     field: 'timeout',
                     label: '渲染超时时间',
                     bottomHelpMessage: '对所有的图片生效，超时后重启puppeteer，单位ms',
@@ -55,6 +68,18 @@ export function supportGuoba() {
                         min: 1000,
                         max: 120000,
                         placeholder: '请输入渲染超时时间',
+                    },
+                },
+                {
+                    field: 'waitingTimeout',
+                    label: '等待渲染超时时间',
+                    bottomHelpMessage: '对所有的图片生效，等待超时后结束任务，单位ms',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 0,
+                        max: 120000,
+                        placeholder: '请输入等待渲染超时时间',
                     },
                 },
                 {
@@ -182,23 +207,11 @@ export function supportGuoba() {
             ],
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {
-                let config = {
-                    b19size: Config.getDefOrConfig('config', 'b19size'),
-                    randerQuality: Config.getDefOrConfig('config', 'randerQuality'),
-                    renderScale: Config.getDefOrConfig('config', 'renderScale'),
-                    WordB19Img: Config.getDefOrConfig('config', 'WordB19Img'),
-                    WordSuggImg: Config.getDefOrConfig('config', 'WordSuggImg'),
-                    cmdhead: Config.getDefOrConfig('config', 'cmdhead'),
-                    GuessTipCd: Config.getDefOrConfig('config', 'GuessTipCd'),
-                    GuessTipRecall: Config.getDefOrConfig('config', 'GuessTipRecall'),
-                    isGuild: Config.getDefOrConfig('config', 'isGuild'),
-                    LetterWinner: Config.getDefOrConfig('config', 'LetterWinner'),
-                    LetterRevealCd: Config.getDefOrConfig('config', 'LetterRevealCd'),
-                    LetterGuessCd: Config.getDefOrConfig('config', 'LetterGuessCd'),
-                    LetterTipCd: Config.getDefOrConfig('config', 'LetterTipCd'),
-                    otherinfo: Config.getDefOrConfig('config','otherinfo'),
-                    LetterNum: Config.getDefOrConfig('config','LetterNum'),
-                    timeout: Config.getDefOrConfig('config','timeout'),
+                const defset = Config.getdefSet('config')
+
+                let config = {}
+                for (var i in defset) {
+                    config[i] = Config.getDefOrConfig('config', i)
                 }
                 return config
             },

@@ -56,7 +56,7 @@ export class phihelp extends plugin {
             `---------------------\n` +
             `⌈sign/签到⌋ 每日签到获取Notes和任务\n` +
             `⌈task/我的任务⌋ 查看自己的任务\n` +
-            `⌈${head}send/送 <目标> <数量>⌋ 给某人转账，支持QQ号或@\n` +
+            `⌈${head}send/送 <目标> <数量>⌋ 给某人转账，支持QQ号或@，将扣除其中的 20%\n` +
             `⌈retask/刷新任务⌋ 刷新任务，需要花费20Notes`
 
         )

@@ -1,3 +1,4 @@
+import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
@@ -286,28 +287,37 @@ export class phimoney extends plugin {
                 target = msg[0]
                 num = Number(msg[1])
             } else {
-                e.reply(`格式错误！请指定目标\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
+                send.send_with_At(e, `格式错误！请指定目标\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
                 return true
             }
         } else {
             num = Number(msg)
         }
         if (num == NaN) {
-            e.reply(`非法数字：${msg}\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
+            send.send_with_At(e, `非法数字：${msg}\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} send <@ or id> <数量>`, true)
             return true
         }
 
         try {
             await Bot.pickMember(e.group_id, target)
         } catch (err) {
-            e.reply(`这个QQ号……好像没有见过呢……`)
+            send.send_with_At(e, `这个QQ号……好像没有见过呢……`)
+            return true
+        }
+
+        if (target == e.user_id) {
+            send.send_with_At(e, `转账成……唔？这个目标……在拿我寻开心嘛！`)
+            common.sleep(1000)
+            send.send_with_At(e, `转账失败！扣除 20 Notes！`)
+            sender_data.plugin_data.money -= 20
+            await get.putpluginData(e.user_id, sender_data)
             return true
         }
 
 
         var sender_data = await get.getmoneydata(e.user_id, true)
         if (sender_data.plugin_data.money < num) {
-            send.send_with_At(e, `你当前的Note数量不够哦！\n当前Notes: ${sender_data.plugin_data.money}`)
+            send.send_with_At(e, `你当前的Note数量不够哦！\n当前Note: ${sender_data.plugin_data.money}`)
             get.delLock(e.user_id)
             return true
         }
@@ -315,10 +325,10 @@ export class phimoney extends plugin {
         await get.putpluginData(e.user_id, sender_data)
 
         var target_data = await get.getmoneydata(target, true)
-        target_data.plugin_data.money += num
+        target_data.plugin_data.money += Math.ceil(num * 0.8)
         await get.putpluginData(target, target_data)
         var target_card = await Bot.pickMember(e.group_id, target)
-        send.send_with_At(e, `转账成功！\n你当前的Notes: ${sender_data.plugin_data.money}\n${target_card.nickname ? target_card.nickname : target_card.card}的Notes: ${target_data.plugin_data.money}`)
+        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_data.plugin_data.money}\n${target_card.nickname ? target_card.nickname : target_card.card}的Note: ${target_data.plugin_data.money}`)
     }
 }
 

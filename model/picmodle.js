@@ -1,6 +1,11 @@
 import puppeteer from './puppeteer.js'
 import Config from '../components/Config.js'
+import common from '../../../lib/common/common.js'
+import { Plugin_Path } from '../components/index.js'
 
+const queue = []
+const randering = []
+var tot = 0
 
 class atlas {
 
@@ -11,7 +16,7 @@ class atlas {
             length: info.length.replace(':', "'") + "''",
         }
         // 渲染图片
-        return await puppeteer.render('atlas/atlas', {
+        return await this.render('atlas/atlas', {
             ...data,
             waitUntil: 'networkidle0'
         }, {
@@ -22,7 +27,7 @@ class atlas {
 
 
     async b19(e, data) {
-        return await puppeteer.render('b19/b19', {
+        return await this.render('b19/b19', {
             ...data,
             size: Config.getDefOrConfig('config', 'b19size') / 100,
         }, {
@@ -32,7 +37,7 @@ class atlas {
     }
 
     async update(e, data) {
-        return await puppeteer.render('update/update', {
+        return await this.render('update/update', {
             ...data,
             size: Config.getDefOrConfig('config', 'b19size') / 100,
         }, {
@@ -42,7 +47,7 @@ class atlas {
     }
 
     async tasks(e, data) {
-        return await puppeteer.render('tasks/tasks', {
+        return await this.render('tasks/tasks', {
             ...data,
             size: Config.getDefOrConfig('config', 'b19size') / 100,
         }, {
@@ -52,7 +57,7 @@ class atlas {
     }
 
     async user_info(e, data) {
-        return await puppeteer.render('userinfo/userinfo', {
+        return await this.render('userinfo/userinfo', {
             ...data,
             size: Config.getDefOrConfig('config', 'b19size') / 100,
         }, {
@@ -62,7 +67,7 @@ class atlas {
     }
 
     async lvsco(e, data) {
-        return await puppeteer.render('lvsco/lvsco', {
+        return await this.render('lvsco/lvsco', {
             ...data
         }, {
             e,
@@ -71,7 +76,7 @@ class atlas {
     }
 
     async score(e, data) {
-        return await puppeteer.render('score/score', {
+        return await this.render('score/score', {
             ...data
         }, {
             e,
@@ -80,7 +85,7 @@ class atlas {
     }
 
     async ill(e, data) {
-        return await puppeteer.render('ill/ill', {
+        return await this.render('ill/ill', {
             ...data,
             waitUntil: 'networkidle0'
         }, {
@@ -90,7 +95,7 @@ class atlas {
     }
 
     async guess(e, data) {
-        return await puppeteer.render('guess/guess', {
+        return await this.render('guess/guess', {
             ...data,
             waitUntil: 'networkidle0'
         }, {
@@ -100,7 +105,7 @@ class atlas {
     }
 
     async rand(e, data) {
-        return await puppeteer.render('rand/rand', {
+        return await this.render('rand/rand', {
             ...data,
             waitUntil: 'networkidle0'
         }, {
@@ -108,8 +113,40 @@ class atlas {
             scale: Config.getDefOrConfig('config', 'renderScale') / 100,
         })
     }
-}
 
+    async render(path, params, cfg) {
+
+        const id = tot++
+        queue.push(id)
+
+        console.info(queue)
+        console.info(randering)
+
+        var cnt = 0
+        while (randering.length >= Config.getDefOrConfig('config', 'maxRandering') || queue[0] != id) {
+            await common.sleep(500)
+            ++cnt
+            if (cnt * 500 >= Config.getDefOrConfig('config', 'waitingTimeout')) {
+
+                
+                queue.splice(queue.indexOf(id), 1)
+                logger.error('[Phi-Plugin] 渲染等待超时')
+                return '等待超时，请重试QAQ！'
+            }
+        }
+
+        const result = await puppeteer.render(path, params, cfg)
+
+        randering.splice(randering.indexOf(id), 1)
+        queue.shift()
+
+        console.info(queue)
+        console.info(randering)
+
+        return result
+
+    }
+}
 
 
 export default new atlas()

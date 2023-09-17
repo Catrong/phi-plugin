@@ -40,7 +40,7 @@ class send {
         }
 
 
-        if (!save.Recordver || save.Recordver < ver) {
+        if (ver && (!save.Recordver || save.Recordver < ver)) {
             this.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
             return false
         }
