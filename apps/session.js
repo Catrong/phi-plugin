@@ -272,7 +272,8 @@ export class phisstk extends plugin {
 
 function cmp() {
     return function (a, b) {
-        return (b.rks_new - b.rks_old) - (a.rks_new - a.rks_old)
+        return b.rks_new - a.rks_new
+        //return (b.rks_new - b.rks_old) - (a.rks_new - a.rks_old)
     }
 }
 
