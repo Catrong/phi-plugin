@@ -27,7 +27,8 @@ export class phiguess extends plugin {
                 },
                 {
                     reg: `^.*$`,
-                    fnc: 'guess'
+                    fnc: 'guess',
+                    log: false
                 },
                 {
                     reg: `^[#/](曲绘)?(ans|答案|结束)$`,
