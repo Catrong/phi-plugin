@@ -49,7 +49,7 @@ export function supportGuoba() {
                     field: 'maxRandering',
                     label: '同时渲染量',
                     helpMessage: '渲染时会将任务加入到队列中，超过同时渲染量的任务将会等待到未完成的任务完成',
-                    bottomHelpMessage: '同时渲染的最大数量，建议小于等于核心数',
+                    bottomHelpMessage: '同时渲染的最大数量，建议小于等于核心线程数',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
