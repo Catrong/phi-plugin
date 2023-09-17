@@ -46,6 +46,12 @@ export class phisstk extends plugin {
         sessionToken = sessionToken.replace(" ", '')
         sessionToken = sessionToken.replace(/[\<\>]/g, '')
 
+
+        if (!sessionToken) {
+            send.send_with_At(e, `请将 <sessionToken> 替换为你Phigros账号的sessionToken哦！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            return true
+        }
+        
         if (!Config.getDefOrConfig('config', 'isGuild')) {
 
             e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
