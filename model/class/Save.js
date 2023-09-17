@@ -93,33 +93,38 @@ export default class Save {
         }
         this.saveUrl = data.saveUrl
         this.Recordver = data.Recordver
-        this.gameProgress = {
-            isFirstRun: data.gameProgress.isFirstRun, //首次运行
-            legacyChapterFinished: data.gameProgress.legacyChapterFinished, //过去的章节已完成
-            alreadyShowCollectionTip: data.gameProgress.alreadyShowCollectionTip, //已展示收藏品Tip
-            alreadyShowAutoUnlockINTip: data.gameProgress.alreadyShowAutoUnlockINTip, //已展示自动解锁IN Tip
-            completed: data.gameProgress.completed, //剧情完成(显示全部歌曲和课题模式入口)
-            songUpdateInfo: data.gameProgress.songUpdateInfo, //？？？
-            challengeModeRank: data.gameProgress.challengeModeRank, //课题分
-            money: data.gameProgress.money, //data货币
-            unlockFlagOfSpasmodic: data.gameProgress.unlockFlagOfSpasmodic, //痉挛解锁
-            unlockFlagOfIgallta: data.gameProgress.unlockFlagOfIgallta, //Igallta解锁
-            unlockFlagOfRrharil: data.gameProgress.unlockFlagOfRrharil, //Rrhar'il解锁
-            flagOfSongRecordKey: data.gameProgress.flagOfSongRecordKey, //IN达到S(倒霉蛋,船,Shadow,心之所向,inferior,DESTRUCTION 3,2,1,Distorted Fate)
-            randomVersionUnlocked: data.gameProgress.randomVersionUnlocked, //Random切片解锁
-            chapter8UnlockBegin: data.gameProgress.chapter8UnlockBegin, //第八章入场
-            chapter8UnlockSecondPhase: data.gameProgress.chapter8UnlockSecondPhase, //第八章第二阶段
-            chapter8Passed: data.gameProgress.chapter8Passed, //第八章通过
-            chapter8SongUnlocked: data.gameProgress.chapter8SongUnlocked //第八章各曲目解锁
-
+        this.gameProgress = null
+        if(data.gameProgress) {
+            this.gameProgress = {
+                isFirstRun: data.gameProgress.isFirstRun, //首次运行
+                legacyChapterFinished: data.gameProgress.legacyChapterFinished, //过去的章节已完成
+                alreadyShowCollectionTip: data.gameProgress.alreadyShowCollectionTip, //已展示收藏品Tip
+                alreadyShowAutoUnlockINTip: data.gameProgress.alreadyShowAutoUnlockINTip, //已展示自动解锁IN Tip
+                completed: data.gameProgress.completed, //剧情完成(显示全部歌曲和课题模式入口)
+                songUpdateInfo: data.gameProgress.songUpdateInfo, //？？？
+                challengeModeRank: data.gameProgress.challengeModeRank, //课题分
+                money: data.gameProgress.money, //data货币
+                unlockFlagOfSpasmodic: data.gameProgress.unlockFlagOfSpasmodic, //痉挛解锁
+                unlockFlagOfIgallta: data.gameProgress.unlockFlagOfIgallta, //Igallta解锁
+                unlockFlagOfRrharil: data.gameProgress.unlockFlagOfRrharil, //Rrhar'il解锁
+                flagOfSongRecordKey: data.gameProgress.flagOfSongRecordKey, //IN达到S(倒霉蛋,船,Shadow,心之所向,inferior,DESTRUCTION 3,2,1,Distorted Fate)
+                randomVersionUnlocked: data.gameProgress.randomVersionUnlocked, //Random切片解锁
+                chapter8UnlockBegin: data.gameProgress.chapter8UnlockBegin, //第八章入场
+                chapter8UnlockSecondPhase: data.gameProgress.chapter8UnlockSecondPhase, //第八章第二阶段
+                chapter8Passed: data.gameProgress.chapter8Passed, //第八章通过
+                chapter8SongUnlocked: data.gameProgress.chapter8SongUnlocked //第八章各曲目解锁
+            }
         }
-        this.gameuser = {
-            name: data.gameuser.name,
-            version: data.gameuser.version,
-            showPlayerId: data.gameuser.showPlayerId,
-            selfIntro: data.gameuser.selfIntro,
-            avatar: data.gameuser.avatar,
-            background: data.gameuser.background
+        this.gameuser = null
+        if(data.gameuser) {
+            this.gameuser = {
+                name: data.gameuser.name,
+                version: data.gameuser.version,
+                showPlayerId: data.gameuser.showPlayerId,
+                selfIntro: data.gameuser.selfIntro,
+                avatar: data.gameuser.avatar,
+                background: data.gameuser.background
+            }
         }
         this.gameRecord = {}
         for (var id in data.gameRecord) {
