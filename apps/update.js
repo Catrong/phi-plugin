@@ -143,6 +143,8 @@ export class phiupdate extends plugin {
             }
         }
 
+        log.reverse()
+
         let line = log.length;
 
         if (line <= 0) return false;
