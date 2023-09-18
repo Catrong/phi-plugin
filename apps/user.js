@@ -563,6 +563,10 @@ function getbackground(name) {
                 save_background = 'Re_Nascence (Psystyle Ver.)'
                 break
             }
+            case 'Winter↑ cube↓': {
+                save_background = 'Winter↑cube↓'
+                break
+            }
             default: {
                 save_background = name
                 break
