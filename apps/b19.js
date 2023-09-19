@@ -321,8 +321,8 @@ export class phib19 extends plugin {
         }
 
         if (!ans) {
-            send.send_with_At(e, `我不知道你这首歌的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
-            return false
+            send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
+            return true
         }
 
         var data = {
