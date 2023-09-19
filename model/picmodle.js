@@ -137,9 +137,12 @@ class atlas {
 
         queue.shift()
         randering.push(id)
+
+
+        var result
         
         try {
-            const result = await puppeteer.render(path, params, cfg)
+            result = await puppeteer.render(path, params, cfg)
         } catch (err) {
             
         }
