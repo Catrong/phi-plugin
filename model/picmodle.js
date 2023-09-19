@@ -119,8 +119,6 @@ class atlas {
         const id = tot++
         queue.push(id)
 
-        console.info(queue)
-        console.info(randering)
 
         var cnt = 0
         while (randering.length >= Config.getDefOrConfig('config', 'maxRandering') || queue[0] != id) {
@@ -130,18 +128,24 @@ class atlas {
 
                 
                 queue.splice(queue.indexOf(id), 1)
-                logger.error('[Phi-Plugin] 渲染等待超时')
+                logger.error(`[Phi-Plugin] 渲染等待超时 id ${id}`)
+                logger.info(`[Phi-Plugin][等待渲染队列] ${queue}`)
+                logger.info(`[Phi-Plugin][渲染队列] ${randering}`)
                 return '等待超时，请重试QAQ！'
             }
         }
 
-        const result = await puppeteer.render(path, params, cfg)
+        queue.shift()
+        randering.push(id)
+        
+        try {
+            const result = await puppeteer.render(path, params, cfg)
+        } catch (err) {
+            
+        }
 
         randering.splice(randering.indexOf(id), 1)
-        queue.shift()
-
-        console.info(queue)
-        console.info(randering)
+        
 
         return result
 
