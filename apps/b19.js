@@ -347,10 +347,10 @@ export class phib19 extends plugin {
                 }
             } else {
                 data[Level[i]] = {
-                    Rating: 'NEW',
-                    difficulty: songsinfo['chart'][Level[i]]['difficulty']
+                    Rating: 'NEW'
                 }
             }
+            data[Level[i]].difficulty = Number(songsinfo['chart'][Level[i]]['difficulty']).toFixed(1)
         }
         await send.send_with_At(e, await get.getsingle(e, data))
         return true
