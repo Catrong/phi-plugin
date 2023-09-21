@@ -41,14 +41,14 @@ export class phihelp extends plugin {
             `⌈/${head}b19⌋ 获取b19图\n` +
             `⌈/${head}info⌋ 获取个人信息统计\n` +
             `⌈/${head}lvsco(scolv) <定数> <难度（可选）>⌋ 获取范围成绩图\n` +
-            `⌈/${head}best1-99⌋ 获取文字版rks，未指定默认b19\n` +
+            `⌈/${head}best1(+)⌋ 获取文字版b19（或更多），最高b99\n` +
             `⌈/${head}score <曲名>⌋ 获取单曲成绩\n` +
             `⌈/${head}suggest⌋ 获取推分建议\n` +
             `⌈/${head}song <曲名>⌋ 获取曲目图鉴\n` +
             `⌈/${head}rand <条件>⌋ 随机曲目\n` +
             `⌈/${head}ill <曲名>⌋ 查看曲目曲绘\n` +
             `⌈/${head}data⌋ 查询data数量\n` +
-            `⌈/${head}re8⌋ 重置第八章\n` +
+            `⌈/${head}re8⌋ 重置第八章剧情，不会清除成绩\n` +
             `⌈/${head}search <条件 值>⌋ 检索曲目，支持BPM 定数(dif) 物量(cmb)\n` +
             `⌈/${head}letter⌋ 根据字母猜曲名，⌈#出...⌋ 开指定的字母，⌈#第n个...⌋ 进行回答，⌈#字母答案⌋ 获取答案\n` +
             `⌈/${head}guess⌋ 开始猜曲绘，回答直接发送，⌈#答案⌋ 结束\n` +
@@ -56,7 +56,7 @@ export class phihelp extends plugin {
             `---------------------\n` +
             `⌈sign/签到⌋ 每日签到获取Notes和任务\n` +
             `⌈task/我的任务⌋ 查看自己的任务\n` +
-            `⌈${head}send/送 <目标> <数量>⌋ 给某人转账，支持QQ号或@，将扣除其中的 20%\n` +
+            `⌈${head}send/送 <目标> <数量>⌋ 给某人转账，支持QQ号或@，将扣除其中的20%\n` +
             `⌈retask/刷新任务⌋ 刷新任务，需要花费20Notes`
 
         )
