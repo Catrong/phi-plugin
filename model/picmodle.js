@@ -144,7 +144,10 @@ class atlas {
         try {
             result = await puppeteer.render(path, params, cfg)
         } catch (err) {
-            
+            logger.error(err)
+            logger.error(`[Phi-Plugin][渲染失败] id ${id}`)
+            logger.info(`[Phi-Plugin][等待渲染队列] ${queue}`)
+            logger.info(`[Phi-Plugin][渲染队列] ${randering}`)
         }
 
         randering.splice(randering.indexOf(id), 1)
