@@ -1,6 +1,7 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
+import get from '../model/getdata.js'
 
 export class phihelp extends plugin {
     constructor() {
