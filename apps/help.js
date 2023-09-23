@@ -32,8 +32,12 @@ export class phihelp extends plugin {
             head = head.replace(/(\||\(\|)/g, '')
         }
         if (head) {
-            head += ' '
+            //head += ' '
+            e.reply([`命令头：⌈/${head}⌋`, get.getimg('help')], true)
+        } else {
+            e.reply(get.getimg('help'), true)
         }
+        /**
         await e.reply(`⌈phi-plugin 帮助⌋ (所有/均可用#代替,空格均可省略)\n` +
             `⌈/${head}bind <sessionToken>⌋ 绑定sessionToken\n` +
             `⌈/${head}unbind⌋ 删除sessionToken和存档记录\n` +
@@ -60,6 +64,7 @@ export class phihelp extends plugin {
             `⌈retask/刷新任务⌋ 刷新任务，需要花费20Notes`
 
         )
+        */
         return true
     }
 
