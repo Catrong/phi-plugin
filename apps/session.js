@@ -76,7 +76,7 @@ export class phisstk extends plugin {
     async update(e) {
         var User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
         if (!User) {
-            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
+            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
             return true
         }
 
@@ -95,7 +95,7 @@ export class phisstk extends plugin {
 
         } catch (err) {
             logger.error(`[phi-plugin]绑定sessionToken错误 ${sessionToken}`)
-            send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
 
