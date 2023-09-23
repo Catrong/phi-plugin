@@ -1,0 +1,57 @@
+@import "../common/common.css";
+
+body {
+    display: flex;
+    flex-direction: column;
+    width: 1920px;
+    height: 960px;
+    justify-content: center;
+    align-items: center;
+    background: url('./demo.jpeg');
+    background-size: auto;
+    background-repeat: no-repeat;
+}
+
+body p {
+    margin: 0px;
+    color: white;
+}
+
+.left {
+    width: 36.2%;
+    height: 86%;
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    align-items: center;
+    left: 4.2%;
+    top: 7%;
+    transform: perspective(520px) rotateY(4deg) rotateX(0deg);
+}
+
+.Player_Info {
+    width: 101%;
+    height: 3.8%;
+    margin-bottom: 1%;
+    background: rgba(40,127,187,0.5);
+}
+
+.basic-box {
+    width: 100%;
+    height: 49.3%;
+    margin-top: 0;
+    display: flex;
+}
+
+.basic-img {
+    width: 100%;
+    height: 88%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.basic-img img {
+    width: 100%;
+}
