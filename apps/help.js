@@ -38,7 +38,7 @@ export class phihelp extends plugin {
             `⌈/${head}bind <sessionToken>⌋ 绑定sessionToken\n` +
             `⌈/${head}unbind⌋ 删除sessionToken和存档记录\n` +
             `⌈/${head}update⌋ 更新数据\n` +
-            `⌈/${head}b19⌋ 获取b19图\n` +
+            `⌈/${head}pgr⌋ 获取b19图\n` +
             `⌈/${head}info⌋ 获取个人信息统计\n` +
             `⌈/${head}lvsco(scolv) <定数> <难度（可选）>⌋ 获取范围成绩图\n` +
             `⌈/${head}best1(+)⌋ 获取文字版b19（或更多），最高b99\n` +
