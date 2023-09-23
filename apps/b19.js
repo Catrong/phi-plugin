@@ -19,7 +19,7 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b19|rks|pgr)$`,
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b19|rks|pgr|PGR|B19|RKS)$`,
                     fnc: 'b19'
                 },
                 {
