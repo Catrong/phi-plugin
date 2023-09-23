@@ -33,7 +33,24 @@ body p {
     width: 101%;
     height: 3.8%;
     margin-bottom: 1%;
-    background: rgba(40,127,187,0.5);
+    background: #3081b8;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* box-shadow: 6px 5px 3px #3081b8; */
+}
+
+.Player_Info p {
+    font-size: 17px;
+    color: white;
+    transform: scaleY(1.5);
+    margin-left: 2%;
+}
+
+.Player_Info::after {
+    content: '';
+    transform: scaleY(0.9);
+    filter: drop-shadow(6px, 6px, 1px, #3081b8);
 }
 
 .basic-box {
