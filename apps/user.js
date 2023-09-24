@@ -3,11 +3,17 @@ import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
 
-await get.init()
 
 var tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
 const Level = ['EZ', 'HD', 'IN', 'AT']
 const tot_rating_info = {}
+const illlist = []
+
+for (var i in get.info()) {
+    if (get.info()[i]['illustration_big']) {
+        illlist.push(get.getill(i))
+    }
+}
 
 for (var song in get.ori_info) {
     var info = get.ori_info[song]
@@ -254,6 +260,7 @@ export class phiuser extends plugin {
             data_range: data_range,
             data_date: [date_to_string(data_date[0]), date_to_string(data_date[1])],
             rks_date: [date_to_string(rks_date[0]), date_to_string(rks_date[1])],
+            background: illlist[randint(0, illlist.length-1)],
         }
 
         send.send_with_At(e, await get.getuser_info(e, data))
@@ -616,4 +623,11 @@ function match_range(msg, range) {
         msg = msg.match(/[0-9]+(.[0-9]+)?/g)[0]
         range[0] = range[1] = Number(msg)
     }
+}
+
+//定义生成指定区间整数随机数的函数
+function randint(min, max) {
+    const range = max - min + 1
+    const randomOffset = Math.floor(Math.random() * range)
+    return (randomOffset + min) % range + min
 }
