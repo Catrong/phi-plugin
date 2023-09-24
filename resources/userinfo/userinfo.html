@@ -1,10 +1,13 @@
 <head>
     <link rel="stylesheet" href="{{_res_path}}/userinfo/userinfo.css">
+    {{if background}}
     <style>
         body {
             background: url('{{background}}');
+            background-size: cover;
         }
     </style>
+    {{/if}}
 </head>
 
 <body style="scale: {{size}};">
