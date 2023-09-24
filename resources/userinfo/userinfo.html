@@ -1,17 +1,13 @@
 <head>
     <link rel="stylesheet" href="{{_res_path}}/userinfo/userinfo.css">
-    {{if background}}
-    <style>
-        body {
-            background: url('{{background}}');
-            background-size: cover;
-        }
-    </style>
-    {{/if}}
 </head>
 
 <body style="scale: {{size}};">
-
+    {{if background}}
+    <div class="background">
+        <img src="{{background}}" alt="{{background}}">
+    </div>
+    {{/if}}
     <div class="left">
         <div class="Player_Info">
             <p>PLAYER_INFO</p>
