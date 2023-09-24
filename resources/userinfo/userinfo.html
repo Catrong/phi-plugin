@@ -230,4 +230,50 @@
             {{/each}}
         </div>
     </div>
+
+    <!-- 曲目名称自适应name-box的宽度 -->
+    <script>
+        function adjustFontSize() {
+
+            /**
+             * @param {string} id id
+             * @param {number} maxFontSize 最大字体大小
+             */
+            function work(id, maxFontSize = 50) {
+
+                //获取song-name和composer滴元素
+                var songName = document.getElementById(id)
+
+                /*调整曲目名称字体大小*/
+                var parentElement = songName.parentElement
+
+
+                //如果字体宽度小于父元素宽度，则增大字体大小
+                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
+                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                    var fontSize = parseFloat(style)
+
+                    //检查是否已经达到最大字体大小
+                    if (fontSize >= maxFontSize) {
+                        break
+                    }
+
+                    songName.style.fontSize = (fontSize + 1) + "px"
+                }
+
+                // 如果字体宽度大于父元素宽度，则减小字体大小
+                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
+                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                    var fontSize = parseFloat(style);
+                    songName.style.fontSize = (fontSize - 1) + "px";
+                }
+            }
+
+            work('Player_Id', 30)
+            work('data', 60)
+
+        }
+        window.onload = adjustFontSize
+        window.onresize = adjustFontSize
+    </script>
 </body>

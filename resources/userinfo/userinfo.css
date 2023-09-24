@@ -150,8 +150,9 @@ body p {
 }
 
 .Player_Id-right {
-    width: 83%;
+    width: 82%;
     height: 100%;
+    padding-right: 1%;
     display: flex;
     align-items: center;
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 2.8% 0%);
@@ -296,7 +297,7 @@ body p {
 }
 
 #data_box {
-    height: 165.5px;
+    height: auto;
 }
 
 .Player_box_title {
@@ -317,7 +318,7 @@ body p {
 .Player_box_value {
     display: flex;
     width: 100%;
-    height: 80%;
+    height: auto;
     align-items: center;
     margin-top: 0%;
     filter: drop-shadow(-3px -2px 0px rgba(255, 255, 255, 0.2));
