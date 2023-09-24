@@ -481,12 +481,12 @@ circle {
 }
 
 .value_box {
-    height: 85%;
+    height: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
+    margin-bottom: 10px;
 }
 
 .value_box p {
