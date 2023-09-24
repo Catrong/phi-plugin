@@ -70,6 +70,7 @@ body p {
     flex-direction: column;
     align-items: center;
     z-index: 2;
+    position: relative;
 }
 
 .basic-img {
@@ -82,6 +83,22 @@ body p {
 }
 
 .basic-img img {
+    width: 100%;
+}
+
+.avatar {
+    position: absolute;
+    left: 0;
+    bottom: 54px;
+    width: 128px;
+    height: 128px;
+    display: flex;
+    border: 5px solid;
+    border-color: grey;
+    height: min-content;
+}
+
+.avatar img {
     width: 100%;
 }
 
