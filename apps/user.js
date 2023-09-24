@@ -496,7 +496,11 @@ export class phiuser extends plugin {
  * @returns 百分数，单位%
  */
 function range(value, range) {
-    return (value - range[0]) / (range[1] - range[0]) * 100
+    if (range[0] == range[1]) {
+        return 50
+    } else {
+        return (value - range[0]) / (range[1] - range[0]) * 100
+    }
 }
 
 /**进度条 */
