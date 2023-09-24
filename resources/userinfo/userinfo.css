@@ -32,6 +32,11 @@ body p {
     height: 1500px;
 }
 
+.left,
+.right {
+    background-color: rgb(45 129 230 / 29%);
+}
+
 .left {
     width: 36.5%;
     height: fit-content;
@@ -42,7 +47,6 @@ body p {
     align-items: center;
     left: 3.8%;
     top: 7%;
-    background: rgba(27, 52, 82, 0.3);
     transform: perspective(600px) rotateY(3.5deg);
     backdrop-filter: blur(20px);
 }
@@ -345,7 +349,6 @@ body p {
     align-items: center;
     right: 6.2%;
     top: 7%;
-    background: rgba(27, 52, 82, 0.2);
     transform: perspective(600px) rotateY(-2.3deg);
     backdrop-filter: blur(20px);
 }
