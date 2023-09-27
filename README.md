@@ -16,8 +16,6 @@
 [![Downloads](https://img.shields.io/github/downloads/Catrong/phi-plugin/total-9cf?style=for-the-badge&color=blue&label=下载)](../../archive/refs/heads/main.zip)
 [![Releases](https://img.shields.io/github/v/release/Catrong/phi-plugin-9cf?style=for-the-badge&color=green&label=发行版)](../../releases/latest)
 
-
-![phi-plugin](https://komarev.com/ghpvc/?username=phi-plugin&style=for-the-badge)
 [![Contributors](https://img.shields.io/badge/Contributors-4-orange.svg?style=for-the-badge)](#Cntributors)
 
   </div>
