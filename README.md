@@ -1,10 +1,27 @@
+<div align="center">
+
 # phi-plugin
 
-![version](https://img.shields.io/badge/%E7%89%88%E6%9C%AC-0.9.6-blue)
-![QQ group](https://img.shields.io/badge/%E4%BA%A4%E6%B5%81%E7%BE%A4-282781491-blue)
-[![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?color=yellow&label=收藏)](../../stargazers)
-[![Downloads](https://img.shields.io/github/downloads/Catrong/phi-plugin/total?color=blue&label=下载)](../../archive/main.tar.gz)
-[![Releases](https://img.shields.io/github/v/release/Catrong/phi-plugin?color=green&label=发行版)](../../releases/latest)
+![nyan](https://count.getloli.com/get/@phi-plugin)
+
+[![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
+[![phi-plugin](https://img.shields.io/badge/Gitee仓库-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
+![version](https://img.shields.io/badge/%E7%89%88%E6%9C%AC-0.9.6-9cf?style=for-the-badge)
+[![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Yunzai-Bot)
+[![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
+[![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
+[![Group](https://img.shields.io/badge/Q群-282781491-9cf?style=for-the-badge&logo=tencent-qq)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=4YLoHlaAb5aDhTy8bi0FAjbZcC8o5XfK&authKey=Oxw5Ss06W5X0UjRN2Ql6RK%2FApduLOgCSCZiBLRw9IWP3UqShLAWw%2BMPJuZTmotW3&noverify=0&group_code=282781491)
+[![Guild](https://img.shields.io/badge/频道-Hutao114Pgr939-9cf?style=for-the-badge&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
+[![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Star)](../../stargazers)
+[![Downloads](https://img.shields.io/github/downloads/Catrong/phi-plugin/total-9cf?style=for-the-badge&color=blue&label=下载)](../../archive/refs/heads/main.zip)
+[![Releases](https://img.shields.io/github/v/release/Catrong/phi-plugin-9cf?style=for-the-badge&color=green&label=发行版)](../../releases/latest)
+
+[![Contributors](https://img.shields.io/badge/Contributors-4-orange.svg?style=for-the-badge)](#Cntributors)
+
+  </div>
+  
+<br>
+
 
 ---
 ### 介绍：
@@ -28,6 +45,7 @@
 
 [Steve喵~](https://github.com/112121212167987534524)
 
+[文酱](https://github.com/7aGiven)
 
 ---
 
