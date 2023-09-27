@@ -259,7 +259,7 @@
                     {{else if rating.tot == 'FC'}}
                     <span style="color: rgb(0, 132, 255);">.{{((tot_acc % 1).toFixed(4)).replace('0.','')}}%</span>
                     {{else}}
-                    <span>.{{((tot_acc % 1) * 1e4).toFixed(0) || '0000'}}%</span>
+                    <span>.{{((tot_acc % 1).toFixed(4)).replace('0.','')}}%</span>
                     {{/if}}
                 </div>
             </div>
