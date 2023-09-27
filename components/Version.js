@@ -80,7 +80,7 @@ try {
 try {
     if (fs.existsSync(README_path)) {
         let README = fs.readFileSync(README_path, 'utf8') || ''
-        let reg = /https:\/\/img.shields.io\/badge\/%E7%89%88%E6%9C%AC-(.*)-blue/.exec(README)
+        let reg = /https:\/\/img.shields.io\/badge\/%E7%89%88%E6%9C%AC-(.*)-9cf?style=for-the-badge/.exec(README)
         if (reg) {
             currentVersion = 'v' + reg[1]
         }
