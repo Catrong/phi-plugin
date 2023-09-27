@@ -255,9 +255,9 @@
                 <div class="tot_acc-right">
                     <span id="acc_word">ACC</span>
                     {{if rating.tot == 'phi'}}
-                    <span style="color: rgb(255, 253, 44);">.{{((tot_acc % 1) * 1e4).toFixed(0)}}%</span>
+                    <span style="color: rgb(255, 253, 44);">.{{((tot_acc % 1).toFixed(4)).replace('0.','')}}%</span>
                     {{else if rating.tot == 'FC'}}
-                    <span style="color: rgb(0, 132, 255);">.{{((tot_acc % 1) * 1e4).toFixed(0)}}%</span>
+                    <span style="color: rgb(0, 132, 255);">.{{((tot_acc % 1).toFixed(4)).replace('0.','')}}%</span>
                     {{else}}
                     <span>.{{((tot_acc % 1) * 1e4).toFixed(0) || '0000'}}%</span>
                     {{/if}}
