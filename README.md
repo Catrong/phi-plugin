@@ -2,6 +2,8 @@
 
 # phi-plugin
 
+![可爱九鸟](https://github.com/Catrong/phi-plugin/assets/117198625/127121b5-8ddf-4d78-a5ec-10fd016681f3)
+
 ![nyan](https://count.getloli.com/get/@phi-plugin)
 
 [![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
@@ -38,14 +40,16 @@
 插件官方频道 [Hutao114Pgr939](https://pd.qq.com/s/e3z86q6bw)，机器人可以添加到其他频道，有什么问题也可以来频道反馈
 
 ### 特别鸣谢
-
-[屑克鲁](https://github.com/KeluIsAfkeru) 
-
-[圈圈](https://github.com/Walkersifolia)
-
-[Steve喵~](https://github.com/112121212167987534524)
-
-[文酱](https://github.com/7aGiven)
+<table style="border-radius: 20px">
+  <tbody style="border-radius: 20px">
+    <tr>
+      <td align="center" valign="top" width="10%"><a href="https://github.com/Walkersifolia"><img src="https://avatars.githubusercontent.com/u/129571444?v=4?s=100" style="border-radius: 50%" width="50px;" alt="圈圈"/><br /><sub><b>@Walkersifolia</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=Walkersifolia" title="Code">🌸</a></td>
+<td align="center" valign="top" width="10%"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Code">🌸</a></td>
+<td align="center" valign="top" width="10%"><a href="https://github.com/112121212167987534524"><img src="https://avatars.githubusercontent.com/u/117198625?v=4?s=100" style="border-radius: 50%" width="50px;" alt="Steve喵~"/><br /><sub><b>@Steve</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=112121212167987534524" title="Code">🌸</a></td>
+<td align="center" valign="top" width="10%"><a href="https://github.com/7aGiven"><img src="https://avatars.githubusercontent.com/u/77519196?v=4?s=100" style="border-radius: 50%" width="50px;" alt="文酱"/><br /><sub><b>@7aGiven</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=7aGiven" title="Code">🌸</a></td>
+      </tr>
+  </tbody>
+</table>
 
 ---
 
