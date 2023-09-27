@@ -82,7 +82,7 @@ try {
         let README = fs.readFileSync(README_path, 'utf8') || ''
         let reg = /https:\/\/img.shields.io\/badge\/%E7%89%88%E6%9C%AC-(.*)-blue/.exec(README)
         if (reg) {
-            currentVersion = reg[1]
+            currentVersion = 'V ' + reg[1]
         }
     }
 } catch (err) { }
