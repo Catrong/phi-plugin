@@ -53,7 +53,7 @@ export class phimoney extends plugin {
         var now_time = new Date().toString()
         var request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
         var midqiu = false
-        if (now_time.includes('Sep 28 2023')) {
+        if (now_time.includes('Sep 29 2023')) {
             midqiu = true
         }
         if (request_time > last_sign) {
@@ -214,6 +214,11 @@ export class phimoney extends plugin {
 
         var task_time = now_time.toString().split(' ')
 
+        var midqiu = false
+        if (now_time.includes('Sep 28 2023')) {
+            midqiu = true
+        }
+
         var picdata = {
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
@@ -227,7 +232,9 @@ export class phimoney extends plugin {
             Notes: data.plugin_data.money,
         }
 
-
+        if (midqiu) {
+            data.tips = `${data.plugin_data.sp_info}中秋节快乐嗷！`
+        }
 
         send.send_with_At(e, await get.gettasks(e, picdata))
 
