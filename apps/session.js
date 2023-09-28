@@ -244,6 +244,14 @@ export class phisstk extends plugin {
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
         }
 
+        var midqiu = false
+        if (new Date().toString().includes('Sep 29 2023')) {
+            midqiu = true
+        }
+        if (midqiu) {
+            data.tips = `${pluginData.plugin_data.sp_info || ''}中秋节快乐嗷！`
+        }
+
         send.send_with_At(this.e, await get.getupdate(this.e, data))
         return false
     }
