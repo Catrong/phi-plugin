@@ -18,11 +18,16 @@
                 <img src="{{gameuser.backgroundurl}}" alt="{{gameuser.backgroundurl}}">
             </div>
             <div class="Player_Id">
-                <div class="Player_Id-left">
-                    <p>ID</p>
+                <div class="avatar">
+                    <img src="{{_res_path}}/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
                 </div>
-                <div class="Player_Id-right">
-                    <p id="Player_Id">{{gameuser.PlayerId}}</p>
+                <div class="Player_Id-box">
+                    <div class="Player_Id-left">
+                        <p>ID</p>
+                    </div>
+                    <div class="Player_Id-right">
+                        <p id="Player_Id">{{gameuser.PlayerId}}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,8 +69,8 @@
             </div>
         </div>
         {{if gameuser.selfIntro}}
-        <div class="Player_data_box" id="profile">
-            <font color='white'>{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
+        <div class="Player_data_box">
+            <font color='white' id="profile">{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
         </div>
         {{/if}}
         <div class="createdbox">
@@ -271,6 +276,7 @@
 
             work('Player_Id', 30)
             work('data', 60)
+            work('profile', 30)
 
         }
         window.onload = adjustFontSize

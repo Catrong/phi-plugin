@@ -15,15 +15,18 @@
             <div class="basic-img">
                 <img src="../otherill/ぱぴぷぴぷぴぱ.ころねぽちWith立秋.png" alt="{{gameuser.backgroundurl}}">
             </div>
-            <div class="avatar">
-                <img src="../avatar/Aphasia.png" alt="{{avatar}}">
-            </div>
             <div class="Player_Id">
-                <div class="Player_Id-left">
-                    <p>ID</p>
+                <div class="avatar">
+                    <img src="../avatar/Aphasia.png" alt="{{avatar}}">
                 </div>
-                <div class="Player_Id-right">
-                    <p id="Player_Id">就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你</p>
+                <div class="Player_Id-box">
+                    <div class="Player_Id-left">
+                        <p>ID</p>
+                    </div>
+                    <div class="Player_Id-right">
+                        <p id="Player_Id">
+                            就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你就是不会告诉你</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,7 +48,7 @@
                 <div class="Player_data_title" id="Player_data_right">
                     <p>CLG MOD</p>
                 </div>
-                <div class="Challenge" id="Challenge1">
+                <div class="Challenge" id="Challenge2">
                     <img src="../otherimg/5.png" alt="{{ChallengeMode}}">
                     <span>54</span>
                 </div>
@@ -62,8 +65,8 @@
                 <p id="data">1PiB 1TiB 1GiB 1MiB 1KiB</p>
             </div>
         </div>
-        <div class="Player_data_box" id="profile">
-            <font color='white'>{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
+        <div class="Player_data_box">
+            <font color='white' id="profile">{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
         </div>
         <div class="createdbox">
             <div class="phi-plugin">
@@ -474,6 +477,7 @@
 
             work('Player_Id', 30)
             work('data', 60)
+            work('profile', 30)
 
         }
         window.onload = adjustFontSize
