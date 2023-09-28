@@ -215,7 +215,7 @@ export class phimoney extends plugin {
         var task_time = now_time.toString().split(' ')
 
         var midqiu = false
-        if (now_time.includes('Sep 28 2023')) {
+        if (now_time.includes('Sep 29 2023')) {
             midqiu = true
         }
 
