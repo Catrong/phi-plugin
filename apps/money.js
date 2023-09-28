@@ -61,9 +61,9 @@ export class phimoney extends plugin {
 
             if (midqiu) {
                 var gxgx = [288, 366, 600, 666, 888]
-                getnum = gxgx[randint(gxgx.length)]
+                getnum = gxgx[randint(gxgx.length - 1)]
                 gxgx = ['天上圆月，人间团圆。', '太平风物，团圆安康。', '中秋团圆月，明月照福缘。', '海上生明月，天涯共此时。', '今夜月明人尽望，不知秋思落谁家。', '秋风吹不尽，总是玉关情。', '今人不见古时月，今月曾经照古人。', '遥怜小儿女，未解忆长安。', '西北望乡何处是，东南见月几回圆。', '明月几时有，把酒问青天。', '素月分辉，明河共影，表里俱澄澈。', '似此星辰非昨夜，为谁风露立中宵。']
-                data.plugin_data.sp_info = gxgx[randint(gxgx.length)]
+                data.plugin_data.sp_info = gxgx[randint(gxgx.length - 1)]
             }
 
             data.plugin_data.money += getnum
