@@ -229,7 +229,7 @@ export class phimoney extends plugin {
         }
 
         var midqiu = false
-        if (now_time.includes('Sep 29 2023')) {
+        if (new Date().includes('Sep 29 2023')) {
             midqiu = true
         }
         if (midqiu) {
@@ -299,7 +299,7 @@ export class phimoney extends plugin {
 
 
         var midqiu = false
-        if (now_time.includes('Sep 29 2023')) {
+        if (new Date().includes('Sep 29 2023')) {
             midqiu = true
         }
         if (midqiu) {
