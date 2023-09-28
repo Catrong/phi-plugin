@@ -125,7 +125,7 @@ export class phimoney extends plugin {
         } else {
             get.delLock(e.user_id)
             if (midqiu) {
-                send.send_with_At(e, `${data.plugin_data.sp_info}祝你中秋节快乐吖！你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
+                send.send_with_At(e, `${data.plugin_data.sp_info || ''}祝你中秋节快乐吖！你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
             } else {
                 send.send_with_At(e, `你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
             }
@@ -233,7 +233,7 @@ export class phimoney extends plugin {
             midqiu = true
         }
         if (midqiu) {
-            picdata.tips = `${data.plugin_data.sp_info}中秋节快乐嗷！`
+            picdata.tips = `${data.plugin_data.sp_info || ''}中秋节快乐嗷！`
         }
 
         send.send_with_At(e, await get.gettasks(e, picdata))
@@ -303,7 +303,7 @@ export class phimoney extends plugin {
             midqiu = true
         }
         if (midqiu) {
-            picdata.tips = `${data.plugin_data.sp_info}中秋节快乐嗷！`
+            picdata.tips = `${data.plugin_data.sp_info || ''}中秋节快乐嗷！`
         }
 
 
