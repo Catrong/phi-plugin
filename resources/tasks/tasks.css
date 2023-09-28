@@ -427,14 +427,3 @@ body p {
     font-size: 40px;
     text-shadow: 0 0 20px #fff700;
 }
-
-.tips {
-    position: absolute;
-    bottom: 1%;
-    left: 1%;
-    writing-mode: horizontal-tb;
-}
-
-.tips p {
-    font-size: 30px;
-}

@@ -407,24 +407,3 @@ body p {
     display: flex;
     z-index: 1;
 }
-
-.phi-plugin p {
-    font-size: 80px;
-    text-shadow: 0 0 20px rgb(0 186 255);
-}
-
-.ver p {
-    font-size: 40px;
-    text-shadow: 0 0 20px #fff700;
-}
-
-.tips {
-    position: absolute;
-    bottom: 1%;
-    left: 1%;
-    writing-mode: horizontal-tb;
-}
-
-.tips p {
-    font-size: 30px;
-}
