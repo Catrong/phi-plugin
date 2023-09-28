@@ -214,10 +214,6 @@ export class phimoney extends plugin {
 
         var task_time = now_time.toString().split(' ')
 
-        var midqiu = false
-        if (now_time.includes('Sep 29 2023')) {
-            midqiu = true
-        }
 
         var picdata = {
             PlayerId: save.saveInfo.PlayerId,
@@ -232,8 +228,12 @@ export class phimoney extends plugin {
             Notes: data.plugin_data.money,
         }
 
+        var midqiu = false
+        if (now_time.includes('Sep 29 2023')) {
+            midqiu = true
+        }
         if (midqiu) {
-            data.tips = `${data.plugin_data.sp_info}中秋节快乐嗷！`
+            picdata.tips = `${data.plugin_data.sp_info}中秋节快乐嗷！`
         }
 
         send.send_with_At(e, await get.gettasks(e, picdata))
@@ -297,6 +297,14 @@ export class phimoney extends plugin {
             Notes: data.plugin_data.money,
         }
 
+
+        var midqiu = false
+        if (now_time.includes('Sep 29 2023')) {
+            midqiu = true
+        }
+        if (midqiu) {
+            picdata.tips = `${data.plugin_data.sp_info}中秋节快乐嗷！`
+        }
 
 
         send.send_with_At(e, await get.gettasks(e, picdata))
