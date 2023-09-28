@@ -53,7 +53,17 @@ export class phimoney extends plugin {
         var now_time = new Date().toString()
         var request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
         if (request_time > last_sign) {
+            var midqiu = false
+            if (now_time.includes('Sep 28 2023') {
+                midqiu = true
+            }
             var getnum = randint(20, 5)
+
+            if (midqiu) {
+                var gxgx = [288, 366, 600, 666, 888]
+                getnum = gxgx[randint(4)]
+            }
+            
             data.plugin_data.money += getnum
             data.plugin_data.sign_in = now_time
 
@@ -84,9 +94,17 @@ export class phimoney extends plugin {
                 Remsg.push(`签到成功！现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！(∪.∪ )...zzz\n`)
             }
 
-            Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}\n`)
-            Remsg.push(`祝您今日愉快呐！（￣︶￣）↗　`)
 
+            if (midqiu) {
+                var gxgx = ['天上圆月，人间团圆。', '太平风物，团圆安康。', '中秋团圆月，明月照福缘。', '海上生明月，天涯共此时。', '今夜月明人尽望，不知秋思落谁家。', '秋风吹不尽，总是玉关情。', '今人不见古时月，今月曾经照古人。', '遥怜小儿女，未解忆长安。', '西北望乡何处是，东南见月几回圆。', '明月几时有，把酒问青天。', '素月分辉，明河共影，表里俱澄澈。', '似此星辰非昨夜，为谁风露立中宵。']
+                Remsg.push(gxgx[randint(gxgx.length)])
+                Remsg.push(`中秋佳节，恭喜您获得了${getnum}个Note，祝您中秋节愉快！`)
+            } else {
+                Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}\n`)
+            
+                Remsg.push(`祝您今日愉快呐！（￣︶￣）↗　`)
+            }
+            
             var save = await get.getsave(e.user_id)
             var last_task = new Date(data.plugin_data.task_time)
 
