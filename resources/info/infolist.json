@@ -5954,5 +5954,65 @@
                 "charter": "TimiTini & HaraKuma"
             }
         }
+    },
+    "Diamond Eyes": {
+        "song": "Diamond Eyes",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "单曲精选集",
+        "bpm": "",
+        "composer": "SYNTHETIC",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "Bitterblossom": {
+        "song": "Bitterblossom",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "单曲精选集",
+        "bpm": "",
+        "composer": "imvi",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "",
+                "combo": "",
+                "charter": ""
+            }
+        }
     }
 }
