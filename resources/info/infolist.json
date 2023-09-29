@@ -5957,8 +5957,8 @@
     },
     "Diamond Eyes from SOUL NOTES": {
         "song": "Diamond Eyes from SOUL NOTES",
-        "illustration": "",
-        "illustration_big": "",
+        "illustration": "DiamondEyes.SYNTHETIC",
+        "illustration_big": "DiamondEyes.SYNTHETIC",
         "chapter": "单曲精选集",
         "bpm": "",
         "composer": "SYNTHETIC",
@@ -5987,8 +5987,8 @@
     },
     "Bitterblossom": {
         "song": "Bitterblossom",
-        "illustration": "",
-        "illustration_big": "",
+        "illustration": "Bitterblossom.imvi",
+        "illustration_big": "Bitterblossom.imvi",
         "chapter": "单曲精选集",
         "bpm": "",
         "composer": "imvi",
