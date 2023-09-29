@@ -621,7 +621,6 @@ class getdata {
      * @param {boolean} [ori=false] 是否只启用原版
      */
     init_info(song, ori = false) {
-        console.info(song)
         if (ori) {
             return new SongsInfo(this.ori_info[song])
         } else {
