@@ -17,16 +17,16 @@ for (var i in get.info()) {
 
 for (var song in get.ori_info) {
     var info = get.ori_info[song]
-    if (info.chart['AT']) {
+    if (info.chart['AT'] && Number(info.chart['AT'].difficulty)) {
         ++tot[3]
     }
-    if (info.chart['IN']) {
+    if (info.chart['IN'] && Number(info.chart['IN'].difficulty)) {
         ++tot[2]
     }
-    if (info.chart['HD']) {
+    if (info.chart['HD'] && Number(info.chart['HD'].difficulty)) {
         ++tot[1]
     }
-    if (info.chart['EZ']) {
+    if (info.chart['EZ'] && Number(info.chart['EZ'].difficulty)) {
         ++tot[0]
     }
     for (var i in info.chart) {
