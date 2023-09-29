@@ -1,6 +1,6 @@
 <div align="center">
 
-# Phi-Plugin
+# phi-plugin
 
 ![可爱九鸟](https://github.com/Catrong/phi-plugin/assets/117198625/127121b5-8ddf-4d78-a5ec-10fd016681f3)
 
@@ -108,18 +108,17 @@ pnpm install -P
 
 #### Todo
 
-* 写菜单
+·写菜单
 
-* 完善云存档
+·完善云存档
 
-* 加入收集品、头像等的图鉴
+·加入收集品、头像等的图鉴
 
-* 点phi的歌
+·点phi的歌
 
-* 频道模式禁用私聊生成b19图及娱乐功能
+·频道模式禁用私聊生成b19图及娱乐功能
 
-* …
-
+ ·…
 ---
 
 #### B19效果图
@@ -142,7 +141,7 @@ pnpm install -P
 
 效果图来自@东城Eastown
 #### 个人信息效果图
-![image](https://github.com/Catrong/phi-plugin/assets/117198625/20bb87b1-41e5-43e4-a97c-865b1090f893)
+![1827322351f30b3ad7cfa481922bfa7e](https://github.com/Catrong/phi-plugin/assets/117198625/20bb87b1-41e5-43e4-a97c-865b1090f893)
 
 效果图来自[@Steve喵~](https://github.com/112121212167987534524)
 
