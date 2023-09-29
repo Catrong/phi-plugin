@@ -142,7 +142,7 @@ pnpm install -P
 
 效果图来自@东城Eastown
 #### 个人信息效果图
-![image](https://github.com/Catrong/phi-plugin/assets/117198625/20bb87b1-41e5-43e4-a97c-865b1090f893)
+![image](https://github.com/112121212167987534524/phi-plugin/assets/117198625/3a4e30b8-3a73-4873-8ac9-119de3f73e64)
 
 效果图来自[@Steve喵~](https://github.com/112121212167987534524)
 
