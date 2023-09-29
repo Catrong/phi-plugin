@@ -137,7 +137,7 @@ body p {
 
 .Player_Id p {
     color: white;
-    font-size: 27px;
+    font-size: 60px;
 }
 
 .Player_Id-box {
@@ -165,7 +165,7 @@ body p {
     font-size: 35px;
 }
 
-.Player_Id-right {display: flex;height: 60%;}
+.Player_Id-right {display: flex;height: 60%;width: 100%;}
 
 .Player_detail {
     width: 98%;
