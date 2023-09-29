@@ -1,4 +1,4 @@
-
+import get from '../model/getdata.js';
 import send from '../model/send.js';
 import Config from '../components/Config.js';
 import { createRequire } from 'module';
@@ -8,19 +8,19 @@ switch (process.platform) {
     //unix 系统内核
     case "darwin": {
         logger.info('[Phi-Plugin][re8] 导入 unix 模块');
-        PhigrosRe8 = await require('../lib/PhigrosLibrary_linux.node');
+        PhigrosRe8 = await require(get.pluginPath + 'lib/PhigrosLibrary_linux.node');
         break;
     }
     //windows 系统内核
     case "win32": {
         logger.info('[Phi-Plugin][re8] 导入 windows 模块');
-        PhigrosRe8 = await require('../lib/PhigrosLibrary_win.node');
+        PhigrosRe8 = await require(get.pluginPath + 'lib/PhigrosLibrary_win.node');
         break;
     }
     default: {
         console.error(process.platform)
         logger.info('[Phi-Plugin][re8] 导入 unix 模块');
-        PhigrosRe8 = await require('../lib/PhigrosLibrary_linux.node');
+        PhigrosRe8 = await require(get.pluginPath + 'lib/PhigrosLibrary_linux.node');
         break;
     }
 }
