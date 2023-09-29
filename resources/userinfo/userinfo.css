@@ -561,6 +561,7 @@ circle {
     justify-content: flex-start;
     align-items: center;
     z-index: 2;
+    filter: drop-shadow(0px 0px 10px #ffffff66);
 }
 
 .Rating p {
@@ -606,6 +607,7 @@ circle {
 .stats-group-tot p {
     font-size: 24px;
     color: #ababab;
+    text-shadow: 1px 1px 1px #006c9a;
 }
 
 .stats-rating-group {
@@ -655,6 +657,14 @@ circle {
     align-items: center;
     justify-content: space-evenly;
     height: 90;
+}
+
+#FC {
+    background: #7af3ff50;
+}
+
+#phi {
+    background: #fff30050;
 }
 
 .file-content,

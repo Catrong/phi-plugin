@@ -497,6 +497,14 @@ body p {
     color: #d5d5d5;
 }
 
+#FC {
+    background: linear-gradient(#00537654 50%, #00b4ff54 100%);
+}
+
+#phi {
+    background: linear-gradient(#534e0054 50%, #f8ff0054 100%);
+}
+
 .right_content {
     width: 95%;
     height: 3.8%;
