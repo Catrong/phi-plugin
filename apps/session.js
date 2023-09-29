@@ -51,7 +51,7 @@ export class phisstk extends plugin {
             send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！请将 <sessionToken> 替换为你Phigros账号的sessionToken哦！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
-        
+
         if (!Config.getDefOrConfig('config', 'isGuild')) {
 
             e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
@@ -257,24 +257,42 @@ export class phisstk extends plugin {
     }
 
     async unbind(e) {
-        if (get.delsave(e.user_id)) {
+        this.setContext('dore8', false, 30)
 
-            var pluginData = await get.getpluginData(e.user_id, true)
+        send.send_with_At(e, '解绑会导致历史数据全部清空呐QAQ！真的要这么做吗？（确认/取消）')
 
-            if (pluginData) {
-                pluginData.rks = []
-                pluginData.data = []
-                if (pluginData.plugin_data)
-                    pluginData.plugin_data.task = []
-                await get.putpluginData(e.user_id, pluginData)
-            }
-
-            send.send_with_At(e, '解绑成功')
-        } else {
-            send.send_with_At(e, '没有找到你的存档哦！')
-        }
         return true
     }
+
+    async doUnbind() {
+
+        var e = this.e
+
+        var msg = e.msg.replace(' ', '')
+
+        if (msg == '确认') {
+            if (get.delsave(e.user_id)) {
+
+                var pluginData = await get.getpluginData(e.user_id, true)
+
+                if (pluginData) {
+                    pluginData.rks = []
+                    pluginData.data = []
+                    if (pluginData.plugin_data)
+                        pluginData.plugin_data.task = []
+                    await get.putpluginData(e.user_id, pluginData)
+                }
+
+                send.send_with_At(e, '解绑成功')
+            } else {
+                send.send_with_At(e, '没有找到你的存档哦！')
+            }
+        } else {
+            send.send_with_At(e, `取消成功！`)
+        }
+        this.finish('doUnbind', false)
+    }
+
 }
 
 
