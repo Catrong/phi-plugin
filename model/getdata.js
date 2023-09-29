@@ -150,12 +150,12 @@ class getdata {
      */
     async getsave(id) {
         var result = await this.getData(`${id}.json`, `${this.userPath}`)
-        if(result) {
+        if (result) {
             return new Save(result)
         } else {
             return null
         }
-        
+
     }
 
     /**
@@ -621,6 +621,7 @@ class getdata {
      * @param {boolean} [ori=false] 是否只启用原版
      */
     init_info(song, ori = false) {
+        console.info(song)
         if (ori) {
             return new SongsInfo(this.ori_info[song])
         } else {

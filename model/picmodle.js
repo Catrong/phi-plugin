@@ -3,11 +3,14 @@ import Config from '../components/Config.js'
 import common from '../../../lib/common/common.js'
 import { Plugin_Path } from '../components/index.js'
 
-const queue = []
-const randering = []
-var tot = 0
 
 class atlas {
+
+    constructor() {
+        this.queue = []
+        this.randering = []
+        this.tot = 0
+    }
 
     async atlas(e, info) {
         // 渲染数据
@@ -116,42 +119,42 @@ class atlas {
 
     async render(path, params, cfg) {
 
-        const id = tot++
-        queue.push(id)
+        const id = this.tot++
+        this.queue.push(id)
 
 
         var cnt = 0
-        while (randering.length >= Config.getDefOrConfig('config', 'maxRandering') || queue[0] != id) {
+        while (this.randering.length >= Config.getDefOrConfig('config', 'maxRandering') || this.queue[0] != id) {
             await common.sleep(500)
             ++cnt
             if (cnt * 500 >= Config.getDefOrConfig('config', 'waitingTimeout')) {
 
-                
-                queue.splice(queue.indexOf(id), 1)
+
+                this.queue.splice(this.queue.indexOf(id), 1)
                 logger.error(`[Phi-Plugin] 渲染等待超时 id ${id}`)
-                logger.info(`[Phi-Plugin][等待渲染队列] ${queue}`)
-                logger.info(`[Phi-Plugin][渲染队列] ${randering}`)
+                logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
+                logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
                 return '等待超时，请重试QAQ！'
             }
         }
 
-        queue.shift()
-        randering.push(id)
+        this.queue.shift()
+        this.randering.push(id)
 
 
         var result
-        
+
         try {
             result = await puppeteer.render(path, params, cfg)
         } catch (err) {
             logger.error(err)
             logger.error(`[Phi-Plugin][渲染失败] id ${id}`)
-            logger.info(`[Phi-Plugin][等待渲染队列] ${queue}`)
-            logger.info(`[Phi-Plugin][渲染队列] ${randering}`)
+            logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
+            logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
         }
 
-        randering.splice(randering.indexOf(id), 1)
-        
+        this.randering.splice(this.randering.indexOf(id), 1)
+
 
         return result
 

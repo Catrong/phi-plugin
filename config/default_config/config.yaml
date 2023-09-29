@@ -12,7 +12,7 @@ b19size: 50
 timeout: 20000
 
 #  最大同时渲染数量
-maxRandering: 12
+maxRandering: 1
 
 #  等待渲染超时时间 ms
 waitingTimeout: 10000
