@@ -43,6 +43,9 @@ class getdata {
         /**资源路径 */
         this.resPath = `${_path}/plugins/phi-plugin/resources/`
 
+        /**插件路径 */
+        this.pluginPath = `${_path}/plugins/phi-plugin/`
+
 
         this.Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 
