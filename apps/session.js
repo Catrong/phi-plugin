@@ -249,7 +249,7 @@ export class phisstk extends plugin {
             midqiu = true
         }
         if (midqiu) {
-            data.tips = `${pluginData.plugin_data.sp_info || ''}中秋节快乐嗷！`
+            data.tips = `${pluginData.plugin_data ? (pluginData.plugin_data.sp_info || '') : ''}中秋节快乐嗷！`
         }
 
         send.send_with_At(this.e, await get.getupdate(this.e, data))
