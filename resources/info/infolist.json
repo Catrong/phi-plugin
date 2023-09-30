@@ -5963,25 +5963,25 @@
         "bpm": "",
         "composer": "SYNTHETIC",
         "length": "",
-        "illustrator": "",
+        "illustrator": "彗星 feat. 祈莲",
         "chart": {
             "EZ": {
-                "level": "",
+                "level": "4",
                 "difficulty": "4.0",
                 "combo": "",
-                "charter": ""
+                "charter": "Su1fuR"
             },
             "HD": {
-                "level": "",
+                "level": "8",
                 "difficulty": "8.2",
                 "combo": "",
-                "charter": ""
+                "charter": "Su1fuR"
             },
             "IN": {
-                "level": "",
+                "level": "13",
                 "difficulty": "13.4",
                 "combo": "",
-                "charter": ""
+                "charter": "Clutter"
             }
         }
     },
@@ -5993,25 +5993,25 @@
         "bpm": "",
         "composer": "imvi",
         "length": "",
-        "illustrator": "",
+        "illustrator": "鲸弑",
         "chart": {
             "EZ": {
-                "level": "",
+                "level": "3",
                 "difficulty": "3.0",
                 "combo": "",
-                "charter": ""
+                "charter": "Su1fuR"
             },
             "HD": {
-                "level": "",
+                "level": "9",
                 "difficulty": "9.6",
                 "combo": "",
-                "charter": ""
+                "charter": "Barbarianerman"
             },
             "IN": {
-                "level": "",
+                "level": "13",
                 "difficulty": "13.7",
                 "combo": "",
-                "charter": ""
+                "charter": "百九十八"
             }
         }
     }
