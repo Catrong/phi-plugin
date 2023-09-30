@@ -8,6 +8,9 @@ await get.init()
 
 const illlist = []
 
+var sp_date = 'Oct 01 2023'
+var sp_date_num = 74
+
 for (var i in get.ori_info) {
     if (get.ori_info[i]['illustration_big']) {
         illlist.push(get.getill(i))
@@ -52,18 +55,15 @@ export class phimoney extends plugin {
         var last_sign = new Date(data.plugin_data.sign_in)
         var now_time = new Date().toString()
         var request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
-        var midqiu = false
-        if (now_time.includes('Sep 29 2023')) {
-            midqiu = true
+        var is_sp_date = false
+        if (now_time.includes(sp_date)) {
+            is_sp_date = true
         }
         if (request_time > last_sign) {
             var getnum = randint(20, 5)
 
-            if (midqiu) {
-                var gxgx = [288, 366, 600, 666, 888]
-                getnum = gxgx[randint(gxgx.length - 1)]
-                gxgx = ['天上圆月，人间团圆。', '太平风物，团圆安康。', '中秋团圆月，明月照福缘。', '海上生明月，天涯共此时。', '今夜月明人尽望，不知秋思落谁家。', '秋风吹不尽，总是玉关情。', '今人不见古时月，今月曾经照古人。', '遥怜小儿女，未解忆长安。', '西北望乡何处是，东南见月几回圆。', '明月几时有，把酒问青天。', '素月分辉，明河共影，表里俱澄澈。', '似此星辰非昨夜，为谁风露立中宵。']
-                data.plugin_data.sp_info = gxgx[randint(gxgx.length - 1)]
+            if (is_sp_date) {
+                getnum = sp_date_num
             }
 
             data.plugin_data.money += getnum
@@ -97,8 +97,8 @@ export class phimoney extends plugin {
             }
 
 
-            if (midqiu) {
-                Remsg.push(`${data.plugin_data.sp_info}中秋佳节，恭喜您获得了${getnum}个Note，祝您中秋节愉快！`)
+            if (is_sp_date) {
+                Remsg.push(`国庆节快乐！恭喜您获得了${getnum}个Note，当前您所拥有的 Note 数量为：${data.plugin_data.money}，祝您国庆节愉快！`)
             } else {
                 Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}\n`)
 
@@ -124,8 +124,8 @@ export class phimoney extends plugin {
 
         } else {
             get.delLock(e.user_id)
-            if (midqiu) {
-                send.send_with_At(e, `${data.plugin_data.sp_info || ''}祝你中秋节快乐吖！你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
+            if (is_sp_date) {
+                send.send_with_At(e, `国庆节快乐！你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
             } else {
                 send.send_with_At(e, `你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
             }
@@ -228,12 +228,12 @@ export class phimoney extends plugin {
             Notes: data.plugin_data.money,
         }
 
-        var midqiu = false
-        if (new Date().toString().includes('Sep 29 2023')) {
-            midqiu = true
+        var is_sp_date = false
+        if (new Date().toString().includes(sp_date)) {
+            is_sp_date = true
         }
-        if (midqiu) {
-            picdata.tips = `${data.plugin_data.sp_info || ''}中秋节快乐嗷！`
+        if (is_sp_date) {
+            picdata.tips = `热烈庆祝中华人民共和国成立74周年，国庆节快乐！`
         }
 
         send.send_with_At(e, await get.gettasks(e, picdata))
@@ -298,12 +298,12 @@ export class phimoney extends plugin {
         }
 
 
-        var midqiu = false
-        if (new Date().toString().includes('Sep 29 2023')) {
-            midqiu = true
+        var is_sp_date = false
+        if (new Date().toString().includes(sp_date)) {
+            is_sp_date = true
         }
-        if (midqiu) {
-            picdata.tips = `${data.plugin_data.sp_info || ''}中秋节快乐嗷！`
+        if (is_sp_date) {
+            picdata.tips = `热烈庆祝中华人民共和国成立74周年，国庆节快乐！`
         }
 
 
@@ -358,6 +358,10 @@ export class phimoney extends plugin {
             get.delLock(e.user_id)
             return true
         }
+
+        var sender_old = sender_data.plugin_data.money 
+        var target_old = target_data.plugin_data.money 
+
         sender_data.plugin_data.money -= num
         await get.putpluginData(e.user_id, sender_data)
 
@@ -365,7 +369,7 @@ export class phimoney extends plugin {
         target_data.plugin_data.money += Math.ceil(num * 0.8)
         await get.putpluginData(target, target_data)
         var target_card = await Bot.pickMember(e.group_id, target)
-        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_data.plugin_data.money}\n${target_card.nickname ? target_card.nickname : target_card.card}的Note: ${target_data.plugin_data.money}`)
+        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.plugin_data.money}\n${target_card.nickname ? target_card.nickname : target_card.card}的Note: ${target_old} + ${Math.ceil(num * 0.8)} = ${target_data.plugin_data.money}`)
     }
 }
 
