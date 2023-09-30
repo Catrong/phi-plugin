@@ -169,7 +169,7 @@ export class philetter extends plugin {
             let included = false
 
             if (alphalist[groupId].replace(/\[object Object\]/g, '').includes(letter.toUpperCase())) {
-                e.reply(`字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！\n`, true)
+                e.reply(`字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！`, true)
                 return true
             }
 
