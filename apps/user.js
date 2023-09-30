@@ -578,6 +578,14 @@ function getbackground(name) {
                 save_background = 'Winter↑cube↓'
                 break
             }
+            case 'JunXion Between Life And Death(VIP Mix)': {
+                save_background = 'JunXion Between Life And Death(VIP Mix)'
+                break
+            }
+            case 'Diamond Eyes': {
+                save_background = 'Diamond Eyes from SOUL NOTES'
+                break
+            }
             default: {
                 save_background = name
                 break
