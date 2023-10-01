@@ -91,7 +91,7 @@ export class phisstk extends plugin {
     /**保存PhigrosUser */
     async build(e, sessionToken) {
         try {
-            this.User = new PhigrosUser(sessionToken)
+            var User = new PhigrosUser(sessionToken)
 
         } catch (err) {
             logger.error(`[phi-plugin]绑定sessionToken错误 ${sessionToken}`)
@@ -99,111 +99,19 @@ export class phisstk extends plugin {
             return true
         }
 
-        if (await this.building())
-            return true
-
-
-
-
-        return false
-    }
-
-    async choose(e) {
-        try {
-            var num = Number(e.msg.replace(/(#|\/)/g, ''))
-        } catch (err) {
-            e.reply(`读取数字失败QAQ\n${err}`)
-        }
-        if (num % 1) {
-            e.reply(`${num} 不是个数字吧！`)
-            return true
-        } else {
-            this.choosenum = num
-        }
-        return false
-    }
-
-    async building() {
-
-        try {
-            await this.User.buildRecord()
-        } catch (err) {
-            send.send_with_At(this.e, "绑定失败！QAQ\n" + err)
-            return true
-        }
-        var old = await get.getsave(this.e.user_id)
-        var pluginData = await get.getpluginData(this.e.user_id, true)
-
-        try {
-            await get.putsave(this.e.user_id, this.User)
-        } catch (err) {
-            this.reply(`保存存档失败！\n${err}`)
+        if (await get.buildingRecord(e, User)) {
             return true
         }
 
-
-
-        if (!pluginData) {
-            pluginData = {}
-        }
-
-        if (!pluginData.version || pluginData.version < 1.0) {
-            /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
-            if (pluginData.update) {
-                delete pluginData.update
-            }
-            if (pluginData.task_update) {
-                delete pluginData.task_update
-            }
-            if (pluginData.scoreHistory) {
-                delete pluginData.scoreHistory
-            }
-            pluginData.version = 1
-        }
-
-        /**data历史记录 */
-        if (!pluginData.data) {
-            pluginData.data = []
-        }
-        /**rks历史记录 */
-        if (!pluginData.rks) {
-            pluginData.rks = []
-        }
-
-
-        var now = new Save(this.User)
-        var date = this.User.saveInfo.modifiedAt.iso
-
-        var illlist = []
-
-        for (var song in now.gameRecord) {
-            illlist.push(get.getill(get.idgetsong(song, false)))
-            if (old && song in old.gameRecord) {
-                for (var i in now['gameRecord'][song]) {
-                    if (now['gameRecord'][song][i]) {
-                        var nowRecord = now['gameRecord'][song][i]
-                        var oldRecord = old['gameRecord'][song][i]
-                        if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
-                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
-                        } else if (!oldRecord) {
-                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
-                        }
-                    }
-                }
-            } else {
-                for (var i in now['gameRecord'][song]) {
-                    if (now['gameRecord'][song][i]) {
-                        var nowRecord = now['gameRecord'][song][i]
-                        add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
-                    }
-                }
-            }
-        }
+        /**图片 */
 
         /**新增曲目成绩 */
         var common_update = {}
         /**时间线 */
         var time_line = []
+
+        var now = new Save(User)
+        var pluginData = await get.getpluginData(e.user_id, true)
 
         for (var song in pluginData.scoreHistory) {
             var tem = pluginData.scoreHistory[song]
@@ -223,6 +131,8 @@ export class phisstk extends plugin {
             }
         }
 
+        var illlist = get.illlist
+
         time_line.sort((a, b) => new Date(b) - new Date(a))
 
         var newnum = common_update[date_to_string(now.saveInfo.updatedAt)] ? common_update[date_to_string(now.saveInfo.updatedAt)].length : 0
@@ -236,43 +146,14 @@ export class phisstk extends plugin {
             show += common_update[date].length
 
         }
-
-
-
-        if (pluginData.data.length >= 2 && now.gameProgress.money == pluginData.data[pluginData.data.length - 2]['value']) {
-            pluginData.data[pluginData.data.length - 1] = {
-                "date": date,
-                "value": now.gameProgress.money
-            }
-        } else {
-            pluginData.data.push({
-                "date": date,
-                "value": now.gameProgress.money
-            })
-        }
-
-        if (pluginData.rks.length >= 2 && now.saveInfo.summary.rankingScore == pluginData.rks[pluginData.rks.length - 2]['value']) {
-            pluginData.rks[pluginData.rks.length - 1] = {
-                "date": date,
-                "value": now.saveInfo.summary.rankingScore
-            }
-        } else {
-            pluginData.rks.push({
-                "date": date,
-                "value": now.saveInfo.summary.rankingScore
-            })
-        }
-
-        get.putpluginData(this.e.user_id, pluginData)
-
-
+        
         var data = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
             Date: now.saveInfo.updatedAt,
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
-            background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
+            background: get.getill(illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
             update: common_update,
             time_line: time_line,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
@@ -287,9 +168,12 @@ export class phisstk extends plugin {
             data.tips = `${pluginData.plugin_data ? (pluginData.plugin_data.sp_info || '') : ''}中秋节快乐嗷！`
         }
 
-        send.send_with_At(this.e, await get.getupdate(this.e, data))
+        send.send_with_At(e, await get.getupdate(e, data))
+
         return false
     }
+
+    
 
     async unbind(e) {
         this.setContext('doUnbind', false, 30)
@@ -301,7 +185,7 @@ export class phisstk extends plugin {
 
     async doUnbind() {
 
-        var e = this.e
+        var e = e
 
         var msg = e.msg.replace(' ', '')
 

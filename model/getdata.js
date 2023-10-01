@@ -8,6 +8,8 @@ import Config from "../components/Config.js";
 import LevelRecord from "./class/LevelRecordInfo.js";
 import SongsInfo from './class/SongsInfo.js';
 import Save from './class/Save.js';
+import PhigrosUser from '../lib/PhigrosUser.js';
+import send from './send.js';
 
 var lock = []
 
@@ -64,7 +66,7 @@ class getdata {
         /**头像id */
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
 
-        /**含有曲绘的曲目列表 */
+        /**含有曲绘的曲目列表，原曲名称 */
         this.illlist = []
         var info = this.info()
         for (var i in info) {
@@ -478,6 +480,114 @@ class getdata {
             return await get.getillatlas(e, { illustration: get.getill(name), illustrator: get.info()[name]["illustrator"] })
         }
 
+    }
+
+    /**
+     * 更新存档
+     * @param {*} e 
+     * @param {PhigrosUser} User 
+     * @returns 
+     */
+    async buildingRecord(e, User) {
+        try {
+            await User.buildRecord()
+        } catch (err) {
+            send.send_with_At(e, "绑定失败！QAQ\n" + err)
+            return true
+        }
+        var old = await get.getsave(e.user_id)
+        var pluginData = await get.getpluginData(e.user_id, true)
+
+        try {
+            await get.putsave(e.user_id, User)
+        } catch (err) {
+            send.send_with_At(e, `保存存档失败！\n${err}`)
+            return true
+        }
+
+        if (!pluginData) {
+            pluginData = {}
+        }
+
+        if (!pluginData.version || pluginData.version < 1.0) {
+            /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
+            if (pluginData.update) {
+                delete pluginData.update
+            }
+            if (pluginData.task_update) {
+                delete pluginData.task_update
+            }
+            if (pluginData.scoreHistory) {
+                delete pluginData.scoreHistory
+            }
+            pluginData.version = 1
+        }
+
+        /**data历史记录 */
+        if (!pluginData.data) {
+            pluginData.data = []
+        }
+        /**rks历史记录 */
+        if (!pluginData.rks) {
+            pluginData.rks = []
+        }
+
+
+        var now = new Save(User)
+        var date = User.saveInfo.modifiedAt.iso
+
+
+        for (var song in now.gameRecord) {
+            if (old && song in old.gameRecord) {
+                for (var i in now['gameRecord'][song]) {
+                    if (now['gameRecord'][song][i]) {
+                        var nowRecord = now['gameRecord'][song][i]
+                        var oldRecord = old['gameRecord'][song][i]
+                        if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
+                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+                        } else if (!oldRecord) {
+                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+                        }
+                    }
+                }
+            } else {
+                for (var i in now['gameRecord'][song]) {
+                    if (now['gameRecord'][song][i]) {
+                        var nowRecord = now['gameRecord'][song][i]
+                        add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
+                    }
+                }
+            }
+        }
+
+        if (pluginData.data.length >= 2 && now.gameProgress.money == pluginData.data[pluginData.data.length - 2]['value']) {
+            pluginData.data[pluginData.data.length - 1] = {
+                "date": date,
+                "value": now.gameProgress.money
+            }
+        } else {
+            pluginData.data.push({
+                "date": date,
+                "value": now.gameProgress.money
+            })
+        }
+
+        if (pluginData.rks.length >= 2 && now.saveInfo.summary.rankingScore == pluginData.rks[pluginData.rks.length - 2]['value']) {
+            pluginData.rks[pluginData.rks.length - 1] = {
+                "date": date,
+                "value": now.saveInfo.summary.rankingScore
+            }
+        } else {
+            pluginData.rks.push({
+                "date": date,
+                "value": now.saveInfo.summary.rankingScore
+            })
+        }
+
+
+        await get.putpluginData(e.user_id, pluginData)
+
+        return false
     }
 
     /**获取best19图片 */

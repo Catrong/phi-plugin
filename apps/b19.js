@@ -3,7 +3,8 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js';
 import get from '../model/getdata.js'
 import { segment } from "oicq";
-import send from '../model/send.js'
+import send from '../model/send.js';
+import PhigrosUser from '../lib/PhigrosUser.js';
 
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
@@ -45,7 +46,8 @@ export class phib19 extends plugin {
     }
 
     async b19(e) {
-        const save = await send.getsave_result(e)
+
+        var save = await send.getsave_result(e)
 
         if (!save) {
             return true
@@ -53,6 +55,21 @@ export class phib19 extends plugin {
 
         if (!Config.getDefOrConfig('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+
+        try {
+            await get.buildingRecord(e, new PhigrosUser(save.session))
+
+            save = await send.getsave_result(e)
+
+            if (!save) {
+                return true
+            }
+
+        } catch (err) {
+            send.send_with_At(e, err)
+        }
+
+
 
         var Record = save.gameRecord
         var phi = {}
@@ -163,7 +180,7 @@ export class phib19 extends plugin {
                 var tem = Record[song][level]
 
                 if (!tem) continue
-                
+
 
                 if (!tem) continue
                 if (tem.acc >= 100) {
