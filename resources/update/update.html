@@ -33,8 +33,8 @@
             <p>Date: {{Date}}</p>
         </div>
     </div>
+    {{if time_line[0]}}
     <div class="box">
-        {{if time_line[0]}}
         {{set cnt = 0}}
         {{each time_line date}}
         <div class="box_title">
@@ -72,8 +72,8 @@
         {{/each}}
         {{/each}}
         {{else}}
-        {{/if}}
     </div>
+    {{/if}}
     <div class="Nosignal">
         <div class="border_corner border_corner_left_top"></div>
         <div class="border_corner border_corner_right_top"></div>
