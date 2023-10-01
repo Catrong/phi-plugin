@@ -185,7 +185,7 @@ export class phisstk extends plugin {
 
     async doUnbind() {
 
-        var e = e
+        var e = this.e
 
         var msg = e.msg.replace(' ', '')
 
