@@ -13,7 +13,7 @@ export default class LevelRecordInfo {
 
         var info = get.init_info(get.idgetsong(id), true)
 
-        this.rank = get.Level[rank] //AT IN HD EZ
+        this.rank = get.Level[rank] //AT IN HD EZ LEGACY 
         this.song = info.song //曲名
         this.illustration = get.getill(this.song) //曲绘链接
 

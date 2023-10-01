@@ -51,7 +51,7 @@ class getdata {
         this.pluginPath = `${_path}/plugins/phi-plugin/`
 
 
-        this.Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
+        this.Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY'] //难度映射
 
         this.MAX_DIFFICULTY = 16.9
     }
@@ -772,8 +772,6 @@ export default get
  */
 function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, old_date) {
 
-    console.info(pluginData)
-    console.info(1)
 
     if (!pluginData.scoreHistory) {
         pluginData.scoreHistory = {}
@@ -788,7 +786,6 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, 
         pluginData.scoreHistory[song][level] = []
     }
     pluginData.scoreHistory[song][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date))
-    // console.info(pluginData.scoreHistory)
 
     var task
     if (pluginData.plugin_data) {

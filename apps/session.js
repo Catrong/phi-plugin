@@ -235,8 +235,6 @@ function cmp() {
  */
 function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, old_date) {
 
-    console.info(pluginData)
-    console.info(1)
 
     if (!pluginData.scoreHistory) {
         pluginData.scoreHistory = {}
