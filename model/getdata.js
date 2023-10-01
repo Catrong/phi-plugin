@@ -757,3 +757,69 @@ var get = new getdata()
 await get.init()
 export default get
 
+
+/**
+ * 处理新成绩
+ * @param {Object} pluginData
+ * @param {EZ|HD|IN|AT|LEGACY} level 
+ * @param {String} song 原曲名称
+ * @param {Object} nowRecord 当前成绩
+ * @param {Object} oldRecord 旧成绩
+ * @param {Date} new_date 新存档时间
+ * @param {Date} old_date 旧存档时间
+ */
+function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, old_date) {
+
+    console.info(pluginData)
+    console.info(1)
+
+    if (!pluginData.scoreHistory) {
+        pluginData.scoreHistory = {}
+    }
+    if (!pluginData.scoreHistory[song]) {
+        pluginData.scoreHistory[song] = {}
+        if (oldRecord) {
+            pluginData.scoreHistory[song][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date)]
+        }
+    }
+    if (!pluginData.scoreHistory[song][level]) {
+        pluginData.scoreHistory[song][level] = []
+    }
+    pluginData.scoreHistory[song][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date))
+    // console.info(pluginData.scoreHistory)
+
+    var task
+    if (pluginData.plugin_data) {
+        task = pluginData.plugin_data.task
+    }
+    if (task) {
+        for (var i in task) {
+            if (!task[i]) continue
+            if (!task[i].finished && song == task[i].song && level == task[i].request.rank) {
+                var isfinished = false
+                var reward = 0
+                switch (task[i].request.type) {
+                    case 'acc': {
+                        if (nowRecord.acc >= task[i].request.value) {
+                            isfinished = true
+                            pluginData.plugin_data.task[i].finished = true
+                            pluginData.plugin_data.money += task[i].reward
+                            reward = task[i].reward
+                        }
+                        break
+                    }
+                    case 'score': {
+                        if (nowRecord.score >= task[i].request.value) {
+                            isfinished = true
+                            pluginData.plugin_data.task[i].finished = true
+                            pluginData.plugin_data.money += task[i].reward
+                            reward = task[i].reward
+                        }
+                        break
+                    }
+                }
+            }
+        }
+    }
+    return false
+}
