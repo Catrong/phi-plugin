@@ -128,14 +128,14 @@ body p {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    background: #87ceeb4f;
+    background: #87ceeb6b;
     width: 97.5%;
     -webkit-backdrop-filter: blur(100px);
     backdrop-filter: blur(100px);
     overflow: hidden;
     padding-top: 100px;
-    border-bottom: skyblue solid 7px;
     border-top: skyblue solid 7px;
+    border-bottom: skyblue solid 7px;
 }
 
 .box_title {
@@ -304,8 +304,10 @@ body p {
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    background-color: rgba(112, 112, 112, 0.4);
+    background-color: rgb(112 112 112 / 45%);
     margin-bottom: 5%;
+    writing-mode: horizontal-tb;
+    backdrop-filter: blur(50px);
 }
 
 .border_corner {
