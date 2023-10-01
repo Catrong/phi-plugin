@@ -56,3 +56,6 @@ GuessTipRecall: false
 
 #  猜字母题面是否公布猜对者
 LetterWinner: false
+
+#  群聊禁用功能（频道请勿手动修改）
+banguess: []

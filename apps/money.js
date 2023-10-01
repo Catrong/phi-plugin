@@ -214,6 +214,12 @@ export class phimoney extends plugin {
 
         var task_time = now_time.toString().split(' ')
 
+        /**添加曲绘 */
+        if (data.plugin_data.task) {
+            for (var i in data.plugin_data.task) {
+                data.plugin_data.task[i].illustration = get.getill(data.plugin_data.task[i].song)
+            }
+        }
 
         var picdata = {
             PlayerId: save.saveInfo.PlayerId,
@@ -283,6 +289,13 @@ export class phimoney extends plugin {
 
         var data = await get.getmoneydata(e.user_id)
         var task_time = data.plugin_data.task_time.split(' ')
+
+        /**添加曲绘 */
+        if (data.plugin_data.task) {
+            for (var i in data.plugin_data.task) {
+                data.plugin_data.task[i].illustration = get.getill(data.plugin_data.task[i].song)
+            }
+        }
 
         var picdata = {
             PlayerId: now.saveInfo.PlayerId,
@@ -359,8 +372,8 @@ export class phimoney extends plugin {
             return true
         }
 
-        var sender_old = sender_data.plugin_data.money 
-        var target_old = target_data.plugin_data.money 
+        var sender_old = sender_data.plugin_data.money
+        var target_old = target_data.plugin_data.money
 
         sender_data.plugin_data.money -= num
         await get.putpluginData(e.user_id, sender_data)
@@ -452,7 +465,6 @@ function randtask(save, task = []) {
         task[i] = {
             song: song,
             reward: randint(reward[Number(i) + 1], reward[i]),
-            illustration: get.getill(song),
             finished: false,
             request: {
                 rank: Level[level],

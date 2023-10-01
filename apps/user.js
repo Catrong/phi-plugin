@@ -587,6 +587,10 @@ function getbackground(name) {
                 save_background = 'Diamond Eyes from SOUL NOTES'
                 break
             }
+            case 'Energy Synergy Matrix': {
+                save_background = 'ENERGY SYNERGY MATRIX'
+                break
+            }
             default: {
                 save_background = name
                 break

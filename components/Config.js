@@ -44,7 +44,25 @@ class Config {
 
     /** 默认配置和用户配置 
      * @param {'config'|'nickconfig'|'otherinfo'} name 文件名
-     * @param {'renderScale'|'randerQuality'|'b19size'|'WordB19Img'|'WordSuggImg'|'cmdhead'|'GuessTipCd'|'GuessTipRecall'|'isGuild'|'LetterWinner'|'LetterGuessCd'|'LetterRevealCd'|'LetterTipCd'|'otherinfo'|'LetterNum'|'timeout'|'maxRandering'|'waitingTimeout'} style key值
+     * @param {'renderScale'
+     * |'randerQuality'
+     * |'b19size'
+     * |'WordB19Img'
+     * |'WordSuggImg'
+     * |'cmdhead'
+     * |'GuessTipCd'
+     * |'GuessTipRecall'
+     * |'isGuild'
+     * |'LetterWinner'
+     * |'LetterGuessCd'
+     * |'LetterRevealCd'
+     * |'LetterTipCd'
+     * |'otherinfo'
+     * |'LetterNum'
+     * |'timeout'
+     * |'maxRandering'
+     * |'waitingTimeout'
+     * |'ban'} style key值
     */
     getDefOrConfig(name, style) {
         let def = this.getdefSet(name)
