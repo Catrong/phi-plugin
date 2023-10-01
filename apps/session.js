@@ -111,7 +111,7 @@ export class phisstk extends plugin {
         var time_line = []
 
         var now = new Save(User)
-        var pluginData = await get.getpluginData(e.user_id, true)
+        var pluginData = await get.getpluginData(e.user_id)
 
         for (var song in pluginData.scoreHistory) {
             var tem = pluginData.scoreHistory[song]
