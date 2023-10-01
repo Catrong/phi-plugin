@@ -51,7 +51,7 @@ export class phiuser extends plugin {
                     fnc: 'data'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(info)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(info)[1-2]?$`,
                     fnc: 'info'
                 },
                 {
@@ -260,10 +260,11 @@ export class phiuser extends plugin {
             data_range: data_range,
             data_date: [date_to_string(data_date[0]), date_to_string(data_date[1])],
             rks_date: [date_to_string(rks_date[0]), date_to_string(rks_date[1])],
-            background: illlist[randint(0, illlist.length-1)],
+            background: illlist[randint(0, illlist.length - 1)],
         }
 
-        send.send_with_At(e, await get.getuser_info(e, data))
+        var kind = Number(e.msg.replace(/\/.*info/g, ''))
+        send.send_with_At(e, await get.getuser_info(e, data, kind))
     }
 
     async lvscore(e) {

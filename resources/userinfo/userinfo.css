@@ -108,16 +108,16 @@ body p {
 }
 
 .avatar {
-     height: 100%;
-     width: max-content;
-     display: flex;
-     border: 3px solid;
-     border-color: skyblue;
-     box-sizing: border-box;
-     align-items: center;
-     z-index: 2;
-     justify-content: space-between;
-     flex-direction: row;
+    height: 100%;
+    width: max-content;
+    display: flex;
+    border: 3px solid;
+    border-color: skyblue;
+    box-sizing: border-box;
+    align-items: center;
+    z-index: 2;
+    justify-content: space-between;
+    flex-direction: row;
 }
 
 .avatar img {
@@ -165,7 +165,11 @@ body p {
     font-size: 35px;
 }
 
-.Player_Id-right {display: flex;height: 60%;width: 100%;}
+.Player_Id-right {
+    display: flex;
+    height: 60%;
+    width: 100%;
+}
 
 .Player_detail {
     width: 98%;
@@ -606,8 +610,6 @@ circle {
 
 .stats-group-tot p {
     font-size: 24px;
-    color: #ababab;
-    text-shadow: 1px 1px 1px #006c9a;
 }
 
 .stats-rating-group {
@@ -648,7 +650,6 @@ circle {
 
 .rating-tatle p {
     font-size: 18px;
-    color: #ababab;
 }
 
 .stats-score {
@@ -657,6 +658,18 @@ circle {
     align-items: center;
     justify-content: space-evenly;
     height: 90;
+    z-index: 2;
+}
+
+.stats-group-tot p,
+.rating-tatle p {
+    color: #c4c4c4;
+}
+
+#FCp,
+#phip {
+    /* text-shadow: 0 0 5px #fff669; */
+    color: #034b92;
 }
 
 #FC {

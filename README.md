@@ -82,7 +82,7 @@ pnpm install -P
 | `#phi (unbind\|解绑)` | 删除sessionToken和存档记录 |
 | `#phi (update\|更新存档)` | 更新存档 |
 | `#phi (rks\|pgr\|b19)` | 查询rks，会提供得出的b21结果 |
-| `#phi info` | 查询个人统计信息 |
+| `#phi info(1\|2)?` | 查询个人统计信息 |
 | `#phi (lvsco(re)\|scolv) <定数范围>` | 获取区间成绩 |
 | `#phi best1(+)` | 查询文字版b19（或更多），最高b99 |
 | `#phi (score\|单曲成绩)xxx` | 获取单曲成绩及这首歌的推分建议 |

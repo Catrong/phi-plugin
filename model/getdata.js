@@ -496,8 +496,8 @@ class getdata {
     }
 
     /**获取个人信息图片 */
-    async getuser_info(e, data) {
-        return await atlas.user_info(e, data)
+    async getuser_info(e, data, kind) {
+        return await atlas.user_info(e, data, kind)
     }
 
     /**获取定级区间成绩 */

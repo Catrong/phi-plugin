@@ -59,14 +59,25 @@ class atlas {
         })
     }
 
-    async user_info(e, data) {
-        return await this.render('userinfo/userinfo', {
-            ...data,
-            size: Config.getDefOrConfig('config', 'b19size') / 100,
-        }, {
-            e,
-            scale: Config.getDefOrConfig('config', 'renderScale') / 100
-        })
+    async user_info(e, data, kind) {
+        switch (kind) {
+            case 2:
+                return await this.render('userinfo/userinfo-old', {
+                    ...data,
+                    size: Config.getDefOrConfig('config', 'b19size') / 100,
+                }, {
+                    e,
+                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                })
+            default:
+                return await this.render('userinfo/userinfo', {
+                    ...data,
+                    size: Config.getDefOrConfig('config', 'b19size') / 100,
+                }, {
+                    e,
+                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                })
+        }
     }
 
     async lvsco(e, data) {
