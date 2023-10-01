@@ -286,7 +286,7 @@ body p {
 .songsinfo,
 .songsinfo_ed,
 .songsinfo_un p {
-    font-size: 20px;
+    font-size: 25px;
     height: 35%;
     display: flex;
     align-items: center;
