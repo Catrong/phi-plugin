@@ -58,7 +58,7 @@ body {
 
 .background img {
     height: inherit;
-    width: inherit;
+    width: auto;
     position: relative;
     overflow: hidden;
     transform: scale(1.2);

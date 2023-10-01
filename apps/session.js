@@ -4,7 +4,7 @@ import get from '../model/getdata.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 import Save from '../model/class/Save.js'
-
+import scoreHistory from '../model/class/scoreHistory.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
 export class phisstk extends plugin {
@@ -182,9 +182,9 @@ export class phisstk extends plugin {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
-                            add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord, oldRecord)
+                            add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt))
                         } else if (!oldRecord) {
-                            add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord)
+                            add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt))
                         }
                     }
                 }
@@ -192,7 +192,7 @@ export class phisstk extends plugin {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
-                        add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord)
+                        add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt))
                     }
                 }
             }
@@ -257,7 +257,7 @@ export class phisstk extends plugin {
     }
 
     async unbind(e) {
-        this.setContext('dore8', false, 30)
+        this.setContext('doUnbind', false, 30)
 
         send.send_with_At(e, '解绑会导致历史数据全部清空呐QAQ！真的要这么做吗？（确认/取消）')
 
@@ -313,8 +313,18 @@ function cmp() {
  * @param {String} song 原曲名称
  * @param {Object} nowRecord 当前成绩
  * @param {Object} oldRecord 旧成绩
+ * @param {Date} date 存档时间
  */
-function add_new_score(pluginData, common_update, task_update, level, song, nowRecord, oldRecord = { rks: 0, acc: 0, score: 0 }) {
+function add_new_score(pluginData, common_update, task_update, level, song, nowRecord, oldRecord = { rks: 0, acc: 0, score: 0 }, date) {
+
+    if (!pluginData.scoreHistory) {
+        pluginData.scoreHistory = {}
+    }
+    if (!pluginData.scoreHistory[song]) {
+        pluginData.scoreHistory[song] = []
+    }
+
+    pluginData.scoreHistory[song].push(scoreHistory.create(nowRecord.acc, nowRecord.score, date))
 
     var task
     if (pluginData.plugin_data) {

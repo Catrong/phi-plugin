@@ -7,10 +7,12 @@ body {
     width: 1800px;
     height: fit-content;
     font-family: 'PHI', 'HIMALAYA', '吞弥恰俊';
+    align-items: center;
 }
 
 .background img {
     height: 100%;
+    filter: blur(0px) brightness(75%);
 }
 
 body p {
@@ -126,6 +128,38 @@ body p {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    background: #87ceeb4f;
+    width: 97.5%;
+    backdrop-filter: blur(50px);
+    padding-top: 100px;
+    border-bottom: skyblue solid 7px;
+    border-top: skyblue solid 7px;
+}
+
+.box_title {
+    width: 96%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 3px solid #ffffff80;
+    margin-bottom: 5%;
+}
+
+.box_title-left {
+    width: AUTO;
+    height: 100%;
+    background-color: #ffffff80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box_title-left p {
+    font-size: 30px;
+    color: rgb(255 255 255);
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .abox {
@@ -364,19 +398,14 @@ body p {
     height: 20%;
     border: 3px solid;
     border-color: white;
-    background-color: rgb(255 255 255 / 58%);
     margin-left: 5%;
     margin-top: 16;
     z-index: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.Nosignal .sqrt p {
-    color: white;
-    font-size: 40px;
-    filter: blur(3px);
+    background: repeating-linear-gradient(-45deg, #ffffff, #ffffff 5px, rgb(255 255 255 / 0%) 0, rgb(255 255 255 / 0%) 10px);
+    filter: drop-shadow(0px 0px 3px #ffffff);
 }
 
 .createdbox {
