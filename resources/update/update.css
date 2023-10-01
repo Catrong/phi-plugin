@@ -1,8 +1,7 @@
 @import "../common/common.css";
 
 body {
-    writing-mode: vertical-lr;
-    flex-direction: row;
+    flex-direction: column;
     display: flex;
     width: 1800px;
     height: fit-content;
@@ -12,7 +11,6 @@ body {
 
 .background img {
     height: 100%;
-    filter: blur(0px) brightness(75%);
 }
 
 body p {
@@ -29,8 +27,8 @@ body p {
     display: flex;
     z-index: 1;
     align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
+    justify-content: flex-start;
+    flex-direction: row;
     margin-bottom: 100px;
 }
 
@@ -48,7 +46,7 @@ body p {
 }
 
 .l {
-    width: 60%;
+    width: 57%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
@@ -56,7 +54,7 @@ body p {
     clip-path: polygon(100% 0%, 90% 100%, 0% 100%, 0px 0px);
     display: flex;
     flex-direction: row;
-    margin-right: -35%;
+    margin-right: -6%;
     align-items: center;
 }
 
@@ -78,12 +76,12 @@ body p {
     background-color: rgba(0, 0, 0, 0.5);
     clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 11% 0px);
     height: 90%;
-    width: 45.5%;
+    width: 48.8%;
     display: flex;
     flex-direction: column;
     writing-mode: horizontal-tb;
     justify-content: center;
-    margin-left: -33%;
+    margin-left: -6%;
 }
 
 .r p {
@@ -122,7 +120,6 @@ body p {
 }
 
 .box {
-    writing-mode: horizontal-tb;
     display: flex;
     z-index: 1;
     flex-direction: row;
@@ -130,22 +127,22 @@ body p {
     justify-content: space-evenly;
     background: #87ceeb6b;
     width: 97.5%;
-    -webkit-backdrop-filter: blur(100px);
-    backdrop-filter: blur(100px);
+    height: auto;
     overflow: hidden;
-    padding-top: 100px;
+    padding-top: 6%;
     border-top: skyblue solid 7px;
     border-bottom: skyblue solid 7px;
 }
 
 .box_title {
-    width: 96%;
+    width: 98%;
     height: 50px;
     display: flex;
     flex-direction: row;
     align-items: center;
     border-bottom: 3px solid #ffffff80;
-    margin-bottom: 5%;
+    margin-bottom: 3%;
+    margin-top: -3%;
 }
 
 .box_title-left {
@@ -165,13 +162,14 @@ body p {
 }
 
 .abox {
-    width: 540px;
-    height: 284.77px;
+    width: 420px;
+    height: 221.484375px;
     display: flex;
     filter: drop-shadow(0px 0px 5px black);
     flex-direction: column;
-    margin-bottom: 5%;
+    margin-bottom: 3%;
     align-items: flex-start;
+    position: relative;
 }
 
 
@@ -288,7 +286,7 @@ body p {
 .songsinfo,
 .songsinfo_ed,
 .songsinfo_un p {
-    font-size: 27px;
+    font-size: 20px;
     height: 35%;
     display: flex;
     align-items: center;
@@ -307,7 +305,6 @@ body p {
     background-color: rgb(112 112 112 / 45%);
     margin-bottom: 5%;
     writing-mode: horizontal-tb;
-    backdrop-filter: blur(50px);
 }
 
 .border_corner {
