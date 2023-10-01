@@ -35,7 +35,6 @@ export default new class scoreHistory {
     }
 
     date(data) {
-        console.info(data[2])
         return new Date(data[2])
     }
 }
