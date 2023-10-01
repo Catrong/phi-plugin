@@ -495,11 +495,11 @@ class getdata {
             send.send_with_At(e, "绑定失败！QAQ\n" + err)
             return true
         }
-        var old = await get.getsave(e.user_id)
-        var pluginData = await get.getpluginData(e.user_id, true)
+        var old = await this.getsave(e.user_id)
+        var pluginData = await this.getpluginData(e.user_id, true)
 
         try {
-            await get.putsave(e.user_id, User)
+            await this.putsave(e.user_id, User)
         } catch (err) {
             send.send_with_At(e, `保存存档失败！\n${err}`)
             return true
@@ -544,9 +544,9 @@ class getdata {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
-                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+                            add_new_score(pluginData, Level[i], this.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         } else if (!oldRecord) {
-                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+                            add_new_score(pluginData, Level[i], this.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         }
                     }
                 }
@@ -585,7 +585,7 @@ class getdata {
         }
 
 
-        await get.putpluginData(e.user_id, pluginData)
+        await this.putpluginData(e.user_id, pluginData)
 
         return false
     }
