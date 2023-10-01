@@ -142,7 +142,7 @@ export class phisstk extends plugin {
 
             common_update[date].sort((a, b) => { return b.rks_new - a.rks_new })
 
-            common_update[date] = common_update[date].slice(0, 9)
+            common_update[date] = common_update[date].slice(0, 12)
             show += common_update[date].length
 
         }
