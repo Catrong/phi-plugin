@@ -10,7 +10,7 @@ import SongsInfo from './class/SongsInfo.js';
 import Save from './class/Save.js';
 import PhigrosUser from '../lib/PhigrosUser.js';
 import send from './send.js';
-import scoreHistory from '../model/class/scoreHistory.js'
+import scoreHistory from './class/scoreHistory.js'
 
 
 var lock = []
