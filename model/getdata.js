@@ -191,7 +191,7 @@ class getdata {
             logger.info(`[phi-plugin][${id}]文件读取等待中`)
             var tot = 0
             while (lock.indexOf(id) != -1 && tot < 20) {
-                await timeout(500)
+                await segment.sleep(500)
                 ++tot
             }
             if (tot == 20) {
