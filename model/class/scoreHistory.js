@@ -14,6 +14,12 @@ export default new class scoreHistory {
     }
 
     extend(song, level, now, old) {
+        now[0] = Number(now[0])
+        now[1] = Number(now[1])
+        if (old) {
+            old[0] = Number(old[0])
+            old[1] = Number(old[1])
+        }
         return {
             song: song,
             rank: level,
