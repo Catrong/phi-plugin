@@ -143,23 +143,24 @@ export class phisstk extends plugin {
 
 
 
-
         if (!pluginData) {
             pluginData = {}
         }
 
-        /**新增曲目成绩 */
-        var common_update = []
-        /**任务相关成绩 */
-        var task_update = []
+        if (!pluginData.version || pluginData.version < 1.0) {
+            /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
+            if (pluginData.update) {
+                delete pluginData.update
+            }
+            if (pluginData.task_update) {
+                delete pluginData.task_update
+            }
+            if (pluginData.scoreHistory) {
+                delete pluginData.scoreHistory
+            }
+            pluginData.version = 1
+        }
 
-        /**取消对当次更新内容的存储 */
-        if (pluginData.update) {
-            delete pluginData.update
-        }
-        if (pluginData.task_update) {
-            delete pluginData.task_update
-        }
         /**data历史记录 */
         if (!pluginData.data) {
             pluginData.data = []
@@ -168,6 +169,7 @@ export class phisstk extends plugin {
         if (!pluginData.rks) {
             pluginData.rks = []
         }
+
 
         var now = new Save(this.User)
         var date = this.User.saveInfo.modifiedAt.iso
@@ -182,9 +184,9 @@ export class phisstk extends plugin {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
-                            add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt))
+                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         } else if (!oldRecord) {
-                            add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt))
+                            add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         }
                     }
                 }
@@ -192,17 +194,50 @@ export class phisstk extends plugin {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
-                        add_new_score(pluginData, common_update, task_update, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt))
+                        add_new_score(pluginData, Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
                     }
                 }
             }
         }
 
-        var newnum = common_update.length + task_update.length
+        /**新增曲目成绩 */
+        var common_update = {}
+        /**时间线 */
+        var time_line = []
 
-        common_update.sort(cmp())
+        for (var song in pluginData.scoreHistory) {
+            var tem = pluginData.scoreHistory[song]
+            for (var level in tem) {
+                var history = tem[level]
+                for (var i in history) {
+                    var score_date = date_to_string(scoreHistory.date(history[i]))
+                    var score = scoreHistory.extend(song, level, history[i], history[i - 1])
+                    if (!common_update[score_date]) {
+                        common_update[score_date] = []
+                    }
+                    common_update[score_date].push(score)
+                    if (!time_line.includes(score_date)) {
+                        time_line.push(score_date)
+                    }
+                }
+            }
+        }
 
-        common_update = common_update.slice(0, 15)
+        time_line.sort((a, b) => new Date(b) - new Date(a))
+
+        var newnum = common_update[date_to_string(now.saveInfo.updatedAt)] ? common_update[date_to_string(now.saveInfo.updatedAt)].length : 0
+        var show = 0 //实际显示的数量
+
+        for (var date in common_update) {
+
+            common_update[date].sort((a, b) => { return b.rks_new - a.rks_new })
+
+            common_update[date] = common_update[date].slice(0, 9)
+            show += common_update[date].length
+
+        }
+
+
 
         if (pluginData.data.length >= 2 && now.gameProgress.money == pluginData.data[pluginData.data.length - 2]['value']) {
             pluginData.data[pluginData.data.length - 1] = {
@@ -239,7 +274,7 @@ export class phisstk extends plugin {
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             update: common_update,
-            task_update: task_update,
+            time_line: time_line,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
         }
@@ -306,25 +341,33 @@ function cmp() {
 
 /**
  * 处理新成绩
- * @param {Object} pluginData 
- * @param {Array} common_update 
- * @param {Array} task_update 
+ * @param {Object} pluginData
  * @param {EZ|HD|IN|AT|LEGACY} level 
  * @param {String} song 原曲名称
  * @param {Object} nowRecord 当前成绩
  * @param {Object} oldRecord 旧成绩
- * @param {Date} date 存档时间
+ * @param {Date} new_date 新存档时间
+ * @param {Date} old_date 旧存档时间
  */
-function add_new_score(pluginData, common_update, task_update, level, song, nowRecord, oldRecord = { rks: 0, acc: 0, score: 0 }, date) {
+function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, old_date) {
+
+    console.info(pluginData)
+    console.info(1)
 
     if (!pluginData.scoreHistory) {
         pluginData.scoreHistory = {}
     }
     if (!pluginData.scoreHistory[song]) {
-        pluginData.scoreHistory[song] = []
+        pluginData.scoreHistory[song] = {}
+        if (oldRecord) {
+            pluginData.scoreHistory[song][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date, oldRecord.Rating)]
+        }
     }
-
-    pluginData.scoreHistory[song].push(scoreHistory.create(nowRecord.acc, nowRecord.score, date))
+    if (!pluginData.scoreHistory[song][level]) {
+        pluginData.scoreHistory[song][level] = []
+    }
+    pluginData.scoreHistory[song][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date, nowRecord.Rating))
+    // console.info(pluginData.scoreHistory)
 
     var task
     if (pluginData.plugin_data) {
@@ -356,37 +399,22 @@ function add_new_score(pluginData, common_update, task_update, level, song, nowR
                         break
                     }
                 }
-                task_update.push({
-                    "song": song,
-                    "rank": level,
-                    "illustration": get.getill(song),
-                    "Rating": nowRecord.Rating,
-                    "rks_old": oldRecord.rks,
-                    "rks_new": nowRecord.rks,
-                    "acc_old": oldRecord.acc,
-                    "acc_new": nowRecord.acc,
-                    "score_old": oldRecord.score,
-                    "score_new": nowRecord.score,
-                    "finished": isfinished,
-                    "request": task[i].request.value,
-                    "reward": reward,
-                })
-                return false
             }
         }
-
     }
-    common_update.push({
-        "song": song,
-        "rank": level,
-        "illustration": get.getill(song),
-        "Rating": nowRecord.Rating,
-        "rks_old": oldRecord.rks,
-        "rks_new": nowRecord.rks,
-        "acc_old": oldRecord.acc,
-        "acc_new": nowRecord.acc,
-        "score_old": oldRecord.score,
-        "score_new": nowRecord.score
-    })
     return false
+}
+
+/**
+ * 转换时间格式
+ * @param {Date|string} date 时间
+ * @returns 2020/10/8 10:08:08
+ */
+function date_to_string(date) {
+    date = new Date(date)
+
+    var month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+    var day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+
+    return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
 }

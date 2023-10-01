@@ -645,5 +645,5 @@ class getdata {
 
 var get = new getdata()
 await get.init()
-
 export default get
+

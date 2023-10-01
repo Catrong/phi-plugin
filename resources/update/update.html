@@ -34,49 +34,15 @@
         </div>
     </div>
     <div class="box">
-        {{if update[0]||task_update[0]}}
-        {{each task_update song}}
-        <div class="abox">
-            <div class="imgbox">
-                <img src="{{song.illustration}}" alt="{{song.song}}">
-            </div>
-            {{if song.reward}}
-            <div class="coinbox">
-                <p>+{{song.reward}} Notes</p>
-            </div>
-            {{/if}}
-
-            <div class="infobox">
-                {{if song.finished}}
-                <div class="namebox_ed">
-                {{else}}
-                <div class="namebox_un">
-                {{/if}}
-                    {{if song.Rating}}
-                    <div class="new-box">
-                        <img src="{{_res_path}}otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
-                    </div>
-                    {{/if}}
-                    <div class="songsname">
-                        <p id="{{$index}}">{{song.song}}</p>
-                    </div>
-                </div>
-                {{if song.finished}}
-                <div class="songsinfo_ed">
-                {{else}}
-                <div class="songsinfo_un">
-                    {{/if}}
-                    <p>{{song.rank}}&ensp;&ensp;{{if song.score_old}}{{song.score_old}} >> {{/if}}{{song.score_new}}&ensp;&ensp;RQ:{{song.request}}</p>
-                    <p>{{if song.acc_old}}{{song.acc_old.toFixed(2)}}% >> {{/if}}{{song.acc_new.toFixed(2)}}%
-                        {{if song.rks_new}}
-                        &ensp;&ensp;{{if song.rks_old}}{{song.rks_old.toFixed(2)}} >> {{/if}}{{song.rks_new.toFixed(2)}}
-                        {{/if}}
-                    </p>
-                </div>
+        {{if time_line[0]}}
+        {{set cnt = 0}}
+        {{each time_line date}}
+        <div class="box_title">
+            <div class="box_title-left">
+                <p>{{date}}</p>
             </div>
         </div>
-        {{/each}}
-        {{each update song}}
+        {{each update[date] song}}
         <div class="abox">
             <div class="imgbox">
                 <img src="{{song.illustration}}" alt="{{song.song}}">
@@ -89,11 +55,12 @@
                     </div>
                     {{/if}}
                     <div class="songsname">
-                        <p id="{{$index + task_update.length}}">{{song.song}}</p>
+                        <p id="{{cnt++}}">{{song.song}}</p>
                     </div>
                 </div>
                 <div class="songsinfo">
-                    <p>{{song.rank}}&ensp;&ensp;&ensp;&ensp;{{if song.score_old}}{{song.score_old}} >> {{/if}}{{song.score_new}}</p>
+                    <p>{{song.rank}}&ensp;&ensp;&ensp;&ensp;{{if song.score_old}}{{song.score_old}} >>
+                        {{/if}}{{song.score_new}}</p>
                     <p>{{if song.acc_old}}{{song.acc_old.toFixed(2)}}% >> {{/if}}{{song.acc_new.toFixed(2)}}%
                         {{if song.rks_new}}
                         &ensp;&ensp;{{if song.rks_old}}{{song.rks_old.toFixed(2)}} >> {{/if}}{{song.rks_new.toFixed(2)}}
@@ -102,6 +69,7 @@
                 </div>
             </div>
         </div>
+        {{/each}}
         {{/each}}
         {{else}}
         <div class="Nosignal">
@@ -116,9 +84,7 @@
             <div class="client">
                 <p>>>> PhigrOS Client Finding NewScore</p>
             </div>
-            <div class="sqrt">
-                <p>////////////////////////////////////////////////////////////////////////////////////////</p>
-            </div>
+            <div class="sqrt"></div>
         </div>
         {{/if}}
     </div>
@@ -139,41 +105,41 @@
     <!-- 曲目名称自适应name-box的宽度 -->
     <script>
         function adjustFontSize() {
-            for (let i = 0; i <= {{task_update.length + update.length}}; ++i) {
+            for (let i = 0; i <= {{ show }}; ++i) {
 
-                //获取song-name和composer滴元素
-                var songName = document.getElementById(`${i}`)
+            //获取song-name和composer滴元素
+            var songName = document.getElementById(`${i}`)
 
-                if (!songName) continue
+            if (!songName) continue
 
-                console.info(i)
+            console.info(i)
 
 
-                /*调整曲目名称字体大小*/
-                var parentElement = songName.parentElement
+            /*调整曲目名称字体大小*/
+            var parentElement = songName.parentElement
 
-                var maxFontSize = 30 //设置最大字体大小
+            var maxFontSize = 30 //设置最大字体大小
 
-                //如果字体宽度小于父元素宽度，则增大字体大小
-                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style)
+            //如果字体宽度小于父元素宽度，则增大字体大小
+            while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style)
 
-                    //检查是否已经达到最大字体大小
-                    if (fontSize >= maxFontSize) {
-                        break
-                    }
-
-                    songName.style.fontSize = (fontSize + 1) + "px"
+                //检查是否已经达到最大字体大小
+                if (fontSize >= maxFontSize) {
+                    break
                 }
 
-                // 如果字体宽度大于父元素宽度，则减小字体大小
-                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style);
-                    songName.style.fontSize = (fontSize - 1) + "px";
-                }
+                songName.style.fontSize = (fontSize + 1) + "px"
             }
+
+            // 如果字体宽度大于父元素宽度，则减小字体大小
+            while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style);
+                songName.style.fontSize = (fontSize - 1) + "px";
+            }
+        }
         }
         window.onload = adjustFontSize
         window.onresize = adjustFontSize

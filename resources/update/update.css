@@ -43,8 +43,8 @@ body p {
 
 .l,
 .r {
-    backdrop-filter: blur(100px);
     -webkit-backdrop-filter: blur(100px);
+    backdrop-filter: blur(100px);
 }
 
 .l {
@@ -130,7 +130,9 @@ body p {
     justify-content: space-evenly;
     background: #87ceeb4f;
     width: 97.5%;
-    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(100px);
+    backdrop-filter: blur(100px);
+    overflow: hidden;
     padding-top: 100px;
     border-bottom: skyblue solid 7px;
     border-top: skyblue solid 7px;
