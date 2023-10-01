@@ -1,8 +1,16 @@
 import get from "../getdata.js"
 
-class scoreHistory {
-    create(acc, score, date, Rating) {
-        return [acc, score, date, Rating]
+export default new class scoreHistory {
+
+    /**
+     * 
+     * @param {number} acc 
+     * @param {number} score 
+     * @param {Date} date 
+     * @returns []
+     */
+    create(acc, score, date) {
+        return [acc.toFixed(4), score, date]
     }
 
     extend(song, level, now, old) {
@@ -10,7 +18,7 @@ class scoreHistory {
             song: song,
             rank: level,
             illustration: get.getill(song),
-            Rating: now[3],
+            Rating: Rating(now[1]),
             rks_new: get.getrks(now[0], get.info(song).chart[level].difficulty),
             rks_old: old ? get.getrks(old[0], get.info(song).chart[level].difficulty) : undefined,
             acc_new: now[0],
@@ -26,4 +34,22 @@ class scoreHistory {
     }
 }
 
-export default new scoreHistory
+
+function Rating(score, fc) {
+    if (score >= 1000000)
+        return 'phi'
+    else if (fc)
+        return 'FC'
+    else if (score < 700000)
+        return 'F'
+    else if (score < 820000)
+        return 'C'
+    else if (score < 880000)
+        return 'B'
+    else if (score < 920000)
+        return 'A'
+    else if (score < 960000)
+        return 'S'
+    else
+        return 'V'
+}

@@ -360,13 +360,13 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, 
     if (!pluginData.scoreHistory[song]) {
         pluginData.scoreHistory[song] = {}
         if (oldRecord) {
-            pluginData.scoreHistory[song][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date, oldRecord.Rating)]
+            pluginData.scoreHistory[song][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date)]
         }
     }
     if (!pluginData.scoreHistory[song][level]) {
         pluginData.scoreHistory[song][level] = []
     }
-    pluginData.scoreHistory[song][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date, nowRecord.Rating))
+    pluginData.scoreHistory[song][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date))
     // console.info(pluginData.scoreHistory)
 
     var task
