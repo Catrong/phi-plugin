@@ -250,7 +250,7 @@ class getdata {
         if (!data) {
             data = {}
         }
-        if (!data.plugin_data || !data.plugin_data.money) {
+        if (!data.plugin_data || !data.plugin_data.task_time) {
             data.plugin_data = {
                 money: 0,
                 sign_in: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',

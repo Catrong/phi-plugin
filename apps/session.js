@@ -170,6 +170,7 @@ export class phisstk extends plugin {
 
         while (show > 40 || showdate >= 6) {
             show -= common_update[time_line[time_line.length - 1]].length
+            delete common_update[time_line[time_line.length - 1]]
             --showdate
             time_line.pop()
         }
