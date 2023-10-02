@@ -65,7 +65,7 @@ export class phisstk extends plugin {
                     send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
                 } else {
                     send.send_with_At(e, `检测到新的sessionToken，将自动删除之前的存档记录……`)
-                    
+
                     await get.delsave(e.user_id)
                     var pluginData = await get.getpluginData(e.user_id, true)
 
@@ -167,7 +167,7 @@ export class phisstk extends plugin {
 
         }
 
-        while (show > 40 || showdate >= 6) {
+        while (show > 40 || showdate > 4) {
             show -= common_update[time_line[time_line.length - 1]].length
             delete common_update[time_line[time_line.length - 1]]
             --showdate
