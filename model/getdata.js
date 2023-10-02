@@ -525,6 +525,7 @@ class getdata {
         if (pluginData.version < 1.1) {
             /**v1.1,更正scoreHistory */
             delete pluginData.scoreHistory
+            pluginData.version = 1.1
         }
 
 
