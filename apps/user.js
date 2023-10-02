@@ -83,10 +83,12 @@ export class phiuser extends plugin {
         var bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
 
         if (bksong) {
-            if (get.fuzzysongsnick(bksong)) {
-                bksong = get.getill(get.fuzzysongsnick(bksong))
+            var tem = get.fuzzysongsnick(bksong)[0]
+            if (tem) {
+                // console.info(tem)
+                bksong = get.getill(tem)
             } else {
-                return false
+                bksong = undefined
             }
         }
 
