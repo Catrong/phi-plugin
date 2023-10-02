@@ -166,6 +166,11 @@ export class phisstk extends plugin {
 
         }
 
+        while (show > 100) {
+            show -= common_update[time_line[time_line.length - 1]].length
+            time_line.pop()
+        }
+
         var data = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
