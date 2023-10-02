@@ -498,8 +498,14 @@ function cmp() {
 
 function cmpsugg() {
     return function (a, b) {
-        return a.difficulty * Number(a.suggest.replace("%", '')) - b.difficulty * Number(b.suggest.replace("%", ''))
+        function com(difficulty, suggest) {
+            return difficulty + Math.min(suggest - 98, 1)*Math.min(suggest - 98, 1) * difficulty * 0.089
+        }
+        var s_a = Number(a.suggest.replace("%", ''))
+        var s_b = Number(b.suggest.replace("%", ''))
+        return com(a.difficulty, s_a) - com(b.difficulty, s_b)
         // return (Number(a.suggest.replace("%", '')) - a.rks) - (Number(b.suggest.replace("%", '')) - b.rks)
     }
 }
+
 

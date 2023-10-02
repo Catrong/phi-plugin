@@ -65,17 +65,16 @@ export class phisstk extends plugin {
                     send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
                 } else {
                     send.send_with_At(e, `检测到新的sessionToken，将自动删除之前的存档记录……`)
-
+                    
+                    await get.delsave(e.user_id)
                     var pluginData = await get.getpluginData(e.user_id, true)
 
-                    if (pluginData) {
-                        pluginData.rks = []
-                        pluginData.data = []
-                        pluginData.scoreHistory = {}
-                        if (pluginData.plugin_data)
-                            pluginData.plugin_data.task = []
-                        await get.putpluginData(e.user_id, pluginData)
-                    }
+                    pluginData.rks = []
+                    pluginData.data = []
+                    pluginData.scoreHistory = {}
+                    if (pluginData.plugin_data)
+                        pluginData.plugin_data.task = []
+                    await get.putpluginData(e.user_id, pluginData)
                 }
             }
         }
