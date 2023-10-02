@@ -6,11 +6,12 @@ export default new class scoreHistory {
      * 
      * @param {number} acc 
      * @param {number} score 
-     * @param {Date} date 
+     * @param {Date} date
+     * @param {boolean} fc 
      * @returns []
      */
-    create(acc, score, date) {
-        return [acc.toFixed(4), score, date]
+    create(acc, score, date, fc) {
+        return [acc.toFixed(4), score, date, fc]
     }
 
     extend(song, level, now, old) {
@@ -20,7 +21,7 @@ export default new class scoreHistory {
             old[0] = Number(old[0])
             old[1] = Number(old[1])
         }
-        if(level == 'LEGACY') {
+        if (level == 'LEGACY') {
             return {
                 song: song,
                 rank: level,
@@ -36,7 +37,7 @@ export default new class scoreHistory {
                 song: song,
                 rank: level,
                 illustration: get.getill(song),
-                Rating: Rating(now[1]),
+                Rating: Rating(now[1], now[3]),
                 rks_new: get.getrks(now[0], get.info(song).chart[level].difficulty),
                 rks_old: old ? get.getrks(old[0], get.info(song).chart[level].difficulty) : undefined,
                 acc_new: now[0],

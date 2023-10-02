@@ -511,6 +511,7 @@ class getdata {
             pluginData = {}
         }
 
+        /**修正 */
         if (!pluginData.version || pluginData.version < 1.0) {
             /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
             if (pluginData.update) {
@@ -519,11 +520,13 @@ class getdata {
             if (pluginData.task_update) {
                 delete pluginData.task_update
             }
-            if (pluginData.scoreHistory) {
-                delete pluginData.scoreHistory
-            }
             pluginData.version = 1
         }
+        if (pluginData.version < 1.1) {
+            /**v1.1,更正scoreHistory */
+            delete pluginData.scoreHistory
+        }
+
 
         /**data历史记录 */
         if (!pluginData.data) {
@@ -765,8 +768,8 @@ export default get
  * @param {Object} pluginData
  * @param {EZ|HD|IN|AT|LEGACY} level 
  * @param {String} song 原曲名称
- * @param {Object} nowRecord 当前成绩
- * @param {Object} oldRecord 旧成绩
+ * @param {LevelRecord} nowRecord 当前成绩
+ * @param {LevelRecord} oldRecord 旧成绩
  * @param {Date} new_date 新存档时间
  * @param {Date} old_date 旧存档时间
  */
@@ -779,13 +782,13 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, 
     if (!pluginData.scoreHistory[song]) {
         pluginData.scoreHistory[song] = {}
         if (oldRecord) {
-            pluginData.scoreHistory[song][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date)]
+            pluginData.scoreHistory[song][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date, oldRecord.fc)]
         }
     }
     if (!pluginData.scoreHistory[song][level]) {
         pluginData.scoreHistory[song][level] = []
     }
-    pluginData.scoreHistory[song][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date))
+    pluginData.scoreHistory[song][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date, nowRecord.fc))
 
     var task
     if (pluginData.plugin_data) {
