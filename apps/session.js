@@ -166,7 +166,7 @@ export class phisstk extends plugin {
 
         }
 
-        while (show > 100) {
+        while (show > 40) {
             show -= common_update[time_line[time_line.length - 1]].length
             time_line.pop()
         }
