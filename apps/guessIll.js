@@ -130,39 +130,23 @@ export class phiguess extends plugin {
             switch (fnc[index]) {
                 case 0: {
                     area_increase(100, data, fnc)
-                    if (Config.getDefOrConfig('config', 'isGuild')) {
-                        tipmsg = `[区域扩增!]`
-                    } else {
-                        tipmsg = `\n[区域扩增!]`
-                    }
+                    tipmsg = `[区域扩增!]`
                     break
                 }
                 case 1: {
                     blur_down(2, data, fnc)
-                    if (Config.getDefOrConfig('config', 'isGuild')) {
-                        tipmsg = `[清晰度上升!]`
-                    } else {
-                        tipmsg = `\n[清晰度上升!]`
-                    }
+                    tipmsg = `[清晰度上升!]`
                     break
                 }
                 case 2: {
                     gave_a_tip(known_info, remain_info, songs_info, fnc)
-                    if (Config.getDefOrConfig('config', 'isGuild')) {
-                        tipmsg = `[追加提示!]`
-                    } else {
-                        tipmsg = `\n[追加提示!]`
-                    }
+                    tipmsg = `[追加提示!]`
                     break
                 }
                 case 3: {
                     data.style = 1
                     fnc.splice(fnc.indexOf(3), 1)
-                    if (Config.getDefOrConfig('config', 'isGuild')) {
-                        tipmsg = `[全局视野!]`
-                    } else {
-                        tipmsg = `\n[全局视野!]`
-                    }
+                    tipmsg = `[全局视野!]`
                     break
                 }
             }
@@ -186,7 +170,7 @@ export class phiguess extends plugin {
             }
 
             if (Config.getDefOrConfig('config', 'GuessTipRecall'))
-                e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
+                e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') + 1 })
             else
                 e.reply(remsg)
 
