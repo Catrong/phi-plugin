@@ -183,6 +183,7 @@ export class phisstk extends plugin {
             time_line: time_line,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
+            show: show,
         }
 
         var midqiu = false
