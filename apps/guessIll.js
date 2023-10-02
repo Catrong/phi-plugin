@@ -64,11 +64,19 @@ export class phiguess extends plugin {
             })
         }
 
-        const song = getRandomSong(e)
-        const songs_info = get.info()[song]
-        if (typeof songs_info.illustration_big == 'undefined') {
-            logger.error(`[phi guess]抽取到无曲绘曲目 ${songs_info.song}`)
-            return true
+        var song = getRandomSong(e)
+        var songs_info = get.info()[song]
+
+        var cnnt = 0
+        while(typeof songs_info.illustration_big == 'undefined' || songs_info.can_t_be_guessill) {
+            ++cnnt
+            if(cnnt>=50) {
+                logger.error(`[phi guess]抽取曲目失败，请检查曲库设置`)
+                e.reply(`[phi guess]抽取曲目失败，请检查曲库设置`)
+                return
+            }
+            song = getRandomSong(e)
+            songs_info = get.info()[song]
         }
 
         gamelist[group_id] = songs_info.song

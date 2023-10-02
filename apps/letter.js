@@ -109,7 +109,14 @@ export class philetter extends plugin {
             let randsong = getRandomSong(e)
 
             // 防止抽到重复的曲目
-            while (chose.includes(randsong)) {
+            var cnnt = 0
+            while (chose.includes(randsong) || get.info(randsong).can_t_be_letter) {
+                ++cnnt
+                if(cnnt>=50) {
+                    logger.error(`[phi letter]抽取曲目失败，请检查曲库设置`)
+                    e.reply(`[phi letter]抽取曲目失败，请检查曲库设置`)
+                    return
+                }
                 randsong = getRandomSong(e)
             }
 
