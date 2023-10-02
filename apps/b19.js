@@ -20,7 +20,7 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b19|rks|pgr|PGR|B19|RKS)$`,
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b19|rks|pgr|PGR|B19|RKS).*$`,
                     fnc: 'b19'
                 },
                 {
@@ -46,6 +46,16 @@ export class phib19 extends plugin {
     }
 
     async b19(e) {
+
+        var bksong = e.msg.replace(/^.*(b19|rks|pgr|PGR|B19|RKS)\s*/g, '')
+
+        if (bksong) {
+            if (get.fuzzysongsnick(bksong)) {
+                bksong = get.getill(get.fuzzysongsnick(bksong))
+            } else {
+                return false
+            }
+        }
 
         var save = await send.getsave_result(e)
 
@@ -133,12 +143,14 @@ export class phib19 extends plugin {
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))]
+            background: bksong || illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))]
         }
         if (save.gameProgress) {
             var money = save.gameProgress.money
             data.data = `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`
         }
+
+
         send.send_with_At(e, await get.getb19(e, data))
 
 

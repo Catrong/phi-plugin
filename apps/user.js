@@ -51,7 +51,7 @@ export class phiuser extends plugin {
                     fnc: 'data'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(info)[1-2]?$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(info)[1-2]?.*$`,
                     fnc: 'info'
                 },
                 {
@@ -80,6 +80,16 @@ export class phiuser extends plugin {
     }
 
     async info(e) {
+        var bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
+
+        if (bksong) {
+            if (get.fuzzysongsnick(bksong)) {
+                bksong = get.getill(get.fuzzysongsnick(bksong))
+            } else {
+                return false
+            }
+        }
+
         const save = await send.getsave_result(e, 1.0)
 
         if (!save) {
@@ -260,7 +270,7 @@ export class phiuser extends plugin {
             data_range: data_range,
             data_date: [date_to_string(data_date[0]), date_to_string(data_date[1])],
             rks_date: [date_to_string(rks_date[0]), date_to_string(rks_date[1])],
-            background: illlist[randint(0, illlist.length - 1)],
+            background: bksong || illlist[randint(0, illlist.length - 1)],
         }
 
         var kind = Number(e.msg.replace(/\/.*info/g, ''))
