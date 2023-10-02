@@ -156,6 +156,7 @@ export class phisstk extends plugin {
 
         var newnum = common_update[date_to_string(now.saveInfo.updatedAt)] ? common_update[date_to_string(now.saveInfo.updatedAt)].length : 0
         var show = 0 //实际显示的数量
+        var showdate = 0 //显示的天数
 
         for (var date in common_update) {
 
@@ -163,11 +164,13 @@ export class phisstk extends plugin {
 
             common_update[date] = common_update[date].slice(0, 12)
             show += common_update[date].length
+            ++showdate
 
         }
 
-        while (show > 40) {
+        while (show > 40 || showdate >= 6) {
             show -= common_update[time_line[time_line.length - 1]].length
+            --showdate
             time_line.pop()
         }
 

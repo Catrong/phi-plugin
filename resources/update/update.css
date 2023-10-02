@@ -298,9 +298,7 @@ body p {
     flex-direction: column;
 }
 
-.songsinfo,
-.songsinfo_ed,
-.songsinfo_un p {
+.songsinfo p, .songsinfo_ed p, .songsinfo_un p {
     font-size: 20px;
     height: 35%;
     display: flex;
