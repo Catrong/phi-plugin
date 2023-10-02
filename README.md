@@ -61,6 +61,7 @@
 
 ```
 git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
+cd ./plugins/phi-plugin/
 pnpm install -P
 ```
 
@@ -68,6 +69,7 @@ pnpm install -P
 
 ```
 git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
+cd ./plugins/phi-plugin/
 pnpm install -P
 ```
 
