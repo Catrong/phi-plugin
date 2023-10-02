@@ -437,6 +437,8 @@ class getdata {
         var all = []
         for (var i in result) {
             if (all.includes(result[i].song)) continue //去重
+            /**如果有完全匹配的曲目则放弃剩下的 */
+            if (result[0].dis == 1 && result[i].dis < 1) break
             all.push(result[i].song)
         }
 
