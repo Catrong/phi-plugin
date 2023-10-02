@@ -67,7 +67,7 @@ export class phisstk extends plugin {
                     send.send_with_At(e, `检测到新的sessionToken，将自动删除之前的存档记录……`)
 
                     var pluginData = await get.getpluginData(e.user_id, true)
-    
+
                     if (pluginData) {
                         pluginData.rks = []
                         pluginData.data = []
@@ -77,7 +77,7 @@ export class phisstk extends plugin {
                         await get.putpluginData(e.user_id, pluginData)
                     }
                 }
-            }  
+            }
         }
 
         await this.build(e, sessionToken)
@@ -122,6 +122,8 @@ export class phisstk extends plugin {
         var common_update = {}
         /**时间线 */
         var time_line = []
+        /**每个时间有多少份 */
+        var update_num = []
 
         var now = new Save(User)
         var pluginData = await get.getpluginData(e.user_id)
@@ -136,6 +138,10 @@ export class phisstk extends plugin {
                     if (!common_update[score_date]) {
                         common_update[score_date] = []
                     }
+                    if (!update_num[score_date]) {
+                        update_num[score_date] = 0
+                    }
+                    ++update_num[score_date]
                     common_update[score_date].push(score)
                     if (!time_line.includes(score_date)) {
                         time_line.push(score_date)
@@ -159,7 +165,7 @@ export class phisstk extends plugin {
             show += common_update[date].length
 
         }
-        
+
         var data = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
@@ -168,6 +174,7 @@ export class phisstk extends plugin {
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: get.getill(illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
             update: common_update,
+            update_num: update_num,
             time_line: time_line,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
@@ -186,7 +193,7 @@ export class phisstk extends plugin {
         return false
     }
 
-    
+
 
     async unbind(e) {
         this.setContext('doUnbind', false, 30)

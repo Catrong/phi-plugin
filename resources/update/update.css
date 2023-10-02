@@ -142,7 +142,7 @@ body p {
     align-items: center;
     border-bottom: 3px solid #ffffff80;
     margin-bottom: 3%;
-    margin-top: -3%;
+    margin-top: 0;
 }
 
 .box_title-left {
@@ -155,6 +155,21 @@ body p {
 }
 
 .box_title-left p {
+    font-size: 30px;
+    color: rgb(255 255 255);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.box_title-right {
+    width: AUTO;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box_title-right p {
     font-size: 30px;
     color: rgb(255 255 255);
     margin-left: 10px;
