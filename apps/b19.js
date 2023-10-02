@@ -50,10 +50,12 @@ export class phib19 extends plugin {
         var bksong = e.msg.replace(/^.*(b19|rks|pgr|PGR|B19|RKS)\s*/g, '')
 
         if (bksong) {
-            if (get.fuzzysongsnick(bksong)) {
-                bksong = get.getill(get.fuzzysongsnick(bksong))
+            var tem = get.fuzzysongsnick(bksong)[0]
+            if (tem) {
+                // console.info(tem)
+                bksong = get.getill(tem)
             } else {
-                return false
+                bksong = undefined
             }
         }
 
