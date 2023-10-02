@@ -66,9 +66,9 @@
                         {{/if}}{{song.score_new}}</p>
                     <p>{{if song.acc_old}}{{song.acc_old.toFixed(2)}}% >> {{/if}}{{song.acc_new.toFixed(2)}}%
                         {{if song.rks_new}}
-                        &ensp;&ensp;{{if song.rks_old}}{{song.rks_old.toFixed(2)}} >> {{/if}}{{song.rks_new.toFixed(2)}}
-                        {{/if}}
                     </p>
+                    <p>{{if song.rks_old}}{{song.rks_old.toFixed(2)}} >> {{/if}}{{song.rks_new.toFixed(2)}}
+                        {{/if}}</p>
                 </div>
             </div>
         </div>
@@ -110,39 +110,39 @@
         function adjustFontSize() {
             for (let i = 0; i <= {{ show }}; ++i) {
 
-                //获取song-name和composer滴元素
-                var songName = document.getElementById(`${i}`)
+            //获取song-name和composer滴元素
+            var songName = document.getElementById(`${i}`)
 
-                if (!songName) continue
+            if (!songName) continue
 
-                console.info(i)
+            console.info(i)
 
 
-                /*调整曲目名称字体大小*/
-                var parentElement = songName.parentElement
+            /*调整曲目名称字体大小*/
+            var parentElement = songName.parentElement
 
-                var maxFontSize = 30 //设置最大字体大小
+            var maxFontSize = 30 //设置最大字体大小
 
-                //如果字体宽度小于父元素宽度，则增大字体大小
-                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style)
+            //如果字体宽度小于父元素宽度，则增大字体大小
+            while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style)
 
-                    //检查是否已经达到最大字体大小
-                    if (fontSize >= maxFontSize) {
-                        break
-                    }
-
-                    songName.style.fontSize = (fontSize + 1) + "px"
+                //检查是否已经达到最大字体大小
+                if (fontSize >= maxFontSize) {
+                    break
                 }
 
-                // 如果字体宽度大于父元素宽度，则减小字体大小
-                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style);
-                    songName.style.fontSize = (fontSize - 1) + "px";
-                }
+                songName.style.fontSize = (fontSize + 1) + "px"
             }
+
+            // 如果字体宽度大于父元素宽度，则减小字体大小
+            while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style);
+                songName.style.fontSize = (fontSize - 1) + "px";
+            }
+        }
         }
         window.onload = adjustFontSize
         window.onresize = adjustFontSize
