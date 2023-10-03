@@ -665,7 +665,7 @@ class getdata {
             if (fs.existsSync(`${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
                 ans = `${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
             } else if (fs.existsSync(`${this.resPath}original_ill/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
-                ans = `${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                ans = `${this.resPath}original_ill/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
             }
         }
         return ans
