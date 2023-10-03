@@ -645,9 +645,10 @@ class getdata {
 
     /**获取曲绘，返回地址，原名
      * @param {string} name 原名
+     * @param {'common'|'blur'|'low'} [kind='common'] 
      * @return 网址或文件地址
     */
-    getill(name) {
+    getill(name, kind = 'common') {
         const totinfo = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
         var ans
         if (!totinfo[name]) {
@@ -665,7 +666,13 @@ class getdata {
             if (fs.existsSync(`${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
                 ans = `${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
             } else if (fs.existsSync(`${this.resPath}original_ill/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
-                ans = `${this.resPath}original_ill/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                if (kind == 'common') {
+                    ans = `${this.resPath}original_ill/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                } else if (kind == 'blur') {
+                    ans = `${this.resPath}original_ill/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                } else if (kind == 'low') {
+                    ans = `${this.resPath}original_ill/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                }
             }
         }
         return ans

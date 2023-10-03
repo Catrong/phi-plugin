@@ -129,45 +129,48 @@ class atlas {
     }
 
     async render(path, params, cfg) {
+        return await puppeteer.render(path, params, cfg)
 
-        const id = this.tot++
-        this.queue.push(id)
-
-
-        var cnt = 0
-        while (this.randering.length >= Config.getDefOrConfig('config', 'maxRandering') || this.queue[0] != id) {
-            await common.sleep(500)
-            ++cnt
-            if (cnt * 500 >= Config.getDefOrConfig('config', 'waitingTimeout')) {
+        // const id = this.tot++
+        // this.queue.push(id)
 
 
-                this.queue.splice(this.queue.indexOf(id), 1)
-                logger.error(`[Phi-Plugin] 渲染等待超时 id ${id}`)
-                logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
-                logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
-                return '等待超时，请重试QAQ！'
-            }
-        }
-
-        this.queue.shift()
-        this.randering.push(id)
+        // var cnt = 0
+        // while (this.randering.length >= Config.getDefOrConfig('config', 'maxRandering') || this.queue[0] != id) {
+        //     await common.sleep(500)
+        //     ++cnt
+        //     if (cnt * 500 >= Config.getDefOrConfig('config', 'waitingTimeout')) {
 
 
-        var result
+        //         this.queue.splice(this.queue.indexOf(id), 1)
+        //         logger.error(`[Phi-Plugin] 渲染等待超时 id ${id}`)
+        //         logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
+        //         logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
+        //         return '等待超时，请重试QAQ！'
+        //     }
+        // }
 
-        try {
-            result = await puppeteer.render(path, params, cfg)
-        } catch (err) {
-            logger.error(err)
-            logger.error(`[Phi-Plugin][渲染失败] id ${id}`)
-            logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
-            logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
-        }
-
-        this.randering.splice(this.randering.indexOf(id), 1)
+        // this.queue.shift()
+        // this.randering.push(id)
 
 
-        return result
+        // var result
+
+        // try {
+
+        result = await puppeteer.render(path, params, cfg)
+
+        // } catch (err) {
+        //     logger.error(err)
+        //     logger.error(`[Phi-Plugin][渲染失败] id ${id}`)
+        //     logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
+        //     logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
+        // }
+
+        // this.randering.splice(this.randering.indexOf(id), 1)
+
+
+        // return result
 
     }
 }
