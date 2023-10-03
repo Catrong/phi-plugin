@@ -39,7 +39,7 @@ class getdata {
         this.default = 0
 
         /**默认图片路径 */
-        this.imgPath = `${_path}/plugins/phi-plugin/resources/otherimg/`
+        this.imgPath = `${_path}/plugins/phi-plugin/resources/html/otherimg/`
 
         /**用户图片路径 */
         this.orillPath = `${_path}/plugins/phi-plugin/resources/otherill/`
@@ -663,6 +663,8 @@ class getdata {
         }
         if (this.ori_info[name]) {
             if (fs.existsSync(`${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
+                ans = `${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+            } else if (fs.existsSync(`${this.resPath}original_ill/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
                 ans = `${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
             }
         }

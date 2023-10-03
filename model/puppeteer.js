@@ -36,7 +36,7 @@ export default new class newPuppeteer {
     async render(path, params, cfg) {
         let { e } = cfg
         let [app, tpl] = path.split('/')
-        let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/common/layout/`
+        let layoutPath = process.cwd() + `/plugins/${Plugin_Name}/resources/html/common/layout/`
         let resPath = process.cwd() + `/plugins/${Plugin_Name}/resources/`
 
 
@@ -45,7 +45,7 @@ export default new class newPuppeteer {
             ...params,
             _plugin: Plugin_Name,
             saveId: params.saveId || params.save_id || tpl,
-            tplFile: `./plugins/${Plugin_Name}/resources/${app}/${tpl}.html`,
+            tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.html`,
             pluResPath: resPath,
             _res_path: resPath,
             _layout_path: layoutPath,
