@@ -684,7 +684,11 @@ class getdata {
      * @returns file name
      */
     idgetavatar(id) {
-        return this.avatarid[id]
+        if (id) {
+            return this.avatarid[id]
+        } else {
+            return 'Introduction'
+        }
     }
 
     /**

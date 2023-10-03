@@ -53,7 +53,7 @@ export class phib19 extends plugin {
             var tem = get.fuzzysongsnick(bksong)[0]
             if (tem) {
                 // console.info(tem)
-                bksong = get.getill(tem)
+                bksong = get.getill(tem, 'blur')
             } else {
                 bksong = undefined
             }
@@ -126,7 +126,7 @@ export class phib19 extends plugin {
             rkslist[i].acc = Number(rkslist[i].acc).toFixed(2)
             rkslist[i].illustration = get.getill(rkslist[i].song)
             b19_list.push(rkslist[i])
-            illlist.push(get.getill(rkslist[i].song))
+            illlist.push(get.getill(rkslist[i].song, 'blur'))
         }
 
         if (save.saveInfo.summary.rankingScore < 14) {
@@ -499,7 +499,7 @@ function cmp() {
 function cmpsugg() {
     return function (a, b) {
         function com(difficulty, suggest) {
-            return difficulty + Math.min(suggest - 98, 1)*Math.min(suggest - 98, 1) * difficulty * 0.089
+            return difficulty + Math.min(suggest - 98, 1) * Math.min(suggest - 98, 1) * difficulty * 0.089
         }
         var s_a = Number(a.suggest.replace("%", ''))
         var s_b = Number(b.suggest.replace("%", ''))
