@@ -1,6 +1,8 @@
 .song_Id {
-    width: 100%;
+    width: 102%;
     height: 40;
     display: flex;
     align-items: center;
+    justify-content: center;
+    background: #0079ab66;
 }
