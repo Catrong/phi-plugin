@@ -171,7 +171,7 @@ body p {
     width: 100%;
 }
 
-.Player_detail {
+.left_title {
     width: 98%;
     height: 25px;
     display: flex;
@@ -181,7 +181,7 @@ body p {
     border-bottom: 3px solid #ffffff80;
 }
 
-.Player_detail-left {
+.left_title-left {
     width: 19%;
     height: 100%;
     background-color: #ffffff80;
@@ -190,7 +190,7 @@ body p {
     justify-content: center;
 }
 
-.Player_detail-left p {
+.left_title-left p {
     font-size: 20px;
     transform: scaleX(0.7);
     color: #23618b;
