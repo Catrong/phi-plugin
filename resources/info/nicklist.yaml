@@ -4,7 +4,19 @@
   - 尊師 ～The Guru～
 痉挛:
   - Spasmodic
+异瞳粉毛双马尾:
+  - Spasmodic
+粉毛异瞳:
+  - Spasmodic
+异瞳粉毛:
+  - Spasmodic
+异瞳双马尾:
+  - Spasmodic
+粉毛异瞳双马尾:
+  - Spasmodic
 船:
+  - Stasis
+炸船:
   - Stasis
 迷宫:
   - Lyrith -迷宮リリス-
@@ -37,6 +49,10 @@ PRAW:
 Non-Melodic Ragez(MUG Edit):
   - Non-Melodic Ragez (MUG Edit)
 NMR:
+  - Non-Melodic Ragez (MUG Edit)
+nmr:
+  - Non-Melodic Ragez (MUG Edit)
+你骂人:
   - Non-Melodic Ragez (MUG Edit)
 苏丹怒:
   - Sultan Rage
@@ -85,6 +101,8 @@ iga:
 Iga:
   - Igallta
 Ig:
+  - Igallta
+ig:
   - Igallta
 时钟悖论:
   - Clock Paradox
@@ -162,6 +180,8 @@ SNL:
 紫时停:
   - Khronostasis Katharsis
 KK:
+  - Khronostasis Katharsis
+时溃:
   - Khronostasis Katharsis
 雪沙漠:
   - Snow Desert
@@ -253,8 +273,6 @@ U盘:
   - Hardcore Kwaya
 雪降:
   - 雪降り、メリクリ
-雪崩:
-  - 雪降り、メリクリ
 打电话:
   - Wavetapper
 大和抚子:
@@ -272,7 +290,7 @@ BGA:
 古神:
   - Cthugha
 克图格亚:
-  - With You
+  - Cthugha
 能量三个x:
   - energy trixxx
 能量xxx:
@@ -285,6 +303,14 @@ BGA:
   - Nhelv
 三头犬:
   - Kerberos
+刻耳柏洛斯:
+  - Kerberos
+刻耳帕洛斯:
+  - Kerberos
+刻耳帕诺斯:
+  - Kerberos
+刻耳柏诺斯:
+  - Kerberos
 欧芹:
   - ρars/ey
 切菜:
@@ -292,6 +318,8 @@ BGA:
 脑震荡:
   - Concvssion
 tell me your secret:
+  - Concvssion
+劲爆四押:
   - Concvssion
 初音机关枪:
   - ジングルベル(Jingle Bell)
@@ -324,11 +352,19 @@ FM:
   - Protoflicker
 flicker:
   - Protoflicker
+最新最热:
+  - Protoflicker
+最新最热配置:
+  - Protoflicker
 蓝界:
   - Horizon Blue
 抽水马桶:
   - You are the Miserable
 倒霉蛋:
+  - You are the Miserable
+你是个倒霉蛋:
+  - You are the Miserable
+你是倒霉蛋:
   - You are the Miserable
 YATM:
   - You are the Miserable
@@ -351,6 +387,8 @@ DataError:
 诚实青年:
   - c.s.q.n.
 csqn:
+  - c.s.q.n.
+csgo:
   - c.s.q.n.
 Aventyr:
   - Äventyr
@@ -406,6 +444,8 @@ Rand:
   - 今年も「雪降り、メリクリ」目指して顽张ります！！
 愚人节雪降:
   - 今年も「雪降り、メリクリ」目指して顽张ります！！
+雪崩:
+  - 今年も「雪降り、メリクリ」目指して頑張ります！！
 future mind:
   - Future Mind
 Dash:
@@ -436,20 +476,28 @@ The Chariot ~REVIIVAL~:
   - The Chariot ~REVIIVAL~
 Chariot:
   - The Chariot ~REVIIVAL~
+战车:
+  - The Chariot ~REVIIVAL~
 Luminescence:
   - Luminescence
 Retribution:
   - Retribution
 DESTRUCTION 3,2,1:
   - DESTRUCTION 3,2,1
-Distorted Fate:
-  - Distorted Fate
 "321":
+  - DESTRUCTION 3,2,1
+幽蓝边界:
+  - DESTRUCTION 3,2,1
+毁灭321:
+  - DESTRUCTION 3,2,1
+毁灭:
   - DESTRUCTION 3,2,1
 mope:
   - もぺもぺ
 小花:
   - もぺもぺ
+Distorted Fate:
+  - Distorted Fate
 df:
   - Distorted Fate
 DF:
@@ -462,8 +510,8 @@ DF:
   - Distorted Fate
 拧巴的命:
   - Distorted Fate
-幽蓝边界:
-  - DESTRUCTION 3,2,1
+骨折鸠:
+  - Distorted Fate
 迷宫莉莉丝:
   - Lyrith -迷宮リリス-
 滚筒洗衣机:
@@ -487,6 +535,8 @@ now is the time, do it:
 现在是时间了，干它:
   - Now Is The Time, Do It
 是时候了，干他:
+  - Now Is The Time, Do It
+do it:
   - Now Is The Time, Do It
 Bougainvillea:
   - Bougainvillea
@@ -644,7 +694,7 @@ LIKWW:
   - +ERABY+E CONNEC+10N
 字节:
   - +ERABY+E CONNEC+10N
-原神:
+原神: #？
   - +ERABY+E CONNEC+10N
 酒精:
   - Compute It With Some Devilish Alcoholic Steampunk Engines
