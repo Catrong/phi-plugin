@@ -441,7 +441,7 @@ export class phib19 extends plugin {
             var tot = 1
             tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             for (var i = 0; i < suggestlist.length; ++i) {
-                if (tot <= 15) {
+                if (tot <= 10) {
                     tmsg += `\n#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> ${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% 推分: ${suggestlist[i].suggest}`
                 } else {
                     Remsg.push(tmsg)
