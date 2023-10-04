@@ -224,10 +224,10 @@ export class phib19 extends plugin {
             } else {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
-            /**防止消息过长发送失败每条消息15行 */
+            /**防止消息过长发送失败每条消息10行 */
             var tot = 1
             for (var i = 0; i < num && i < rkslist.length; ++i) {
-                if (tot <= 15) {
+                if (tot <= 10) {
                     tmsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}% 等效${rkslist[i].rks.toFixed(4)} 推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                 } else {
                     Remsg.push(tmsg)

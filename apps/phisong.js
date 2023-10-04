@@ -141,7 +141,8 @@ export class phisong extends plugin {
                 single += msg
                 ++tot
                 ++count
-                if (count == 15) {
+                /**每条消息10行 */
+                if (count == 10) {
                     Resmsg.push(single)
                     single = ''
                     count = 0
