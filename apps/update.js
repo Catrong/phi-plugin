@@ -3,7 +3,7 @@ import { createRequire } from "module";
 import lodash from "lodash";
 import { Restart } from '../../other/restart.js'
 import Config from "../components/Config.js";
-import common from "../../../lib/common/common.js"
+import common from "../../../lib/common/common.js";
 import get from "../model/getdata.js";
 
 const require = createRequire(import.meta.url);
