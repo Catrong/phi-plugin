@@ -735,7 +735,7 @@ class getdata {
      */
     SongGetId(song) {
         logger.info(song)
-        logget.info(this.idssong)
+        logger.info(this.idssong)
         return this.idssong[song]
     }
 
