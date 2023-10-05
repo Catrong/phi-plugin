@@ -734,8 +734,10 @@ class getdata {
      * @returns 曲目id
      */
     SongGetId(song) {
-        logger.info(song)
+        
         logger.info(this.idssong)
+        logger.info(song)
+        logger.info(this.idssong[song])
         return this.idssong[song]
     }
 
