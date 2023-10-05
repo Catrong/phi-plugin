@@ -167,7 +167,7 @@ export class phisstk extends plugin {
 
         }
 
-        while (showdate > 3) {
+        while (showdate > 1) {
             show -= common_update[time_line[time_line.length - 1]].length
             delete common_update[time_line[time_line.length - 1]]
             --showdate
