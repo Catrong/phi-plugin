@@ -7,6 +7,30 @@
     background: #0079ab66;
 }
 
+.AT {
+    background: #9c9c9c88;
+}
+
+.IN {
+    background: #ff616188;
+}
+
+.HD {
+    background: #009dff88;
+}
+
+.EZ {
+    background: #7ae07a88;
+}
+
+.rank_dif {
+    background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%);
+    background: linear-gradient(-75deg, #9c9c9c88 24%, #00000000 24%, #00000000 28%, #ff616188 28%, #ff616188 49%, #00000000 49%, #00000000 53%, #009dff88 53%, #009dff88 73%, #00000000 73%, #00000000 77%, #7ae07a88 77%);
+    margin-top: 20px;
+    width: 98%;
+    height: 100px;
+}
+
 .data_score {
     position: relative;
     display: flex;
@@ -20,7 +44,7 @@
 
 .data_mid {
     display: flex;
-    height: 33%;
+    height: 27%;
     align-items: center;
     justify-content: space-around;
 }
@@ -34,16 +58,50 @@
 .data_acc {
     height: 100%;
     display: flex;
+    align-items: center;
 }
 
-.data_rks p,.data_acc p {
-    font-size: 50px;
+.data_rks p,
+.data_acc p {
+    font-size: 39px;
+}
+
+.data_rks p {
+    color: yellow;
+}
+
+.data_acc p {
+    color: white;
 }
 
 .data_bottom {
     display: flex;
+    justify-content: flex-end;
+    width: 90%;
 }
 
 .data_suggest {
     display: flex;
+}
+
+.data_suggest p {
+    font-size: 40px;
+    color: greenyellow;
+}
+
+#NEW {
+    background: #00000000;
+}
+
+.no_info {
+    position: absolute;
+    width: 100%;
+    height: 93%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no_info p {
+    font-size: 80px;
 }

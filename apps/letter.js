@@ -47,11 +47,11 @@ export class philetter extends plugin {
                     fnc: 'reveal'
                 },
                 {
-                    reg: `^[#/](\\s*)第(\\s*)[1-9一二三四五六七八九十百千万](\\s*)(个|首)?.*$`,
+                    reg: `^[#/]${Config.getDefOrConfig('config', 'isGuild') ? '?' : ''}(\\s*)第(\\s*)[1-9一二三四五六七八九十百千万](\\s*)(个|首)?.*$`,
                     fnc: 'guess'
                 },
                 {
-                    reg: `^[#/](字母)?(ans|答案|结束)$`,
+                    reg: `^[#/](字母|letter)(ans|答案|结束)$`,
                     fnc: 'ans'
                 },
                 {
@@ -112,7 +112,7 @@ export class philetter extends plugin {
             var cnnt = 0
             while (chose.includes(randsong) || get.info(randsong).can_t_be_letter) {
                 ++cnnt
-                if(cnnt>=50) {
+                if (cnnt >= 50) {
                     logger.error(`[phi letter]抽取曲目失败，请检查曲库设置`)
                     e.reply(`[phi letter]抽取曲目失败，请检查曲库设置`)
                     return
@@ -132,7 +132,7 @@ export class philetter extends plugin {
         }
 
         // 输出提示信息
-        e.reply(`出你字母开启成功！回复'/X个XXXX'命令猜歌，例如：/第1个Reimei;发送'/出X'来揭开字母(不区分大小写)，如'/出A';发送'/字母答案'结束并查看答案`)
+        e.reply(`出你字母开启成功！回复'/X个XXXX'命令猜歌，例如：/第1个Reimei;发送'/出X'来揭开字母(不区分大小写)，如'/出A';发送'/letterans'结束并查看答案`)
 
         // 延时1s
         await timeout(1 * 1000)

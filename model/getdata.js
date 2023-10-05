@@ -32,17 +32,18 @@ class getdata {
 
         /**用户设置路径 */
         this.configPath = `${_path}/plugins/phi-plugin/config/config/`
-        this.config = 0
 
         /**默认设置路径 */
         this.defaultPath = `${_path}/plugins/phi-plugin/config/default_config/`
-        this.default = 0
 
         /**默认图片路径 */
         this.imgPath = `${_path}/plugins/phi-plugin/resources/html/otherimg/`
 
         /**用户图片路径 */
         this.orillPath = `${_path}/plugins/phi-plugin/resources/otherill/`
+
+        /**音频资源 */
+        this.guessMicPath = `${_path}/plugins/phi-plugin/resources/splited_music/`
 
         /**资源路径 */
         this.resPath = `${_path}/plugins/phi-plugin/resources/`
@@ -70,11 +71,19 @@ class getdata {
 
         /**含有曲绘的曲目列表，原曲名称 */
         this.illlist = []
-        var info = this.info()
+
+        var info = this.info(undefined, false)
         for (var i in info) {
             if (info[i]['illustration_big']) {
                 this.illlist.push(i)
             }
+        }
+
+        /**所有曲目曲名列表 */
+        this.songlist = []
+
+        for (var i in this.ori_info) {
+            this.songlist.push(i)
         }
 
         /**原曲名称映射id */
@@ -87,8 +96,9 @@ class getdata {
 
     /**
      * @param {string} [song=undefined] 原曲曲名
+     * @param {boolean} [init=false] 是否格式化
      */
-    info(song = undefined) {
+    info(song = undefined, init = true) {
         var result
         switch (Config.getDefOrConfig('config', 'otherinfo')) {
             case 0: {
@@ -105,7 +115,7 @@ class getdata {
             }
         }
         if (song) {
-            return result[song]
+            return init ? new SongsInfo(result[song]) : result[song]
         } else {
             return result
         }
@@ -436,9 +446,24 @@ class getdata {
 
         var all = []
         for (var i in result) {
+
+            /**这些曲名有过更改 */
+            switch (result[i].song) {
+                case '今年も「雪降り、メリクリ」目指して顽张ります！！': {
+                    result[i].song = '今年も「雪降り、メリクリ」目指して頑張ります！！';
+                    break;
+                }
+                case 'Cipher: /2&//<|0': {
+                    result[i].song = 'Cipher : /2&//<|0';
+                    break;
+                }
+            }
+
             if (all.includes(result[i].song)) continue //去重
             /**如果有完全匹配的曲目则放弃剩下的 */
             if (result[0].dis == 1 && result[i].dis < 1) break
+
+
             all.push(result[i].song)
         }
 

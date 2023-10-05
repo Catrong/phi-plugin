@@ -383,7 +383,7 @@ export class phib19 extends plugin {
             }
             data[Level[i]].difficulty = Number(songsinfo['chart'][Level[i]]['difficulty']).toFixed(1)
         }
-        await send.send_with_At(e, await get.getsingle(e, data))
+        send.send_with_At(e, await get.getsingle(e, data))
         return true
 
     }

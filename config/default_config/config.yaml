@@ -23,10 +23,10 @@ waitingTimeout: 10000
 isGuild: false
 
 #  文字版b19是否带图，关闭可以节约大量发送时间
-WordB19Img: true
+WordB19Img: false
 
 #  文字版suggest是否带图，关闭可以节约大量发送时间
-WordSuggImg: true
+WordSuggImg: false
 
 #  ************ 【接收设置】 ************* 
 #  命令头
@@ -39,6 +39,7 @@ otherinfo: 0
 #  猜曲绘提示时间间隔(s)
 GuessTipCd: 15
 
+#  ************ 【猜字母设置】 ************* 
 #  猜字母条数
 LetterNum: 8
 
@@ -51,11 +52,15 @@ LetterRevealCd: 12
 #  猜字母群聊全局提示冷却时间间隔(s)
 LetterTipCd: 30
 
+#  ************ 【猜曲绘设置】 ************* 
 #  猜曲绘是否撤回
 GuessTipRecall: false
 
-#  猜字母题面是否公布猜对者
-LetterWinner: false
 
+#  ************ 【猜歌设置】 ************* 
+#  猜歌群聊全局提示冷却时间间隔
+MicTipCd: 30
+
+#  ************ 【其他设置】 ************* 
 #  群聊禁用功能（频道请勿手动修改）
 banguess: []

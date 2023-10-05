@@ -1,12 +1,14 @@
 <head>
-    <link rel="stylesheet" href="./userinfo.css">
-    <link rel="stylesheet" href="./scoreInfo.css">
+    <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css">
+    <link rel="stylesheet" href="{{_res_path}}html/userinfo/scoreInfo.css">
 </head>
 
-<body style="scale: 1;">
+<body style="scale: {{size}};">
+    {{if background}}
     <div class="background">
-        <img src="../../otherill/ComputeItWithSomeDevilishAlcoholicSteampunkEngines.かめりあ.png" alt="{{background}}">
+        <img src="{{background}}" alt="{{background}}">
     </div>
+    {{/if}}
     <div class="left">
         <div class="Player_Info">
             <p>PLAYER_INFO</p>
@@ -14,22 +16,18 @@
         <div class="Player_Info-after"></div>
         <div class="basic-box">
             <div class="basic-img">
-                <img src="../../otherill/ComputeItWithSomeDevilishAlcoholicSteampunkEngines.かめりあ.png"
-                    alt="{{gameuser.backgroundurl}}">
-            </div>
-            <div class="song_Id">
-                <p id="song_Id">Compute It With Some Devilish Alcoholic Steampunk Engines</p>
+                <img src="{{gameuser.backgroundurl}}" alt="{{gameuser.backgroundurl}}">
             </div>
             <div class="Player_Id">
                 <div class="avatar">
-                    <img src="../avatar/Aphasia.png" alt="{{avatar}}">
+                    <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
                 </div>
                 <div class="Player_Id-box">
                     <div class="Player_Id-left">
                         <p>ID</p>
                     </div>
                     <div class="Player_Id-right">
-                        <p id="Player_Id">就是不会告诉你</p>
+                        <p id="Player_Id">{{gameuser.PlayerId}}</p>
                     </div>
                 </div>
             </div>
@@ -45,20 +43,23 @@
                     <p>RKS</p>
                 </div>
                 <div class="Player_data_value" id="Player_data_left">
-                    <p>14.6578</p>
+                    <p>{{gameuser.rks.toFixed(4)}}</p>
                 </div>
             </div>
             <div class="Player_data_line-right">
                 <div class="Player_data_title" id="Player_data_right">
                     <p>CLG MOD</p>
                 </div>
-                <div class="Challenge" id="Challenge2">
-                    <img src="../otherimg/5.png" alt="{{ChallengeMode}}">
-                    <span>54</span>
+                <div class="Challenge" id="Challenge{{gameuser.CLGMOD ? '1' : '2'}}">
+                    <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png"
+                        alt="{{gameuser.ChallengeMode}}">
+                    <span>{{gameuser.ChallengeModeRank}}</span>
                 </div>
+                {{if gameuser.CLGMOD}}
                 <div class="Player_data_value" id="Player_data_right">
-                    <p>0th Dan</p>
+                    <p>{{gameuser.CLGMOD}}</p>
                 </div>
+                {{/if}}
             </div>
         </div>
         <div class="left_title">
@@ -66,16 +67,14 @@
                 <p>SONG_DATAIL</p>
             </div>
         </div>
-        <div class="rank_dif">
-            <p>233</p>
-        </div>
+
         <!-- <div class="Player_data_line">
             <div class="Player_data_line-left EZ">
                 <div class="Player_data_title" id="Player_data_left">
                     <p>EZ</p>
                 </div>
                 <div class="Player_data_value" id="Player_data_left">
-                    <p>14.6</p>
+                    <p>{{EZ.difficulty || '-'}}</p>
                 </div>
             </div>
             <div class="Player_data_line-right HD">
@@ -83,7 +82,7 @@
                     <p>HD</p>
                 </div>
                 <div class="Player_data_value" id="Player_data_right">
-                    <p>14.7</p>
+                    <p>{{HD.difficulty || '-'}}</p>
                 </div>
             </div>
         </div>
@@ -94,7 +93,7 @@
                     <p>IN</p>
                 </div>
                 <div class="Player_data_value" id="Player_data_left">
-                    <p>14.8</p>
+                    <p>{{IN.difficulty || '-'}}</p>
                 </div>
             </div>
             <div class="Player_data_line-right AT"
@@ -103,7 +102,7 @@
                     <p>AT</p>
                 </div>
                 <div class="Player_data_value" id="Player_data_right">
-                    <p>14.9</p>
+                    <p>{{AT.difficulty || '-'}}</p>
                 </div>
             </div>
         </div> -->
@@ -194,75 +193,41 @@
             </div>
         </div>
         <div class="stats-box">
-            <div class="one-stats-box EZ" id="A">
+            {{each scoreData rank}}
+            <div class="one-stats-box {{rank}}" id="A">
                 <div class="rank">
-                    <p>EZ</p>
+                    <p>{{rank}}</p>
                 </div>
+                {{if rank}}
                 <div class="stats-up">
                     <div class="Rating">
-                        <img src="../otherimg/phi.png" alt="{{Rating}}">
+                        <img src="../otherimg/{{rank.Rating}}.png" alt="{{Rating}}">
                     </div>
+                    {{if rank.Rating != 'NEW'}}
                     <div class="data_score">
-                        <p>1000000</p>
+                        <p>{{rank.score}}</p>
                     </div>
+                    {{/if}}
                 </div>
+                {{if rank.Rating != 'NEW'}}
                 <div class="data_mid">
                     <div class="data_rks">
-                        <p>14.6000</p>
+                        <p>{{rank.rks}}</p>
                     </div>
                     <div class="data_acc">
-                        <p>100.0000%</p>
+                        <p>{{rank.acc}}</p>
                     </div>
                 </div>
                 <div class="data_bottom">
                     <div class="data_suggest">
-                        <p>>>100.0000%</p>
+                        <p>>> {{rank.suggest}}</p>
                     </div>
                 </div>
-            </div>
-            <div class="one-stats-box HD" id="A">
-                <div class="rank">
-                    <p>HD</p>
-                </div>
-                <div class="stats-up">
-                    <div class="Rating">
-                        <img src="../otherimg/FC.png" alt="{{Rating}}">
-                    </div>
-                    <div class="data_score">
-                        <p>1000000</p>
-                    </div>
-                </div>
-                <div class="data_mid">
-                    <div class="data_rks">
-                        <p>14.6000</p>
-                    </div>
-                    <div class="data_acc">
-                        <p>100.0000%</p>
-                    </div>
-                </div>
-                <div class="data_bottom">
-                    <div class="data_suggest">
-                        <p>>>100.0000%</p>
-                    </div>
-                </div>
-            </div>
-            <div class="one-stats-box IN" id="A">
-                <div class="rank">
-                    <p>IN</p>
-                </div>
-                <div class="stats-up">
-                    <div class="Rating">
-                        <img src="../otherimg/NEW.png" alt="{{Rating}}">
-                    </div>
-                </div>
-            </div>
-            <div class="one-stats-box AT" id="A">
-                <div class="rank">
-                    <p>AT</p>
-                </div>
+                {{else}}
                 <div class="no_info">
                     <p>NO_INFO</p>
                 </div>
+                {{/if}}
             </div>
         </div>
     </div>
@@ -305,8 +270,6 @@
             }
             work('Player_Id', 60)
             work('song_Id', 60)
-            work('data', 60)
-            work('profile', 30)
 
         }
         window.onload = adjustFontSize

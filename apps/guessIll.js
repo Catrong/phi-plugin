@@ -31,7 +31,7 @@ export class phiguess extends plugin {
                     log: false
                 },
                 {
-                    reg: `^[#/](曲绘)?(ans|答案|结束)$`,
+                    reg: `^[#/](曲绘|ill)(\\s*)(ans|答案|结束)$`,
                     fnc: 'ans'
                 },
                 {
@@ -109,7 +109,7 @@ export class phiguess extends plugin {
         let fnc = [0, 1, 2, 3]
         logger.info(data)
 
-        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 /答案 结束游戏`)
+        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 /illans 结束游戏`)
         if (Config.getDefOrConfig('config', 'GuessTipRecall'))
             await e.reply(await get.getguess(e, data), false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
         else
@@ -212,9 +212,9 @@ export class phiguess extends plugin {
                         }
                     }
                     if (song[1]) {
-                        e.reply(`不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                        send.send_with_At(e, `不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
                     } else {
-                        e.reply(`不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                        send.send_with_At(e, `不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
                     }
                     return true
                 }

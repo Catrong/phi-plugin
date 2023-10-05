@@ -62,7 +62,8 @@ class Config {
      * |'timeout'
      * |'maxRandering'
      * |'waitingTimeout'
-     * |'ban'} style key值
+     * |'ban'
+     * |'MicTipCd'} style key值
     */
     getDefOrConfig(name, style) {
         let def = this.getdefSet(name)
