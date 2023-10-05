@@ -67,11 +67,11 @@ export class phiGuessMic extends plugin {
 
         // }
 
-        await SendMusicShare(e, { source: 'netease', name: `发送 /mic 猜歌哦！/micans可以结束哦！`, artist: `Phi-Plugin 猜歌`, pic: get.getimg('Phigros_Icon_3.0.0.png'), link: url })
+        // await SendMusicShare(e, { source: 'netease', name: `发送 /mic 猜歌哦！/micans可以结束哦！`, artist: `Phi-Plugin 猜歌`, pic: get.getimg('Phigros_Icon_3.0.0.png'), link: url })
 
         // e.reply(segment.share(url, `发送 /mic 猜歌哦！/micans可以结束哦！`, get.getimg('Phigros_Icon_3.0.0.png')))
 
-        // e.reply(segment.record(`https://qxsky.top:833/data/other_data/web/splited_music/${gamelist[group_id].songId}/${gamelist[group_id].unsend[rand]}${'.wav'}`))
+        e.reply(segment.record(`https://qxsky.top:833/data/other_data/web/splited_music/${gamelist[group_id].songId}/${gamelist[group_id].unsend[rand]}.wav`))
 
         gamelist[group_id].unsend.splice(rand, 1)
 
@@ -94,7 +94,7 @@ export class phiGuessMic extends plugin {
         gamelist[group_id].tip = now
         var rand = randint(0, gamelist[group_id].unsend.length - 1)
 
-        e.reply(segment.record(`https://qxsky.top:833/data/other_data/web/splited_music/${gamelist[group_id].songId}/${gamelist[group_id].unsend[rand]}${'.wav'}`))
+        e.reply(segment.record(`https://qxsky.top:833/data/other_data/web/splited_music/${gamelist[group_id].songId}/${gamelist[group_id].unsend[rand]}.wav`))
 
         gamelist[group_id].unsend.splice(rand, 1)
 
