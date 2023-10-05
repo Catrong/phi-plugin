@@ -4,8 +4,6 @@ import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
 
-await get.init()
-
 const illlist = []
 
 var sp_date = 'Oct 01 2023'
