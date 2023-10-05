@@ -2,7 +2,6 @@ import get from '../model/getdata.js';
 import send from '../model/send.js';
 import Config from '../components/Config.js';
 import { segment, core } from 'oicq';
-import uploadRecord from '../model/uploadRecord.js';
 
 const gamelist = {}
 
