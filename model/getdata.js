@@ -69,6 +69,13 @@ class getdata {
         /**头像id */
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
 
+        /**原曲名称映射id */
+        this.idssong = {}
+
+        for (let id in this.songsid) {
+            this.idssong[this.songsid[id]] = id
+        }
+        
         /**含有曲绘的曲目列表，原曲名称 */
         this.illlist = []
 
@@ -78,6 +85,7 @@ class getdata {
                 this.illlist.push(i)
             }
         }
+        
 
         /**所有曲目曲名列表 */
         this.songlist = []
@@ -86,12 +94,7 @@ class getdata {
             this.songlist.push(i)
         }
 
-        /**原曲名称映射id */
-        this.idssong = {}
-
-        for (let id in this.songsid) {
-            this.idssong[this.songsid[id]] = id
-        }
+        
     }
 
     /**
