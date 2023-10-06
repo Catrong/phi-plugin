@@ -50,9 +50,9 @@ export class phib19 extends plugin {
         var nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
         console.log(nnum)
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
-        // if (!nnum) {
+        if (!nnum) {
             nnum = 21
-        // }
+        }
         if (nnum > 600) {
             nnum = 600
         }
