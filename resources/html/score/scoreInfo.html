@@ -51,8 +51,7 @@
                     <p>CLG MOD</p>
                 </div>
                 <div class="Challenge" id="Challenge{{CLGMOD ? '1' : '2'}}">
-                    <img src="{{_res_path}}html/otherimg/{{ChallengeMode}}.png"
-                        alt="{{ChallengeMode}}">
+                    <img src="{{_res_path}}html/otherimg/{{ChallengeMode}}.png" alt="{{ChallengeMode}}">
                     <span>{{ChallengeModeRank}}</span>
                 </div>
                 {{if CLGMOD}}
@@ -102,7 +101,7 @@
         </div>
         <div class="stats-box">
             {{each scoreData rank}}
-            <div class="one-stats-box {{rank}}" id="{{rank.Rating}}">
+            <div class="one-stats-box {{rank}}" id="{{rank.Rating || 'NEW'}}">
                 <div class="rank">
                     <p>{{$index}}</p>
                 </div>
