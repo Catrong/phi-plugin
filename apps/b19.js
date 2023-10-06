@@ -28,7 +28,7 @@ export class phib19 extends plugin {
                     fnc: 'bestn'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(score|单曲成绩).*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(score|单曲成绩)[1-2]?.*$`,
                     fnc: 'singlescore'
                 },
                 {
@@ -81,19 +81,22 @@ export class phib19 extends plugin {
         if (!Config.getDefOrConfig('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
-        try {
-            await get.buildingRecord(e, new PhigrosUser(save.session))
+        if (nnum == 22) {
 
-            save = await send.getsave_result(e)
+            /**自定义数量不更新存档 */
+            try {
+                await get.buildingRecord(e, new PhigrosUser(save.session))
 
-            if (!save) {
-                return true
+                save = await send.getsave_result(e)
+
+                if (!save) {
+                    return true
+                }
+
+            } catch (err) {
+                send.send_with_At(e, err)
             }
-
-        } catch (err) {
-            send.send_with_At(e, err)
         }
-
 
 
         var Record = save.gameRecord
@@ -322,7 +325,7 @@ export class phib19 extends plugin {
         if (!save) {
             return true
         }
-        var song = e.msg.replace(/[#/](.*)(score|单曲成绩)(\s*)/g, '')
+        var song = e.msg.replace(/[#/](.*)(score|单曲成绩)[1-2]?(\s*)/g, '')
 
         if (!song) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} score <曲名>`)
@@ -382,6 +385,7 @@ export class phib19 extends plugin {
 
         data.illustration = get.getill(song)
         var songsinfo = get.ori_info[song]
+
         for (var i in ans) {
             if (ans[i]) {
                 ans[i].acc = ans[i].acc.toFixed(2)
