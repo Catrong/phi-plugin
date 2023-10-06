@@ -1,0 +1,188 @@
+<head>
+    <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css">
+    <link rel="stylesheet" href="{{_res_path}}html/score/scoreInfo.css">
+</head>
+
+<body style="scale: {{size}};">
+    {{if background || illustration}}
+    <div class="background">
+        <img src="{{background || illustration}}" alt="{{background || illustration}}">
+    </div>
+    {{/if}}
+    <div class="left">
+        <div class="Player_Info">
+            <p>PLAYER & SONGS_INFO</p>
+        </div>
+        <div class="Player_Info-after"></div>
+        <div class="basic-box">
+            <div class="basic-img">
+                <img src="{{illustration}}" alt="{{illustration}}">
+            </div>
+            <div class="Player_Id">
+                <div class="avatar">
+                    <img src="{{_res_path}}html/avatar/{{avatar}}.png" alt="{{avatar}}">
+                </div>
+                <div class="Player_Id-box">
+                    <div class="Player_Id-left">
+                        <p>ID</p>
+                    </div>
+                    <div class="Player_Id-right">
+                        <p id="Player_Id">{{PlayerId}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="left_title">
+            <div class="left_title-left">
+                <p>PLAYER_DATAIL</p>
+            </div>
+        </div>
+        <div class="Player_data_line">
+            <div class="Player_data_line-left">
+                <div class="Player_data_title" id="Player_data_left">
+                    <p>RKS</p>
+                </div>
+                <div class="Player_data_value" id="Player_data_left">
+                    <p>{{Rks}}</p>
+                </div>
+            </div>
+            <div class="Player_data_line-right">
+                <div class="Player_data_title" id="Player_data_right">
+                    <p>CLG MOD</p>
+                </div>
+                <div class="Challenge" id="Challenge{{CLGMOD ? '1' : '2'}}">
+                    <img src="{{_res_path}}html/otherimg/{{ChallengeMode}}.png"
+                        alt="{{ChallengeMode}}">
+                    <span>{{ChallengeModeRank}}</span>
+                </div>
+                {{if CLGMOD}}
+                <div class="Player_data_value" id="Player_data_right">
+                    <p>{{CLGMOD}}</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        <div class="left_title">
+            <div class="left_title-left">
+                <p>SONG_DATAIL</p>
+            </div>
+        </div>
+
+        <div class="rank_dif_{{scoreData.AT ? 1 : 0}}">
+            {{each scoreData song}}
+            <div class="a_rank">
+                <div class="a_rank_dif">
+                    <p>{{song.difficulty || '-'}}</p>
+                </div>
+                <div class="a_rank_name">
+                    <p>{{$index}}</p>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <div class="createdbox">
+            <div class="phi-plugin">
+                <p>Phi-Plugin</p>
+            </div>
+            <div class="ver">
+                <p>{{Version.ver}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        <div class="file-content">
+            <div class="file-content-left">
+                <p>SCORE_DATA</p>
+            </div>
+        </div>
+        <div class="data_title">
+            <div class="data_title-left">
+                <p>SCORE_INFO</p>
+            </div>
+        </div>
+        <div class="stats-box">
+            {{each scoreData rank}}
+            <div class="one-stats-box {{rank}}" id="{{rank.Rating}}">
+                <div class="rank">
+                    <p>{{$index}}</p>
+                </div>
+                {{if rank.Rating}}
+                <div class="stats-up">
+                    <div class="Rating">
+                        <img src="{{_res_path}}html/otherimg/{{rank.Rating}}.png" alt="{{rank.Rating}}">
+                    </div>
+                    {{if rank.Rating != 'NEW'}}
+                    <div class="data_score">
+                        <p>{{rank.score}}</p>
+                    </div>
+                    {{/if}}
+                </div>
+                {{if rank.Rating != 'NEW'}}
+                <div class="data_mid">
+                    <div class="data_rks">
+                        <p>{{rank.rks}}</p>
+                    </div>
+                    <div class="data_acc">
+                        <p>{{rank.acc}}%</p>
+                    </div>
+                </div>
+                <div class="data_bottom">
+                    <div class="data_suggest">
+                        <p>>> {{rank.suggest}}</p>
+                    </div>
+                </div>
+                {{/if}}
+                {{else}}
+                <div class="no_info">
+                    <p>NO_INFO</p>
+                </div>
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    <!-- 曲目名称自适应name-box的宽度 -->
+    <script>
+        function adjustFontSize() {
+
+            /**
+             * @param {string} id id
+             * @param {number} maxFontSize 最大字体大小
+             */
+            function work(id, maxFontSize = 50) {
+
+                //获取song-name和composer滴元素
+                var songName = document.getElementById(id)
+
+                /*调整曲目名称字体大小*/
+                var parentElement = songName.parentElement
+
+
+                //如果字体宽度小于父元素宽度，则增大字体大小
+                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
+                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                    var fontSize = parseFloat(style)
+
+                    //检查是否已经达到最大字体大小
+                    if (fontSize >= maxFontSize) {
+                        break
+                    }
+
+                    songName.style.fontSize = (fontSize + 1) + "px"
+                }
+
+                // 如果字体宽度大于父元素宽度，则减小字体大小
+                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
+                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                    var fontSize = parseFloat(style);
+                    songName.style.fontSize = (fontSize - 1) + "px";
+                }
+            }
+            work('Player_Id', 60)
+            work('song_Id', 60)
+
+        }
+        window.onload = adjustFontSize
+        window.onresize = adjustFontSize
+    </script>
+</body>

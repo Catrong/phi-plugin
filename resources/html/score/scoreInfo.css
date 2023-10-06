@@ -23,12 +23,56 @@
     background: #7ae07a88;
 }
 
-.rank_dif {
-    background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%);
+.rank_dif_1 {
+    /* background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%); */
     background: linear-gradient(-75deg, #9c9c9c88 24%, #00000000 24%, #00000000 28%, #ff616188 28%, #ff616188 49%, #00000000 49%, #00000000 53%, #009dff88 53%, #009dff88 73%, #00000000 73%, #00000000 77%, #7ae07a88 77%);
     margin-top: 20px;
     width: 98%;
     height: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.rank_dif_0 {
+    /* background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%); */
+    background: linear-gradient(-75deg,#ff616188 32%, #00000000 32%, #00000000 36%, #009dff88 36%, #009dff88 65%, #00000000 65%, #00000000 70%, #7ae07a88 70%);
+    margin-top: 20px;
+    width: 98%;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.a_rank {
+    display: flex;
+    width: 100px;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.a_rank_dif {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.a_rank_dif p {
+    font-size: 40px;
+}
+
+.a_rank_name {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.a_rank_name p {
+    font-size: 20px;
 }
 
 .data_score {

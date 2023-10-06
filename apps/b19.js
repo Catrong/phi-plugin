@@ -5,6 +5,7 @@ import get from '../model/getdata.js'
 import { segment } from "oicq";
 import send from '../model/send.js';
 import PhigrosUser from '../lib/PhigrosUser.js';
+import altas from '../model/picmodle.js'
 
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
@@ -53,7 +54,7 @@ export class phib19 extends plugin {
         if (!nnum) {
             nnum = 22
         }
-        
+
         nnum = Math.max(nnum, 22)
         nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
 
@@ -167,7 +168,7 @@ export class phib19 extends plugin {
         }
 
 
-        send.send_with_At(e, await get.getb19(e, data))
+        send.send_with_At(e, await altas.b19(e, data))
 
 
 
@@ -322,6 +323,10 @@ export class phib19 extends plugin {
         if (!save) {
             return true
         }
+
+        var picversion = Number(e.msg.match(/(score|单曲成绩)[1-2]?/g)[0].replace(/(score|单曲成绩)/g, '')) || 1
+
+
         var song = e.msg.replace(/[#/](.*)(score|单曲成绩)[1-2]?(\s*)/g, '')
 
         if (!song) {
@@ -376,29 +381,58 @@ export class phib19 extends plugin {
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
-            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            scoreData: {},
         }
 
 
         data.illustration = get.getill(song)
         var songsinfo = get.ori_info[song]
 
-        for (var i in ans) {
-            if (ans[i]) {
-                ans[i].acc = ans[i].acc.toFixed(2)
-                ans[i].rks = ans[i].rks.toFixed(2)
-                data[Level[i]] = {
-                    ...ans[i],
-                    suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4)
+        switch (picversion) {
+            case 2: {
+                for (var i in ans) {
+                    if (ans[i]) {
+                        ans[i].acc = ans[i].acc.toFixed(2)
+                        ans[i].rks = ans[i].rks.toFixed(2)
+                        data[Level[i]] = {
+                            ...ans[i],
+                            suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4)
+                        }
+                    } else {
+                        data[Level[i]] = {
+                            Rating: 'NEW'
+                        }
+                    }
+                    data[Level[i]].difficulty = Number(songsinfo['chart'][Level[i]]['difficulty']).toFixed(1)
                 }
-            } else {
-                data[Level[i]] = {
-                    Rating: 'NEW'
-                }
+                send.send_with_At(e, await altas.score(e, data, 2))
+                break;
             }
-            data[Level[i]].difficulty = Number(songsinfo['chart'][Level[i]]['difficulty']).toFixed(1)
+            default: {
+                console.info(songsinfo.chart)
+                for (var i in songsinfo.chart) {
+                    data.scoreData[i] = {}
+                    data.scoreData[i].difficulty = songsinfo['chart'][i]['difficulty']
+                }
+                console.info(data.scoreData)
+                for (var i in ans) {
+                    if (ans[i]) {
+                        ans[i].acc = ans[i].acc.toFixed(4)
+                        ans[i].rks = ans[i].rks.toFixed(4)
+                        data.scoreData[Level[i]] = {
+                            ...ans[i],
+                            suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4),
+                            difficulty: data.scoreData[Level[i]].difficulty,
+                        }
+                    } else {
+                        data.scoreData[Level[i]].Rating = 'NEW'
+                    }
+                }
+                send.send_with_At(e, await altas.score(e, data, 1))
+                break;
+            }
         }
-        send.send_with_At(e, await get.getsingle(e, data))
         return true
 
     }

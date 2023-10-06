@@ -4,7 +4,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 1920px;
-    height: 1500;
+    height: 1351;
     justify-content: center;
     align-items: center;
     background-size: cover;
@@ -40,11 +40,11 @@ data_rks p {
 .right {
     background-color: rgb(45 129 230 / 29%);
     backdrop-filter: blur(50px);
+    height: 1125px;
 }
 
 .left {
     width: 36.5%;
-    height: 87%;
     padding-bottom: 18px;
     display: flex;
     position: absolute;
@@ -53,7 +53,6 @@ data_rks p {
     left: 4.5%;
     top: 7%;
     transform: perspective(600px) rotateY(3deg);
-    backdrop-filter: blur(20px);
 }
 
 .Player_Info {
@@ -358,7 +357,6 @@ data_rks p {
 
 .right {
     width: 51.2%;
-    height: 87%;
     padding-bottom: 18px;
     display: flex;
     position: absolute;

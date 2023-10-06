@@ -30,7 +30,7 @@ class atlas {
 
 
     async b19(e, data) {
-        if(data.nnum != 22) {
+        if (data.nnum != 22) {
             /**锁质量 */
             return await this.render('b19/b19', {
                 ...data,
@@ -100,13 +100,32 @@ class atlas {
         })
     }
 
-    async score(e, data) {
-        return await this.render('score/score', {
-            ...data
-        }, {
-            e,
-            scale: Config.getDefOrConfig('config', 'renderScale') / 100
-        })
+    /**
+     * 单曲成绩
+     * @param {1|2} picversion 版本
+     */
+    async score(e, data, picversion) {
+        
+        switch (picversion) {
+            case 1: {
+                return await this.render('score/scoreInfo', {
+                    ...data,
+                    size: Config.getDefOrConfig('config', 'b19size') / 100,
+                }, {
+                    e,
+                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                })
+            }
+
+            default: {
+                return await this.render('score/score', {
+                    ...data
+                }, {
+                    e,
+                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                })
+            }
+        }
     }
 
     async ill(e, data) {
