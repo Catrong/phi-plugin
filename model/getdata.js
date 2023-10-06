@@ -450,18 +450,6 @@ class getdata {
         var all = []
         for (var i in result) {
 
-            /**这些曲名有过更改 */
-            switch (result[i].song) {
-                case '今年も「雪降り、メリクリ」目指して顽张ります！！': {
-                    result[i].song = '今年も「雪降り、メリクリ」目指して頑張ります！！';
-                    break;
-                }
-                case 'Cipher: /2&//<|0': {
-                    result[i].song = 'Cipher : /2&//<|0';
-                    break;
-                }
-            }
-
             if (all.includes(result[i].song)) continue //去重
             /**如果有完全匹配的曲目则放弃剩下的 */
             if (result[0].dis == 1 && result[i].dis < 1) break
