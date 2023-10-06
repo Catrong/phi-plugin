@@ -53,8 +53,8 @@ export class phib19 extends plugin {
         if (!nnum) {
             nnum = 21
         }
-        if (nnum > 600) {
-            nnum = 600
+        if (nnum > 99) {
+            nnum = 99
         }
 
         var bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-99]*\s*/g, '')
