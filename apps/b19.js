@@ -53,6 +53,9 @@ export class phib19 extends plugin {
         if (!nnum) {
             nnum = 22
         }
+        if (nnum <= 22) {
+            nnum = 22
+        }
         if (nnum > 50) {
             nnum = 50
         }
