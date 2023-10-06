@@ -20,7 +20,7 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b19|rks|pgr|PGR|B19|RKS).*$`,
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b|rks|pgr|PGR|B|RKS)[0-9]*.*$`,
                     fnc: 'b19'
                 },
                 {
@@ -47,7 +47,17 @@ export class phib19 extends plugin {
 
     async b19(e) {
 
-        var bksong = e.msg.replace(/^.*(b19|rks|pgr|PGR|B19|RKS)\s*/g, '')
+        var nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
+        console.log(nnum)
+        nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
+        if (!nnum) {
+            nnum = 21
+        }
+        if (nnum > 600) {
+            nnum = 600
+        }
+
+        var bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-99]*\s*/g, '')
 
         if (bksong) {
             var tem = get.fuzzysongsnick(bksong)[0]
@@ -119,7 +129,7 @@ export class phib19 extends plugin {
 
         rkslist = rkslist.sort(cmp())
         var illlist = []
-        for (var i = 0; i < 21 && i < rkslist.length; ++i) {
+        for (var i = 0; i < nnum && i < rkslist.length; ++i) {
             rkslist[i].num = i + 1
             rkslist[i].suggest = get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
             rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
@@ -145,7 +155,8 @@ export class phib19 extends plugin {
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            background: bksong || illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))]
+            background: bksong || illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
+            nnum: nnum,
         }
         if (save.gameProgress) {
             var money = save.gameProgress.money

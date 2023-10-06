@@ -30,6 +30,17 @@ class atlas {
 
 
     async b19(e, data) {
+        if(data.nnum != 21) {
+            /**锁50 */
+            return await this.render('b19/b19', {
+                ...data,
+                size: 50,
+            }, {
+                e,
+                scale: Config.getDefOrConfig('config', 'renderScale') / 100
+            })
+
+        }
         return await this.render('b19/b19', {
             ...data,
             size: Config.getDefOrConfig('config', 'b19size') / 100,
