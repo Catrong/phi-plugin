@@ -18,12 +18,16 @@ export class phiGuessMic extends plugin {
                     fnc: 'start'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)mic提示$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)mic(提示|tip)$`,
                     fnc: 'tip'
                 },
                 {
-                    reg: `^[#/]${Config.getDefOrConfig('config', 'isGuild') ? '?' : ''}(\\s*)mic.*$`,
+                    reg: `^[#/]${Config.getDefOrConfig('config', 'isGuild') ? '?' : ''}(\\s*)gu.*$`,
                     fnc: 'guess'
+                },
+                {
+                    reg: `^[#/]${Config.getDefOrConfig('config', 'isGuild') ? '?' : ''}(\\s*)micans$`,
+                    fnc: 'ans'
                 }
             ]
         })
@@ -32,7 +36,7 @@ export class phiGuessMic extends plugin {
 
     async start(e) {
 
-        if(e.isGuild) {
+        if (e.isGuild) {
             e.reply('暂时无法在频道中使用哦QAQ！')
         }
 
@@ -58,15 +62,7 @@ export class phiGuessMic extends plugin {
         var rand = randint(0, gamelist[group_id].unsend.length - 1)
 
         var url = `https://qxsky.top:833/data/other_data/web/splited_music/${gamelist[group_id].songId}/${gamelist[group_id].unsend[rand]}.wav`
-        // try {
-        //     let msg = await uploadRecord(url, 0, false)
-        //     e.reply(msg)
-        // } catch {
-        //     e.reply('歌曲文件太大啦，发不出来，诶嘿')
 
-        // }
-
-        // await SendMusicShare(e, { source: 'netease', name: `发送 /mic 猜歌哦！/micans可以结束哦！`, artist: `Phi-Plugin 猜歌`, pic: get.getimg('Phigros_Icon_3.0.0.png'), link: url })
 
         // e.reply(segment.share(url, `发送 /mic 猜歌哦！/micans可以结束哦！`, get.getimg('Phigros_Icon_3.0.0.png')))
 
@@ -129,6 +125,17 @@ export class phiGuessMic extends plugin {
         }
     }
 
+    async ans(e) {
+        const { group_id } = e
+        if (!gamelist[group_id]) {
+            return false
+        }
+        await e.reply('好吧，下面开始公布答案。', true)
+        e.reply(await get.GetSongsInfoAtlas(e, get.idgetsong(gamelist[group_id].songId + '.0')))
+        delete gamelist[group_id]
+
+    }
+
 }
 
 
@@ -139,103 +146,3 @@ function randint(min, max) {
     return (randomOffset + min) % range + min
 }
 
-
-async function SendMusicShare(e, data, to_uin = null) {
-    if (!Bot.sendOidb) return false
-
-    let appid, appname, appsign, style = 4;
-    switch (data.source) {
-        case 'netease':
-            appid = 100495085, appname = "com.netease.cloudmusic", appsign = "da6b069da1e2982db3e386233f68d76d";
-            break;
-        case 'kuwo':
-            appid = 100243533, appname = "cn.kuwo.player", appsign = "bf9ff4ffb4c558a34ee3fd52c223ebf5";
-            break;
-        case 'kugou':
-            appid = 205141, appname = "com.kugou.android", appsign = "fe4a24d80fcf253a00676a808f62c2c6";
-            break;
-        case 'migu':
-            appid = 1101053067, appname = "cmccwm.mobilemusic", appsign = "6cdc72a439cef99a3418d2a78aa28c73";
-            break;
-        case 'qq':
-        default:
-            appid = 100497308, appname = "com.tencent.qqmusic", appsign = "cbd27cd7c861227d013a25b2d10f0799";
-            break;
-    }
-
-    var title = data.name, singer = data.artist, prompt = '[分享]', jumpUrl, preview, musicUrl;
-
-    let types = [];
-    if (data.url == null) { types.push('url') };
-    if (data.pic == null) { types.push('pic') };
-    if (data.link == null) { types.push('link') };
-    if (types.length > 0 && typeof (data.api) == 'function') {
-        let { url, pic, link } = await data.api(data.data, types);
-        if (url) { data.url = url; }
-        if (pic) { data.pic = pic; }
-        if (link) { data.link = link; }
-    }
-
-    typeof (data.url) == 'function' ? musicUrl = await data.url(data.data) : musicUrl = data.url;
-    typeof (data.pic) == 'function' ? preview = await data.pic(data.data) : preview = data.pic;
-    typeof (data.link) == 'function' ? jumpUrl = await data.link(data.data) : jumpUrl = data.link;
-
-    if (typeof (musicUrl) != 'string' || musicUrl == '') {
-        style = 0;
-        musicUrl = '';
-    }
-
-    prompt = '[分享]' + title + '-' + singer;
-
-    let recv_uin = 0;
-    let send_type = 0;
-    let recv_guild_id = 0;
-    let ShareMusic_Guild_id = false;
-
-    if (e.isGroup && to_uin == null) {//群聊
-        recv_uin = e.group.gid;
-        send_type = 1;
-    } else if (e.guild_id) {//频道
-        recv_uin = Number(e.channel_id);
-        recv_guild_id = BigInt(e.guild_id);
-        send_type = 3;
-    } else if (to_uin == null) {//私聊
-        recv_uin = e.friend.uid;
-        send_type = 0;
-    } else {//指定号码私聊
-        recv_uin = to_uin;
-        send_type = 0;
-    }
-
-    let body = {
-        1: appid,
-        2: 1,
-        3: style,
-        5: {
-            1: 1,
-            2: "0.0.0",
-            3: appname,
-            4: appsign,
-        },
-        10: send_type,
-        11: recv_uin,
-        12: {
-            10: title,
-            11: singer,
-            12: prompt,
-            13: jumpUrl,
-            14: preview,
-            16: musicUrl,
-        },
-        19: recv_guild_id
-    };
-
-
-    let payload = await Bot.sendOidb("OidbSvc.0xb77_9", core.pb.encode(body));
-
-    let result = core.pb.decode(payload);
-
-    if (result[3] != 0) {
-        e.reply('歌曲分享失败：' + result[3], true);
-    }
-}

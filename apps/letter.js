@@ -368,7 +368,7 @@ export class philetter extends plugin {
                         e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/提示]呐≧ ﹏ ≦`, true)
                     }
 
-                    return true
+                    return false
                 }
 
                 e.reply(`没有找到[${content}]的曲目信息呐QAQ`, true)

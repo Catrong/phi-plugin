@@ -82,7 +82,7 @@ class getdata {
         var info = this.info(undefined, false)
         for (var i in info) {
             if (info[i]['illustration_big']) {
-                this.illlist.push(i)
+                this.illlist.push(info[i].song)
             }
         }
         
@@ -91,7 +91,7 @@ class getdata {
         this.songlist = []
 
         for (var i in this.ori_info) {
-            this.songlist.push(i)
+            this.songlist.push(this.ori_info[i].song)
         }
 
         

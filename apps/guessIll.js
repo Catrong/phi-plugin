@@ -216,7 +216,7 @@ export class phiguess extends plugin {
                     } else {
                         send.send_with_At(e, `不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
                     }
-                    return true
+                    return false
                 }
             }
         }
