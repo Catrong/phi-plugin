@@ -410,12 +410,10 @@ export class phib19 extends plugin {
                 break;
             }
             default: {
-                console.info(songsinfo.chart)
                 for (var i in songsinfo.chart) {
                     data.scoreData[i] = {}
                     data.scoreData[i].difficulty = songsinfo['chart'][i]['difficulty']
                 }
-                console.info(data.scoreData)
                 for (var i in ans) {
                     if (ans[i]) {
                         ans[i].acc = ans[i].acc.toFixed(4)
