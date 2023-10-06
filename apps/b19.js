@@ -51,7 +51,7 @@ export class phib19 extends plugin {
         console.log(nnum)
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
         if (!nnum) {
-            nnum = 21
+            nnum = 22
         }
         if (nnum > 50) {
             nnum = 50
