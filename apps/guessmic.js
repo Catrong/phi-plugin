@@ -100,7 +100,7 @@ export class phiGuessMic extends plugin {
         if (!gamelist[group_id]) {
             return false
         }
-        const ans = msg.replace(/^.*?mic\s*/g, '')
+        const ans = msg.replace(/^[#/]?gu\s*/g, '')
         if (!ans) {
             return false
         }
