@@ -53,12 +53,9 @@ export class phib19 extends plugin {
         if (!nnum) {
             nnum = 22
         }
-        if (nnum <= 22) {
-            nnum = 22
-        }
-        if (nnum > 50) {
-            nnum = 50
-        }
+        
+        nnum = Math.max(nnum, 22)
+        nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
 
         var bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
 

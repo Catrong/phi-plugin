@@ -46,19 +46,6 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    field: 'maxRandering',
-                    label: '同时渲染量',
-                    helpMessage: '渲染时会将任务加入到队列中，超过同时渲染量的任务将会等待到未完成的任务完成',
-                    bottomHelpMessage: '同时渲染的最大数量，建议小于等于核心线程数',
-                    component: 'InputNumber',
-                    required: true,
-                    componentProps: {
-                        min: 0,
-                        max: 100,
-                        placeholder: '请输入最大同时渲染数量',
-                    },
-                },
-                {
                     field: 'timeout',
                     label: '渲染超时时间',
                     bottomHelpMessage: '对所有的图片生效，超时后重启puppeteer，单位ms',
@@ -71,15 +58,15 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    field: 'waitingTimeout',
-                    label: '等待渲染超时时间',
-                    bottomHelpMessage: '对所有的图片生效，等待超时后结束任务，单位ms',
+                    field: 'B19MaxNum',
+                    label: 'B19最大限制',
+                    bottomHelpMessage: '用户可以获取B19图片成绩的最大数量，建议不要太大',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
-                        min: 0,
-                        max: 120000,
-                        placeholder: '请输入等待渲染超时时间',
+                        min: 22,
+                        max: 605,
+                        placeholder: '请输入B19最大限制',
                     },
                 },
                 {
@@ -203,6 +190,18 @@ export function supportGuoba() {
                     label: '@猜对者',
                     bottomHelpMessage: '开字母是否在答案后附带猜对者，不会@人',
                     component: 'Switch',
+                },
+                {
+                    field: 'MicTipCd',
+                    label: '猜歌提示冷却',
+                    bottomHelpMessage: '猜歌的全局提示冷却时间，单位：秒',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 0,
+                        max: 120,
+                        placeholder: '请输入时间',
+                    },
                 },
             ],
             // 获取配置数据方法（用于前端填充显示数据）
