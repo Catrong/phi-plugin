@@ -57,7 +57,7 @@ export class phib19 extends plugin {
             nnum = 50
         }
 
-        var bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-99]*\s*/g, '')
+        var bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
 
         if (bksong) {
             var tem = get.fuzzysongsnick(bksong)[0]
