@@ -248,10 +248,9 @@ export class phimoney extends plugin {
     }
 
     async tasks(e) {
-        var now = await get.getsave(e.user_id)
+        var now = await send.getsave_result(e)
 
         if (!now) {
-            send.send_with_At(e, `该功能需要绑定后才能使用哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
         var now_time = new Date()
