@@ -34,7 +34,7 @@ class atlas {
             /**锁50 */
             return await this.render('b19/b19', {
                 ...data,
-                size: 50,
+                size: 0.5,
             }, {
                 e,
                 scale: Config.getDefOrConfig('config', 'renderScale') / 100
