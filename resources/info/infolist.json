@@ -246,7 +246,8 @@
         }
     },
     "Cipher: /2&//<|0": {
-        "song": "Cipher : /2&//<|0",
+        "song": "Cipher: /2&//<|0",
+        "uisong": "Cipher : /2&//<|0",
         "illustration": "https://img.moegirl.org.cn/common/thumb/5/5a/Cipher_%E6%96%B0_Phigros.JPG/300px-Cipher_%E6%96%B0_Phigros.JPG",
         "illustration_big": "https://img.moegirl.org.cn/common/5/5a/Cipher_%E6%96%B0_Phigros.JPG",
         "chapter": "Chapter Legacy 过去的章节",
