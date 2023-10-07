@@ -57,7 +57,7 @@ export class phiGuessMic extends plugin {
         }
         console.info(gamelist)
 
-        e.reply(`游戏开始！发送 /mic提示 获取更多提示，发送/micans 查看答案哦！`)
+        e.reply(`游戏开始！。发送 /gu 进行猜测，发送 /mic提示 获取更多提示，发送/micans 查看答案哦！`)
 
         var rand = randint(0, gamelist[group_id].unsend.length - 1)
 
