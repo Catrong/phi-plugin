@@ -128,8 +128,12 @@ export class phib19 extends plugin {
         }
 
 
+        var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
+        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        if (minuprks < 0) {
+            minuprks += 0.1
+        }
 
         rkslist = rkslist.sort(cmp())
         var illlist = []
@@ -223,8 +227,12 @@ export class phib19 extends plugin {
 
         phi.suggest = "无法推分"
 
+        var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
+        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        if (minuprks < 0) {
+            minuprks += 0.1
+        }
 
         rkslist = rkslist.sort(cmp())
 
@@ -359,9 +367,12 @@ export class phib19 extends plugin {
         rkslist = rkslist.sort(cmp())
         /**b19最低rks */
         var minrks = rkslist[Math.min(18, rkslist.length)]
+        var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
-
+        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        if (minuprks < 0) {
+            minuprks += 0.1
+        }
         for (var i in Record) {
             var now = await get.idgetsong(i)
             if (now == song) {
@@ -460,8 +471,12 @@ export class phib19 extends plugin {
         rkslist = rkslist.sort(cmp())
         /**b19最低rks */
         var minrks = rkslist[Math.min(18, rkslist.length)]
+        var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Number(save.saveInfo.summary.rankingScore.toFixed(2)) - save.saveInfo.summary.rankingScore + 0.005
+        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        if (minuprks < 0) {
+            minuprks += 0.1
+        }
 
         /**计算 */
         var suggestlist = []
