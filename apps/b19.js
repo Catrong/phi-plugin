@@ -132,7 +132,7 @@ export class phib19 extends plugin {
         /**考虑屁股肉四舍五入原则 */
         var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
         if (minuprks < 0) {
-            minuprks += 0.1
+            minuprks += 0.01
         }
 
         rkslist = rkslist.sort(cmp())
@@ -231,7 +231,7 @@ export class phib19 extends plugin {
         /**考虑屁股肉四舍五入原则 */
         var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
         if (minuprks < 0) {
-            minuprks += 0.1
+            minuprks += 0.01
         }
 
         rkslist = rkslist.sort(cmp())
@@ -371,7 +371,7 @@ export class phib19 extends plugin {
         /**考虑屁股肉四舍五入原则 */
         var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
         if (minuprks < 0) {
-            minuprks += 0.1
+            minuprks += 0.01
         }
         for (var i in Record) {
             var now = await get.idgetsong(i)
@@ -475,7 +475,7 @@ export class phib19 extends plugin {
         /**考虑屁股肉四舍五入原则 */
         var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
         if (minuprks < 0) {
-            minuprks += 0.1
+            minuprks += 0.01
         }
 
         /**计算 */
