@@ -255,6 +255,10 @@ export class phisong extends plugin {
 
     async ill(e) {
         let msg = e.msg.replace(/[#/](.*)(曲绘|ill|Ill)(\s*)/g, "")
+        if (!msg) {
+            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} ill <曲名>`)
+            return true
+        }
         let songs = get.fuzzysongsnick(msg)
         if (songs[0]) {
             let msgRes
