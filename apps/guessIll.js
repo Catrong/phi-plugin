@@ -19,7 +19,7 @@ export class phiguess extends plugin {
             name: 'phi-game 猜曲绘',
             dsc: 'phi-plugin 猜曲绘',
             event: 'message',
-            priority: 1001,
+            priority: 1000,
             rule: [
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(guess|猜曲目|猜曲绘)$`,
