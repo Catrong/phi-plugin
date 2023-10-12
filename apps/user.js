@@ -603,6 +603,10 @@ function getbackground(name) {
                 save_background = 'ENERGY SYNERGY MATRIX'
                 break
             }
+            case 'NYA!!!': {
+                save_background = 'NYA!!!(Phigros ver.)'
+                break
+            }
             default: {
                 save_background = name
                 break
