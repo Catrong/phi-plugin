@@ -51,7 +51,7 @@ export class philetter extends plugin {
                     fnc: 'guess'
                 },
                 {
-                    reg: `^[#/](字母|letter)(ans|答案|结束)$`,
+                    reg: `^[#/](字母|letter|ltr)(ans|答案|结束)$`,
                     fnc: 'ans'
                 },
                 {
@@ -132,7 +132,7 @@ export class philetter extends plugin {
         }
 
         // 输出提示信息
-        e.reply(`出你字母开启成功！回复'/X个XXXX'命令猜歌，例如：/第1个Reimei;发送'/出X'来揭开字母(不区分大小写)，如'/出A';发送'/letterans'结束并查看答案`)
+        e.reply(`出你字母开启成功！回复'/X个XXXX'命令猜歌，例如：/第1个Reimei;发送'/出X'来揭开字母(不区分大小写)，如'/出A';发送'/ltrans'结束并查看答案`)
 
         // 延时1s
         await timeout(1 * 1000)
