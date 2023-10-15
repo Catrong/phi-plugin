@@ -38,7 +38,7 @@ export class phimoney extends plugin {
                     fnc: 'gettask'
                 },
                 {
-                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(send|送|转)(.*)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(send|送|转)(.*)$`,
                     fnc: 'send'
                 },
 
