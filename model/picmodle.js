@@ -30,7 +30,7 @@ class atlas {
 
 
     async b19(e, data) {
-        if (data.nnum != 22) {
+        if (data.nnum != 21) {
             /**锁质量 */
             return await this.render('b19/b19', {
                 ...data,
