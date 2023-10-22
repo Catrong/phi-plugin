@@ -26,6 +26,10 @@ export class phiDan extends plugin {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(Dan|dan).*$`,
                     fnc: 'dan'
                 },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(sessionToken)$`,
+                    fnc: 'sstk'
+                },
 
             ]
         })
@@ -99,5 +103,20 @@ export class phiDan extends plugin {
         send.send_with_At(e, `更新成功！你的认证段位为 ${dan.Dan.replace('/', ' ')} ${dan.EX ? 'EX' : ''}`)
         send.send_with_At(e, segment.image(dan.img))
         return true
+    }
+
+    async sstk(e) {
+        if(e.isGroup) {
+            send.send_with_At(e, `请私聊使用嗷`)
+            return false
+        }
+        var save = await send.getsave_result(e)
+
+        if (!save) {
+            return true
+        }
+
+        send.send_with_At(e, `sessionToken: ${save.session}\nObjectId: ${save.saveInfo.objectId}`)
+
     }
 }
