@@ -46,8 +46,7 @@ export class phiDan extends plugin {
                 send.send_with_At(e, segment.image(dan.img))
                 return true
             } catch (err) {
-                console.info(err)
-                send.send_with_At(e, `当前服务忙，请稍后重试QAQ！`)
+                send.send_with_At(e, `唔，本地没有你的认证记录哦！如果提交过审核的话，可以试试更新一下嗷！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} dan update\n${word}`)
                 return true
             }
         } else {
