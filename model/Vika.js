@@ -25,6 +25,7 @@ class VikaData {
             } catch { }
             logger.info(sessionToken)
             logger.info(response)
+            logger.info(Config.getDefOrConfig('config', 'VikaToken'))
             if (response.success) {
                 return makeRespones(response);
             }
