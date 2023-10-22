@@ -181,8 +181,8 @@ export class phiuser extends plugin {
             selfIntro: save.gameuser.selfIntro,
             backgroundurl: userbackground,
             PlayerId: save.saveInfo.PlayerId,
-            CLGMOD: plugindata.plugin_data.CLGMOD.Dan,
-            EX: plugindata.plugin_data.CLGMOD.EX,
+            CLGMOD: plugindata.plugin_data.CLGMOD ? plugindata.plugin_data.CLGMOD.Dan : null,
+            EX: plugindata.plugin_data.CLGMOD ? plugindata.plugin_data.CLGMOD.EX : null,
         }
 
         const user_data = await get.getpluginData(e.user_id)
