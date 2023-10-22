@@ -52,10 +52,10 @@ export class phib19 extends plugin {
         console.log(nnum)
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
         if (!nnum) {
-            nnum = 22
+            nnum = 21
         }
 
-        nnum = Math.max(nnum, 22)
+        nnum = Math.max(nnum, 21)
         nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
 
         var bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
@@ -79,7 +79,7 @@ export class phib19 extends plugin {
         if (!Config.getDefOrConfig('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
-        if (nnum == 22) {
+        if (nnum == 21) {
 
             /**自定义数量不更新存档 */
             try {
