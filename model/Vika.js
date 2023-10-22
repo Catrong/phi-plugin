@@ -23,6 +23,8 @@ class VikaData {
             try {
                 response = await this.PhigrosDan.records.query({ viewId: "viwpdf3HFtnvG", filterByFormula: `{fldB7Wx6wHX57} = \'${sessionToken}\'`, requestTimeout: 10000 });
             } catch { }
+            logger.info(sessionToken)
+            logger.info(response)
             if (response.success) {
                 return makeRespones(response);
             }
