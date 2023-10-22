@@ -10,6 +10,12 @@ const read = '（建设中）'
 const sheet = 'https://f.kdocs.cn/g/fxsg4EM2/'
 const word = `想要了解有关 Phigros民间段位标准 的有关信息可以查看这个专栏！\n${read}\n提交审核请前往这个链接哦！\n${sheet}\n`
 
+const cancanneed = Vika.PhigrosDan ? true : false
+
+if (!cancanneed) {
+    logger.info(`[Phi-Plugin]未填写 Vika Token ，将禁用段位认证。`)
+}
+
 export class phiDan extends plugin {
     constructor() {
         super({
@@ -37,6 +43,9 @@ export class phiDan extends plugin {
     }
 
     async dan(e) {
+        if (!cancanneed) {
+            return false
+        }
         var name = e.msg.replace(/[#/].*(dan|dan)/g, '')
         if (!name) {
             var plugindata = await get.getpluginData(e.user_id)
@@ -51,7 +60,7 @@ export class phiDan extends plugin {
             }
         } else {
             try {
-                var dan = Vika.GetUserDanByName(name);
+                var dan = await Vika.GetUserDanByName(name);
                 if (!dan) {
                     send.send_with_At(e, `唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！${word}`)
                     return true
@@ -72,6 +81,9 @@ export class phiDan extends plugin {
     }
 
     async danupdate(e) {
+        if (!cancanneed) {
+            return false
+        }
         var save = await send.getsave_result(e)
 
         if (!save) {
