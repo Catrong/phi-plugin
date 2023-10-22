@@ -78,6 +78,7 @@ function makeRespones(response) {
         ObjectId: response.data.records[0].fields.fld9mDj3ktKD7,
         nickname: response.data.records[0].fields.fldzkniADAUck, //常用名
         Dan: response.data.records[0].fields.fldWVwne5p9xg, // 段位
+        EX: response.data.records[0].fields.fldbILNU5o7Nl, // 是否EX
         img: response.data.records[0].fields.fldqbC6IK8m3o[0].url, // 截图
         score: (response.data.records[0].fields.fldTszelbRQIu ? response.data.records[0].fields.fldTszelbRQIu.split('\n') : undefined), // 详细成绩
         staffer: response.data.records[0].fields.fldoKAoJoBSJO.name, //审核人

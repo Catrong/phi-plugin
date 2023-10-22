@@ -56,7 +56,7 @@ export class phiDan extends plugin {
                 var plugindata = await get.getpluginData(e.user_id, true)
                 plugindata.plugin_data.CLGMOD = dan
                 get.putpluginData(e.user_id, plugindata)
-                send.send_with_At(e, `你的认证段位为 ${dan.Dan.replace('/', ' ')}`)
+                send.send_with_At(e, `你的认证段位为 ${dan.Dan.replace('/', ' ')} ${dan.EX ? 'EX' : ''}`)
                 send.send_with_At(e, segment.image(dan.img))
                 return true
             } catch (err) {
@@ -88,7 +88,7 @@ export class phiDan extends plugin {
             send.send_with_At(e, `当前服务忙，请稍后重试QAQ！`)
             return true
         }
-        
+
         if (!dan) {
             send.send_with_At(e, `唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！${word}`)
             return true
@@ -96,7 +96,7 @@ export class phiDan extends plugin {
         var plugindata = await get.getpluginData(e.user_id, true)
         plugindata.plugin_data.CLGMOD = dan
         get.putpluginData(e.user_id, plugindata)
-        send.send_with_At(e, `更新成功！你的认证段位为 ${dan.Dan.replace('/', ' ')}`)
+        send.send_with_At(e, `更新成功！你的认证段位为 ${dan.Dan.replace('/', ' ')} ${dan.EX ? 'EX' : ''}`)
         send.send_with_At(e, segment.image(dan.img))
         return true
     }

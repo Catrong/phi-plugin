@@ -182,6 +182,7 @@ export class phiuser extends plugin {
             backgroundurl: userbackground,
             PlayerId: save.saveInfo.PlayerId,
             CLGMOD: plugindata.plugin_data.CLGMOD.Dan,
+            EX: plugindata.plugin_data.CLGMOD.EX,
         }
 
         const user_data = await get.getpluginData(e.user_id)

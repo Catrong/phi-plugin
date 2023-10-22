@@ -55,8 +55,8 @@
                     <span>{{ChallengeModeRank}}</span>
                 </div>
                 {{if CLGMOD}}
-                <div class="Player_data_value" id="Player_data_right">
-                    <p>{{CLGMOD}}</p>
+                <div class="Player_data_value CLG{{EX ? ' colorful' : ''}}" id="Player_data_right">
+                    <p id="CLG">{{CLGMOD}}</p>
                 </div>
                 {{/if}}
             </div>
@@ -179,6 +179,9 @@
             }
             work('Player_Id', 60)
             work('song_Id', 60)
+            work('data', 60)
+            work('profile', 30)
+            work('CLG', 60)
 
         }
         window.onload = adjustFontSize

@@ -206,7 +206,7 @@ export function supportGuoba() {
                 {
                     field: 'VikaToken',
                     label: 'token',
-                    bottomHelpMessage: 'token',
+                    bottomHelpMessage: 'token 填写后请重启',
                     component: 'Input',
                     required: false,
                     componentProps: {

@@ -54,8 +54,8 @@
                     <span>{{gameuser.ChallengeModeRank}}</span>
                 </div>
                 {{if gameuser.CLGMOD}}
-                <div class="Player_data_value" id="Player_data_right">
-                    <p>{{gameuser.CLGMOD}}</p>
+                <div class="Player_data_value CLG{{gameuser.EX ? ' colorful' : ''}}" id="Player_data_right">
+                    <p id="CLG">{{gameuser.CLGMOD}}</p>
                 </div>
                 {{/if}}
             </div>
@@ -277,6 +277,7 @@
             work('Player_Id', 60)
             work('data', 60)
             work('profile', 30)
+            work('CLG', 40)
 
         }
         window.onload = adjustFontSize

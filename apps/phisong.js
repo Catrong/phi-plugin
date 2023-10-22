@@ -276,6 +276,7 @@ export class phisong extends plugin {
             }
         } else {
             e.reply(`未找到${msg}的相关曲目信息QAQ`, true)
+            return false
         }
         return true
 
