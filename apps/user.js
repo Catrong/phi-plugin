@@ -170,6 +170,8 @@ export class phiuser extends plugin {
             console.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
+        const plugindata = await get.getpluginData(e.user_id)
+
         const gameuser = {
             avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
@@ -179,6 +181,7 @@ export class phiuser extends plugin {
             selfIntro: save.gameuser.selfIntro,
             backgroundurl: userbackground,
             PlayerId: save.saveInfo.PlayerId,
+            CLGMOD: plugindata.plugin_data.CLGMOD.Dan,
         }
 
         const user_data = await get.getpluginData(e.user_id)

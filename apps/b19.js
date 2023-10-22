@@ -130,7 +130,7 @@ export class phib19 extends plugin {
 
         var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
@@ -229,7 +229,7 @@ export class phib19 extends plugin {
 
         var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
@@ -369,7 +369,7 @@ export class phib19 extends plugin {
         var minrks = rkslist[Math.min(18, rkslist.length)]
         var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
@@ -386,6 +386,8 @@ export class phib19 extends plugin {
             return true
         }
 
+        const plugindata = await get.getpluginData(e.user_id)
+
         var data = {
             PlayerId: save.saveInfo.PlayerId,
             avatar: get.idgetavatar(save.saveInfo.summary.avatar),
@@ -394,6 +396,7 @@ export class phib19 extends plugin {
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             scoreData: {},
+            CLGMOD: plugindata.plugin_data.CLGMOD.Dan,
         }
 
 
@@ -438,6 +441,7 @@ export class phib19 extends plugin {
                         data.scoreData[Level[i]].Rating = 'NEW'
                     }
                 }
+                data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
                 send.send_with_At(e, await altas.score(e, data, 1))
                 break;
             }
@@ -473,7 +477,7 @@ export class phib19 extends plugin {
         var minrks = rkslist[Math.min(18, rkslist.length)]
         var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
