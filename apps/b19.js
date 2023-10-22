@@ -396,8 +396,8 @@ export class phib19 extends plugin {
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             scoreData: {},
-            CLGMOD: plugindata.plugin_data.CLGMOD.Dan,
-            EX: plugindata.plugin_data.CLGMOD.EX,
+            CLGMOD: plugindata.plugin_data.CLGMOD ? plugindata.plugin_data.CLGMOD.Dan : null,
+            EX: plugindata.plugin_data.CLGMOD ? plugindata.plugin_data.CLGMOD.EX : null,
         }
 
 
