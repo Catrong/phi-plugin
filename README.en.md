@@ -6,8 +6,8 @@
 
 ![nyan](https://count.getloli.com/get/@phi-plugin)
 
-[![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
-[![phi-plugin](https://img.shields.io/badge/Gitee仓库-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
+[![phi-plugin](https://img.shields.io/badge/GitHub_repository-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
+[![phi-plugin](https://img.shields.io/badge/GitHub_repository-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
 ![version](https://img.shields.io/badge/version-0.9.6-9cf?style=for-the-badge)
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
@@ -18,8 +18,11 @@
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Stars)](../../stargazers)
 [![Downloads](https://img.shields.io/github/downloads/Catrong/phi-plugin/total-9cf?style=for-the-badge&color=blue&label=Downloads)](../../archive/refs/heads/main.zip)
 [![Releases](https://img.shields.io/github/v/release/Catrong/phi-plugin-9cf?style=for-the-badge&color=green&label=Releases)](../../releases/latest)
-
 [![Contributors](https://img.shields.io/badge/Contributors-4-orange.svg?style=for-the-badge)](#Cntributors)
+
+[![phi-plugin](https://img.shields.io/badge/语言-中文-FF0000?style=for-the-badge)](https://github.com/Catrong/phi-plugin/README.md)
+[![phi-plugin](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](https://github.com/Catrong/phi-plugin/README.md)
+
 
   </div>
   
@@ -38,7 +41,7 @@ Can you help provide some aliases, welcome to submit pull requests or come to me
 
 I'm already in my third year of high school, and I can't necessarily write code on weekends, so there may not be major feature updates in the past year, only maintenance of new tracks. Thank you all very much for your understanding :(
 
-Plugin official QQGuild: [Hutao114Pgr939](https://pd.qq.com/s/e3z86q6bw)，机器人可以添加到其他频道，有什么问题也可以来频道反馈
+Plugin official QQGuild: [Hutao114Pgr939](https://pd.qq.com/s/e3z86q6bw)，Bots can be added to other Guild, and any questions can also come to Guild for feedback
 
 ### Special thanks:
 <table style="border-radius: 20px">
@@ -93,7 +96,7 @@ The following # can be replaced by / , and the command header can be customized
 | `#phi re8` | Reset the plot of chap 8 |
 | `#phi (guess\|猜曲绘)` | Guess the song, answer without special orders, reply directly, if it is not the song title will not speak, if it is not the correct song title will reply. '#illans' End of guessing |
 | `#phi mic` | Listen to music clips and guess the song, answer that you need to send '/gu'<song>; For example '/gu Distorted Fate', if more fragments are needed to send '/phi mictip', answer '/micans' |
-| `#phi (曲绘洗牌\|illmix)` | 将猜曲绘中曲目列表的顺序进行打乱并将权重归一 |
+| `#phi (曲绘洗牌\|illmix)` | Shuffle the order of the track list in the guess plot and normalize the weights |
 | `#phi (letter\|出你字母\|猜曲名)` | Guess the title of the song according to the letters, '#出...' Opens the specified letter, '#第n个...' Answer, '#letterans' to get the answer |
 | `#phi (字母洗牌\|lettermix)` | The order of the track list in the title will be shuffled according to the letter guess and the weights will be normalized |
 | `#phi (song\|曲) xxx` | Query Phigros song info, also supports aliasing |
