@@ -18,8 +18,10 @@
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Star)](../../stargazers)
 [![Downloads](https://img.shields.io/github/downloads/Catrong/phi-plugin/total-9cf?style=for-the-badge&color=blue&label=下载)](../../archive/refs/heads/main.zip)
 [![Releases](https://img.shields.io/github/v/release/Catrong/phi-plugin-9cf?style=for-the-badge&color=green&label=发行版)](../../releases/latest)
-
 [![Contributors](https://img.shields.io/badge/Contributors-4-orange.svg?style=for-the-badge)](#Cntributors)
+
+[![phi-plugin](https://img.shields.io/badge/语言-中文-FF0000?style=for-the-badge)](https://github.com/Catrong/phi-plugin/README.md)
+[![phi-plugin](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](https://github.com/Catrong/phi-plugin/README.en.md)
 
   </div>
   
