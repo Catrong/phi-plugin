@@ -172,6 +172,10 @@ export class phiuser extends plugin {
 
         const plugindata = await get.getpluginData(e.user_id)
 
+        if (!plugindata.plugin_data) {
+            plugindata.plugin_data = {}
+        }
+        
         const gameuser = {
             avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
