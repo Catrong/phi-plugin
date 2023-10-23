@@ -21,7 +21,7 @@
 [![Contributors](https://img.shields.io/badge/Contributors-4-orange.svg?style=for-the-badge)](#Cntributors)
 
 [![phi-plugin](https://img.shields.io/badge/语言-中文-FF0000?style=for-the-badge)](https://github.com/Catrong/phi-plugin/README.md)
-[![phi-plugin](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](https://github.com/Catrong/phi-plugin/README.md)
+[![phi-plugin](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](https://github.com/Catrong/phi-plugin/README.en.md)
 
 
   </div>
