@@ -388,6 +388,11 @@ export class phib19 extends plugin {
 
         const plugindata = await get.getpluginData(e.user_id)
 
+        if (!plugindata.plugin_data) {
+            plugindata.plugin_data = {}
+        }
+        
+        
         var data = {
             PlayerId: save.saveInfo.PlayerId,
             avatar: get.idgetavatar(save.saveInfo.summary.avatar),
