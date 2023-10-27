@@ -58,7 +58,7 @@ export class phire8 extends plugin {
 
         this.setContext('dore8', false, 30)
 
-        send.send_with_At(e, `本功能暂处于实验阶段，不保证存档的安全性，继续重置请发送 [确认] 进行确认`)
+        send.send_with_At(e, `本功能暂处于实验阶段，不保证存档的安全性，同步出现网络错误即为失败，请注意及时覆盖云端存档，继续重置请发送 [确认] 进行确认`)
 
         return true
     }

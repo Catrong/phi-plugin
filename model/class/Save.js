@@ -58,7 +58,8 @@ export default class Save {
      *  showPlayerId: boolean,
      *  selfIntro: string,
      *  avatar: string,
-     *  background: string
+     *  background: string,
+     *  CLGMOD: string,
      * },
      * gameRecord: {}
      * }} data 
@@ -94,7 +95,7 @@ export default class Save {
         this.saveUrl = data.saveUrl
         this.Recordver = data.Recordver
         this.gameProgress = null
-        if(data.gameProgress) {
+        if (data.gameProgress) {
             this.gameProgress = {
                 isFirstRun: data.gameProgress.isFirstRun, //首次运行
                 legacyChapterFinished: data.gameProgress.legacyChapterFinished, //过去的章节已完成
@@ -116,14 +117,14 @@ export default class Save {
             }
         }
         this.gameuser = null
-        if(data.gameuser) {
+        if (data.gameuser) {
             this.gameuser = {
                 name: data.gameuser.name,
                 version: data.gameuser.version,
                 showPlayerId: data.gameuser.showPlayerId,
                 selfIntro: data.gameuser.selfIntro,
                 avatar: data.gameuser.avatar,
-                background: data.gameuser.background
+                background: data.gameuser.background,
             }
         }
         this.gameRecord = {}
@@ -131,12 +132,12 @@ export default class Save {
             this.gameRecord[id] = []
             for (var i in data.gameRecord[id]) {
                 var level = Number(i)
-                if(!data.gameRecord[id][level]) {
+                if (!data.gameRecord[id][level]) {
                     this.gameRecord[id][level] = null
                     continue
                 }
                 this.gameRecord[id][level] = new LevelRecordInfo(data.gameRecord[id][level], id, level)
-                
+
             }
         }
     }

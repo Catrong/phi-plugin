@@ -260,7 +260,7 @@ data_rks p {
 }
 
 .Player_data_value p {
-    font-size: 61px;
+    font-size: 60px;
 }
 
 .Challenge {
@@ -341,6 +341,28 @@ data_rks p {
 
 .Player_box_value p {
     font-size: 60px;
+}
+
+.CLG p {
+    font-size: 40px;
+    word-break: keep-all;
+    margin-left: -16px;
+}
+
+.colorful p {
+    /* width: 100%; */
+    background-image:
+        -webkit-gradient(linear, left top, right top, color-stop(0, #f22),
+            color-stop(1, #2ff),
+            color-stop(0.8, #2f2),
+            color-stop(0.6, #2f2),
+            color-stop(0.4, #ff2),
+            color-stop(0.2, #f92),
+            color-stop(0, #f22));
+    color: transparent;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -ms-background-clip: text
 }
 
 #profile {

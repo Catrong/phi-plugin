@@ -68,6 +68,8 @@ class getdata {
         this.songnick = await this.getData('nicklist.yaml', this.infoPath)
         /**头像id */
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
+        /**Tips */
+        this.tips = await this.getData('tips.yaml', this.infoPath)
 
         /**原曲名称映射id */
         this.idssong = {}

@@ -203,6 +203,16 @@ export function supportGuoba() {
                         placeholder: '请输入时间',
                     },
                 },
+                {
+                    field: 'VikaToken',
+                    label: 'token',
+                    bottomHelpMessage: 'token 填写后请重启',
+                    component: 'Input',
+                    required: false,
+                    componentProps: {
+                        placeholder: '请输入token',
+                    },
+                },
             ],
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {

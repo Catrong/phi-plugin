@@ -230,6 +230,7 @@ export class phimoney extends plugin {
             task_ans: Remsg,
             task_ans1: Remsg1,
             Notes: data.plugin_data.money,
+            tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
         }
 
         var is_sp_date = false
@@ -305,6 +306,7 @@ export class phimoney extends plugin {
             task_ans: Remsg,
             task_ans1: Remsg1,
             Notes: data.plugin_data.money,
+            tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
         }
 
 

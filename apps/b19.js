@@ -52,10 +52,10 @@ export class phib19 extends plugin {
         console.log(nnum)
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
         if (!nnum) {
-            nnum = 22
+            nnum = 21
         }
 
-        nnum = Math.max(nnum, 22)
+        nnum = Math.max(nnum, 21)
         nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
 
         var bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
@@ -79,7 +79,7 @@ export class phib19 extends plugin {
         if (!Config.getDefOrConfig('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
-        if (nnum == 22) {
+        if (nnum == 21) {
 
             /**自定义数量不更新存档 */
             try {
@@ -130,7 +130,7 @@ export class phib19 extends plugin {
 
         var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
@@ -229,7 +229,7 @@ export class phib19 extends plugin {
 
         var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
@@ -369,7 +369,7 @@ export class phib19 extends plugin {
         var minrks = rkslist[Math.min(18, rkslist.length)]
         var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
@@ -386,6 +386,13 @@ export class phib19 extends plugin {
             return true
         }
 
+        const plugindata = await get.getpluginData(e.user_id)
+
+        if (!plugindata.plugin_data) {
+            plugindata.plugin_data = {}
+        }
+        
+        
         var data = {
             PlayerId: save.saveInfo.PlayerId,
             avatar: get.idgetavatar(save.saveInfo.summary.avatar),
@@ -394,6 +401,8 @@ export class phib19 extends plugin {
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             scoreData: {},
+            CLGMOD: plugindata.plugin_data.CLGMOD ? plugindata.plugin_data.CLGMOD.Dan : null,
+            EX: plugindata.plugin_data.CLGMOD ? plugindata.plugin_data.CLGMOD.EX : null,
         }
 
 
@@ -438,6 +447,7 @@ export class phib19 extends plugin {
                         data.scoreData[Level[i]].Rating = 'NEW'
                     }
                 }
+                data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
                 send.send_with_At(e, await altas.score(e, data, 1))
                 break;
             }
@@ -473,7 +483,7 @@ export class phib19 extends plugin {
         var minrks = rkslist[Math.min(18, rkslist.length)]
         var userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 +0.005 - userrks
+        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }

@@ -18,7 +18,13 @@
   - Stasis
 EC:
   - Eradication Catastrophe
+屠龙:
+  - Eradication Catastrophe
+根除灾难:
+  - Eradication Catastrophe
 EXS:
+  - Engine x Start!! (melody mix)
+引擎启动:
   - Engine x Start!! (melody mix)
 冬季方块:
   - Winter↑cube↓
@@ -34,6 +40,14 @@ Cipher:
   - 混乱-Confusion
 福利自动射:
   - FULi AUTO SHOOTER
+福利自动爆:
+  - FULi AUTO BUSTER
+NOYM:
+  - NO ONE YES MAN
+脑裂:
+  - FULi AUTO BUSTER
+  - FULi AUTO SHOOTER
+  - NO ONE YES MAN
 PRAW:
   - "[PRAW]"
 像素小人:
@@ -80,8 +94,6 @@ Colorful Days:
   - Colorful Days♪
 微波炉:
   - micro.wav
-NOYM:
-  - NO ONE YES MAN
 方舟:
   - 望影の方舟Six
 Iga:
@@ -89,6 +101,8 @@ Iga:
 Ig:
   - Igallta
 姐姐砍我:
+  - Igallta
+姐姐:
   - Igallta
 时钟悖论:
   - Clock Paradox
@@ -122,10 +136,14 @@ Miracle Forest:
   - Miracle Forest (VIP Mix)
 灯球:
   - MOBILYS
+光球:
+  - MOBILYS
 AD:
   - After Dawn
   - Ad astra per aspera
 太阳:
+  - Ad astra per aspera
+循此苦旅 直抵群星:
   - Ad astra per aspera
 IEO:
   - INFiNiTE ENERZY -Overdoze-
@@ -142,6 +160,8 @@ mopemope:
 mope:
   - もぺもぺ
 小花:
+  - もぺもぺ
+陶土花盆:
   - もぺもぺ
 骂人OL:
   - MARENOL
@@ -188,6 +208,8 @@ KK:
 烤全押:
   - Burn
 烤全压:
+  - Burn
+烧:
   - Burn
 a0:
   - Aleph-0
@@ -250,6 +272,8 @@ U盘:
 良幸:
   - GOODFORTUNE
 良怒:
+  - GOODRAGE
+好生气:
   - GOODRAGE
 吞山者:
   - The Mountain Eater
@@ -344,8 +368,6 @@ FM:
 冷光:
   - Luminescent
   - Luminescence
-福利自动爆:
-  - FULi AUTO BUSTER
 守船石:
   - Protoflicker
 flicker:
@@ -368,11 +390,15 @@ YATM:
   - You are the Miserable
 你节操都喂狗啦:
   - You are the Miserable
+你真惨:
+  - You are the Miserable
 参上:
   - いざ、参ります
 OAO:
   - On And On!!
 DataError:
+  - DataErr0r
+数据错误:
   - DataErr0r
 草酸氢钠:
   - c.s.q.n.
@@ -401,6 +427,10 @@ Trane:
 Re_Nascence:
   - Re_Nascence (Psystyle Ver.)
 PR:
+  - Parallel Retrogression(Game Ver.)
+parallel:
+  - Parallel Retrogression(Game Ver.)
+para:
   - Parallel Retrogression(Game Ver.)
 远东之宴:
   - Feast远东之宴
@@ -446,6 +476,8 @@ Äventyr:
   - インフェルノシティ
 地狱城:
   - インフェルノシティ
+inferno city:
+  - インフェルノシティ
 Chariot:
   - The Chariot ~REVIIVAL~
 战车:
@@ -488,6 +520,10 @@ DF:
   - Cervelle Connexion
 大脑连接:
   - Cervelle Connexion
+脑链接:
+  - Cervelle Connexion
+脑连接:
+  - Cervelle Connexion
 干他:
   - Now Is The Time, Do It
 现在是时间了，干他:
@@ -503,6 +539,10 @@ Do It:
 最后的舞蹈:
   - El último baile
 El:
+  - El último baile
+EUB:
+  - El último baile
+El ultimo baile:
   - El último baile
 小提琴:
   - El último baile
@@ -545,6 +585,8 @@ Aapa:
 紊乱:
   - Disorder
 失序:
+  - Disorder
+乱序:
   - Disorder
 寻我:
   - Find_Me
@@ -619,6 +661,8 @@ popi:
   - ぱぴぷぴぷぴぱ
 立秋:
   - ぱぴぷぴぷぴぱ
+ppp:
+  - ぱぴぷぴぷぴぱ
 九龙:
   - "Labyrinth in Kowloon: Walled World"
 九龙城寨:
@@ -647,6 +691,8 @@ satelite:
   - Compute It With Some Devilish Alcoholic Steampunk Engines
 你游最长曲名:
   - Compute It With Some Devilish Alcoholic Steampunk Engines
+夹竹桃:
+  - Compute It With Some Devilish Alcoholic Steampunk Engines
 静舞:
   - Dance with Silence
 dws:
@@ -659,9 +705,15 @@ Diamond Eyes:
   - "Diamond Eyes from SOUL NOTES"
 月旅:
   - A journey to the moonlight
+月光:
+  - A journey to the moonlight
 月光之旅:
   - A journey to the moonlight
 月球之旅:
+  - A journey to the moonlight
+黄键蛇:
+  - A journey to the moonlight
+去月亮:
   - A journey to the moonlight
 永恒的雪:
   - Eternal Snow
@@ -671,3 +723,15 @@ Diamond Eyes:
   - Credits
 椒盐菠萝:
   - 游园地
+BO:
+  - Break Over
+愚人节常驻谱:
+  - 愚人节常驻谱
+眼病:
+  - opia
+T&R:
+  - Triumph & Regret
+时隙:
+  - Nick of Time
+Hikari:
+  - 光
