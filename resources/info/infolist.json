@@ -6015,5 +6015,65 @@
                 "charter": "百九十八"
             }
         }
+    },
+    "Silence in Golden, Speech is Golden": {
+        "song": "Silence in Golden, Speech is Golden",
+        "illustration": "SilenceisGoldenSpeechisGolden.NIWASHI.png",
+        "illustration_big": "SilenceisGoldenSpeechisGolden.NIWASHI.png",
+        "chapter": "单曲精选集",
+        "bpm": "",
+        "composer": "NIWASHI",
+        "length": "",
+        "illustrator": "Jerry & OsuMe65",
+        "chart": {
+            "EZ": {
+                "level": "5",
+                "difficulty": "5.0",
+                "combo": "",
+                "charter": "Clutter is coppery，Tumult is coppery"
+            },
+            "HD": {
+                "level": "9",
+                "difficulty": "9.7",
+                "combo": "",
+                "charter": "XMT is silvery, 小咩兔 is silvery"
+            },
+            "IN": {
+                "level": "15",
+                "difficulty": "15.5",
+                "combo": "",
+                "charter": "Hara is golden, Kuma is golden"
+            }
+        }
+    },
+    "Fractured Angel": {
+        "song": "Fractured Angel",
+        "illustration": "FracturedAngel.DJRaisei.png",
+        "illustration_big": "FracturedAngel.DJRaisei.png",
+        "chapter": "单曲精选集",
+        "bpm": "",
+        "composer": "DJ Raisei",
+        "length": "",
+        "illustrator": "OsuMe65",
+        "chart": {
+            "EZ": {
+                "level": "4",
+                "difficulty": "4.0",
+                "combo": "",
+                "charter": "Su1fuR"
+            },
+            "HD": {
+                "level": "10",
+                "difficulty": "10.9",
+                "combo": "",
+                "charter": "Su1fuR"
+            },
+            "IN": {
+                "level": "15",
+                "difficulty": "15.9",
+                "combo": "",
+                "charter": "逆天使の悪魔 【Likey】"
+            }
+        }
     }
 }
