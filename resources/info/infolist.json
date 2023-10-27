@@ -5961,27 +5961,27 @@
         "illustration": "DiamondEyes.SYNTHETIC.png",
         "illustration_big": "DiamondEyes.SYNTHETIC.png",
         "chapter": "单曲精选集",
-        "bpm": "",
+        "bpm": "140",
         "composer": "SYNTHETIC",
-        "length": "",
+        "length": "2:13",
         "illustrator": "彗星 feat. 祈莲",
         "chart": {
             "EZ": {
                 "level": "4",
                 "difficulty": "4.0",
-                "combo": "",
+                "combo": "340",
                 "charter": "Su1fuR"
             },
             "HD": {
                 "level": "8",
                 "difficulty": "8.2",
-                "combo": "",
+                "combo": "429",
                 "charter": "Su1fuR"
             },
             "IN": {
                 "level": "13",
                 "difficulty": "13.4",
-                "combo": "",
+                "combo": "774",
                 "charter": "Clutter"
             }
         }
@@ -5991,27 +5991,27 @@
         "illustration": "Bitterblossom.imvi.png",
         "illustration_big": "Bitterblossom.imvi.png",
         "chapter": "单曲精选集",
-        "bpm": "",
+        "bpm": "180",
         "composer": "imvi",
-        "length": "",
+        "length": "2:24",
         "illustrator": "鲸弑",
         "chart": {
             "EZ": {
                 "level": "3",
                 "difficulty": "3.0",
-                "combo": "",
+                "combo": "152",
                 "charter": "Su1fuR"
             },
             "HD": {
                 "level": "9",
                 "difficulty": "9.6",
-                "combo": "",
+                "combo": "581",
                 "charter": "Barbarianerman"
             },
             "IN": {
                 "level": "13",
                 "difficulty": "13.7",
-                "combo": "",
+                "combo": "597",
                 "charter": "百九十八"
             }
         }
@@ -6021,27 +6021,27 @@
         "illustration": "SilenceisGoldenSpeechisGolden.NIWASHI.png",
         "illustration_big": "SilenceisGoldenSpeechisGolden.NIWASHI.png",
         "chapter": "单曲精选集",
-        "bpm": "",
+        "bpm": "177",
         "composer": "NIWASHI",
-        "length": "",
+        "length": "2:44",
         "illustrator": "Jerry & OsuMe65",
         "chart": {
             "EZ": {
                 "level": "5",
                 "difficulty": "5.0",
-                "combo": "",
+                "combo": "376",
                 "charter": "Clutter is coppery，Tumult is coppery"
             },
             "HD": {
                 "level": "9",
                 "difficulty": "9.7",
-                "combo": "",
+                "combo": "795",
                 "charter": "XMT is silvery, 小咩兔 is silvery"
             },
             "IN": {
                 "level": "15",
                 "difficulty": "15.5",
-                "combo": "",
+                "combo": "1273",
                 "charter": "Hara is golden, Kuma is golden"
             }
         }
@@ -6051,27 +6051,27 @@
         "illustration": "FracturedAngel.DJRaisei.png",
         "illustration_big": "FracturedAngel.DJRaisei.png",
         "chapter": "单曲精选集",
-        "bpm": "",
+        "bpm": "301",
         "composer": "DJ Raisei",
-        "length": "",
+        "length": "3:00",
         "illustrator": "OsuMe65",
         "chart": {
             "EZ": {
                 "level": "4",
                 "difficulty": "4.0",
-                "combo": "",
+                "combo": "626",
                 "charter": "Su1fuR"
             },
             "HD": {
                 "level": "10",
                 "difficulty": "10.9",
-                "combo": "",
+                "combo": "796",
                 "charter": "Su1fuR"
             },
             "IN": {
                 "level": "15",
                 "difficulty": "15.9",
-                "combo": "",
+                "combo": "1084",
                 "charter": "逆天使の悪魔 【Likey】"
             }
         }
