@@ -1,8 +1,28 @@
 
 import fs from 'fs'
 import puppeteer from 'puppeteer'
-import pet from '../../../lib/puppeteer/puppeteer.js'
 import { Data, Version, Plugin_Name, Config } from '../components/index.js'
+import { segment } from 'oicq';
+
+var pet = {}
+
+try {
+    let puppeteer = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({});
+    pet = puppeteer;
+} catch (e) {
+    console.info(e)
+}
+
+if (!pet) {
+    try {
+        let puppeteer = (await import("../../../lib/puppeteer/puppeteer.js")).default;
+        pet = puppeteer;
+    } catch (err) {
+        logger.error(`[Phi-Plugin]导入puppeteer失败`);
+        logger.error(err);
+        pet = {};
+    }
+}
 
 const _path = process.cwd()
 let consvis = false
@@ -79,11 +99,15 @@ export default new class newPuppeteer {
 
         let base64 = await pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
         let ret = true
-        if (base64) {
-            return base64
-        }
-        return cfg.retMsgId ? ret : true
-
-
+        return base64 ? segment.image(base64) : base64
+        // if (base64) {
+        //     return base64
+        // }
+        // return cfg.retMsgId ? ret : true
     }
+
+    async restart() {
+        await pet.restart()
+    }
+
 }()

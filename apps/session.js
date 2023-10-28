@@ -167,7 +167,7 @@ export class phisstk extends plugin {
 
         }
 
-        while (showdate > 1) {
+        while (showdate > Config.getDefOrConfig('config','HistoryScoreDate') || show > Config.getDefOrConfig('config','HistoryScoreNum')) {
             show -= common_update[time_line[time_line.length - 1]].length
             delete common_update[time_line[time_line.length - 1]]
             --showdate

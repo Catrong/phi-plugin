@@ -58,6 +58,18 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'waitingTimeout',
+                    label: '等待超时时间',
+                    bottomHelpMessage: '对所有的图片生效，单位ms',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 1000,
+                        max: 120000,
+                        placeholder: '请输入等待超时时间',
+                    },
+                },
+                {
                     field: 'B19MaxNum',
                     label: 'B19最大限制',
                     bottomHelpMessage: '用户可以获取B19图片成绩的最大数量，建议不要太大',
@@ -65,8 +77,32 @@ export function supportGuoba() {
                     required: true,
                     componentProps: {
                         min: 22,
-                        max: 605,
+                        max: 1000,
                         placeholder: '请输入B19最大限制',
+                    },
+                },
+                {
+                    field: 'HistoryScoreNum',
+                    label: '历史成绩展示数量',
+                    bottomHelpMessage: '/update 展现历史成绩的最大数量',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 10,
+                        max: 10000,
+                        placeholder: '请输入最大限制',
+                    },
+                },
+                {
+                    field: 'HistoryScoreDate',
+                    label: '历史成绩展示天数',
+                    bottomHelpMessage: '/update 展现历史成绩的最大天数',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 1,
+                        max: 100,
+                        placeholder: '请输入最大限制',
                     },
                 },
                 {

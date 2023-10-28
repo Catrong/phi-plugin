@@ -105,7 +105,7 @@ class atlas {
      * @param {1|2} picversion 版本
      */
     async score(e, data, picversion) {
-        
+
         switch (picversion) {
             case 1: {
                 return await this.render('score/scoreInfo', {
@@ -186,15 +186,24 @@ class atlas {
 
         var result
 
+
+
         try {
 
-        result = await puppeteer.render(path, params, cfg)
+            setTimeout(() => {
+                puppeteer.restart()
+            }, Config.getDefOrConfig('config', 'timeout'));
+
+            result = await puppeteer.render(path, params, cfg)
+
 
         } catch (err) {
             logger.error(err)
             logger.error(`[Phi-Plugin][渲染失败] id ${id}`)
             logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
             logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
+            
+            return '渲染失败，请重试QAQ！'
         }
 
         this.randering.splice(this.randering.indexOf(id), 1)
@@ -203,6 +212,11 @@ class atlas {
         return result
 
     }
+
+    async restart() {
+        await puppeteer.restart(true)
+    }
+
 }
 
 

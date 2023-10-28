@@ -64,7 +64,9 @@ class Config {
      * |'waitingTimeout'
      * |'ban'
      * |'MicTipCd'
-     * |'VikaToken'} style key值
+     * |'VikaToken'
+     * |'HistoryScoreNum'
+     * |'HistoryScoreDate' } style key值
     */
     getDefOrConfig(name, style) {
         let def = this.getdefSet(name)
