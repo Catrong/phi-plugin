@@ -257,6 +257,7 @@ data_rks p {
     height: 50%;
     align-items: center;
     margin-top: 5%;
+    justify-content: flex-start;
 }
 
 .Player_data_value p {
