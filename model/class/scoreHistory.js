@@ -15,7 +15,7 @@ export default new class scoreHistory {
     }
 
     extend(songsid, level, now, old) {
-        song = get.idgetsong(songsid)
+        var song = get.idgetsong(songsid)
         now[0] = Number(now[0])
         now[1] = Number(now[1])
         if (old) {
