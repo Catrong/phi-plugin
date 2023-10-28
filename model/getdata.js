@@ -547,6 +547,11 @@ class getdata {
             delete pluginData.scoreHistory
             pluginData.version = 1.1
         }
+        if (pluginData.version < 1.2) {
+            /**v1.2,由于曲名错误，删除所有记录，曲名使用id记录 */
+            delete pluginData.scoreHistory
+            pluginData.version = 1.2
+        }
 
 
         /**data历史记录 */
@@ -813,16 +818,17 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, 
     if (!pluginData.scoreHistory) {
         pluginData.scoreHistory = {}
     }
-    if (!pluginData.scoreHistory[song]) {
-        pluginData.scoreHistory[song] = {}
+    var songsid = get.SongGetId(song)
+    if (!pluginData.scoreHistory[songsid]) {
+        pluginData.scoreHistory[songsid] = {}
         if (oldRecord) {
-            pluginData.scoreHistory[song][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date, oldRecord.fc)]
+            pluginData.scoreHistory[songsid][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date, oldRecord.fc)]
         }
     }
-    if (!pluginData.scoreHistory[song][level]) {
-        pluginData.scoreHistory[song][level] = []
+    if (!pluginData.scoreHistory[songsid][level]) {
+        pluginData.scoreHistory[songsid][level] = []
     }
-    pluginData.scoreHistory[song][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date, nowRecord.fc))
+    pluginData.scoreHistory[songsid][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date, nowRecord.fc))
 
     var task
     if (pluginData.plugin_data) {

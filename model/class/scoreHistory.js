@@ -14,7 +14,8 @@ export default new class scoreHistory {
         return [acc.toFixed(4), score, date, fc]
     }
 
-    extend(song, level, now, old) {
+    extend(songsid, level, now, old) {
+        song = get.idgetsong(songsid)
         now[0] = Number(now[0])
         now[1] = Number(now[1])
         if (old) {
