@@ -46,7 +46,7 @@ export class phiDan extends plugin {
         if (!cancanneed) {
             return false
         }
-        var name = e.msg.replace(/[#/].*(dan|dan)/g, '')
+        var name = e.msg.replace(/[#/].*(dan|dan)(\s*)/g, '')
         if (!name) {
             var plugindata = await get.getpluginData(e.user_id)
             try {

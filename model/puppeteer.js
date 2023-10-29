@@ -6,6 +6,7 @@ import { segment } from 'oicq';
 
 var pet = {}
 
+
 try {
     let puppeteer = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({});
     pet = puppeteer;

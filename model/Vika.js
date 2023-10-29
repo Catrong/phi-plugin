@@ -4,6 +4,12 @@ import Config from "../components/Config.js"
 
 // 通过 datasheetId 来指定要从哪张维格表操作数据。
 
+const cfg = {
+    viewId: "viwpdf3HFtnvG",
+    sort: [{ field: 'fldWVwne5p9xg', order: 'desc' }],
+    requestTimeout: 10000,
+}
+
 class VikaData {
     constructor(Token) {
         try {
@@ -21,7 +27,7 @@ class VikaData {
         if (this.PhigrosDan) {
             var response;
             try {
-                response = await this.PhigrosDan.records.query({ viewId: "viwpdf3HFtnvG", filterByFormula: `{fldB7Wx6wHX57} = \'${sessionToken}\'`, requestTimeout: 10000 });
+                response = await this.PhigrosDan.records.query({ ...cfg, filterByFormula: `{fldB7Wx6wHX57} = \'${sessionToken}\'` });
             } catch { }
             logger.info(sessionToken)
             logger.info(response)
@@ -42,7 +48,7 @@ class VikaData {
         if (this.PhigrosDan) {
             var response;
             try {
-                response = await this.PhigrosDan.records.query({ viewId: "viwpdf3HFtnvG", filterByFormula: `{fld9mDj3ktKD7} = \'${ObjectId}\'`, requestTimeout: 10000 });
+                response = await this.PhigrosDan.records.query({ ...cfg, filterByFormula: `{fld9mDj3ktKD7} = \'${ObjectId}\'` });
             } catch { }
             if (response.success) {
                 return makeRespones(response);
@@ -60,7 +66,7 @@ class VikaData {
         if (this.PhigrosDan) {
             var response;
             try {
-                response = await this.PhigrosDan.records.query({ viewId: "viwpdf3HFtnvG", filterByFormula: `{fldzkniADAUck} = \'${nickname}\'`, requestTimeout: 10000 });
+                response = await this.PhigrosDan.records.query({ ...cfg, filterByFormula: `{fldzkniADAUck} = \'${nickname}\'` });
             } catch { }
             if (response.success) {
                 return makeRespones(response);
