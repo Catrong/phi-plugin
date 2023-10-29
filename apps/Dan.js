@@ -55,7 +55,7 @@ export class phiDan extends plugin {
                 if (Object.prototype.toString.call(dan) == '[object Array]') {
                     var resmsg = [`更新成功！你的认证段位为`]
                     for (var i in dan) {
-                        resmsg.push(`${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
+                        resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
                         resmsg.push(segment.image(dan[i].img))
                     }
                     send.send_with_At(e, resmsg)
@@ -79,7 +79,7 @@ export class phiDan extends plugin {
                 var plugindata = await get.getpluginData(e.user_id, true)
                 plugindata.plugin_data.CLGMOD = dan
                 get.putpluginData(e.user_id, plugindata)
-                var resmsg = [`更新成功！你的认证段位为`]
+                var resmsg = [`更新成功！你的认证段位为\n`]
                 for (var i in dan) {
                     resmsg.push(`${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
                     resmsg.push(segment.image(dan[i].img))
@@ -126,9 +126,9 @@ export class phiDan extends plugin {
         var plugindata = await get.getpluginData(e.user_id, true)
         plugindata.plugin_data.CLGMOD = dan
         get.putpluginData(e.user_id, plugindata)
-        var resmsg = [`更新成功！你的认证段位为`]
+        var resmsg = [`更新成功！你的认证段位为\n`]
         for (var i in dan) {
-            resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
+            resmsg.push(`${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
             resmsg.push(segment.image(dan[i].img))
         }
         send.send_with_At(e, resmsg)
