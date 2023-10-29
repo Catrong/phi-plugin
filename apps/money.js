@@ -6,8 +6,9 @@ import send from '../model/send.js'
 
 const illlist = []
 
-var sp_date = 'Oct 01 2023'
-var sp_date_num = 74
+const sp_date = 'Oct 01 2023'
+const sp_date_num = [74]
+const sp_date_tips = []
 
 for (var i in get.ori_info) {
     if (get.ori_info[i]['illustration_big']) {
@@ -61,7 +62,7 @@ export class phimoney extends plugin {
             var getnum = randint(20, 5)
 
             if (is_sp_date) {
-                getnum = sp_date_num
+                getnum = sp_date_num[randint(sp_date_num.length - 1)]
             }
 
             data.plugin_data.money += getnum
@@ -238,7 +239,7 @@ export class phimoney extends plugin {
             is_sp_date = true
         }
         if (is_sp_date) {
-            picdata.tips = `热烈庆祝中华人民共和国成立74周年，国庆节快乐！`
+            picdata.tips = sp_date_tips[randint(sp_date_tips.length - 1)]
         }
 
         send.send_with_At(e, await get.gettasks(e, picdata))
@@ -307,6 +308,7 @@ export class phimoney extends plugin {
             task_ans1: Remsg1,
             Notes: data.plugin_data.money,
             tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
+            dan: await get.getDan(e.user_id),
         }
 
 

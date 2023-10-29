@@ -165,6 +165,7 @@ export class phib19 extends plugin {
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             background: bksong || illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             nnum: nnum,
+            dan: await get.getDan(e.user_id),
         }
         if (save.gameProgress) {
             var money = save.gameProgress.money
@@ -387,7 +388,7 @@ export class phib19 extends plugin {
         }
 
         const dan = await get.getDan(e.user_id)
-        
+
         var data = {
             PlayerId: save.saveInfo.PlayerId,
             avatar: get.idgetavatar(save.saveInfo.summary.avatar),

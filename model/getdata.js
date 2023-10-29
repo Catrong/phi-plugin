@@ -293,7 +293,7 @@ class getdata {
     /**
      * 获取玩家 Dan 数据
      * @param {string} id QQ号
-     * @returns 
+     * @returns dan[0]
      */
     async getDan(id) {
         var plugindata = await this.getpluginData(id)

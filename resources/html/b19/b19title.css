@@ -1,0 +1,115 @@
+
+.title .l,
+.title .r {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.title {
+    width: 100%;
+    margin-top: 100px;
+    height: 350px;
+    display: flex;
+    z-index: 1;
+    flex-direction: column;
+    margin-bottom: 100px;
+    align-items: center;
+    justify-content: flex-start;
+    writing-mode: vertical-lr;
+}
+
+.title img {
+    height: 246px;
+    margin-left: 4%;
+    margin-right: 4%;
+    border-radius: 58px;
+}
+
+.title .l {
+    width: 58%;
+    height: 100%;
+    z-index: 1;
+    writing-mode: horizontal-tb;
+    clip-path: polygon(100% 0%, 90% 100%, 0% 100%, 0px 0px);
+    display: flex;
+    flex-direction: row;
+    margin-right: -31%;
+    align-items: center;
+}
+
+.title .l .doc p {
+    font-size: 70;
+    margin: 10;
+}
+
+.title .m {
+    background-color: white;
+    clip-path: polygon(100% 0%, 5% 100%, 0% 100%, 95% 0px);
+    height: 100%;
+    width: 6.2%;
+    z-index: 2;
+    margin: 0;
+}
+
+.title .r {
+    clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 11% 0px);
+    height: 90%;
+    width: 42.3%;
+    display: flex;
+    flex-direction: column;
+    writing-mode: horizontal-tb;
+    justify-content: center;
+    margin-left: -29.4%;
+    padding-left: 27%;
+}
+
+.Challenge_1 {
+    /* position: absolute; */
+    right: 10px;
+}
+
+.title .r p {
+    font-size: 40;
+    /* margin-left: 15%; */
+}
+
+.title .r .Challenge {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+}
+
+.title .r .Challenge-r {
+    width: 95px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 2%;
+    margin-left: 3%;
+}
+
+.title .r .Challenge-r img {
+    width: 100%;
+    height: auto;
+    margin-right: 0;
+    margin-left: 0;
+    border-radius: 0px;
+    margin-bottom: -60px;
+}
+
+.title .r .Challenge-r p {
+    margin: 0;
+}
+
+.CLG p {
+    margin-left: 0;
+}
+
+.CLG {
+    margin-left: 0;
+    width: auto;
+    display: flex;
+    margin-left: 10px;
+    margin-right: -20px;
+}

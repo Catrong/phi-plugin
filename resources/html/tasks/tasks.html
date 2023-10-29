@@ -10,7 +10,7 @@
         <img src="{{_res_path}}html/otherimg/phigros.png" alt="曲绘-模糊">
         {{/if}}
     </div>
-    <div class="tatle">
+    <div class="title">
         <div class="l">
             <img src="{{_res_path}}html/otherimg/Phigros_Icon_3.0.0.png" alt="icon">
             <div class="doc">
@@ -25,8 +25,13 @@
             <p>RankingScore: {{Rks}}</p>
             <div class="Challenge">
                 <p>ChallengeMode:</p>
+                {{if dan}}
+                <div class="CLG {{dan.EX ? 'colorful' : ''}}">
+                    <p>{{dan.Dan}}</p>
+                </div>
+                {{/if}}
                 <div class="Challenge-r">
-                    <img src="{{_res_path}}html/otherimg/{{ChallengeMode}}.png" alt="{{ChallengeMode}}">
+                    <img src="{{_res_path}}html/otherimg/{{ChallengeMode}}.png" alt="Challenge">
                     <p>{{ChallengeModeRank}}</p>
                 </div>
             </div>

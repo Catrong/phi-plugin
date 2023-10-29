@@ -71,6 +71,7 @@ export class phisstk extends plugin {
 
                     pluginData.rks = []
                     pluginData.data = []
+                    pluginData.dan = []
                     pluginData.scoreHistory = {}
                     if (pluginData.plugin_data)
                         pluginData.plugin_data.task = []
@@ -188,6 +189,7 @@ export class phisstk extends plugin {
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
             show: show,
             tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
+            dan: await get.getDan(e.user_id),
         }
 
         var midqiu = false
@@ -228,6 +230,7 @@ export class phisstk extends plugin {
                     pluginData.rks = []
                     pluginData.data = []
                     pluginData.scoreHistory = {}
+                    pluginData.dan = []
                     if (pluginData.plugin_data)
                         pluginData.plugin_data.task = []
                     await get.putpluginData(e.user_id, pluginData)
@@ -244,6 +247,7 @@ export class phisstk extends plugin {
     }
 
 }
+
 
 /**
  * 转换时间格式

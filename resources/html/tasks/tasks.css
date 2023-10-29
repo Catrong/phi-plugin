@@ -1,4 +1,5 @@
 @import "../common/common.css";
+@import "../b19/b19title.css";
 
 body {
     writing-mode: vertical-lr;
@@ -17,105 +18,6 @@ body p {
 
 .background img {
     height: 100%;
-}
-
-.tatle {
-    width: 100%;
-    margin-top: 100px;
-    height: 350px;
-    display: flex;
-    z-index: 1;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    margin-bottom: 100px;
-}
-
-.tatle img {
-    height: 246px;
-    margin-left: 4%;
-    margin-right: 4%;
-    border-radius: 58px;
-}
-
-.l,
-.r {
-    backdrop-filter: blur(100px);
-    -webkit-backdrop-filter: blur(100px);
-}
-
-.l {
-    width: 60%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1;
-    writing-mode: horizontal-tb;
-    clip-path: polygon(100% 0%, 90% 100%, 0% 100%, 0px 0px);
-    display: flex;
-    flex-direction: row;
-    margin-right: -35%;
-    align-items: center;
-}
-
-.l .doc p {
-    font-size: 70;
-    margin: 10;
-}
-
-.m {
-    background-color: white;
-    clip-path: polygon(100% 0%, 5% 100%, 0% 100%, 95% 0px);
-    height: 100%;
-    width: 6.2%;
-    z-index: 2;
-    margin: 0;
-}
-
-.r {
-    background-color: rgba(0, 0, 0, 0.5);
-    clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 11% 0px);
-    height: 90%;
-    width: 45.5%;
-    display: flex;
-    flex-direction: column;
-    writing-mode: horizontal-tb;
-    justify-content: center;
-    margin-left: -33%;
-}
-
-.r p {
-    font-size: 40;
-    margin-left: 15%;
-    height: 55;
-}
-
-.r .Challenge {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.r .Challenge-r {
-    width: 95px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin-top: 2%;
-    margin-left: 3%;
-}
-
-.r .Challenge-r img {
-    width: 100%;
-    height: auto;
-    margin-right: 0;
-    margin-left: 0;
-    border-radius: 0px;
-    margin-bottom: -60px;
-}
-
-.r .Challenge-r p {
-    margin: 0;
 }
 
 .box {
