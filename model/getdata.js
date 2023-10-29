@@ -77,7 +77,7 @@ class getdata {
         for (let id in this.songsid) {
             this.idssong[this.songsid[id]] = id
         }
-        
+
         /**含有曲绘的曲目列表，原曲名称 */
         this.illlist = []
 
@@ -87,7 +87,7 @@ class getdata {
                 this.illlist.push(info[i].song)
             }
         }
-        
+
 
         /**所有曲目曲名列表 */
         this.songlist = []
@@ -96,7 +96,7 @@ class getdata {
             this.songlist.push(this.ori_info[i].song)
         }
 
-        
+
     }
 
     /**
@@ -290,7 +290,21 @@ class getdata {
         return false
     }
 
+    /**
+     * 获取玩家 Dan 数据
+     * @param {string} id QQ号
+     * @returns 
+     */
+    async getDan(id) {
+        var plugindata = await this.getpluginData(id)
 
+        var dan = plugindata?.plugin_data?.CLGMOD
+
+        if (dan && Object.prototype.toString.call(dan) == '[object Array]') {
+            dan = dan[0]
+        }
+        return dan
+    }
 
     /**
      * 匹配歌曲名称，根据参数返回原曲名称

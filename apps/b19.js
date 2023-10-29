@@ -386,12 +386,7 @@ export class phib19 extends plugin {
             return true
         }
 
-        const plugindata = await get.getpluginData(e.user_id)
-
-        if (!plugindata.plugin_data) {
-            plugindata.plugin_data = {}
-        }
-        
+        const dan = await get.getDan(e.user_id)
         
         var data = {
             PlayerId: save.saveInfo.PlayerId,
@@ -401,8 +396,8 @@ export class phib19 extends plugin {
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             scoreData: {},
-            CLGMOD: plugindata.plugin_data.CLGMOD ? plugindata.plugin_data.CLGMOD.Dan : null,
-            EX: plugindata.plugin_data.CLGMOD ? plugindata.plugin_data.CLGMOD.EX : null,
+            CLGMOD: dan?.Dan,
+            EX: dan?.EX,
         }
 
 

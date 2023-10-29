@@ -51,8 +51,19 @@ export class phiDan extends plugin {
             var plugindata = await get.getpluginData(e.user_id)
             try {
                 var dan = plugindata.plugin_data.CLGMOD;
-                send.send_with_At(e, `你的认证段位为 ${dan.Dan.replace('/', ' ')}`)
-                send.send_with_At(e, segment.image(dan.img))
+
+                if (Object.prototype.toString.call(dan) == '[object Array]') {
+                    var resmsg = [`更新成功！你的认证段位为`]
+                    for (var i in dan) {
+                        resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
+                        resmsg.push(segment.image(dan[i].img))
+                    }
+                    send.send_with_At(e, resmsg)
+                } else {
+                    send.send_with_At(e, `你的认证段位为 ${dan.Dan.replace('/', ' ')}`)
+                    send.send_with_At(e, segment.image(dan.img))
+                }
+
                 return true
             } catch (err) {
                 send.send_with_At(e, `唔，本地没有你的认证记录哦！如果提交过审核的话，可以试试更新一下嗷！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} dan update\n${word}`)
@@ -68,8 +79,12 @@ export class phiDan extends plugin {
                 var plugindata = await get.getpluginData(e.user_id, true)
                 plugindata.plugin_data.CLGMOD = dan
                 get.putpluginData(e.user_id, plugindata)
-                send.send_with_At(e, `你的认证段位为 ${dan.Dan.replace('/', ' ')} ${dan.EX ? 'EX' : ''}`)
-                send.send_with_At(e, segment.image(dan.img))
+                var resmsg = [`更新成功！你的认证段位为`]
+                for (var i in dan) {
+                    resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
+                    resmsg.push(segment.image(dan[i].img))
+                }
+                send.send_with_At(e, resmsg)
                 return true
             } catch (err) {
                 console.info(err)
@@ -111,13 +126,17 @@ export class phiDan extends plugin {
         var plugindata = await get.getpluginData(e.user_id, true)
         plugindata.plugin_data.CLGMOD = dan
         get.putpluginData(e.user_id, plugindata)
-        send.send_with_At(e, `更新成功！你的认证段位为 ${dan.Dan.replace('/', ' ')} ${dan.EX ? 'EX' : ''}`)
-        send.send_with_At(e, segment.image(dan.img))
+        var resmsg = [`更新成功！你的认证段位为`]
+        for (var i in dan) {
+            resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
+            resmsg.push(segment.image(dan[i].img))
+        }
+        send.send_with_At(e, resmsg)
         return true
     }
 
     async sstk(e) {
-        if(e.isGroup) {
+        if (e.isGroup) {
             send.send_with_At(e, `请私聊使用嗷`)
             return false
         }
