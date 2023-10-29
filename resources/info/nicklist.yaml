@@ -34,7 +34,23 @@ EXS:
   - Winter↑cube↓
 冬方块:
   - Winter↑cube↓
+冬块:
+  - Winter↑cube↓
+冬方SP:
+  - Winter♂cube
+冬块SP:
+  - Winter♂cube
+冬方块SP:
+  - Winter♂cube
+冬季方块SP:
+  - Winter♂cube
+FQ:
+  - Winter♂cube
+♂:
+  - Winter♂cube
 Cipher:
+  - "Cipher: /2&//<|0"
+密码:
   - "Cipher: /2&//<|0"
 混乱:
   - 混乱-Confusion
@@ -211,6 +227,10 @@ KK:
   - Burn
 烧:
   - Burn
+烧全鸭:
+  - Burn
+bfd:
+  - Burn
 a0:
   - Aleph-0
 阿列夫0:
@@ -297,6 +317,10 @@ U盘:
   - Wavetapper
 大和抚子:
   - 大和撫子 -Wild Dances-
+大和:
+  - 大和撫子 -Wild Dances-
+大和无子:
+  - 大和撫子 -Wild Dances-
 樱树街道:
   - 桜樹街道
 樱树:
@@ -360,6 +384,8 @@ Time to Night Sky:
 DNA:
   - Don't Never Around
 电阻:
+  - RESSiSTANCE
+ress:
   - RESSiSTANCE
 绿魔王:
   - RESSiSTANCE
@@ -426,6 +452,8 @@ Trane:
   - Träne
 Re_Nascence:
   - Re_Nascence (Psystyle Ver.)
+瑞纳森斯:
+  - Re_Nascence (Psystyle Ver.)
 PR:
   - Parallel Retrogression(Game Ver.)
 parallel:
@@ -478,9 +506,13 @@ Äventyr:
   - インフェルノシティ
 inferno city:
   - インフェルノシティ
+ic:
+  - インフェルノシティ
 Chariot:
   - The Chariot ~REVIIVAL~
 战车:
+  - The Chariot ~REVIIVAL~
+tcr:
   - The Chariot ~REVIIVAL~
 Retribution:
   - Retribution
@@ -580,6 +612,8 @@ Aapa:
   - 華灯爱
 幽灵:
   - Doppelganger
+双重身:
+  - Doppelganger
 疾病:
   - Disorder
 紊乱:
@@ -624,16 +658,6 @@ BurnSP:
   - Burn(Haocore Mix)
 烤鸭SP:
   - Burn(Haocore Mix)
-冬方SP:
-  - Winter♂cube
-冬方块SP:
-  - Winter♂cube
-冬季方块SP:
-  - Winter♂cube
-FQ:
-  - Winter♂cube
-♂:
-  - Winter♂cube
 sigmaSP:
   - Sigma(Haocore Mix)～105秒の伝説～
   - Sigma(Haocore Mix)～Regrets of The Yellow Tulip～
@@ -657,11 +681,15 @@ sigma里谱:
   - ぱぴぷぴぷぴぱ
 巴比卜:
   - ぱぴぷぴぷぴぱ
-popi:
+papipu:
   - ぱぴぷぴぷぴぱ
 立秋:
   - ぱぴぷぴぷぴぱ
+立秋拉面馆:
+  - ぱぴぷぴぷぴぱ
 ppp:
+  - ぱぴぷぴぷぴぱ
+pomi:
   - ぱぴぷぴぷぴぱ
 九龙:
   - "Labyrinth in Kowloon: Walled World"
@@ -679,13 +707,21 @@ satelite:
   - +ERABY+E CONNEC+10N
 兆字节连接:
   - +ERABY+E CONNEC+10N
+千兆字节:
+  - +ERABY+E CONNEC+10N
 10N+:
   - +ERABY+E CONNEC+10N
 +E:
   - +ERABY+E CONNEC+10N
 字节:
   - +ERABY+E CONNEC+10N
+TERABYTE CONNECTION:
+  - +ERABY+E CONNEC+10N
 原神: #启动！
+  - +ERABY+E CONNEC+10N
+terabyte:
+  - +ERABY+E CONNEC+10N
+TB连接:
   - +ERABY+E CONNEC+10N
 酒精:
   - Compute It With Some Devilish Alcoholic Steampunk Engines
@@ -741,9 +777,13 @@ Angel:
   - Fractured Angel
 骨折天使:
   - Fractured Angel
+折翼天使:
+  - Fractured Angel
 Golden:
   - Silence is Golden, Speech is Golden
 沉默是金:
+  - Silence is Golden, Speech is Golden
+金金:
   - Silence is Golden, Speech is Golden
 沉默是金，雄辩是金:
   - Silence is Golden, Speech is Golden
@@ -753,3 +793,9 @@ imsn:
   - Temporal Shifting
 ts:
   - Temporal Shifting
+美女与鬼兽:
+  - Bitterblossom
+ort:
+  - Orthodox
+特洛伊:
+  - Trojan
