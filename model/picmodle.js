@@ -191,6 +191,7 @@ class atlas {
         try {
 
             setTimeout(() => {
+                this.randering.splice(this.randering.indexOf(id), 1)
                 puppeteer.restart()
             }, Config.getDefOrConfig('config', 'timeout'));
 
