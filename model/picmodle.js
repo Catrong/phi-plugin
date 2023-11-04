@@ -191,8 +191,8 @@ class atlas {
         try {
 
             setTimeout(() => {
-                this.randering.splice(this.randering.indexOf(id), 1)
                 puppeteer.restart()
+                this.randering.splice(this.randering.indexOf(id), 1)
             }, Config.getDefOrConfig('config', 'timeout'));
 
             result = await puppeteer.render(path, params, cfg)
@@ -203,12 +203,11 @@ class atlas {
             logger.error(`[Phi-Plugin][渲染失败] id ${id}`)
             logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
             logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
-            
-            return '渲染失败，请重试QAQ！'
         }
 
         this.randering.splice(this.randering.indexOf(id), 1)
 
+        result = result || '渲染失败，请重试QAQ！'
 
         return result
 
