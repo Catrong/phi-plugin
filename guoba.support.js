@@ -266,10 +266,19 @@ export function supportGuoba() {
                     data.WordB19Img = false
                     data.WordSuggImg = false
                 }
+                var vis = false
+                if (data.VikaToken.length != 23) {
+                    data.VikaToken = ''
+                    vis = true
+                }
                 for (let [keyPath, value] of Object.entries(data)) {
                     Config.modify('config', keyPath, value)
                 }
-                return Result.ok({}, '保存成功~')
+                if (vis) {
+                    return Result.ok({}, 'VikaToken非法')
+                } else {
+                    return Result.ok({}, '保存成功~')
+                }
             },
         },
     }

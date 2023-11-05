@@ -3,6 +3,7 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
+import Vika from '../model/Vika.js'
 
 const illlist = []
 
@@ -150,14 +151,18 @@ export class phimoney extends plugin {
             /**每天一次免费刷新任务 */
         } else {
             /**花费20Notes刷新 */
-            if (data.plugin_data.money >= 20) {
-                data.plugin_data.money -= 20
-                oldtask = data.plugin_data.task
-            } else {
-                send.send_with_At(e, `刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.plugin_data.money}`)
-                get.delLock(e.user_id)
-                return false
+            /**服务器补偿 通过是否填写token判断 免费刷新 */
+            if (!Config.getDefOrConfig('config', 'VikaToken')) {
+                if (data.plugin_data.money >= 20) {
+                    data.plugin_data.money -= 20
+                    oldtask = data.plugin_data.task
+                } else {
+                    send.send_with_At(e, `刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.plugin_data.money}`)
+                    get.delLock(e.user_id)
+                    return false
+                }
             }
+
         }
 
         data.plugin_data.task_time = now_time
