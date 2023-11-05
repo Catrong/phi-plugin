@@ -6,9 +6,9 @@ import Vika from '../model/Vika.js'
 import { segment } from 'oicq'
 import common from '../../../lib/common/common.js'
 
-const read = '（建设中）'
+const read = 'https://www.bilibili.com/read/cv27354116'
 const sheet = 'https://f.kdocs.cn/g/fxsg4EM2/'
-const word = `想要了解有关 Phigros民间段位标准 的有关信息可以查看这个专栏！\n${read}\n提交审核请前往这个链接哦！\n${sheet}\n`
+const word = `想要了解有关 Phigros民间段位标准 的有关信息可以查看这个专栏！${read}\n提交审核请前往这个链接哦！${sheet}\n`
 
 const cancanneed = Vika.PhigrosDan ? true : false
 
