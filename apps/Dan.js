@@ -118,6 +118,8 @@ export class phiDan extends plugin {
             return true
         }
 
+        console.info(dan)
+
         if (!dan) {
             send.send_with_At(e, `唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！${word}`)
             return true
