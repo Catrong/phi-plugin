@@ -247,6 +247,8 @@ Another Me2:
   - Another Me (Rising Sun Traxx)
 BTTB:
   - Break Through The Barrier
+2B2T:
+  - Break Through The Barrier
 时停:
   - Chronostasis
 死鬼:
@@ -321,6 +323,8 @@ U盘:
   - 大和撫子 -Wild Dances-
 大和无子:
   - 大和撫子 -Wild Dances-
+野舞:
+  - 大和撫子 -Wild Dances-
 樱树街道:
   - 桜樹街道
 樱树:
@@ -389,6 +393,8 @@ ress:
   - RESSiSTANCE
 绿魔王:
   - RESSiSTANCE
+反抗:
+  - RESSiSTANCE
 FM:
   - Future Mind
 冷光:
@@ -454,6 +460,8 @@ Re_Nascence:
   - Re_Nascence (Psystyle Ver.)
 瑞纳森斯:
   - Re_Nascence (Psystyle Ver.)
+rnp:
+  - Re_Nascence (Psystyle Ver.)
 PR:
   - Parallel Retrogression(Game Ver.)
 parallel:
@@ -507,6 +515,8 @@ Äventyr:
 inferno city:
   - インフェルノシティ
 ic:
+  - インフェルノシティ
+Inferno City:
   - インフェルノシティ
 Chariot:
   - The Chariot ~REVIIVAL~
@@ -594,9 +604,13 @@ AM2:
 梅雨:
   - Rainy Season
   - Rainy Heart
+雨心:
+  - Rainy Heart
 人类:
   - HumaN
 ECP:
+  - El Condor Pasa (Phigros Edit)
+二人转:
   - El Condor Pasa (Phigros Edit)
 最后一步:
   - Final Step!
@@ -691,6 +705,8 @@ ppp:
   - ぱぴぷぴぷぴぱ
 pomi:
   - ぱぴぷぴぷぴぱ
+ppppp:
+  - ぱぴぷぴぷぴぱ
 九龙:
   - "Labyrinth in Kowloon: Walled World"
 九龙城寨:
@@ -729,11 +745,15 @@ TB连接:
   - Compute It With Some Devilish Alcoholic Steampunk Engines
 夹竹桃:
   - Compute It With Some Devilish Alcoholic Steampunk Engines
+蒸汽朋克:
+  - Compute It With Some Devilish Alcoholic Steampunk Engines
 静舞:
   - Dance with Silence
 dws:
   - Dance with Silence
 CF:
+  - Triumph & Regret
+T&R:
   - Triumph & Regret
 黎明之后:
   - "After Dawn"
@@ -767,17 +787,19 @@ BO:
   - 愚人节常驻谱
 眼病:
   - opia
-T&R:
-  - Triumph & Regret
 时隙:
   - Nick of Time
 Hikari:
+  - 光
+木烬:
   - 光
 Angel:
   - Fractured Angel
 骨折天使:
   - Fractured Angel
 折翼天使:
+  - Fractured Angel
+FA:
   - Fractured Angel
 Golden:
   - Silence is Golden, Speech is Golden
@@ -787,15 +809,23 @@ Golden:
   - Silence is Golden, Speech is Golden
 沉默是金，雄辩是金:
   - Silence is Golden, Speech is Golden
+演讲是金:
+  - Silence is Golden,Speech is Golden
+沉默:
+  - Silence is Golden,Speech is Golden
 imsn:
   - I Must Say No
 时移:
   - Temporal Shifting
 ts:
   - Temporal Shifting
-美女与鬼兽:
-  - Bitterblossom
 ort:
   - Orthodox
 特洛伊:
   - Trojan
+bb:
+  - Bitterblossom
+美女与鬼兽:
+  - Bitterblossom
+影子:
+  - Shadow
