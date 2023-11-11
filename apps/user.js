@@ -456,7 +456,7 @@ export class phiuser extends plugin {
                 score: totreal_score,
             },
             rating: {
-                tot: Rate(tottot_score, totreal_score, totfc == totcharts),
+                tot: Rate(totreal_score, tottot_score, totfc == totcharts),
                 ...totRating,
             },
             range: {
@@ -540,7 +540,13 @@ function progress_bar(value, length) {
     return result
 }
 
-
+/**
+ * 
+ * @param {number} real_score 真实成绩
+ * @param {number} tot_score 总成绩
+ * @param {boolean} fc 是否fc
+ * @returns 
+ */
 function Rate(real_score, tot_score, fc) {
 
     if (!real_score) {
