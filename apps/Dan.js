@@ -107,10 +107,6 @@ export class phiDan extends plugin {
         try {
 
             var dan = await Vika.GetUserDanBySstk(save.session);
-            if (!dan) {
-                await common.sleep(1000)
-                dan = await Vika.GetUserDanById(save.saveInfo.objectId);
-            }
 
         } catch (err) {
             console.info(err)
