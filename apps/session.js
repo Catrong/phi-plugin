@@ -75,6 +75,7 @@ export class phisstk extends plugin {
                     pluginData.scoreHistory = {}
                     if (pluginData.plugin_data)
                         pluginData.plugin_data.task = []
+                        pluginData.plugin_data.CLGMOD = []
                     await get.putpluginData(e.user_id, pluginData)
                 }
             }
@@ -230,9 +231,9 @@ export class phisstk extends plugin {
                     pluginData.rks = []
                     pluginData.data = []
                     pluginData.scoreHistory = {}
-                    pluginData.dan = []
                     if (pluginData.plugin_data)
                         pluginData.plugin_data.task = []
+                        pluginData.plugin_data.CLGMOD = []
                     await get.putpluginData(e.user_id, pluginData)
                 }
 
