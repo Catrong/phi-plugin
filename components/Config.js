@@ -66,7 +66,8 @@ class Config {
      * |'MicTipCd'
      * |'VikaToken'
      * |'HistoryScoreNum'
-     * |'HistoryScoreDate' } style key值
+     * |'HistoryScoreDate'
+     * |'LetterTimeLength' } style key值
     */
     getDefOrConfig(name, style) {
         let def = this.getdefSet(name)

@@ -61,6 +61,9 @@ LetterRevealCd: 12
 #  猜字母群聊全局提示冷却时间间隔(s)
 LetterTipCd: 30
 
+#  猜字母超时时长(s)
+LetterTimeLength: 600
+
 #  ************ 【猜曲绘设置】 ************* 
 #  猜曲绘是否撤回
 GuessTipRecall: false

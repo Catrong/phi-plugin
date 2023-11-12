@@ -222,6 +222,18 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'LetterTimeLength',
+                    label: '猜字母最长时长',
+                    bottomHelpMessage: '单位：秒',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 0,
+                        max: 9999999,
+                        placeholder: '请输入时间',
+                    },
+                },
+                {
                     field: 'MicTipCd',
                     label: '猜歌提示冷却',
                     bottomHelpMessage: '猜歌的全局提示冷却时间，单位：秒',

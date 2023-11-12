@@ -144,8 +144,8 @@ export class philetter extends plugin {
         }
         await e.reply(output, true)
 
-        /**单局游戏不超过4分半 */
-        for (let j = 0; j < 270; ++j) {
+        /**单局游戏不超过设定 */
+        for (let j = 0; j < Config.getDefOrConfig('config', 'LetterTimeLength'); ++j) {
             await timeout(1000)
             if (!gamelist[group_id]) {
                 return false
