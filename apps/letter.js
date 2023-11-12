@@ -144,6 +144,20 @@ export class philetter extends plugin {
         }
         await e.reply(output, true)
 
+        /**单局游戏不超过4分半 */
+        for (let j = 0; j < 270; ++j) {
+            await timeout(1000)
+            if (!gamelist[group_id]) {
+                return false
+            }
+        }
+
+        if (gamelist[group_id]) {
+            await e.reply('呜，怎么还没有人答对啊QAQ！只能说答案了喵……')
+
+            e.reply(gameover(group_id))
+            return true
+        }
         return true
     }
 
@@ -234,7 +248,7 @@ export class philetter extends plugin {
                 } else {
                     let result = `\n【${m}】${gamelist[groupId][m]}`
 
-                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[groupId][m]) {
+                    if (winnerlist[groupId][m]) {
                         result += ` @${winnerlist[groupId][m]}`
                     }
 
@@ -330,7 +344,7 @@ export class philetter extends plugin {
                                     } else {
                                         output.push(`\n【${m}】${gamelist[group_id][m]}`)
 
-                                        if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][m]) {
+                                        if (winnerlist[group_id][m]) {
                                             output.push(` @${winnerlist[group_id][m]}`)
                                         }
                                     }
@@ -347,7 +361,7 @@ export class philetter extends plugin {
                                 for (const m of Object.keys(gamelist[group_id])) {
                                     output.push(`\n【${m}】${gamelist[group_id][m]}`)
 
-                                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][m]) {
+                                    if (winnerlist[group_id][m]) {
                                         output.push(` @${winnerlist[group_id][m]}`)
                                     }
                                 }
@@ -388,31 +402,9 @@ export class philetter extends plugin {
         const { group_id } = e//使用对象解构提取group_id
 
         if (gamelist[group_id]) {
-            e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
+            await e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
 
-            const t = gamelist[group_id]
-            const winner = winnerlist[group_id]
-
-            delete alphalist[group_id]
-            delete gamelist[group_id]
-            delete blurlist[group_id]
-            delete winnerlist[group_id]
-
-            const output = ['出你字母已结束，答案如下：']
-
-            for (const m of Object.keys(t)) {
-                const correct_name = t[m]
-                const winner_card = winner[m]
-                output.push(`\n【${m}】${correct_name}`)
-
-                if (Config.getDefOrConfig('config', 'LetterWinner')) {
-                    if (typeof winner_card === 'object' && winner_card !== null && typeof winner_card[group_id] === 'object') {
-                        output.push(` @${winner_card[group_id][m]}`)
-                    }
-                }
-            }
-
-            e.reply(output)
+            e.reply(gameover(group_id))
             return true
         }
 
@@ -502,7 +494,7 @@ export class philetter extends plugin {
                     output.push(`\n【${key}】${blurlist[group_id][key]}`)
                 } else {
                     output.push(`\n【${key}】${gamelist[group_id][key]}`)
-                    if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][key]) {
+                    if (winnerlist[group_id][key]) {
                         output.push(` @${winnerlist[group_id][key]}`)
                     }
                 }
@@ -512,7 +504,7 @@ export class philetter extends plugin {
             delete (blurlist[group_id])
             output.push('\n字母已被全部翻开，答案如下：')
             output.push(`\n【${key}】${gamelist[group_id][key]}`)
-            if (Config.getDefOrConfig('config', 'LetterWinner') && winnerlist[group_id][key]) {
+            if (winnerlist[group_id][key]) {
                 output.push(` @${winnerlist[group_id][key]}`)
             }
 
@@ -719,4 +711,31 @@ function getRandCharacter(str, blur) {
 
     // 返回随机字符
     return str.charAt(temlist[randomIndex]);
+}
+
+/**结束本群游戏，返回答案 */
+function gameover(group_id) {
+
+    const t = gamelist[group_id]
+    const winner = winnerlist[group_id]
+
+    delete alphalist[group_id]
+    delete gamelist[group_id]
+    delete blurlist[group_id]
+    delete winnerlist[group_id]
+
+    const output = ['出你字母已结束，答案如下：']
+
+    console.info(winnerlist)
+
+    for (const m of Object.keys(t)) {
+        const correct_name = t[m]
+        const winner_card = winner[m]
+        output.push(`\n【${m}】${correct_name}`)
+
+        if (winner_card) {
+            output.push(` @${winner_card}`)
+        }
+    }
+    return output
 }

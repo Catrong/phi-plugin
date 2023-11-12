@@ -222,12 +222,6 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    field: 'LetterWinner',
-                    label: '@猜对者',
-                    bottomHelpMessage: '开字母是否在答案后附带猜对者，不会@人',
-                    component: 'Switch',
-                },
-                {
                     field: 'MicTipCd',
                     label: '猜歌提示冷却',
                     bottomHelpMessage: '猜歌的全局提示冷却时间，单位：秒',

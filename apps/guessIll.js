@@ -68,9 +68,9 @@ export class phiguess extends plugin {
         var songs_info = get.info()[song]
 
         var cnnt = 0
-        while(typeof songs_info.illustration_big == 'undefined' || songs_info.can_t_be_guessill) {
+        while (typeof songs_info.illustration_big == 'undefined' || songs_info.can_t_be_guessill) {
             ++cnnt
-            if(cnnt>=50) {
+            if (cnnt >= 50) {
                 logger.error(`[phi guess]抽取曲目失败，请检查曲库设置`)
                 e.reply(`[phi guess]抽取曲目失败，请检查曲库设置`)
                 return
@@ -115,9 +115,10 @@ export class phiguess extends plugin {
         else
             await e.reply(await get.getguess(e, data))
 
-        for (let i = 0; i < 30; ++i) {
+        /**单局时间不超过4分半 */
+        const time = Config.getDefOrConfig('config', 'GuessTipCd')
+        for (let i = 0; i < Math.min(270 / time, 30); ++i) {
 
-            const time = Config.getDefOrConfig('config', 'GuessTipCd')
 
             for (let j = 0; j < time; ++j) {
                 await common.sleep(1000)
@@ -182,6 +183,19 @@ export class phiguess extends plugin {
             else
                 e.reply(remsg)
 
+        }
+
+        for (let j = 0; j < time; ++j) {
+            await common.sleep(1000)
+            if (gamelist[group_id]) {
+                if (gamelist[group_id] != songs_info.song) {
+                    await gameover(e, data)
+                    return true
+                }
+            } else {
+                await gameover(e, data)
+                return true
+            }
         }
 
         const t = gamelist[group_id]
