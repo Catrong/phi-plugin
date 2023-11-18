@@ -23,7 +23,7 @@ export class phiupdate extends plugin {
             priority: 1009,
             rule: [
                 {
-                    reg: `^/(pgr|PGR|屁股肉|phi|Phi|(${Config.getDefOrConfig('config', 'cmdhead')}))(插件)?(\\s*)(强制)?(更新|gx)$`,
+                    reg: `^([/#](pgr|PGR|屁股肉|phi|Phi)|/(${Config.getDefOrConfig('config', 'cmdhead')}))(插件)?(\\s*)(强制)?(更新|gx)$`,
                     fnc: "update",
                 },
             ],
