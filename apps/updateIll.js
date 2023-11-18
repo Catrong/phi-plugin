@@ -69,7 +69,7 @@ export class phiupdateIll extends plugin {
     }
 
     async clone() {
-        let command = "git clone https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill ./plugins/phi-plugin/resources/original_ill/ --depth=1";
+        let command = "git clone https://gitee.com/Steveeee-e/phi-plugin-ill.git ./plugins/phi-plugin/resources/original_ill/ --depth=1";
         
         this.e.reply("正在下载曲绘文件，请勿重复执行");
         
