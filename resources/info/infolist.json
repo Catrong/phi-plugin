@@ -3216,6 +3216,96 @@
             }
         }
     },
+    "Journey with You": {
+        "song": "Journey with You",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Rotaeno 精选集",
+        "bpm": "",
+        "composer": "Iris",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "5.5",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "10.1",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "13.8",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "Secret Illumination": {
+        "song": "Secret Illumination",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Rotaeno 精选集",
+        "bpm": "",
+        "composer": "Yooh",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "5.0",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "10.5",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "14.8",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "Inverted World": {
+        "song": "Inverted World",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Rotaeno 精选集",
+        "bpm": "",
+        "composer": "Yooh",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "",
+                "difficulty": "5.0",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "",
+                "difficulty": "11.2",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "",
+                "difficulty": "15.4",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
     "Doppelganger": {
         "song": "Doppelganger",
         "illustration": "https://img.moegirl.org.cn/common/thumb/8/86/Doppelganger_Phigros.png/300px-Doppelganger_Phigros.png",

@@ -67,7 +67,8 @@ class Config {
      * |'VikaToken'
      * |'HistoryScoreNum'
      * |'HistoryScoreDate'
-     * |'LetterTimeLength' } style key值
+     * |'LetterTimeLength'
+     * |'HistoryDayNum' } style key值
     */
     getDefOrConfig(name, style) {
         let def = this.getdefSet(name)

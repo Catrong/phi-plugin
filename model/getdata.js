@@ -10,6 +10,7 @@ import SongsInfo from './class/SongsInfo.js';
 import Save from './class/Save.js';
 import PhigrosUser from '../lib/PhigrosUser.js';
 import send from './send.js';
+import common from '../../../lib/common/common.js'
 import scoreHistory from './class/scoreHistory.js'
 
 
@@ -208,7 +209,7 @@ class getdata {
             logger.info(`[phi-plugin][${id}]文件读取等待中`)
             var tot = 0
             while (lock.indexOf(id) != -1 && tot < 20) {
-                await segment.sleep(500)
+                await common.sleep(500)
                 ++tot
             }
             if (tot == 20) {
@@ -255,7 +256,7 @@ class getdata {
     }
 
     /**
-     * 获取并初始化 id 货币相关数据
+     * 获取并初始化 id 插件相关数据
      * @param {String} id 
      * @param {boolean} [islock=false] 是否锁定
      * @returns 整个data对象
@@ -268,6 +269,7 @@ class getdata {
         if (!data.plugin_data || !data.plugin_data.task_time) {
             data.plugin_data = {
                 money: 0,
+                CLGMOD: {},
                 sign_in: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
                 task_time: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
                 task: []
@@ -276,7 +278,7 @@ class getdata {
         return data
     }
 
-    /**获取本地图片,带后缀
+    /**获取本地图片
      * @param {string} img 文件名
      * @param {string} style 文件格式，默认为png
      */

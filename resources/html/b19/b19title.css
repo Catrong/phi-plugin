@@ -1,4 +1,3 @@
-
 .title .l,
 .title .r {
     background-color: rgba(0, 0, 0, 0.5);
@@ -25,7 +24,7 @@
 }
 
 .title .l {
-    width: 58%;
+    width: 56%;
     height: 100%;
     z-index: 1;
     writing-mode: horizontal-tb;
@@ -53,18 +52,13 @@
 .title .r {
     clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 11% 0px);
     height: 90%;
-    width: 42.3%;
+    width: 43.3%;
     display: flex;
     flex-direction: column;
     writing-mode: horizontal-tb;
     justify-content: center;
     margin-left: -29.4%;
-    padding-left: 27%;
-}
-
-.Challenge_1 {
-    /* position: absolute; */
-    right: 10px;
+    padding-left: 33%;
 }
 
 .title .r p {
@@ -77,6 +71,32 @@
     flex-direction: row;
     align-items: center;
     position: relative;
+}
+
+.title .r .Challenge-r,
+.title .r .Challenge-r_1 {
+    width: 95px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 2%;
+    margin-left: 3%;
+}
+
+.title .r .Challenge-r img,
+.title .r .Challenge-r_1 img {
+    width: 100%;
+    height: auto;
+    margin-right: 0;
+    margin-left: 0;
+    border-radius: 0px;
+    margin-bottom: -60px;
+}
+
+.title .r .Challenge-r p,
+.title .r .Challenge-r_1 p {
+    margin: 0;
 }
 
 .title .r .Challenge-r {
@@ -101,6 +121,8 @@
 .title .r .Challenge-r p {
     margin: 0;
 }
+
+
 
 .CLG p {
     margin-left: 0;

@@ -3,17 +3,17 @@
 body {
     width: 1920px;
     height: 2000px;
+    border: 5px solid white;
 }
 
-.title {
-    width: 80%;
-    margin-top: 10%;
-    height: 20%;
-    background-color: #ffffffaa;
-    z-index: 1;
-    position: relative;
+.createdbox {
+    position: absolute;
+    left: 10px;
+    width: auto;
 }
 
-.title p {
-    font-size: 25px;
+.helpbox {
+    width: 400px;
+    height: 200px;
+    
 }

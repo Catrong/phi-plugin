@@ -8,7 +8,7 @@ import common from '../../../lib/common/common.js'
 
 const read = 'https://www.bilibili.com/read/cv27354116'
 const sheet = 'https://f.kdocs.cn/g/fxsg4EM2/'
-const word = `想要了解有关 Phigros民间段位标准 的有关信息可以查看这个专栏！${read}\n提交审核请前往这个链接哦！${sheet}\n`
+const word = [`想要了解有关 Phigros民间段位标准 的有关信息可以查看这个专栏！`, `${read}\n`, `提交审核请前往这个链接哦！`, get.getimg('dan_code')]
 
 const cancanneed = Vika.PhigrosDan ? true : false
 
@@ -66,17 +66,17 @@ export class phiDan extends plugin {
 
                 return true
             } catch (err) {
-                send.send_with_At(e, `唔，本地没有你的认证记录哦！如果提交过审核的话，可以试试更新一下嗷！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} dan update\n${word}`)
+                send.send_with_At(e, [`唔，本地没有你的认证记录哦！如果提交过审核的话，可以试试更新一下嗷！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} dan update`, word])
                 return true
             }
         } else {
             try {
                 var dan = await Vika.GetUserDanByName(name);
                 if (!dan) {
-                    send.send_with_At(e, `唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！${word}`)
+                    send.send_with_At(e, [`唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！`, word])
                     return true
                 }
-                var plugindata = await get.getpluginData(e.user_id, true)
+                var plugindata = await get.getpluginData(e.user_id)
                 plugindata.plugin_data.CLGMOD = dan
                 var resmsg = [`${name}的认证段位为\n`]
                 for (var i in dan) {
@@ -91,7 +91,7 @@ export class phiDan extends plugin {
                 return true
             }
         }
-        send.send_with_At(e, `${word}`)
+        send.send_with_At(e, word)
     }
 
     async danupdate(e) {
@@ -116,10 +116,13 @@ export class phiDan extends plugin {
 
 
         if (!dan) {
-            send.send_with_At(e, `唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！${word}`)
+            send.send_with_At(e, [`唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！`, word])
             return true
         }
         var plugindata = await get.getpluginData(e.user_id, true)
+        if (!plugindata.plugin_data) {
+            plugindata.plugin_data = {}
+        }
         plugindata.plugin_data.CLGMOD = dan
         get.putpluginData(e.user_id, plugindata)
         var resmsg = [`更新成功！你的认证段位为\n`]

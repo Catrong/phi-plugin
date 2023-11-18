@@ -73,9 +73,10 @@ export class phisstk extends plugin {
                     pluginData.data = []
                     pluginData.dan = []
                     pluginData.scoreHistory = {}
-                    if (pluginData.plugin_data)
+                    if (pluginData.plugin_data) {
                         pluginData.plugin_data.task = []
                         pluginData.plugin_data.CLGMOD = []
+                    }
                     await get.putpluginData(e.user_id, pluginData)
                 }
             }
@@ -119,12 +120,12 @@ export class phisstk extends plugin {
 
         /**图片 */
 
-        /**新增曲目成绩 */
-        var common_update = {}
-        /**时间线 */
-        var time_line = []
-        /**每个时间有多少份 */
-        var update_num = []
+        /**标记数据中含有的时间 */
+        var time_vis = {}
+
+        /**总信息 */
+        var tot_update = []
+
 
         var now = new Save(User)
         var pluginData = await get.getpluginData(e.user_id)
@@ -135,45 +136,80 @@ export class phisstk extends plugin {
                 var history = tem[level]
                 for (var i in history) {
                     var score_date = date_to_string(scoreHistory.date(history[i]))
-                    var score = scoreHistory.extend(song, level, history[i], history[i - 1])
-                    if (!common_update[score_date]) {
-                        common_update[score_date] = []
+                    var score_info = scoreHistory.extend(song, level, history[i], history[i - 1])
+                    if (!time_vis[score_date]) {
+                        time_vis[score_date] = tot_update.length
+                        tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
                     }
-                    if (!update_num[score_date]) {
-                        update_num[score_date] = 0
-                    }
-                    ++update_num[score_date]
-                    common_update[score_date].push(score)
-                    if (!time_line.includes(score_date)) {
-                        time_line.push(score_date)
-                    }
+                    ++tot_update[time_vis[score_date]].update_num
+                    tot_update[time_vis[score_date]].song.push(score_info)
                 }
             }
         }
 
         var illlist = get.illlist
 
-        time_line.sort((a, b) => new Date(b) - new Date(a))
+        var newnum = tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]] ? tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]].song.length : 0
 
-        var newnum = common_update[date_to_string(now.saveInfo.updatedAt)] ? common_update[date_to_string(now.saveInfo.updatedAt)].length : 0
-        var show = 0 //实际显示的数量
-        var showdate = 0 //显示的天数
+        tot_update.sort((a, b) => new Date(b.date) - new Date(a.date))
 
-        for (var date in common_update) {
+        /**实际显示的数量 */
+        var show = 0
+        /**显示的天数 */
+        var showdate = 0
+        /**每日显示上限 */
+        const DayNum = Config.getDefOrConfig('config', 'HistoryDayNum')
+        /**显示日期上限 */
+        const DateNum = Config.getDefOrConfig('config', 'HistoryScoreDate')
+        /**总显示上限 */
+        const TotNum = Config.getDefOrConfig('config', 'HistoryScoreNum')
 
-            common_update[date].sort((a, b) => { return b.rks_new - a.rks_new })
+        for (var date in tot_update) {
+            /**预处理每日显示上限 */
+            tot_update[date].song.sort((a, b) => { return b.rks_new - a.rks_new })
 
-            common_update[date] = common_update[date].slice(0, 10)
-            show += common_update[date].length
-            ++showdate
-
+            tot_update[date].song = tot_update[date].song.slice(0, DayNum)
         }
 
-        while (showdate > Config.getDefOrConfig('config','HistoryScoreDate') || show > Config.getDefOrConfig('config','HistoryScoreNum')) {
-            show -= common_update[time_line[time_line.length - 1]].length
-            delete common_update[time_line[time_line.length - 1]]
-            --showdate
-            time_line.pop()
+        /**预分行 */
+        var box_line = []
+
+        box_line[box_line.length - 1]
+
+        /**循环中当前行的数量 */
+        var line_num = 0
+
+        while (tot_update[0].song.length) {
+            box_line.push([{ ...tot_update[0], song: tot_update[0].song.splice(0, 5) }])
+            var tem = box_line[box_line.length - 1]
+            tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
+        }
+
+        tot_update.shift()
+        line_num = box_line[box_line.length - 1][0].song.length
+        var flag = false
+
+        while (tot_update.length) {
+            if (line_num == 5) {
+                if (flag) {
+                    box_line.push([{ color: tot_update[0].color, song: tot_update[0].song.splice(0, 5) }])
+                } else {
+                    box_line.push([{ ...tot_update[0], song: tot_update[0].song.splice(0, 5) }])
+                }
+                var tem = box_line[box_line.length - 1]
+                line_num = tem[tem.length - 1].song.length
+            } else {
+                var tem = box_line[box_line.length - 1]
+                tem.push({ ...tot_update[0], song: tot_update[0].song.splice(0, 5 - line_num) })
+                line_num += tem[tem.length - 1].song.length
+            }
+            var tem = box_line[box_line.length - 1]
+            tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
+            flag = true
+            if (!tot_update[0].song.length) {
+                tot_update.shift()
+                flag = true
+            }
         }
 
         var data = {
@@ -183,9 +219,7 @@ export class phisstk extends plugin {
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: get.getill(illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
-            update: common_update,
-            update_num: update_num,
-            time_line: time_line,
+            box_line: box_line,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
             show: show,
@@ -231,9 +265,10 @@ export class phisstk extends plugin {
                     pluginData.rks = []
                     pluginData.data = []
                     pluginData.scoreHistory = {}
-                    if (pluginData.plugin_data)
+                    if (pluginData.plugin_data) {
                         pluginData.plugin_data.task = []
                         pluginData.plugin_data.CLGMOD = []
+                    }
                     await get.putpluginData(e.user_id, pluginData)
                 }
 
@@ -262,4 +297,31 @@ function date_to_string(date) {
     var day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
 
     return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
+}
+
+// 定义一个函数，接受一个整数参数，返回它的十六进制形式
+function toHex(num) {
+    // 如果数字小于 16，就在前面补一个 0
+    if (num < 16) {
+        return "0" + num.toString(16);
+    } else {
+        return num.toString(16);
+    }
+}
+
+// 定义一个函数，不接受参数，返回一个随机的背景色
+function getRandomBgColor() {
+    // 生成三个 0 到 200 之间的随机整数，分别代表红、绿、蓝分量
+    let red = Math.floor(Math.random() * 201);
+    let green = Math.floor(Math.random() * 201);
+    let blue = Math.floor(Math.random() * 201);
+    // 将三个分量转换为十六进制形式，然后拼接成一个 RGB 颜色代码
+    let hexColor = "#" + toHex(red) + toHex(green) + toHex(blue);
+    // 返回生成的颜色代码
+    return hexColor;
+}
+
+/**计算/update宽度 */
+function comWidth(num) {
+    return num * 330 + 20 * num - 20
 }
