@@ -215,7 +215,7 @@ export class phisstk extends plugin {
             if (!tot_update[0].song.length) {
                 tem[tem.length - 1].update_num = tot_update[0].update_num
                 tot_update.shift()
-                flag = true
+                flag = false
             }
         }
 
