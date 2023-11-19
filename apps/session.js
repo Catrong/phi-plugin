@@ -156,7 +156,7 @@ export class phisstk extends plugin {
         /**实际显示的数量 */
         var show = 0
         /**每日显示上限 */
-        const DayNum = Config.getDefOrConfig('config', 'HistoryDayNum')
+        const DayNum = Math.max(Config.getDefOrConfig('config', 'HistoryDayNum'), 2)
         /**显示日期上限 */
         const DateNum = Config.getDefOrConfig('config', 'HistoryScoreDate')
         /**总显示上限 */
@@ -191,7 +191,7 @@ export class phisstk extends plugin {
         /**循环中当前行的数量 */
         var line_num = 0
 
-        
+
         line_num = 5
         var flag = false
 

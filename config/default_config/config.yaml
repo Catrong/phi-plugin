@@ -20,14 +20,14 @@ waitingTimeout: 10000
 #  b19最大成绩数量
 B19MaxNum: 50
 
-#  历史成绩单日数量
+#  历史成绩单日数量，至少为2
 HistoryDayNum: 10
 
 #  历史成绩总数量
-HistoryScoreNum: 10
+HistoryScoreNum: 50
 
 #  历史成绩展示天数
-HistoryScoreDate: 1
+HistoryScoreDate: 10
 
 #  ************ 【发送设置】 ************* 
 

@@ -82,6 +82,18 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'HistoryDayNum',
+                    label: '历史成绩单日数量',
+                    bottomHelpMessage: '/update 展现历史成绩的单日最大数量，至少为2',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 2,
+                        max: 10000,
+                        placeholder: '请输入最大限制',
+                    },
+                },
+                {
                     field: 'HistoryScoreNum',
                     label: '历史成绩展示数量',
                     bottomHelpMessage: '/update 展现历史成绩的最大数量',
