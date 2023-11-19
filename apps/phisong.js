@@ -347,18 +347,18 @@ export class phisong extends plugin {
         if (top % 1 == 0 && !msg.includes(".0")) top += 0.9
 
         var songsname = []
-        for (let i in get.info()) {
+        for (let i in get.ori_info) {
             for (var level in Level) {
-                if (isask[level] && get.info()[i]['chart'][Level[level]]) {
-                    var difficulty = get.info()[i]['chart'][Level[level]]['difficulty']
+                if (isask[level] && get.ori_info[i]['chart'][Level[level]]) {
+                    var difficulty = get.ori_info[i]['chart'][Level[level]]['difficulty']
                     if (difficulty >= bottom && difficulty <= top) {
                         songsname.push({
-                            ...get.info()[i]['chart'][Level[level]],
+                            ...get.ori_info[i]['chart'][Level[level]],
                             rank: Level[level],
                             illustration: get.getill(i),
-                            song: get.info()[i]['song'],
-                            illustrator: get.info()[i]['illustrator'],
-                            composer: get.info()[i]['composer'],
+                            song: get.ori_info[i]['song'],
+                            illustrator: get.ori_info[i]['illustrator'],
+                            composer: get.ori_info[i]['composer'],
                         })
                     }
                 }
