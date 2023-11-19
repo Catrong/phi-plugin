@@ -1,6 +1,7 @@
 import { segment } from "oicq";
 import Config from '../components/Config.js'
 import get from "./getdata.js";
+import common from "../../../lib/common/common.js";
 
 class send {
 
@@ -56,6 +57,7 @@ class send {
     async pick_send(e, msg) {
         try {
             await Bot.pickMember(e.group_id, e.user_id).sendMsg(msg)
+            await common.sleep(500)
         } catch (err) {
             logger.error(err)
             this.send_with_At(e, `转发失败QAQ！请尝试在私聊触发命令！`)
