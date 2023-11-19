@@ -155,8 +155,6 @@ export class phisstk extends plugin {
 
         /**实际显示的数量 */
         var show = 0
-        /**显示的天数 */
-        var showdate = 0
         /**每日显示上限 */
         const DayNum = Config.getDefOrConfig('config', 'HistoryDayNum')
         /**显示日期上限 */
@@ -164,11 +162,23 @@ export class phisstk extends plugin {
         /**总显示上限 */
         const TotNum = Config.getDefOrConfig('config', 'HistoryScoreNum')
 
+
+
         for (var date in tot_update) {
+
+            /**天数上限 */
+            if (date > DateNum || TotNum <= show) {
+                delete tot_update[date]
+            }
+
             /**预处理每日显示上限 */
             tot_update[date].song.sort((a, b) => { return b.rks_new - a.rks_new })
 
-            tot_update[date].song = tot_update[date].song.slice(0, DayNum)
+            tot_update[date].song = tot_update[date].song.slice(0, Math.min(DayNum, TotNum - show))
+
+            /**总上限 */
+            show += tot_update[date].song.length
+
         }
 
         /**预分行 */
@@ -179,14 +189,14 @@ export class phisstk extends plugin {
         /**循环中当前行的数量 */
         var line_num = 0
 
-        while (tot_update[0].song.length) {
-            box_line.push([{ ...tot_update[0], song: tot_update[0].song.splice(0, 5) }])
-            var tem = box_line[box_line.length - 1]
-            tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
-        }
+        // while (tot_update[0].song.length) {
+        //     box_line.push([{ ...tot_update[0], song: tot_update[0].song.splice(0, 5) }])
+        //     var tem = box_line[box_line.length - 1]
+        //     tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
+        // }
 
-        tot_update.shift()
-        line_num = box_line[box_line.length - 1][0].song.length
+        // tot_update.shift()
+        line_num = 5
         var flag = false
 
         while (tot_update.length) {
@@ -194,7 +204,7 @@ export class phisstk extends plugin {
                 if (flag) {
                     box_line.push([{ color: tot_update[0].color, song: tot_update[0].song.splice(0, 5) }])
                 } else {
-                    box_line.push([{ ...tot_update[0], song: tot_update[0].song.splice(0, 5) }])
+                    box_line.push([{ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5) }])
                 }
                 var tem = box_line[box_line.length - 1]
                 line_num = tem[tem.length - 1].song.length
@@ -207,6 +217,7 @@ export class phisstk extends plugin {
             tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
             flag = true
             if (!tot_update[0].song.length) {
+                tem[tem.length - 1].update_num = tot_update[0].update_num
                 tot_update.shift()
                 flag = true
             }

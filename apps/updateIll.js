@@ -4,7 +4,7 @@ import lodash from "lodash";
 import { Restart } from '../../other/restart.js'
 import Config from "../components/Config.js";
 import common from "../../../lib/common/common.js";
-import fs from 'node:fs'
+import fs from 'node:fs';
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
@@ -69,7 +69,7 @@ export class phiupdateIll extends plugin {
     }
 
     async clone() {
-        let command = "git clone https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill ./plugins/phi-plugin/resources/original_ill/ --depth=1";
+        let command = "git clone https://gitee.com/Steveeee-e/phi-plugin-ill.git ./plugins/phi-plugin/resources/original_ill/ --depth=1";
 
         this.e.reply("正在下载曲绘文件，请勿重复执行");
 
@@ -107,6 +107,21 @@ export class phiupdateIll extends plugin {
      * @returns
      */
     async runUpdate(isForce) {
+
+        try {
+            var gitCfg = fs.readFileSync(`./plugins/phi-plugin/resources/original_ill/.git/config`, "utf8")
+
+            // console.info(gitCfg)
+
+            gitCfg = gitCfg.replace('https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill', 'https://gitee.com/Steveeee-e/phi-plugin-ill.git')
+            // console.info(gitCfg)
+
+            fs.writeFileSync(`./plugins/phi-plugin/resources/original_ill/.git/config`, gitCfg, "utf8")
+        } catch (err) {
+            logger.error(err)
+        }
+
+
         let command = "git -C ./plugins/phi-plugin/resources/original_ill/ pull --no-rebase";
         command = `git -C ./plugins/phi-plugin/resources/original_ill/ checkout . && ${command}`;
         this.e.reply("正在更新曲绘文件，请勿重复执行");
