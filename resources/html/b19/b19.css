@@ -74,8 +74,10 @@ body p {
 
 .num {
     writing-mode: horizontal-tb;
-    width: 15%;
+    width: 11%;
     height: 15%;
+    padding-left: 3.5%;
+    padding-right: 3.5%;
     margin-left: 5.3%;
     display: flex;
     background-color: rgba(255, 255, 255, 1);

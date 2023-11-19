@@ -69,7 +69,7 @@
                 </div>
                 <div class="info-AT">
                     <div class="songname">
-                        <p id="0">Shadow</p>
+                        <p name="pvis">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -112,7 +112,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p id="2">Shadow</p>
+                        <p name="pvis">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -154,7 +154,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p name="pvis">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -196,7 +196,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p name="pvis">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -238,7 +238,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p name="pvis">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -280,7 +280,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p name="pvis">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -322,7 +322,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p name="pvis">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -364,7 +364,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p>Shadow</p>
+                        <p name="pvis">Shadow</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -390,7 +390,7 @@
             <div class="song">
                 <div class="ill-box">
                     <div class="num">
-                        <p>#2</p>
+                        <p name="pvis">#2</p>
                     </div>
                     <div class="ill">
                         <img src="https://img.moegirl.org.cn/common/f/fe/Shadow_Phigros.png" alt="ill">
@@ -406,7 +406,7 @@
                 </div>
                 <div class="info-HD">
                     <div class="songname">
-                        <p id="19">Compute It With Some Devilish Alcoholic Steampunk Engines</p>
+                        <p name="pvis">Compute It With Some Devilish Alcoholic Steampunk Engines</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -434,7 +434,7 @@
             <div class="song">
                 <div class="ill-box">
                     <div class="num">
-                        <p>#1</p>
+                        <p name="pvis">#1</p>
                     </div>
                     <div class="ill">
                         <img src="https://img.moegirl.org.cn/common/f/fe/Shadow_Phigros.png" alt="ill">
@@ -450,7 +450,7 @@
                 </div>
                 <div class="info-IN">
                     <div class="songname">
-                        <p id="1">Non-Melodic Ragez (MUG Edit)</p>
+                        <p name="pvis">Non-Melodic Ragez (MUG Edit)</p>
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
@@ -492,7 +492,7 @@
                 </div>
                 <div class="info-EZ">
                     <div class="songname">
-                        <p id="20" style="font-size: 30px;">Compute It With Some Devilish Alcoholic Steampunk Engines
+                        <p name="pvis">Compute It With Some Devilish Alcoholic Steampunk Engines
                         </p>
                     </div>
                     <div class="songinfo">
@@ -530,20 +530,19 @@
     <!-- 曲目名称自适应name-box的宽度 -->
     <script>
         function adjustFontSize() {
-            for (let i = 0; i <= 22; ++i) {
+            //获取p元素
+            var a = document.getElementsByName('pvis')
+            for (var i = 0; i < a.length; ++i) {
 
-                //获取song-name和composer滴元素
-                var songName = document.getElementById(`${i}`)
+                const songName = a[i]
 
                 if (!songName) continue
-
-                console.info(i)
 
 
                 /*调整曲目名称字体大小*/
                 var parentElement = songName.parentElement
 
-                var maxFontSize = 30 //设置最大字体大小
+                var maxFontSize = 23.5 //设置最大字体大小
 
                 //如果字体宽度小于父元素宽度，则增大字体大小
                 while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
