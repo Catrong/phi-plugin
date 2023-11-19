@@ -168,13 +168,15 @@ export class phisstk extends plugin {
 
             /**天数上限 */
             if (date > DateNum || TotNum <= show) {
-                delete tot_update[date]
+                tot_update.splice(date, tot_update.length)
+                break
             }
 
             /**预处理每日显示上限 */
             tot_update[date].song.sort((a, b) => { return b.rks_new - a.rks_new })
 
             tot_update[date].song = tot_update[date].song.slice(0, Math.min(DayNum, TotNum - show))
+
 
             /**总上限 */
             show += tot_update[date].song.length
@@ -189,13 +191,7 @@ export class phisstk extends plugin {
         /**循环中当前行的数量 */
         var line_num = 0
 
-        // while (tot_update[0].song.length) {
-        //     box_line.push([{ ...tot_update[0], song: tot_update[0].song.splice(0, 5) }])
-        //     var tem = box_line[box_line.length - 1]
-        //     tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
-        // }
-
-        // tot_update.shift()
+        
         line_num = 5
         var flag = false
 
@@ -210,7 +206,7 @@ export class phisstk extends plugin {
                 line_num = tem[tem.length - 1].song.length
             } else {
                 var tem = box_line[box_line.length - 1]
-                tem.push({ ...tot_update[0], song: tot_update[0].song.splice(0, 5 - line_num) })
+                tem.push({ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
                 line_num += tem[tem.length - 1].song.length
             }
             var tem = box_line[box_line.length - 1]

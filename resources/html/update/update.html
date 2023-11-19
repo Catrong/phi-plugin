@@ -50,9 +50,9 @@
                     <p name="pvis">{{date.date}}</p>
                 </div>
                 {{/if}}
-                {{if date.update_num}}
+                {{if date?.update_num > 1}}
                 <div class="box_title-right">
-                    <p name="pvis">×{{date.update_num}}</p>
+                    <p name="pvis">Updated × {{date.update_num}}</p>
                 </div>
                 {{/if}}
             </div>

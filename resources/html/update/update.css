@@ -53,7 +53,7 @@ body p {
 }
 
 .box_title-left {
-    width: AUTO;
+    width: 330px;
     height: 100%;
     display: flex;
     align-items: center;
