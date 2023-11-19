@@ -206,7 +206,12 @@ export class phisstk extends plugin {
                 line_num = tem[tem.length - 1].song.length
             } else {
                 var tem = box_line[box_line.length - 1]
-                tem.push({ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
+                if (flag) {
+                    tem.push({ color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
+                } else {
+                    tem.push({ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
+
+                }
                 line_num += tem[tem.length - 1].song.length
             }
             var tem = box_line[box_line.length - 1]
