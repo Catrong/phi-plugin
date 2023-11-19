@@ -70,9 +70,9 @@ export class phiupdateIll extends plugin {
 
     async clone() {
         let command = "git clone https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill ./plugins/phi-plugin/resources/original_ill/ --depth=1";
-        
+
         this.e.reply("正在下载曲绘文件，请勿重复执行");
-        
+
         uping = true;
         let ret = await this.execSync(command);
         uping = false;
@@ -170,7 +170,7 @@ export class phiupdateIll extends plugin {
         }
 
         log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin-ill");
-        
+
         let line = log.length;
 
         if (line <= 1) return "";
@@ -290,5 +290,50 @@ export class phiupdateIll extends plugin {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 处理更新失败的相关函数
+     * @param {string} err
+     * @param {string} stdout
+     * @returns
+     */
+    async gitErr(err, stdout) {
+        let msg = "更新失败！";
+        let errMsg = err.toString();
+        stdout = stdout.toString();
+
+        if (errMsg.includes("Timed out")) {
+            let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
+            await this.reply(msg + `\n连接超时：${remote}`);
+            return;
+        }
+
+        if (/Failed to connect|unable to access/g.test(errMsg)) {
+            let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
+            await this.reply(msg + `\n连接失败：${remote}`);
+            return;
+        }
+
+        if (errMsg.includes("be overwritten by merge")) {
+            await this.reply(
+                msg +
+                `存在冲突：\n${errMsg}\n` +
+                "请解决冲突后再更新，或者执行#强制更新，放弃本地修改"
+            );
+            return;
+        }
+
+        if (stdout.includes("CONFLICT")) {
+            await this.reply([
+                msg + "存在冲突\n",
+                errMsg,
+                stdout,
+                "\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改",
+            ]);
+            return;
+        }
+
+        await this.reply([errMsg, stdout]);
     }
 }
