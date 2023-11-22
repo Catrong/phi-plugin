@@ -6165,5 +6165,95 @@
                 "charter": "逆天使の悪魔 【Likey】"
             }
         }
+    },
+    "Journey with You": {
+        "song": "Journey with You",
+        "illustration": "JourneywithYou.Iris.png",
+        "illustration_big": "JourneywithYou.Iris.png",
+        "chapter": "Chapter EX-Rotaeno精选集",
+        "bpm": "150",
+        "composer": "Iris",
+        "length": "2:20",
+        "illustrator": "BTKCyber (青鸟 modified)",
+        "chart": {
+            "EZ": {
+                "level": "5",
+                "difficulty": "5.5",
+                "combo": "60",
+                "charter": "jouR.ney with hold"
+            },
+            "HD": {
+                "level": "10",
+                "difficulty": "10.1",
+                "combo": "175",
+                "charter": "jouR.ney to the end 【CORVERED】"
+            },
+            "IN": {
+                "level": "13",
+                "difficulty": "13.8",
+                "combo": "562",
+                "charter": "Su1fuR -All about YOU & ME-"
+            }
+        }
+    },
+    "Secret Illumination": {
+        "song": "Secret Illumination",
+        "illustration": "SecretIllumination.Yooh.png",
+        "illustration_big": "SecretIllumination.Yooh.png",
+        "chapter": "Chapter EX-Rotaeno精选集",
+        "bpm": "160",
+        "composer": "Yooh",
+        "length": "2:30",
+        "illustrator": "Juice Black (青鸟 modified)",
+        "chart": {
+            "EZ": {
+                "level": "5",
+                "difficulty": "5.0",
+                "combo": "281",
+                "charter": "Likey"
+            },
+            "HD": {
+                "level": "10",
+                "difficulty": "10.5",
+                "combo": "863",
+                "charter": "迟戈 vs Likey"
+            },
+            "IN": {
+                "level": "14",
+                "difficulty": "14.8",
+                "combo": "901",
+                "charter": "NerSAN"
+            }
+        }
+    },
+    "Inverted World": {
+        "song": "Inverted World",
+        "illustration": "InvertedWorld.ARForest.png",
+        "illustration_big": "InvertedWorld.ARForest.png",
+        "chapter": "Chapter EX-Rotaeno精选集",
+        "bpm": "180",
+        "composer": "ARForest",
+        "length": "2:12",
+        "illustrator": "Mechari (青鸟 modified)",
+        "chart": {
+            "EZ": {
+                "level": "5",
+                "difficulty": "5.0",
+                "combo": "246",
+                "charter": "Clutter"
+            },
+            "HD": {
+                "level": "11",
+                "difficulty": "11.2",
+                "combo": "614",
+                "charter": "ɹǝʇʇnlƆ"
+            },
+            "IN": {
+                "level": "15",
+                "difficulty": "15.4",
+                "combo": "820",
+                "charter": "ƃuɐnɥs∀ .sʌ uoqsnɐꓨ"
+            }
+        }
     }
 }
