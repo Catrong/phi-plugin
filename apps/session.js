@@ -167,7 +167,7 @@ export class phisstk extends plugin {
         for (var date in tot_update) {
 
             /**天数上限 */
-            if (date > DateNum || TotNum < show + Math.min(DayNum, tot_update[date].update_num)) {
+            if (date >= DateNum || TotNum < show + Math.min(DayNum, tot_update[date].update_num)) {
                 tot_update.splice(date, tot_update.length)
                 break
             }
