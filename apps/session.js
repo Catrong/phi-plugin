@@ -137,7 +137,7 @@ export class phisstk extends plugin {
                 for (var i in history) {
                     var score_date = date_to_string(scoreHistory.date(history[i]))
                     var score_info = scoreHistory.extend(song, level, history[i], history[i - 1])
-                    if (!time_vis[score_date]) {
+                    if (time_vis[score_date] == undefined) {
                         time_vis[score_date] = tot_update.length
                         tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
                     }
