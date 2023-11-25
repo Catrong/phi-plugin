@@ -261,13 +261,13 @@ body p {
 
 .rank p {
     font-size: 73px;
-    color: rgba(255, 255, 255, 0.2);
+    color: rgb(255 255 255 / 49%);
     margin-top: -5%;
 }
 
 .songsinfo_ed .rank p,
 .songsinfo_un .rank p {
-    color: rgba(0, 0, 0, 0.2);
+    color: rgb(0 0 0 / 42%);
 }
 
 .score {

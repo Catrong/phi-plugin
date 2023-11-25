@@ -224,6 +224,23 @@ export class phisstk extends plugin {
             }
         }
 
+        /**添加任务信息 */
+        var task_data = pluginData?.plugin_data?.task
+        var task_time = date_to_string(pluginData?.plugin_data?.task_time)
+
+        /**添加曲绘 */
+        if (task_data) {
+            for (var i in task_data) {
+                task_data[i].illustration = get.getill(task_data[i].song)
+                if (task_data[i].request.type == 'acc') {
+                    task_data[i].request.value = task_data[i].request.value.toFixed(2) + '%'
+                    if (task_data[i].request.value.length < 6) {
+                        task_data[i].request.value = '0' + task_data[i].request.value
+                    }
+                }
+            }
+        }
+
         var data = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
@@ -236,6 +253,8 @@ export class phisstk extends plugin {
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
             show: show,
             tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
+            task_data: task_data,
+            task_time: task_time,
             dan: await get.getDan(e.user_id),
         }
 
@@ -303,6 +322,7 @@ export class phisstk extends plugin {
  * @returns 2020/10/8 10:08:08
  */
 function date_to_string(date) {
+    if (!date) return undefined
     date = new Date(date)
 
     var month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
