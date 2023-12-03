@@ -72,18 +72,19 @@
                 <div class="infobox">
                     {{if song.finished}}
                     <div class="namebox_ed">
-                    {{else}}
-                    <div class="namebox_un">
-                    {{/if}}
                         <div class="songsname">
                             <p name="pvis">{{song.song}}</p>
                         </div>
                     </div>
+                    {{else}}
+                    <div class="namebox_un">
+                        <div class="songsname">
+                            <p name="pvis">{{song.song}}</p>
+                        </div>
+                    </div>
+                    {{/if}}
                     {{if song.finished}}
                     <div class="songsinfo_ed">
-                    {{else}}
-                    <div class="songsinfo_un">
-                    {{/if}}
                         <div class="rank">
                             <p>{{song.request.rank}}</p>
                         </div>
@@ -91,13 +92,23 @@
                             <p>{{song.request.value}}</p>
                         </div>
                     </div>
+                    {{else}}
+                    <div class="songsinfo_un">
+                        <div class="rank">
+                            <p>{{song.request.rank}}</p>
+                        </div>
+                        <div class="score">
+                            <p>{{song.request.value}}</p>
+                        </div>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
             {{/if}}
             {{/each}}
         </div>
         {{/if}}
-        
+
 
         {{each box_line time_line}}
         <div class="title_box">
