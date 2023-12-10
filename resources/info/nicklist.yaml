@@ -58,11 +58,13 @@ Cipher:
   - FULi AUTO SHOOTER
 福利自动爆:
   - FULi AUTO BUSTER
+福利自动炸:
+  - FULi AUTO BUSTER
 NOYM:
   - NO ONE YES MAN
 脑裂:
-  - FULi AUTO BUSTER
   - FULi AUTO SHOOTER
+  - FULi AUTO BUSTER
   - NO ONE YES MAN
 PRAW:
   - "[PRAW]"
@@ -462,6 +464,8 @@ Re_Nascence:
   - Re_Nascence (Psystyle Ver.)
 rnp:
   - Re_Nascence (Psystyle Ver.)
+ren:
+  - Re_Nascence (Psystyle Ver.)
 PR:
   - Parallel Retrogression(Game Ver.)
 parallel:
@@ -524,7 +528,7 @@ Chariot:
   - The Chariot ~REVIIVAL~
 tcr:
   - The Chariot ~REVIIVAL~
-Retribution:
+报应:
   - Retribution
 "321":
   - DESTRUCTION 3,2,1
@@ -839,5 +843,17 @@ bb:
   - Secret Illumination
 与你同行:
   - Journey with You
+和你旅行:
+  - Journey with You
 颠倒世界:
   - Inverted World
+紫方块:
+  - Bougainvillea
+粉方块:
+  - Bougainvillea
+叶子花:
+  - Bougainvillea
+
+重开:
+  - 重生
+
