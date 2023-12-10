@@ -38,7 +38,7 @@
             <p>Date: {{Date}}</p>
         </div>
     </div>
-    {{if box_line[0]||task_data[0]||task_data[1]||task_data[2]||task_data[3]||task_data[4]}}
+    {{if box_line[0]||(task_data&&(task_data[0]||task_data[1]||task_data[2]||task_data[3]||task_data[4]))}}
     <div class="record_box">
         {{if task_data[0]||task_data[1]||task_data[2]||task_data[3]||task_data[4]}}
         <div class="title_box">
