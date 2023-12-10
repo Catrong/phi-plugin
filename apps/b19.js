@@ -411,7 +411,7 @@ export class phib19 extends plugin {
             }
         }
 
-        history.sort((a, b) => b.date_new - a.date_new)
+        history.sort((a, b) => a.date_new - b.date_new)
 
         history.splice(16)
 
