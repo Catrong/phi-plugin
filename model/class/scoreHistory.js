@@ -31,7 +31,9 @@ export default new class scoreHistory {
                 acc_new: now[0],
                 acc_old: old ? old[0] : undefined,
                 score_new: now[1],
-                score_old: old ? old[1] : undefined
+                score_old: old ? old[1] : undefined,
+                date_new: new Date(now[2]),
+                date_old: old ? new Date(old[2]) : undefined
             }
         } else {
             return {
@@ -44,7 +46,9 @@ export default new class scoreHistory {
                 acc_new: now[0],
                 acc_old: old ? old[0] : undefined,
                 score_new: now[1],
-                score_old: old ? old[1] : undefined
+                score_old: old ? old[1] : undefined,
+                date_new: new Date(now[2]),
+                date_old: old ? new Date(old[2]) : undefined
             }
         }
     }

@@ -14,6 +14,7 @@ body {
 body p {
     margin: 0px;
     color: white;
+    font-size: 16px;
 }
 
 data_rks p {
@@ -536,6 +537,7 @@ circle {
     height: auto;
     width: 93%;
     justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .one-stats-box {

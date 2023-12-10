@@ -98,7 +98,7 @@ export class phimoney extends plugin {
 
 
             if (is_sp_date) {
-                Remsg.push(`国庆节快乐！恭喜您获得了${getnum}个Note，当前您所拥有的 Note 数量为：${data.plugin_data.money}，祝您国庆节愉快！`)
+                // Remsg.push(`节快乐！恭喜您获得了${getnum}个Note，当前您所拥有的 Note 数量为：${data.plugin_data.money}，祝您节日愉快！`)
             } else {
                 Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}\n`)
 
@@ -322,7 +322,7 @@ export class phimoney extends plugin {
             is_sp_date = true
         }
         if (is_sp_date) {
-            picdata.tips = `热烈庆祝中华人民共和国成立74周年，国庆节快乐！`
+            picdata.tips = ``
         }
 
 

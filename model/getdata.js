@@ -63,7 +63,7 @@ class getdata {
         this.ori_info = await this.getData('infolist.json', this.infoPath)
         /**SP信息 */
         this.sp_info = await this.getData('spinfo.json', this.infoPath)
-        /**id映射曲名 */
+        /**通过id映射曲名 */
         this.songsid = await this.getData('songsid.yaml', this.infoPath)
         /**默认别名 */
         this.songnick = await this.getData('nicklist.yaml', this.infoPath)

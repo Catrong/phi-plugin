@@ -6,6 +6,7 @@ import { segment } from "oicq";
 import send from '../model/send.js';
 import PhigrosUser from '../lib/PhigrosUser.js';
 import altas from '../model/picmodle.js'
+import scoreHistory from '../model/class/scoreHistory.js';
 
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
@@ -389,7 +390,33 @@ export class phib19 extends plugin {
 
         const dan = await get.getDan(e.user_id)
 
+        /**获取历史成绩 */
+        var pluginData = await get.getpluginData(e.user_id)
+
+        var HistoryData = pluginData?.scoreHistory
+
+        if (HistoryData) {
+            HistoryData = HistoryData[get.SongGetId(song)]
+        }
+
+        const history = []
+
+        if (HistoryData) {
+            for (var i in HistoryData) {
+                for(var j in HistoryData[i]) {
+                    const tem = scoreHistory.extend(get.SongGetId(song), i, HistoryData[i][j])
+                    tem.date_new = date_to_string(tem.date_new)
+                    history.push(tem)
+                }
+            }
+        }
+
+        history.sort((a, b) => b.date_new - a.date_new)
+
+        history.splice(16)
+
         var data = {
+            songName: song,
             PlayerId: save.saveInfo.PlayerId,
             avatar: get.idgetavatar(save.saveInfo.summary.avatar),
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
@@ -399,6 +426,7 @@ export class phib19 extends plugin {
             scoreData: {},
             CLGMOD: dan?.Dan,
             EX: dan?.EX,
+            history: history,
         }
 
 
@@ -577,3 +605,18 @@ function cmpsugg() {
 }
 
 
+
+/**
+ * 转换时间格式
+ * @param {Date|string} date 时间
+ * @returns 2020/10/8 10:08:08
+ */
+function date_to_string(date) {
+    if (!date) return undefined
+    date = new Date(date)
+
+    var month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+    var day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+
+    return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
+}
