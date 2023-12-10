@@ -46,21 +46,22 @@ export class phiDan extends plugin {
         if (!cancanneed) {
             return false
         }
-        var name = e.msg.replace(/[#/].*(dan|dan)(\s*)/g, '')
+        var name = e.msg.replace(/[#/].*(dan|Dan)(\s*)/g, '')
         if (!name) {
             var plugindata = await get.getpluginData(e.user_id)
             try {
                 var dan = plugindata.plugin_data.CLGMOD;
 
                 if (Object.prototype.toString.call(dan) == '[object Array]') {
-                    var resmsg = [`你的认证段位为`]
+                    var resmsg = [segment.at(e.user_id), `你的认证段位为`]
                     for (var i in dan) {
                         resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
                         resmsg.push(segment.image(dan[i].img))
+                        send.send_with_At(e, resmsg)
+                        resmsg = []
                     }
-                    send.send_with_At(e, resmsg)
                 } else {
-                    send.send_with_At(e, `你的认证段位为 ${dan.Dan.replace('/', ' ')}`)
+                    send.send_with_At(e, [segment.at(e.user_id), `你的认证段位为 ${dan.Dan.replace('/', ' ')}`])
                     send.send_with_At(e, segment.image(dan.img))
                 }
 
@@ -73,21 +74,22 @@ export class phiDan extends plugin {
             try {
                 var dan = await Vika.GetUserDanByName(name);
                 if (!dan) {
-                    send.send_with_At(e, [`唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！`, word])
+                    send.send_with_At(e, [segment.at(e.user_id), `唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！`, word])
                     return true
                 }
                 var plugindata = await get.getpluginData(e.user_id)
                 plugindata.plugin_data.CLGMOD = dan
-                var resmsg = [`${name}的认证段位为\n`]
+                var resmsg = [segment.at(e.user_id), `${name}的认证段位为\n`]
                 for (var i in dan) {
                     resmsg.push(`${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
                     resmsg.push(segment.image(dan[i].img))
+                    send.send_with_At(e, resmsg)
+                    resmsg = []
                 }
-                send.send_with_At(e, resmsg)
                 return true
             } catch (err) {
                 console.info(err)
-                send.send_with_At(e, `当前服务忙，请稍后重试QAQ！`)
+                send.send_with_At(e, [segment.at(e.user_id), `当前服务忙，请稍后重试QAQ！`])
                 return true
             }
         }
@@ -110,13 +112,13 @@ export class phiDan extends plugin {
 
         } catch (err) {
             console.info(err)
-            send.send_with_At(e, `当前服务忙，请稍后重试QAQ！`)
+            send.send_with_At(e, [segment.at(e.user_id), `当前服务忙，请稍后重试QAQ！`])
             return true
         }
 
 
         if (!dan) {
-            send.send_with_At(e, [`唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！`, word])
+            send.send_with_At(e, [segment.at(e.user_id), `唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！`, word])
             return true
         }
         var plugindata = await get.getpluginData(e.user_id, true)
@@ -125,18 +127,19 @@ export class phiDan extends plugin {
         }
         plugindata.plugin_data.CLGMOD = dan
         get.putpluginData(e.user_id, plugindata)
-        var resmsg = [`更新成功！你的认证段位为\n`]
+        var resmsg = [segment.at(e.user_id), `更新成功！你的认证段位为\n`]
         for (var i in dan) {
             resmsg.push(`${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
             resmsg.push(segment.image(dan[i].img))
+            send.send_with_At(e, resmsg)
+            resmsg = []
         }
-        send.send_with_At(e, resmsg)
         return true
     }
 
     async sstk(e) {
         if (e.isGroup) {
-            send.send_with_At(e, `请私聊使用嗷`)
+            send.send_with_At(e, [segment.at(e.user_id), `请私聊使用嗷`])
             return false
         }
         var save = await send.getsave_result(e)
@@ -145,7 +148,7 @@ export class phiDan extends plugin {
             return true
         }
 
-        send.send_with_At(e, `sessionToken: ${save.session}\nObjectId: ${save.saveInfo.objectId}`)
+        send.send_with_At(e, `sessionToken: ${save.session}\nObjectId: ${save.saveInfo.objectId}\nQQGuildId: ${e.user_id}`)
 
     }
 }

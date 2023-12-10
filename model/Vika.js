@@ -86,7 +86,7 @@ function makeRespones(response) {
     for (var i in response.data.records) {
         ans.push({
             sessionToken: response.data.records[i].fields.fldB7Wx6wHX57,
-            ObjectId: response.data.records[i].fields.fld9mDj3ktKD7,
+            // ObjectId: response.data.records[i].fields.fld9mDj3ktKD7,
             nickname: response.data.records[i].fields.fldzkniADAUck, //常用名
             Dan: response.data.records[i].fields.fldWVwne5p9xg, // 段位
             EX: (response.data.records[i].fields.fldbILNU5o7Nl == "是", true, false), // 是否EX
@@ -95,7 +95,7 @@ function makeRespones(response) {
             staffer: response.data.records[i].fields.fldoKAoJoBSJO.name, //审核人
         });
     }
-    return ans;
+    return ans.sort((a, b) => Number(a.Dan.match(/[0-9]+th/g)[0].replace('th')) - Number(b.Dan.match(/[0-9]+th/g)[0].replace('th')));
 }
 
 
