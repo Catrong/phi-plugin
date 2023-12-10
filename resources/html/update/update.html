@@ -38,9 +38,9 @@
             <p>Date: {{Date}}</p>
         </div>
     </div>
-    {{if box_line[0]||(task_data&&(task_data[0]||task_data[1]||task_data[2]||task_data[3]||task_data[4]))}}
+    {{if box_line[0]||task_data}}
     <div class="record_box">
-        {{if (task_data&&(task_data[0]||task_data[1]||task_data[2]||task_data[3]||task_data[4]))}}
+        {{if task_data}}
         <div class="title_box">
             <div class="box_title" style="width: 1730px;filter: drop-shadow(0px 2px 2px #fff382);">
                 <div class="box_title-right-down" style="background-color: #fff382;"></div>
