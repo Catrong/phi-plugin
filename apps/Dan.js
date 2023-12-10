@@ -8,7 +8,7 @@ import common from '../../../lib/common/common.js'
 
 const read = 'https://www.bilibili.com/read/cv27354116'
 const sheet = 'https://f.kdocs.cn/g/fxsg4EM2/'
-const word = [`想要了解有关 Phigros民间段位标准 的有关信息可以查看这个专栏！`, `${read}\n`, `提交审核请前往这个链接哦！`, get.getimg('dan_code')]
+const word = [get.getimg('dan_code')]
 
 const cancanneed = Vika.PhigrosDan ? true : false
 
