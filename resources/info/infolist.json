@@ -1758,6 +1758,114 @@
             }
         }
     },
+    "TECHNOPOLIS 2085": {
+        "song": "TECHNOPOLIS 2085",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Extra Story Chapter-CHUNITHM 精选集",
+        "bpm": "",
+        "composer": "PRASTIK DANCEFLOOR",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "5",
+                "difficulty": "5.0",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "10",
+                "difficulty": "10.2",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "14",
+                "difficulty": "14.4",
+                "combo": "",
+                "charter": ""
+            },
+            "AT": {
+                "level": "15",
+                "difficulty": "15.7",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "テリトリーバトル": {
+        "song": "テリトリーバトル",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Extra Story Chapter-CHUNITHM 精选集",
+        "bpm": "",
+        "composer": "ツユ",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "3",
+                "difficulty": "3.0",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "9",
+                "difficulty": "9.1",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "13",
+                "difficulty": "13.8",
+                "combo": "",
+                "charter": ""
+            },
+            "AT": {
+                "level": "15",
+                "difficulty": "15.3",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
+    "祈 -我ら神祖と共に歩む者なり-": {
+        "song": "祈 -我ら神祖と共に歩む者なり-",
+        "illustration": "",
+        "illustration_big": "",
+        "chapter": "Extra Story Chapter-CHUNITHM 精选集",
+        "bpm": "",
+        "composer": "光吉猛修 VS 穴山大輔 VS Kai VS 水野健治 VS 大国奏音",
+        "length": "",
+        "illustrator": "",
+        "chart": {
+            "EZ": {
+                "level": "7",
+                "difficulty": "7.5",
+                "combo": "",
+                "charter": ""
+            },
+            "HD": {
+                "level": "12",
+                "difficulty": "12.9",
+                "combo": "",
+                "charter": ""
+            },
+            "IN": {
+                "level": "15",
+                "difficulty": "15.9",
+                "combo": "",
+                "charter": ""
+            },
+            "AT": {
+                "level": "16",
+                "difficulty": "16.5",
+                "combo": "",
+                "charter": ""
+            }
+        }
+    },
     "S.A.T.E.L.L.I.T.E.": {
         "song": "S.A.T.E.L.L.I.T.E.",
         "illustration": "SATELLITE.かめりあ.png",
