@@ -16,11 +16,11 @@
         <div class="info-box">
             <div class="name-box">
                 <div class="song">
-                    <p id="song-name">{{song}}</p>
+                    <p name="pvis">{{song}}</p>
                     <!-- <p style="font-size: 45px;">{{song}}</p> -->
                 </div>
                 <div class="composer">
-                    <p>{{composer}}</p>
+                    <p name="pvis">{{composer}}</p>
                 </div>
             </div>
             <div class="charts-box">
@@ -33,12 +33,12 @@
                     </div>
                     <div class="line">
                         {{if spinfo}}
-                        <p id="other-info">{{#spinfo.replace(/\n/g,'<br\>')}}</p>
+                        <p  name="pvis">{{#spinfo.replace(/\n/g,'<br\>')}}</p>
                         {{/if}}
                     </div>
                 </div>
                 <div class="chart-info-box">
-                    <div class="chart-info" id="song-info">
+                    <div class="chart-info">
                         <div class="common">
                             <span>Illustrator: {{illustrator}}</span>
                             <span>Bpm:&ensp;{{bpm}}&ensp;&ensp;&ensp;&ensp;Chapter:&ensp;{{chapter}}</span>
@@ -112,21 +112,22 @@
 </div>
 
 <!-- 曲目名称自适应name-box的宽度 -->
+<!-- 曲目名称自适应name-box的宽度 -->
 <script>
     function adjustFontSize() {
+        //获取p元素
+        var a = document.getElementsByName('pvis')
+        for (var i = 0; i < a.length; ++i) {
 
-        /**
-         * @param {string} id id
-         * @param {number} maxFontSize 最大字体大小
-         */
-        function work(id, maxFontSize = 50) {
+            const songName = a[i]
 
-            //获取song-name和composer滴元素
-            var songName = document.getElementById(id)
+            if (!songName) continue
+
 
             /*调整曲目名称字体大小*/
             var parentElement = songName.parentElement
 
+            var maxFontSize = 30 //设置最大字体大小
 
             //如果字体宽度小于父元素宽度，则增大字体大小
             while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
@@ -148,11 +149,6 @@
                 songName.style.fontSize = (fontSize - 1) + "px";
             }
         }
-
-        work('song-name', 50)
-        work('song-info', 30)
-        work('other-info', 30)
-
     }
     window.onload = adjustFontSize
     window.onresize = adjustFontSize
