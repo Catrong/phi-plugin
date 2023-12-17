@@ -143,7 +143,7 @@ export class phib19 extends plugin {
             rkslist[i].suggest = get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
             rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
             rkslist[i].acc = Number(rkslist[i].acc).toFixed(2)
-            rkslist[i].illustration = get.getill(rkslist[i].song)
+            rkslist[i].illustration = get.getill(rkslist[i].song, 'low')
             b19_list.push(rkslist[i])
             illlist.push(get.getill(rkslist[i].song, 'blur'))
         }
@@ -403,7 +403,7 @@ export class phib19 extends plugin {
 
         if (HistoryData) {
             for (var i in HistoryData) {
-                for(var j in HistoryData[i]) {
+                for (var j in HistoryData[i]) {
                     const tem = scoreHistory.extend(get.SongGetId(song), i, HistoryData[i][j])
                     tem.date_new = date_to_string(tem.date_new)
                     history.push(tem)

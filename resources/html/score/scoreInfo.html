@@ -72,6 +72,7 @@
 
         <div class="rank_dif_{{scoreData.AT ? 1 : 0}}">
             {{each scoreData song}}
+            {{if song.difficulty != 'SP'}}
             <div class="a_rank">
                 <div class="a_rank_dif">
                     <p>{{song.difficulty || '-'}}</p>
@@ -80,6 +81,7 @@
                     <p>{{$index}}</p>
                 </div>
             </div>
+            {{/if}}
             {{/each}}
         </div>
         <div class="createdbox">

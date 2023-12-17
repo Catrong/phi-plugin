@@ -713,6 +713,14 @@ class getdata {
                     ans = `${this.resPath}original_ill/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 }
             }
+        } else {
+                if (kind == 'common') {
+                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                } else if (kind == 'blur') {
+                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                } else if (kind == 'low') {
+                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                }
         }
         return ans
     }
