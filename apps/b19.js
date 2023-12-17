@@ -399,7 +399,7 @@ export class phib19 extends plugin {
             HistoryData = HistoryData[get.SongGetId(song)]
         }
 
-        const history = []
+        var history = []
 
         if (HistoryData) {
             for (var i in HistoryData) {
@@ -411,7 +411,7 @@ export class phib19 extends plugin {
             }
         }
 
-        history.sort((a, b) => a.date_new - b.date_new)
+        history.sort((a, b) => new Date(b.date_new) - new Date(a.date_new))
 
         history.splice(16)
 
