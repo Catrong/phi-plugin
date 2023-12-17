@@ -698,9 +698,6 @@ class getdata {
         if (ans && !reg.test(ans)) {
             ans = `${this.orillPath}${ans}`
         }
-        if (!ans) {
-            ans = `${this.imgPath}phigros.png`
-        }
         if (this.ori_info[name]) {
             if (fs.existsSync(`${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
                 ans = `${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
@@ -712,8 +709,7 @@ class getdata {
                 } else if (kind == 'low') {
                     ans = `${this.resPath}original_ill/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 }
-            }
-        } else {
+            } else if(!ans) {
                 if (kind == 'common') {
                     ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 } else if (kind == 'blur') {
@@ -721,6 +717,10 @@ class getdata {
                 } else if (kind == 'low') {
                     ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 }
+            }
+        }
+        if (!ans) {
+            ans = `${this.imgPath}phigros.png`
         }
         return ans
     }
