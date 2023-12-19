@@ -7,9 +7,9 @@ import Vika from '../model/Vika.js'
 
 const illlist = []
 
-const sp_date = 'Oct 01 2023'
-const sp_date_num = [74]
-const sp_date_tips = []
+const sp_date = 'Dec 22 2023'
+const sp_date_num = [22]
+const sp_date_tips = ["今天是冬至嗷，你有没有吃饺子呢（歪头）？"]
 
 for (var i in get.ori_info) {
     if (get.ori_info[i]['illustration_big']) {
@@ -98,7 +98,7 @@ export class phimoney extends plugin {
 
 
             if (is_sp_date) {
-                // Remsg.push(`节快乐！恭喜您获得了${getnum}个Note，当前您所拥有的 Note 数量为：${data.plugin_data.money}，祝您节日愉快！`)
+                Remsg.push(`${sp_date_tips[randint(sp_date_tips.length - 1)]}恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}，祝您节日愉快！`)
             } else {
                 Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}\n`)
 
@@ -125,7 +125,7 @@ export class phimoney extends plugin {
         } else {
             get.delLock(e.user_id)
             if (is_sp_date) {
-                send.send_with_At(e, `国庆节快乐！你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
+                send.send_with_At(e, `${sp_date_tips[randint(sp_date_tips.length - 1)]}你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
             } else {
                 send.send_with_At(e, `你在今天${last_sign.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}的时候已经签过到了哦！\n你现在的Note数量: ${data.plugin_data.money}`)
             }
@@ -322,7 +322,7 @@ export class phimoney extends plugin {
             is_sp_date = true
         }
         if (is_sp_date) {
-            picdata.tips = ``
+            picdata.tips = sp_date_tips[randint(sp_date_tips.length - 1)]
         }
 
 
