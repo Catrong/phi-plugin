@@ -783,7 +783,7 @@ class getdata {
      * @returns 所需acc
      */
     comsuggest(rks, difficulty, count = undefined) {
-        var ans = 45 * Math.sqrt(Number(rks.toFixed(2)) / difficulty) + 55
+        var ans = 45 * Math.sqrt(rks / difficulty) + 55
 
         if (ans >= 100)
             return "无法推分"
