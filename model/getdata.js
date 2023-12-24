@@ -257,11 +257,19 @@ class getdata {
     }
 
     /**
-         * 删除QQ号对应的存档文件
-         * @param {String} id user_id
-         */
+     * 删除QQ号对应的存档文件
+     * @param {String} id user_id
+     */
     async delsave(id) {
         return this.delData(`${id}.json`, this.userPath)
+    }
+
+    /**
+     * 删除QQ号对应的Note和历史文件
+     * @param {String} id user_id
+     */
+    async delpluginData(id) {
+        return this.pluginDataPath(`${id}.json`, this.userPath)
     }
 
     /**

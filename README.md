@@ -84,6 +84,7 @@ pnpm install -P
 | `#phi帮助` | 获取帮助 |
 | `#phi (bind\|绑定)xxx` | 绑定sessionToken |
 | `#phi (unbind\|解绑)` | 删除sessionToken和存档记录 |
+| `#phi clean` | 删除所有记录 |
 | `#phi (update\|更新存档)` | 更新存档 |
 | `#phi (rks\|pgr\|b19)` | 查询rks，会提供得出的b21结果 |
 | `#phi info(1\|2)?` | 查询个人统计信息 |

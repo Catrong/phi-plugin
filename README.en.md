@@ -85,6 +85,7 @@ The following # can be replaced by / , and the command header can be customized
 | `#phi帮助` | Get help |
 | `#phi (bind\|绑定)xxx` | Bind sessionToken |
 | `#phi (unbind\|解绑)` | Delete sessionToken and save records on the bot) |
+| `#phi clean` | Delete all of the persenal date |
 | `#phi (update\|更新存档)` | Update save on the bot |
 | `#phi (rks\|pgr\|b19)` | Querying the rks will provide the resulting b21 results |
 | `#phi info(1\|2)?` | Inquiries for personal information |

@@ -26,6 +26,10 @@ export class phisstk extends plugin {
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(解绑|unbind)$`,
                     fnc: 'unbind'
+                },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(clean)$`,
+                    fnc: 'clean'
                 }
             ]
         })
@@ -289,8 +293,14 @@ export class phisstk extends plugin {
         var msg = e.msg.replace(' ', '')
 
         if (msg == '确认') {
-            if (get.delsave(e.user_id)) {
-
+            var flag = true
+            try {
+                get.delsave(e.user_id)
+            } catch (err) {
+                send.send_with_At(e, err)
+                flag = false
+            }
+            try {
                 var pluginData = await get.getpluginData(e.user_id, true)
 
                 if (pluginData) {
@@ -303,7 +313,11 @@ export class phisstk extends plugin {
                     }
                     await get.putpluginData(e.user_id, pluginData)
                 }
-
+            } catch (err) {
+                send.send_with_At(e, err)
+                flag = false
+            }
+            if (flag) {
                 send.send_with_At(e, '解绑成功')
             } else {
                 send.send_with_At(e, '没有找到你的存档哦！')
@@ -312,6 +326,44 @@ export class phisstk extends plugin {
             send.send_with_At(e, `取消成功！`)
         }
         this.finish('doUnbind', false)
+    }
+
+
+    async clean(e) {
+        this.setContext('doClean', false, 30)
+
+        send.send_with_At(e, '请注意，本操作将会删除Phi-Plugin关于您的所有信息QAQ！（确认/取消）')
+
+        return true
+    }
+
+    async doClean() {
+
+        var e = this.e
+
+        var msg = e.msg.replace(' ', '')
+
+        if (msg == '确认') {
+            var flag = true
+            try {
+                get.delsave(e.user_id)
+            } catch (err) {
+                send.send_with_At(e, err)
+                flag = false
+            }
+            try {
+                get.delpluginData(e.user_id)
+            } catch (err) {
+                send.send_with_At(e, err)
+                flag = false
+            }
+            if (flag) {
+                send.send_with_At(e, '解绑成功')
+            }
+        } else {
+            send.send_with_At(e, `取消成功！`)
+        }
+        this.finish('doClean', false)
     }
 
 }
