@@ -87,8 +87,11 @@ export class phisstk extends plugin {
             }
         }
 
-        await this.build(e, sessionToken)
-
+        try {
+            await this.build(e, sessionToken)
+        } catch (error) {
+            send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
+        }
 
         return true
     }
@@ -103,7 +106,11 @@ export class phisstk extends plugin {
         if (!Config.getDefOrConfig('config', 'isGuild') || !e.isGroup) {
             e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
         }
-        await this.build(e, User.session)
+        try {
+            await this.build(e, sessionToken)
+        } catch (error) {
+            send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
+        }
 
         return true
     }
