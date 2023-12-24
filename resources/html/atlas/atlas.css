@@ -1,9 +1,14 @@
 @import "../common/common.css";
+@import "../common/snow.css";
 
 body {
     height: 1080px;
     width: 2048px;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .background {
@@ -48,6 +53,7 @@ body {
     clip-path: polygon(36px 0px, 100% 0%, 100% 100%, 0% 100%, 36px 0px);
     flex-direction: column;
     z-index: 1;
+    backdrop-filter: blur(3px);
 }
 
 .name-box .song {
@@ -87,6 +93,7 @@ body {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
+    backdrop-filter: blur(3px);
     z-index: 1;
 }
 

@@ -180,6 +180,7 @@ body p {
     width: 49%;
     height: 80%;
     filter: drop-shadow(2px 4px 10px #00000055);
+    backdrop-filter: blur(3px);
 }
 
 .info-AT {
@@ -200,7 +201,6 @@ body p {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: ;
 }
 
 .songname p {

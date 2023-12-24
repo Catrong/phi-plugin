@@ -225,9 +225,23 @@
             <p>{{Version.ver}}</p>
         </div>
     </div>
+    <div class="snow-box"> </div>
 
     <!-- 曲目名称自适应name-box的宽度 -->
     <script>
+        function addSnow() {
+            var snow = document.createElement("div")
+            snow.innerHTML = `<img src="{{_res_path}}html/otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
+            snow.className = "snow"
+            snow.style.left = `${Math.random() * 100}%`
+            snow.style.bottom = `${Math.random() * 100}%`
+            snow.style.width = `${Math.random() * 4}%`
+            snow.style.rotate = `${Math.random() * 360}deg`
+            snow.style.transform = `rotateX(${Math.random() * 0.5 + 0.5}) rotateY(${Math.random() * 0.5 + 0.5}) rotateZ(${Math.random() * 0.5 + 0.5})`
+            snow.style.filter = `blur(${Math.random() * 2}px)`
+            const tar = document.getElementsByClassName("snow-box")[0]
+            tar.appendChild(snow)
+        }
         function adjustFontSize() {
             //获取p元素
             var a = document.getElementsByName('pvis')
@@ -262,6 +276,10 @@
                     var fontSize = parseFloat(style);
                     songName.style.fontSize = (fontSize - 1) + "px";
                 }
+            }
+            var sum = Math.floor(Math.random() * 100) + 50
+            while (sum--) {
+                addSnow()
             }
         }
         window.onload = adjustFontSize
