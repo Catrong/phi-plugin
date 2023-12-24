@@ -18,6 +18,7 @@ export default class SongsInfo {
      */
     constructor(data) {
         // console.info(data)
+        this.id = data.id //id
         this.song = data.song //曲目
         this.illustration = data.illustration //小型曲绘
         this.illustration_big = get.getill(data.song) //原版曲绘

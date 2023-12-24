@@ -59,12 +59,35 @@ class getdata {
     }
 
     async init() {
-        /**原版信息 */
-        this.ori_info = await this.getData('infolist.json', this.infoPath)
+
+        var nick = await this.getData('nickconfig.yaml', this.configPath, 'TXT')
+        if (nick) {
+            const waitToReplace = {
+                "Winter↑cube↓": "Winter ↑cube↓",
+                "Cipher: /2&//<|0": "Cipher : /2&//<|0",
+                "NYA!!!(Phigros ver.)": "NYA!!! (Phigros ver.)",
+                "JunXion Between Life And Death(VIP Mix)": "JunXion Between Life And Death(VIP Mix)",
+                "Dash from SOUL NOTES": "Dash",
+                "Drop It from SOUL NOTES": "Drop It",
+                "Diamond Eyes from SOUL NOTES": "Diamond Eyes",
+            }
+            var flag = false
+            for (var i in waitToReplace) {
+                if (nick.includes(i)) {
+                    flag = true
+                    nick = nick.replace(i, waitToReplace[i])
+                }
+            }
+            if (flag) {
+                await get.setData('nickconfig.yaml', nick, this.configPath, 'TXT')
+                console.info('[phi-plugin]自动修正别名')
+            }
+        }
+
+        /**附加信息 */
+        const Jsoninfo = await this.getData('infolist.json', this.infoPath)
         /**SP信息 */
         this.sp_info = await this.getData('spinfo.json', this.infoPath)
-        /**通过id映射曲名 */
-        this.songsid = await this.getData('songsid.yaml', this.infoPath)
         /**默认别名 */
         this.songnick = await this.getData('nicklist.yaml', this.infoPath)
         /**头像id */
@@ -72,19 +95,57 @@ class getdata {
         /**Tips */
         this.tips = await this.getData('tips.yaml', this.infoPath)
 
-        /**原曲名称映射id */
+        /**csv文件 */
+        const CsvInfo = await this.getData('info.csv', this.infoPath)
+        const Csvdif = await this.getData('difficulty.csv', this.infoPath)
+
+        /**原版信息 */
+        this.ori_info = {}
+        /**通过id获取曲名 */
+        this.songsid = {}
+        /**原曲名称获取id */
         this.idssong = {}
 
-        for (let id in this.songsid) {
-            this.idssong[this.songsid[id]] = id
+        for (var i in CsvInfo) {
+            switch (CsvInfo[i].id) {
+                case 'AnotherMe.DAAN': {
+                    CsvInfo[i].song = 'Another Me (KALPA)';
+                    break;
+                }
+                case 'AnotherMe.NeutralMoon': {
+                    CsvInfo[i].song = 'Another Me (Rising Sun Traxx)';
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+            this.songsid[CsvInfo[i].id + '.0'] = CsvInfo[i].song
+            this.idssong[CsvInfo[i].song] = CsvInfo[i].id + '.0'
+
+            this.ori_info[CsvInfo[i].song] = Jsoninfo[CsvInfo[i].id]
+            if (!this.ori_info[CsvInfo[i].song]) {
+                this.ori_info[CsvInfo[i].song] = { chart: {} }
+                console.info(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
+            }
+            this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
+            this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
+            this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
+            for (var level in this.Level) {
+                if (CsvInfo[i][level]) {
+                    this.ori_info[CsvInfo[i].song].chart[level] = { charter: CsvInfo[i][level], difficulty: Csvdif[i][level] }
+                }
+            }
         }
+
 
         /**含有曲绘的曲目列表，原曲名称 */
         this.illlist = []
 
         var info = this.info(undefined, false)
         for (var i in info) {
-            if (info[i]['illustration_big']) {
+            const id = info[i].id
+            if (info[i]['illustration_big'] || (id && (fs.existsSync(`${this.resPath}original_ill/${id.replace(/.0$/, '.png')}`) || fs.existsSync(`${this.resPath}original_ill/ill/${id.replace(/.0$/, '.png')}`)))) {
                 this.illlist.push(info[i].song)
             }
         }
@@ -129,9 +190,12 @@ class getdata {
 
     /**获取 chos 文件 
      * @param {string}  chos 文件名称 含后缀 yaml json
-     * @param {string}  kind 路径
+     * @param {string}  path 路径
+     * @param {'JSON'|'YAML'|'CSV'|'TXT'} [style=undefined] 
     */
-    async getData(chos, path) {
+    async getData(chos, path, style = undefined) {
+        return await Film.FileReader(`${path}${chos}`, style)
+
         if (chos.includes('.yaml')) {
             return Film.YamlReader(`${path}${chos}`, path)
         } else {
@@ -141,10 +205,12 @@ class getdata {
 
     /**修改 chos 文件为 data 
      * @param {string} chos 文件名称 含后缀 yaml json
-     * @param {string} data 覆写内容
+     * @param {any} data 覆写内容
      * @param {string} path 路径
+     * @param {'JSON'|'YAML'|'TXT'} [style=undefined] 文件类型
     */
-    async setData(chos, data, path) {
+    async setData(chos, data, path, style = undefined) {
+        return await Film.SetFile(`${path}${chos}`, data, style)
         if (chos.includes('.yaml')) {
             return Film.SetYaml(`${path}${chos}`, data, path)
         } else {
@@ -709,7 +775,7 @@ class getdata {
                 } else if (kind == 'low') {
                     ans = `${this.resPath}original_ill/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 }
-            } else if(!ans) {
+            } else if (!ans) {
                 if (kind == 'common') {
                     ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 } else if (kind == 'blur') {

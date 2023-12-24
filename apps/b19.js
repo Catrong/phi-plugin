@@ -245,7 +245,7 @@ export class phib19 extends plugin {
             var tmsg = ''
             tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             if (phi.song) {
-                tmsg += `\n#φ:${phi.song} <${phi.rank}> Lv ${phi.difficulty} ${phi.score} ${phi.Rating} ${phi.acc.toFixed(4)}% 等效${phi.rks.toFixed(4)} 推分: ${phi.suggest}`
+                tmsg += `\n#φ:${phi.song}<${phi.rank}>${phi.difficulty}`
             } else {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
@@ -253,10 +253,10 @@ export class phib19 extends plugin {
             var tot = 1
             for (var i = 0; i < num && i < rkslist.length; ++i) {
                 if (tot <= 10) {
-                    tmsg += `\n#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}% 等效${rkslist[i].rks.toFixed(4)} 推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
+                    tmsg += `\n#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                 } else {
                     Remsg.push(tmsg)
-                    tmsg = `#Best${i + 1}: ${rkslist[i].song} <${rkslist[i].rank}> ${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}% 等效${rkslist[i].rks.toFixed(4)} 推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
+                    tmsg = `#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                     tot = 0
                 }
                 ++tot
@@ -265,9 +265,10 @@ export class phib19 extends plugin {
             Remsg.push(tmsg)
 
             if (e.isGroup) {
-                /**频道模式群聊自动转发私聊 */
-                send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                send.pick_send(e, await common.makeForwardMsg(e, Remsg))
+                /**群聊只发送10条 */
+                send.send_with_At(e, Remsg[0])
+                // send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
+                // send.pick_send(e, await common.makeForwardMsg(e, Remsg))
             } else {
                 e.reply(await common.makeForwardMsg(e, Remsg))
             }
@@ -535,13 +536,13 @@ export class phib19 extends plugin {
 
             /**防止消息过长发送失败每条消息10行 */
             var tot = 1
-            tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
+            tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} CLG MOD: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             for (var i = 0; i < suggestlist.length; ++i) {
                 if (tot <= 10) {
-                    tmsg += `\n#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> ${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% 推分: ${suggestlist[i].suggest}`
+                    tmsg += `\n#${i + 1}: ${suggestlist[i].song}<${suggestlist[i].rank}>${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% -> ${suggestlist[i].suggest}`
                 } else {
                     Remsg.push(tmsg)
-                    tmsg = `#${i + 1}: ${suggestlist[i].song} <${suggestlist[i].rank}> ${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% 推分: ${suggestlist[i].suggest}`
+                    tmsg = `#${i + 1}: ${suggestlist[i].song}<${suggestlist[i].rank}>${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% -> ${suggestlist[i].suggest}`
                     tot = 0
                 }
                 ++tot
@@ -549,9 +550,11 @@ export class phib19 extends plugin {
             Remsg.push(tmsg)
 
             if (e.isGroup) {
+                /**群聊只发送10条 */
+                send.send_with_At(e, Remsg[0])
                 /**频道模式群聊自动转发私聊 */
-                send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                send.pick_send(e, await common.makeForwardMsg(e, Remsg))
+                // send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
+                // send.pick_send(e, await common.makeForwardMsg(e, Remsg))
             } else {
                 await e.reply(await common.makeForwardMsg(e, Remsg))
             }

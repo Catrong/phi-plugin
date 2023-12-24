@@ -72,8 +72,8 @@ body {
 }
 
 .background img {
-    height: inherit;
-    width: auto;
+    min-width: 100%;
+    min-width: 100%;
     position: relative;
     overflow: hidden;
     transform: scale(1.2);
@@ -120,7 +120,7 @@ body {
 
 .tips {
     position: absolute;
-    bottom: 1%;
+    bottom: 10px;
     left: 1%;
     writing-mode: horizontal-tb;
 }

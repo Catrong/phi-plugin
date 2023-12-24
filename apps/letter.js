@@ -11,7 +11,6 @@ import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
 
-await get.init()
 var songsname = []
 var songweights = {} //存储每首歌曲被抽取的权重
 for (let i in get.info()) {

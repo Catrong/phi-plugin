@@ -2,6 +2,9 @@
 import fs from 'node:fs'
 import YAML from 'yaml'
 import { _path } from "./path.js";
+import csv from 'csvtojson'
+
+
 
 
 class Film {
@@ -35,6 +38,105 @@ class Film {
 
     }
 
+    /**
+     * 读取文件
+     * @param {string} path 完整路径
+     * @param {'JSON'|'YAML'|'CSV'|'TXT'} [style=undefined] 
+     */
+    async FileReader(path, style = undefined) {
+        try {
+            if (!fs.existsSync(`${path}`)) { return false }
+            if (!style) {
+                switch (path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase()) {
+                    case 'JSON': {
+                        style = 'JSON'
+                        break
+                    }
+                    case 'YAML': {
+                        style = 'YAML'
+                        break
+                    }
+                    case 'CSV': {
+                        style = 'CSV'
+                        break
+                    }
+                    default: {
+                        console.info(path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase())
+                        style = 'TXT'
+                    }
+                }
+
+            }
+            switch (style) {
+                case 'JSON': {
+                    return JSON.parse(fs.readFileSync(`${path}`, 'utf8'))
+                }
+                case 'YAML': {
+                    return YAML.parse(fs.readFileSync(`${path}`, 'utf8'))
+                }
+                case 'CSV': {
+                    return (await csv().fromString(fs.readFileSync(`${path}`, 'utf8')))
+                }
+                default: {
+                    return fs.readFileSync(`${path}`, 'utf8')
+                }
+            }
+        } catch (error) {
+            logger.warn(`[phi插件][${path}] 读取失败\n${error}`)
+            return false
+        }
+    }
+
+    /**
+     * 存储文件
+     * @param {string} path 完整路径
+     * @param {any} data 目标数据
+     * @param {'JSON'|'YAML'|'TXT'} [style=undefined] 
+     */
+    async SetFile(path, data, style = undefined) {
+        try {
+            const fatherPath = path.match(/^(.*)\//g)[0]
+            if (!fs.existsSync(path)) {
+                // 递归创建目录
+                fs.mkdirSync(path, { path: true });
+            }
+            if (!style) {
+                switch (path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase()) {
+                    case 'JSON': {
+                        style = 'JSON'
+                        break
+                    }
+                    case 'YAML': {
+                        style = 'YAML'
+                        break
+                    }
+                    default: {
+                        console.info(path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase())
+                        style = 'TXT'
+                    }
+                }
+
+            }
+            switch (style) {
+                case 'JSON': {
+                    fs.writeFileSync(`${path}`, JSON.stringify(data), 'utf8')
+                    break
+                }
+                case 'YAML': {
+                    fs.writeFileSync(`${path}`, YAML.stringify(data), 'utf8')
+                    break
+                }
+                default: {
+                    fs.writeFileSync(`${path}`, data, 'utf8')
+                    break
+                }
+            }
+        } catch (error) {
+            logger.warn(`[phi插件]写入文件 ${path} 时遇到错误\n${error}`)
+            return false
+        }
+    }
+
     /**保存Yaml文件
      * @param path 真实路径，包含文件后缀
      * @param data 覆写内容
@@ -52,7 +154,7 @@ class Film {
             return false
         }
     }
-    
+
     /**保存Json文件
      * @param path 真实路径，包含文件后缀
      * @param data 覆写内容
@@ -64,7 +166,7 @@ class Film {
                 // 递归创建目录
                 fs.mkdirSync(style, { recursive: true });
             }
-             fs.writeFileSync(`${path}`, JSON.stringify(data), 'utf8')
+            fs.writeFileSync(`${path}`, JSON.stringify(data), 'utf8')
         } catch (error) {
             logger.warn(`[phi插件]写入文件 ${path} 时遇到错误\n${error}`)
             return false
