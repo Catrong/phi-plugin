@@ -95,10 +95,10 @@ class Film {
      */
     async SetFile(path, data, style = undefined) {
         try {
-            const fatherPath = path.match(/^(.*)\//g)[0]
-            if (!fs.existsSync(path)) {
+            var fatherPath = path.match(/^(.*)\//g)[0]
+            if (!fs.existsSync(fatherPath)) {
                 // 递归创建目录
-                fs.mkdirSync(path, { path: true });
+                fs.mkdirSync(fatherPath, { fatherPath: true });
             }
             if (!style) {
                 switch (path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase()) {

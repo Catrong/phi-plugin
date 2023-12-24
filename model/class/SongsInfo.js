@@ -17,7 +17,10 @@ export default class SongsInfo {
      * }} data 原始数据
      */
     constructor(data) {
-        // console.info(data)
+        if(!data) {
+            console.error(data)
+            return {}
+        }
         this.id = data.id //id
         this.song = data.song //曲目
         this.illustration = data.illustration //小型曲绘
