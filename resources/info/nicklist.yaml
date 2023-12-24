@@ -265,6 +265,8 @@ BTTB:
   - Dead Soul
 迷失灵魂:
   - Dead Soul
+地板烫脚:
+  - Dead Soul
 无限天堂:
   - Infinity Heaven
 穿魂:
@@ -405,6 +407,8 @@ FM:
   - Future Mind
 冷光:
   - Luminescent
+  - Luminescence
+烟花:
   - Luminescence
 守船石:
   - Protoflicker
@@ -860,6 +864,10 @@ bb:
 卡诶赛卡诶赛:
   - テリトリーバトル
 卡诶赛:
+  - テリトリーバトル
+territory battle:
+  - テリトリーバトル
+领土战争:
   - テリトリーバトル
 "2085":
   - TECHNOPOLIS 2085

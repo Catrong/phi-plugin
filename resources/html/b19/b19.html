@@ -237,7 +237,7 @@
             snow.style.bottom = `${Math.random() * 100}%`
             snow.style.width = `${Math.random() * 4}%`
             snow.style.rotate = `${Math.random() * 360}deg`
-            snow.style.transform = `rotateX(${Math.random() * 0.5 + 0.5}) rotateY(${Math.random() * 0.5 + 0.5}) rotateZ(${Math.random() * 0.5 + 0.5})`
+            snow.style.transform = `rotate3d(${Math.random()}, ${Math.random()}, ${Math.random()}, ${Math.random() * 360}deg)`
             snow.style.filter = `blur(${Math.random() * 2}px)`
             const tar = document.getElementsByClassName("snow-box")[0]
             tar.appendChild(snow)
