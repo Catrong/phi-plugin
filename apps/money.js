@@ -7,9 +7,9 @@ import Vika from '../model/Vika.js'
 
 const illlist = []
 
-const sp_date = 'Dec 22 2023'
-const sp_date_num = [22]
-const sp_date_tips = ["今天是冬至嗷，你有没有吃饺子呢（歪头）？"]
+const sp_date = 'Dec 25 2023'
+const sp_date_num = [25]
+const sp_date_tips = ["今天是圣诞节呐！抽出一点时间让自己好好休息一下吧~"]
 
 for (var i in get.ori_info) {
     if (get.ori_info[i]['illustration_big']) {
@@ -360,18 +360,24 @@ export class phimoney extends plugin {
             send.send_with_At(e, `这个QQ号……好像没有见过呢……`)
             return true
         }
+        
+        var sender_data = await get.getmoneydata(e.user_id, true)
 
         if (target == e.user_id) {
-            send.send_with_At(e, `转账成……唔？这个目标……在拿我寻开心嘛！`)
-            common.sleep(1000)
-            send.send_with_At(e, `转账失败！扣除 20 Notes！`)
-            sender_data.plugin_data.money -= 20
+            await send.send_with_At(e, `转账成……唔？这个目标……在拿我寻开心嘛！`)
+            await common.sleep(1000)
+            await send.send_with_At(e, `转账失败！扣除 20 Notes！`)
+            if (sender_data.plugin_data.money < 20) {
+                await send.send_with_At(e, `唔，你怎么连20 Note都没有哇`)
+                await send.send_with_At(e, `www，算了，我今天心情好，不和你计较了，哼！`)
+            } else {
+                sender_data.plugin_data.money -= 20
+            }
             await get.putpluginData(e.user_id, sender_data)
             return true
         }
 
 
-        var sender_data = await get.getmoneydata(e.user_id, true)
         if (sender_data.plugin_data.money < num) {
             send.send_with_At(e, `你当前的Note数量不够哦！\n当前Note: ${sender_data.plugin_data.money}`)
             get.delLock(e.user_id)
@@ -388,7 +394,7 @@ export class phimoney extends plugin {
         target_data.plugin_data.money += Math.ceil(num * 0.8)
         await get.putpluginData(target, target_data)
         var target_card = await Bot.pickMember(e.group_id, target)
-        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.plugin_data.money}\n${target_card.nickname ? target_card.nickname : target_card.card}的Note: ${target_old} + ${Math.ceil(num * 0.8)} = ${target_data.plugin_data.money}`)
+        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.plugin_data.money}\n${target_card.nickname || target_card.card}的Note: ${target_old} + ${Math.ceil(num * 0.8)} = ${target_data.plugin_data.money}`)
     }
 }
 

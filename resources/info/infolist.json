@@ -1,4 +1,22 @@
 {
+    "Introduction": {
+        "song": "Introduction",
+        "illustration": "https://img.moegirl.org.cn/common/thumb/1/13/Introduction.png/300px-Introduction.png",
+        "illustration_big": "https://img.moegirl.org.cn/common/1/13/Introduction.png",
+        "chapter": "--",
+        "bpm": "138",
+        "composer": "姜米條&ElousΛ.-FZ",
+        "length": "2:30",
+        "illustrator": "L-sp4",
+        "chart": {
+            "EZ": {
+                "level": "1",
+                "difficulty": "-",
+                "combo": "93",
+                "charter": "Barbarianerman"
+            }
+        }
+    },
     "Glaciaxion.SunsetRay": {
         "song": "Glaciaxion",
         "illustration": "https://img.moegirl.org.cn/common/thumb/0/0b/Glaciaxion_Phigros.png/300px-Glaciaxion_Phigros.png",

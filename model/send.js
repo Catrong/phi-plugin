@@ -12,7 +12,7 @@ class send {
      * @param {boolean} [quote=false] 是否引用回复
      * @param {{}} [data={}] recallMsg等
      */
-    send_with_At(e, msg, quote = false, data = {}) {
+    async send_with_At(e, msg, quote = false, data = {}) {
         if (e.isGroup) {
             if (typeof msg == 'string') {
                 e.reply([segment.at(e.user_id), ` ${msg}`], quote, data)
