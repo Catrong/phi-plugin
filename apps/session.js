@@ -107,7 +107,7 @@ export class phisstk extends plugin {
             e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
         }
         try {
-            await this.build(e, sessionToken)
+            await this.build(e, User.session)
         } catch (error) {
             send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
         }
