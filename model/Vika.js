@@ -89,7 +89,7 @@ function makeRespones(response) {
             // ObjectId: response.data.records[i].fields.fld9mDj3ktKD7,
             nickname: response.data.records[i].fields.fldzkniADAUck, //常用名
             Dan: response.data.records[i].fields.fldWVwne5p9xg, // 段位
-            EX: (response.data.records[i].fields.fldbILNU5o7Nl == "是", true, false), // 是否EX
+            EX: (response.data.records[i].fields.fldbILNU5o7Nl == "是" ? true : false), // 是否EX
             img: response.data.records[i].fields.fldqbC6IK8m3o[0].url, // 截图
             score: (response.data.records[i].fields.fldTszelbRQIu ? response.data.records[0].fields.fldTszelbRQIu.split('\n') : undefined), // 详细成绩
             staffer: response.data.records[i].fields.fldoKAoJoBSJO.name, //审核人
