@@ -318,7 +318,7 @@ function area_increase(size, data, fnc) {
             data.x = Math.min(data.x, 2048 - data.width)
         }
     } else {
-        console.error('err')
+        logger.error('err')
         return true
     }
     return false
@@ -333,7 +333,7 @@ function blur_down(size, data, fnc) {
         data.blur = Math.max(0, data.blur - size)
         if (!data.blur) fnc.splice(fnc.indexOf(1), 1)
     } else {
-        console.error('err')
+        logger.error('err')
         return true
     }
     return false
@@ -383,7 +383,7 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
             }
         }
     } else {
-        console.error('Error: remaining info is empty')
+        logger.error('Error: remaining info is empty')
         return true
     }
     return false

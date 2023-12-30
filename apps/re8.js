@@ -21,7 +21,7 @@ switch (process.platform) {
         break;
     }
     default: {
-        console.error(process.platform)
+        logger.error(process.platform)
         logger.info('[Phi-Plugin][re8] 导入 unix? 模块');
         PhigrosRe8 = await require(get.pluginPath + 'lib/PhigrosLibrary_linux.node');
         break;

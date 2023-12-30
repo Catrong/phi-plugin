@@ -85,7 +85,6 @@ export class phiuser extends plugin {
         if (bksong) {
             var tem = get.fuzzysongsnick(bksong)[0]
             if (tem) {
-                // console.info(tem)
                 bksong = get.getill(tem)
             } else {
                 bksong = undefined
@@ -167,7 +166,7 @@ export class phiuser extends plugin {
 
         if (!userbackground) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
-            console.error(`未找到${save.gameuser.background}的曲绘！`)
+            logger.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
         const dan = await get.getDan(e.user_id)
@@ -395,7 +394,6 @@ export class phiuser extends plugin {
             const record = Record[id]
             var vis = false
             for (var lv in [0, 1, 2, 3]) {
-                // console.info(info)
                 if (!info.chart[Level[lv]]) continue
                 var difficulty = info.chart[Level[lv]].difficulty
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
@@ -433,7 +431,7 @@ export class phiuser extends plugin {
 
         if (!illustration) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
-            console.error(`未找到${save.gameuser.background}的曲绘！`)
+            logger.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
         var data = {
@@ -597,24 +595,8 @@ function getbackground(name) {
                 save_background = 'Re_Nascence (Psystyle Ver.)'
                 break
             }
-            case 'Winter ↑cube↓': {
-                save_background = 'Winter↑cube↓'
-                break
-            }
-            case 'JunXion Between Life And Death(VIP Mix)': {
-                save_background = 'JunXion Between Life And Death(VIP Mix)'
-                break
-            }
-            case 'Diamond Eyes': {
-                save_background = 'Diamond Eyes from SOUL NOTES'
-                break
-            }
             case 'Energy Synergy Matrix': {
                 save_background = 'ENERGY SYNERGY MATRIX'
-                break
-            }
-            case 'NYA!!!': {
-                save_background = 'NYA!!!(Phigros ver.)'
                 break
             }
             default: {

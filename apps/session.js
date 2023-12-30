@@ -90,6 +90,7 @@ export class phisstk extends plugin {
         try {
             await this.build(e, sessionToken)
         } catch (error) {
+            logger.error(error)
             send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
         }
 
@@ -109,6 +110,7 @@ export class phisstk extends plugin {
         try {
             await this.build(e, User.session)
         } catch (error) {
+            logger.error(error)
             send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
         }
 

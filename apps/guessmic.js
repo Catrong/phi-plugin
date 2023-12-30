@@ -55,7 +55,7 @@ export class phiGuessMic extends plugin {
         for (let i = 1; i <= gamelist[group_id].tot; i++) {
             gamelist[group_id].unsend.push(i)
         }
-        console.info(gamelist)
+        logger.info(gamelist)
 
         e.reply(`游戏开始！。发送 /gu 进行猜测，发送 /mic提示 获取更多提示，发送/micans 查看答案哦！`)
 
@@ -107,8 +107,8 @@ export class phiGuessMic extends plugin {
         const result = get.fuzzysongsnick(ans, 0.95)
         const real = get.idgetsong(gamelist[group_id].songId + '.0')
 
-        console.info(result)
-        console.info(real)
+        logger.info(result)
+        logger.info(real)
 
         for (var i = 0; i < result.length; ++i) {
             if (result[i] == real) {

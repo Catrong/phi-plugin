@@ -80,7 +80,7 @@ class getdata {
             }
             if (flag) {
                 await get.setData('nickconfig.yaml', nick, this.configPath, 'TXT')
-                console.info('[phi-plugin]自动修正别名')
+                logger.info('[phi-plugin]自动修正别名')
             }
         }
 
@@ -125,18 +125,21 @@ class getdata {
 
             this.ori_info[CsvInfo[i].song] = Jsoninfo[CsvInfo[i].id]
             if (!this.ori_info[CsvInfo[i].song]) {
-                this.ori_info[CsvInfo[i].song] = { chart: {} }
-                console.info(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
+                /**illustration_big = 'null'为特殊标记，getill时会返回默认图片 */
+                this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, illustration_big: 'null', chapter: '', bpm: '', length: '', chart: {} }
+                logger.info(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
             }
             this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
             this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
             this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
-            for (var level in this.Level) {
+            for (var j in this.Level) {
+                const level = this.Level[j]
                 if (CsvInfo[i][level]) {
                     this.ori_info[CsvInfo[i].song].chart[level] = { charter: CsvInfo[i][level], difficulty: Csvdif[i][level] }
                 }
             }
         }
+
 
 
         /**含有曲绘的曲目列表，原曲名称 */
@@ -490,8 +493,6 @@ class getdata {
     */
     fuzzysongsnick(mic, Distance = 0.85) {
 
-        const nickconfig = Config.getDefOrConfig('nickconfig', mic)
-
         const fuzzyMatch = (str1, str2) => {
             if (str1 == str2) {
                 return 1
@@ -514,6 +515,8 @@ class getdata {
 
         const usernick = Config.getDefOrConfig('nickconfig')
         const allinfo = this.info()
+
+
         for (var std in usernick) {
             var dis = fuzzyMatch(mic, std)
             if (dis >= Distance) {
@@ -602,7 +605,10 @@ class getdata {
      */
     async buildingRecord(e, User) {
         try {
-            await User.buildRecord()
+            const err = await User.buildRecord()
+            if (err.length) {
+                send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
+            }
         } catch (err) {
             send.send_with_At(e, "绑定失败！QAQ\n" + err)
             return true
@@ -764,12 +770,9 @@ class getdata {
     getill(name, kind = 'common') {
         const totinfo = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
         var ans
-        if (!totinfo[name]) {
-            throw new Error(`未找到[${name}]的曲目资料！`)
-        }
-        ans = totinfo[name].illustration_big
+        ans = totinfo[name]?.illustration_big
         var reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
-        if (ans && !reg.test(ans)) {
+        if (ans && !reg.test(ans) && ans != 'null') {
             ans = `${this.orillPath}${ans}`
         }
         if (this.ori_info[name]) {
@@ -793,7 +796,7 @@ class getdata {
                 }
             }
         }
-        if (!ans) {
+        if (!ans || ans == 'null') {
             ans = `${this.imgPath}phigros.png`
         }
         return ans

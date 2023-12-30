@@ -17,7 +17,7 @@ export default class LevelRecordInfo {
         this.song = info.song //曲名
         this.illustration = get.getill(this.song) //曲绘链接
 
-        if (rank <= 3) {
+        if (info.chart && info.chart[this.rank]?.difficulty) {
             this.difficulty = info.chart[this.rank]['difficulty'] //难度
             this.rks = get.getrks(this.acc, this.difficulty) //等效rks
             this.Rating = Rating(this.score, this.fc) //V S A 

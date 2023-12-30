@@ -725,7 +725,6 @@ function gameover(group_id) {
 
     const output = ['出你字母已结束，答案如下：']
 
-    console.info(winnerlist)
 
     for (const m of Object.keys(t)) {
         const correct_name = t[m]

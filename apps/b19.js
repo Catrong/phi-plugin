@@ -50,7 +50,7 @@ export class phib19 extends plugin {
     async b19(e) {
 
         var nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
-        console.log(nnum)
+        
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
         if (!nnum) {
             nnum = 21
