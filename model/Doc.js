@@ -208,16 +208,18 @@ class Film {
                 tempFile++;
                 this.rmEmptyDir(`${path}/${file}`, 1);
             });
-            if (tempFile === files.length && level !== 0) {
+            if (tempFile === files.length && level !== 0 && fs.lstatSync(path).isDirectory()) {
                 try {
                     fs.rmdirSync(path);
                 } catch { }
             }
         }
         else {
-            try {
-                level !== 0 && fs.rmdirSync(path);
-            } catch { }
+            if (fs.lstatSync(path).isDirectory()) {
+                try {
+                    fs.rmdirSync(path);
+                } catch { }
+            }
         }
     }
 }
