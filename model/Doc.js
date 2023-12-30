@@ -206,7 +206,7 @@ class Film {
             let tempFile = 0;
             files.forEach(file => {
                 tempFile++;
-                rmEmptyDir(`${path}/${file}`, 1);
+                this.rmEmptyDir(`${path}/${file}`, 1);
             });
             if (tempFile === files.length && level !== 0) {
                 fs.rmdirSync(path);
