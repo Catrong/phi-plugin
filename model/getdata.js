@@ -209,11 +209,11 @@ class getdata {
     /**修改 chos 文件为 data 
      * @param {string} chos 文件名称 含后缀 yaml json
      * @param {any} data 覆写内容
-     * @param {string} path 路径
+     * @param {string} path 父路径
      * @param {'JSON'|'YAML'|'TXT'} [style=undefined] 文件类型
     */
     async setData(chos, data, path, style = undefined) {
-        return await Film.SetFile(`${path}${chos}`, data, style)
+        return await Film.SetFile(chos, path, data, style)
         if (chos.includes('.yaml')) {
             return Film.SetYaml(`${path}${chos}`, data, path)
         } else {

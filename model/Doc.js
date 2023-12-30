@@ -89,13 +89,14 @@ class Film {
 
     /**
      * 存储文件
-     * @param {string} path 完整路径
+     * @param {string} fileName 文件名，含后缀
+     * @param {string} fatherPath 父路径
      * @param {any} data 目标数据
      * @param {'JSON'|'YAML'|'TXT'} [style=undefined] 
      */
-    async SetFile(path, data, style = undefined) {
+    async SetFile(fileName, fatherPath, data, style = undefined) {
         try {
-            var fatherPath = path.match(/^(.*)\//g)[0]
+            var path = `${fatherPath}/${fileName}`
             if (!fs.existsSync(fatherPath)) {
                 // 递归创建目录
                 fs.mkdirSync(fatherPath, { fatherPath: true });
