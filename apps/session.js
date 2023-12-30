@@ -245,11 +245,13 @@ export class phisstk extends plugin {
         /**添加曲绘 */
         if (task_data) {
             for (var i in task_data) {
-                task_data[i].illustration = get.getill(task_data[i].song)
-                if (task_data[i].request.type == 'acc') {
-                    task_data[i].request.value = task_data[i].request.value.toFixed(2) + '%'
-                    if (task_data[i].request.value.length < 6) {
-                        task_data[i].request.value = '0' + task_data[i].request.value
+                if (task_data[i]) {
+                    task_data[i].illustration = get.getill(task_data[i].song)
+                    if (task_data[i].request.type == 'acc') {
+                        task_data[i].request.value = task_data[i].request.value.toFixed(2) + '%'
+                        if (task_data[i].request.value.length < 6) {
+                            task_data[i].request.value = '0' + task_data[i].request.value
+                        }
                     }
                 }
             }

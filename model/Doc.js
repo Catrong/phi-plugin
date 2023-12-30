@@ -99,7 +99,7 @@ class Film {
      */
     async SetFile(fileName, fatherPath, data, style = undefined) {
         try {
-            var path = `${fatherPath}/${fileName}`
+            var path = `${fatherPath}${fileName}`
             if (!fs.existsSync(fatherPath)) {
                 // 递归创建目录
                 fs.mkdirSync(fatherPath, { fatherPath: true });
