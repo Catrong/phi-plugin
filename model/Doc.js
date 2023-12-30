@@ -194,6 +194,28 @@ class Film {
             return false
         }
     }
+
+
+    /**
+     * 删除指定路径下的所有空文件夹
+     * @param {*} path 
+     */
+    async rmEmptyDir(path, level = 0) {
+        const files = fs.readdirSync(path);
+        if (files.length > 0) {
+            let tempFile = 0;
+            files.forEach(file => {
+                tempFile++;
+                rmEmptyDir(`${path}/${file}`, 1);
+            });
+            if (tempFile === files.length && level !== 0) {
+                fs.rmdirSync(path);
+            }
+        }
+        else {
+            level !== 0 && fs.rmdirSync(path);
+        }
+    }
 }
 
 export default new Film()
