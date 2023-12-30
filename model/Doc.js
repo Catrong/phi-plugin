@@ -201,7 +201,10 @@ class Film {
      * @param {*} path 
      */
     async rmEmptyDir(path, level = 0) {
-        const files = fs.readdirSync(path);
+        var files = {}
+        if (fs.lstatSync(path).isDirectory()) {
+            files = fs.readdirSync(path);
+        }
         if (files.length > 0) {
             let tempFile = 0;
             files.forEach(file => {
