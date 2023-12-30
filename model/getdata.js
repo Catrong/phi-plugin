@@ -141,8 +141,8 @@ class getdata {
                     if (!this.ori_info[CsvInfo[i].song].chart[level]) {
                         this.ori_info[CsvInfo[i].song].chart[level] = {}
                     }
-                    this.ori_info[CsvInfo[i].song].chart[level].charter: CsvInfo[i][level]
-                    this.ori_info[CsvInfo[i].song].chart[level].difficulty: Csvdif[i][level]
+                    this.ori_info[CsvInfo[i].song].chart[level].charter = CsvInfo[i][level]
+                    this.ori_info[CsvInfo[i].song].chart[level].difficulty = Csvdif[i][level]
                 }
             }
         }
