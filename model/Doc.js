@@ -209,11 +209,15 @@ class Film {
                 this.rmEmptyDir(`${path}/${file}`, 1);
             });
             if (tempFile === files.length && level !== 0) {
-                fs.rmdirSync(path);
+                try {
+                    fs.rmdirSync(path);
+                } catch { }
             }
         }
         else {
-            level !== 0 && fs.rmdirSync(path);
+            try {
+                level !== 0 && fs.rmdirSync(path);
+            } catch { }
         }
     }
 }
