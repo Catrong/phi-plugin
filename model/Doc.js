@@ -18,7 +18,8 @@ class Film {
             if (!fs.existsSync(`${style}`)) { return false }
             return YAML.parse(fs.readFileSync(`${path}`, 'utf8'))
         } catch (error) {
-            logger.warn(`[phi插件][${path}] 读取失败 ${error}`)
+            logger.warn(`[phi插件][${path}] 读取失败`)
+            logger.warn(error)
             return false
         }
     }
@@ -32,7 +33,8 @@ class Film {
             if (!fs.existsSync(`${style}`)) { return false }
             return JSON.parse(fs.readFileSync(`${path}`, 'utf8'))
         } catch (error) {
-            logger.warn(`[phi插件][${path}] 读取失败\n${error}`)
+            logger.warn(`[phi插件][${path}] 读取失败`)
+            logger.warn(error)
             return false
         }
 
@@ -82,7 +84,8 @@ class Film {
                 }
             }
         } catch (error) {
-            logger.warn(`[phi插件][${path}] 读取失败\n${error}`)
+            logger.warn(`[phi插件][${path}] 读取失败`)
+            logger.warn(error)
             return false
         }
     }
@@ -133,7 +136,8 @@ class Film {
                 }
             }
         } catch (error) {
-            logger.warn(`[phi插件]写入文件 ${path} 时遇到错误\n${error}`)
+            logger.warn(`[phi插件]写入文件 ${path} 时遇到错误`)
+            logger.warn(error)
             return false
         }
     }
@@ -151,7 +155,8 @@ class Film {
             }
             fs.writeFileSync(`${path}`, YAML.stringify(data), 'utf8')
         } catch (error) {
-            logger.warn(`[phi插件]写入文件 ${path} 时遇到错误\n${error}`)
+            logger.warn(`[phi插件]写入文件 ${path} 时遇到错误`)
+            logger.warn(error)
             return false
         }
     }
@@ -169,7 +174,8 @@ class Film {
             }
             fs.writeFileSync(`${path}`, JSON.stringify(data), 'utf8')
         } catch (error) {
-            logger.warn(`[phi插件]写入文件 ${path} 时遇到错误\n${error}`)
+            logger.warn(`[phi插件]写入文件 ${path} 时遇到错误`)
+            logger.warn(error)
             return false
         }
     }
@@ -183,7 +189,8 @@ class Film {
             })
             return true
         } catch (error) {
-            logger.warn(`[phi插件][${path}] 删除失败 ${error}`)
+            logger.warn(`[phi插件][${path}] 删除失败`)
+            logger.warn(error)
             return false
         }
     }
