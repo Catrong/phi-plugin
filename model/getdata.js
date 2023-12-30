@@ -138,7 +138,11 @@ class getdata {
             for (var j in this.Level) {
                 const level = this.Level[j]
                 if (CsvInfo[i][level]) {
-                    this.ori_info[CsvInfo[i].song].chart[level] = { charter: CsvInfo[i][level], difficulty: Csvdif[i][level] }
+                    if (!this.ori_info[CsvInfo[i].song].chart[level]) {
+                        this.ori_info[CsvInfo[i].song].chart[level] = {}
+                    }
+                    this.ori_info[CsvInfo[i].song].chart[level].charter: CsvInfo[i][level]
+                    this.ori_info[CsvInfo[i].song].chart[level].difficulty: Csvdif[i][level]
                 }
             }
         }
