@@ -73,12 +73,13 @@
                 <p name="pvis">{{gameuser.data}}</p>
             </div>
         </div>
-        {{if gameuser.selfIntro}}
-        <div class="Player_data_box"
+        <div class="Player_data_box">
+            {{if gameuser.selfIntro}}
             <font color='white' name="pvis">{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
-
+            {{else}}
+            <font color='skyblue' name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</font>
+            {{/if}}
         </div>
-        {{/if}}
         <div class="createdbox">
             <div class="phi-plugin">
                 <p>Phi-Plugin</p>
