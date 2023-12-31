@@ -201,7 +201,7 @@ class Film {
      * @param {*} path 
      */
     async rmEmptyDir(path, level = 0) {
-        var files = {}
+        if (!fs.existsSync(path)) return false
         if (fs.lstatSync(path).isDirectory()) {
             files = fs.readdirSync(path);
         }
