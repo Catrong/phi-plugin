@@ -9,7 +9,7 @@ const require = createRequire(import.meta.url);
 var PhigrosRe8
 switch (process.platform) {
     //unix 系统内核
-    case "darwin": {
+    case "linux": {
         logger.info('[Phi-Plugin][re8] 导入 unix 模块');
         PhigrosRe8 = await require(get.pluginPath + 'lib/PhigrosLibrary_linux.node');
         break;
@@ -21,7 +21,7 @@ switch (process.platform) {
         break;
     }
     default: {
-        logger.error(process.platform)
+        logger.warn(process.platform)
         logger.info('[Phi-Plugin][re8] 导入 unix? 模块');
         PhigrosRe8 = await require(get.pluginPath + 'lib/PhigrosLibrary_linux.node');
         break;
