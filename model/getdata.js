@@ -132,6 +132,7 @@ class getdata {
                 this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, illustration_big: 'null', chapter: '', bpm: '', length: '', chart: {} }
                 logger.info(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
             }
+            this.ori_info[CsvInfo[i].song].song = CsvInfo[i].song
             this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
             this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
             this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
