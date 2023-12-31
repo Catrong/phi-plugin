@@ -276,7 +276,7 @@ export class phiuser extends plugin {
             var sum_rks = 0
             if (!acc_rksRecord[0]) break
             for (var j = 0; j < acc_rksRecord.length; j++) {
-                if (j >= 20) break
+                if (j >= 19) break
                 while (acc_rksRecord[j]?.acc < i) {
                     acc_rksRecord.splice(j, 1)
                 }

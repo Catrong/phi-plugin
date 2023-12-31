@@ -12,6 +12,7 @@ var info = get.info()
 shuffleArray(songsname)
 
 var gamelist = {}
+const eList = {}
 
 export class phiguess extends plugin {
     constructor() {
@@ -80,6 +81,7 @@ export class phiguess extends plugin {
         }
 
         gamelist[group_id] = songs_info.song
+        eList[group_id] = e
 
         const w_ = randint(100, 140)
         const h_ = randint(100, 140)
@@ -168,6 +170,8 @@ export class phiguess extends plugin {
             if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
             if (known_info.chart) remsg.push(known_info.chart)
 
+            e = eList[group_id]
+
             if (gamelist[group_id]) {
                 if (gamelist[group_id] != songs_info.song) {
                     await gameover(e, data)
@@ -198,6 +202,8 @@ export class phiguess extends plugin {
             }
         }
 
+        e = eList[group_id]
+
         const t = gamelist[group_id]
         delete (gamelist[group_id])
         await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
@@ -212,6 +218,7 @@ export class phiguess extends plugin {
     async guess(e) {
         const { group_id, msg, user_id } = e
         if (gamelist[group_id]) {
+            eList[group_id] = e
             if (typeof msg === 'string') {
                 const ans = msg.replace(/[#/](我)?猜(\s*)/g, '')
                 const song = get.fuzzysongsnick(ans, 0.95)
@@ -240,6 +247,7 @@ export class phiguess extends plugin {
     async ans(e) {
         const { group_id } = e
         if (gamelist[group_id]) {
+            eList[group_id] = e
             const t = gamelist[group_id]
             delete gamelist[group_id]
             await e.reply('好吧，下面开始公布答案。', true)
