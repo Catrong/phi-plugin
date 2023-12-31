@@ -275,7 +275,7 @@ export class phiuser extends plugin {
         for (var i = 97; i <= 100; i += 0.01) {
             var sum_rks = 0
             if (!acc_rksRecord[0]) break
-            for (var j in acc_rksRecord) {
+            for (var j = 0; j < acc_rksRecord.length; j++) {
                 if (j >= 20) break
                 while (acc_rksRecord[j]?.acc < i) {
                     acc_rksRecord.splice(j, 1)
@@ -286,7 +286,7 @@ export class phiuser extends plugin {
                     break
                 }
             }
-            console.info(acc_rksRecord[0])
+            // console.info(acc_rksRecord[0])
             var tem_rks = (sum_rks + (acc_rks_phi[0]?.rks || 0)) / 20
             acc_rks_data.push(tem_rks)
             acc_rks_range[0] = Math.min(acc_rks_range[0], tem_rks)
@@ -301,9 +301,9 @@ export class phiuser extends plugin {
             }
         }
 
-        console.info(acc_rks_data)
-        console.info(acc_rks_data_)
-        console.info(acc_rks_range)
+        // console.info(acc_rks_data)
+        // console.info(acc_rks_data_)
+        // console.info(acc_rks_range)
 
         var data = {
             gameuser: gameuser,
