@@ -7,9 +7,9 @@ import Vika from '../model/Vika.js'
 
 const illlist = []
 
-const sp_date = 'Dec 25 2023'
-const sp_date_num = [25]
-const sp_date_tips = ["今天是圣诞节呐！抽出一点时间让自己好好休息一下吧~"]
+const sp_date = 'Jan 01 2024'
+const sp_date_num = [2024]
+const sp_date_tips = ["2！0！2！4！新！年！快！乐！"]
 
 for (var i in get.ori_info) {
     if (get.ori_info[i]['illustration_big']) {
