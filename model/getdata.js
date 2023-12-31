@@ -61,8 +61,11 @@ class getdata {
     async init() {
 
         /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
-        Film.rmEmptyDir(this.userPath)
-
+        try {
+            Film.rmEmptyDir(this.userPath)
+        } catch (error) {
+            logger.warn(error)
+        }
         var nick = await this.getData('nickconfig.yaml', this.configPath, 'TXT')
         if (nick) {
             const waitToReplace = {
