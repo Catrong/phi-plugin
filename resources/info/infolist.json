@@ -5826,110 +5826,91 @@
         }
     },
     "テリトリーバトル.ツユ": {
-        "song": "テリトリーバトル",
-        "illustration": "",
-        "illustration_big": "",
         "chapter": "Chapter EX-CHUNITHM 精选集",
         "bpm": "",
-        "composer": "ツユ",
-        "length": "",
-        "illustrator": "SEGA (V17AMax modified)",
+        "length": "2:30",
         "chart": {
             "EZ": {
-                "level": "3",
-                "difficulty": "3.0",
-                "combo": "",
-                "charter": "返せ！返せ！ボクのSu1fuRを"
+                "combo": "172"
             },
             "HD": {
-                "level": "9",
-                "difficulty": "9.1",
-                "combo": "",
-                "charter": "{^-7-^} BATTLE against Su1fuR"
+                "combo": "589"
             },
             "IN": {
-                "level": "13",
-                "difficulty": "13.8",
-                "combo": "",
-                "charter": "阿爽 and StupiGGy Seizing Territory"
+                "combo": "974"
             },
             "AT": {
-                "level": "15",
-                "difficulty": "15.3",
-                "combo": "",
-                "charter": "JKy feat. 0419_Guardian"
+                "combo": "1417"
             }
         }
     },
     "TECHNOPOLIS2085.PRASTIKDANCEFLOOR": {
-        "song": "TECHNOPOLIS 2085",
-        "illustration": "",
-        "illustration_big": "",
         "chapter": "Chapter EX-CHUNITHM 精选集",
         "bpm": "",
-        "composer": "PRASTIK DANCEFLOOR",
-        "length": "",
-        "illustrator": "SEGA (V17AMax modified)",
+        "length": "2:18",
         "chart": {
             "EZ": {
-                "level": "5",
-                "difficulty": "5.0",
-                "combo": "",
-                "charter": "dancing\"L\"ine 2085"
+                "combo": "141"
             },
             "HD": {
-                "level": "10",
-                "difficulty": "10.2",
-                "combo": "",
-                "charter": "迟戈 vs Like"
+                "combo": "443"
             },
             "IN": {
-                "level": "14",
-                "difficulty": "14.4",
-                "combo": "",
-                "charter": "CTYMAX ????"
+                "combo": "820"
             },
             "AT": {
-                "level": "15",
-                "difficulty": "15.7",
-                "combo": "",
-                "charter": "TECHNOXMT vs LATENCYPOLIS"
+                "combo": "824"
             }
         }
     },
     "祈-我ら神祖と共に歩む者なり-.光吉猛修VS穴山大輔VSKaiVS水野健治VS大国奏音": {
-        "song": "祈 -我ら神祖と共に歩む者なり-",
-        "illustration": "",
-        "illustration_big": "",
         "chapter": "Chapter EX-CHUNITHM 精选集",
         "bpm": "",
-        "composer": "光吉猛修 VS 穴山大輔 VS Kai VS 水野健治 VS 大国奏音",
-        "length": "",
-        "illustrator": "SEGA (V17AMax modified)",
+        "length": "2:58",
         "chart": {
             "EZ": {
-                "level": "7",
-                "difficulty": "7.5",
-                "combo": "",
-                "charter": "Su1fuRikko \"SouRce of the metaveRse\""
+                "combo": "666"
             },
             "HD": {
-                "level": "12",
-                "difficulty": "12.9",
-                "combo": "",
-                "charter": "Su1fuRikko × rN \"judgemeNt fRom the cataStRophy\""
+                "combo": "1111"
             },
             "IN": {
-                "level": "15",
-                "difficulty": "15.9",
-                "combo": "",
-                "charter": "兔咩小 vs 咩小兔 vs 小兔咩 vs 咩兔小 vs 兔小咩"
+                "combo": "2222"
             },
             "AT": {
-                "level": "16",
-                "difficulty": "16.5",
-                "combo": "",
-                "charter": "フィグロス譜面チーム \"Rikko feat. Ner\" -Pray for \"PHI\"-"
+                "combo": "2222"
+            }
+        }
+    },
+    "bye.DingerBox": {
+        "bpm": "",
+        "length": "2:40",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "186"
+            },
+            "HD": {
+                "combo": "333"
+            },
+            "IN": {
+                "combo": "725"
+            }
+        }
+    },
+    "聖夜讃歌.A39沙包P": {
+        "bpm": "",
+        "length": "3:06",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "402"
+            },
+            "HD": {
+                "combo": "593"
+            },
+            "IN": {
+                "combo": "1339"
             }
         }
     },
