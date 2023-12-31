@@ -1,4 +1,6 @@
+{{extend defaultLayout}}
 {{block 'css'}}
+
 
 <head>
     <link rel="stylesheet" href="{{_res_path}}html/atlas/atlas.css">
@@ -8,167 +10,111 @@
 {{/block}}
 
 {{block 'main'}}
-<div class="background" style="background: url({{illustration}}) no-repeat; background-size: cover;">
-    <img src="{{illustration}}" alt="曲绘-模糊">
-</div>
-<div class="big-box">
-    <div class="box">
-        <div class="info-box">
-            <div class="name-box">
-                <div class="song">
-                    <p name="pvis">{{song}}</p>
-                    <!-- <p style="font-size: 45px;">{{song}}</p> -->
-                </div>
-                <div class="composer">
-                    <p name="pvis">{{composer}}</p>
-                </div>
-            </div>
-            <div class="charts-box">
-                <div class="length">
-                    <p>{{length}}</p>
-                </div>
-                <div class="txt">
-                    <div class="sqrt">
-                        <p>SONG'S_INFO</p>
-                    </div>
-                    <div class="line">
-                        {{if spinfo}}
-                        <p  name="pvis">{{#spinfo.replace(/\n/g,'<br\>')}}</p>
-                        {{/if}}
-                    </div>
-                </div>
-                <div class="chart-info-box">
-                    <div class="chart-info">
-                        <div class="common">
-                            <span>Illustrator: {{illustrator}}</span>
-                            <span>Bpm:&ensp;{{bpm}}&ensp;&ensp;&ensp;&ensp;Chapter:&ensp;{{chapter}}</span>
-                            <span>Charts:</span>
-                        </div>
-                        <div class="chart">
-                            {{each chart}}
 
-                            <div class="up">
-                                {{if $index == 'SP'}}
-                                <span style="color: rgb(0, 0, 0);">SP&ensp;</span>
-                                {{else if $index == 'AT'}}
-                                <span style="color: rgb(213, 213, 213);">AT&ensp;</span>
-                                {{else if $index == 'IN'}}
-                                <span style="color: rgb(255, 159, 159);">IN&ensp;</span>
-                                {{else if $index == 'HD'}}
-                                <span style="color: rgb(165, 187, 227);">HD&ensp;</span>
-                                {{else if $index == 'EZ'}}
-                                <span style="color: rgb(192, 221, 173);">EZ&ensp;</span>
-                                {{else}}
-                                <span style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</span>
-                                {{/if}}
-                                <span>&ensp;{{$value.difficulty}}&ensp;</span>
-                                <span>&ensp;{{$value.combo}}&ensp;Notes</span>
+<body>
+    <div class="background" style="background: url({{illustration}}) no-repeat; background-size: cover;">
+        <img src="{{illustration}}" alt="曲绘-模糊">
+    </div>
+    <div class="big-box">
+        <div class="box">
+            <div class="info-box">
+                <div class="name-box">
+                    <div class="song">
+                        <p name="pvis">{{song}}</p>
+                        <!-- <p style="font-size: 45px;">{{song}}</p> -->
+                    </div>
+                    <div class="composer">
+                        <p name="pvis">{{composer}}</p>
+                    </div>
+                </div>
+                <div class="charts-box">
+                    <div class="length">
+                        <p>{{length}}</p>
+                    </div>
+                    <div class="txt">
+                        <div class="sqrt">
+                            <p>SONG'S_INFO</p>
+                        </div>
+                        <div class="line">
+                            {{if spinfo}}
+                            <p name="pvis">{{#spinfo.replace(/\n/g,'<br\>')}}</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="chart-info-box">
+                        <div class="chart-info">
+                            <div class="common">
+                                <span>Illustrator: {{illustrator}}</span>
+                                <span>Bpm:&ensp;{{bpm}}&ensp;&ensp;&ensp;&ensp;Chapter:&ensp;{{chapter}}</span>
+                                <span>Charts:</span>
                             </div>
-                            <span>Charter:&ensp;{{$value.charter}}</span>
-                            {{/each}}
+                            <div class="chart">
+                                {{each chart}}
+
+                                <div class="up">
+                                    {{if $index == 'SP'}}
+                                    <span style="color: rgb(0, 0, 0);">SP&ensp;</span>
+                                    {{else if $index == 'AT'}}
+                                    <span style="color: rgb(213, 213, 213);">AT&ensp;</span>
+                                    {{else if $index == 'IN'}}
+                                    <span style="color: rgb(255, 159, 159);">IN&ensp;</span>
+                                    {{else if $index == 'HD'}}
+                                    <span style="color: rgb(165, 187, 227);">HD&ensp;</span>
+                                    {{else if $index == 'EZ'}}
+                                    <span style="color: rgb(192, 221, 173);">EZ&ensp;</span>
+                                    {{else}}
+                                    <span style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</span>
+                                    {{/if}}
+                                    <span>&ensp;{{$value.difficulty}}&ensp;</span>
+                                    <span>&ensp;{{$value.combo}}&ensp;Notes</span>
+                                </div>
+                                <span>Charter:&ensp;{{$value.charter}}</span>
+                                {{/each}}
 
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="ill-box">
-            <img src="{{illustration}}" alt="曲绘">
-        </div>
-    </div>
-    <div class="leave">
-        <div class="leave-box">
-            {{each chart}}
-
-            {{if $index == 'EZ'}}
-            <div class="leave-ez">
-            {{else if $index == 'HD'}}
-            <div class="leave-hd">
-            {{else if $index == 'IN'}}
-            <div class="leave-in">
-            {{else if $index == 'AT'}}
-            <div class="leave-at">
-            {{else if $index == 'SP'}}
-            <div class="leave-sp">
-            {{else}}
-            <div class="leave-sp" style="background-color: rgba({{$value.rgba}});">
-                {{/if}}
-                <p style="margin-left: 3px;">{{$value.difficulty}}</p>
-                <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+            <div class="ill-box">
+                <img src="{{illustration}}" alt="曲绘">
             </div>
-
-            {{/each}}
         </div>
-    </div>
-</div>
-<div class="createdbox">
-    <div class="phi-plugin">
-        <p>Phi-Plugin</p>
-    </div>
-    <div class="ver">
-        <p>{{Version.ver}}</p>
-    </div>
-</div>
-<div class="snow-box"> </div>
+        <div class="leave">
+            <div class="leave-box">
+                {{each chart}}
 
-<!-- 曲目名称自适应name-box的宽度 -->
-<!-- 曲目名称自适应name-box的宽度 -->
-<script>
-    function addSnow() {
-        var snow = document.createElement("div")
-        snow.innerHTML = `<img src="{{_res_path}}html/otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
-        snow.className = "snow"
-        snow.style.left = `${Math.random() * 100}%`
-        snow.style.bottom = `${Math.random() * 100}%`
-        snow.style.width = `${Math.random() * 4}%`
-        snow.style.rotate = `${Math.random() * 360}deg`
-        snow.style.transform = `rotate3d(${Math.random()}, ${Math.random()}, ${Math.random()}, ${Math.random() * 360}deg)`
-        snow.style.filter = `blur(${Math.random() * 2}px)`
-        const tar = document.getElementsByClassName("snow-box")[0]
-        tar.appendChild(snow)
-    }
-    function adjustFontSize() {
-        //获取p元素
-        var a = document.getElementsByName('pvis')
-        for (var i = 0; i < a.length; ++i) {
+                {{if $index == 'EZ'}}
+                <div class="leave-ez">
+                    {{else if $index == 'HD'}}
+                    <div class="leave-hd">
+                        {{else if $index == 'IN'}}
+                        <div class="leave-in">
+                            {{else if $index == 'AT'}}
+                            <div class="leave-at">
+                                {{else if $index == 'SP'}}
+                                <div class="leave-sp">
+                                    {{else}}
+                                    <div class="leave-sp" style="background-color: rgba({{$value.rgba}});">
+                                        {{/if}}
+                                        <p style="margin-left: 3px;">{{$value.difficulty}}</p>
+                                        <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                                    </div>
 
-            const songName = a[i]
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="createdbox">
+                            <div class="phi-plugin">
+                                <p>Phi-Plugin</p>
+                            </div>
+                            <div class="ver">
+                                <p>{{Version.ver}}</p>
+                            </div>
+                        </div>
+                        <div class="snow-box"> </div>
 
-            if (!songName) continue
-
-
-            /*调整曲目名称字体大小*/
-            var parentElement = songName.parentElement
-
-            var maxFontSize = 100 //设置最大字体大小
-
-            //如果字体宽度小于父元素宽度，则增大字体大小
-            while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
-                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                var fontSize = parseFloat(style)
-
-                //检查是否已经达到最大字体大小
-                if (fontSize >= maxFontSize) {
-                    break
-                }
-
-                songName.style.fontSize = (fontSize + 1) + "px"
-            }
-
-            // 如果字体宽度大于父元素宽度，则减小字体大小
-            while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
-                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                var fontSize = parseFloat(style);
-                songName.style.fontSize = (fontSize - 1) + "px";
-            }
-        }
-        var sum = Math.floor(Math.random() * 50) + 30
-        while (sum--) {
-            addSnow()
-        }
-    }
-    window.onload = adjustFontSize
-    window.onresize = adjustFontSize
-</script>
+</body>
 {{/block}}

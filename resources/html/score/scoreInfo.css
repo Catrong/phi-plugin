@@ -1,3 +1,11 @@
+body {
+    height: 1000px;
+}
+
+.left,.right {
+    height: 1100px;
+}
+
 .song_Id {
     width: 102%;
     height: 40;
@@ -153,6 +161,7 @@
 .scoreHistory {
     width: 93%;
     height: auto;
+    max-height: 34%;
     display: flex;
     margin-top: 20px;
     background-color: #87ceeb5e;

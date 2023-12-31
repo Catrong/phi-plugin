@@ -1,7 +1,11 @@
-<head>
-    <link rel="stylesheet" href="{{_res_path}}html/lvsco/lvsco.css">
+{{extend defaultLayout}}
+{{block 'css'}}
 
-</head>
+<link rel="stylesheet" href="{{_res_path}}html/lvsco/lvsco.css">
+
+{{/block}}
+
+{{block 'main'}}
 
 <body>
     <div class="full-box">
@@ -82,7 +86,7 @@
                         </div>
                         <div class="basic_info">
                             <div class="user_name">
-                                <p id="user-name" style="font-size: 30px;">{{PlayerId}}</p>
+                                <p name="pvis">{{PlayerId}}</p>
                             </div>
                             <div class="user_rks">
                                 <div class="player_rks">
@@ -325,38 +329,5 @@
             </div>
         </div>
     </div>
-    <script>
-        function adjustFontSize() {
-            //获取user_name和composer滴元素
-            var songName = document.getElementById('user-name')
-
-            /*调整曲目名称字体大小*/
-            var parentElement = songName.parentElement
-
-            var maxFontSize = 30 //设置最大字体大小
-
-            //如果字体宽度小于父元素宽度，则增大字体大小
-            while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
-                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                var fontSize = parseFloat(style)
-
-                //检查是否已经达到最大字体大小
-                if (fontSize >= maxFontSize) {
-                    break
-                }
-
-                songName.style.fontSize = (fontSize + 1) + "px"
-            }
-
-            // 如果字体宽度大于父元素宽度，则减小字体大小
-            while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
-                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                var fontSize = parseFloat(style);
-                songName.style.fontSize = (fontSize - 1) + "px";
-            }
-
-        }
-        window.onload = adjustFontSize
-        window.onresize = adjustFontSize
-    </script>
 </body>
+{{/block}}

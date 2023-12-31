@@ -1,6 +1,12 @@
-<head>
-    <link rel="stylesheet" href="{{_res_path}}html/tasks/tasks.css">
-</head>
+{{extend defaultLayout}}
+{{block 'css'}}
+
+
+<link rel="stylesheet" href="{{_res_path}}html/tasks/tasks.css">
+
+{{/block}}
+
+{{block 'main'}}
 
 <body style="scale: {{size}};">
     <div class="background">
@@ -47,32 +53,19 @@
             <div class="imgbox">
                 <img src="{{song.illustration}}" alt="{{song.song}}">
             </div>
-            {{if song.finished}}
-            <div class="coinbox_ed">
+            <div class="coinbox_{{song.finished ? 'ed' : 'un'}}">
                 <p>+{{song.reward}} Notes</p>
             </div>
-            {{else}}
-            <div class="coinbox_un">
-                <p>+{{song.reward}} Notes</p>
-            </div>
-            {{/if}}
 
             <div class="infobox">
-                {{if song.finished}}
-                <div class="namebox_ed">
-                {{else}}
-                <div class="namebox_un">
-                {{/if}}
+                <div class="namebox_{{song.finished ? 'ed' : 'un'}}">
                     <div class="songsname">
                         <p id="{{$index}}">{{song.song}}</p>
                     </div>
                 </div>
-                {{if song.finished}}
-                <div class="songsinfo_ed">
-                {{else}}
-                <div class="songsinfo_un">
-                {{/if}}
-                    <p>{{song.request.rank}}&ensp;&ensp;{{song.request.type.toUpperCase()}}&ensp;&ensp;{{song.request.value}}</p>
+                <div class="songsinfo_{{song.finished ? 'ed' : 'un'}}">
+                    <p>{{song.request.rank}}&ensp;&ensp;{{song.request.type.toUpperCase()}}&ensp;&ensp;{{song.request.value}}
+                    </p>
                 </div>
             </div>
         </div>
@@ -111,64 +104,5 @@
     </div>
     {{/if}}
     <div class="snow-box"> </div>
-    
-    <!-- 曲目名称自适应name-box的宽度 -->
-    <script>
-        function addSnow() {
-            var snow = document.createElement("div")
-            snow.innerHTML = `<img src="{{_res_path}}html/otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
-            snow.className = "snow"
-            snow.style.left = `${Math.random() * 100}%`
-            snow.style.bottom = `${Math.random() * 100}%`
-            snow.style.width = `${Math.random() * 4}%`
-            snow.style.rotate = `${Math.random() * 360}deg`
-            snow.style.transform = `rotate3d(${Math.random()}, ${Math.random()}, ${Math.random()}, ${Math.random() * 360}deg)`
-            snow.style.filter = `blur(${Math.random() * 2}px)`
-            const tar = document.getElementsByClassName("snow-box")[0]
-            tar.appendChild(snow)
-        }
-        function adjustFontSize() {
-            for (let i = 0; i <= 4; ++i) {
-
-                //获取song-name和composer滴元素
-                var songName = document.getElementById(`${i}`)
-
-                if (!songName) continue
-
-                console.info(i)
-
-
-                /*调整曲目名称字体大小*/
-                var parentElement = songName.parentElement
-
-                var maxFontSize = 30 //设置最大字体大小
-
-                //如果字体宽度小于父元素宽度，则增大字体大小
-                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style)
-
-                    //检查是否已经达到最大字体大小
-                    if (fontSize >= maxFontSize) {
-                        break
-                    }
-
-                    songName.style.fontSize = (fontSize + 1) + "px"
-                }
-
-                // 如果字体宽度大于父元素宽度，则减小字体大小
-                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style);
-                    songName.style.fontSize = (fontSize - 1) + "px";
-                }
-            }
-            var sum = Math.floor(Math.random() * 50) + 30
-            while (sum--) {
-                addSnow()
-            }
-        }
-        window.onload = adjustFontSize
-        window.onresize = adjustFontSize
-    </script>
 </body>
+{{/block}}

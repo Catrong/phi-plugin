@@ -264,7 +264,46 @@ export class phiuser extends plugin {
         }
 
 
+        /**统计在要求acc>=i的前提下，玩家的rks为多少 */
+        const acc_rksRecord = save.sortRecord()
+        const acc_rks_phi = save.findRegRecord((e) => { e.acc >= 100 ? true : false })
+        const acc_rks_data = []
+        const acc_rks_data_ = []
 
+        const acc_rks_range = [100, 0]
+
+        for (var i = 97; i <= 100; i += 0.01) {
+            var sum_rks = 0
+            if (!acc_rksRecord[0]) break
+            for (var j in acc_rksRecord) {
+                if (j >= 20) break
+                while (acc_rksRecord[j]?.acc < i) {
+                    acc_rksRecord.splice(j, 1)
+                }
+                if (acc_rksRecord[j]) {
+                    sum_rks += acc_rksRecord[j].rks
+                } else {
+                    break
+                }
+            }
+            console.info(acc_rksRecord[0])
+            var tem_rks = (sum_rks + (acc_rks_phi[0]?.rks || 0)) / 20
+            acc_rks_data.push(tem_rks)
+            acc_rks_range[0] = Math.min(acc_rks_range[0], tem_rks)
+            acc_rks_range[1] = Math.max(acc_rks_range[1], tem_rks)
+        }
+
+        for (var i = 1; i <= 300; ++i) {
+            if (acc_rks_data_[0] && acc_rks_data[i - 1] == acc_rks_data[i]) {
+                acc_rks_data_[acc_rks_data_.length - 1][2] = i
+            } else {
+                acc_rks_data_.push([i - 1, range(acc_rks_data[i - 1], acc_rks_range), i, range(acc_rks_data[i], acc_rks_range)])
+            }
+        }
+
+        console.info(acc_rks_data)
+        console.info(acc_rks_data_)
+        console.info(acc_rks_range)
 
         var data = {
             gameuser: gameuser,
@@ -275,6 +314,8 @@ export class phiuser extends plugin {
             data_range: data_range,
             data_date: [date_to_string(data_date[0]), date_to_string(data_date[1])],
             rks_date: [date_to_string(rks_date[0]), date_to_string(rks_date[1])],
+            acc_rks_data: acc_rks_data_,
+            acc_rks_range: acc_rks_range,
             background: bksong || illlist[randint(0, illlist.length - 1)],
         }
 
@@ -514,7 +555,7 @@ export class phiuser extends plugin {
 /**
  * 计算百分比
  * @param {Number} value 值
- * @param {Array} range 区间数组
+ * @param {Array} range 区间数组 (0,1)
  * @returns 百分数，单位%
  */
 function range(value, range) {

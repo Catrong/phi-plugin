@@ -141,4 +141,54 @@ export default class Save {
             }
         }
     }
+
+    /**
+     * 将存档排序
+     * @param {boolean} isSort 是否排序
+     * @returns 
+     */
+    sortRecord(isSort = true) {
+        const sortedRecord = []
+        for (var song in this.gameRecord) {
+            for (var level in song) {
+                if (level == 4) break
+                var tem = this.gameRecord[song][level]
+                if (!tem) continue
+                sortedRecord.push(tem)
+            }
+        }
+        if (!isSort) return sortedRecord
+
+        sortedRecord.sort((a, b) => { return b.rks - a.rks })
+        return sortedRecord
+    }
+    
+    /**
+     * 筛选满足条件的成绩
+     * @param {Function} reg
+     * @returns 按照rks排序的数组
+     */
+    findRegRecord(reg) {
+        var record = []
+        for (var song in this.gameRecord) {
+            for (var level in song) {
+                if (level == 4) break
+                var tem = this.gameRecord[song][level]
+                if (!tem) continue
+                if (reg(tem)) {
+                    record.push(tem)
+                }
+            }
+        }
+        record.sort((a, b) => { return b.rks - a.rks })
+        return record
+    }
+
+
+    /**计算rks+0.01的最低所需要提升的rks */
+    minUpRks() {
+        /**考虑屁股肉四舍五入原则 */
+        var minuprks = Math.floor(this.saveInfo.summary.rankingScore * 100) / 100 + 0.005 - this.saveInfo.summary.rankingScore
+        return minuprks < 0 ? minuprks += 0.01 : minuprks
+    }
 }

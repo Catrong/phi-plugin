@@ -1,6 +1,10 @@
-<head>
-    <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css">
-</head>
+{{extend defaultLayout}}
+{{block 'css'}}
+
+<link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css">
+
+{{/block}}
+{{block 'main'}}
 
 <body style="scale: {{size}};">
     {{if background}}
@@ -26,7 +30,7 @@
                         <p>ID</p>
                     </div>
                     <div class="Player_Id-right">
-                        <p id="Player_Id">{{gameuser.PlayerId}}</p>
+                        <p name="pvis">{{gameuser.PlayerId}}</p>
                     </div>
                 </div>
             </div>
@@ -50,12 +54,13 @@
                     <p>CLG MOD</p>
                 </div>
                 <div class="Challenge" id="Challenge{{gameuser.CLGMOD ? '1' : '2'}}">
-                    <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="{{gameuser.ChallengeMode}}">
+                    <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png"
+                        alt="{{gameuser.ChallengeMode}}">
                     <span>{{gameuser.ChallengeModeRank}}</span>
                 </div>
                 {{if gameuser.CLGMOD}}
                 <div class="Player_data_value CLG{{gameuser.EX ? ' colorful' : ''}}" id="Player_data_right">
-                    <p id="CLG">{{gameuser.CLGMOD}}</p>
+                    <p name="pvis">{{gameuser.CLGMOD}}</p>
                 </div>
                 {{/if}}
             </div>
@@ -65,12 +70,12 @@
                 <p>DATA</p>
             </div>
             <div class="Player_box_value">
-                <p id="data">{{gameuser.data}}</p>
+                <p name="pvis">{{gameuser.data}}</p>
             </div>
         </div>
         {{if gameuser.selfIntro}}
         <div class="Player_data_box">
-            <font color='white' id="profile">{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
+            <font color='white' name="pvis">{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
         </div>
         {{/if}}
         <div class="createdbox">
@@ -158,6 +163,48 @@
         </div>
         <div class="data_title">
             <div class="data_title-left">
+                <p>Limit-ACC_RKS</p>
+            </div>
+        </div>
+        <div class="svg-box">
+            {{if acc_rks_data[0]}}
+            <div class="value_box">
+                <p>{{((acc_rks_range[1] - acc_rks_range[0]) / 4 * 4 + acc_rks_range[0]).toFixed(4)}}</p>
+                <p>{{((acc_rks_range[1] - acc_rks_range[0]) / 4 * 3 + acc_rks_range[0]).toFixed(4)}}</p>
+                <p>{{((acc_rks_range[1] - acc_rks_range[0]) / 4 * 2 + acc_rks_range[0]).toFixed(4)}}</p>
+                <p>{{((acc_rks_range[1] - acc_rks_range[0]) / 4 * 1 + acc_rks_range[0]).toFixed(4)}}</p>
+                <p>{{((acc_rks_range[1] - acc_rks_range[0]) / 4 * 0 + acc_rks_range[0]).toFixed(4)}}</p>
+            </div>
+            <div class="line-box">
+                <div class="line">
+                    <svg>
+                        <defs>
+                            <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="2" refY="2">
+                                <circle cx="2" cy="2" r="1"></circle>
+                            </marker>
+                        </defs>
+                        {{each acc_rks_data}}
+                        <line x1="{{$value[0] / 3}}%" y1="{{$value[1]}}%" x2="{{$value[2] / 3}}%" y2="{{$value[3]}}%">
+                        </line>
+                        {{/each}}
+                    </svg>
+                </div>
+                <div class="date_box">
+                    <p>97.0%</p>
+                    <p>97.5%</p>
+                    <p>98.0%</p>
+                    <p>98.5%</p>
+                    <p>99.0%</p>
+                    <p>99.5%</p>
+                    <p>100.0%</p>
+                </div>
+            </div>
+            {{else}}
+            <p>NO_INFO</p>
+            {{/if}}
+        </div>
+        <div class="data_title">
+            <div class="data_title-left">
                 <p>STATS</p>
             </div>
         </div>
@@ -235,52 +282,5 @@
             {{/each}}
         </div>
     </div>
-
-    <!-- 曲目名称自适应name-box的宽度 -->
-    <script>
-        function adjustFontSize() {
-
-            /**
-             * @param {string} id id
-             * @param {number} maxFontSize 最大字体大小
-             */
-            function work(id, maxFontSize = 50) {
-
-                //获取song-name和composer滴元素
-                var songName = document.getElementById(id)
-
-                /*调整曲目名称字体大小*/
-                var parentElement = songName.parentElement
-
-
-                //如果字体宽度小于父元素宽度，则增大字体大小
-                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style)
-
-                    //检查是否已经达到最大字体大小
-                    if (fontSize >= maxFontSize) {
-                        break
-                    }
-
-                    songName.style.fontSize = (fontSize + 1) + "px"
-                }
-
-                // 如果字体宽度大于父元素宽度，则减小字体大小
-                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style);
-                    songName.style.fontSize = (fontSize - 1) + "px";
-                }
-            }
-
-            work('Player_Id', 60)
-            work('data', 60)
-            work('profile', 30)
-            work('CLG', 40)
-
-        }
-        window.onload = adjustFontSize
-        window.onresize = adjustFontSize
-    </script>
 </body>
+{{/block}}
