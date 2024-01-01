@@ -612,7 +612,7 @@ class getdata {
      * 更新存档
      * @param {*} e 
      * @param {PhigrosUser} User 
-     * @returns 
+     * @returns [rks变化值，note变化值]
      */
     async buildingRecord(e, User) {
         try {
@@ -622,7 +622,7 @@ class getdata {
             }
         } catch (err) {
             send.send_with_At(e, "绑定失败！QAQ\n" + err)
-            return true
+            return false
         }
         var old = await this.getsave(e.user_id)
         var pluginData = await this.getpluginData(e.user_id, true)
@@ -631,7 +631,7 @@ class getdata {
             await this.putsave(e.user_id, User)
         } catch (err) {
             send.send_with_At(e, `保存存档失败！\n${err}`)
-            return true
+            return false
         }
 
         if (!pluginData) {
@@ -674,6 +674,8 @@ class getdata {
         var now = new Save(User)
         var date = User.saveInfo.modifiedAt.iso
 
+        /**note数量变化 */
+        var add_money = 0
 
         for (var song in now.gameRecord) {
             if (old && song in old.gameRecord) {
@@ -681,10 +683,10 @@ class getdata {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
-                        if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score))) {
-                            add_new_score(pluginData, this.Level[i], this.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+                        if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score) || (nowRecord.fc != oldRecord.fc))) {
+                            add_money += add_new_score(pluginData, this.Level[i], this.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         } else if (!oldRecord) {
-                            add_new_score(pluginData, this.Level[i], this.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+                            add_money += add_new_score(pluginData, this.Level[i], this.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         }
                     }
                 }
@@ -692,7 +694,7 @@ class getdata {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
-                        add_new_score(pluginData, this.Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
+                        add_money += add_new_score(pluginData, this.Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
                     }
                 }
             }
@@ -722,10 +724,15 @@ class getdata {
             })
         }
 
+        /**rks变化 */
+        var add_rks = 0
+        if (pluginData.rks.length) {
+            add_rks = now.saveInfo.summary.rankingScore - pluginData.rks[pluginData.rks.length - 2]['value']
+        }
 
         await this.putpluginData(e.user_id, pluginData)
 
-        return false
+        return [add_rks, add_money]
     }
 
     /**获取best19图片 */
@@ -946,6 +953,7 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, 
     if (pluginData.plugin_data) {
         task = pluginData.plugin_data.task
     }
+    var add_money = 0
     if (task) {
         for (var i in task) {
             if (!task[i]) continue
@@ -958,6 +966,7 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, 
                             isfinished = true
                             pluginData.plugin_data.task[i].finished = true
                             pluginData.plugin_data.money += task[i].reward
+                            add_money += task[i].reward
                             reward = task[i].reward
                         }
                         break
@@ -967,6 +976,7 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, 
                             isfinished = true
                             pluginData.plugin_data.task[i].finished = true
                             pluginData.plugin_data.money += task[i].reward
+                            add_money += task[i].reward
                             reward = task[i].reward
                         }
                         break
@@ -975,5 +985,5 @@ function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, 
             }
         }
     }
-    return false
+    return add_money
 }

@@ -147,22 +147,23 @@ export class phimoney extends plugin {
         var now_time = new Date().toString()
         var request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
         var oldtask = []
+
+        /**note变化 */
+        var change_note = 0
+
         if (request_time > last_task) {
             /**每天一次免费刷新任务 */
         } else {
             /**花费20Notes刷新 */
-            /**服务器补偿 通过是否填写token判断 免费刷新 */
-            if (!Config.getDefOrConfig('config', 'VikaToken')) {
-                if (data.plugin_data.money >= 20) {
-                    data.plugin_data.money -= 20
-                    oldtask = data.plugin_data.task
-                } else {
-                    send.send_with_At(e, `刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.plugin_data.money}`)
-                    get.delLock(e.user_id)
-                    return false
-                }
+            if (data.plugin_data.money >= 20) {
+                data.plugin_data.money -= 20
+                change_note -= 20
+                oldtask = data.plugin_data.task
+            } else {
+                send.send_with_At(e, `刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.plugin_data.money}`)
+                get.delLock(e.user_id)
+                return false
             }
-
         }
 
         data.plugin_data.task_time = now_time
@@ -237,6 +238,7 @@ export class phimoney extends plugin {
             task_ans1: Remsg1,
             Notes: data.plugin_data.money,
             tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
+            change_notes: `${change_note ? change_note : ''}`,
         }
 
         var is_sp_date = false
@@ -360,7 +362,7 @@ export class phimoney extends plugin {
             send.send_with_At(e, `这个QQ号……好像没有见过呢……`)
             return true
         }
-        
+
         var sender_data = await get.getmoneydata(e.user_id, true)
 
         if (target == e.user_id) {

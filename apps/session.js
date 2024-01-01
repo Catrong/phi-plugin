@@ -128,9 +128,15 @@ export class phisstk extends plugin {
             return true
         }
 
-        if (await get.buildingRecord(e, User)) {
+        /**记录存档rks,note变化 */
+        var added_rks_notes = await get.buildingRecord(e, User)
+        if (!added_rks_notes) {
             return true
         }
+
+        if (added_rks_notes[0]) added_rks_notes[0] = `${added_rks_notes[0] > 0 ? '+' : ''}${added_rks_notes[0].toFixed(4)}`
+        if (added_rks_notes[1]) added_rks_notes[1] = `${added_rks_notes[1] > 0 ? '+' : ''}${added_rks_notes[1].toFixed(4)}`
+
 
         /**图片 */
 
@@ -143,6 +149,7 @@ export class phisstk extends plugin {
 
         var now = new Save(User)
         var pluginData = await get.getpluginData(e.user_id)
+
 
         for (var song in pluginData.scoreHistory) {
             var tem = pluginData.scoreHistory[song]
@@ -272,14 +279,7 @@ export class phisstk extends plugin {
             task_data: task_data,
             task_time: task_time,
             dan: await get.getDan(e.user_id),
-        }
-
-        var midqiu = false
-        if (new Date().toString().includes('Sep 29 2023')) {
-            midqiu = true
-        }
-        if (midqiu) {
-            data.tips = `${pluginData.plugin_data ? (pluginData.plugin_data.sp_info || '') : ''}中秋节快乐嗷！`
+            added_rks_notes: added_rks_notes,
         }
 
         send.send_with_At(e, await get.getupdate(e, data))

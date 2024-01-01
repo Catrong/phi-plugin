@@ -41,7 +41,9 @@
                     <p>{{ChallengeModeRank}}</p>
                 </div>
             </div>
-            <p>Notes: {{Notes}}</p>
+            <p>Notes: {{Notes}}{{if change_notes}} <span
+                style="color: {{change_notes.includes('+')?'gold':'red'}};">{{change_notes}}</span>{{/if}}
+        </p></p>
             <p>Date: {{Date}}</p>
         </div>
     </div>
