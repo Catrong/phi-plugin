@@ -420,7 +420,10 @@ data_rks p {
     align-items: center;
     /* margin-top: 0.5%; */
     border-bottom: 3px solid #ffffff80;
+    justify-content: space-between;
 }
+
+.data_title p {font-size: 20px;}
 
 .data_title-left {
     width: AUTO;
