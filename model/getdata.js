@@ -732,7 +732,7 @@ class getdata {
 
         /**rks变化 */
         var add_rks = 0
-        if (pluginData.rks.length) {
+        if (pluginData.rks.length >= 2) {
             add_rks = now.saveInfo.summary.rankingScore - pluginData.rks[pluginData.rks.length - 2]['value']
         }
 
