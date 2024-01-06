@@ -464,6 +464,26 @@ circle {
     fill: #ffffff;
 }
 
+.vis_dot_box {
+    width: 0;
+    height: 0;
+    bottom: 70%;
+    left: 20%;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+}
+
+.vis_dot {
+    overflow: hidden;
+    background-color: white;
+    border-radius: 5px;
+    width: 10;
+    height: 10;
+    position: absolute;
+}
+
 .line line {
     marker-start: url(#dot)
 }

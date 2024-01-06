@@ -650,7 +650,7 @@ function encrypt_song_name(name) {
     let encryptedName = Array.from(name, (char, index) => {
         if (numset.includes(index)) {
             return char
-        } else if (char === ' ') {
+        } else if (char === ' '|| char === ' ') {
             return ' '
         } else {
             return '*'
