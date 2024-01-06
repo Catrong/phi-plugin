@@ -293,6 +293,9 @@ class getdata {
      * @returns save
      */
     async getpluginData(id, islock = false) {
+
+        islock = false //暂时先不锁
+            
         if (lock.indexOf(id) != -1) {
             logger.info(`[phi-plugin][${id}]文件读取等待中`)
             var tot = 0
@@ -350,6 +353,9 @@ class getdata {
      * @returns 整个data对象
      */
     async getmoneydata(id, islock = false) {
+
+        islock = false //暂时先不锁
+        
         var data = await this.getpluginData(id, islock)
         if (!data) {
             data = {}
@@ -726,7 +732,7 @@ class getdata {
 
         /**rks变化 */
         var add_rks = 0
-        if (pluginData.rks.length) {
+        if (pluginData.rks.length >= 2) {
             add_rks = now.saveInfo.summary.rankingScore - pluginData.rks[pluginData.rks.length - 2]['value']
         }
 
