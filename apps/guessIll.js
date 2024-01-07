@@ -205,6 +205,7 @@ export class phiguess extends plugin {
         e = eList[group_id]
 
         const t = gamelist[group_id]
+        delete eList[group_id]
         delete (gamelist[group_id])
         await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
 
@@ -250,6 +251,7 @@ export class phiguess extends plugin {
             eList[group_id] = e
             const t = gamelist[group_id]
             delete gamelist[group_id]
+            delete eList[group_id]
             await e.reply('好吧，下面开始公布答案。', true)
             await e.reply(await get.GetSongsInfoAtlas(e, t))
             return true

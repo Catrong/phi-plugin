@@ -266,7 +266,7 @@ export class phiuser extends plugin {
 
         /**统计在要求acc>=i的前提下，玩家的rks为多少 */
         const acc_rksRecord = save.sortRecord()
-        const acc_rks_phi = save.findRegRecord((e) => { e.acc >= 100 ? true : false })
+        const acc_rks_phi = save.findRegRecord(function (e) { e.acc >= 100 ? true : false })
         const acc_rks_data = []
         const acc_rks_data_ = []
 
