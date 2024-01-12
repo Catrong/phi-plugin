@@ -32,7 +32,7 @@
 ### 介绍：
 适用于`Yunzai-Bot V3`的`Phigros`辅助插件。
 
-本项目云存档由 [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary/tree/v3.1.0) 改写而来，感谢 [文酱](https://github.com/7aGiven) 的帮助！
+本项目云存档由 [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary) 改写而来，感谢 [文酱](https://github.com/7aGiven) 的帮助！
 
 交流群：[282781491](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=4YLoHlaAb5aDhTy8bi0FAjbZcC8o5XfK&authKey=Oxw5Ss06W5X0UjRN2Ql6RK%2FApduLOgCSCZiBLRw9IWP3UqShLAWw%2BMPJuZTmotW3&noverify=0&group_code=282781491)
 
