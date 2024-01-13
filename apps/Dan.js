@@ -53,7 +53,7 @@ export class phiDan extends plugin {
                 var dan = plugindata.plugin_data.CLGMOD;
 
                 if (Object.prototype.toString.call(dan) == '[object Array]') {
-                    var resmsg = `你的认证段位为`
+                    var resmsg = [`你的认证段位为`]
                     for (var i in dan) {
                         resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
                         resmsg.push(segment.image(dan[i].img))
@@ -127,7 +127,7 @@ export class phiDan extends plugin {
         }
         plugindata.plugin_data.CLGMOD = dan
         get.putpluginData(e.user_id, plugindata)
-        var resmsg = `更新成功！你的认证段位为\n`
+        var resmsg = [`更新成功！你的认证段位为\n`]
         for (var i in dan) {
             resmsg.push(`${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
             resmsg.push(segment.image(dan[i].img))
