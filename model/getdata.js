@@ -690,9 +690,9 @@ class getdata {
                         var nowRecord = now['gameRecord'][song][i]
                         var oldRecord = old['gameRecord'][song][i]
                         if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score) || (nowRecord.fc != oldRecord.fc))) {
-                            add_money += add_new_score(pluginData, this.Level[i], this.idgetsong(song, false), nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+                            add_money += add_new_score(pluginData, this.Level[i], song, nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         } else if (!oldRecord) {
-                            add_money += add_new_score(pluginData, this.Level[i], this.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+                            add_money += add_new_score(pluginData, this.Level[i], song, nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         }
                     }
                 }
@@ -700,7 +700,7 @@ class getdata {
                 for (var i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
                         var nowRecord = now['gameRecord'][song][i]
-                        add_money += add_new_score(pluginData, this.Level[i], get.idgetsong(song, false), nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
+                        add_money += add_new_score(pluginData, this.Level[i], song, nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
                     }
                 }
             }
@@ -931,19 +931,19 @@ export default get
  * 处理新成绩
  * @param {Object} pluginData
  * @param {EZ|HD|IN|AT|LEGACY} level 
- * @param {String} song 原曲名称
+ * @param {String} id 曲目id
  * @param {LevelRecord} nowRecord 当前成绩
  * @param {LevelRecord} oldRecord 旧成绩
  * @param {Date} new_date 新存档时间
  * @param {Date} old_date 旧存档时间
  */
-function add_new_score(pluginData, level, song, nowRecord, oldRecord, new_date, old_date) {
+function add_new_score(pluginData, level, songsid, nowRecord, oldRecord, new_date, old_date) {
 
 
     if (!pluginData.scoreHistory) {
         pluginData.scoreHistory = {}
     }
-    var songsid = get.SongGetId(song)
+    var song = get.idgetsong(songsid)
     if (!pluginData.scoreHistory[songsid]) {
         pluginData.scoreHistory[songsid] = {}
         if (oldRecord) {
