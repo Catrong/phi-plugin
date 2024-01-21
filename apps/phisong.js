@@ -51,7 +51,7 @@ export class phisong extends plugin {
 
     /**歌曲图鉴 */
     async song(e) {
-        let msg = e.msg.replace(/[#/](.*)(曲|song)??(\s*)/g, "")
+        let msg = e.msg.replace(/[#/](.*)(曲|song)+?(\s*)/g, "")
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} song <曲名>`)
             return true
@@ -254,7 +254,7 @@ export class phisong extends plugin {
     }
 
     async ill(e) {
-        let msg = e.msg.replace(/[#/](.*)(曲绘|ill|Ill)??(\s*)/g, "")
+        let msg = e.msg.replace(/[#/](.*)(曲绘|ill|Ill)+?(\s*)/g, "")
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} ill <曲名>`)
             return true
@@ -284,7 +284,7 @@ export class phisong extends plugin {
 
     /**随机定级范围内曲目 */
     async randmic(e) {
-        let msg = e.msg.replace(/^[#/](.*)(随机|rand)??(\s*)/, "")
+        let msg = e.msg.replace(/^[#/](.*)(随机|rand)+?(\s*)/, "")
         let isask = [1, 1, 1, 1]
 
         msg = msg.toUpperCase()
