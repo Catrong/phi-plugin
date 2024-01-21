@@ -307,6 +307,7 @@ export class phiuser extends plugin {
             acc_rks_range[0] = Math.min(acc_rks_range[0], tem_rks)
             acc_rks_range[1] = Math.max(acc_rks_range[1], tem_rks)
         }
+        // console.info(acc_rks_AccRange)
 
         for (var i = 1; i <= 300; ++i) {
             if (acc_rks_data_[0] && acc_rks_data[i - 1] == acc_rks_data[i]) {
@@ -337,7 +338,7 @@ export class phiuser extends plugin {
             }
             acc_rks_AccRange_position.push([acc_rks_AccRange[i], (acc_rks_AccRange[i] - min_acc) / acc_length * 100])
         }
-        console.info(acc_rks_AccRange_position)
+        // console.info(acc_rks_AccRange_position)
         // console.info(acc_rks_data_)
         // console.info(acc_rks_range)
 
