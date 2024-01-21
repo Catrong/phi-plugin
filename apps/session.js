@@ -150,6 +150,12 @@ export class phisstk extends plugin {
         var now = new Save(User)
         var pluginData = await get.getpluginData(e.user_id)
 
+        const RecordErr = now.checkRecord()
+
+        if (RecordErr) {
+            send.send_with_At(e, '[测试功能，小概率有误]\n请注意，你的存档可能涉嫌作弊：\n' + RecordErr)
+        }
+
 
         for (var song in pluginData.scoreHistory) {
             var tem = pluginData.scoreHistory[song]

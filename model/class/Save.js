@@ -148,6 +148,9 @@ export default class Save {
      * @returns 
      */
     sortRecord(isSort = true) {
+        if (this.sortedRecord) {
+            return this.sortedRecord
+        }
         const sortedRecord = []
         for (var song in this.gameRecord) {
             for (var level in song) {
@@ -160,9 +163,10 @@ export default class Save {
         if (!isSort) return sortedRecord
 
         sortedRecord.sort((a, b) => { return b.rks - a.rks })
+        this.sortedRecord = sortedRecord
         return sortedRecord
     }
-    
+
     /**
      * 筛选满足ACC条件的成绩
      * @param {Function} reg >=reg
@@ -190,5 +194,25 @@ export default class Save {
         /**考虑屁股肉四舍五入原则 */
         var minuprks = Math.floor(this.saveInfo.summary.rankingScore * 100) / 100 + 0.005 - this.saveInfo.summary.rankingScore
         return minuprks < 0 ? minuprks += 0.01 : minuprks
+    }
+
+    /**简单检查存档是否作弊 */
+    checkRecord() {
+        const error = ``
+        for (var i in this.gameRecord) {
+            for (var j in this.gameRecord[i]) {
+                var score = this.gameRecord[i][j]
+                if (score.acc > 100 || score.acc < 0 || score.score > 1000000 || score.score < 0) {
+                    error += `\n${i} ${j} 成绩异常 code 1`
+                }
+                if (!score.fc && (score.score >= 1000000 || score.acc >= 100)) {
+                    error += `\n${i} ${j} 成绩异常 code 2`
+                }
+                if ((score.score >= 1000000 && score.acc < 100) || (score.score < 1000000 && score.acc >= 100)) {
+                    error += `\n${i} ${j} 成绩异常 code 3`
+                }
+            }
+        }
+        return error
     }
 }
