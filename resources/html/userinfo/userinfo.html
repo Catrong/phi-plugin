@@ -193,13 +193,10 @@
                     </svg>
                 </div>
                 <div class="date_box">
-                    <p>97.0%</p>
-                    <p>97.5%</p>
-                    <p>98.0%</p>
-                    <p>98.5%</p>
-                    <p>99.0%</p>
-                    <p>99.5%</p>
-                    <p>100.0%</p>
+                    {{each acc_rks_AccRange acc}}
+                    <p style="position: absolute;left: {{acc[1]}}%;white-space: nowrap;width: 0px;display: flex;justify-content: center;">
+                        {{acc[0]%1==0?acc[0]:acc[0].toFixed(2)}}%</p>
+                    {{/each}}
                 </div>
             </div>
             {{else}}

@@ -161,14 +161,14 @@ export class phiguess extends plugin {
                     break
                 }
             }
-            remsg = [await get.getguess(e, data)]
-            remsg.push(tipmsg)
-            if (known_info.chapter) remsg.push(`\n该曲目隶属于 ${known_info.chapter}`)
-            if (known_info.bpm) remsg.push(`\n该曲目的 BPM 值为 ${known_info.bpm}`)
-            if (known_info.composer) remsg.push(`\n该曲目的作者为 ${known_info.composer}`)
-            if (known_info.length) remsg.push(`\n该曲目的时长为 ${known_info.length}`)
-            if (known_info.illustrator) remsg.push(`\n该曲目曲绘的作者为 ${known_info.illustrator}`)
-            if (known_info.chart) remsg.push(known_info.chart)
+            if (known_info.chapter) tipmsg += `\n该曲目隶属于 ${known_info.chapter}`
+            if (known_info.bpm) tipmsg += `\n该曲目的 BPM 值为 ${known_info.bpm}`
+            if (known_info.composer) tipmsg += `\n该曲目的作者为 ${known_info.composer}`
+            if (known_info.length) tipmsg += `\n该曲目的时长为 ${known_info.length}`
+            if (known_info.illustrator) tipmsg += `\n该曲目曲绘的作者为 ${known_info.illustrator}`
+            if (known_info.chart) tipmsg += known_info.chart
+            remsg = [tipmsg]
+            remsg.push(await get.getguess(e, data))
 
             e = eList[group_id]
 

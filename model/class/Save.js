@@ -164,8 +164,8 @@ export default class Save {
     }
     
     /**
-     * 筛选满足条件的成绩
-     * @param {Function} reg
+     * 筛选满足ACC条件的成绩
+     * @param {Function} reg >=reg
      * @returns 按照rks排序的数组
      */
     findRegRecord(reg) {
@@ -175,7 +175,7 @@ export default class Save {
                 if (level == 4) break
                 var tem = this.gameRecord[song][level]
                 if (!tem) continue
-                if (reg(tem)) {
+                if (tem.acc >= reg) {
                     record.push(tem)
                 }
             }

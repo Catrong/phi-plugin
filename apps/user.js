@@ -265,18 +265,33 @@ export class phiuser extends plugin {
 
 
         /**统计在要求acc>=i的前提下，玩家的rks为多少 */
+        /**存档 */
         const acc_rksRecord = save.sortRecord()
-        const acc_rks_phi = save.findRegRecord(function (e) { e.acc >= 100 ? true : false })
+        /**phi列表 */
+        const acc_rks_phi = save.findRegRecord(100)
+        /**所有rks节点 */
         const acc_rks_data = []
+        /**转换成坐标的节点 */
         const acc_rks_data_ = []
-
+        /**rks上下界 */
         const acc_rks_range = [100, 0]
 
-        for (var i = 97; i <= 100; i += 0.01) {
+        /**原本b19中最小acc */
+        const acc_rks_AccRange = [100]
+
+        for (var i = 0; i < Math.min(acc_rksRecord.length, 19); i++) {
+            acc_rks_AccRange[0] = Math.min(acc_rks_AccRange[0], acc_rksRecord[i].acc)
+        }
+
+        for (var i = acc_rks_AccRange[0]; i <= 100; i += 0.01) {
             var sum_rks = 0
             if (!acc_rksRecord[0]) break
             for (var j = 0; j < acc_rksRecord.length; j++) {
                 if (j >= 19) break
+                if (acc_rksRecord[j]?.acc < i) {
+                    /**预处理展示的acc数字 */
+                    acc_rks_AccRange.push(i)
+                }
                 while (acc_rksRecord[j]?.acc < i) {
                     acc_rksRecord.splice(j, 1)
                 }
@@ -301,7 +316,28 @@ export class phiuser extends plugin {
             }
         }
 
-        // console.info(acc_rks_data)
+        /**处理acc显示区间，防止横轴数字重叠 */
+        if (acc_rks_AccRange[acc_rks_AccRange.length - 1] < 100) {
+            acc_rks_AccRange.push(100)
+        }
+        if (acc_rks_AccRange[0] == 100) {
+            acc_rks_AccRange[0] = 0
+        }
+        const acc_length = (100 - acc_rks_AccRange[0])
+        const min_acc = acc_rks_AccRange[0]
+        /**要传的数组 */
+        const acc_rks_AccRange_position = []
+        while (100 - acc_rks_AccRange[acc_rks_AccRange.length - 2] < acc_length / 10) {
+            acc_rks_AccRange.splice(acc_rks_AccRange.length - 2, 1)
+        }
+        acc_rks_AccRange_position.push([acc_rks_AccRange[0], 0])
+        for (var i = 1; i < acc_rks_AccRange.length; i++) {
+            while (acc_rks_AccRange[i] - acc_rks_AccRange[i - 1] < acc_length / 10) {
+                acc_rks_AccRange.splice(i, 1)
+            }
+            acc_rks_AccRange_position.push([acc_rks_AccRange[i], (acc_rks_AccRange[i] - min_acc) / acc_length * 100])
+        }
+        console.info(acc_rks_AccRange_position)
         // console.info(acc_rks_data_)
         // console.info(acc_rks_range)
 
@@ -316,6 +352,7 @@ export class phiuser extends plugin {
             rks_date: [date_to_string(rks_date[0]), date_to_string(rks_date[1])],
             acc_rks_data: acc_rks_data_,
             acc_rks_range: acc_rks_range,
+            acc_rks_AccRange: acc_rks_AccRange_position,
             background: bksong || illlist[randint(0, illlist.length - 1)],
         }
 

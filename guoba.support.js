@@ -1,4 +1,3 @@
-
 import Config from './components/Config.js'
 
 // 支持锅巴
