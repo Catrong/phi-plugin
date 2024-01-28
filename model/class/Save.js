@@ -206,9 +206,9 @@ export default class Save {
                 if (score.acc > 100 || score.acc < 0 || score.score > 1000000 || score.score < 0) {
                     error += `\n${i} ${Level[j]} ${score.fc} ${score.acc} ${score.score} 非法的成绩`
                 }
-                if (!score.fc && (score.score >= 1000000 || score.acc >= 100)) {
-                    error += `\n${i} ${Level[j]} ${score.fc} ${score.acc} ${score.score} 不符合预期的值`
-                }
+                // if (!score.fc && (score.score >= 1000000 || score.acc >= 100)) {
+                //     error += `\n${i} ${Level[j]} ${score.fc} ${score.acc} ${score.score} 不符合预期的值`
+                // }
                 if ((score.score >= 1000000 && score.acc < 100) || (score.score < 1000000 && score.acc >= 100)) {
                     error += `\n${i} ${Level[j]} ${score.fc} ${score.acc} ${score.score} 成绩不自洽`
                 }
