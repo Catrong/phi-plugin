@@ -196,7 +196,7 @@ export default class Save {
         return minuprks < 0 ? minuprks += 0.01 : minuprks
     }
 
-    /**简单检查存档是否作弊 */
+    /**简单检查存档是否存在问题 */
     checkRecord() {
         var error = ``
         for (var i in this.gameRecord) {

@@ -5914,6 +5914,54 @@
             }
         }
     },
+    "ストレイソウルアラウンド.みーに" :{
+        "bpm": "",
+        "length": "2:16",
+        "chapter": "Chapter EX-Rotaeno精选集",
+        "chart": {
+            "EZ": {
+                "combo": "324"
+            },
+            "HD": {
+                "combo": "386"
+            },
+            "IN": {
+                "combo": "908"
+            }
+        }
+    },
+    "ManifoldHypothesis.cybermisofeattigerlily" :{
+        "bpm": "",
+        "length": "2:29",
+        "chapter": "Chapter EX-Rotaeno精选集",
+        "chart": {
+            "EZ": {
+                "combo": "187"
+            },
+            "HD": {
+                "combo": "401"
+            },
+            "IN": {
+                "combo": "895"
+            }
+        }
+    },
+    "KMoeVIP.ZxNX" :{
+        "bpm": "",
+        "length": "2:08",
+        "chapter": "Chapter EX-Rotaeno精选集",
+        "chart": {
+            "EZ": {
+                "combo": "123"
+            },
+            "HD": {
+                "combo": "432"
+            },
+            "IN": {
+                "combo": "1060"
+            }
+        }
+    },
     "Poseidon.1112vsStar": {
         "song": "Ποσειδών",
         "illustration": "https://img.moegirl.org.cn/common/thumb/0/01/%CE%A0%CE%BF%CF%83%CE%B5%CE%B9%CE%B4%CF%8E%CE%BD_Phigros.png/300px-%CE%A0%CE%BF%CF%83%CE%B5%CE%B9%CE%B4%CF%8E%CE%BD_Phigros.png",
