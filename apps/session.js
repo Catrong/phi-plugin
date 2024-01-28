@@ -153,7 +153,7 @@ export class phisstk extends plugin {
         const RecordErr = now.checkRecord()
 
         if (RecordErr) {
-            send.send_with_At(e, '[测试功能，小概率有误]\n请注意，你的存档可能存在一些问题：\n' + RecordErr)
+            send.send_with_At(e, '[测试功能，概率有误，暂时不清楚错误原因]\n请注意，你的存档可能存在一些问题：\n' + RecordErr)
         }
 
 

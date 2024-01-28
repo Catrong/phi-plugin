@@ -199,17 +199,18 @@ export default class Save {
     /**简单检查存档是否存在问题 */
     checkRecord() {
         var error = ``
+        const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
         for (var i in this.gameRecord) {
             for (var j in this.gameRecord[i]) {
                 var score = this.gameRecord[i][j]
                 if (score.acc > 100 || score.acc < 0 || score.score > 1000000 || score.score < 0) {
-                    error += `\n${i} ${j} 成绩异常 code 1`
+                    error += `\n${i} ${Level[j]} ${score.fc} ${score.acc} ${score.score} 非法的成绩`
                 }
                 if (!score.fc && (score.score >= 1000000 || score.acc >= 100)) {
-                    error += `\n${i} ${j} 成绩异常 code 2`
+                    error += `\n${i} ${Level[j]} ${score.fc} ${score.acc} ${score.score} 不符合预期的值`
                 }
                 if ((score.score >= 1000000 && score.acc < 100) || (score.score < 1000000 && score.acc >= 100)) {
-                    error += `\n${i} ${j} 成绩异常 code 3`
+                    error += `\n${i} ${Level[j]} ${score.fc} ${score.acc} ${score.score} 成绩不自洽`
                 }
             }
         }
