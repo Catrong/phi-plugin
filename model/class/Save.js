@@ -198,7 +198,7 @@ export default class Save {
 
     /**简单检查存档是否作弊 */
     checkRecord() {
-        const error = ``
+        var error = ``
         for (var i in this.gameRecord) {
             for (var j in this.gameRecord[i]) {
                 var score = this.gameRecord[i][j]
