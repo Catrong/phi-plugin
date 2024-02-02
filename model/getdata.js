@@ -95,7 +95,21 @@ class getdata {
         /**SP信息 */
         this.sp_info = await this.getData('spinfo.json', this.infoPath)
         /**默认别名 */
-        this.songnick = await this.getData('nicklist.yaml', this.infoPath)
+        var Yamlnick = await this.getData('nicklist.yaml', this.infoPath)
+
+        this.songnick = {}
+
+        for (var i in Yamlnick) {
+            for (var j in Yamlnick[i]) {
+                if (this.songnick[Yamlnick[i][j]]) {
+                    this.songnick[Yamlnick[i][j]].push(i)
+                } else {
+                    this.songnick[Yamlnick[i][j]] = [i]
+                }
+            }
+        }
+
+        
         /**头像id */
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
         /**Tips */
@@ -295,7 +309,7 @@ class getdata {
     async getpluginData(id, islock = false) {
 
         islock = false //暂时先不锁
-            
+
         if (lock.indexOf(id) != -1) {
             logger.info(`[phi-plugin][${id}]文件读取等待中`)
             var tot = 0
@@ -355,7 +369,7 @@ class getdata {
     async getmoneydata(id, islock = false) {
 
         islock = false //暂时先不锁
-        
+
         var data = await this.getpluginData(id, islock)
         if (!data) {
             data = {}
