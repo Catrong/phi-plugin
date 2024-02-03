@@ -28,10 +28,7 @@ export class phihelp extends plugin {
     /**暂行帮助 */
     async help(e) {
         var head = Config.getDefOrConfig('config', 'cmdhead')
-        if (head.includes('|')) {
-            head = head.match(/\(\|.*\|/g)[0]
-            head = head.replace(/(\||\(\|)/g, '')
-        }
+        head = head.replace('|', '或')
         if (head) {
             //head += ' '
             e.reply([`命令头：⌈/${head}⌋`, get.getimg('help')], true)
