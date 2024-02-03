@@ -50,13 +50,13 @@ Winter♂cube:
   - 混乱
 FULi AUTO SHOOTER:
   - 福利自动射
+  - 脑裂
 FULi AUTO BUSTER:
   - 福利自动爆
   - 福利自动炸
+  - 脑裂
 NO ONE YES MAN:
   - NOYM
-FULi AUTO SHOOTER,FULi AUTO BUSTER,NO ONE YES MAN:
-  - 脑裂
 "[PRAW]":
   - PRAW
 Pixel Rebelz:
@@ -135,8 +135,9 @@ Miracle Forest (VIP Mix):
 MOBILYS:
   - 灯球
   - 光球
-After Dawn,Ad astra per aspera:
+After Dawn:
   - AD
+  - 黎明之后
 Ad astra per aspera:
   - 太阳
   - 循此苦旅 直抵群星
@@ -318,10 +319,11 @@ RESSiSTANCE:
   - 反抗
 Future Mind:
   - FM
-Luminescent,Luminescence:
+Luminescent:
   - 冷光
 Luminescence:
   - 烟花
+  - 冷光
 Protoflicker:
   - 守船石
   - flicker
@@ -448,12 +450,15 @@ El último baile:
 Dlyrotz:
   - 德利
   - 队长
-Apocalypse,Apocalyptic:
+Apocalypse:
   - 启示录
-Rainy Season,Rainy Heart:
+Apocalyptic:
+  - 启示录
+Rainy Season:
   - 梅雨
 Rainy Heart:
   - 雨心
+  - 梅雨
 HumaN:
   - 人类
 El Condor Pasa (Phigros Edit):
@@ -480,9 +485,6 @@ Find_Me:
   - 找我
 Pont des souvenirs:
   - 记忆之桥
-Another Me (KALPA),Another Me (Rising Sun Traxx):
-  - Another Me
-  - 另一个我
 dB doll:
   - 碉堡玩偶
   - 大比玩偶
@@ -500,8 +502,6 @@ Burn(Haocore Mix):
   - 烤全压SP
   - 考全压SP
   - 烤鸭SP
-Sigma(Haocore Mix)～105秒の伝説～,Sigma(Haocore Mix)～Regrets of The Yellow Tulip～:
-  - sigmaSP
 Sigma(Haocore Mix)～105秒の伝説～:
   - sigma表SP
   - sigmaSP1
@@ -555,8 +555,6 @@ Dance with Silence:
 Triumph & Regret:
   - CF
   - T&R
-After Dawn:
-  - 黎明之后
 Diamond Eyes:
   - 钻石眼
 A journey to the moonlight:
