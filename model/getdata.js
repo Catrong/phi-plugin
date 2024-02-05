@@ -293,11 +293,11 @@ class getdata {
     }
 
     /**
-     * 删除QQ号对应的Note和历史文件
+     * 删除QQ号对应的娱乐数据
      * @param {String} id user_id
      */
     async delpluginData(id) {
-        return this.pluginDataPath(`${id}.json`, this.userPath)
+        return this.delData(`${id}_.json`, `${this.pluginDataPath}`)
     }
 
     /**
@@ -350,14 +350,6 @@ class getdata {
         if (lock.indexOf(id) != -1) {
             delete lock[lock.indexOf(id)]
         }
-    }
-
-    /**
-     * 删除QQ号对应的娱乐数据
-     * @param {String} id user_id
-     */
-    async delpluginData(id) {
-        return this.delData(`${id}_.json`, `${this.pluginDataPath}`)
     }
 
     /**
