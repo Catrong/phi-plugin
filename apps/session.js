@@ -16,7 +16,7 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(绑定|bind).*[^(uid)\s0-9].*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(绑定|bind).*[^(uid)\\s0-9].*$`,
                     fnc: 'bind'
                 },
                 {
@@ -61,30 +61,6 @@ export class phisstk extends plugin {
 
             e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
             // return true
-        }
-
-        var User = await get.getsave(e.user_id)
-        if (User) {
-            if (User.session) {
-                if (User.session == sessionToken) {
-                    send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
-                } else {
-                    send.send_with_At(e, `检测到新的sessionToken，将自动删除之前的存档记录……`)
-
-                    await get.delsave(e.user_id)
-                    var pluginData = await get.getpluginData(e.user_id, true)
-
-                    pluginData.rks = []
-                    pluginData.data = []
-                    pluginData.dan = []
-                    pluginData.scoreHistory = {}
-                    if (pluginData.plugin_data) {
-                        pluginData.plugin_data.task = []
-                        pluginData.plugin_data.CLGMOD = []
-                    }
-                    await get.putpluginData(e.user_id, pluginData)
-                }
-            }
         }
 
         try {
