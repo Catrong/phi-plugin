@@ -276,7 +276,7 @@ export class phiuser extends plugin {
         /**rks上下界 */
         const acc_rks_range = [100, 0]
 
-        /**原本b19中最小acc */
+        /**原本b19中最小acc 要展示的acc序列 */
         const acc_rks_AccRange = [100]
 
         for (var i = 0; i < Math.min(acc_rksRecord.length, 19); i++) {
@@ -303,19 +303,20 @@ export class phiuser extends plugin {
             }
             // console.info(acc_rksRecord[0])
             var tem_rks = (sum_rks + (acc_rks_phi[0]?.rks || 0)) / 20
-            acc_rks_data.push(tem_rks)
+            acc_rks_data.push([i, tem_rks])
             acc_rks_range[0] = Math.min(acc_rks_range[0], tem_rks)
             acc_rks_range[1] = Math.max(acc_rks_range[1], tem_rks)
         }
         // console.info(acc_rks_AccRange)
 
-        for (var i = 1; i <= 300; ++i) {
-            if (acc_rks_data_[0] && acc_rks_data[i - 1] == acc_rks_data[i]) {
-                acc_rks_data_[acc_rks_data_.length - 1][2] = i
+        for (var i = 1; i < acc_rks_data.length; ++i) {
+            if (acc_rks_data_[0] && acc_rks_data[i - 1][1] == acc_rks_data[i][1]) {
+                acc_rks_data_[acc_rks_data_.length - 1][2] = range(acc_rks_data[i][0], acc_rks_AccRange)
             } else {
-                acc_rks_data_.push([i - 1, range(acc_rks_data[i - 1], acc_rks_range), i, range(acc_rks_data[i], acc_rks_range)])
+                acc_rks_data_.push([range(acc_rks_data[i - 1][0], acc_rks_AccRange), range(acc_rks_data[i - 1][1], acc_rks_range), range(acc_rks_data[i][0], acc_rks_AccRange), range(acc_rks_data[i][1], acc_rks_range)])
             }
         }
+        console.info(acc_rks_data_)
 
         /**处理acc显示区间，防止横轴数字重叠 */
         if (acc_rks_AccRange[acc_rks_AccRange.length - 1] < 100) {
@@ -593,14 +594,14 @@ export class phiuser extends plugin {
 /**
  * 计算百分比
  * @param {Number} value 值
- * @param {Array} range 区间数组 (0,1)
+ * @param {Array} range 区间数组 (0,..,1)
  * @returns 百分数，单位%
  */
 function range(value, range) {
-    if (range[0] == range[1]) {
+    if (range[0] == range[range.length - 1]) {
         return 50
     } else {
-        return (value - range[0]) / (range[1] - range[0]) * 100
+        return (value - range[0]) / (range[range.length - 1] - range[0]) * 100
     }
 }
 
