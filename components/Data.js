@@ -41,7 +41,7 @@ let Data = {
             try {
                 return JSON.parse(fs.readFileSync(`${root}/${file}`, 'utf8'))
             } catch (e) {
-                console.log(e)
+                logger.error(e)
             }
         }
         return {}
@@ -69,7 +69,7 @@ let Data = {
                 return JSON.parse(txt)
             }
         } catch (e) {
-            console.log(e)
+            console.error(e)
         }
         return {}
     },
@@ -88,7 +88,7 @@ let Data = {
                 let data = await import(`file://${root}/${file}?t=${new Date() * 1}`)
                 return data || {}
             } catch (e) {
-                console.log(e)
+                console.error(e)
             }
         }
         return {}

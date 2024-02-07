@@ -316,7 +316,7 @@ export class phiuser extends plugin {
                 acc_rks_data_.push([range(acc_rks_data[i - 1][0], acc_rks_AccRange), range(acc_rks_data[i - 1][1], acc_rks_range), range(acc_rks_data[i][0], acc_rks_AccRange), range(acc_rks_data[i][1], acc_rks_range)])
             }
         }
-        console.info(acc_rks_data_)
+        // console.info(acc_rks_data_)
 
         /**处理acc显示区间，防止横轴数字重叠 */
         if (acc_rks_AccRange[acc_rks_AccRange.length - 1] < 100) {
