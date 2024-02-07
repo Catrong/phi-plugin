@@ -466,10 +466,13 @@ export class phib19 extends plugin {
                         data.scoreData[Level[i]] = {
                             ...ans[i],
                             suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4),
-                            difficulty: data.scoreData[Level[i]].difficulty,
+                            difficulty: songsinfo['chart'][Level[i]]['difficulty'],
                         }
                     } else {
-                        data.scoreData[Level[i]].Rating = 'NEW'
+                        data.scoreData[Level[i]] = {
+                            Rating: 'NEW',
+                            difficulty: songsinfo['chart'][Level[i]]['difficulty'],
+                        }
                     }
                 }
                 data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
