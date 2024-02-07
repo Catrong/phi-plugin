@@ -104,6 +104,7 @@ pnpm install -P
 | `#phi (rand\|随机) <条件>` | 根据条件随机曲目，条件支持难度、定数，难度可以多选，定数以-作为分隔 |
 | `#phi (曲绘\|ill\|Ill) xxx` | 查询phigros中某一曲目的曲绘 |
 | `#phi (search\|查询\|检索) <条件 值>` | 检索曲库中的曲目，支持BPM 定数 物量，条件 bpm dif cmb，值可以为区间，以 - 间隔 |
+| `#phi (theme\|主题) [0-2]` | 切换绘图主题，仅对 b19 update task 生效 |
 | `sign/签到` | 签到获取Notes |
 | `task/我的任务` | 查看自己的任务 |
 | `retask/刷新任务` | 刷新任务，需要花费20Notes |

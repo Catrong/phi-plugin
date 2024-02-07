@@ -72,6 +72,7 @@ export class phib19 extends plugin {
         }
 
         var save = await send.getsave_result(e)
+        var plugin_data = await get.getpluginData(e.user_id)
 
         if (!save) {
             return true
@@ -167,6 +168,7 @@ export class phib19 extends plugin {
             background: bksong || illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             nnum: nnum,
             dan: await get.getDan(e.user_id),
+            theme: plugin_data?.plugin_data?.theme || 'star',
         }
         if (save.gameProgress) {
             var money = save.gameProgress.money

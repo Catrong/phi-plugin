@@ -262,6 +262,7 @@ export class phisstk extends plugin {
             task_time: task_time,
             dan: await get.getDan(e.user_id),
             added_rks_notes: added_rks_notes,
+            theme: pluginData?.plugin_data?.theme || 'star',
         }
 
         send.send_with_At(e, await get.getupdate(e, data))

@@ -9,30 +9,31 @@ import fs from 'node:fs'
 logger.info('------φ^_^φ------')
 
 const files = fs.readdirSync('./plugins/phi-plugin/apps').filter(file => file.endsWith('.js'))
-
+let errvis = false
 let ret = []
 
 files.forEach((file) => {
-  ret.push(import(`./apps/${file}`))
+    ret.push(import(`./apps/${file}`))
 })
 
 ret = await Promise.allSettled(ret)
 
 let apps = {}
 for (let i in files) {
-  let name = files[i].replace('.js', '')
+    let name = files[i].replace('.js', '')
 
-  if (ret[i].status != 'fulfilled') {
-    logger.error(`[phi-plugin]载入插件错误：${logger.red(name)}`)
-    logger.error(ret[i].reason)
-    continue
-  }
-  apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
+    if (ret[i].status != 'fulfilled') {
+        logger.error(`[phi-plugin]载入插件错误：${logger.red(name)}`)
+        logger.error(ret[i].reason)
+        errvis = true
+        continue
+    }
+    apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
 }
 export { apps }
 
-
-logger.info(` phi插件载入成功~`)
-logger.info(` 本项目云存档功能由 7aGiven/PhigrosLibrary 改写而来，感谢文酱的帮助！`)
-logger.info(` 可以在这个群找到我哦！282781491`)
-logger.info(`-----------------`);
+if (!errvis) {
+    logger.info(` phi插件载入成功~`)
+    logger.info(` 本项目云存档功能由 7aGiven/PhigrosLibrary 改写而来，感谢文酱的帮助！`)
+    logger.info(` 可以在这个群找到我哦！282781491`)
+}

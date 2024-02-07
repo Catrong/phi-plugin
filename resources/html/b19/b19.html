@@ -7,10 +7,16 @@
 
 <body style="scale: {{size}};">
     <div class="background">
+        {{if theme == "star"}}
+        <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
+        <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
+            style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
+        {{else}}
         {{if background}}
         <img src="{{background}}" alt="曲绘-模糊">
         {{else}}
         <img src="{{_res_path}}html/otherimg/phigros.png" alt="曲绘-模糊">
+        {{/if}}
         {{/if}}
     </div>
     <div class="title">
@@ -225,9 +231,9 @@
             <p>{{Version.ver}}</p>
         </div>
     </div>
-    <div class="snow-box"> </div>
 
-    <!-- 曲目名称自适应name-box的宽度 -->
+    {{if theme == "snow"}}
+    <div class="snow-box"> </div>
     <script>
         function addSnow() {
             var snow = document.createElement("div")
@@ -242,6 +248,18 @@
             const tar = document.getElementsByClassName("snow-box")[0]
             tar.appendChild(snow)
         }
+        var sum = Math.floor(Math.random() * 100) + 50
+        while (sum--) {
+            addSnow()
+        }
+    </script>
+    {{else if theme == "star"}}
+    <canvas id="stars"></canvas>
+    <script src="{{_res_path}}html/common/star.js"></script>
+    {{/if}}
+
+    <!-- 曲目名称自适应name-box的宽度 -->
+    <script>
         function adjustFontSize() {
             //获取p元素
             var a = document.getElementsByName('pvis')
@@ -276,10 +294,6 @@
                     var fontSize = parseFloat(style);
                     songName.style.fontSize = (fontSize - 1) + "px";
                 }
-            }
-            var sum = Math.floor(Math.random() * 100) + 50
-            while (sum--) {
-                addSnow()
             }
         }
         window.onload = adjustFontSize

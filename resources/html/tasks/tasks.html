@@ -10,10 +10,16 @@
 
 <body style="scale: {{size}};">
     <div class="background">
+        {{if theme == "star"}}
+        <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
+        <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
+            style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
+        {{else}}
         {{if background}}
         <img src="{{background}}" alt="曲绘-模糊">
         {{else}}
         <img src="{{_res_path}}html/otherimg/phigros.png" alt="曲绘-模糊">
+        {{/if}}
         {{/if}}
     </div>
     <div class="title">
@@ -42,8 +48,9 @@
                 </div>
             </div>
             <p>Notes: {{Notes}}{{if change_notes}} <span
-                style="color: {{change_notes.includes('+')?'gold':'red'}};">{{change_notes}}</span>{{/if}}
-        </p></p>
+                    style="color: {{change_notes.includes('+')?'gold':'red'}};">{{change_notes}}</span>{{/if}}
+            </p>
+            </p>
             <p>Date: {{Date}}</p>
         </div>
     </div>
@@ -105,6 +112,30 @@
         <p>Tip:{{tips}}</p>
     </div>
     {{/if}}
+    {{if theme == "snow"}}
     <div class="snow-box"> </div>
+    <script>
+        function addSnow() {
+            var snow = document.createElement("div")
+            snow.innerHTML = `<img src="{{_res_path}}html/otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
+            snow.className = "snow"
+            snow.style.left = `${Math.random() * 100}%`
+            snow.style.bottom = `${Math.random() * 100}%`
+            snow.style.width = `${Math.random() * 4}%`
+            snow.style.rotate = `${Math.random() * 360}deg`
+            snow.style.transform = `rotate3d(${Math.random()}, ${Math.random()}, ${Math.random()}, ${Math.random() * 360}deg)`
+            snow.style.filter = `blur(${Math.random() * 2}px)`
+            const tar = document.getElementsByClassName("snow-box")[0]
+            tar.appendChild(snow)
+        }
+        var sum = Math.floor(Math.random() * 100) + 50
+        while (sum--) {
+            addSnow()
+        }
+    </script>
+    {{else if theme == "star"}}
+    <canvas id="stars"></canvas>
+    <script src="{{_res_path}}html/common/star.js"></script>
+    {{/if}}
 </body>
 {{/block}}

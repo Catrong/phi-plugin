@@ -105,6 +105,7 @@ The following # can be replaced by / , and the command header can be customized
 | `#phi (rand\|随机) <condition>` | According to the conditional random tracks, the condition supports difficulty, fixed number, difficulty can be multi-select, in - interval |
 | `#phi (曲绘\|ill\|Ill) xxx` | Query the artwork of a track in Phigros |
 | `#phi (search\|查询\|检索) <condition, value>` | Retrieve tracks in the library, support BPM constant quantity, condition bpm dif cmb, the value can be interval, with - interval |
+| `#phi (theme\|主题) [0-2]` | Switch the drawing theme, only effective for the b19, the update and the task |
 | `sign/签到` | Check in to get Notes and task |
 | `task/我的任务` | Review your tasks |
 | `retask/刷新任务` | Refreshing the task costs 20Notes |

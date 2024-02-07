@@ -372,7 +372,8 @@ class getdata {
                 CLGMOD: {},
                 sign_in: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
                 task_time: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
-                task: []
+                task: [],
+                theme: 'default',
             }
         }
         return data

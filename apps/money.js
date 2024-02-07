@@ -6,6 +6,7 @@ import send from '../model/send.js'
 import Vika from '../model/Vika.js'
 
 const illlist = []
+const theme = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }]
 
 const sp_date = 'Jan 01 2024'
 const sp_date_num = [2024]
@@ -43,7 +44,10 @@ export class phimoney extends plugin {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(send|送|转)(.*)$`,
                     fnc: 'send'
                 },
-
+                {
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(theme)(\\s*)[0-2]$`,
+                    fnc: 'theme'
+                },
             ]
         })
 
@@ -239,6 +243,7 @@ export class phimoney extends plugin {
             Notes: data.plugin_data.money,
             tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
             change_notes: `${change_note ? change_note : ''}`,
+            theme: data?.plugin_data?.theme || 'star',
         }
 
         var is_sp_date = false
@@ -316,6 +321,7 @@ export class phimoney extends plugin {
             Notes: data.plugin_data.money,
             tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
             dan: await get.getDan(e.user_id),
+            theme: data?.plugin_data?.theme || 'star',
         }
 
 
@@ -397,6 +403,24 @@ export class phimoney extends plugin {
         await get.putpluginData(target, target_data)
         var target_card = await Bot.pickMember(e.group_id, target)
         send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.plugin_data.money}\n${target_card.nickname || target_card.card}的Note: ${target_old} + ${Math.ceil(num * 0.8)} = ${target_data.plugin_data.money}`)
+    }
+
+    /**主题相关 */
+    async theme(e) {
+        var aim = e.msg.replace(/.*?theme\s*/g, '')
+        aim = Number(aim)
+        if (typeof aim != 'number' || aim < 0 || aim > 2) {
+            send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getDefOrConfig('config', 'cmdhead')} theme 0-2`)
+            return false
+        }
+        await get.getmoneydata(e.user_id)
+        const plugin_data = await get.getpluginData(e.user_id)
+        plugin_data.plugin_data.theme = theme[aim].id
+
+        await get.putpluginData(e.user_id, plugin_data)
+
+        send.send_with_At(e, `设置成功！\n你当前的主题是：${theme[aim].src}`)
+        return true
     }
 }
 

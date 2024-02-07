@@ -2,9 +2,9 @@
     <link rel="stylesheet" href="./b19.css">
 </head>
 
-<body style="scale: 0.6;" id="body">
+<body style="scale: 0.5;" id="body">
     <div class="background">
-        <img src="../../original_ill/illBlur/996.李化禹.png" alt="曲绘-模糊">
+        <img src="../../original_ill/illBlur/996.李化禹.png" alt="曲绘-模糊" id="bkg">
     </div>
     <div class="title">
         <div class="l">
@@ -579,9 +579,13 @@
                     songName.style.fontSize = (fontSize - 1) + "px";
                 }
             }
-            var sum = Math.floor(Math.random() * 100) + 50
-            while (sum--) {
-                addSnow()
+
+            if (document.getElementsByClassName("snow-box")[0]) {
+                var sum = Math.floor(Math.random() * 100) + 50
+                while (sum--) {
+                    addSnow()
+                }
+
             }
         }
         window.onload = adjustFontSize

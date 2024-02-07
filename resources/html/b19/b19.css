@@ -19,7 +19,7 @@ body p {
 .background img {
     height: 100%;
     width: auto;
-    filter: blur(100px) brightness(75%);
+    /* filter: blur(100px) brightness(75%); */
 }
 
 .b19 {
