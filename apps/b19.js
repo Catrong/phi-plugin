@@ -50,7 +50,7 @@ export class phib19 extends plugin {
     async b19(e) {
 
         var nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
-        
+
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
         if (!nnum) {
             nnum = 21
@@ -416,6 +416,7 @@ export class phib19 extends plugin {
 
         history.splice(16)
 
+
         var data = {
             songName: song,
             PlayerId: save.saveInfo.PlayerId,
@@ -461,6 +462,7 @@ export class phib19 extends plugin {
                 }
                 // console.info(ans)
                 for (var i in ans) {
+                    if (i > 3 || !songsinfo['chart'][Level[i]]) break
                     if (ans[i]) {
                         ans[i].acc = ans[i].acc.toFixed(4)
                         ans[i].rks = ans[i].rks.toFixed(4)

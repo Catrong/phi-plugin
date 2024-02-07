@@ -171,7 +171,7 @@
                     <p>{{song.acc_new.toFixed(4)}}%</p>
                 </div>
                 <div class="HistoryRks">
-                    <p>{{song.rks_new.toFixed(2)}}</p>
+                    <p>{{song.rks_new?song.rks_new.toFixed(2):''}}</p>
                 </div>
             </div>
             {{/each}}
