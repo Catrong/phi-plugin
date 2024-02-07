@@ -459,7 +459,7 @@ export class phib19 extends plugin {
                     data.scoreData[i] = {}
                     data.scoreData[i].difficulty = songsinfo['chart'][i]['difficulty']
                 }
-                console.info(ans)
+                // console.info(ans)
                 for (var i in ans) {
                     if (ans[i]) {
                         ans[i].acc = ans[i].acc.toFixed(4)
