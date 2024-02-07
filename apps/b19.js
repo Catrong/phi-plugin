@@ -459,6 +459,7 @@ export class phib19 extends plugin {
                     data.scoreData[i] = {}
                     data.scoreData[i].difficulty = songsinfo['chart'][i]['difficulty']
                 }
+                console.info(ans)
                 for (var i in ans) {
                     if (ans[i]) {
                         ans[i].acc = ans[i].acc.toFixed(4)
@@ -466,12 +467,10 @@ export class phib19 extends plugin {
                         data.scoreData[Level[i]] = {
                             ...ans[i],
                             suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4),
-                            difficulty: songsinfo['chart'][Level[i]]['difficulty'],
                         }
                     } else {
                         data.scoreData[Level[i]] = {
                             Rating: 'NEW',
-                            difficulty: songsinfo['chart'][Level[i]]['difficulty'],
                         }
                     }
                 }
