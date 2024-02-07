@@ -33,7 +33,7 @@ var Star = function () {
     //绘制
     this.draw = function () {
         context.fillStyle = this.color;
-        context.font = Math.random() * 20 + 15 + "px Georgia";
+        context.font = Math.random() * 10 + 5 + "px Georgia";
         context.fillText(this.text, this.x, this.y);
     }
 }
