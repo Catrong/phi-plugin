@@ -71,7 +71,7 @@ export class phiupdateIll extends plugin {
     async clone() {
         let command = "git clone https://gitee.com/Steveeee-e/phi-plugin-ill.git ./plugins/phi-plugin/resources/original_ill/ --depth=1";
 
-        this.e.reply("正在下载曲绘文件，请勿重复执行");
+        this.e.reply("开始下载曲绘文件，请勿重复执行");
 
         uping = true;
         let ret = await this.execSync(command);
