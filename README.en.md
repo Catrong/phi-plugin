@@ -41,8 +41,6 @@ Can you help provide some aliases, welcome to submit pull requests or come to me
 
 I'm already in my third year of high school, and I can't necessarily write code on weekends, so there may not be major feature updates in the past year, only maintenance of new tracks. Thank you all very much for your understanding :(
 
-Plugin official QQGuild: [Hutao114Pgr939](https://pd.qq.com/s/e3z86q6bw)，Bots can be added to other Guild, and any questions can also come to Guild for feedback
-
 ### Special thanks:
 <table style="border-radius: 20px">
   <tbody style="border-radius: 20px">
