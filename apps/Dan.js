@@ -139,7 +139,7 @@ export class phiDan extends plugin {
 
     async sstk(e) {
         if (e.isGroup) {
-            send.send_with_At(e, [segment.at(e.user_id), `请私聊使用嗷`])
+            send.send_with_At(e, `请私聊使用嗷`)
             return false
         }
         var save = await send.getsave_result(e)
