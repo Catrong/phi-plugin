@@ -34,10 +34,6 @@
 
 本项目云存档由 [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary) 改写而来，感谢 [文酱](https://github.com/7aGiven) 的帮助！
 
-交流群：[282781491](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=4YLoHlaAb5aDhTy8bi0FAjbZcC8o5XfK&authKey=Oxw5Ss06W5X0UjRN2Ql6RK%2FApduLOgCSCZiBLRw9IWP3UqShLAWw%2BMPJuZTmotW3&noverify=0&group_code=282781491)
-
-大家能不能帮忙提供一些别名呐QAQ，欢迎提交PR或者来找我！
-
 # 高三下学期，停止更新（
 
 ### 特别鸣谢
