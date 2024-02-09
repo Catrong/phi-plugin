@@ -35,12 +35,6 @@
 
 The cloud save of this project is a rewrite of [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary/tree/v3.1.0), thanks to [文酱](https://github.com/7aGiven) for help!
 
-Official QQ exchange group:[282781491](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=4YLoHlaAb5aDhTy8bi0FAjbZcC8o5XfK&authKey=Oxw5Ss06W5X0UjRN2Ql6RK%2FApduLOgCSCZiBLRw9IWP3UqShLAWw%2BMPJuZTmotW3&noverify=0&group_code=282781491)
-
-Can you help provide some aliases, welcome to submit pull requests or come to me!
-
-I'm already in my third year of high school, and I can't necessarily write code on weekends, so there may not be major feature updates in the past year, only maintenance of new tracks. Thank you all very much for your understanding :(
-
 ### Special thanks:
 <table style="border-radius: 20px">
   <tbody style="border-radius: 20px">
