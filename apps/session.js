@@ -39,10 +39,12 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            if (!Config.getDefOrConfig('config', 'isGuild')) {
+            if (!await e.recall()) {
+                if (!Config.getDefOrConfig('config', 'isGuild')) {
 
-                send.send_with_At(e, `\n请注意保护好自己的sessionToken哦！`, false, { recallMsg: 10 })
-                // return true
+                    send.send_with_At(e, `\n请注意保护好自己的sessionToken哦！`, false, { recallMsg: 10 })
+                    // return true
+                }
             }
         }
 
@@ -100,7 +102,7 @@ export class phisstk extends plugin {
 
         } catch (err) {
             logger.error(`[phi-plugin]绑定sessionToken错误 ${sessionToken}`)
-            send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, false, { recallMsg: 10 })
             return true
         }
 
