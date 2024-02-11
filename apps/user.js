@@ -69,7 +69,7 @@ export class phiuser extends plugin {
         if (User) {
             if (User.gameProgress) {
                 var data = User.gameProgress.money
-                send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PiB ` : ''}${data[3] ? `${data[3]}TiB ` : ''}${data[2] ? `${data[2]}GiB ` : ''}${data[1] ? `${data[1]}MiB ` : ''}${data[0] ? `${data[0]}KiB ` : ''}`)
+                send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PB ` : ''}${data[3] ? `${data[3]}TB ` : ''}${data[2] ? `${data[2]}GB ` : ''}${data[1] ? `${data[1]}MB ` : ''}${data[0] ? `${data[0]}KB ` : ''}`)
             } else {
                 send.send_with_At(e, `请先更新数据哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} update`)
             }
