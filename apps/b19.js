@@ -22,7 +22,7 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b[0-9]+|rks|pgr|PGR|B[0-9]+|RKS).*$`,
+                    reg: `^([#/]?${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)pgr|[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b[0-9]+|rks|pgr|PGR|B[0-9]+|RKS).*)$`,
                     fnc: 'b19'
                 },
                 {
