@@ -39,7 +39,10 @@ export class phisstk extends plugin {
     async bind(e) {
 
         if (e.isGroup) {
-            if (!await e.recall()) {
+            try {
+                await e.recall()
+            }
+            catch {
                 if (!Config.getDefOrConfig('config', 'isGuild')) {
 
                     send.send_with_At(e, `\n请注意保护好自己的sessionToken哦！`, false, { recallMsg: 10 })
