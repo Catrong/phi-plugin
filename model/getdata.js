@@ -23,6 +23,7 @@ class getdata {
         /**曲绘资源、曲目信息路径 */
         // this.infoPath = `E:/bot/233/Miao-Yunzai/plugins/phi-plugin/resources/info/`
         this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
+        this.DlcInfoPath = `${_path}/plugins/phi-plugin/resources/info/DLC/`
 
         /**用户数据路径 */
         // this.userPath = `E:/bot/233/Miao-Yunzai/plugins/phi-plugin/data/`
@@ -66,6 +67,7 @@ class getdata {
         } catch (error) {
             logger.warn(error)
         }
+        /**之前改过一次名称，修正别名 */
         var nick = await this.getData('nickconfig.yaml', this.configPath, 'TXT')
         if (nick) {
             const waitToReplace = {
@@ -92,6 +94,11 @@ class getdata {
 
         /**附加信息 */
         const Jsoninfo = await this.getData('infolist.json', this.infoPath)
+
+        /**扩增曲目信息 */
+        this.arcName = await this.getData('arc.json', this.DlcInfoPath)
+        this.orzName = await this.getData('orz.json', this.DlcInfoPath)
+
         /**SP信息 */
         this.sp_info = await this.getData('spinfo.json', this.infoPath)
         /**默认别名 */
@@ -109,7 +116,7 @@ class getdata {
             }
         }
 
-        
+
         /**头像id */
         this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
         /**Tips */
@@ -898,7 +905,7 @@ class getdata {
         if (acc == 100) {
             /**满分原曲定数即为有效rks */
             return Number(difficulty)
-        } else if (acc < 55) {
+        } else if (acc < 70) {
             /**无效acc */
             return 0
         } else {
