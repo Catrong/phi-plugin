@@ -16,7 +16,7 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(绑定|bind).*[^(uid)\\s0-9].*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(绑定|bind).*[0-9a-zA-Z]{25}.*$`,
                     fnc: 'bind'
                 },
                 {
@@ -51,10 +51,8 @@ export class phisstk extends plugin {
             }
         }
 
-        var sessionToken = e.msg.replace(/(#|\/)(.*)(绑定|bind)(\s*)/g, '')
-        sessionToken = sessionToken.replace(" ", '')
-        sessionToken = sessionToken.replace("<", '')
-        sessionToken = sessionToken.replace(">", '')
+        var sessionToken = e.msg.match(/[0-9a-zA-Z]{25}/g)
+        sessionToken = sessionToken ? sessionToken[0] : null
 
 
         if (!sessionToken) {
