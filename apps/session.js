@@ -16,7 +16,7 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(绑定|bind).*[0-9a-zA-Z]{25}.*$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(绑定.*[0-9a-zA-Z]{25}|bind).*$`,
                     fnc: 'bind'
                 },
                 {
