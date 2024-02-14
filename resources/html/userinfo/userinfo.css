@@ -310,7 +310,7 @@ data_rks p {
     margin-top: 2.5%;
     border: #7aa8bb69 2px solid;
     flex-direction:column ;
-    max-height: 16%;
+    max-height: 10%;
 }
 
 #data_box {
@@ -327,7 +327,7 @@ data_rks p {
     margin-top: 2.5%;
     border: #7aa8bb69 2px solid;
     flex-direction:column ;
-    max-height: 10%;
+    max-height: 16%;
 }
 
 .Player_box_title {
