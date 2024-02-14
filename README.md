@@ -10,7 +10,7 @@
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
 [![Group](https://img.shields.io/badge/QQ群-282781491-9cf?style=for-the-badge&logo=tencent-qq)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=4YLoHlaAb5aDhTy8bi0FAjbZcC8o5XfK&authKey=Oxw5Ss06W5X0UjRN2Ql6RK%2FApduLOgCSCZiBLRw9IWP3UqShLAWw%2BMPJuZTmotW3&noverify=0&group_code=282781491)
 [![Guild](https://img.shields.io/badge/频道-Hutao114Pgr939-9cf?style=for-the-badge&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
-[![Bilibili](https://img.shields.io/badge/Bilibili_就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
+[![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Star)](../../stargazers)
 
 [![phi-plugin](https://img.shields.io/badge/语言-中文-FF0000?style=for-the-badge)](https://github.com/Catrong/phi-plugin/blob/main/README.md)
@@ -90,12 +90,11 @@ pnpm install -P #安装插件所需依赖
 | `#phi (rand\|随机) <条件>` | 根据条件随机曲目，条件支持难度、定数，难度可以多选，定数以-作为分隔 
 | `#phi (曲绘\|ill\|Ill) xxx` | 查询phigros中某一曲目的曲绘 
 | `#phi (search\|查询\|检索) <条件 值>` | 检索曲库中的曲目，支持BPM 定数 物量，条件 bpm dif cmb，值可以为区间，以 - 间隔 
-| `#phi (theme\|主题) [0-2]` | 切换绘图主题，仅对 b19 update task 生效 
+| `#phi (theme\|主题) [0-2]` | 切换绘图主题，仅对 b19 update 生效 
 | `sign/签到` | 签到获取Notes 
 | `task/我的任务` | 查看自己的任务 
 | `retask/刷新任务` | 刷新任务，需要花费20Notes 
 | `#phi (send\|送\|转) <目标> <数量>` | 送给目标Note，支持@或QQ号 
-| `#phi theme(0\|1\|2)` | 送给目标Note，支持@或QQ号 
 
 #### **以下为管理功能**
 
