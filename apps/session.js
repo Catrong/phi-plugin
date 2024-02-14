@@ -51,7 +51,7 @@ export class phisstk extends plugin {
             }
         }
 
-        var sessionToken = e.msg.match(/[0-9a-zA-Z]{25}/g)
+        var sessionToken = e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}/g)
         sessionToken = sessionToken ? sessionToken[0] : null
 
 
