@@ -49,25 +49,7 @@ class Film {
         try {
             if (!fs.existsSync(`${path}`)) { return false }
             if (!style) {
-                switch (path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase()) {
-                    case 'JSON': {
-                        style = 'JSON'
-                        break
-                    }
-                    case 'YAML': {
-                        style = 'YAML'
-                        break
-                    }
-                    case 'CSV': {
-                        style = 'CSV'
-                        break
-                    }
-                    default: {
-                        console.info(path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase())
-                        style = 'TXT'
-                    }
-                }
-
+                style = path.match(/\.(\w+)$/g)[0].replace('.', '').toUpperCase()
             }
             switch (style) {
                 case 'JSON': {
@@ -79,7 +61,11 @@ class Film {
                 case 'CSV': {
                     return (await csv().fromString(fs.readFileSync(`${path}`, 'utf8')))
                 }
+                case 'TXT': {
+                    return fs.readFileSync(`${path}`, 'utf8')
+                }
                 default: {
+                    logger.error(`[phi插件]不支持的文件格式 ${style}`)
                     return fs.readFileSync(`${path}`, 'utf8')
                 }
             }
@@ -105,21 +91,7 @@ class Film {
                 fs.mkdirSync(fatherPath, { fatherPath: true });
             }
             if (!style) {
-                switch (path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase()) {
-                    case 'JSON': {
-                        style = 'JSON'
-                        break
-                    }
-                    case 'YAML': {
-                        style = 'YAML'
-                        break
-                    }
-                    default: {
-                        console.info(path.match(/\.(.*?)$/g)[0].replace('.', '').toUpperCase())
-                        style = 'TXT'
-                    }
-                }
-
+                style = path.match(/\.(\w+)$/g)[0].replace('.', '').toUpperCase()
             }
             switch (style) {
                 case 'JSON': {
@@ -130,7 +102,11 @@ class Film {
                     fs.writeFileSync(`${path}`, YAML.stringify(data), 'utf8')
                     break
                 }
+                case 'TXT': {
+                    fs.writeFileSync(`${path}`, data, 'utf8')
+                }
                 default: {
+                    logger.error(`[phi插件]不支持的文件格式 ${style}`)
                     fs.writeFileSync(`${path}`, data, 'utf8')
                     break
                 }
