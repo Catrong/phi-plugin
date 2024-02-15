@@ -348,7 +348,7 @@ data_rks p {
 .Player_box_value {
     display: flex;
     width: 100%;
-    height: aut
+    height: auto;
     align-items: center;
     margin-top: 0%;
     filter: drop-shadow(4px -2px 0px rgba(255, 255, 255, 0.2));
