@@ -309,12 +309,25 @@ data_rks p {
     background-color: rgb(74 188 233 / 40%);
     margin-top: 2.5%;
     border: #7aa8bb69 2px solid;
-    flex-direction: column;
-    max-height: 15%;
+    flex-direction:column ;
+    max-height: 10%;
 }
 
 #data_box {
     height: auto;
+}
+
+.Player_profile_box {
+    display: flex;
+    width: 94%;
+    height: auto;
+    padding-left: 2%;
+    padding-right: 2%;
+    background-color: rgb(74 188 233 / 40%);
+    margin-top: 2.5%;
+    border: #7aa8bb69 2px solid;
+    flex-direction:column ;
+    max-height: 16%;
 }
 
 .Player_box_title {
@@ -329,7 +342,7 @@ data_rks p {
 }
 
 .Player_box_title p {
-    font-size: 40px;
+    font-size: 28px;
 }
 
 .Player_box_value {
@@ -338,8 +351,8 @@ data_rks p {
     height: auto;
     align-items: center;
     margin-top: 0%;
-    filter: drop-shadow(-3px -2px 0px rgba(255, 255, 255, 0.2));
-    justify-content: flex-end;
+    filter: drop-shadow(4px -2px 0px rgba(255, 255, 255, 0.2));
+    justify-content: flex-start;
 }
 
 .Player_box_value p {
