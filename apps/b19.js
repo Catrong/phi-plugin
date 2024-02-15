@@ -445,6 +445,7 @@ export class phib19 extends plugin {
                         ans[i].rks = ans[i].rks.toFixed(2)
                         data[Level[i]] = {
                             ...ans[i],
+                                                            //      b19最低rks          当前曲目rks     最低提升的rks          定数              保留位数
                             suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4)
                         }
                     } else {

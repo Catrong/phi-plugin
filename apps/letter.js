@@ -38,7 +38,7 @@ export class philetter extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(letter|出你字母|猜曲名|开字母|猜字母)$`,
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(letter|出你字母|猜曲名|开字母|猜字母)[\\s(arc)(pgr)(orz)]*$`,
                     fnc: 'start'
                 },
                 {
@@ -68,6 +68,20 @@ export class philetter extends plugin {
     /**发起出字母猜歌 **/
     async start(e) {
         const { group_id } = e // 使用对象解构提取group_id
+        let { msg } = e // 提取消息
+        msg = msg.replace(/[#/](.*)(letter|出你字母|猜曲名|开字母|猜字母)(\s*)/, "")
+
+        /**处理其他游戏曲库 */
+        let totNameList = []
+        if (msg.includes("pgr") || !msg) {
+            totNameList = [...songsname]
+        }
+        if (msg.includes("arc") && get.arcName) {
+            totNameList = [...totNameList, ...get.arcName]
+        }
+        if (msg.includes("orz") && get.orzName) {
+            totNameList = [...totNameList, ...get.orzName]
+        }
 
         if (gamelist[group_id]) {
             e.reply("喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'/第X个XXXX'来猜曲名或者'/出X'来揭开字母吧！", true)
@@ -650,7 +664,7 @@ function encrypt_song_name(name) {
     let encryptedName = Array.from(name, (char, index) => {
         if (numset.includes(index)) {
             return char
-        } else if (char === ' '|| char === ' ') {
+        } else if (char === ' ' || char === ' ') {
             return ' '
         } else {
             return '*'
