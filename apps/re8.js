@@ -28,7 +28,6 @@ switch (process.platform) {
     }
 }
 
-var session = []
 
 export class phire8 extends plugin {
     constructor() {
@@ -54,8 +53,6 @@ export class phire8 extends plugin {
             return true
         }
 
-        session[e.user_id] = save.session
-
         this.setContext('dore8', false, 30)
 
         send.send_with_At(e, `本功能暂处于实验阶段，不保证存档的安全性，同步出现网络错误即为失败，请注意及时覆盖云端存档，继续重置请发送 [确认] 进行确认`)
@@ -71,7 +68,8 @@ export class phire8 extends plugin {
 
         if (msg == '确认') {
 
-            var stk = session[e.user_id]
+            const save = await send.getsave_result(e)
+            var stk = save.session
             try {
                 await PhigrosRe8.re8(stk)
             } catch (err) {
@@ -84,8 +82,6 @@ export class phire8 extends plugin {
         } else {
             send.send_with_At(e, `取消成功`)
         }
-
-        delete session[e.user_id]
 
         this.finish('dore8', false)
         return true
