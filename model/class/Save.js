@@ -128,10 +128,10 @@ export default class Save {
             }
         }
         this.gameRecord = {}
-        for (var id in data.gameRecord) {
+        for (let id in data.gameRecord) {
             this.gameRecord[id] = []
-            for (var i in data.gameRecord[id]) {
-                var level = Number(i)
+            for (let i in data.gameRecord[id]) {
+                let level = Number(i)
                 if (!data.gameRecord[id][level]) {
                     this.gameRecord[id][level] = null
                     continue
@@ -152,10 +152,10 @@ export default class Save {
             return this.sortedRecord
         }
         const sortedRecord = []
-        for (var song in this.gameRecord) {
-            for (var level in song) {
+        for (let song in this.gameRecord) {
+            for (let level in song) {
                 if (level == 4) break
-                var tem = this.gameRecord[song][level]
+                let tem = this.gameRecord[song][level]
                 if (!tem) continue
                 sortedRecord.push(tem)
             }
@@ -173,11 +173,11 @@ export default class Save {
      * @returns 按照rks排序的数组
      */
     findRegRecord(reg) {
-        var record = []
-        for (var song in this.gameRecord) {
-            for (var level in song) {
+        let record = []
+        for (let song in this.gameRecord) {
+            for (let level in song) {
                 if (level == 4) break
-                var tem = this.gameRecord[song][level]
+                let tem = this.gameRecord[song][level]
                 if (!tem) continue
                 if (tem.acc >= reg) {
                     record.push(tem)
@@ -192,17 +192,17 @@ export default class Save {
     /**计算rks+0.01的最低所需要提升的rks */
     minUpRks() {
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(this.saveInfo.summary.rankingScore * 100) / 100 + 0.005 - this.saveInfo.summary.rankingScore
+        let minuprks = Math.floor(this.saveInfo.summary.rankingScore * 100) / 100 + 0.005 - this.saveInfo.summary.rankingScore
         return minuprks < 0 ? minuprks += 0.01 : minuprks
     }
 
     /**简单检查存档是否存在问题 */
     checkRecord() {
-        var error = ``
+        let error = ``
         const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
-        for (var i in this.gameRecord) {
-            for (var j in this.gameRecord[i]) {
-                var score = this.gameRecord[i][j]
+        for (let i in this.gameRecord) {
+            for (let j in this.gameRecord[i]) {
+                let score = this.gameRecord[i][j]
                 if (score.acc > 100 || score.acc < 0 || score.score > 1000000 || score.score < 0) {
                     error += `\n${i} ${Level[j]} ${score.fc} ${score.acc} ${score.score} 非法的成绩`
                 }

@@ -59,9 +59,9 @@ export class phiGuessMic extends plugin {
 
         e.reply(`游戏开始！。发送 /gu 进行猜测，发送 /mic提示 获取更多提示，发送/micans 查看答案哦！`)
 
-        var rand = randint(0, gamelist[group_id].unsend.length - 1)
+        let rand = randint(0, gamelist[group_id].unsend.length - 1)
 
-        var url = `https://qxsky.top:833/data/other_data/web/splited_music/${gamelist[group_id].songId}/${gamelist[group_id].unsend[rand]}.wav`
+        let url = `https://qxsky.top:833/data/other_data/web/splited_music/${gamelist[group_id].songId}/${gamelist[group_id].unsend[rand]}.wav`
 
 
         // e.reply(segment.share(url, `发送 /mic 猜歌哦！/micans可以结束哦！`, get.getimg('Phigros_Icon_3.0.0.png')))
@@ -81,13 +81,13 @@ export class phiGuessMic extends plugin {
             e.reply(`提示已经发完了呐QAQ！如果还是猜不出来也可以发送 /micans 查看答案哦！`)
             return true
         }
-        var now = new Date()
+        let now = new Date()
         if (now - gamelist[group_id].tip <= Config.getDefOrConfig('config', 'MicTipCd') * 1000) {
             send.send_with_At(e, `距离提示的冷却时间还有${(Config.getDefOrConfig('config', 'MicTipCd') * 1000 - now + gamelist[group_id].tip).toFixed(1)}s呐！先仔细想一想吧！`)
             return true
         }
         gamelist[group_id].tip = now
-        var rand = randint(0, gamelist[group_id].unsend.length - 1)
+        let rand = randint(0, gamelist[group_id].unsend.length - 1)
 
         e.reply(segment.record(`https://qxsky.top:833/data/other_data/web/splited_music/${gamelist[group_id].songId}/${gamelist[group_id].unsend[rand]}.wav`))
 
@@ -110,7 +110,7 @@ export class phiGuessMic extends plugin {
         logger.info(result)
         logger.info(real)
 
-        for (var i = 0; i < result.length; ++i) {
+        for (let i = 0; i < result.length; ++i) {
             if (result[i] == real) {
                 send.send_with_At(e, `恭喜你，答对啦喵！ヾ(≧▽≦*)o\n答案是${real}！`)
                 delete gamelist[group_id]

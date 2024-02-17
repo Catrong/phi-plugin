@@ -6,7 +6,7 @@ import { createRequire } from 'module';
 
 
 const require = createRequire(import.meta.url);
-var PhigrosRe8
+let PhigrosRe8
 switch (process.platform) {
     //unix 系统内核
     case "linux": {
@@ -64,12 +64,12 @@ export class phire8 extends plugin {
 
         e = this.e
 
-        var msg = e.msg.replace(' ', '')
+        let msg = e.msg.replace(' ', '')
 
         if (msg == '确认') {
 
             const save = await send.getsave_result(e)
-            var stk = save.session
+            let stk = save.session
             try {
                 await PhigrosRe8.re8(stk)
             } catch (err) {

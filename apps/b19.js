@@ -49,7 +49,7 @@ export class phib19 extends plugin {
 
     async b19(e) {
 
-        var nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
+        let nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
 
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
         if (!nnum) {
@@ -59,10 +59,10 @@ export class phib19 extends plugin {
         nnum = Math.max(nnum, 21)
         nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
 
-        var bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
+        let bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
 
         if (bksong) {
-            var tem = get.fuzzysongsnick(bksong)[0]
+            let tem = get.fuzzysongsnick(bksong)[0]
             if (tem) {
                 // console.info(tem)
                 bksong = get.getill(tem, 'blur')
@@ -71,8 +71,8 @@ export class phib19 extends plugin {
             }
         }
 
-        var save = await send.getsave_result(e)
-        var plugin_data = await get.getpluginData(e.user_id)
+        let save = await send.getsave_result(e)
+        let plugin_data = await get.getpluginData(e.user_id)
 
         if (!save) {
             return true
@@ -99,19 +99,19 @@ export class phib19 extends plugin {
         }
 
 
-        var Record = save.gameRecord
-        var phi = {}
-        var b19_list = []
+        let Record = save.gameRecord
+        let phi = {}
+        let b19_list = []
 
         phi.rks = 0
 
 
         /**取出信息 */
-        var rkslist = []
-        for (var song in Record) {
-            for (var level in song) {
+        let rkslist = []
+        for (let song in Record) {
+            for (let level in song) {
                 if (level == 4) break
-                var tem = Record[song][level]
+                let tem = Record[song][level]
                 if (!tem) continue
 
                 if (tem.acc >= 100) {
@@ -130,16 +130,16 @@ export class phib19 extends plugin {
         }
 
 
-        var userrks = save.saveInfo.summary.rankingScore
+        let userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
+        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
 
         rkslist = rkslist.sort(cmp())
-        var illlist = []
-        for (var i = 0; i < nnum && i < rkslist.length; ++i) {
+        let illlist = []
+        for (let i = 0; i < nnum && i < rkslist.length; ++i) {
             rkslist[i].num = i + 1
             rkslist[i].suggest = get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
             rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
@@ -156,7 +156,7 @@ export class phib19 extends plugin {
         }
 
 
-        var data = {
+        let data = {
             phi,
             b19_list,
             data: undefined,
@@ -171,7 +171,7 @@ export class phib19 extends plugin {
             theme: plugin_data?.plugin_data?.theme || 'star',
         }
         if (save.gameProgress) {
-            var money = save.gameProgress.money
+            let money = save.gameProgress.money
             data.data = `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`
         }
 
@@ -192,7 +192,7 @@ export class phib19 extends plugin {
             return true
         }
 
-        var num = e.msg.replace(/[#/](.*)(best)(\s*)/g, '')
+        let num = e.msg.replace(/[#/](.*)(best)(\s*)/g, '')
 
         if (Number(num) % 1 != 0) {
             await e.reply(`${num}不是个数字吧！`, true)
@@ -204,17 +204,17 @@ export class phib19 extends plugin {
         if (!num)
             num = 19 //未指定默认b19
 
-        var Record = save.gameRecord
-        var phi = {}
+        let Record = save.gameRecord
+        let phi = {}
 
         phi.rks = 0
 
         /**取出信息 */
-        var rkslist = []
-        for (var song in Record) {
-            for (var level in song) {
+        let rkslist = []
+        for (let song in Record) {
+            for (let level in song) {
                 if (level == 4) break
-                var tem = Record[song][level]
+                let tem = Record[song][level]
 
                 if (!tem) continue
 
@@ -231,9 +231,9 @@ export class phib19 extends plugin {
 
         phi.suggest = "无法推分"
 
-        var userrks = save.saveInfo.summary.rankingScore
+        let userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
+        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
@@ -243,8 +243,8 @@ export class phib19 extends plugin {
         if (Config.getDefOrConfig('config', 'isGuild')) {
             /**频道模式 */
 
-            var Remsg = []
-            var tmsg = ''
+            let Remsg = []
+            let tmsg = ''
             tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             if (phi.song) {
                 tmsg += `\n#φ:${phi.song}<${phi.rank}>${phi.difficulty}`
@@ -252,8 +252,8 @@ export class phib19 extends plugin {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
             /**防止消息过长发送失败每条消息10行 */
-            var tot = 1
-            for (var i = 0; i < num && i < rkslist.length; ++i) {
+            let tot = 1
+            for (let i = 0; i < num && i < rkslist.length; ++i) {
                 if (tot <= 10) {
                     tmsg += `\n#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                 } else {
@@ -277,7 +277,7 @@ export class phib19 extends plugin {
 
         } else {
 
-            var Remsg = []
+            let Remsg = []
             Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
 
 
@@ -294,7 +294,7 @@ export class phib19 extends plugin {
                 } else {
                     Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
                 }
-                for (var i = 0; i < num && i < rkslist.length; ++i) {
+                for (let i = 0; i < num && i < rkslist.length; ++i) {
                     Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n`,
                     segment.image(get.getill(rkslist[i].song, false)),
                     `\n` +
@@ -314,7 +314,7 @@ export class phib19 extends plugin {
                 } else {
                     Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
                 }
-                for (var i = 0; i < num && i < rkslist.length; ++i) {
+                for (let i = 0; i < num && i < rkslist.length; ++i) {
                     Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n` +
                         `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
                         `${rkslist[i].score} ${rkslist[i].Rating}\n` +
@@ -337,10 +337,10 @@ export class phib19 extends plugin {
             return true
         }
 
-        var picversion = Number(e.msg.match(/(score|单曲成绩)[1-2]?/g)[0].replace(/(score|单曲成绩)/g, '')) || 1
+        let picversion = Number(e.msg.match(/(score|单曲成绩)[1-2]?/g)[0].replace(/(score|单曲成绩)/g, '')) || 1
 
 
-        var song = e.msg.replace(/[#/](.*)(score|单曲成绩)[1-2]?(\s*)/g, '')
+        let song = e.msg.replace(/[#/](.*)(score|单曲成绩)[1-2]?(\s*)/g, '')
 
         if (!song) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} score <曲名>`)
@@ -354,16 +354,16 @@ export class phib19 extends plugin {
         song = get.fuzzysongsnick(song)
         song = song[0]
 
-        var Record = save.gameRecord
+        let Record = save.gameRecord
 
-        var ans
+        let ans
 
         /**取出信息 */
-        var rkslist = []
-        for (var i in Record) {
-            for (var level in i) {
+        let rkslist = []
+        for (let i in Record) {
+            for (let level in i) {
                 if (level == 4) break
-                var tem = Record[i][level]
+                let tem = Record[i][level]
                 if (!tem) continue
                 rkslist.push(tem)
             }
@@ -371,15 +371,15 @@ export class phib19 extends plugin {
 
         rkslist = rkslist.sort(cmp())
         /**b19最低rks */
-        var minrks = rkslist[Math.min(18, rkslist.length)]
-        var userrks = save.saveInfo.summary.rankingScore
+        let minrks = rkslist[Math.min(18, rkslist.length)]
+        let userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
+        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
-        for (var i in Record) {
-            var now = await get.idgetsong(i)
+        for (let i in Record) {
+            let now = await get.idgetsong(i)
             if (now == song) {
                 ans = Record[i]
                 break
@@ -394,19 +394,19 @@ export class phib19 extends plugin {
         const dan = await get.getDan(e.user_id)
 
         /**获取历史成绩 */
-        var pluginData = await get.getpluginData(e.user_id)
+        let pluginData = await get.getpluginData(e.user_id)
 
-        var HistoryData = pluginData?.scoreHistory
+        let HistoryData = pluginData?.scoreHistory
 
         if (HistoryData) {
             HistoryData = HistoryData[get.SongGetId(song)]
         }
 
-        var history = []
+        let history = []
 
         if (HistoryData) {
-            for (var i in HistoryData) {
-                for (var j in HistoryData[i]) {
+            for (let i in HistoryData) {
+                for (let j in HistoryData[i]) {
                     const tem = scoreHistory.extend(get.SongGetId(song), i, HistoryData[i][j])
                     tem.date_new = date_to_string(tem.date_new)
                     history.push(tem)
@@ -419,7 +419,7 @@ export class phib19 extends plugin {
         history.splice(16)
 
 
-        var data = {
+        let data = {
             songName: song,
             PlayerId: save.saveInfo.PlayerId,
             avatar: get.idgetavatar(save.saveInfo.summary.avatar),
@@ -435,11 +435,11 @@ export class phib19 extends plugin {
 
 
         data.illustration = get.getill(song)
-        var songsinfo = get.ori_info[song]
+        let songsinfo = get.ori_info[song]
 
         switch (picversion) {
             case 2: {
-                for (var i in ans) {
+                for (let i in ans) {
                     if (ans[i]) {
                         ans[i].acc = ans[i].acc.toFixed(2)
                         ans[i].rks = ans[i].rks.toFixed(2)
@@ -459,12 +459,12 @@ export class phib19 extends plugin {
                 break;
             }
             default: {
-                for (var i in songsinfo.chart) {
+                for (let i in songsinfo.chart) {
                     data.scoreData[i] = {}
                     data.scoreData[i].difficulty = songsinfo['chart'][i]['difficulty']
                 }
                 // console.info(ans)
-                for (var i in ans) {
+                for (let i in ans) {
                     if (i > 3 || !songsinfo['chart'][Level[i]]) break
                     if (ans[i]) {
                         ans[i].acc = ans[i].acc.toFixed(4)
@@ -497,14 +497,14 @@ export class phib19 extends plugin {
             return true
         }
 
-        var Record = save.gameRecord
+        let Record = save.gameRecord
 
         /**取出信息 */
-        var rkslist = []
-        for (var song in Record) {
-            for (var level in song) {
+        let rkslist = []
+        for (let song in Record) {
+            for (let level in song) {
                 if (level == 4) break
-                var tem = Record[song][level]
+                let tem = Record[song][level]
                 if (!tem) continue
                 rkslist.push(tem)
             }
@@ -512,19 +512,19 @@ export class phib19 extends plugin {
 
         rkslist = rkslist.sort(cmp())
         /**b19最低rks */
-        var minrks = rkslist[Math.min(18, rkslist.length)]
-        var userrks = save.saveInfo.summary.rankingScore
+        let minrks = rkslist[Math.min(18, rkslist.length)]
+        let userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
-        var minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
+        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
         }
 
         /**计算 */
-        var suggestlist = []
-        for (var i in rkslist) {
-            var tem = rkslist[i]
-            var suggest = get.comsuggest(Number((i < 18) ? tem.rks : minrks.rks) + minuprks * 20, Number(tem.difficulty), 4)
+        let suggestlist = []
+        for (let i in rkslist) {
+            let tem = rkslist[i]
+            let suggest = get.comsuggest(Number((i < 18) ? tem.rks : minrks.rks) + minuprks * 20, Number(tem.difficulty), 4)
             if (!suggest.includes("无")) {
                 tem.acc = tem.acc
                 tem.rks = tem.rks
@@ -538,13 +538,13 @@ export class phib19 extends plugin {
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
             /**频道模式 */
-            var Remsg = []
-            var tmsg = ''
+            let Remsg = []
+            let tmsg = ''
 
             /**防止消息过长发送失败每条消息10行 */
-            var tot = 1
+            let tot = 1
             tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} CLG MOD: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
-            for (var i = 0; i < suggestlist.length; ++i) {
+            for (let i = 0; i < suggestlist.length; ++i) {
                 if (tot <= 10) {
                     tmsg += `\n#${i + 1}: ${suggestlist[i].song}<${suggestlist[i].rank}>${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% -> ${suggestlist[i].suggest}`
                 } else {
@@ -567,11 +567,11 @@ export class phib19 extends plugin {
             }
 
         } else {
-            var Remsg = []
+            let Remsg = []
 
             /**判断是否发图 */
             if (Config.getDefOrConfig('config', 'WordSuggImg')) {
-                for (var i = 0; i < suggestlist.length; ++i) {
+                for (let i = 0; i < suggestlist.length; ++i) {
                     Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n`,
                     segment.image(get.getill(suggestlist[i].song, false)),
                     `\n` +
@@ -581,7 +581,7 @@ export class phib19 extends plugin {
                     `推分: ${suggestlist[i].suggest}`])
                 }
             } else {
-                for (var i = 0; i < suggestlist.length; ++i) {
+                for (let i = 0; i < suggestlist.length; ++i) {
                     Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n` +
                         `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
                         `${suggestlist[i].score} ${suggestlist[i].Rating}\n` +
@@ -607,8 +607,8 @@ function cmpsugg() {
         function com(difficulty, suggest) {
             return difficulty + Math.min(suggest - 98, 1) * Math.min(suggest - 98, 1) * difficulty * 0.089
         }
-        var s_a = Number(a.suggest.replace("%", ''))
-        var s_b = Number(b.suggest.replace("%", ''))
+        let s_a = Number(a.suggest.replace("%", ''))
+        let s_b = Number(b.suggest.replace("%", ''))
         return com(a.difficulty, s_a) - com(b.difficulty, s_b)
         // return (Number(a.suggest.replace("%", '')) - a.rks) - (Number(b.suggest.replace("%", '')) - b.rks)
     }
@@ -625,8 +625,8 @@ function date_to_string(date) {
     if (!date) return undefined
     date = new Date(date)
 
-    var month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
-    var day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+    let month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+    let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
 
     return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
 }

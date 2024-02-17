@@ -4,19 +4,19 @@ import get from '../model/getdata.js'
 import send from '../model/send.js'
 
 
-var tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
+let tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
 const Level = ['EZ', 'HD', 'IN', 'AT']
 const tot_rating_info = {}
 const illlist = []
 
-for (var i in get.info()) {
+for (let i in get.info()) {
     if (get.info()[i]['illustration_big']) {
         illlist.push(get.getill(i))
     }
 }
 
-for (var song in get.ori_info) {
-    var info = get.ori_info[song]
+for (let song in get.ori_info) {
+    let info = get.ori_info[song]
     if (info.chart['AT'] && Number(info.chart['AT'].difficulty)) {
         ++tot[3]
     }
@@ -29,8 +29,8 @@ for (var song in get.ori_info) {
     if (info.chart['EZ'] && Number(info.chart['EZ'].difficulty)) {
         ++tot[0]
     }
-    for (var i in info.chart) {
-        var rating = info.chart[i].difficulty
+    for (let i in info.chart) {
+        let rating = info.chart[i].difficulty
         if (!tot_rating_info[rating]) {
             tot_rating_info[rating] = []
         }
@@ -65,10 +65,10 @@ export class phiuser extends plugin {
 
     /**查询data */
     async data(e) {
-        var User = await get.getsave(e.user_id)
+        let User = await get.getsave(e.user_id)
         if (User) {
             if (User.gameProgress) {
-                var data = User.gameProgress.money
+                let data = User.gameProgress.money
                 send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PB ` : ''}${data[3] ? `${data[3]}TB ` : ''}${data[2] ? `${data[2]}GB ` : ''}${data[1] ? `${data[1]}MB ` : ''}${data[0] ? `${data[0]}KB ` : ''}`)
             } else {
                 send.send_with_At(e, `请先更新数据哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} update`)
@@ -80,10 +80,10 @@ export class phiuser extends plugin {
     }
 
     async info(e) {
-        var bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
+        let bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
 
         if (bksong) {
-            var tem = get.fuzzysongsnick(bksong)[0]
+            let tem = get.fuzzysongsnick(bksong)[0]
             if (tem) {
                 bksong = get.getill(tem)
             } else {
@@ -113,7 +113,7 @@ export class phiuser extends plugin {
             lowest: 18,
         }
 
-        var stats = [{ ...stats_ }, { ...stats_ }, { ...stats_ }, { ...stats_ }]
+        let stats = [{ ...stats_ }, { ...stats_ }, { ...stats_ }, { ...stats_ }]
 
         stats[0].tot = tot[0]
         stats[0].tatle = Level[0]
@@ -127,10 +127,10 @@ export class phiuser extends plugin {
         stats[3].tot = tot[3]
         stats[3].tatle = Level[3]
 
-        for (var id in Record) {
+        for (let id in Record) {
             const info = get.init_info(get.idgetsong(id), true)
             const record = Record[id]
-            for (var lv in [0, 1, 2, 3]) {
+            for (let lv in [0, 1, 2, 3]) {
                 if (!record[lv]) continue
 
                 ++stats[lv].unlock
@@ -154,7 +154,7 @@ export class phiuser extends plugin {
             }
         }
 
-        for (var lv in [0, 1, 2, 3]) {
+        for (let lv in [0, 1, 2, 3]) {
             stats[lv].Rating = Rate(stats[lv].real_score, stats[lv].tot_score, stats[lv].fc == stats[lv].unlock)
             if (stats[lv].lowest == 18) {
                 stats[lv].lowest = 0
@@ -162,7 +162,7 @@ export class phiuser extends plugin {
         }
 
         const money = save.gameProgress.money
-        var userbackground = getbackground(save.gameuser.background)
+        let userbackground = getbackground(save.gameuser.background)
 
         if (!userbackground) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
@@ -186,16 +186,16 @@ export class phiuser extends plugin {
 
         const user_data = await get.getpluginData(e.user_id)
 
-        var rks_history_ = []
-        var data_history_ = []
-        var user_rks_data = user_data.rks
-        var user_data_data = user_data.data
+        let rks_history_ = []
+        let data_history_ = []
+        let user_rks_data = user_data.rks
+        let user_data_data = user_data.data
         const rks_range = [17, 0]
         const data_range = [1e9, 0]
         const rks_date = [new Date(user_rks_data[0].date).getTime(), 0]
         const data_date = [new Date(user_data_data[0].date).getTime(), 0]
 
-        for (var i in user_rks_data) {
+        for (let i in user_rks_data) {
             user_rks_data[i].date = new Date(user_rks_data[i].date)
             if (i <= 1 || user_rks_data[i].value != rks_history_[rks_history_.length - 2].value) {
                 rks_history_.push(user_rks_data[i])
@@ -207,7 +207,7 @@ export class phiuser extends plugin {
             rks_date[1] = user_rks_data[i].date.getTime()
         }
 
-        for (var i in user_data_data) {
+        for (let i in user_data_data) {
             const value = user_data_data[i]['value']
             user_data_data[i].value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
             user_data_data[i].date = new Date(user_data_data[i].date)
@@ -221,10 +221,10 @@ export class phiuser extends plugin {
             data_date[1] = user_data_data[i].date.getTime()
         }
 
-        var rks_history = []
-        var data_history = []
+        let rks_history = []
+        let data_history = []
 
-        for (var i in rks_history_) {
+        for (let i in rks_history_) {
 
             i = Number(i)
 
@@ -236,7 +236,7 @@ export class phiuser extends plugin {
             rks_history.push([x1, y1, x2, y2])
         }
 
-        for (var i in data_history_) {
+        for (let i in data_history_) {
 
             i = Number(i)
 
@@ -251,13 +251,13 @@ export class phiuser extends plugin {
 
         const unit = ["KiB", "MiB", "GiB", "TiB", "Pib"]
 
-        for (var i in [1, 2, 3, 4]) {
+        for (let i in [1, 2, 3, 4]) {
             if (Math.floor(data_range[0] / (Math.pow(1024, i))) < 1024) {
                 data_range[0] = `${Math.floor(data_range[0] / (Math.pow(1024, i)))}${unit[i]}`
             }
         }
 
-        for (var i in [1, 2, 3, 4]) {
+        for (let i in [1, 2, 3, 4]) {
             if (Math.floor(data_range[1] / (Math.pow(1024, i))) < 1024) {
                 data_range[1] = `${Math.floor(data_range[1] / (Math.pow(1024, i)))}${unit[i]}`
             }
@@ -279,14 +279,14 @@ export class phiuser extends plugin {
         /**原本b19中最小acc 要展示的acc序列 */
         const acc_rks_AccRange = [100]
 
-        for (var i = 0; i < Math.min(acc_rksRecord.length, 19); i++) {
+        for (let i = 0; i < Math.min(acc_rksRecord.length, 19); i++) {
             acc_rks_AccRange[0] = Math.min(acc_rks_AccRange[0], acc_rksRecord[i].acc)
         }
 
-        for (var i = acc_rks_AccRange[0]; i <= 100; i += 0.01) {
-            var sum_rks = 0
+        for (let i = acc_rks_AccRange[0]; i <= 100; i += 0.01) {
+            let sum_rks = 0
             if (!acc_rksRecord[0]) break
-            for (var j = 0; j < acc_rksRecord.length; j++) {
+            for (let j = 0; j < acc_rksRecord.length; j++) {
                 if (j >= 19) break
                 if (acc_rksRecord[j]?.acc < i) {
                     /**预处理展示的acc数字 */
@@ -302,14 +302,14 @@ export class phiuser extends plugin {
                 }
             }
             // console.info(acc_rksRecord[0])
-            var tem_rks = (sum_rks + (acc_rks_phi[0]?.rks || 0)) / 20
+            let tem_rks = (sum_rks + (acc_rks_phi[0]?.rks || 0)) / 20
             acc_rks_data.push([i, tem_rks])
             acc_rks_range[0] = Math.min(acc_rks_range[0], tem_rks)
             acc_rks_range[1] = Math.max(acc_rks_range[1], tem_rks)
         }
         // console.info(acc_rks_AccRange)
 
-        for (var i = 1; i < acc_rks_data.length; ++i) {
+        for (let i = 1; i < acc_rks_data.length; ++i) {
             if (acc_rks_data_[0] && acc_rks_data[i - 1][1] == acc_rks_data[i][1]) {
                 acc_rks_data_[acc_rks_data_.length - 1][2] = range(acc_rks_data[i][0], acc_rks_AccRange)
             } else {
@@ -333,7 +333,7 @@ export class phiuser extends plugin {
             acc_rks_AccRange.splice(acc_rks_AccRange.length - 2, 1)
         }
         acc_rks_AccRange_position.push([acc_rks_AccRange[0], 0])
-        for (var i = 1; i < acc_rks_AccRange.length; i++) {
+        for (let i = 1; i < acc_rks_AccRange.length; i++) {
             while (acc_rks_AccRange[i] - acc_rks_AccRange[i - 1] < acc_length / 10) {
                 acc_rks_AccRange.splice(i, 1)
             }
@@ -343,7 +343,7 @@ export class phiuser extends plugin {
         // console.info(acc_rks_data_)
         // console.info(acc_rks_range)
 
-        var data = {
+        let data = {
             gameuser: gameuser,
             userstats: stats,
             rks_history: rks_history,
@@ -358,7 +358,7 @@ export class phiuser extends plugin {
             background: bksong || illlist[randint(0, illlist.length - 1)],
         }
 
-        var kind = Number(e.msg.replace(/\/.*info/g, ''))
+        let kind = Number(e.msg.replace(/\/.*info/g, ''))
         send.send_with_At(e, await get.getuser_info(e, data, kind))
     }
 
@@ -372,7 +372,7 @@ export class phiuser extends plugin {
 
         let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
 
-        var isask = [true, true, true, true]
+        let isask = [true, true, true, true]
         msg = msg.toUpperCase()
         if (msg.includes('AT') || msg.includes('IN') || msg.includes('HD') || msg.includes('EZ')) {
             isask = [false, false, false, false]
@@ -383,7 +383,7 @@ export class phiuser extends plugin {
         }
         msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
 
-        var range = [0, get.MAX_DIFFICULTY]
+        let range = [0, get.MAX_DIFFICULTY]
 
 
 
@@ -397,7 +397,7 @@ export class phiuser extends plugin {
                 range[0] = Number(range[0])
                 range[1] = Number(range[1])
                 if (range[0] > range[1]) {
-                    var tem = range[1]
+                    let tem = range[1]
                     range[1] = range[0]
                     range[0] = tem
                 }
@@ -415,18 +415,18 @@ export class phiuser extends plugin {
 
 
 
-        var unlockcharts = 0
-        var totreal_score = 0
-        var totacc = 0
-        var totcharts = 0
-        var totcleared = 0
-        var totfc = 0
-        var totphi = 0
-        var tottot_score = 0
-        var tothighest = 0
-        var totlowest = 17
-        var totsongs = 0
-        var totRating = {
+        let unlockcharts = 0
+        let totreal_score = 0
+        let totacc = 0
+        let totcharts = 0
+        let totcleared = 0
+        let totfc = 0
+        let totphi = 0
+        let tottot_score = 0
+        let tothighest = 0
+        let totlowest = 17
+        let totsongs = 0
+        let totRating = {
             F: 0,
             C: 0,
             B: 0,
@@ -436,27 +436,27 @@ export class phiuser extends plugin {
             FC: 0,
             phi: 0,
         }
-        var totRank = {
+        let totRank = {
             AT: 0,
             IN: 0,
             HD: 0,
             EZ: 0,
         }
-        var unlockRank = {
+        let unlockRank = {
             AT: 0,
             IN: 0,
             HD: 0,
             EZ: 0,
         }
-        var unlocksongs = 0
+        let unlocksongs = 0
 
-        var Record = save.gameRecord
+        let Record = save.gameRecord
 
-        for (var song in get.ori_info) {
-            var info = get.ori_info[song]
-            var vis = false
-            for (var i in info.chart) {
-                var difficulty = info['chart'][i].difficulty
+        for (let song in get.ori_info) {
+            let info = get.ori_info[song]
+            let vis = false
+            for (let i in info.chart) {
+                let difficulty = info['chart'][i].difficulty
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[Level.indexOf(i)]) {
                     ++totcharts
                     ++totRank[i]
@@ -469,13 +469,13 @@ export class phiuser extends plugin {
         }
 
 
-        for (var id in Record) {
+        for (let id in Record) {
             const info = get.init_info(get.idgetsong(id), true)
             const record = Record[id]
-            var vis = false
-            for (var lv in [0, 1, 2, 3]) {
+            let vis = false
+            for (let lv in [0, 1, 2, 3]) {
                 if (!info.chart[Level[lv]]) continue
-                var difficulty = info.chart[Level[lv]].difficulty
+                let difficulty = info.chart[Level[lv]].difficulty
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
 
                     if (!record[lv]) continue
@@ -507,14 +507,14 @@ export class phiuser extends plugin {
             }
         }
 
-        var illustration = getbackground(save.gameuser.background)
+        let illustration = getbackground(save.gameuser.background)
 
         if (!illustration) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
             logger.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
-        var data = {
+        let data = {
             tot: {
                 at: totRank.AT,
                 in: totRank.IN,
@@ -560,7 +560,7 @@ export class phiuser extends plugin {
             PlayerId: save.saveInfo.PlayerId,
         }
 
-        // var remsg = ''
+        // let remsg = ''
         // remsg += `\n${range[0]}-${range[1]} `
         // remsg += `clear:${totcleared} fc:${totfc} phi:${totphi}\n`
         // remsg += `${progress_bar(totphi / totcharts, 30)} ${totphi}/${totcharts}\n`
@@ -581,9 +581,9 @@ export class phiuser extends plugin {
             return true
         }
 
-        var phi = { ...tot_rating_info }
+        let phi = { ...tot_rating_info }
 
-        var range = [0, get.MAX_DIFFICULTY]
+        let range = [0, get.MAX_DIFFICULTY]
 
         match_range(e.msg, range)
 
@@ -607,11 +607,11 @@ function range(value, range) {
 
 /**进度条 */
 function progress_bar(value, length) {
-    var result = '['
-    for (var i = 1; i <= Number((value * length).toFixed(0)); ++i) {
+    let result = '['
+    for (let i = 1; i <= Number((value * length).toFixed(0)); ++i) {
         result += '|'
     }
-    for (var i = 1; i <= (length - Number((value * length).toFixed(0))); ++i) {
+    for (let i = 1; i <= (length - Number((value * length).toFixed(0))); ++i) {
         result += ' '
     }
     result += `] ${(value * 100).toFixed(2)}%`
@@ -659,7 +659,7 @@ function date_to_string(date) {
 }
 
 function getbackground(name) {
-    var save_background = name
+    let save_background = name
     try {
         save_background = name
         switch (save_background) {
@@ -700,11 +700,11 @@ function match_range(msg, range) {
     if (msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)) {
         /**0-16.9 */
         msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)[0]
-        var result = msg.split(/\s*[-～~]\s*/g)
+        let result = msg.split(/\s*[-～~]\s*/g)
         range[0] = Number(result[0])
         range[1] = Number(result[1])
         if (range[0] > range[1]) {
-            var tem = range[1]
+            let tem = range[1]
             range[1] = range[0]
             range[0] = tem
         }
@@ -712,7 +712,7 @@ function match_range(msg, range) {
     } else if (msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)) {
         /**16.9- 15+ */
         msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)[0]
-        var result = msg.replace(/\s*[-+]/g, '')
+        let result = msg.replace(/\s*[-+]/g, '')
         if (msg.includes('+')) {
             range[0] = result
         } else {

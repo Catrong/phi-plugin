@@ -11,8 +11,8 @@ import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
 
-var songsname = []
-var songweights = {} //存储每首歌曲被抽取的权重
+let songsname = []
+let songweights = {} //存储每首歌曲被抽取的权重
 for (let i in get.info()) {
     songsname.push(i)
 }
@@ -20,14 +20,14 @@ for (let i in get.info()) {
 //曲目初始洗牌
 shuffleArray(songsname)
 
-var gamelist = {}//存储标准答案曲名
-var blurlist = {}//存储模糊后的曲名
-var alphalist = {}//存储翻开的字母
-var winnerlist = {} //存储猜对者的群名称
-var lastGuessedTime = {} //存储群聊猜字母全局冷却时间
-var lastRevealedTime = {} //存储群聊翻字母全局冷却时间
-var lastTipTime = {} //存储群聊提示全局冷却时间
-var isfuzzymatch = true
+let gamelist = {}//存储标准答案曲名
+let blurlist = {}//存储模糊后的曲名
+let alphalist = {}//存储翻开的字母
+let winnerlist = {} //存储猜对者的群名称
+let lastGuessedTime = {} //存储群聊猜字母全局冷却时间
+let lastRevealedTime = {} //存储群聊翻字母全局冷却时间
+let lastTipTime = {} //存储群聊提示全局冷却时间
+let isfuzzymatch = true
 
 export class philetter extends plugin {
     constructor() {
@@ -115,14 +115,14 @@ export class philetter extends plugin {
         winnerlist[group_id] = {}
 
         // 存储单局抽到的曲目下标
-        var chose = []
+        let chose = []
 
         for (let i = 1; i <= Config.getDefOrConfig('config', 'LetterNum'); i++) {
             // 根据曲目权重随机返回一首曲目名称
             let randsong = getRandomSong(e)
 
             // 防止抽到重复的曲目
-            var cnnt = 0
+            let cnnt = 0
             while (chose.includes(randsong) || get.info(randsong).can_t_be_letter) {
                 ++cnnt
                 if (cnnt >= 50) {
@@ -613,9 +613,9 @@ function randint(min, max) {
 
 //定义生成指定区间带有指定小数位数随机数的函数
 function randfloat(min, max, precision = 0) {
-    var range = max - min
-    var randomOffset = Math.random() * range
-    var randomNumber = randomOffset + min + range * 10 ** -precision
+    let range = max - min
+    let randomOffset = Math.random() * range
+    let randomNumber = randomOffset + min + range * 10 ** -precision
 
     return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
 }

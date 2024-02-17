@@ -165,7 +165,7 @@ class atlas {
         this.queue.push(id)
 
 
-        var cnt = 0
+        let cnt = 0
         while (this.randering.length >= 1 || this.queue[0] != id) {
             await common.sleep(500)
             ++cnt
@@ -184,7 +184,7 @@ class atlas {
         this.randering.push(id)
 
 
-        var result
+        let result
 
 
 

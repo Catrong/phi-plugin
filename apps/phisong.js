@@ -7,8 +7,8 @@ import send from '../model/send.js'
 await get.init()
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
-var wait_to_del_list
-var wait_to_del_nick
+let wait_to_del_list
+let wait_to_del_nick
 
 
 export class phisong extends plugin {
@@ -66,7 +66,7 @@ export class phisong extends plugin {
                 e.reply(msgRes)
             } else {
                 msgRes = []
-                for (var i in songs) {
+                for (let i in songs) {
                     msgRes[i] = await get.GetSongsInfoAtlas(e, songs[i])
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
@@ -124,9 +124,9 @@ export class phisong extends plugin {
 
         if (Config.getDefOrConfig('config', 'isGuild')) {
             let Resmsg = []
-            var tot = 0
-            var count = 1
-            var single = `当前筛选：${filters.bpm ? `BPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? ` 物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`
+            let tot = 0
+            let count = 1
+            let single = `当前筛选：${filters.bpm ? `BPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? ` 物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`
             for (let i in remain) {
                 let song = remain[i]
                 let msg
@@ -215,8 +215,8 @@ export class phisong extends plugin {
             this.e.reply("只有管理员可以删除别名哦！")
             return true
         }
-        var msg = this.e.msg.replace(/[#/](.*)(删除别名|delnic(k?))(\s*)/g, '')
-        var ans = Config.getConfig('nickconfig', msg)
+        let msg = this.e.msg.replace(/[#/](.*)(删除别名|delnic(k?))(\s*)/g, '')
+        let ans = Config.getConfig('nickconfig', msg)
         ans = ans[msg]
         if (ans) {
             if (ans.length == 1) {
@@ -225,9 +225,9 @@ export class phisong extends plugin {
             } else {
                 wait_to_del_list = ans
                 wait_to_del_nick = msg
-                var Remsg = []
+                let Remsg = []
                 Remsg.push("找到了多个别名！请发送 /序号 进行选择！")
-                for (var i in ans) {
+                for (let i in ans) {
                     Remsg.push(`#${i}\n${ans[i]}`)
                 }
                 this.reply(common.makeForwardMsg(this.e, Remsg, "找到了多个结果！"))
@@ -241,7 +241,7 @@ export class phisong extends plugin {
     }
 
     choosesdelnick() {
-        var msg = this.e.msg.match(/\/\s*[0-9]+/g, '')[0]
+        let msg = this.e.msg.match(/\/\s*[0-9]+/g, '')[0]
         msg = Number(msg.replace('/', ''))
         if (wait_to_del_list[msg]) {
             Config.modifyarr('nickconfig', wait_to_del_nick, wait_to_del_list[msg], 'del', 'config')
@@ -269,7 +269,7 @@ export class phisong extends plugin {
                 e.reply(msgRes)
             } else {
                 msgRes = []
-                for (var i in songs) {
+                for (let i in songs) {
                     msgRes.push(await get.GetSongsIllAtlas(e, songs[i]))
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
@@ -296,9 +296,9 @@ export class phisong extends plugin {
             if (msg.includes('AT')) { isask[3] = 1 }
         }
         msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
-        var rank = msg.split('-')
-        var top
-        var bottom
+        let rank = msg.split('-')
+        let top
+        let bottom
 
         /**是否指定范围 */
         if (rank[0]) {
@@ -346,11 +346,11 @@ export class phisong extends plugin {
 
         if (top % 1 == 0 && !msg.includes(".0")) top += 0.9
 
-        var songsname = []
+        let songsname = []
         for (let i in get.ori_info) {
-            for (var level in Level) {
+            for (let level in Level) {
                 if (isask[level] && get.ori_info[i]['chart'][Level[level]]) {
-                    var difficulty = get.ori_info[i]['chart'][Level[level]]['difficulty']
+                    let difficulty = get.ori_info[i]['chart'][Level[level]]['difficulty']
                     if (difficulty >= bottom && difficulty <= top) {
                         songsname.push({
                             ...get.ori_info[i]['chart'][Level[level]],
@@ -370,7 +370,7 @@ export class phisong extends plugin {
             return true
         }
 
-        var result = songsname[randbt(songsname.length - 1)]
+        let result = songsname[randbt(songsname.length - 1)]
 
         send.send_with_At(e, await get.getrand(e, result))
         return true

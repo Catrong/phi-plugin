@@ -14,7 +14,7 @@ import common from '../../../lib/common/common.js'
 import scoreHistory from './class/scoreHistory.js'
 
 
-var lock = []
+let lock = []
 
 class getdata {
 
@@ -68,7 +68,7 @@ class getdata {
             logger.warn(error)
         }
         /**之前改过一次名称，修正别名 */
-        var nick = await this.getData('nickconfig.yaml', this.configPath, 'TXT')
+        let nick = await this.getData('nickconfig.yaml', this.configPath, 'TXT')
         if (nick) {
             const waitToReplace = {
                 "Winter↑cube↓": "Winter ↑cube↓",
@@ -79,8 +79,8 @@ class getdata {
                 "Drop It from SOUL NOTES": "Drop It",
                 "Diamond Eyes from SOUL NOTES": "Diamond Eyes",
             }
-            var flag = false
-            for (var i in waitToReplace) {
+            let flag = false
+            for (let i in waitToReplace) {
                 if (nick.includes(i)) {
                     flag = true
                     nick = nick.replace(i, waitToReplace[i])
@@ -102,12 +102,12 @@ class getdata {
         /**SP信息 */
         this.sp_info = await this.getData('spinfo.json', this.infoPath)
         /**默认别名 */
-        var Yamlnick = await this.getData('nicklist.yaml', this.infoPath)
+        let Yamlnick = await this.getData('nicklist.yaml', this.infoPath)
 
         this.songnick = {}
 
-        for (var i in Yamlnick) {
-            for (var j in Yamlnick[i]) {
+        for (let i in Yamlnick) {
+            for (let j in Yamlnick[i]) {
                 if (this.songnick[Yamlnick[i][j]]) {
                     this.songnick[Yamlnick[i][j]].push(i)
                 } else {
@@ -133,7 +133,7 @@ class getdata {
         /**原曲名称获取id */
         this.idssong = {}
 
-        for (var i in CsvInfo) {
+        for (let i in CsvInfo) {
             switch (CsvInfo[i].id) {
                 case 'AnotherMe.DAAN': {
                     CsvInfo[i].song = 'Another Me (KALPA)';
@@ -160,7 +160,7 @@ class getdata {
             this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
             this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
             this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
-            for (var j in this.Level) {
+            for (let j in this.Level) {
                 const level = this.Level[j]
                 if (CsvInfo[i][level]) {
                     if (!this.ori_info[CsvInfo[i].song].chart[level]) {
@@ -177,8 +177,8 @@ class getdata {
         /**含有曲绘的曲目列表，原曲名称 */
         this.illlist = []
 
-        var info = this.info(undefined, false)
-        for (var i in info) {
+        let info = this.info(undefined, false)
+        for (let i in info) {
             const id = info[i].id
             if (info[i]['illustration_big'] || (id && (fs.existsSync(`${this.resPath}original_ill/${id.replace(/.0$/, '.png')}`) || fs.existsSync(`${this.resPath}original_ill/ill/${id.replace(/.0$/, '.png')}`)))) {
                 this.illlist.push(info[i].song)
@@ -189,7 +189,7 @@ class getdata {
         /**所有曲目曲名列表 */
         this.songlist = []
 
-        for (var i in this.ori_info) {
+        for (let i in this.ori_info) {
             this.songlist.push(this.ori_info[i].song)
         }
 
@@ -201,7 +201,7 @@ class getdata {
      * @param {boolean} [init=false] 是否格式化
      */
     info(song = undefined, init = true) {
-        var result
+        let result
         switch (Config.getDefOrConfig('config', 'otherinfo')) {
             case 0: {
                 result = { ...this.ori_info, ...this.sp_info }
@@ -273,7 +273,7 @@ class getdata {
      * @returns save
      */
     async getsave(id) {
-        var result = await this.getData(`${id}.json`, `${this.userPath}`)
+        let result = await this.getData(`${id}.json`, `${this.userPath}`)
         if (result) {
             return new Save(result)
         } else {
@@ -319,7 +319,7 @@ class getdata {
 
         if (lock.indexOf(id) != -1) {
             logger.info(`[phi-plugin][${id}]文件读取等待中`)
-            var tot = 0
+            let tot = 0
             while (lock.indexOf(id) != -1 && tot < 20) {
                 await common.sleep(500)
                 ++tot
@@ -342,7 +342,7 @@ class getdata {
      * @param {Object} data 
      */
     async putpluginData(id, data) {
-        var returns = await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
+        let returns = await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
         if (lock.indexOf(id) != -1) {
             delete lock[lock.indexOf(id)]
         }
@@ -369,7 +369,7 @@ class getdata {
 
         islock = false //暂时先不锁
 
-        var data = await this.getpluginData(id, islock)
+        let data = await this.getpluginData(id, islock)
         if (!data) {
             data = {}
         }
@@ -392,7 +392,7 @@ class getdata {
      */
     getimg(img, style = 'png') {
         // name = 'phi'
-        var url = `${this.imgPath}/${img}.${style}`
+        let url = `${this.imgPath}/${img}.${style}`
         if (url) {
             return segment.image(url)
         }
@@ -406,9 +406,9 @@ class getdata {
      * @returns dan[0]
      */
     async getDan(id) {
-        var plugindata = await this.getpluginData(id)
+        let plugindata = await this.getpluginData(id)
 
-        var dan = plugindata?.plugin_data?.CLGMOD
+        let dan = plugindata?.plugin_data?.CLGMOD
 
         if (dan && Object.prototype.toString.call(dan) == '[object Array]') {
             dan = dan[0]
@@ -423,17 +423,17 @@ class getdata {
      */
     songsnick(mic) {
         let nickconfig = Config.getDefOrConfig('nickconfig', mic)
-        var all = []
+        let all = []
 
         if (this.info()[mic]) all.push(mic)
 
         if (this.songnick[mic]) {
-            for (var i in this.songnick[mic]) {
+            for (let i in this.songnick[mic]) {
                 all.push(this.songnick[mic][i])
             }
         }
         if (nickconfig) {
-            for (var i in nickconfig) {
+            for (let i in nickconfig) {
                 all.push(nickconfig[i])
             }
         }
@@ -446,7 +446,7 @@ class getdata {
 
     //采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)=>n为较长的那个字符出的长度
     jaroWinklerDistance(s1, s2) {
-        var m = 0 //匹配的字符数量
+        let m = 0 //匹配的字符数量
 
         //如果任任一字符串为空则距离为0
         if (s1.length === 0 || s2.length === 0) {
@@ -458,16 +458,16 @@ class getdata {
             return 1
         }
 
-        var range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
+        let range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
             s1Matches = new Array(s1.length),
             s2Matches = new Array(s2.length)
 
         //查找匹配的字符
-        for (var i = 0; i < s1.length; i++) {
-            var low = (i >= range) ? i - range : 0,
+        for (let i = 0; i < s1.length; i++) {
+            let low = (i >= range) ? i - range : 0,
                 high = (i + range <= (s2.length - 1)) ? (i + range) : (s2.length - 1)
 
-            for (var j = low; j <= high; j++) {
+            for (let j = low; j <= high; j++) {
                 if (s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j]) {
                     ++m
                     s1Matches[i] = s2Matches[j] = true
@@ -482,10 +482,10 @@ class getdata {
         }
 
         //计算转置的数量
-        var k = 0, n_trans = 0
-        for (var i = 0; i < s1.length; i++) {
+        let k = 0, n_trans = 0
+        for (let i = 0; i < s1.length; i++) {
             if (s1Matches[i] === true) {
-                var j
+                let j
                 for (j = k; j < s2.length; j++) {
                     if (s2Matches[j] === true) {
                         k = j + 1
@@ -500,7 +500,7 @@ class getdata {
         }
 
         //计算Jaro距离
-        var weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
+        let weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
             l = 0,
             p = 0.1
 
@@ -542,30 +542,30 @@ class getdata {
         }
 
         /**按照匹配程度排序 */
-        var result = []
+        let result = []
 
         const usernick = Config.getDefOrConfig('nickconfig')
         const allinfo = this.info()
 
 
-        for (var std in usernick) {
-            var dis = fuzzyMatch(mic, std)
+        for (let std in usernick) {
+            let dis = fuzzyMatch(mic, std)
             if (dis >= Distance) {
-                for (var i in usernick[std]) {
+                for (let i in usernick[std]) {
                     result.push({ song: usernick[std][i], dis: dis })
                 }
             }
         }
-        for (var std in this.songnick) {
-            var dis = fuzzyMatch(mic, std)
+        for (let std in this.songnick) {
+            let dis = fuzzyMatch(mic, std)
             if (dis >= Distance) {
-                for (var i in this.songnick[std]) {
+                for (let i in this.songnick[std]) {
                     result.push({ song: this.songnick[std][i], dis: dis })
                 }
             }
         }
-        for (var std in allinfo) {
-            var dis = fuzzyMatch(mic, std)
+        for (let std in allinfo) {
+            let dis = fuzzyMatch(mic, std)
             if (dis >= Distance) {
                 result.push({ song: allinfo[std]['song'], dis: dis })
             }
@@ -573,8 +573,8 @@ class getdata {
 
         result = result.sort((a, b) => b.dis - a.dis)
 
-        var all = []
-        for (var i in result) {
+        let all = []
+        for (let i in result) {
 
             if (all.includes(result[i].song)) continue //去重
             /**如果有完全匹配的曲目则放弃剩下的 */
@@ -644,7 +644,7 @@ class getdata {
             send.send_with_At(e, "绑定失败！QAQ\n" + err)
             return false
         }
-        var old = await this.getsave(e.user_id)
+        let old = await this.getsave(e.user_id)
 
         if (old) {
             if (old.session) {
@@ -654,7 +654,7 @@ class getdata {
                     send.send_with_At(e, `检测到新的sessionToken，将自动删除之前的存档记录……`)
 
                     await get.delsave(e.user_id)
-                    var pluginData = await get.getpluginData(e.user_id, true)
+                    let pluginData = await get.getpluginData(e.user_id, true)
 
                     pluginData.rks = []
                     pluginData.data = []
@@ -669,7 +669,7 @@ class getdata {
             }
         }
 
-        var pluginData = await this.getpluginData(e.user_id, true)
+        let pluginData = await this.getpluginData(e.user_id, true)
 
         try {
             await this.putsave(e.user_id, User)
@@ -715,18 +715,18 @@ class getdata {
         }
 
 
-        var now = new Save(User)
-        var date = User.saveInfo.modifiedAt.iso
+        let now = new Save(User)
+        let date = User.saveInfo.modifiedAt.iso
 
         /**note数量变化 */
-        var add_money = 0
+        let add_money = 0
 
-        for (var song in now.gameRecord) {
+        for (let song in now.gameRecord) {
             if (old && song in old.gameRecord) {
-                for (var i in now['gameRecord'][song]) {
+                for (let i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
-                        var nowRecord = now['gameRecord'][song][i]
-                        var oldRecord = old['gameRecord'][song][i]
+                        let nowRecord = now['gameRecord'][song][i]
+                        let oldRecord = old['gameRecord'][song][i]
                         if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score) || (nowRecord.fc != oldRecord.fc))) {
                             add_money += add_new_score(pluginData, this.Level[i], song, nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
                         } else if (!oldRecord) {
@@ -735,9 +735,9 @@ class getdata {
                     }
                 }
             } else {
-                for (var i in now['gameRecord'][song]) {
+                for (let i in now['gameRecord'][song]) {
                     if (now['gameRecord'][song][i]) {
-                        var nowRecord = now['gameRecord'][song][i]
+                        let nowRecord = now['gameRecord'][song][i]
                         add_money += add_new_score(pluginData, this.Level[i], song, nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
                     }
                 }
@@ -769,7 +769,7 @@ class getdata {
         }
 
         /**rks变化 */
-        var add_rks = 0
+        let add_rks = 0
         if (pluginData.rks.length >= 2) {
             add_rks = now.saveInfo.summary.rankingScore - pluginData.rks[pluginData.rks.length - 2]['value']
         }
@@ -831,9 +831,9 @@ class getdata {
     */
     getill(name, kind = 'common') {
         const totinfo = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
-        var ans
+        let ans
         ans = totinfo[name]?.illustration_big
-        var reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
+        let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans) && ans != 'null') {
             ans = `${this.orillPath}${ans}`
         }
@@ -922,7 +922,7 @@ class getdata {
      * @returns 所需acc
      */
     comsuggest(rks, difficulty, count = undefined) {
-        var ans = 45 * Math.sqrt(rks / difficulty) + 55
+        let ans = 45 * Math.sqrt(rks / difficulty) + 55
 
         if (ans >= 100)
             return "无法推分"
@@ -953,14 +953,14 @@ class getdata {
      * @param {Array} Record 单曲存档数组
      */
     init_Record(Record, id) {
-        for (var i in Record) {
+        for (let i in Record) {
             Record[i] = new LevelRecord(Record[i], id, this.Level[i])
         }
     }
 
 }
 
-var get = new getdata()
+let get = new getdata()
 await get.init()
 export default get
 
@@ -981,7 +981,7 @@ function add_new_score(pluginData, level, songsid, nowRecord, oldRecord, new_dat
     if (!pluginData.scoreHistory) {
         pluginData.scoreHistory = {}
     }
-    var song = get.idgetsong(songsid)
+    let song = get.idgetsong(songsid)
     if (!pluginData.scoreHistory[songsid]) {
         pluginData.scoreHistory[songsid] = {}
         if (oldRecord) {
@@ -993,17 +993,17 @@ function add_new_score(pluginData, level, songsid, nowRecord, oldRecord, new_dat
     }
     pluginData.scoreHistory[songsid][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date, nowRecord.fc))
 
-    var task
+    let task
     if (pluginData.plugin_data) {
         task = pluginData.plugin_data.task
     }
-    var add_money = 0
+    let add_money = 0
     if (task) {
-        for (var i in task) {
+        for (let i in task) {
             if (!task[i]) continue
             if (!task[i].finished && song == task[i].song && level == task[i].request.rank) {
-                var isfinished = false
-                var reward = 0
+                let isfinished = false
+                let reward = 0
                 switch (task[i].request.type) {
                     case 'acc': {
                         if (nowRecord.acc >= task[i].request.value) {

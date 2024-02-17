@@ -5,7 +5,7 @@ import { Data, Version, Plugin_Name, Config } from '../components/index.js'
 import { segment } from 'oicq';
 import {_path} from './path.js';
 
-var pet = {}
+let pet = {}
 
 
 try {

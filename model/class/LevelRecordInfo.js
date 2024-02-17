@@ -11,7 +11,7 @@ export default class LevelRecordInfo {
         this.score = data.score;
         this.acc = data.acc;
 
-        var info = get.init_info(get.idgetsong(id), true)
+        let info = get.init_info(get.idgetsong(id), true)
 
         this.rank = get.Level[rank] //AT IN HD EZ LEGACY 
         this.song = info.song //曲名

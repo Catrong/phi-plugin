@@ -25,7 +25,7 @@ class VikaData {
      */
     async GetUserDanBySstk(sessionToken) {
         if (this.PhigrosDan) {
-            var response;
+            let response;
             try {
                 response = await this.PhigrosDan.records.query({ ...cfg, filterByFormula: `{fldB7Wx6wHX57} = \'${sessionToken}\'` });
             } catch { }
@@ -46,7 +46,7 @@ class VikaData {
      */
     async GetUserDanById(ObjectId) {
         if (this.PhigrosDan) {
-            var response;
+            let response;
             try {
                 response = await this.PhigrosDan.records.query({ ...cfg, filterByFormula: `{fld9mDj3ktKD7} = \'${ObjectId}\'` });
             } catch { }
@@ -64,7 +64,7 @@ class VikaData {
      */
     async GetUserDanByName(nickname) {
         if (this.PhigrosDan) {
-            var response;
+            let response;
             try {
                 response = await this.PhigrosDan.records.query({ ...cfg, filterByFormula: `{fldzkniADAUck} = \'${nickname}\'` });
             } catch { }
@@ -82,8 +82,8 @@ function makeRespones(response) {
     if (!response.data.records[0]) {
         return undefined
     }
-    var ans = []
-    for (var i in response.data.records) {
+    let ans = []
+    for (let i in response.data.records) {
         ans.push({
             sessionToken: response.data.records[i].fields.fldB7Wx6wHX57,
             // ObjectId: response.data.records[i].fields.fld9mDj3ktKD7,

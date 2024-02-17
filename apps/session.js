@@ -51,7 +51,7 @@ export class phisstk extends plugin {
             }
         }
 
-        var sessionToken = e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}/g)
+        let sessionToken = e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}/g)
         sessionToken = sessionToken ? sessionToken[0] : null
 
 
@@ -77,7 +77,7 @@ export class phisstk extends plugin {
     }
 
     async update(e) {
-        var User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
+        let User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
         if (!User) {
             e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
             return true
@@ -100,15 +100,14 @@ export class phisstk extends plugin {
     async build(e, sessionToken) {
         try {
             var User = new PhigrosUser(sessionToken)
-
         } catch (err) {
-            logger.error(`[phi-plugin]绑定sessionToken错误 ${sessionToken}`)
+            logger.error(`[phi-plugin]绑定sessionToken错误`, err)
             send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, false, { recallMsg: 10 })
             return true
         }
 
         /**记录存档rks,note变化 */
-        var added_rks_notes = await get.buildingRecord(e, User)
+        let added_rks_notes = await get.buildingRecord(e, User)
         if (!added_rks_notes) {
             return true
         }
@@ -120,14 +119,14 @@ export class phisstk extends plugin {
         /**图片 */
 
         /**标记数据中含有的时间 */
-        var time_vis = {}
+        let time_vis = {}
 
         /**总信息 */
-        var tot_update = []
+        let tot_update = []
 
 
-        var now = new Save(User)
-        var pluginData = await get.getpluginData(e.user_id)
+        let now = new Save(User)
+        let pluginData = await get.getpluginData(e.user_id)
 
         const RecordErr = now.checkRecord()
 
@@ -136,13 +135,13 @@ export class phisstk extends plugin {
         }
 
 
-        for (var song in pluginData.scoreHistory) {
-            var tem = pluginData.scoreHistory[song]
-            for (var level in tem) {
-                var history = tem[level]
-                for (var i in history) {
-                    var score_date = date_to_string(scoreHistory.date(history[i]))
-                    var score_info = scoreHistory.extend(song, level, history[i], history[i - 1])
+        for (let song in pluginData.scoreHistory) {
+            let tem = pluginData.scoreHistory[song]
+            for (let level in tem) {
+                let history = tem[level]
+                for (let i in history) {
+                    let score_date = date_to_string(scoreHistory.date(history[i]))
+                    let score_info = scoreHistory.extend(song, level, history[i], history[i - 1])
                     if (time_vis[score_date] == undefined) {
                         time_vis[score_date] = tot_update.length
                         tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
@@ -153,14 +152,14 @@ export class phisstk extends plugin {
             }
         }
 
-        var illlist = get.illlist
+        let illlist = get.illlist
 
-        var newnum = tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]] ? tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]].song.length : 0
+        let newnum = tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]] ? tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]].song.length : 0
 
         tot_update.sort((a, b) => new Date(b.date) - new Date(a.date))
 
         /**实际显示的数量 */
-        var show = 0
+        let show = 0
         /**每日显示上限 */
         const DayNum = Math.max(Config.getDefOrConfig('config', 'HistoryDayNum'), 2)
         /**显示日期上限 */
@@ -170,7 +169,7 @@ export class phisstk extends plugin {
 
 
 
-        for (var date in tot_update) {
+        for (let date in tot_update) {
 
             /**天数上限 */
             if (date >= DateNum || TotNum < show + Math.min(DayNum, tot_update[date].update_num)) {
@@ -190,16 +189,16 @@ export class phisstk extends plugin {
         }
 
         /**预分行 */
-        var box_line = []
+        let box_line = []
 
         box_line[box_line.length - 1]
 
         /**循环中当前行的数量 */
-        var line_num = 0
+        let line_num = 0
 
 
         line_num = 5
-        var flag = false
+        let flag = false
 
         while (tot_update.length) {
             if (line_num == 5) {
@@ -208,10 +207,10 @@ export class phisstk extends plugin {
                 } else {
                     box_line.push([{ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5) }])
                 }
-                var tem = box_line[box_line.length - 1]
+                let tem = box_line[box_line.length - 1]
                 line_num = tem[tem.length - 1].song.length
             } else {
-                var tem = box_line[box_line.length - 1]
+                let tem = box_line[box_line.length - 1]
                 if (flag) {
                     tem.push({ color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
                 } else {
@@ -220,7 +219,7 @@ export class phisstk extends plugin {
                 }
                 line_num += tem[tem.length - 1].song.length
             }
-            var tem = box_line[box_line.length - 1]
+            let tem = box_line[box_line.length - 1]
             tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
             flag = true
             if (!tot_update[0].song.length) {
@@ -231,12 +230,12 @@ export class phisstk extends plugin {
         }
 
         /**添加任务信息 */
-        var task_data = pluginData?.plugin_data?.task
-        var task_time = date_to_string(pluginData?.plugin_data?.task_time)
+        let task_data = pluginData?.plugin_data?.task
+        let task_time = date_to_string(pluginData?.plugin_data?.task_time)
 
         /**添加曲绘 */
         if (task_data) {
-            for (var i in task_data) {
+            for (let i in task_data) {
                 if (task_data[i]) {
                     task_data[i].illustration = get.getill(task_data[i].song)
                     if (task_data[i].request.type == 'acc') {
@@ -249,7 +248,7 @@ export class phisstk extends plugin {
             }
         }
 
-        var data = {
+        let data = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
             Date: now.saveInfo.updatedAt,
@@ -285,12 +284,12 @@ export class phisstk extends plugin {
 
     async doUnbind() {
 
-        var e = this.e
+        let e = this.e
 
-        var msg = e.msg.replace(' ', '')
+        let msg = e.msg.replace(' ', '')
 
         if (msg == '确认') {
-            var flag = true
+            let flag = true
             try {
                 get.delsave(e.user_id)
             } catch (err) {
@@ -298,7 +297,7 @@ export class phisstk extends plugin {
                 flag = false
             }
             try {
-                var pluginData = await get.getpluginData(e.user_id, true)
+                let pluginData = await get.getpluginData(e.user_id, true)
 
                 if (pluginData) {
                     pluginData.rks = []
@@ -336,12 +335,12 @@ export class phisstk extends plugin {
 
     async doClean() {
 
-        var e = this.e
+        let e = this.e
 
-        var msg = e.msg.replace(' ', '')
+        let msg = e.msg.replace(' ', '')
 
         if (msg == '确认') {
-            var flag = true
+            let flag = true
             try {
                 get.delsave(e.user_id)
             } catch (err) {
@@ -375,8 +374,8 @@ function date_to_string(date) {
     if (!date) return undefined
     date = new Date(date)
 
-    var month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
-    var day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+    let month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+    let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
 
     return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
 }

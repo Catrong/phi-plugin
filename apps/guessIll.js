@@ -4,14 +4,14 @@ import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
 
-var songsname = get.illlist
-var songweights = {} //存储每首歌曲被抽取的权重
-var info = get.info()
+let songsname = get.illlist
+let songweights = {} //存储每首歌曲被抽取的权重
+let info = get.info()
 
 //曲目初始洗牌
 shuffleArray(songsname)
 
-var gamelist = {}
+let gamelist = {}
 const eList = {}
 
 export class phiguess extends plugin {
@@ -65,10 +65,10 @@ export class phiguess extends plugin {
             })
         }
 
-        var song = getRandomSong(e)
-        var songs_info = get.info()[song]
+        let song = getRandomSong(e)
+        let songs_info = get.info()[song]
 
-        var cnnt = 0
+        let cnnt = 0
         while (typeof songs_info.illustration_big == 'undefined' || songs_info.can_t_be_guessill) {
             ++cnnt
             if (cnnt >= 50) {
@@ -366,11 +366,11 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
         if (!remain_info.length) fnc.splice(fnc.indexOf(2), 1)
 
         if (aim === 'chart') {
-            var charts = []
-            for (var i in songs_info[aim]) {
+            let charts = []
+            for (let i in songs_info[aim]) {
                 charts.push(i)
             }
-            var t1 = charts[randint(0, charts.length - 1)]
+            let t1 = charts[randint(0, charts.length - 1)]
 
             known_info[aim] = `\n该曲目的 ${t1} 谱面的`
 
@@ -413,9 +413,9 @@ function shuffleArray(arr) {
 
 //定义生成指定区间带有指定小数位数随机数的函数
 function randfloat(min, max, precision = 0) {
-    var range = max - min
-    var randomOffset = Math.random() * range
-    var randomNumber = randomOffset + min + range * 10 ** -precision
+    let range = max - min
+    let randomOffset = Math.random() * range
+    let randomNumber = randomOffset + min + range * 10 ** -precision
 
     return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
 }

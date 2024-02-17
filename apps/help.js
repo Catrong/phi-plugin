@@ -27,7 +27,7 @@ export class phihelp extends plugin {
 
     /**暂行帮助 */
     async help(e) {
-        var head = Config.getDefOrConfig('config', 'cmdhead')
+        let head = Config.getDefOrConfig('config', 'cmdhead')
         head = head.replace('|', '或')
         if (head) {
             //head += ' '

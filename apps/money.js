@@ -12,7 +12,7 @@ const sp_date = 'Jan 01 2024'
 const sp_date_num = [2024]
 const sp_date_tips = ["2！0！2！4！新！年！快！乐！"]
 
-for (var i in get.ori_info) {
+for (let i in get.ori_info) {
     if (get.ori_info[i]['illustration_big']) {
         illlist.push(get.getill(i))
     }
@@ -55,16 +55,16 @@ export class phimoney extends plugin {
 
     /**签到 */
     async sign(e) {
-        var data = await get.getmoneydata(e.user_id, true)
-        var last_sign = new Date(data.plugin_data.sign_in)
-        var now_time = new Date().toString()
-        var request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
-        var is_sp_date = false
+        let data = await get.getmoneydata(e.user_id, true)
+        let last_sign = new Date(data.plugin_data.sign_in)
+        let now_time = new Date().toString()
+        let request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
+        let is_sp_date = false
         if (now_time.includes(sp_date)) {
             is_sp_date = true
         }
         if (request_time > last_sign) {
-            var getnum = randint(20, 5)
+            let getnum = randint(20, 5)
 
             if (is_sp_date) {
                 getnum = sp_date_num[randint(sp_date_num.length - 1)]
@@ -77,13 +77,13 @@ export class phimoney extends plugin {
 
             await get.putpluginData(e.user_id, data)
             /**判断时间段 */
-            var time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
-            var time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
-            var time3 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
-            var time4 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
-            var time5 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
+            let time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
+            let time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
+            let time3 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
+            let time4 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
+            let time5 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
-            var Remsg = []
+            let Remsg = []
 
             now_time = new Date()
             if (now_time < time1) {
@@ -109,8 +109,8 @@ export class phimoney extends plugin {
                 Remsg.push(`祝您今日愉快呐！（￣︶￣）↗　`)
             }
 
-            var save = await get.getsave(e.user_id)
-            var last_task = new Date(data.plugin_data.task_time)
+            let save = await get.getsave(e.user_id)
+            let last_task = new Date(data.plugin_data.task_time)
 
             if (save) {
                 if (last_task < request_time) {
@@ -139,21 +139,21 @@ export class phimoney extends plugin {
 
     /**刷新任务并发送图片 */
     async gettask(e) {
-        var save = await get.getsave(e.user_id)
+        let save = await get.getsave(e.user_id)
 
         if (!save) {
             send.send_with_At(e, `该功能需要绑定后才能使用哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
 
-        var data = await get.getmoneydata(e.user_id, true)
-        var last_task = new Date(data.plugin_data.task_time)
-        var now_time = new Date().toString()
-        var request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
-        var oldtask = []
+        let data = await get.getmoneydata(e.user_id, true)
+        let last_task = new Date(data.plugin_data.task_time)
+        let now_time = new Date().toString()
+        let request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
+        let oldtask = []
 
         /**note变化 */
-        var change_note = 0
+        let change_note = 0
 
         if (request_time > last_task) {
             /**每天一次免费刷新任务 */
@@ -173,8 +173,8 @@ export class phimoney extends plugin {
         data.plugin_data.task_time = now_time
         data.plugin_data.task = randtask(save, oldtask)
 
-        var vis = false
-        for (var i in data.plugin_data.task) {
+        let vis = false
+        for (let i in data.plugin_data.task) {
             if (data.plugin_data.task) {
                 vis = true
                 break
@@ -191,14 +191,14 @@ export class phimoney extends plugin {
 
         now_time = new Date()
         /**判断时间段 */
-        var time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
-        var time2 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
-        var time3 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
-        var time4 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
-        var time5 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
+        let time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
+        let time2 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
+        let time3 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
+        let time4 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
+        let time5 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
-        var Remsg = ''
-        var Remsg1 = ''
+        let Remsg = ''
+        let Remsg1 = ''
 
         if (now_time < time1) {
             Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！`
@@ -221,16 +221,16 @@ export class phimoney extends plugin {
         }
 
 
-        var task_time = now_time.toString().split(' ')
+        let task_time = now_time.toString().split(' ')
 
         /**添加曲绘 */
         if (data.plugin_data.task) {
-            for (var i in data.plugin_data.task) {
+            for (let i in data.plugin_data.task) {
                 data.plugin_data.task[i].illustration = get.getill(data.plugin_data.task[i].song)
             }
         }
 
-        var picdata = {
+        let picdata = {
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: `${task_time[3]} ${task_time[1]}.${task_time[2]} ${task_time[4]}`,
@@ -246,7 +246,7 @@ export class phimoney extends plugin {
             theme: data?.plugin_data?.theme || 'star',
         }
 
-        var is_sp_date = false
+        let is_sp_date = false
         if (new Date().toString().includes(sp_date)) {
             is_sp_date = true
         }
@@ -262,21 +262,21 @@ export class phimoney extends plugin {
     }
 
     async tasks(e) {
-        var now = await send.getsave_result(e)
+        let now = await send.getsave_result(e)
 
         if (!now) {
             return false
         }
-        var now_time = new Date()
+        let now_time = new Date()
         /**判断时间段 */
-        var time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
-        var time2 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
-        var time3 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
-        var time4 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
-        var time5 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
+        let time1 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
+        let time2 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
+        let time3 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '13:00:00'))
+        let time4 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '18:30:00'))
+        let time5 = new Date(now_time.toString().replace(/([0-9])+:([0-9])+:([0-9])+/g, '23:00:00'))
 
-        var Remsg = ''
-        var Remsg1 = ''
+        let Remsg = ''
+        let Remsg1 = ''
 
         if (now_time < time1) {
             Remsg = `现在是${now_time.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}，夜深了，注意休息哦！`
@@ -298,17 +298,17 @@ export class phimoney extends plugin {
             Remsg1 = `(∪.∪ )...zzz`
         }
 
-        var data = await get.getmoneydata(e.user_id)
-        var task_time = data.plugin_data.task_time.split(' ')
+        let data = await get.getmoneydata(e.user_id)
+        let task_time = data.plugin_data.task_time.split(' ')
 
         /**添加曲绘 */
         if (data.plugin_data.task) {
-            for (var i in data.plugin_data.task) {
+            for (let i in data.plugin_data.task) {
                 data.plugin_data.task[i].illustration = get.getill(data.plugin_data.task[i].song)
             }
         }
 
-        var picdata = {
+        let picdata = {
             PlayerId: now.saveInfo.PlayerId,
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
             Date: `${task_time[3]} ${task_time[1]}.${task_time[2]} ${task_time[4]}`,
@@ -325,7 +325,7 @@ export class phimoney extends plugin {
         }
 
 
-        var is_sp_date = false
+        let is_sp_date = false
         if (new Date().toString().includes(sp_date)) {
             is_sp_date = true
         }
@@ -341,10 +341,10 @@ export class phimoney extends plugin {
 
     /**转账 */
     async send(e) {
-        var msg = e.msg.replace(/[#/](.*)(send|送|转)(\s*)/g, "")
+        let msg = e.msg.replace(/[#/](.*)(send|送|转)(\s*)/g, "")
         msg = msg.replace(/[\<\>]/g, "")
-        var target = e.at
-        var num
+        let target = e.at
+        let num
         if (!e.at) {
             if (msg.includes(' ')) {
                 msg = msg.split(' ')
@@ -369,7 +369,7 @@ export class phimoney extends plugin {
             return true
         }
 
-        var sender_data = await get.getmoneydata(e.user_id, true)
+        let sender_data = await get.getmoneydata(e.user_id, true)
 
         if (target == e.user_id) {
             await send.send_with_At(e, `转账成……唔？这个目标……在拿我寻开心嘛！`)
@@ -392,22 +392,22 @@ export class phimoney extends plugin {
             return true
         }
 
-        var sender_old = sender_data.plugin_data.money
-        var target_old = target_data.plugin_data.money
+        let sender_old = sender_data.plugin_data.money
+        let target_old = target_data.plugin_data.money
 
         sender_data.plugin_data.money -= num
         await get.putpluginData(e.user_id, sender_data)
 
-        var target_data = await get.getmoneydata(target, true)
+        let target_data = await get.getmoneydata(target, true)
         target_data.plugin_data.money += Math.ceil(num * 0.8)
         await get.putpluginData(target, target_data)
-        var target_card = await Bot.pickMember(e.group_id, target)
+        let target_card = await Bot.pickMember(e.group_id, target)
         send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.plugin_data.money}\n${target_card.nickname || target_card.card}的Note: ${target_old} + ${Math.ceil(num * 0.8)} = ${target_data.plugin_data.money}`)
     }
 
     /**主题相关 */
     async theme(e) {
-        var aim = e.msg.replace(/.*?theme\s*/g, '')
+        let aim = e.msg.replace(/.*?theme\s*/g, '')
         aim = Number(aim)
         if (typeof aim != 'number' || aim < 0 || aim > 2) {
             send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getDefOrConfig('config', 'cmdhead')} theme 0-2`)
@@ -427,16 +427,16 @@ export class phimoney extends plugin {
 
 
 function randtask(save, task = []) {
-    var rks = save.saveInfo.summary.rankingScore
-    var gameRecord = save.gameRecord
-    for (var song in gameRecord) {
+    let rks = save.saveInfo.summary.rankingScore
+    let gameRecord = save.gameRecord
+    for (let song in gameRecord) {
         gameRecord[get.idgetsong(song, false)] = gameRecord[song]
     }
 
-    var info = get.ori_info
-    var ranked_songs = [[], [], [], [], []] //任务难度分级后的曲目列表
+    let info = get.ori_info
+    let ranked_songs = [[], [], [], [], []] //任务难度分级后的曲目列表
 
-    var rank_line = [] //割分歌曲的临界定数
+    let rank_line = [] //割分歌曲的临界定数
 
 
     if (rks < 15) {
@@ -459,12 +459,12 @@ function randtask(save, task = []) {
     rank_line.push(18)
 
     /**将曲目分级并处理 */
-    for (var song in info) {
-        for (var level in Level) {
+    for (let song in info) {
+        for (let level in Level) {
             if (info[song]['chart'][Level[level]]) {
                 if (!gameRecord[song] || !gameRecord[song][level] || gameRecord[song][level].acc != 100) {
-                    var dif = info[song]['chart'][Level[level]]['difficulty']
-                    for (var i in rank_line) {
+                    let dif = info[song]['chart'][Level[level]]['difficulty']
+                    for (let i in rank_line) {
                         if (dif < rank_line[i]) {
                             ranked_songs[i].push({ song, level })
                             break
@@ -475,22 +475,22 @@ function randtask(save, task = []) {
         }
     }
 
-    var reward = [10, 15, 30, 60, 80, 100]
+    let reward = [10, 15, 30, 60, 80, 100]
 
-    for (var i in ranked_songs) {
+    for (let i in ranked_songs) {
         if (task[i] && task[i].finished == true) {
             continue
         }
-        var aim = ranked_songs[i][randint(ranked_songs[i].length - 1)]
+        let aim = ranked_songs[i][randint(ranked_songs[i].length - 1)]
         if (!aim) {
             continue
         }
-        var song = aim.song
-        var level = aim.level
-        var type = randint(1) //0 acc, 1 score
-        var value
-        var old_acc = 0
-        var old_score = 0
+        let song = aim.song
+        let level = aim.level
+        let type = randint(1) //0 acc, 1 score
+        let value
+        let old_acc = 0
+        let old_score = 0
         if (gameRecord[song] && gameRecord[song][level]) {
             old_acc = gameRecord[song][level].acc
             old_score = gameRecord[song][level].score
@@ -530,9 +530,9 @@ function randint(max, min = 0) {
 
 //定义生成指定区间带有指定小数位数随机数的函数
 function randfloat(min, max, precision = 0) {
-    var range = max - min
-    var randomOffset = Math.random() * range
-    var randomNumber = randomOffset + min + range * 10 ** -precision
+    let range = max - min
+    let randomOffset = Math.random() * range
+    let randomNumber = randomOffset + min + range * 10 ** -precision
 
     return precision === 0 ? Math.floor(randomNumber) : Number(randomNumber.toFixed(precision))
 }

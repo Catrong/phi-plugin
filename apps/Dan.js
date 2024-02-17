@@ -46,15 +46,15 @@ export class phiDan extends plugin {
         if (!cancanneed) {
             return false
         }
-        var name = e.msg.replace(/[#/].*(dan|Dan)(\s*)/g, '')
+        let name = e.msg.replace(/[#/].*(dan|Dan)(\s*)/g, '')
         if (!name) {
-            var plugindata = await get.getpluginData(e.user_id)
+            let plugindata = await get.getpluginData(e.user_id)
             try {
-                var dan = plugindata.plugin_data.CLGMOD;
+                let dan = plugindata.plugin_data.CLGMOD;
 
                 if (Object.prototype.toString.call(dan) == '[object Array]') {
-                    var resmsg = [`你的认证段位为`]
-                    for (var i in dan) {
+                    let resmsg = [`你的认证段位为`]
+                    for (let i in dan) {
                         resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
                         resmsg.push(segment.image(dan[i].img))
                         send.send_with_At(e, resmsg)
@@ -72,15 +72,15 @@ export class phiDan extends plugin {
             }
         } else {
             try {
-                var dan = await Vika.GetUserDanByName(name);
+                let dan = await Vika.GetUserDanByName(name);
                 if (!dan) {
                     send.send_with_At(e, [`唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！`, word])
                     return true
                 }
-                var plugindata = await get.getpluginData(e.user_id)
+                let plugindata = await get.getpluginData(e.user_id)
                 plugindata.plugin_data.CLGMOD = dan
-                var resmsg = [`${name}的认证段位为\n`]
-                for (var i in dan) {
+                let resmsg = [`${name}的认证段位为\n`]
+                for (let i in dan) {
                     resmsg.push(`${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
                     resmsg.push(segment.image(dan[i].img))
                     send.send_with_At(e, resmsg)
@@ -100,15 +100,15 @@ export class phiDan extends plugin {
         if (!cancanneed) {
             return false
         }
-        var save = await send.getsave_result(e)
+        let save = await send.getsave_result(e)
 
         if (!save) {
             return true
         }
-
+        let dan
         try {
 
-            var dan = await Vika.GetUserDanBySstk(save.session);
+            dan = await Vika.GetUserDanBySstk(save.session);
 
         } catch (err) {
             console.info(err)
@@ -121,14 +121,14 @@ export class phiDan extends plugin {
             send.send_with_At(e, [`唔，暂时没有在审核通过列表里找到你哦！如果提交过审核的话，请耐心等待审核通过哦！`, word])
             return true
         }
-        var plugindata = await get.getpluginData(e.user_id, true)
+        let plugindata = await get.getpluginData(e.user_id, true)
         if (!plugindata.plugin_data) {
             plugindata.plugin_data = {}
         }
         plugindata.plugin_data.CLGMOD = dan
         get.putpluginData(e.user_id, plugindata)
-        var resmsg = [`更新成功！你的认证段位为\n`]
-        for (var i in dan) {
+        let resmsg = [`更新成功！你的认证段位为\n`]
+        for (let i in dan) {
             resmsg.push(`${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)
             resmsg.push(segment.image(dan[i].img))
             send.send_with_At(e, resmsg)
@@ -142,7 +142,7 @@ export class phiDan extends plugin {
             send.send_with_At(e, `请私聊使用嗷`)
             return false
         }
-        var save = await send.getsave_result(e)
+        let save = await send.getsave_result(e)
 
         if (!save) {
             return true

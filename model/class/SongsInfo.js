@@ -33,7 +33,7 @@ export default class SongsInfo {
         this.spinfo = data.spinfo //特殊信息
         this.chart = {}
         /**谱面详情 */
-        for (var i in data.chart) {
+        for (let i in data.chart) {
             this.chart[i] = new Chart(data.chart[i])
         }
     }
