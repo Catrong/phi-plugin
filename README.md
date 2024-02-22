@@ -8,7 +8,6 @@
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
-[![Group](https://img.shields.io/badge/QQ群-282781491-9cf?style=for-the-badge&logo=tencent-qq)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=4YLoHlaAb5aDhTy8bi0FAjbZcC8o5XfK&authKey=Oxw5Ss06W5X0UjRN2Ql6RK%2FApduLOgCSCZiBLRw9IWP3UqShLAWw%2BMPJuZTmotW3&noverify=0&group_code=282781491)
 [![Guild](https://img.shields.io/badge/频道-Hutao114Pgr939-9cf?style=for-the-badge&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Star)](../../stargazers)
