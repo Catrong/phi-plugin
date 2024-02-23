@@ -21,7 +21,7 @@ body p {
 
 .background img {
     height: 100%;
-    width: auto;
+    min-width: 100%;
     /* filter: blur(100px) brightness(75%); */
 }
 

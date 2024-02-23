@@ -76,7 +76,7 @@ body {
 .background img {
     min-width: 100%;
     min-width: 100%;
-    position: relative;
+    position: absolute;
     overflow: hidden;
     transform: scale(1.2);
     filter: blur(50px) brightness(75%);
