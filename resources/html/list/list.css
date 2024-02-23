@@ -4,6 +4,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 1920px;
+    height: auto;
     justify-content: center;
     align-items: center;
     background-size: cover;
