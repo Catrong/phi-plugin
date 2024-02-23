@@ -2,39 +2,16 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
+import atlas from '../model/picmodle.js'
 
 
 let tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
 const Level = ['EZ', 'HD', 'IN', 'AT']
-const tot_rating_info = {}
 const illlist = []
 
 for (let i in get.info()) {
     if (get.info()[i]['illustration_big']) {
         illlist.push(get.getill(i))
-    }
-}
-
-for (let song in get.ori_info) {
-    let info = get.ori_info[song]
-    if (info.chart['AT'] && Number(info.chart['AT'].difficulty)) {
-        ++tot[3]
-    }
-    if (info.chart['IN'] && Number(info.chart['IN'].difficulty)) {
-        ++tot[2]
-    }
-    if (info.chart['HD'] && Number(info.chart['HD'].difficulty)) {
-        ++tot[1]
-    }
-    if (info.chart['EZ'] && Number(info.chart['EZ'].difficulty)) {
-        ++tot[0]
-    }
-    for (let i in info.chart) {
-        let rating = info.chart[i].difficulty
-        if (!tot_rating_info[rating]) {
-            tot_rating_info[rating] = []
-        }
-        tot_rating_info[rating].push([info.song, i, false])
     }
 }
 
@@ -57,6 +34,10 @@ export class phiuser extends plugin {
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)((lvsco(re)?)|scolv)(.*)$`,
                     fnc: 'lvscore'
+                },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)list(.*)$`,
+                    fnc: 'list'
                 }
             ]
         })
@@ -573,7 +554,7 @@ export class phiuser extends plugin {
         send.send_with_At(e, await get.getlvsco(e, data))
     }
 
-    async tot_phi(e) {
+    async list(e) {
 
         const save = await send.getsave_result(e)
 
@@ -581,11 +562,86 @@ export class phiuser extends plugin {
             return true
         }
 
-        let phi = { ...tot_rating_info }
+        const range = [0, get.MAX_DIFFICULTY]
 
-        let range = [0, get.MAX_DIFFICULTY]
+        let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
+
+        /**EZ HD IN AT */
+        let isask = [true, true, true, true]
+
+        msg = msg.toUpperCase()
+
+        if (msg.includes('EZ') || msg.includes('HD') || msg.includes('IN') || msg.includes('AT')) {
+            isask = [false, false, false, false]
+            if (msg.includes('EZ')) { isask[0] = true }
+            if (msg.includes('HD')) { isask[1] = true }
+            if (msg.includes('IN')) { isask[2] = true }
+            if (msg.includes('AT')) { isask[3] = true }
+        }
+        msg = msg.replace(/(list|AT|IN|HD|EZ)*/g, "")
+
+        let scoreAsk = { NEW: true, F: true, C: true, B: true, A: true, S: true, V: true, FC: true, PHI: true }
+
+        if (msg.includes(' NEW') || msg.includes(' F') || msg.includes(' C') || msg.includes(' B') || msg.includes(' A') || msg.includes(' S') || msg.includes(' V') || msg.includes(' FC') || msg.includes(' PHI')) {
+            scoreAsk = { NEW: false, F: false, C: false, B: false, A: false, S: false, V: false, FC: false, PHI: false }
+            let rating = ['NEW', 'F', 'C', 'B', 'A', 'S', 'V', 'FC', 'PHI']
+            for (let i in rating) {
+                if (msg.includes(` ${rating[i]}`)) { scoreAsk[rating[i]] = true }
+            }
+        }
+        msg = msg.replace(/(NEW|F|C|B|A|S|V|FC|PHI)*/g, "")
 
         match_range(e.msg, range)
+
+
+        let Record = save.gameRecord
+
+        let data = []
+
+        for (let id in Record) {
+            const info = get.init_info(get.idgetsong(id), true)
+            const record = Record[id]
+            for (let lv in [0, 1, 2, 3]) {
+                if (!info.chart[Level[lv]]) continue
+                let difficulty = info.chart[Level[lv]].difficulty
+                if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
+                    if ((!record[lv] && !scoreAsk.NEW)) continue
+                    if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()]) continue
+                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id)), difficulty: difficulty, rank: Level[lv] })
+                }
+            }
+        }
+
+        if (data.length > 180) {
+            send.send_with_At(e, "谱面数量过多，请缩小搜索范围QAQ！")
+            return true
+        }
+
+        data.sort((a, b) => {
+            return (b.difficulty || 0) - (a.difficulty || 0)
+        })
+
+        let plugin_data = get.getpluginData(e.user_id)
+
+        let request = []
+        request.push(`${range[0]} - ${range[1]}`)
+
+        for (let lv in isask) {
+
+        }
+
+        send.send_with_At(e, atlas.list(e, {
+            song: data,
+            background: illlist[randint(0, illlist.length - 1)],
+            theme: plugin_data?.plugin_data?.theme || 'star',
+            PlayerId: save.saveInfo.PlayerId,
+            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
+            Date: save.saveInfo.updatedAt,
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            dan: await get.getDan(e.user_id),
+            request: request
+        }))
 
     }
 
@@ -696,7 +752,8 @@ function getbackground(name) {
  * @param {Array} range 范围数组
  */
 function match_range(msg, range) {
-    range = [0, get.MAX_DIFFICULTY]
+    range[0] = 0
+    range[1] = get.MAX_DIFFICULTY
     if (msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)) {
         /**0-16.9 */
         msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)[0]
@@ -723,6 +780,9 @@ function match_range(msg, range) {
         /**15 */
         msg = msg.match(/[0-9]+(.[0-9]+)?/g)[0]
         range[0] = range[1] = Number(msg)
+        if (!msg.includes('.')) {
+            range[1] += 0.9
+        }
     }
 }
 

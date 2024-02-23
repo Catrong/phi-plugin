@@ -137,7 +137,6 @@ export default class Save {
                     continue
                 }
                 this.gameRecord[id][level] = new LevelRecordInfo(data.gameRecord[id][level], id, level)
-
             }
         }
     }

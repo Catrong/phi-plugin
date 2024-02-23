@@ -12,6 +12,7 @@ function init() {
     stars.height = parentElement.offsetHeight - 400;
     stars.style.zIndex = 0
     stars.style.position = "fixed"
+    stars.style.top = "0px"
     context = stars.getContext("2d");
 }
 

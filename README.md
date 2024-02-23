@@ -74,7 +74,8 @@ pnpm install -P #安装插件所需依赖
 | `#phi (update\|更新存档)` | 更新存档 
 | `#phi (rks\|pgr\|b19)` | 查询rks，会提供得出的b21结果 
 | `#phi info(1\|2)?` | 查询个人统计信息 
-| `#phi (lvsco(re)\|scolv) <定数范围>` | 获取区间成绩 
+| `#phi (lvsco(re)\|scolv) <定数范围> <难度>` | 获取区间成绩 
+| `#phi list <定数范围> <EZ|HD|IN|AT> <NEW|C|B|A|S|V|FC|PHI>` | 获取区间每首曲目的成绩
 | `#phi best1(+)` | 查询文字版b19（或更多），最高b99 
 | `#phi (score\|单曲成绩)xxx` | 获取单曲成绩及这首歌的推分建议 
 | `#phi (suggest\|推分)` | 获取可以让RKS+0.01的曲目及其所需ACC 

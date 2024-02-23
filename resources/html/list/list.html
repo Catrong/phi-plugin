@@ -1,0 +1,86 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+
+<link rel="stylesheet" href="{{_res_path}}html/list/list.css">
+
+{{/block}}
+{{block 'main'}}
+
+<body>
+    <div class="background">
+        {{if theme == "star"}}
+        <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
+        <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
+            style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
+        {{else}}
+        {{if background}}
+        <img src="{{background}}" alt="曲绘-模糊">
+        {{else}}
+        <img src="{{_res_path}}html/otherimg/phigros.png" alt="曲绘-模糊">
+        {{/if}}
+        {{/if}}
+    </div>
+    <div class="list_box">
+        {{each song line}}
+        <div class="line">
+            <div class="ill_box">
+                <img src="{{line.illustration}}" alt="{{line.illustration}}">
+            </div>
+            <div class="info_box">
+                <div class="up">
+                    <div class="num"><span name="pvis">{{$index + 1}}</span></div>
+                    <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+                    <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
+                </div>
+                <div class="down">
+                    <div class="acc">
+                        <div class="left">
+                            <div class="box-title">ACC</div>
+                            <div class="box-content">{{line.acc ? line.acc.toFixed(2) : '---'}}%</div>
+                        </div>
+                        <div class="right">
+                            <div class="Rating">
+                                <img src="{{line.Rating ? `${_res_path}html/otherimg/${line.Rating}.png` : `${_res_path}html/otherimg/NEW.png`}}" alt="{{line.Rating}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>Phi-Plugin</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
+    {{if theme == "snow"}}
+    <div class="snow-box"> </div>
+    <script>
+        function addSnow() {
+            var snow = document.createElement("div")
+            snow.innerHTML = `<img src="{{_res_path}}html/otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
+            snow.className = "snow"
+            snow.style.left = `${Math.random() * 100}%`
+            snow.style.bottom = `${Math.random() * 100}%`
+            snow.style.width = `${Math.random() * 4}%`
+            snow.style.rotate = `${Math.random() * 360}deg`
+            snow.style.transform = `rotate3d(${Math.random()}, ${Math.random()}, ${Math.random()}, ${Math.random() * 360}deg)`
+            snow.style.filter = `blur(${Math.random() * 2}px)`
+            const tar = document.getElementsByClassName("snow-box")[0]
+            tar.appendChild(snow)
+        }
+        var sum = Math.floor(Math.random() * 100) + 50
+        while (sum--) {
+            addSnow()
+        }
+    </script>
+    {{else if theme == "star"}}
+    <canvas id="stars"></canvas>
+    <script src="{{_res_path}}html/common/star.js"></script>
+    {{/if}}
+</body>
+{{/block}}

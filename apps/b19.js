@@ -165,10 +165,10 @@ export class phib19 extends plugin {
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            background: bksong || illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
-            nnum: nnum,
             dan: await get.getDan(e.user_id),
+            background: bksong || illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             theme: plugin_data?.plugin_data?.theme || 'star',
+            nnum: nnum,
         }
         if (save.gameProgress) {
             let money = save.gameProgress.money

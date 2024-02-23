@@ -16,15 +16,15 @@ export default class LevelRecordInfo {
         this.rank = get.Level[rank] //AT IN HD EZ LEGACY 
         this.song = info.song //曲名
         this.illustration = get.getill(this.song) //曲绘链接
+        this.Rating = Rating(this.score, this.fc) //V S A 
+        
 
         if (info.chart && info.chart[this.rank]?.difficulty) {
             this.difficulty = info.chart[this.rank]['difficulty'] //难度
             this.rks = get.getrks(this.acc, this.difficulty) //等效rks
-            this.Rating = Rating(this.score, this.fc) //V S A 
         } else {
             this.difficulty = 0
             this.rks = 0
-            this.Rating = undefined
         }
 
 

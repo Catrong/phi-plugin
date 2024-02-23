@@ -100,6 +100,15 @@ class atlas {
         })
     }
 
+    async list(e, data) {
+        return await this.render('list/list', {
+            ...data
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100
+        })
+    }
+
     /**
      * 单曲成绩
      * @param {1|2} picversion 版本
