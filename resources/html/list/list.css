@@ -3,6 +3,7 @@
 body {
     display: flex;
     flex-direction: column;
+    height: fit-content;
     width: 1920px;
     height: auto;
     justify-content: center;
