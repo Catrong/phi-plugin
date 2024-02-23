@@ -1,18 +1,15 @@
 @import "../common/common.css";
 
 body {
-    display: flex;
     flex-direction: column;
-    height: fit-content;
+    display: flex;
     width: 1920px;
-    height: auto;
-    justify-content: center;
+    height: fit-content;
+    font-family: 'PHI', 'HIMALAYA', '吞弥恰俊';
     align-items: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    margin: 0px;
     color: white;
-    font-size: 16px;
+    margin: 0px;
+    position: relative;
 }
 
 body p {
