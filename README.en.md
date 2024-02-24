@@ -75,7 +75,6 @@ pnpm install -P # Install the plugin dependencies
 | `#phi (score\|单曲成绩)xxx` | Get track scores and score suggestions 
 | `#phi (suggest\|推分)` | Get the track information that can make RKS+0.01 and its required ACC 
 | `#phi data` | Gets the number of user data 
-| `#phi re8` | Reset the plot of chap 8 
 | `#phi (guess\|猜曲绘)` | Guess the song, answer without special orders, reply directly, if it is not the song title will not speak, if it is not the correct song title will reply. '#illans' End of guessing 
 | `#phi mic` | Listen to music clips and guess the song, answer that you need to send '/gu'<song>; For example '/gu Distorted Fate', if more fragments are needed to send '/phi mictip', answer '/micans' 
 | `#phi (曲绘洗牌\|illmix)` | Shuffle the order of the track list in the guess plot and normalize the weights 
