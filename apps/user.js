@@ -630,7 +630,7 @@ export class phiuser extends plugin {
 
         }
 
-        send.send_with_At(e, atlas.list(e, {
+        send.send_with_At(e, await atlas.list(e, {
             song: data,
             background: illlist[randint(0, illlist.length - 1)],
             theme: plugin_data?.plugin_data?.theme || 'star',
