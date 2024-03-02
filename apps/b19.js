@@ -459,13 +459,14 @@ export class phib19 extends plugin {
                 break;
             }
             default: {
-                for (let i in songsinfo.chart) {
-                    data.scoreData[i] = {}
-                    data.scoreData[i].difficulty = songsinfo['chart'][i]['difficulty']
+                for (let i in Level) {
+                    if(!songsinfo.chart[Level[i]]) break
+                    data.scoreData[Level[i]] = {}
+                    data.scoreData[Level[i]].difficulty = songsinfo['chart'][Level[i]]['difficulty']
                 }
                 // console.info(ans)
                 for (let i in ans) {
-                    if (i > 3 || !songsinfo['chart'][Level[i]]) break
+                    if (!songsinfo['chart'][Level[i]]) break
                     if (ans[i]) {
                         ans[i].acc = ans[i].acc.toFixed(4)
                         ans[i].rks = ans[i].rks.toFixed(4)
