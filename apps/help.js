@@ -153,13 +153,13 @@ export class phihelp extends plugin {
             e.reply(await atlas.help(e, {
                 helpGroup: helpGroup,
                 cmdHead: head,
-                background: get.getill(get.illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
+                background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
                 theme: pluginData?.plugin_data?.theme || 'star'
             }), true)
         } else {
             e.reply(await atlas.help(e, {
                 helpGroup: helpGroup,
-                background: get.getill(get.illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
+                background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
                 theme: pluginData?.plugin_data?.theme || 'star'
             }), true)
         }
