@@ -39,7 +39,7 @@ data_rks p {
 
 .left,
 .right {
-    background-color: rgb(45 129 230 / 29%);
+    background-color: #2d81e64a;
     backdrop-filter: blur(50px);
     height: 1320px;
     padding-bottom: 0px;

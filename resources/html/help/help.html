@@ -1,0 +1,95 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+
+<link rel="stylesheet" href="{{_res_path}}html/help/help.css">
+
+{{/block}}
+{{block 'main'}}
+
+<body>
+    <div class="background">
+        {{if theme == "star"}}
+        <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
+        <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
+            style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
+        {{else}}
+        {{if background}}
+        <img src="{{background}}" alt="曲绘-模糊">
+        {{else}}
+        <img src="{{_res_path}}html/otherimg/phigros.png" alt="曲绘-模糊">
+        {{/if}}
+        {{/if}}
+    </div>
+    {{each helpGroup group}}
+    {{set len = group?.list?.length || 0 }}
+    <div class="help_box">
+        <div class="help-group">——·{{group.group}}·——</div>
+        {{if len > 0}}
+        {{each group.list help idx}}
+        <div class="line">
+            <div class="order">
+                {{if cmdHead}}
+                <p name="pvis">{{help.title.replace('/',`/${cmdHead} `)}}</p>
+                {{else}}
+                <p name="pvis">{{help.title}}</p>
+                {{/if}}
+            </div>
+            <div class="info_box">
+                <div class="up">
+                    <div class="num">{{idx + 1}}</div>
+                    <div class="song">
+                        {{if cmdHead}}
+                        <p name="pvis">{{#(help.eg || help.title).replace('/',`/${cmdHead} `)}}</p>
+                        {{else}}
+                        <p name="pvis">{{#(help.eg || help.title)}}</p>
+                        {{/if}}
+                    </div>
+                    <!-- <div class="Master">Master</div> -->
+                </div>
+                <div class="down">
+                    <div class="desc">
+                        <p name="pvis">{{#help.desc.replace('\n','<br>').replace(' ','&ensp;')}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{/if}}
+    </div>
+    {{/each}}
+
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>Phi-Plugin</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
+    {{if theme == "snow"}}
+    <div class="snow-box"> </div>
+    <script>
+        function addSnow() {
+            var snow = document.createElement("div")
+            snow.innerHTML = `<img src="{{_res_path}}html/otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
+            snow.className = "snow"
+            snow.style.left = `${Math.random() * 100}%`
+            snow.style.bottom = `${Math.random() * 100}%`
+            snow.style.width = `${Math.random() * 4}%`
+            snow.style.rotate = `${Math.random() * 360}deg`
+            snow.style.transform = `rotate3d(${Math.random()}, ${Math.random()}, ${Math.random()}, ${Math.random() * 360}deg)`
+            snow.style.filter = `blur(${Math.random() * 2}px)`
+            const tar = document.getElementsByClassName("snow-box")[0]
+            tar.appendChild(snow)
+        }
+        var sum = Math.floor(Math.random() * 100) + 50
+        while (sum--) {
+            addSnow()
+        }
+    </script>
+    {{else if theme == "star"}}
+    <canvas id="stars"></canvas>
+    <script src="{{_res_path}}html/common/star.js"></script>
+    {{/if}}
+</body>
+{{/block}}

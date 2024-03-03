@@ -167,6 +167,16 @@ class atlas {
         })
     }
 
+    async help(e, data) {
+        return await this.render('help/help', {
+            ...data,
+            waitUntil: 'networkidle0'
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100,
+        })
+    }
+
     async render(path, params, cfg) {
         // return await puppeteer.render(path, params, cfg)
 

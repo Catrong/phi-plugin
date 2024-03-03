@@ -4,8 +4,6 @@ import common from "../../../lib/common/common.js"
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 
-await get.init()
-
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
 let wait_to_del_nick
