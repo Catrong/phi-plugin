@@ -150,15 +150,16 @@ export class phihelp extends plugin {
         head = head.match(RegExp(head))[0]
         let pluginData = await get.getpluginData(e.user_id)
         if (head) {
-            console.info(1)
             e.reply(await atlas.help(e, {
                 helpGroup: helpGroup,
-                cmdHead:head,
+                cmdHead: head,
+                background: get.getill(get.illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
                 theme: pluginData?.plugin_data?.theme || 'star'
             }), true)
         } else {
             e.reply(await atlas.help(e, {
                 helpGroup: helpGroup,
+                background: get.getill(get.illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
                 theme: pluginData?.plugin_data?.theme || 'star'
             }), true)
         }

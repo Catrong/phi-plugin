@@ -152,7 +152,6 @@ export class phisstk extends plugin {
             }
         }
 
-        let illlist = get.illlist
 
         let newnum = tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]] ? tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]].song.length : 0
 
@@ -254,7 +253,7 @@ export class phisstk extends plugin {
             Date: now.saveInfo.updatedAt,
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
-            background: get.getill(illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
+            background: get.getill(get.illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
             box_line: box_line,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
