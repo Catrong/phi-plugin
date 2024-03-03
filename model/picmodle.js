@@ -34,7 +34,7 @@ class atlas {
             /**锁质量 */
             return await this.render('b19/b19', {
                 ...data,
-                size: 0.5,
+                size: Config.getDefOrConfig('config', 'b19size') / 100,
             }, {
                 e,
                 scale: 0.5
