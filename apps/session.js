@@ -253,7 +253,7 @@ export class phisstk extends plugin {
             Date: now.saveInfo.updatedAt,
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
-            background: get.getill(get.illlist[Math.floor((Math.random() * (illlist.length - 1)))]),
+            background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
             box_line: box_line,
             update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
             Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
