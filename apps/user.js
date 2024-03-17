@@ -7,13 +7,7 @@ import atlas from '../model/picmodle.js'
 
 let tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
 const Level = ['EZ', 'HD', 'IN', 'AT']
-const illlist = []
-
-for (let i in get.info()) {
-    if (get.info()[i]['illustration_big']) {
-        illlist.push(get.getill(i))
-    }
-}
+const illlist = get.illlist
 
 export class phiuser extends plugin {
     constructor() {
@@ -95,6 +89,22 @@ export class phiuser extends plugin {
         }
 
         let stats = [{ ...stats_ }, { ...stats_ }, { ...stats_ }, { ...stats_ }]
+
+        for (let song in get.ori_info) {
+            let info = get.ori_info[song]
+            if (info.chart['AT'] && Number(info.chart['AT'].difficulty)) {
+                ++tot[3]
+            }
+            if (info.chart['IN'] && Number(info.chart['IN'].difficulty)) {
+                ++tot[2]
+            }
+            if (info.chart['HD'] && Number(info.chart['HD'].difficulty)) {
+                ++tot[1]
+            }
+            if (info.chart['EZ'] && Number(info.chart['EZ'].difficulty)) {
+                ++tot[0]
+            }
+        }
 
         stats[0].tot = tot[0]
         stats[0].tatle = Level[0]
@@ -607,7 +617,7 @@ export class phiuser extends plugin {
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
                     if ((!record[lv] && !scoreAsk.NEW)) continue
                     if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()]) continue
-                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id)), difficulty: difficulty, rank: Level[lv] })
+                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'blur'), difficulty: difficulty, rank: Level[lv] })
                 }
             }
         }
