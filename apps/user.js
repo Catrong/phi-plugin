@@ -346,7 +346,7 @@ export class phiuser extends plugin {
             acc_rks_data: acc_rks_data_,
             acc_rks_range: acc_rks_range,
             acc_rks_AccRange: acc_rks_AccRange_position,
-            background: bksong || illlist[randint(0, illlist.length - 1)],
+            background: bksong || get.getill(illlist[randint(0, illlist.length - 1)]),
         }
 
         let kind = Number(e.msg.replace(/\/.*info/g, ''))
@@ -642,7 +642,7 @@ export class phiuser extends plugin {
 
         send.send_with_At(e, await atlas.list(e, {
             song: data,
-            background: illlist[randint(0, illlist.length - 1)],
+            background: get.getill(illlist[randint(0, illlist.length - 1)]),
             theme: plugin_data?.plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
