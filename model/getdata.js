@@ -92,6 +92,8 @@ class getdata {
             }
         }
 
+
+
         /**附加信息 */
         const Jsoninfo = await this.getData('infolist.json', this.infoPath)
 

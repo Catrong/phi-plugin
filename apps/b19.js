@@ -102,6 +102,7 @@ export class phib19 extends plugin {
         let Record = save.gameRecord
         let phi = {}
         let b19_list = []
+        let com_rks = 0 //计算得到的rks
 
         phi.rks = 0
 
@@ -124,6 +125,7 @@ export class phib19 extends plugin {
         }
 
         if (phi.rks) {
+            com_rks += Number(phi.rks) //计算得到的rks
             phi.rks = phi.rks.toFixed(2)
             phi.acc = phi.acc.toFixed(2)
             phi.illustration = get.getill(phi.song)
@@ -140,6 +142,8 @@ export class phib19 extends plugin {
         rkslist = rkslist.sort(cmp())
         let illlist = []
         for (let i = 0; i < nnum && i < rkslist.length; ++i) {
+            if (i < 19)
+                com_rks += Number(rkslist[i].rks) //计算得到的rks
             rkslist[i].num = i + 1
             rkslist[i].suggest = get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
             rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
@@ -154,6 +158,9 @@ export class phib19 extends plugin {
         } else {
             phi.suggest = "无法推分"
         }
+
+        console.info(com_rks / 20)
+        console.info(save.saveInfo.summary.rankingScore)
 
 
         let data = {
@@ -445,7 +452,7 @@ export class phib19 extends plugin {
                         ans[i].rks = ans[i].rks.toFixed(2)
                         data[Level[i]] = {
                             ...ans[i],
-                                                            //      b19最低rks          当前曲目rks     最低提升的rks          定数              保留位数
+                            //      b19最低rks          当前曲目rks     最低提升的rks          定数              保留位数
                             suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4)
                         }
                     } else {
@@ -460,7 +467,7 @@ export class phib19 extends plugin {
             }
             default: {
                 for (let i in Level) {
-                    if(!songsinfo.chart[Level[i]]) break
+                    if (!songsinfo.chart[Level[i]]) break
                     data.scoreData[Level[i]] = {}
                     data.scoreData[Level[i]].difficulty = songsinfo['chart'][Level[i]]['difficulty']
                 }

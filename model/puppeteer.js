@@ -1,9 +1,9 @@
 
 import fs from 'fs'
 import puppeteer from 'puppeteer'
-import { Data, Version, Plugin_Name, Config } from '../components/index.js'
+import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../components/index.js'
 import { segment } from 'oicq';
-import {_path} from './path.js';
+import { _path } from './path.js';
 
 let pet = {}
 
@@ -66,7 +66,7 @@ export default new class newPuppeteer {
         Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
         let data = {
             ...params,
-            _plugin: Plugin_Name,
+            _plugin: Display_Plugin_Name,
             saveId: params.saveId || params.save_id || tpl,
             tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.html`,
             pluResPath: resPath,
