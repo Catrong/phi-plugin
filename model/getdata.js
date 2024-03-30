@@ -198,7 +198,7 @@ class getdata {
 
     /**
      * @param {string} [song=undefined] 原曲曲名
-     * @param {boolean} [init=false] 是否格式化
+     * @param {boolean} [init=true] 是否格式化
      */
     info(song = undefined, init = true) {
         let result

@@ -75,7 +75,7 @@
         </div>
         <div class="Player_profile_box">
             {{if gameuser.selfIntro}}
-            <p color='white' name="pvis">{{#gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</p>
+            <p color='white' name="pvis">{{gameuser.selfIntro.replace(/\n\r?/g,'<br>')}}</p>
             {{else}}
             <p color='skyblue' name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
             {{/if}}

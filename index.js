@@ -35,5 +35,4 @@ export { apps }
 if (!errvis) {
     logger.info(` phi插件载入成功~`)
     logger.info(` 本项目云存档功能由 7aGiven/PhigrosLibrary 改写而来，感谢文酱的帮助！`)
-    logger.info(` 可以在这个群找到我哦！282781491`)
 }

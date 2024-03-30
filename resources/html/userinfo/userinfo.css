@@ -365,12 +365,12 @@ data_rks p {
     margin-left: -16px;
 }
 
-.Player_profile_box font {
+.Player_profile_box p {
     filter: drop-shadow(1px -2px 0px rgba(255, 255, 255, 0.2));
     font-size: 60px;
 }
 
-#profile font {
+#profile p {
     font-size: 20px;
     margin: 0;
     width: 100%;
