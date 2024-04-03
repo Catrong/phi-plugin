@@ -112,7 +112,7 @@ class Film {
                 }
             }
         } catch (error) {
-            logger.warn(`[phi插件]写入文件 ${path} 时遇到错误`)
+            logger.warn(`[phi插件]写入文件 ${fatherPath}${fileName} 时遇到错误`)
             logger.warn(error)
             return false
         }
