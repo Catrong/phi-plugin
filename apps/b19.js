@@ -158,9 +158,7 @@ export class phib19 extends plugin {
         } else {
             phi.suggest = "无法推分"
         }
-
-        console.info(com_rks / 20)
-        console.info(save.saveInfo.summary.rankingScore)
+        
 
 
         let data = {

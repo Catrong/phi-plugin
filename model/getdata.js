@@ -120,7 +120,7 @@ class getdata {
 
 
         /**头像id */
-        let csv_avatar = await this.getData('avatarid.csv', this.infoPath)
+        let csv_avatar = await this.getData('avatar.csv', this.infoPath)
         this.avatarid = {}
         for( let i in csv_avatar) {
             this.avatarid[csv_avatar[i].id] = csv_avatar[i].name
@@ -876,8 +876,8 @@ class getdata {
      * @returns file name
      */
     idgetavatar(id) {
-        if (id) {
-            return this.avatarid[id]
+        if (this.avatarid[id]) {
+            return id
         } else {
             return 'Introduction'
         }
