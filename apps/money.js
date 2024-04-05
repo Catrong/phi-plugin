@@ -29,15 +29,15 @@ export class phimoney extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})?(sign|sign in|签到|打卡)$`,
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(sign|sign in|签到|打卡)$`,
                     fnc: 'sign'
                 },
                 {
-                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})?(task|我的任务)$`,
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(task|我的任务)$`,
                     fnc: 'tasks'
                 },
                 {
-                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})?(retask|刷新任务)$`,
+                    reg: `^[#/]?(${Config.getDefOrConfig('config', 'cmdhead')})(retask|刷新任务)$`,
                     fnc: 'gettask'
                 },
                 {
