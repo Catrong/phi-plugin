@@ -120,7 +120,11 @@ class getdata {
 
 
         /**头像id */
-        this.avatarid = await this.getData('avatarid.yaml', this.infoPath)
+        let csv_avatar = await this.getData('avatarid.csv', this.infoPath)
+        this.avatarid = {}
+        for( let i in csv_avatar) {
+            this.avatarid[csv_avatar[i].id] = csv_avatar[i].name
+        }
         /**Tips */
         this.tips = await this.getData('tips.yaml', this.infoPath)
 
