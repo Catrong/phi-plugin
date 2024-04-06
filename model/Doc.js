@@ -91,7 +91,7 @@ class Film {
             let path = `${fatherPath}${fileName}`
             if (!fs.existsSync(fatherPath)) {
                 // 递归创建目录
-                fs.mkdirSync(fatherPath, { fatherPath: true });
+                fs.mkdirSync(fatherPath, { recursive: true });
             }
             if (!style) {
                 style = path.match(/\.(\w+)$/g)[0].replace('.', '').toUpperCase()
