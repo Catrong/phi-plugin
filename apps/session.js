@@ -78,8 +78,8 @@ export class phisstk extends plugin {
     }
 
     async update(e) {
-        let User = await get.getsave(e.user_id)
-        if (!User) {
+        let session = await Film.get_user_token(e.user_id)
+        if (!session) {
             e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
             return true
         }
@@ -88,7 +88,7 @@ export class phisstk extends plugin {
             e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
         }
         try {
-            await this.build(e, User.session)
+            await this.build(e, session)
         } catch (error) {
             logger.error(error)
             send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
