@@ -273,7 +273,7 @@ class getdata {
      */
     async getsave(id) {
         let session = await Film.get_user_token(id)
-        let result = await this.getData(`save.json`, `${this.savePath}/${session}/`)
+        let result = await this.getData(`save.json`, `${this.savePath}${session}/`)
         if (result) {
             return new Save(result)
         } else {
@@ -290,7 +290,7 @@ class getdata {
     async putsave(id, data) {
         let session = data.session
         Film.add_user_token(id, session)
-        return await this.setData(`save.json`, data, `${this.savePath}/${session}/`)
+        return await this.setData(`save.json`, data, `${this.savePath}${session}/`)
     }
 
     /**
@@ -299,8 +299,8 @@ class getdata {
      */
     async delsave(id) {
         let session = await Film.get_user_token(id)
-        this.delData(`save.json`, `${this.savePath}/${session}/`)
-        this.delData(`history.json`, `${this.savePath}/${session}/`)
+        this.delData(`save.json`, `${this.savePath}${session}/`)
+        this.delData(`history.json`, `${this.savePath}${session}/`)
         Film.del_user_token(id)
     }
 
@@ -322,7 +322,7 @@ class getdata {
     async getpluginData(id) {
         let session = await Film.get_user_token(id)
 
-        return { ...await this.getData(`${id}_.json`, `${this.pluginDataPath}`), ... await this.getData(`history.json`, `${this.savePath}/${session}/`) }
+        return { ...await this.getData(`${id}_.json`, `${this.pluginDataPath}`), ... await this.getData(`history.json`, `${this.savePath}${session}/`) }
     }
 
     /**
@@ -338,7 +338,7 @@ class getdata {
             delete data.rks
             delete data.scoreHistory
             delete data.dan
-            await this.setData(`history.json`, history, `${this.savePath}/${session}/`)
+            await this.setData(`history.json`, history, `${this.savePath}${session}/`)
         }
         await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
 
@@ -653,8 +653,6 @@ class getdata {
             }
         }
 
-        Film.add_user_token(e.user_id, User.session)
-
         let pluginData = await this.getpluginData(e.user_id, true)
 
         try {
@@ -729,6 +727,7 @@ class getdata {
                 }
             }
         }
+
 
         if (pluginData.data.length >= 2 && now.gameProgress.money == pluginData.data[pluginData.data.length - 2]['value']) {
             pluginData.data[pluginData.data.length - 1] = {
