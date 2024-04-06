@@ -1,11 +1,13 @@
 
 import fs from 'node:fs'
 import YAML from 'yaml'
-import { _path } from "./path.js";
+import { _path, pluginRoot } from "./path.js";
 import csv from 'csvtojson'
 
 
-
+let user_token = {}
+const data_path = `${pluginRoot}/data/`
+const token_path = `${pluginRoot}/data/user_token.json`
 
 class Film {
 
@@ -43,7 +45,7 @@ class Film {
     /**
      * 读取文件
      * @param {string} path 完整路径
-     * @param {'JSON'|'YAML'|'CSV'|'TXT'} [style=undefined] 
+     * @param {'JSON'|'YAML'|'CSV'|'TXT'} [style=undefined] 强制设置文件格式
      */
     async FileReader(path, style = undefined) {
         try {
@@ -171,6 +173,19 @@ class Film {
         }
     }
 
+    async add_user_token(user_id, session) {
+        user_token[user_id] = session
+        await this.SetFile('user_token.json', data_path, user_token)
+    }
+
+    async get_user_token(user_id) {
+        return user_token[user_id]
+    }
+
+    async del_user_token(user_id) {
+        delete user_token[user_id]
+        await this.SetFile('user_token.json', data_path, user_token)
+    }
 
     /**
      * 删除指定路径下的所有空文件夹
@@ -200,6 +215,41 @@ class Film {
             }
         }
     }
+
+    /**更改数据储存位置 */
+    async movJsonFile(path) {
+        if (!fs.existsSync(`${path}`)) { return false }
+        const files = fs.readdirSync(path);
+
+        if (files.length > 0) {
+            files.forEach(file => {
+                if (!fs.lstatSync(`${path}/${file}`).isDirectory() && file != 'user_token.json') {
+                    let user_id = file.replace('.json', '')
+                    this.FileReader(`${path}/${file}`).then((json) => {
+                        let session = json.session
+                        /**保存user_id和session映射 */
+                        this.add_user_token(user_id, session)
+                        this.SetFile('save.json', `${path}/saveData/${session}/`, json, 'JSON')
+                        this.FileReader(`${path}/pluginData/${user_id}_.json`).then((json_) => {
+                            if (json_) {
+                                let tem_file = {
+                                    data: json_.data,
+                                    rks: json_.rks,
+                                    scoreHistory: json_.scoreHistory,
+                                    dan: json_.dan,
+                                }
+                                this.SetFile('history.json', `${path}/saveData/${session}/`, tem_file, 'JSON')
+                            }
+                        })
+                        fs.rmSync(`${path}/${file}`)
+                    })
+                }
+            });
+        }
+    }
 }
+
+
+user_token = await new Film().FileReader(token_path) || {}
 
 export default new Film()

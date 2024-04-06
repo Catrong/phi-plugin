@@ -10,11 +10,8 @@ import SongsInfo from './class/SongsInfo.js';
 import Save from './class/Save.js';
 import PhigrosUser from '../lib/PhigrosUser.js';
 import send from './send.js';
-import common from '../../../lib/common/common.js'
 import scoreHistory from './class/scoreHistory.js'
 
-
-let lock = []
 
 class getdata {
 
@@ -31,6 +28,9 @@ class getdata {
 
         /**用户娱乐数据路径 */
         this.pluginDataPath = `${_path}/plugins/phi-plugin/data/pluginData/`
+
+        /**用户存档数据路径 */
+        this.savePath = `${_path}/plugins/phi-plugin/data/saveData/`
 
         /**用户设置路径 */
         this.configPath = `${_path}/plugins/phi-plugin/config/config/`
@@ -61,12 +61,16 @@ class getdata {
 
     async init() {
 
-        /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
         try {
+        /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
             Film.rmEmptyDir(this.userPath)
+        /**移动json文件 */
+            Film.movJsonFile(this.userPath)
         } catch (error) {
-            logger.warn(error)
+            logger.error(error)
         }
+
+
         /**之前改过一次名称，修正别名 */
         let nick = await this.getData('nickconfig.yaml', this.configPath, 'TXT')
         if (nick) {
@@ -88,7 +92,7 @@ class getdata {
             }
             if (flag) {
                 await get.setData('nickconfig.yaml', nick, this.configPath, 'TXT')
-                logger.info('[phi-plugin]自动修正别名')
+                logger.mark('[phi-plugin]自动修正别名')
             }
         }
 
@@ -122,7 +126,7 @@ class getdata {
         /**头像id */
         let csv_avatar = await this.getData('avatar.csv', this.infoPath)
         this.avatarid = {}
-        for( let i in csv_avatar) {
+        for (let i in csv_avatar) {
             this.avatarid[csv_avatar[i].id] = csv_avatar[i].name
         }
         /**Tips */
@@ -160,7 +164,7 @@ class getdata {
             if (!this.ori_info[CsvInfo[i].song]) {
                 /**illustration_big = 'null'为特殊标记，getill时会返回默认图片 */
                 this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, illustration_big: 'null', chapter: '', bpm: '', length: '', chart: {} }
-                logger.info(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
+                logger.mark(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
             }
             this.ori_info[CsvInfo[i].song].song = CsvInfo[i].song
             this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
@@ -236,12 +240,6 @@ class getdata {
     */
     async getData(chos, path, style = undefined) {
         return await Film.FileReader(`${path}${chos}`, style)
-
-        if (chos.includes('.yaml')) {
-            return Film.YamlReader(`${path}${chos}`, path)
-        } else {
-            return Film.JsonReader(`${path}${chos}`, path)
-        }
     }
 
     /**修改 chos 文件为 data 
@@ -252,11 +250,6 @@ class getdata {
     */
     async setData(chos, data, path, style = undefined) {
         return await Film.SetFile(chos, path, data, style)
-        if (chos.includes('.yaml')) {
-            return Film.SetYaml(`${path}${chos}`, data, path)
-        } else {
-            return Film.SetJson(`${path}${chos}`, data, path)
-        }
     }
 
     /**删除 chos.yaml 文件
@@ -279,7 +272,8 @@ class getdata {
      * @returns save
      */
     async getsave(id) {
-        let result = await this.getData(`${id}.json`, `${this.userPath}`)
+        let session = await Film.get_user_token(id)
+        let result = await this.getData(`save.json`, `${this.savePath}/${session}/`)
         if (result) {
             return new Save(result)
         } else {
@@ -294,7 +288,9 @@ class getdata {
      * @param {Object} data 
      */
     async putsave(id, data) {
-        return await this.setData(`${id}.json`, data, `${this.userPath}`)
+        let session = data.session
+        Film.add_user_token(id, session)
+        return await this.setData(`save.json`, data, `${this.savePath}/${session}/`)
     }
 
     /**
@@ -302,7 +298,10 @@ class getdata {
      * @param {String} id user_id
      */
     async delsave(id) {
-        return this.delData(`${id}.json`, this.userPath)
+        let session = await Film.get_user_token(id)
+        this.delData(`save.json`, `${this.savePath}/${session}/`)
+        this.delData(`history.json`, `${this.savePath}/${session}/`)
+        Film.del_user_token(id)
     }
 
     /**
@@ -313,56 +312,36 @@ class getdata {
         return this.delData(`${id}_.json`, `${this.pluginDataPath}`)
     }
 
+
+
     /**
      * 获取QQ号对应的娱乐数据
      * @param {String} user_id 
-     * @param {boolean} [islock=false] 是否锁定文件
      * @returns save
      */
-    async getpluginData(id, islock = false) {
+    async getpluginData(id) {
+        let session = await Film.get_user_token(id)
 
-        islock = false //暂时先不锁
-
-        if (lock.indexOf(id) != -1) {
-            logger.info(`[phi-plugin][${id}]文件读取等待中`)
-            let tot = 0
-            while (lock.indexOf(id) != -1 && tot < 20) {
-                await common.sleep(500)
-                ++tot
-            }
-            if (tot == 20) {
-                logger.error(`[phi-plugin][${id}]文件读取失败！`)
-                throw new Error(`[phi-plugin][${id}]文件读取失败！`)
-            }
-        }
-
-        if (islock) {
-            lock.push(id)
-        }
-        return await this.getData(`${id}_.json`, `${this.pluginDataPath}`)
+        return { ...await this.getData(`${id}_.json`, `${this.pluginDataPath}`), ... await this.getData(`history.json`, `${this.savePath}/${session}/`) }
     }
 
     /**
-     * 保存QQ号对应的娱乐数据，并解锁文件
+     * 保存QQ号对应的娱乐数据
      * @param {String} id user_id
      * @param {Object} data 
      */
     async putpluginData(id, data) {
-        let returns = await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
-        if (lock.indexOf(id) != -1) {
-            delete lock[lock.indexOf(id)]
+        let session = await Film.get_user_token(id)
+        if (data.rks) {
+            let history = { data: data.data, rks: data.rks, scoreHistory: data.scoreHistory, dan: data.dan }
+            delete data.data
+            delete data.rks
+            delete data.scoreHistory
+            delete data.dan
+            await this.setData(`history.json`, history, `${this.savePath}/${session}/`)
         }
-        return returns
-    }
+        await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
 
-    /**
-     * 取消对id文件的锁定
-     * @param {String} id 用户id
-     */
-    async delLock(id) {
-        if (lock.indexOf(id) != -1) {
-            delete lock[lock.indexOf(id)]
-        }
     }
 
     /**
@@ -659,7 +638,6 @@ class getdata {
                 } else {
                     send.send_with_At(e, `检测到新的sessionToken，将自动删除之前的存档记录……`)
 
-                    await get.delsave(e.user_id)
                     let pluginData = await get.getpluginData(e.user_id, true)
 
                     pluginData.rks = []

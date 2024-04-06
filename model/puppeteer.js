@@ -11,16 +11,16 @@ let pet = {}
 try {
     let puppeteer = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({});
     pet = puppeteer;
-    logger.info("[Phi-Plugin]导入新版puppteer");
+    logger.mark("[Phi-Plugin]导入新版puppteer");
 } catch (err) {
-    console.error(`[Phi-Plugin]新版puppteer导入失败 ${err}`)
+    logger.error(`[Phi-Plugin]新版puppteer导入失败 ${err}`)
 }
 
 if (!pet) {
     try {
         let puppeteer = (await import("../../../lib/puppeteer/puppeteer.js")).default;
         pet = puppeteer;
-        logger.info("[Phi-Plugin]导入旧版puppteer，/repu将不可用");
+        logger.mark("[Phi-Plugin]导入旧版puppteer，/repu将不可用");
     } catch (err) {
         logger.error(`[Phi-Plugin]导入puppeteer失败`);
         logger.error(err);

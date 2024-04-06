@@ -5,6 +5,7 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import Save from '../model/class/Save.js'
 import scoreHistory from '../model/class/scoreHistory.js'
+import Film from '../model/Doc.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
 export class phisstk extends plugin {
@@ -77,7 +78,7 @@ export class phisstk extends plugin {
     }
 
     async update(e) {
-        let User = await get.getData(`${e.user_id}.json`, `${get.userPath}`)
+        let User = await get.getsave(e.user_id)
         if (!User) {
             e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
             return true
@@ -299,15 +300,17 @@ export class phisstk extends plugin {
                 let pluginData = await get.getpluginData(e.user_id, true)
 
                 if (pluginData) {
-                    pluginData.rks = []
-                    pluginData.data = []
-                    pluginData.scoreHistory = {}
+                    delete pluginData.rks
+                    delete pluginData.data
+                    delete pluginData.scoreHistory
+                    delete pluginData.dan
                     if (pluginData.plugin_data) {
                         pluginData.plugin_data.task = []
                         pluginData.plugin_data.CLGMOD = []
                     }
                     await get.putpluginData(e.user_id, pluginData)
                 }
+                Film.del_user_token(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
