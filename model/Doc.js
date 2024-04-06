@@ -1,4 +1,5 @@
 
+import common from '../../../lib/common/common.js'
 import fs from 'node:fs'
 import YAML from 'yaml'
 import { _path, pluginRoot } from "./path.js";
@@ -113,6 +114,7 @@ class Film {
                     break
                 }
             }
+            return true
         } catch (error) {
             logger.warn(`[phi插件]写入文件 ${fatherPath}${fileName} 时遇到错误`)
             logger.warn(error)
@@ -222,6 +224,14 @@ class Film {
         const files = fs.readdirSync(path);
 
         if (files.length > 0) {
+
+            let tot = 0
+            let already = 0
+            files.forEach(file => {
+                if (!fs.lstatSync(`${path}/${file}`).isDirectory() && file != 'user_token.json') {
+                    ++tot
+                }
+            });
             files.forEach(file => {
                 if (!fs.lstatSync(`${path}/${file}`).isDirectory() && file != 'user_token.json') {
                     let user_id = file.replace('.json', '')
@@ -229,24 +239,44 @@ class Film {
                         if (json) {
                             let session = json.session
                             /**保存user_id和session映射 */
-                            this.add_user_token(user_id, session)
-                            this.SetFile('save.json', `${path}/saveData/${session}/`, json, 'JSON')
-                            this.FileReader(`${path}/pluginData/${user_id}_.json`).then((json_) => {
-                                if (json_) {
-                                    let tem_file = {
-                                        data: json_.data,
-                                        rks: json_.rks,
-                                        scoreHistory: json_.scoreHistory,
-                                        dan: json_.dan,
+                            user_token[user_id] = session
+                            ++already
+                            logger.mark('[phi-plugin][数据整合]', `${already}/${tot}`)
+                            if (this.SetFile('save.json', `${path}/saveData/${session}/`, json, 'JSON')) {
+                                this.FileReader(`${path}/pluginData/${user_id}_.json`).then((json_) => {
+                                    if (json_) {
+                                        let tem_file = {
+                                            data: json_.data,
+                                            rks: json_.rks,
+                                            scoreHistory: json_.scoreHistory,
+                                            dan: json_.dan,
+                                        }
+                                        this.SetFile('history.json', `${path}/saveData/${session}/`, tem_file, 'JSON')
                                     }
-                                    this.SetFile('history.json', `${path}/saveData/${session}/`, tem_file, 'JSON')
-                                }
-                            })
-                            fs.rmSync(`${path}/${file}`)
+                                })
+                                fs.rmSync(`${path}/${file}`)
+                            }
                         }
                     })
                 }
             });
+
+            async function check() {
+                let count = 0 //循环次数
+                while (already < tot) {
+                    await common.sleep(1000);
+                    ++count
+                    if (count > 200) {
+                        logger.mark('[phi-plugin][数据整合]', `${already}/${tot}`)
+                        break
+                    }
+                }
+            }
+
+            await check()
+            await this.SetFile('user_token.json', data_path, user_token)
+
+
         }
     }
 }

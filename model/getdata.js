@@ -62,9 +62,9 @@ class getdata {
     async init() {
 
         try {
-        /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
+            /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
             Film.rmEmptyDir(this.userPath)
-        /**移动json文件 */
+            /**移动json文件 */
             Film.movJsonFile(this.userPath)
         } catch (error) {
             logger.error(error)
@@ -652,6 +652,8 @@ class getdata {
                 }
             }
         }
+
+        Film.add_user_token(e.user_id, User.session)
 
         let pluginData = await this.getpluginData(e.user_id, true)
 
