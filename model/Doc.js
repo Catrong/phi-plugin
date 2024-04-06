@@ -229,7 +229,7 @@ class Film {
             let already = 0
             files.forEach(file => {
                 if (!fs.lstatSync(`${path}/${file}`).isDirectory() && file != 'user_token.json') {
-                    ++tot
+                    if (json) ++tot
                 }
             });
             files.forEach(file => {
@@ -244,6 +244,7 @@ class Film {
                             logger.mark('[phi-plugin][数据整合]', `${already}/${tot}`)
                             if (this.SetFile('save.json', `${path}/saveData/${session}/`, json, 'JSON')) {
                                 this.FileReader(`${path}/pluginData/${user_id}_.json`).then((json_) => {
+                                    console.info(json_)
                                     if (json_) {
                                         let tem_file = {
                                             data: json_.data,
