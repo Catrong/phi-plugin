@@ -226,22 +226,24 @@ class Film {
                 if (!fs.lstatSync(`${path}/${file}`).isDirectory() && file != 'user_token.json') {
                     let user_id = file.replace('.json', '')
                     this.FileReader(`${path}/${file}`).then((json) => {
-                        let session = json.session
-                        /**保存user_id和session映射 */
-                        this.add_user_token(user_id, session)
-                        this.SetFile('save.json', `${path}/saveData/${session}/`, json, 'JSON')
-                        this.FileReader(`${path}/pluginData/${user_id}_.json`).then((json_) => {
-                            if (json_) {
-                                let tem_file = {
-                                    data: json_.data,
-                                    rks: json_.rks,
-                                    scoreHistory: json_.scoreHistory,
-                                    dan: json_.dan,
+                        if (json) {
+                            let session = json.session
+                            /**保存user_id和session映射 */
+                            this.add_user_token(user_id, session)
+                            this.SetFile('save.json', `${path}/saveData/${session}/`, json, 'JSON')
+                            this.FileReader(`${path}/pluginData/${user_id}_.json`).then((json_) => {
+                                if (json_) {
+                                    let tem_file = {
+                                        data: json_.data,
+                                        rks: json_.rks,
+                                        scoreHistory: json_.scoreHistory,
+                                        dan: json_.dan,
+                                    }
+                                    this.SetFile('history.json', `${path}/saveData/${session}/`, tem_file, 'JSON')
                                 }
-                                this.SetFile('history.json', `${path}/saveData/${session}/`, tem_file, 'JSON')
-                            }
-                        })
-                        fs.rmSync(`${path}/${file}`)
+                            })
+                            fs.rmSync(`${path}/${file}`)
+                        }
                     })
                 }
             });
