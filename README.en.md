@@ -54,6 +54,12 @@ git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugi
 cd ./plugins/phi-plugin/ # Go to the plugins directory
 pnpm install -P # Install the plugin dependencies
 ```
+> If you use `TRSS-Yunzai` , you need to downgrade `node-fetch` for it to work properly
+```
+git reset --hard
+git pull --rebase
+pnpm up node-fetch@latest
+```
 
 ---
 
@@ -107,38 +113,49 @@ pnpm install -P # Install the plugin dependencies
 - [ ] Guild mode disables private chat to generate b19 graphs and entertainment functions  
 …
 
+
+---
+
+## Links
+
+[Yunzai-Bot plugins index](https://github.com/yhArcadia/Yunzai-Bot-plugins-index)
+
+[Miao-Yunzai](https://github.com/yoimiya-kokomi/Miao-Yunzai/tree/master)
+
+[TRSS-Yunzai](https://github.com/TimeRainStarSky/Yunzai)
+
 ---
 
 #### Best19 rendering
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/e55e7fec-c0cc-447e-8529-71dfa13b370b" width="60%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/e55e7fec-c0cc-447e-8529-71dfa13b370b" width="30%">
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)  
 
 #### Single song score info rendering
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8f4606da-dbc4-476f-b7c9-8a32dda72758" width="100%">  
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8f4606da-dbc4-476f-b7c9-8a32dda72758" width="30%">  
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)
 
 #### Single song score info rendering(Legacy)
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="100%">  
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="30%">  
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)
 
 #### Range Score Info rendering
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="100%">  
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="30%">  
 
 Renderings from@Eastown
 
 #### Single song information rendering
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="100%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="30%">
 
 #### User information renderings(Legacy)
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%">  
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="30%">  
 
 Renderings from@Eastown
 
 #### User information renderings
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c576dd76-4011-4e5f-9f58-b1f2e5015d56" width="100%">  
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c576dd76-4011-4e5f-9f58-b1f2e5015d56" width="30%">  
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)
 

@@ -57,6 +57,14 @@ cd ./plugins/phi-plugin/ #进入插件目录
 pnpm install -P #安装插件所需依赖
 ```
 
+> 如使用 `TRSS-Yunzai` ，暂时需要降级 `node-fetch` 才可以正常使用
+
+```
+git reset --hard
+git pull --rebase
+pnpm up node-fetch@latest
+```
+
 ------
 
 ### 功能
@@ -115,35 +123,46 @@ pnpm install -P #安装插件所需依赖
  
 - [ ] 点phi的歌
 
+- [ ] 支持扫码获取sessionToken
 
-…
+- [ - ] …
+
+------
+
+## 友情链接
+
+[Yunzai-Bot 相关内容索引](https://github.com/yhArcadia/Yunzai-Bot-plugins-index)
+
+[Miao-Yunzai](https://github.com/yoimiya-kokomi/Miao-Yunzai/tree/master)
+
+[TRSS-Yunzai](https://github.com/TimeRainStarSky/Yunzai)
 
 ------
 
 #### Best19效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/e55e7fec-c0cc-447e-8529-71dfa13b370b" width="60%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/e55e7fec-c0cc-447e-8529-71dfa13b370b" width="30%">
 
 效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
 #### 单曲成绩效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8f4606da-dbc4-476f-b7c9-8a32dda72758" width="100%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8f4606da-dbc4-476f-b7c9-8a32dda72758" width="30%">
 
 效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
-#### 单曲成绩效果图（Legacy)
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="100%">
+#### 单曲成绩效果图（Legacy）
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="30%">
 
 #### 范围成绩效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="100%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="30%">
 
 效果图来自@东城Eastown
 #### 单曲图鉴效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="100%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="30%">
 
 #### 个人信息效果图（Legacy） 
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="30%">
 
 效果图来自@东城Eastown
 #### 个人信息效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8525d6ef-46d4-48e0-be3b-dd6bcdf2c56b" width="100%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8525d6ef-46d4-48e0-be3b-dd6bcdf2c56b" width="30%">
 
 效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
 
