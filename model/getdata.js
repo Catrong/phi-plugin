@@ -256,8 +256,8 @@ class getdata {
      * @param {string} chos 文件名称 含后缀 yaml json
      * @param {string} path 路径
     */
-    delData(chos, path) {
-        if (!Film.DelFile(`${path}${chos}`)) {
+    async delData(chos, path) {
+        if (!await Film.DelFile(`${path}${chos}`)) {
             logger.info(`[phi插件] ${chos} 已删除`)
             return false
         } else {
@@ -299,8 +299,9 @@ class getdata {
      */
     async delsave(id) {
         let session = await Film.get_user_token(id)
-        this.delData(`save.json`, `${this.savePath}${session}/`)
-        this.delData(`history.json`, `${this.savePath}${session}/`)
+        await this.delData(`save.json`, `${this.savePath}${session}/`)
+        await this.delData(`history.json`, `${this.savePath}${session}/`)
+        fs.rmdirSync(`${this.savePath}${session}`);
         Film.del_user_token(id)
     }
 
