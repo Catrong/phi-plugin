@@ -190,7 +190,7 @@ class getdata {
         let info = this.info(undefined, false)
         for (let i in info) {
             const id = info[i].id
-            if (info[i]['illustration_big'] || (id && (fs.existsSync(`${this.resPath}original_ill/${id.replace(/.0$/, '.png')}`) || fs.existsSync(`${this.resPath}original_ill/ill/${id.replace(/.0$/, '.png')}`)))) {
+            if (info[i]['illustration_big'] || info[i].song in this.ori_info) {
                 this.illlist.push(info[i].song)
             }
         }
@@ -626,6 +626,7 @@ class getdata {
                 send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
             }
         } catch (err) {
+            logger.error(err)
             send.send_with_At(e, "绑定失败！QAQ\n" + err)
             return false
         }

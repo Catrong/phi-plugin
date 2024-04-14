@@ -4,7 +4,6 @@ import send from '../model/send.js'
 import get from '../model/getdata.js'
 import Vika from '../model/Vika.js'
 import { segment } from 'oicq'
-import common from '../../../lib/common/common.js'
 
 const read = 'https://www.bilibili.com/read/cv27354116'
 const sheet = 'https://f.kdocs.cn/g/fxsg4EM2/'

@@ -6,7 +6,6 @@ import send from '../model/send.js'
 
 let songsname = get.illlist
 let songweights = {} //存储每首歌曲被抽取的权重
-let info = get.info()
 
 //曲目初始洗牌
 shuffleArray(songsname)
