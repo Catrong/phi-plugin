@@ -106,13 +106,13 @@ pnpm up node-fetch@latest
 
 #### Todo
 
-- [ ] Write a help menu
-- [ ] Complete cloud save
-- [ ] Add a booklet for collectibles, avatars, etc
-- [ ] Listen to phigros's songs
-- [ ] Guild mode disables private chat to generate b19 graphs and entertainment functions  
-…
+- [ ] Optimized the interface design
 
+- [ ] Added collectibles, avatars, etc
+ 
+- [ ] Dotted phi's song
+
+- [ ] You can scan the code to obtain a sessionToken
 
 ---
 

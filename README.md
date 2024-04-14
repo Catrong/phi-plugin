@@ -125,7 +125,7 @@ pnpm up node-fetch@latest
 
 - [ ] 支持扫码获取sessionToken
 
-- [ - ] …
+- [ ] …
 
 ------
 
