@@ -54,13 +54,6 @@ git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugi
 cd ./plugins/phi-plugin/ # Go to the plugins directory
 pnpm install -P # Install the plugin dependencies
 ```
-> If you use `TRSS-Yunzai` , you need to downgrade `node-fetch` for it to work properly
-```
-git reset --hard
-git pull --rebase
-pnpm up node-fetch@latest
-```
-
 ---
 
 ### List of features:

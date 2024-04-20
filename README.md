@@ -57,14 +57,6 @@ cd ./plugins/phi-plugin/ #进入插件目录
 pnpm install -P #安装插件所需依赖
 ```
 
-> 如使用 `TRSS-Yunzai` ，暂时需要降级 `node-fetch` 才可以正常使用
-
-```
-git reset --hard
-git pull --rebase
-pnpm up node-fetch@latest
-```
-
 ------
 
 ### 功能
