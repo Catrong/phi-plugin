@@ -68,7 +68,7 @@ export class phiguess extends plugin {
         let songs_info = get.info()[song]
 
         let cnnt = 0
-        while (typeof songs_info.illustration_big == 'undefined' || songs_info.can_t_be_guessill) {
+        while (songs_info.can_t_be_guessill) {
             ++cnnt
             if (cnnt >= 50) {
                 logger.error(`[phi guess]抽取曲目失败，请检查曲库设置`)
