@@ -158,12 +158,12 @@ export class philetter extends plugin {
         await timeout(1 * 1000)
 
         let output = '出你字母进行中：\n'
-        /**添加游戏范围 */
-        output += `游戏范围：`
-        for(let i in gameSelectList[group_id]) {
-            output += `${gameSelectList[group_id][i]} `
-        }
-        output += `\n`
+        // /**添加游戏范围 */
+        // output += `游戏范围：`
+        // for(let i in gameSelectList[group_id]) {
+        //     output += `${gameSelectList[group_id][i]} `
+        // }
+        // output += `\n`
         for (const i of Object.keys(blurlist[group_id])) {
             const blur_name = blurlist[group_id][i]
             output += `【${i}】${blur_name}\n`
