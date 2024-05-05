@@ -22,15 +22,15 @@ export default new class scoreHistory {
             old[0] = Number(old[0])
             old[1] = Number(old[1])
         }
-        if (get.ori_info[song]?.chart[level]?.difficulty) {
+        if (get.info(song, true)?.chart[level]?.difficulty) {
             /**有难度信息 */
             return {
                 song: song,
                 rank: level,
                 illustration: get.getill(song),
                 Rating: Rating(now[1], now[3]),
-                rks_new: get.getrks(now[0], get.ori_info[song].chart[level].difficulty),
-                rks_old: old ? get.getrks(old[0], get.ori_info[song].chart[level].difficulty) : undefined,
+                rks_new: get.getrks(now[0], get.info(song, true).chart[level].difficulty),
+                rks_old: old ? get.getrks(old[0], get.info(song, true).chart[level].difficulty) : undefined,
                 acc_new: now[0],
                 acc_old: old ? old[0] : undefined,
                 score_new: now[1],

@@ -1,263 +1,110 @@
-
-import fs from 'node:fs'
-import { _path } from "./path.js";
+import { _path, dataPath, imgPath, pluginDataPath } from "./path.js";
 import { segment } from "oicq";
-import Film from './Doc.js';
+import readFile from './Doc.js';
 import atlas from "./picmodle.js";
-import Config from "../components/Config.js";
 import LevelRecord from "./class/LevelRecordInfo.js";
 import SongsInfo from './class/SongsInfo.js';
 import Save from './class/Save.js';
 import PhigrosUser from '../lib/PhigrosUser.js';
 import send from './send.js';
 import scoreHistory from './class/scoreHistory.js'
+import path from 'node:path';
+import getSave from './getSave.js';
+import money from './getNotes.js'
+import info from './getInfo.js';
+import pic from './getPic.js';
 
 
 class getdata {
 
 
     constructor() {
-        /**曲绘资源、曲目信息路径 */
-        // this.infoPath = `E:/bot/233/Miao-Yunzai/plugins/phi-plugin/resources/info/`
-        this.infoPath = `${_path}/plugins/phi-plugin/resources/info/`
-        this.DlcInfoPath = `${_path}/plugins/phi-plugin/resources/info/DLC/`
+        
+        this.Level = info.Level //难度映射
 
-        /**用户数据路径 */
-        // this.userPath = `E:/bot/233/Miao-Yunzai/plugins/phi-plugin/data/`
-        this.userPath = `${_path}/plugins/phi-plugin/data/`
+        /**头像id */
+        this.avatarid = info.avatarid
+        /**Tips */
+        this.tips = info.tips
 
-        /**用户娱乐数据路径 */
-        this.pluginDataPath = `${_path}/plugins/phi-plugin/data/pluginData/`
-
-        /**用户存档数据路径 */
-        this.savePath = `${_path}/plugins/phi-plugin/data/saveData/`
-
-        /**用户设置路径 */
-        this.configPath = `${_path}/plugins/phi-plugin/config/config/`
-
-        /**默认设置路径 */
-        this.defaultPath = `${_path}/plugins/phi-plugin/config/default_config/`
-
-        /**默认图片路径 */
-        this.imgPath = `${_path}/plugins/phi-plugin/resources/html/otherimg/`
-
-        /**用户图片路径 */
-        this.orillPath = `${_path}/plugins/phi-plugin/resources/otherill/`
-
-        /**音频资源 */
-        this.guessMicPath = `${_path}/plugins/phi-plugin/resources/splited_music/`
-
-        /**资源路径 */
-        this.resPath = `${_path}/plugins/phi-plugin/resources/`
-
-        /**插件路径 */
-        this.pluginPath = `${_path}/plugins/phi-plugin/`
+        /**原版信息 */
+        this.ori_info = info.ori_info
+        /**通过id获取曲名 */
+        this.songsid = info.songsid
+        /**原曲名称获取id */
+        this.idssong = info.idssong
 
 
-        this.Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY'] //难度映射
+        /**含有曲绘的曲目列表，原曲名称 */
+        this.illlist = info.illlist
 
-        this.MAX_DIFFICULTY = 16.9
+        /**所有曲目曲名列表 */
+        this.songlist = info.songlist
     }
 
     async init() {
 
         try {
             /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
-            Film.rmEmptyDir(this.userPath)
+            readFile.rmEmptyDir(dataPath)
             /**移动json文件 */
-            Film.movJsonFile(this.userPath)
+            readFile.movJsonFile(dataPath)
         } catch (error) {
             logger.error(error)
         }
 
 
-        /**之前改过一次名称，修正别名 */
-        let nick = await this.getData('nickconfig.yaml', this.configPath, 'TXT')
-        if (nick) {
-            const waitToReplace = {
-                "Winter↑cube↓": "Winter ↑cube↓",
-                "Cipher: /2&//<|0": "Cipher : /2&//<|0",
-                "NYA!!!(Phigros ver.)": "NYA!!! (Phigros ver.)",
-                "JunXion Between Life And Death(VIP Mix)": "JunXion Between Life And Death(VIP Mix)",
-                "Dash from SOUL NOTES": "Dash",
-                "Drop It from SOUL NOTES": "Drop It",
-                "Diamond Eyes from SOUL NOTES": "Diamond Eyes",
-            }
-            let flag = false
-            for (let i in waitToReplace) {
-                if (nick.includes(i)) {
-                    flag = true
-                    nick = nick.replace(i, waitToReplace[i])
-                }
-            }
-            if (flag) {
-                await get.setData('nickconfig.yaml', nick, this.configPath, 'TXT')
-                logger.mark('[phi-plugin]自动修正别名')
-            }
-        }
+    }
 
-
-
-        /**附加信息 */
-        const Jsoninfo = await this.getData('infolist.json', this.infoPath)
-
-        /**扩增曲目信息 */
-        this.arcName = await this.getData('arc.json', this.DlcInfoPath)
-        this.orzName = await this.getData('orz.json', this.DlcInfoPath)
-
-        /**SP信息 */
-        this.sp_info = await this.getData('spinfo.json', this.infoPath)
-        /**默认别名 */
-        let Yamlnick = await this.getData('nicklist.yaml', this.infoPath)
-
-        this.songnick = {}
-
-        for (let i in Yamlnick) {
-            for (let j in Yamlnick[i]) {
-                if (this.songnick[Yamlnick[i][j]]) {
-                    this.songnick[Yamlnick[i][j]].push(i)
-                } else {
-                    this.songnick[Yamlnick[i][j]] = [i]
-                }
-            }
-        }
-
-
-        /**头像id */
-        let csv_avatar = await this.getData('avatar.csv', this.infoPath)
-        this.avatarid = {}
-        for (let i in csv_avatar) {
-            this.avatarid[csv_avatar[i].id] = csv_avatar[i].name
-        }
-        /**Tips */
-        this.tips = await this.getData('tips.yaml', this.infoPath)
-
-        /**csv文件 */
-        const CsvInfo = await this.getData('info.csv', this.infoPath)
-        const Csvdif = await this.getData('difficulty.csv', this.infoPath)
-
-        /**原版信息 */
-        this.ori_info = {}
-        /**通过id获取曲名 */
-        this.songsid = {}
-        /**原曲名称获取id */
-        this.idssong = {}
-
-        for (let i in CsvInfo) {
-            switch (CsvInfo[i].id) {
-                case 'AnotherMe.DAAN': {
-                    CsvInfo[i].song = 'Another Me (KALPA)';
-                    break;
-                }
-                case 'AnotherMe.NeutralMoon': {
-                    CsvInfo[i].song = 'Another Me (Rising Sun Traxx)';
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
-            this.songsid[CsvInfo[i].id + '.0'] = CsvInfo[i].song
-            this.idssong[CsvInfo[i].song] = CsvInfo[i].id + '.0'
-
-            this.ori_info[CsvInfo[i].song] = Jsoninfo[CsvInfo[i].id]
-            if (!this.ori_info[CsvInfo[i].song]) {
-                /**illustration_big = 'null'为特殊标记，getill时会返回默认图片 */
-                this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, illustration_big: 'null', chapter: '', bpm: '', length: '', chart: {} }
-                logger.mark(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
-            }
-            this.ori_info[CsvInfo[i].song].song = CsvInfo[i].song
-            this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
-            this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
-            this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
-            for (let j in this.Level) {
-                const level = this.Level[j]
-                if (CsvInfo[i][level]) {
-                    if (!this.ori_info[CsvInfo[i].song].chart[level]) {
-                        this.ori_info[CsvInfo[i].song].chart[level] = {}
-                    }
-                    this.ori_info[CsvInfo[i].song].chart[level].charter = CsvInfo[i][level]
-                    this.ori_info[CsvInfo[i].song].chart[level].difficulty = Csvdif[i][level]
-                }
-            }
-        }
-
-
-
-        /**含有曲绘的曲目列表，原曲名称 */
-        this.illlist = []
-
-        let info = this.info(undefined, false)
-        for (let i in info) {
-            const id = info[i].id
-            if (info[i]['illustration_big'] || info[i].song in this.ori_info) {
-                this.illlist.push(info[i].song)
-            }
-        }
-
-
-        /**所有曲目曲名列表 */
-        this.songlist = []
-
-        for (let i in this.ori_info) {
-            this.songlist.push(this.ori_info[i].song)
-        }
-
-
+    
+    /**
+    * 根据参数模糊匹配返回原曲名称
+    * @param {string} mic 别名
+    * @param {number} [Distance=0.85] 阈值
+    * @returns 原曲名称数组，按照匹配程度降序
+    */
+    fuzzysongsnick(mic, Distance = 0.85) {
+        return info.fuzzysongsnick(mic, Distance)
     }
 
     /**
      * @param {string} [song=undefined] 原曲曲名
-     * @param {boolean} [init=true] 是否格式化
+     * @param {boolean} [original=false] 是否仅使用原版曲库
+     * @returns {SongsInfo|{each:SongsInfo}}
      */
-    info(song = undefined, init = true) {
-        let result
-        switch (Config.getDefOrConfig('config', 'otherinfo')) {
-            case 0: {
-                result = { ...this.ori_info, ...this.sp_info }
-                break;
-            }
-            case 1: {
-                result = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
-                break;
-            }
-            case 2: {
-                result = Config.getDefOrConfig('otherinfo')
-                break;
-            }
-        }
-        if (song) {
-            return init ? new SongsInfo(result[song]) : result[song]
-        } else {
-            return result
-        }
+    info(song = undefined, original = false) {
+        if (song)
+            return info.info(song, original)
+        else
+            return info.all_info(original)
+
     }
 
     /**获取 chos 文件 
-     * @param {string}  chos 文件名称 含后缀 yaml json
-     * @param {string}  path 路径
-     * @param {'JSON'|'YAML'|'CSV'|'TXT'} [style=undefined] 
+     * @param {string}  fileName 文件名称 含后缀 yaml json
+     * @param {string}  fatherPath 路径
+     * @param {'JSON'|'YAML'|'CSV'|'TXT'} [style=undefined] 指定格式
     */
-    async getData(chos, path, style = undefined) {
-        return await Film.FileReader(`${path}${chos}`, style)
+    async getData(fileName, fatherPath, style = undefined) {
+        return await readFile.FileReader(path.join(fatherPath, fileName), style)
     }
 
     /**修改 chos 文件为 data 
-     * @param {string} chos 文件名称 含后缀 yaml json
+     * @param {string} fileName 文件名称 含后缀 yaml json
      * @param {any} data 覆写内容
-     * @param {string} path 父路径
+     * @param {string} fatherPath 父路径
      * @param {'JSON'|'YAML'|'TXT'} [style=undefined] 文件类型
     */
-    async setData(chos, data, path, style = undefined) {
-        return await Film.SetFile(chos, path, data, style)
+    async setData(fileName, data, fatherPath, style = undefined) {
+        return await readFile.SetFile(path.join(fatherPath, fileName), data, style)
     }
 
     /**删除 chos.yaml 文件
-     * @param {string} chos 文件名称 含后缀 yaml json
-     * @param {string} path 路径
+     * @param {string} fileName 文件名称 含后缀 yaml json
+     * @param {string} fatherPath 路径
     */
-    async delData(chos, path) {
-        if (!await Film.DelFile(`${path}${chos}`)) {
+    async delData(fileName, fatherPath) {
+        if (!await readFile.DelFile(path.join(fatherPath, fileName))) {
             logger.info(`[phi插件] ${chos} 已删除`)
             return false
         } else {
@@ -272,14 +119,7 @@ class getdata {
      * @returns save
      */
     async getsave(id) {
-        let session = await Film.get_user_token(id)
-        let result = await this.getData(`save.json`, `${this.savePath}${session}/`)
-        if (result) {
-            return new Save(result)
-        } else {
-            return null
-        }
-
+        return await getSave.get_save(id)
     }
 
     /**
@@ -288,9 +128,7 @@ class getdata {
      * @param {Object} data 
      */
     async putsave(id, data) {
-        let session = data.session
-        Film.add_user_token(id, session)
-        return await this.setData(`save.json`, data, `${this.savePath}${session}/`)
+        return await getSave.putsave(id, data)
     }
 
     /**
@@ -298,11 +136,7 @@ class getdata {
      * @param {String} id user_id
      */
     async delsave(id) {
-        let session = await Film.get_user_token(id)
-        await this.delData(`save.json`, `${this.savePath}${session}/`)
-        await this.delData(`history.json`, `${this.savePath}${session}/`)
-        fs.rmdirSync(`${this.savePath}${session}`);
-        Film.del_user_token(id)
+        return await getSave.delsave(id)
     }
 
     /**
@@ -310,7 +144,7 @@ class getdata {
      * @param {String} id user_id
      */
     async delpluginData(id) {
-        return this.delData(`${id}_.json`, `${this.pluginDataPath}`)
+        return this.delData(`${id}_.json`, pluginDataPath)
     }
 
 
@@ -321,9 +155,7 @@ class getdata {
      * @returns save
      */
     async getpluginData(id) {
-        let session = await Film.get_user_token(id)
-
-        return { ...await this.getData(`${id}_.json`, `${this.pluginDataPath}`), ... await this.getData(`history.json`, `${this.savePath}${session}/`) }
+        return await money.getPluginData(id)
     }
 
     /**
@@ -332,17 +164,7 @@ class getdata {
      * @param {Object} data 
      */
     async putpluginData(id, data) {
-        let session = await Film.get_user_token(id)
-        if (data.rks) {
-            let history = { data: data.data, rks: data.rks, scoreHistory: data.scoreHistory, dan: data.dan }
-            delete data.data
-            delete data.rks
-            delete data.scoreHistory
-            delete data.dan
-            await this.setData(`history.json`, history, `${this.savePath}${session}/`)
-        }
-        await this.setData(`${id}_.json`, data, `${this.pluginDataPath}`)
-
+        return await money.putPluginData(id, data)
     }
 
     /**
@@ -352,24 +174,7 @@ class getdata {
      * @returns 整个data对象
      */
     async getmoneydata(id, islock = false) {
-
-        islock = false //暂时先不锁
-
-        let data = await this.getpluginData(id, islock)
-        if (!data) {
-            data = {}
-        }
-        if (!data.plugin_data || !data.plugin_data.task_time) {
-            data.plugin_data = {
-                money: 0,
-                CLGMOD: {},
-                sign_in: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
-                task_time: 'Thu Jul 27 2023 11:40:26 GMT+0800 (中国标准时间)',
-                task: [],
-                theme: 'default',
-            }
-        }
-        return data
+        return await money.getMoneyData(id, islock)
     }
 
     /**获取本地图片
@@ -378,7 +183,7 @@ class getdata {
      */
     getimg(img, style = 'png') {
         // name = 'phi'
-        let url = `${this.imgPath}/${img}.${style}`
+        let url = `${imgPath}/${img}.${style}`
         if (url) {
             return segment.image(url)
         }
@@ -392,14 +197,7 @@ class getdata {
      * @returns dan[0]
      */
     async getDan(id) {
-        let plugindata = await this.getpluginData(id)
-
-        let dan = plugindata?.plugin_data?.CLGMOD
-
-        if (dan && Object.prototype.toString.call(dan) == '[object Array]') {
-            dan = dan[0]
-        }
-        return dan
+        return await money.getDan(id)
     }
 
     /**
@@ -408,194 +206,23 @@ class getdata {
      * @returns 原曲名称
      */
     songsnick(mic) {
-        let nickconfig = Config.getDefOrConfig('nickconfig', mic)
-        let all = []
-
-        if (this.info()[mic]) all.push(mic)
-
-        if (this.songnick[mic]) {
-            for (let i in this.songnick[mic]) {
-                all.push(this.songnick[mic][i])
-            }
-        }
-        if (nickconfig) {
-            for (let i in nickconfig) {
-                all.push(nickconfig[i])
-            }
-        }
-        if (all.length) {
-            all = Array.from(new Set(all)) //去重
-            return all
-        }
-        return false
+        return info.songsnick(mic)
     }
-
-    //采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)=>n为较长的那个字符出的长度
-    jaroWinklerDistance(s1, s2) {
-        let m = 0 //匹配的字符数量
-
-        //如果任任一字符串为空则距离为0
-        if (s1.length === 0 || s2.length === 0) {
-            return 0
-        }
-
-        //字符串完全匹配，距离为1
-        if (s1 === s2) {
-            return 1
-        }
-
-        let range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
-            s1Matches = new Array(s1.length),
-            s2Matches = new Array(s2.length)
-
-        //查找匹配的字符
-        for (let i = 0; i < s1.length; i++) {
-            let low = (i >= range) ? i - range : 0,
-                high = (i + range <= (s2.length - 1)) ? (i + range) : (s2.length - 1)
-
-            for (let j = low; j <= high; j++) {
-                if (s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j]) {
-                    ++m
-                    s1Matches[i] = s2Matches[j] = true
-                    break
-                }
-            }
-        }
-
-        //如果没有匹配的字符，那么捏Jaro距离为0
-        if (m === 0) {
-            return 0
-        }
-
-        //计算转置的数量
-        let k = 0, n_trans = 0
-        for (let i = 0; i < s1.length; i++) {
-            if (s1Matches[i] === true) {
-                let j
-                for (j = k; j < s2.length; j++) {
-                    if (s2Matches[j] === true) {
-                        k = j + 1
-                        break
-                    }
-                }
-
-                if (s1[i] !== s2[j]) {
-                    ++n_trans
-                }
-            }
-        }
-
-        //计算Jaro距离
-        let weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
-            l = 0,
-            p = 0.1
-
-        //如果Jaro距离大于0.7，计算Jaro-Winkler距离
-        if (weight > 0.7) {
-            while (s1[l] === s2[l] && l < 4) {
-                ++l
-            }
-
-            weight = weight + l * p * (1 - weight)
-        }
-
-        return weight
-    }
-
-    /**
-    * 根据参数模糊匹配返回原曲名称
-    * @param {string} mic 别名
-    * @param {number} [Distance=0.85] 阈值
-    * @returns 原曲名称数组，按照匹配程度降序
-    */
-    fuzzysongsnick(mic, Distance = 0.85) {
-
-        const fuzzyMatch = (str1, str2) => {
-            if (str1 == str2) {
-                return 1
-            }
-            //首先第一次去除空格和其他符号，并转换为小写
-            const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？↑↓←→]/g
-            const formattedStr1 = str1.replace(pattern, '').toLowerCase()
-            const formattedStr2 = str2.replace(pattern, '').toLowerCase()
-
-            //第二次再计算str1和str2之间的JaroWinkler距离
-            const distance = this.jaroWinklerDistance(formattedStr1, formattedStr2)
-
-            //如果距离大于等于某个阈值，则认为匹配
-            //可以根据实际情况调整这个阈值
-            return distance
-        }
-
-        /**按照匹配程度排序 */
-        let result = []
-
-        const usernick = Config.getDefOrConfig('nickconfig')
-        const allinfo = this.info()
-
-
-        for (let std in usernick) {
-            let dis = fuzzyMatch(mic, std)
-            if (dis >= Distance) {
-                for (let i in usernick[std]) {
-                    result.push({ song: usernick[std][i], dis: dis })
-                }
-            }
-        }
-        for (let std in this.songnick) {
-            let dis = fuzzyMatch(mic, std)
-            if (dis >= Distance) {
-                for (let i in this.songnick[std]) {
-                    result.push({ song: this.songnick[std][i], dis: dis })
-                }
-            }
-        }
-        for (let std in allinfo) {
-            let dis = fuzzyMatch(mic, std)
-            if (dis >= Distance) {
-                result.push({ song: allinfo[std]['song'], dis: dis })
-            }
-        }
-
-        result = result.sort((a, b) => b.dis - a.dis)
-
-        let all = []
-        for (let i in result) {
-
-            if (all.includes(result[i].song)) continue //去重
-            /**如果有完全匹配的曲目则放弃剩下的 */
-            if (result[0].dis == 1 && result[i].dis < 1) break
-
-
-            all.push(result[i].song)
-        }
-
-        return all
-    }
-
 
     /**设置别名 原名, 别名 */
     async setnick(mic, nick) {
-        if (!Config.getDefOrConfig('nickconfig', mic)) {
-            Config.modify('nickconfig', nick, [mic])
-        } else {
-            Config.modifyarr('nickconfig', nick, mic, 'add')
-        }
+        return await info.setnick(mic, nick)
     }
 
-    /**获取歌曲图鉴，曲名为原名 */
-    GetSongsInfoAtlas(e, name, data = undefined) {
-
-        if (!data) {
-            data = this.info()[name]
-        }
-        if (data) {
-            data.illustration = this.getill(name)
-            return atlas.atlas(e, data)
-        } else {
-            /**未找到曲目 */
-            return `未找到${name}的相关曲目信息!QAQ`
-        }
+    /**
+     * 获取歌曲图鉴，曲名为原名
+     * @param {any} e 消息
+     * @param {string} name 曲名
+     * @param {any} data 自定义数据
+     * @returns 
+     */
+    async GetSongsInfoAtlas(e, name, data = undefined) {
+        return await pic.GetSongsInfoAtlas(e, name, data)
     }
 
     /**
@@ -606,11 +233,7 @@ class getdata {
      * @returns 
      */
     async GetSongsIllAtlas(e, name, data = undefined) {
-        if (data) {
-            return await get.getillatlas(e, { illustration: data.illustration, illustrator: data.illustrator })
-        } else {
-            return await get.getillatlas(e, { illustration: get.getill(name), illustrator: get.info()[name]["illustrator"] })
-        }
+        return await pic.GetSongsIllAtlas(e, name, data)
 
     }
 
@@ -627,8 +250,8 @@ class getdata {
                 send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
             }
         } catch (err) {
-            logger.error(err)
             send.send_with_At(e, "绑定失败！QAQ\n" + err)
+            logger.error(err)
             return false
         }
         let old = await this.getsave(e.user_id)
@@ -661,6 +284,7 @@ class getdata {
             await this.putsave(e.user_id, User)
         } catch (err) {
             send.send_with_At(e, `保存存档失败！\n${err}`)
+            logger.error(err)
             return false
         }
 
@@ -817,51 +441,16 @@ class getdata {
      * @return 网址或文件地址
     */
     getill(name, kind = 'common') {
-        const totinfo = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
-        let ans
-        ans = totinfo[name]?.illustration_big
-        let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
-        if (ans && !reg.test(ans) && ans != 'null') {
-            ans = `${this.orillPath}${ans}`
-        }
-        if (this.ori_info[name]) {
-            if (fs.existsSync(`${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
-                ans = `${this.resPath}original_ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
-            } else if (fs.existsSync(`${this.resPath}original_ill/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`)) {
-                if (kind == 'common') {
-                    ans = `${this.resPath}original_ill/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
-                } else if (kind == 'blur') {
-                    ans = `${this.resPath}original_ill/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
-                } else if (kind == 'low') {
-                    ans = `${this.resPath}original_ill/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
-                }
-            } else if (!ans) {
-                if (kind == 'common') {
-                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
-                } else if (kind == 'blur') {
-                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
-                } else if (kind == 'low') {
-                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/blob/main/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
-                }
-            }
-        }
-        if (!ans || ans == 'null') {
-            ans = `${this.imgPath}phigros.png`
-        }
-        return ans
+        return info.getill(name, kind)
     }
 
     /**
      * 通过id获得头像文件名称
-     * @param {string} id 
-     * @returns file name
+     * @param {string} id 头像id
+     * @returns {string} file name
      */
     idgetavatar(id) {
-        if (this.avatarid[id]) {
-            return id
-        } else {
-            return 'Introduction'
-        }
+        return info.idgetavatar(id)
     }
 
     /**
@@ -870,7 +459,7 @@ class getdata {
      * @returns 原名
      */
     idgetsong(id) {
-        return this.songsid[id]
+        return info.idgetsong(id)
     }
 
     /**
@@ -879,7 +468,7 @@ class getdata {
      * @returns 曲目id
      */
     SongGetId(song) {
-        return this.idssong[song]
+        return info.SongGetId(song)
     }
 
     /**
@@ -919,29 +508,6 @@ class getdata {
             } else {
                 return ans
             }
-        }
-    }
-
-    /**
-     * 根据原曲曲名获取结构化的曲目信息
-     * @param {string} song 原曲曲名
-     * @param {boolean} [ori=false] 是否只启用原版
-     */
-    init_info(song, ori = false) {
-        if (ori) {
-            return new SongsInfo(this.ori_info[song])
-        } else {
-            return new SongsInfo(this.info(song))
-        }
-    }
-
-    /**
-     * 结构化存档数组
-     * @param {Array} Record 单曲存档数组
-     */
-    init_Record(Record, id) {
-        for (let i in Record) {
-            Record[i] = new LevelRecord(Record[i], id, this.Level[i])
         }
     }
 

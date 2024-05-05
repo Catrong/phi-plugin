@@ -3,7 +3,6 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
-import Vika from '../model/Vika.js'
 
 const illlist = []
 const theme = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }]

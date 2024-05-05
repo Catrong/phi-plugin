@@ -65,7 +65,7 @@ export class phiguess extends plugin {
         }
 
         let song = getRandomSong(e)
-        let songs_info = get.info()[song]
+        let songs_info = get.info(song)
 
         let cnnt = 0
         while (songs_info.can_t_be_guessill) {
@@ -76,7 +76,7 @@ export class phiguess extends plugin {
                 return
             }
             song = getRandomSong(e)
-            songs_info = get.info()[song]
+            songs_info = get.info(song)
         }
 
         gamelist[group_id] = songs_info.song

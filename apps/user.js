@@ -3,6 +3,7 @@ import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
 import atlas from '../model/picmodle.js'
+import getInfo from '../model/getInfo.js'
 
 
 let tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
@@ -55,8 +56,9 @@ export class phiuser extends plugin {
     }
 
     async info(e) {
+        /**背景 */
         let bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
-
+        console.info(bksong)
         if (bksong) {
             let tem = get.fuzzysongsnick(bksong)[0]
             if (tem) {
@@ -64,6 +66,9 @@ export class phiuser extends plugin {
             } else {
                 bksong = undefined
             }
+        }
+        if (!bksong) {
+            bksong = get.getill(illlist[randint(0, illlist.length - 1)], 'blur')
         }
 
         const save = await send.getsave_result(e, 1.0)
@@ -119,7 +124,6 @@ export class phiuser extends plugin {
         stats[3].tatle = Level[3]
 
         for (let id in Record) {
-            const info = get.init_info(get.idgetsong(id), true)
             const record = Record[id]
             for (let lv in [0, 1, 2, 3]) {
                 if (!record[lv]) continue
@@ -346,7 +350,7 @@ export class phiuser extends plugin {
             acc_rks_data: acc_rks_data_,
             acc_rks_range: acc_rks_range,
             acc_rks_AccRange: acc_rks_AccRange_position,
-            background: bksong || get.getill(illlist[randint(0, illlist.length - 1)]),
+            background: bksong,
         }
 
         let kind = Number(e.msg.replace(/\/.*info/g, ''))
@@ -361,6 +365,7 @@ export class phiuser extends plugin {
             return true
         }
 
+        /**匹配定数区间 */
         let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
 
         let isask = [true, true, true, true]
@@ -374,7 +379,7 @@ export class phiuser extends plugin {
         }
         msg = msg.replace(/((\s*)|AT|IN|HD|EZ)*/g, "")
 
-        let range = [0, get.MAX_DIFFICULTY]
+        let range = [0, getInfo.MAX_DIFFICULTY]
 
 
 
@@ -402,9 +407,6 @@ export class phiuser extends plugin {
 
         range[1] = Math.min(range[1], 16.9)
         range[0] = Math.max(range[0], 0)
-
-
-
 
         let unlockcharts = 0
         let totreal_score = 0
@@ -443,6 +445,7 @@ export class phiuser extends plugin {
 
         let Record = save.gameRecord
 
+
         for (let song in get.ori_info) {
             let info = get.ori_info[song]
             let vis = false
@@ -461,7 +464,7 @@ export class phiuser extends plugin {
 
 
         for (let id in Record) {
-            const info = get.init_info(get.idgetsong(id), true)
+            const info = get.info(get.idgetsong(id), true)
             const record = Record[id]
             let vis = false
             for (let lv in [0, 1, 2, 3]) {
@@ -572,7 +575,7 @@ export class phiuser extends plugin {
             return true
         }
 
-        const range = [0, get.MAX_DIFFICULTY]
+        const range = [0, getInfo.MAX_DIFFICULTY]
 
         let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
 
@@ -599,7 +602,8 @@ export class phiuser extends plugin {
                 if (msg.includes(` ${rating[i]}`)) { scoreAsk[rating[i]] = true }
             }
         }
-        msg = msg.replace(/(NEW|F|C|B|A|S|V|FC|PHI)*/g, "")
+        if (msg.includes(` AP`)) { scoreAsk.PHI = true }
+        msg = msg.replace(/(NEW|F|C|B|A|S|V|FC|PHI|AP)*/g, "")
 
         match_range(e.msg, range)
 
@@ -609,7 +613,7 @@ export class phiuser extends plugin {
         let data = []
 
         for (let id in Record) {
-            const info = get.init_info(get.idgetsong(id), true)
+            const info = get.info(get.idgetsong(id), true)
             const record = Record[id]
             for (let lv in [0, 1, 2, 3]) {
                 if (!info.chart[Level[lv]]) continue
@@ -763,7 +767,7 @@ function getbackground(name) {
  */
 function match_range(msg, range) {
     range[0] = 0
-    range[1] = get.MAX_DIFFICULTY
+    range[1] = getInfo.MAX_DIFFICULTY
     if (msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)) {
         /**0-16.9 */
         msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)[0]

@@ -196,5 +196,22 @@ export class phihelp extends plugin {
 
     async tkhelp(e) {
         send.send_with_At(e, `sessionToken有关帮助：\nhttps://potent-cartwheel-e81.notion.site/Phigros-Bot-f154a4b0ea6446c28f62149587cd5f31\n绑定sessionToken指令：\n/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+        e.reply(segment.markdown([`猜字母小游戏正在火热进行中，可点击相应的 [蓝色文本] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('你点击了蓝色文本')}&reply=false&enter=false) 快速操作：\r`, `[【1】∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第1 ')}&reply=false&enter=false)\r[【2】∗∗∗∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第2 ')}&reply=false&enter=false)\r[【3】∗∗∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第3 ')}&reply=false&enter=false)\r[【4】∗∗∗∗∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第4 ')}&reply=false&enter=false)\r[【5】∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第5 ')}&reply=false&enter=false)\r[【6】∗∗∗∗∗∗∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第6 ')}&reply=false&enter=false)\r[【7】∗∗∗∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第7 ')}&reply=false&enter=false)\r[【8】∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第8 ')}&reply=false&enter=false)\r[【9】∗∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第9 ')}&reply=false&enter=false)\r[【10】∗∗∗∗∗∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第10 ')}&reply=false&enter=false)\r[【11】∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第11 ')}&reply=false&enter=false)\r[【12】∗∗∗∗∗∗∗∗∗] (mqqapi://aio/inlinecmd?command=${encodeURIComponent('#第12 ')}&reply=false&enter=false)`, segment.button(
+            [{
+                text: "猜测",
+                input: "#第 "
+            },
+            {
+                text: "提示",
+                input: "tip",
+                send: true
+            },
+            {
+                text: "结束",
+                input: "#字母答案",
+                send: true
+            },
+            ]
+        )]))
     }
 }

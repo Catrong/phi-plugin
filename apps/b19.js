@@ -81,9 +81,9 @@ export class phib19 extends plugin {
         if (!Config.getDefOrConfig('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
+        /**自定义数量不更新存档 */
         if (nnum == 21) {
 
-            /**自定义数量不更新存档 */
             try {
                 await get.buildingRecord(e, new PhigrosUser(save.session))
 
@@ -95,6 +95,7 @@ export class phib19 extends plugin {
 
             } catch (err) {
                 send.send_with_At(e, err)
+                getLogger.error(err)
             }
         }
 
@@ -158,7 +159,7 @@ export class phib19 extends plugin {
         } else {
             phi.suggest = "无法推分"
         }
-        
+
 
 
         let data = {
@@ -274,8 +275,8 @@ export class phib19 extends plugin {
             if (e.isGroup) {
                 /**群聊只发送10条 */
                 send.send_with_At(e, Remsg[0])
-                // send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                // send.pick_send(e, await common.makeForwardMsg(e, Remsg))
+                send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
+                send.pick_send(e, await common.makeForwardMsg(e, Remsg))
             } else {
                 e.reply(await common.makeForwardMsg(e, Remsg))
             }

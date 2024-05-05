@@ -1,5 +1,11 @@
 import fs from 'node:fs'
-
+if (!global.segment) {
+    try {
+        global.segment = (await import("icqq")).segment
+    } catch {
+        global.segment = (await import("oicq")).segment
+    }
+}
 
 
 //插件作者QQ号：1436375503

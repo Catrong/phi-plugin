@@ -2,6 +2,7 @@ import { segment } from "oicq";
 import Config from '../components/Config.js'
 import get from "./getdata.js";
 import common from "../../../lib/common/common.js";
+import getSave from "./getSave.js";
 
 class send {
 
@@ -36,25 +37,26 @@ class send {
      */
     async getsave_result(e, ver) {
 
-        const save = await get.getsave(e.user_id)
+        const sessionToken = getSave.get_user_token(e.user_id)
 
-        if (!save) {
+        const user_save = await get.getsave(e.user_id)
+
+        if (!sessionToken) {
             this.send_with_At(e, `请先绑定sessionToken哦！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
 
-
-        if (ver && (!save.Recordver || save.Recordver < ver)) {
+        if (!user_save || (ver && (!user_save.Recordver || user_save.Recordver < ver))) {
             this.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
             return false
         }
 
-        return save
+        return user_save
     }
 
     /**
      * 转发到私聊
-     * @param {*} e 消息数组e
+     * @param {any} e 消息数组e
      * @param {any} msg 发送内容
      */
     async pick_send(e, msg) {

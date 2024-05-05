@@ -10,6 +10,7 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
+import getInfo from '../model/getInfo.js'
 
 let songsname = []
 let songweights = {} //存储每首歌曲被抽取的权重
@@ -27,6 +28,7 @@ let winnerlist = {} //存储猜对者的群名称
 let lastGuessedTime = {} //存储群聊猜字母全局冷却时间
 let lastRevealedTime = {} //存储群聊翻字母全局冷却时间
 let lastTipTime = {} //存储群聊提示全局冷却时间
+let gameSelectList = {} //群聊游戏选择的游戏范围
 let isfuzzymatch = true
 
 export class philetter extends plugin {
@@ -73,15 +75,20 @@ export class philetter extends plugin {
 
         /**处理其他游戏曲库 */
         let totNameList = []
-        if (msg.includes("pgr") || !msg) {
-            totNameList = [...songsname]
+        // console.info(getInfo.DLC_Info)
+        gameSelectList[group_id] = []
+        if (!msg) {
+            totNameList = totNameList.concat(getInfo.all_info())
+            gameSelectList[group_id].push('phigros')
+        } else {
+            for (let i in getInfo.DLC_Info) {
+                if (msg.includes(i)) {
+                    totNameList = totNameList.concat(getInfo.DLC_Info[i])
+                    gameSelectList[group_id].push(i)
+                }
+            }
         }
-        if (msg.includes("arc") && get.arcName) {
-            totNameList = [...totNameList, ...get.arcName]
-        }
-        if (msg.includes("orz") && get.orzName) {
-            totNameList = [...totNameList, ...get.orzName]
-        }
+        // console.info(totNameList)
 
         if (gamelist[group_id]) {
             e.reply("喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'/第X个XXXX'来猜曲名或者'/出X'来揭开字母吧！", true)
@@ -119,21 +126,21 @@ export class philetter extends plugin {
 
         for (let i = 1; i <= Config.getDefOrConfig('config', 'LetterNum'); i++) {
             // 根据曲目权重随机返回一首曲目名称
-            let randsong = getRandomSong(e)
+            let randsong = getRandomSong(e, totNameList)
 
             // 防止抽到重复的曲目
             let cnnt = 0
-            while (chose.includes(randsong) || get.info(randsong).can_t_be_letter) {
+            while (chose.includes(randsong) || get.info(randsong)?.can_t_be_letter) {
                 ++cnnt
                 if (cnnt >= 50) {
-                    logger.error(`[phi letter]抽取曲目失败，请检查曲库设置`)
-                    e.reply(`[phi letter]抽取曲目失败，请检查曲库设置`)
+                    logger.error(`[phi-plugin][letter]抽取曲目失败，请检查曲库设置`)
+                    e.reply(`抽取曲目失败，请检查曲库设置`)
                     return
                 }
-                randsong = getRandomSong(e)
+                randsong = getRandomSong(e, totNameList)
             }
 
-            const songs_info = get.info()[randsong]
+            const songs_info = get.info(randsong)
             chose.push(randsong)
 
             gamelist[group_id] = gamelist[group_id] || {}
@@ -151,6 +158,12 @@ export class philetter extends plugin {
         await timeout(1 * 1000)
 
         let output = '出你字母进行中：\n'
+        /**添加游戏范围 */
+        output += `游戏范围：`
+        for(let i in gameSelectList[group_id]) {
+            output += `${gameSelectList[group_id][i]} `
+        }
+        output += `\n`
         for (const i of Object.keys(blurlist[group_id])) {
             const blur_name = blurlist[group_id][i]
             output += `【${i}】${blur_name}\n`
@@ -340,7 +353,7 @@ export class philetter extends plugin {
                             delete blurlist[group_id][num]
                             send.send_with_At(e, `恭喜你ww，答对啦喵，第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `, true)
 
-                            if (get.info()[standard_song].illustration) { //如果有曲绘文件
+                            if (get.info(standard_song).illustration) { //如果有曲绘文件
                                 e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
                             }
 
@@ -554,7 +567,6 @@ export class philetter extends plugin {
 
     // 检查字母是否包含在曲目中
     checkLetterInSongs(group_id, letter) {
-        const songs_info = get.info()
 
         for (const i of Object.keys(gamelist[group_id])) {
             const songname = gamelist[group_id][i]
@@ -641,6 +653,7 @@ function getRandomSong(e) {
     }
 
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
+    if (songlist) { return songlist[randint(0, songlist.length - 1)] }
     return songsname[randint(0, songsname.length - 1)]
 }
 
