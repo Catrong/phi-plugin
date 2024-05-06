@@ -38,7 +38,7 @@ export default new class money {
 
             readFile.SetFile(path.join(savePath, session, 'history.json'), history)
         }
-        readFile.SetFile(path.join(pluginDataPath, session, `${user_id}_.json`), data)
+        readFile.SetFile(path.join(pluginDataPath, `${user_id}_.json`), data)
     }
 
     /**
