@@ -404,7 +404,7 @@ export default new class info {
         let ans = songsinfo?.illustration_big
         let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans)) {
-            ans = `${ortherIllPath}${ans}`
+            ans = path.join(ortherIllPath, ans)
         }
         if (this.ori_info[name]) {
             if (fs.existsSync(path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png')))) {
