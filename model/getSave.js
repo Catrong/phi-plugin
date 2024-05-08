@@ -34,7 +34,7 @@ export default new class getSave {
      */
     async get_save(user_id) {
         let session = await this.get_user_token(user_id)
-        let result = await readFile.FileReader(path.join(savePath, session, 'save.json'))
+        let result = session ? await readFile.FileReader(path.join(savePath, session, 'save.json')) : null
         if (result) {
             return new Save(result)
         } else {
