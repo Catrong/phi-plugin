@@ -50,6 +50,7 @@ export default new class getSave {
     async putsave(user_id, data) {
         let session = data.session
         this.add_user_token(user_id, session)
+        // console.info(path.join(savePath, session, 'save.json'), data)
         return await readFile.SetFile(path.join(savePath, session, 'save.json'), data)
     }
 

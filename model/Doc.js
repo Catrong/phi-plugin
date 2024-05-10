@@ -67,19 +67,19 @@ class readFile {
             }
             switch (style) {
                 case 'JSON': {
-                    fs.writeFileSync(fileName, JSON.stringify(data), 'utf8')
+                    fs.writeFileSync(filepath, JSON.stringify(data), 'utf8')
                     break
                 }
                 case 'YAML': {
-                    fs.writeFileSync(fileName, YAML.stringify(data), 'utf8')
+                    fs.writeFileSync(filepath, YAML.stringify(data), 'utf8')
                     break
                 }
                 case 'TXT': {
-                    fs.writeFileSync(fileName, data, 'utf8')
+                    fs.writeFileSync(filepath, data, 'utf8')
                 }
                 default: {
                     logger.error(`[phi-plugin][Set]不支持的文件格式`, style, filepath)
-                    fs.writeFileSync(fileName, data, 'utf8')
+                    fs.writeFileSync(filepath, data, 'utf8')
                     break
                 }
             }

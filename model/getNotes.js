@@ -36,9 +36,10 @@ export default new class money {
             delete data.scoreHistory
             delete data.dan
 
-            readFile.SetFile(path.join(savePath, session, 'history.json'), history)
+            await readFile.SetFile(path.join(savePath, session, 'history.json'), history)
         }
-        readFile.SetFile(path.join(pluginDataPath, `${user_id}_.json`), data)
+        console.info(path.join(pluginDataPath, `${user_id}_.json`), data)
+        await readFile.SetFile(path.join(pluginDataPath, `${user_id}_.json`), data)
     }
 
     /**
@@ -46,12 +47,12 @@ export default new class money {
      * @param {string} user_id 
      */
     async getMoneyData(user_id) {
-        let data = await this.getPluginData(path.join(pluginDataPath, `${user_id}_.json`))
+        let data = await readFile.FileReader(path.join(pluginDataPath, `${user_id}_.json`))
         if (!data) {
             data = {
                 version: 1.2,
                 plugin_data: {
-                    money: 45,
+                    money: 0,
                     CLGMOD: [],
                     sign_in: "Wed Apr 03 2024 23:03:52 GMT+0800 (中国标准时间)",
                     task_time: "Wed Apr 03 2024 23:03:52 GMT+0800 (中国标准时间)",
@@ -61,6 +62,10 @@ export default new class money {
             }
         }
         return data
+    }
+
+    async putMoneyData(user_id, data) {
+        return await readFile.SetFile(path.join(pluginDataPath, `${user_id}_.json`), data)
     }
 
     /**
