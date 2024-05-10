@@ -13,7 +13,7 @@ export default new class money {
         let session = await getSave.get_user_token(user_id)
         if (session) {
             return {
-                ... await readFile.FileReader(path.join(pluginDataPath, session, `${user_id}_.json`)),
+                ... await readFile.FileReader(path.join(pluginDataPath, `${user_id}_.json`)),
                 ... await readFile.FileReader(path.join(savePath, session, 'history.json'))
             }
         } else {
