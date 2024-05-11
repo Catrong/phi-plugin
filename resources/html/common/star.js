@@ -9,7 +9,7 @@ var stars = document.getElementById("stars");
 var parentElement = document.getElementsByTagName("body")[0];
 function init() {
     stars.width = parentElement.offsetWidth;
-    stars.height = parentElement.offsetHeight - 400;
+    stars.height = parentElement.offsetHeight - 200;
     stars.style.zIndex = 0
     stars.style.position = "fixed"
     stars.style.top = "0px"

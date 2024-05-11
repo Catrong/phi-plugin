@@ -3,69 +3,68 @@
 .title .l,
 .title .r {
     background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px);
+    /* backdrop-filter: blur(3px); */
 }
 
 .title {
     width: 100%;
-    margin-top: 100px;
-    height: 350px;
+    margin-top: 5%;
+    height: 150px;
     display: flex;
     z-index: 1;
-    flex-direction: column;
-    margin-bottom: 100px;
-    align-items: center;
+    flex-direction: row;
+    margin-bottom: 5%;
     justify-content: flex-start;
-    writing-mode: vertical-lr;
+    /* writing-mode: vertical-lr; */
+    align-items: center;
 }
 
 .title img {
-    height: 246px;
+    width: 26%;
     margin-left: 3%;
     margin-right: 3%;
-    border-radius: 58px;
+    border-radius: 25%;
 }
 
 .title .l {
-    width: 56%;
+    width: 57%;
     height: 100%;
     z-index: 1;
     writing-mode: horizontal-tb;
     clip-path: polygon(100% 0%, 90% 100%, 0% 100%, 0px 0px);
     display: flex;
     flex-direction: row;
-    margin-right: -31%;
+    /* margin-right: -6%; */
     align-items: center;
 }
 
 .title .l .doc p {
-    font-size: 70px;
-    margin: 10px;
+    font-size: x-large;
+    margin: 4px;
 }
 
 .title .m {
     background-color: white;
     clip-path: polygon(100% 0%, 5% 100%, 0% 100%, 95% 0px);
     height: 100%;
-    width: 6.2%;
+    width: 6%;
     z-index: 2;
-    margin: 0;
+    margin: -5.7%;
 }
 
 .title .r {
     clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 11% 0px);
     height: 90%;
-    width: 43.3%;
+    width: 42.4%;
     display: flex;
     flex-direction: column;
-    writing-mode: horizontal-tb;
     justify-content: center;
-    margin-left: -29.4%;
-    padding-left: 33%;
+    /* margin-left: -5%; */
+    padding-left: 6%;
 }
 
 .title .r p {
-    font-size: 40;
+    font-size: unset;
     /* margin-left: 15%; */
 }
 
@@ -78,13 +77,13 @@
 
 .title .r .Challenge-r,
 .title .r .Challenge-r_1 {
-    width: 95px;
+    width: 14%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin-top: 2%;
-    margin-left: 3%;
+    margin-top: 0%;
+    margin-left: 0%;
 }
 
 .title .r .Challenge-r img,
@@ -94,7 +93,7 @@
     margin-right: 0;
     margin-left: 0;
     border-radius: 0px;
-    margin-bottom: -60px;
+    margin-bottom: -56%;
 }
 
 .title .r .Challenge-r p,
@@ -103,22 +102,22 @@
 }
 
 .title .r .Challenge-r {
-    width: 95px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin-top: 2%;
-    margin-left: 3%;
+    /* width: 95px; */
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
+    /* flex-direction: column; */
+    /* margin-top: 2%; */
+    /* margin-left: 3%; */
 }
 
 .title .r .Challenge-r img {
-    width: 100%;
-    height: auto;
-    margin-right: 0;
-    margin-left: 0;
-    border-radius: 0px;
-    margin-bottom: -60px;
+    /* width: 100%; */
+    /* height: auto; */
+    /* margin-right: 0; */
+    /* margin-left: 0; */
+    /* border-radius: 0px; */
+    /* margin-bottom: -60px; */
 }
 
 .title .r .Challenge-r p {
@@ -136,5 +135,5 @@
     width: auto;
     display: flex;
     margin-left: 10px;
-    margin-right: -20px;
+    /* margin-right: -20px; */
 }

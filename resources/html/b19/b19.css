@@ -2,10 +2,10 @@
 @import "./b19title.css";
 
 body {
-    writing-mode: vertical-lr;
-    flex-direction: row;
+    /* writing-mode: vertical-lr; */
+    flex-direction: column;
     display: flex;
-    width: 1800px;
+    width: 800px;
     height: fit-content;
 }
 
@@ -53,7 +53,7 @@ body p {
 
 .song {
     width: 90%;
-    height: 243px;
+    height: 100px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -62,44 +62,45 @@ body p {
 
 .song .ill-box {
     width: 50%;
-    height: inherit;
+    height: auto;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    flex-direction: row;
-    writing-mode: vertical-lr;
+    flex-direction: column;
     z-index: 1;
     filter: drop-shadow(2px 4px 10px #00000055);
+    position: relative;
 }
 
 .num {
     writing-mode: horizontal-tb;
-    width: 11%;
-    height: 15%;
+    width: 8%;
+    height: 16%;
     padding-left: 3.5%;
-    padding-right: 3.5%;
-    margin-left: 5.3%;
+    padding-right: 4.5%;
+    top: 4%;
+    left: 2%;
     display: flex;
     background-color: rgba(255, 255, 255, 1);
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
     justify-content: center;
     align-items: center;
+    position: absolute;
 }
 
 .num p {
-    font-size: 25px;
+    font-size: xx-small;
     margin: 0;
+    line-height: 130%;
     color: black;
 }
 
 .ill {
     writing-mode: horizontal-tb;
     width: 100%;
-    height: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
-    margin-bottom: -42%;
-    margin-top: -15%;
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
     overflow: hidden;
 }
@@ -112,14 +113,15 @@ body p {
 .rank-IN,
 .rank-HD,
 .rank-EZ {
-    writing-mode: horizontal-tb;
-    width: 30%;
-    height: 30%;
+    width: 33%;
+    height: 33%;
+    bottom: 0;
+    position: absolute;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    margin-left: -15%;
+    margin-left: -13%;
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
 }
 
@@ -153,7 +155,7 @@ body p {
 }
 
 .org p {
-    font-size: 24px;
+    font-size: xx-small;
 }
 
 .rel {
@@ -162,7 +164,7 @@ body p {
 }
 
 .rel p {
-    font-size: 33px;
+    font-size: xx-small;
 }
 
 
@@ -170,15 +172,15 @@ body p {
 .info-IN,
 .info-HD,
 .info-EZ {
-    margin-left: -8.1%;
+    margin-left: -9.1%;
     padding-left: 5%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     border-right: 3px solid;
     width: 49%;
-    height: 80%;
+    height: 90%;
     filter: drop-shadow(2px 4px 10px #00000055);
     backdrop-filter: blur(3px);
 }
@@ -196,7 +198,7 @@ body p {
 }
 
 .songname {
-    width: 90%;
+    width: 95%;
     height: 25%;
     display: flex;
     justify-content: center;
@@ -204,7 +206,7 @@ body p {
 }
 
 .songname p {
-    font-size: 30px;
+    font-size: unset;
     margin: 0;
     text-align: center;
 }
@@ -218,8 +220,8 @@ body p {
 }
 
 .Rating {
-    width: 75px;
-    height: 75px;
+    width: 20%;
+    height: auto;
     display: flex;
 }
 
@@ -246,7 +248,7 @@ body p {
 }
 
 .score p {
-    font-size: 55px;
+    font-size: larger;
 }
 
 .acc-box {
@@ -266,7 +268,7 @@ body p {
 }
 
 .acc p {
-    font-size: 40px;
+    font-size: unset;
 }
 
 .suggest {
@@ -276,7 +278,7 @@ body p {
 }
 
 .suggest p {
-    font-size: 20px;
+    font-size: xx-small;
     color: rgb(192, 221, 173);
 }
 
@@ -289,7 +291,7 @@ body p {
 
 .Nosignal {
     width: 87%;
-    height: 243px;
+    height: 100px;
     display: flex;
     position: relative;
     flex-direction: column;
@@ -301,10 +303,10 @@ body p {
 .border_corner {
     z-index: 2500;
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     background: rgba(0, 0, 0, 0);
-    border: 6px solid #ffffff;
+    border: 3px solid #ffffff;
 }
 
 .border_corner_left_top {
@@ -361,14 +363,14 @@ body p {
         1px 0 5px #d8f9ffab,
         -1px 0 10px #d8f9ffab;
     margin-left: 5%;
-    font-size: 75px;
+    font-size: x-large;
     color: white;
 }
 
 .Nosignal .client p {
     text-shadow: 0 0 1px #8eeeff88, 1px 0 2px #8eeeff88, -1px 0 5px #8eeeff88;
     margin-left: 5%;
-    font-size: 25px;
+    font-size: x-small;
     color: #00B0F0;
 }
 
@@ -386,7 +388,7 @@ body p {
     border: 3px solid;
     border-color: white;
     margin-left: 5%;
-    margin-top: 16;
+    margin-top: 2%;
     z-index: 1;
     display: flex;
     justify-content: center;
@@ -406,8 +408,8 @@ body p {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin-top: 5%;
+    margin-bottom: 5%;
     writing-mode: horizontal-tb;
     justify-content: center;
 }
@@ -431,11 +433,11 @@ body p {
 }
 
 .phi-plugin p {
-    font-size: 80px;
+    font-size: xx-large;
     text-shadow: 0 0 20px rgb(0 186 255);
 }
 
 .ver p {
-    font-size: 40px;
+    font-size: large;
     text-shadow: 0 0 20px #fff700;
 }

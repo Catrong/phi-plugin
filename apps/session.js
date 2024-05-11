@@ -5,7 +5,7 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import Save from '../model/class/Save.js'
 import scoreHistory from '../model/class/scoreHistory.js'
-import save from '../model/getSave.js'
+import getSave from '../model/getSave.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
 export class phisstk extends plugin {
@@ -78,7 +78,7 @@ export class phisstk extends plugin {
     }
 
     async update(e) {
-        let session = await save.get_user_token(e.user_id)
+        let session = await getSave.get_user_token(e.user_id)
         if (!session) {
             e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
             return true
@@ -275,6 +275,12 @@ export class phisstk extends plugin {
 
 
     async unbind(e) {
+
+        if (!getSave.get_user_token(e.user_id)) {
+            send.send_with_At(e, '没有找到你的存档信息嗷！')
+            return false
+        }
+
         this.setContext('doUnbind', false, 30)
 
         send.send_with_At(e, '解绑会导致历史数据全部清空呐QAQ！真的要这么做吗？（确认/取消）')
@@ -310,7 +316,7 @@ export class phisstk extends plugin {
                     }
                     await get.putpluginData(e.user_id, pluginData)
                 }
-                save.del_user_token(e.user_id)
+                getSave.del_user_token(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
@@ -406,5 +412,5 @@ function getRandomBgColor() {
 
 /**计算/update宽度 */
 function comWidth(num) {
-    return num * 330 + 20 * num - 20
+    return num * 135 + 20 * num - 20
 }

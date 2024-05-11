@@ -60,11 +60,13 @@ export default new class getSave {
      */
     async delsave(user_id) {
         let session = await this.get_user_token(user_id)
+        if(!session) return false
         let fPath = path.join(savePath, session)
         await readFile.DelFile(path.join(fPath, 'save.json'))
         await readFile.DelFile(path.join(fPath, 'history.json'))
-        fs.rmdirSync(path.join(savePath, session), { recursive: true, force: true });
-        readFile.del_user_token(user_id)
+        fs.rmSync(path.join(savePath, session), { recursive: true, force: true });
+        this.del_user_token(user_id)
+        return true
     }
 
 }()
