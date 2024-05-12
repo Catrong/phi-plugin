@@ -149,7 +149,7 @@ export class phisstk extends plugin {
                         tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
                     }
                     ++tot_update[time_vis[score_date]].update_num
-                    if (b19.indexOf(score_info.song) != -1) {
+                    if (i == history.length - 1 && b19.indexOf(score_info.song) != -1) {
                         score_info.isB19 = b19.indexOf(score_info.song)
                         b19[score_info.isB19] = null
                     }
