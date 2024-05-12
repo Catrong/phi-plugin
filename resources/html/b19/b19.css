@@ -248,7 +248,7 @@ body p {
 }
 
 .score p {
-    font-size: larger;
+    font-size: x-large;
 }
 
 .acc-box {
@@ -285,7 +285,7 @@ body p {
 .chengji .line {
     width: 90%;
     margin: 0;
-    border-bottom: 3px solid;
+    border-bottom: 2px solid;
     border-color: white;
 }
 
