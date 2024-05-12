@@ -261,9 +261,9 @@ export class phiuser extends plugin {
 
         /**统计在要求acc>=i的前提下，玩家的rks为多少 */
         /**存档 */
-        const acc_rksRecord = save.sortRecord()
+        const acc_rksRecord = save.getRecord()
         /**phi列表 */
-        const acc_rks_phi = save.findRegRecord(100)
+        const acc_rks_phi = save.findAccRecord(100)
         /**所有rks节点 */
         const acc_rks_data = []
         /**转换成坐标的节点 */

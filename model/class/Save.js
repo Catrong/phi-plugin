@@ -142,11 +142,10 @@ export default class Save {
     }
 
     /**
-     * 将存档排序
-     * @param {boolean} isSort 是否排序
+     * 获取存档
      * @returns 
      */
-    sortRecord(isSort = true) {
+    getRecord() {
         if (this.sortedRecord) {
             return this.sortedRecord
         }
@@ -159,7 +158,6 @@ export default class Save {
                 sortedRecord.push(tem)
             }
         }
-        if (!isSort) return sortedRecord
 
         sortedRecord.sort((a, b) => { return b.rks - a.rks })
         this.sortedRecord = sortedRecord
@@ -168,23 +166,48 @@ export default class Save {
 
     /**
      * 筛选满足ACC条件的成绩
-     * @param {Function} reg >=reg
+     * @param {Function} acc >= acc
+     * @param {boolean} [same=false] 是否筛选最高rks
      * @returns 按照rks排序的数组
      */
-    findRegRecord(reg) {
+    findAccRecord(acc, same = false) {
         let record = []
         for (let song in this.gameRecord) {
             for (let level in song) {
                 if (level == 4) break
                 let tem = this.gameRecord[song][level]
                 if (!tem) continue
-                if (tem.acc >= reg) {
+                if (tem.acc >= acc) {
                     record.push(tem)
                 }
             }
         }
         record.sort((a, b) => { return b.rks - a.rks })
+        if (same) {
+            for (let i in record) {
+                if (record[i].rks != record[i + 1]?.rks) {
+                    record = record.slice(0, i + 1)
+                    break
+                }
+            }
+        }
         return record
+    }
+
+    /**
+     * BestN曲名
+     * @param {number} n 
+     * @returns 
+     */
+    comBest(n) {
+        let list = []
+        let record = this.getRecord()
+        let phi = this.findAccRecord(100, true)
+        list = list.concat(phi, record.slice(0, n))
+        for (let i in list) {
+            list[i] = list[i].song
+        }
+        return list
     }
 
 

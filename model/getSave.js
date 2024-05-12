@@ -55,12 +55,37 @@ export default new class getSave {
     }
 
     /**
+     * 获取 user_id 对应的历史记录
+     * @param {string} user_id 
+     * @returns 
+     */
+    async getHistory(user_id) {
+        let session = await this.get_user_token(user_id)
+        let result = session ? await readFile.FileReader(path.join(savePath, session, 'history.json')) : null
+        if (result) {
+            return result
+        } else {
+            return null
+        }
+    }
+
+    /**
+     * 保存 user_id 对应的历史记录
+     * @param {String} user_id user_id
+     * @param {Object} data 
+     */
+    async putHistory(user_id, data) {
+        let session = this.get_user_token(user_id)
+        return await readFile.SetFile(path.join(savePath, session, 'history.json'), data)
+    }
+
+    /**
      * 删除 user_id 对应的存档文件
      * @param {String} user_id user_id
      */
     async delsave(user_id) {
         let session = await this.get_user_token(user_id)
-        if(!session) return false
+        if (!session) return false
         let fPath = path.join(savePath, session)
         await readFile.DelFile(path.join(fPath, 'save.json'))
         await readFile.DelFile(path.join(fPath, 'history.json'))

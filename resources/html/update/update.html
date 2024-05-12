@@ -59,7 +59,7 @@
     <div class="record_box">
         {{if task_data && (task_data[0]||task_data[1]||task_data[2]||task_data[3]||task_data[4])}}
         <div class="title_box">
-            <div class="box_title" style="width: 1730px;filter: drop-shadow(0px 2px 2px #fff382);">
+            <div class="box_title" style="width: 755px;filter: drop-shadow(0px 2px 2px #fff382);">
                 <div class="box_title-right-down" style="background-color: #fff382;"></div>
                 <div class="box_title-left" style="background-color: #fff382;">
                     <p style="color: white;text-shadow: 0px 0px 3px #000000;">Task_table</p>
@@ -152,6 +152,11 @@
                 <div class="imgbox">
                     <img src="{{song.illustration}}" alt="{{song.song}}">
                 </div>
+                {{if song.isB19}}
+                <div class="coinbox">
+                    <p>Best {{song.isB19}}</p>
+                </div>
+                {{/if}}
                 <div class="infobox">
                     <div class="namebox">
                         {{if song.Rating}}

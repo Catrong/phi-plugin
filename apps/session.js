@@ -135,6 +135,7 @@ export class phisstk extends plugin {
             send.send_with_At(e, '[测试功能，概率有误，暂时不清楚错误原因]\n请注意，你的存档可能存在一些问题：\n' + RecordErr)
         }
 
+        let b19 = now.comBest(19)
 
         for (let song in pluginData.scoreHistory) {
             let tem = pluginData.scoreHistory[song]
@@ -148,6 +149,10 @@ export class phisstk extends plugin {
                         tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
                     }
                     ++tot_update[time_vis[score_date]].update_num
+                    if (b19.indexOf(score_info.song) != -1) {
+                        score_info.isB19 = b19.indexOf(score_info.song)
+                        b19[score_info.isB19] = null
+                    }
                     tot_update[time_vis[score_date]].song.push(score_info)
                 }
             }
