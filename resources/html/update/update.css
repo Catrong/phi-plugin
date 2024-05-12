@@ -281,7 +281,7 @@ body p {
     position: absolute;
     display: flex;
     right: 0px;
-    /* bottom: 5px; */
+    bottom: 1px;
     flex-direction: row;
     align-items: flex-end;
 }
@@ -296,12 +296,12 @@ body p {
 
 .rks {
     position: absolute;
-    left: 200px;
-    bottom: 24px;
+    right: 0;
+    bottom: 14px;
 }
 
 .rks p {
-    font-size: 30px;
+    font-size: xx-small;
 }
 
 .Nosignal {
