@@ -73,14 +73,14 @@ body p {
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     z-index: 1;
     position: absolute;
     right: 0px;
 }
 
 .box_title-right p {
-    font-size: small;
+    font-size: x-small;
     color: rgb(255 255 255);
 }
 
