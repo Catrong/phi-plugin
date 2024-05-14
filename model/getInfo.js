@@ -440,7 +440,7 @@ export default new class info {
      */
     idgetavatar(id) {
         if (this.avatarid[id]) {
-            return id
+            return this.avatarid[id]
         } else {
             return 'Introduction'
         }
