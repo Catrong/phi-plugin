@@ -359,10 +359,12 @@ Future Mind:
   - FM
 Luminescent:
   - 冷光
+  - 小冷光
 Luminescence:
   - 烟花
   - 冷光
   - 流光
+  - 大冷光
 Protoflicker:
   - 守船石
   - flicker
@@ -743,6 +745,7 @@ Quantum Hyperspace:
 Freaky Undulations ~Noble Knights of Tune~:
   - Freaky
   - 音调骑士
+  - funkot
 Dash:
   - 冲
   - 冲撞
@@ -803,3 +806,5 @@ PRAGMATISM -RESURRECTION-:
   - 牢二
 Antithese:
   - 反命题
+云女孩:
+  - 云女鬼
