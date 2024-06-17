@@ -92,7 +92,7 @@ var MeteorRain = function () {
         this.alpha = 1;//透明度
         this.getRandomColor();
         //最小长度，最大长度
-        var x = Math.random() * parentElement.offsetHeight * 0.5 + 50;
+        var x = Math.random() * 1428 * 0.5 + 50;
         this.length = Math.ceil(x);
         // x = Math.random()*10+30;
         this.angle = - this.countAngle(this.x, this.y, parentElement.offsetWidth / 2, parentElement.offsetHeight * 3); //流星倾斜角

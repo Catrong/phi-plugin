@@ -194,23 +194,6 @@ export default class Save {
         return record
     }
 
-    /**
-     * BestN曲名
-     * @param {number} n 
-     * @returns 
-     */
-    comBest(n) {
-        let list = []
-        let record = this.getRecord()
-        let phi = this.findAccRecord(100, true)
-        list = list.concat(phi, record.slice(0, n))
-        for (let i in list) {
-            list[i] = list[i].song
-        }
-        return list
-    }
-
-
     /**计算rks+0.01的最低所需要提升的rks */
     minUpRks() {
         /**考虑屁股肉四舍五入原则 */

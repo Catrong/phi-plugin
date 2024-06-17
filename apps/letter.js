@@ -12,7 +12,7 @@ import get from '../model/getdata.js'
 import send from '../model/send.js'
 import getInfo from '../model/getInfo.js'
 
-let songsname = []
+let songsname = getInfo.songlist
 let songweights = {} //存储每首歌曲被抽取的权重
 for (let i in get.info()) {
     songsname.push(i)
@@ -653,7 +653,7 @@ function getRandomSong(e) {
     }
 
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
-    if (songlist) { return songlist[randint(0, songlist.length - 1)] }
+    if (songsname) { return songsname[randint(0, songsname.length - 1)] }
     return songsname[randint(0, songsname.length - 1)]
 }
 
