@@ -3,6 +3,7 @@ import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
 import Config from '../components/Config.js'
 import send from '../model/send.js'
+import getInfo from '../model/getInfo.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
@@ -41,6 +42,10 @@ export class phisong extends plugin {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(随机|rand(om)?).*$`,
                     fnc: 'randmic'
                 },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)nick.*$`,
+                    fnc: 'nick'
+                }
             ]
         })
 
@@ -372,6 +377,23 @@ export class phisong extends plugin {
 
         send.send_with_At(e, await get.getrand(e, result))
         return true
+    }
+
+    nick(e) {
+        let msg = e.msg.replace(/[#/](.*?)nick(\s*)/, "")
+        let song = getInfo.fuzzysongsnick(msg)
+        if (song[0]) {
+            let info = getInfo.info(song[0])
+            let nick = ''
+            let usernick = Config.getDefOrConfig('nickconfig', song[0])
+            for (let i in usernick) {
+                nick += `${usernick[i]}\n`
+            }
+            for (let i in getInfo.nicklist[song[0]]) {
+                nick += `${getInfo.nicklist[song[0]][i]}\n`
+            }
+            send.send_with_At(e, `${song[0]}\n${info.id}\n` + nick)
+        }
     }
 
 }
