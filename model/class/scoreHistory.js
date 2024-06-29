@@ -1,9 +1,10 @@
-import get from "../getdata.js"
+import fCompute from "../fCompute.js"
+import getInfo from "../getInfo.js"
 
 export default new class scoreHistory {
 
     /**
-     * 
+     * 生成成绩记录数组
      * @param {number} acc 
      * @param {number} score 
      * @param {Date} date
@@ -14,23 +15,31 @@ export default new class scoreHistory {
         return [acc.toFixed(4), score, date, fc]
     }
 
+    /**
+     * 扩充信息
+     * @param {string} songsid 曲目id
+     * @param {EZ|HD|IN|AT|LEGACY} level 难度
+     * @param {Array} now 
+     * @param {Array} old 
+     * @returns {Object}
+     */
     extend(songsid, level, now, old) {
-        let song = get.idgetsong(songsid) || songsid
+        let song = getInfo.idgetsong(songsid) || songsid
         now[0] = Number(now[0])
         now[1] = Number(now[1])
         if (old) {
             old[0] = Number(old[0])
             old[1] = Number(old[1])
         }
-        if (get.info(song, true)?.chart[level]?.difficulty) {
+        if (getInfo.info(song, true)?.chart[level]?.difficulty) {
             /**有难度信息 */
             return {
                 song: song,
                 rank: level,
-                illustration: get.getill(song),
+                illustration: getInfo.getill(song),
                 Rating: Rating(now[1], now[3]),
-                rks_new: get.getrks(now[0], get.info(song, true).chart[level].difficulty),
-                rks_old: old ? get.getrks(old[0], get.info(song, true).chart[level].difficulty) : undefined,
+                rks_new: fCompute.rks(now[0], getInfo.info(song, true).chart[level].difficulty),
+                rks_old: old ? fCompute.rks(old[0], getInfo.info(song, true).chart[level].difficulty) : undefined,
                 acc_new: now[0],
                 acc_old: old ? old[0] : undefined,
                 score_new: now[1],
@@ -43,7 +52,7 @@ export default new class scoreHistory {
             return {
                 song: song,
                 rank: level,
-                illustration: get.getill(song),
+                illustration: getInfo.getill(song),
                 Rating: Rating(now[1]),
                 acc_new: now[0],
                 acc_old: old ? old[0] : undefined,
@@ -55,6 +64,24 @@ export default new class scoreHistory {
         }
     }
 
+    /**
+     * 展开信息
+     * @param {Array} data 历史成绩
+     */
+    open(data) {
+        return {
+            acc: data[0],
+            score: data[1],
+            date: new Date(data[2]),
+            fc: data[3]
+        }
+    }
+
+    /**
+     * 获取该成绩记录的日期
+     * @param {Array} data 成绩记录
+     * @returns {Date} 该成绩的日期
+     */
     date(data) {
         return new Date(data[2])
     }

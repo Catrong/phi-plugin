@@ -129,11 +129,11 @@ export class phisstk extends plugin {
         let now = new Save(User)
         let pluginData = await get.getpluginData(e.user_id)
 
-        const RecordErr = now.checkRecord()
+        // const RecordErr = now.checkRecord()
 
-        if (RecordErr) {
-            send.send_with_At(e, '[测试功能，概率有误，暂时不清楚错误原因]\n请注意，你的存档可能存在一些问题：\n' + RecordErr)
-        }
+        // if (RecordErr) {
+        //     send.send_with_At(e, '[测试功能，概率有误，暂时不清楚错误原因]\n请注意，你的存档可能存在一些问题：\n' + RecordErr)
+        // }
 
         for (let song in pluginData.scoreHistory) {
             let tem = pluginData.scoreHistory[song]
@@ -152,8 +152,7 @@ export class phisstk extends plugin {
             }
         }
 
-
-        let newnum = tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]] ? tot_update[time_vis[date_to_string(now.saveInfo.updatedAt)]].song.length : 0
+        let newnum = tot_update[time_vis[date_to_string(now.saveInfo.modifiedAt.iso)]].update_num || 0
 
         tot_update.sort((a, b) => new Date(b.date) - new Date(a.date))
 
@@ -333,7 +332,7 @@ export class phisstk extends plugin {
 
 
     async clean(e) {
-        this.setContext('doClean', false, 30)
+        this.setContext('doClean', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
 
         send.send_with_At(e, '请注意，本操作将会删除Phi-Plugin关于您的所有信息QAQ！（确认/取消）')
 

@@ -3,6 +3,7 @@ import Config from '../components/Config.js'
 import get from "./getdata.js";
 import common from "../../../lib/common/common.js";
 import getSave from "./getSave.js";
+import Save from "./class/Save.js";
 
 class send {
 
@@ -23,7 +24,7 @@ class send {
                 e.reply([segment.at(e.user_id), msg], quote, data)
             }
         } else {
-            e.reply(msg, quote)
+            e.reply(msg, quote, data)
         }
     }
 
@@ -31,13 +32,14 @@ class send {
      * 检查存档部分
      * @param {*} e 
      * @param {Number} ver 存档版本
+     * @returns {Promise<Save>}
      * v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory 
      * v1.1,更正scoreHistory
      * v1.2,由于曲名错误，删除所有记录，曲名使用id记录
      */
     async getsave_result(e, ver) {
 
-        const sessionToken = getSave.get_user_token(e.user_id)
+        const sessionToken = await getSave.get_user_token(e.user_id)
 
         const user_save = await get.getsave(e.user_id)
 

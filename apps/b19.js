@@ -7,6 +7,7 @@ import send from '../model/send.js';
 import PhigrosUser from '../lib/PhigrosUser.js';
 import altas from '../model/picmodle.js'
 import scoreHistory from '../model/class/scoreHistory.js';
+import fCompute from '../model/fCompute.js';
 
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
@@ -49,6 +50,12 @@ export class phib19 extends plugin {
 
     async b19(e) {
 
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return true
+        }
+
+        
         let nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
 
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
@@ -71,12 +78,8 @@ export class phib19 extends plugin {
             }
         }
 
-        let save = await send.getsave_result(e)
         let plugin_data = await get.getpluginData(e.user_id)
 
-        if (!save) {
-            return true
-        }
 
         if (!Config.getDefOrConfig('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
@@ -85,7 +88,7 @@ export class phib19 extends plugin {
         if (nnum == 21) {
 
             try {
-                await get.buildingRecord(e, new PhigrosUser(save.session))
+                get.buildingRecord(e, new PhigrosUser(save.session))
 
                 save = await send.getsave_result(e)
 
@@ -95,44 +98,35 @@ export class phib19 extends plugin {
 
             } catch (err) {
                 send.send_with_At(e, err)
-                getLogger.error(err)
+                logger.error(err)
             }
         }
 
 
-        let Record = save.gameRecord
         let phi = {}
         let b19_list = []
         let com_rks = 0 //计算得到的rks
 
         phi.rks = 0
 
+        /**满分且 rks 最高的成绩数组 */
+        let philist = save.findAccRecord(100, true)
 
-        /**取出信息 */
-        let rkslist = []
-        for (let song in Record) {
-            for (let level in song) {
-                if (level == 4) break
-                let tem = Record[song][level]
-                if (!tem) continue
-
-                if (tem.acc >= 100) {
-                    if (tem.rks > phi.rks) {
-                        phi = tem
-                    }
-                }
-                rkslist.push(tem)
-            }
-        }
+        /**随机抽取一个 b0 */
+        // console.info(philist)
+        phi = philist[Math.floor(Math.random() * philist.length)]
 
         if (phi.rks) {
-            com_rks += Number(phi.rks) //计算得到的rks
+            com_rks += Number(phi.rks) //计算rks
             phi.rks = phi.rks.toFixed(2)
             phi.acc = phi.acc.toFixed(2)
             phi.illustration = get.getill(phi.song)
+            phi.suggest = "无法推分"
         }
 
-
+        /**所有成绩 */
+        let rkslist = save.getRecord()
+        /**真实 rks */
         let userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
         let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
@@ -143,21 +137,21 @@ export class phib19 extends plugin {
         rkslist = rkslist.sort(cmp())
         let illlist = []
         for (let i = 0; i < nnum && i < rkslist.length; ++i) {
-            if (i < 19)
-                com_rks += Number(rkslist[i].rks) //计算得到的rks
+            /**计算rks */
+            if (i < 19) com_rks += Number(rkslist[i].rks)
+            /**是 Best 几 */
             rkslist[i].num = i + 1
-            rkslist[i].suggest = get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
+            /**推分建议 */
+            rkslist[i].suggest = fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
+
             rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
             rkslist[i].acc = Number(rkslist[i].acc).toFixed(2)
-            rkslist[i].illustration = get.getill(rkslist[i].song, 'low')
+            /**曲绘 */
+            rkslist[i].illustration = get.getill(rkslist[i].song, 'common')
+            /**b19列表 */
             b19_list.push(rkslist[i])
+            /**背景列表 */
             illlist.push(get.getill(rkslist[i].song, 'blur'))
-        }
-
-        if (save.saveInfo.summary.rankingScore < 14) {
-            phi.suggest = "已经到顶啦"
-        } else {
-            phi.suggest = "无法推分"
         }
 
 
@@ -183,9 +177,6 @@ export class phib19 extends plugin {
 
 
         send.send_with_At(e, await altas.b19(e, data))
-
-
-
     }
 
     /**获取bestn文字版 */
@@ -261,10 +252,10 @@ export class phib19 extends plugin {
             let tot = 1
             for (let i = 0; i < num && i < rkslist.length; ++i) {
                 if (tot <= 10) {
-                    tmsg += `\n#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
+                    tmsg += `\n#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                 } else {
                     Remsg.push(tmsg)
-                    tmsg = `#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
+                    tmsg = `#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
                     tot = 0
                 }
                 ++tot
@@ -307,7 +298,7 @@ export class phib19 extends plugin {
                     `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
                     `${rkslist[i].score} ${rkslist[i].Rating}\n` +
                     `${Number(rkslist[i].acc).toFixed(4)}% ${Number(rkslist[i].rks).toFixed(4)}\n` +
-                    `推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`])
+                    `推分: ${fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`])
                 }
             } else {
                 /**无图模式 */
@@ -325,7 +316,7 @@ export class phib19 extends plugin {
                         `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
                         `${rkslist[i].score} ${rkslist[i].Rating}\n` +
                         `${Number(rkslist[i].acc).toFixed(4)}% ${Number(rkslist[i].rks).toFixed(4)}\n` +
-                        `推分: ${get.comsuggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`])
+                        `推分: ${fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`])
                 }
             }
             await e.reply(await common.makeForwardMsg(e, Remsg))
@@ -452,7 +443,7 @@ export class phib19 extends plugin {
                         data[Level[i]] = {
                             ...ans[i],
                             //      b19最低rks          当前曲目rks     最低提升的rks          定数              保留位数
-                            suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4)
+                            suggest: fCompute.suggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4)
                         }
                     } else {
                         data[Level[i]] = {
@@ -478,7 +469,7 @@ export class phib19 extends plugin {
                         ans[i].rks = ans[i].rks.toFixed(4)
                         data.scoreData[Level[i]] = {
                             ...ans[i],
-                            suggest: get.comsuggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4),
+                            suggest: fCompute.suggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4),
                         }
                     } else {
                         data.scoreData[Level[i]] = {
@@ -531,7 +522,7 @@ export class phib19 extends plugin {
         let suggestlist = []
         for (let i in rkslist) {
             let tem = rkslist[i]
-            let suggest = get.comsuggest(Number((i < 18) ? tem.rks : minrks.rks) + minuprks * 20, Number(tem.difficulty), 4)
+            let suggest = fCompute.suggest(Number((i < 18) ? tem.rks : minrks.rks) + minuprks * 20, Number(tem.difficulty), 4)
             if (!suggest.includes("无")) {
                 tem.acc = tem.acc
                 tem.rks = tem.rks

@@ -1,12 +1,13 @@
-import readFile from './Doc.js'
+import readFile from './getFile.js'
 import { DlcInfoPath, configPath, imgPath, infoPath, originalIllPath, ortherIllPath } from './path.js'
 import path from 'path'
 import Config from '../components/Config.js'
 import SongsInfo from './class/SongsInfo.js'
 import fs from 'fs'
+import { Level } from './constNum.js'
 
 
-export default new class info {
+export default new class getInfo {
     constructor() {
 
         /**之前改过一次名称，修正别名 */
@@ -37,6 +38,9 @@ export default new class info {
 
         /**默认别名 */
         readFile.FileReader(path.join(infoPath, 'nicklist.yaml')).then((nicklist) => {
+            /**以曲名为key */
+            this.nicklist = nicklist
+            /**以别名为key */
             this.songnick = {}
             for (let i in nicklist) {
                 for (let j in nicklist[i]) {
@@ -102,10 +106,11 @@ export default new class info {
         })
 
 
+        /**难度映射 */
+        this.Level = Level
+
         /**最高定数 */
         this.MAX_DIFFICULTY = 0
-        /**难度映射 */
-        this.Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
 
         /**所有曲目曲名列表 */
         this.songlist = []

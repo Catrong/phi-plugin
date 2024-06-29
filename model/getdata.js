@@ -1,6 +1,5 @@
-import { _path, dataPath, imgPath, pluginDataPath } from "./path.js";
-import { segment } from "oicq";
-import readFile from './Doc.js';
+import { dataPath, imgPath, pluginDataPath } from "./path.js";
+import readFile from './getFile.js';
 import atlas from "./picmodle.js";
 import LevelRecord from "./class/LevelRecordInfo.js";
 import SongsInfo from './class/SongsInfo.js';
@@ -10,36 +9,38 @@ import send from './send.js';
 import scoreHistory from './class/scoreHistory.js'
 import path from 'node:path';
 import getSave from './getSave.js';
-import money from './getNotes.js'
-import info from './getInfo.js';
+import getNotes from './getNotes.js'
+import getInfo from './getInfo.js';
 import pic from './getPic.js';
+import { Level } from "./constNum.js";
+import getPic from "./getPic.js";
 
 
 class getdata {
 
 
     constructor() {
-        
-        this.Level = info.Level //难度映射
+
+        this.Level = getInfo.Level //难度映射
 
         /**头像id */
-        this.avatarid = info.avatarid
+        this.avatarid = getInfo.avatarid
         /**Tips */
-        this.tips = info.tips
+        this.tips = getInfo.tips
 
         /**原版信息 */
-        this.ori_info = info.ori_info
+        this.ori_info = getInfo.ori_info
         /**通过id获取曲名 */
-        this.songsid = info.songsid
+        this.songsid = getInfo.songsid
         /**原曲名称获取id */
-        this.idssong = info.idssong
+        this.idssong = getInfo.idssong
 
 
         /**含有曲绘的曲目列表，原曲名称 */
-        this.illlist = info.illlist
+        this.illlist = getInfo.illlist
 
         /**所有曲目曲名列表 */
-        this.songlist = info.songlist
+        this.songlist = getInfo.songlist
     }
 
     async init() {
@@ -56,7 +57,7 @@ class getdata {
 
     }
 
-    
+
     /**
     * 根据参数模糊匹配返回原曲名称
     * @param {string} mic 别名
@@ -64,7 +65,7 @@ class getdata {
     * @returns 原曲名称数组，按照匹配程度降序
     */
     fuzzysongsnick(mic, Distance = 0.85) {
-        return info.fuzzysongsnick(mic, Distance)
+        return getInfo.fuzzysongsnick(mic, Distance)
     }
 
     /**
@@ -74,9 +75,9 @@ class getdata {
      */
     info(song = undefined, original = false) {
         if (song)
-            return info.info(song, original)
+            return getInfo.info(song, original)
         else
-            return info.all_info(original)
+            return getInfo.all_info(original)
 
     }
 
@@ -119,7 +120,7 @@ class getdata {
      * @returns save
      */
     async getsave(id) {
-        return await getSave.get_save(id)
+        return await getSave.getSave(id)
     }
 
     /**
@@ -128,7 +129,7 @@ class getdata {
      * @param {Object} data 
      */
     async putsave(id, data) {
-        return await getSave.putsave(id, data)
+        return await getSave.putSave(id, data)
     }
 
     /**
@@ -136,7 +137,7 @@ class getdata {
      * @param {String} id user_id
      */
     async delsave(id) {
-        return await getSave.delsave(id)
+        return await getSave.delSave(id)
     }
 
     /**
@@ -155,7 +156,7 @@ class getdata {
      * @returns save
      */
     async getpluginData(id) {
-        return await money.getPluginData(id)
+        return await getNotes.getPluginData(id)
     }
 
     /**
@@ -164,7 +165,7 @@ class getdata {
      * @param {Object} data 
      */
     async putpluginData(id, data) {
-        return await money.putPluginData(id, data)
+        return await getNotes.putPluginData(id, data)
     }
 
     /**
@@ -173,8 +174,8 @@ class getdata {
      * @param {boolean} [islock=false] 是否锁定
      * @returns 整个data对象
      */
-    async getmoneydata(id, islock = false) {
-        return await money.getMoneyData(id, islock)
+    async getNotesData(id, islock = false) {
+        return await getNotes.getNotesData(id, islock)
     }
 
     /**获取本地图片
@@ -182,13 +183,7 @@ class getdata {
      * @param {string} style 文件格式，默认为png
      */
     getimg(img, style = 'png') {
-        // name = 'phi'
-        let url = `${imgPath}/${img}.${style}`
-        if (url) {
-            return segment.image(url)
-        }
-        logger.info('未找到 ' + `${img}.${style}`)
-        return false
+        return getPic.getimg(img, style)
     }
 
     /**
@@ -197,7 +192,7 @@ class getdata {
      * @returns dan[0]
      */
     async getDan(id) {
-        return await money.getDan(id)
+        return await getSave.getDan(id)
     }
 
     /**
@@ -206,12 +201,12 @@ class getdata {
      * @returns 原曲名称
      */
     songsnick(mic) {
-        return info.songsnick(mic)
+        return getInfo.songsnick(mic)
     }
 
     /**设置别名 原名, 别名 */
     async setnick(mic, nick) {
-        return await info.setnick(mic, nick)
+        return await getInfo.setnick(mic, nick)
     }
 
     /**
@@ -241,9 +236,24 @@ class getdata {
      * 更新存档
      * @param {*} e 
      * @param {PhigrosUser} User 
-     * @returns [rks变化值，note变化值]
+     * @returns {[number,number]} [rks变化值，note变化值]，失败返回 false
      */
     async buildingRecord(e, User) {
+        let old = await this.getsave(e.user_id)
+
+        if (old) {
+            if (old.session) {
+                if (old.session == User.session) {
+                    // send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
+                } else {
+                    send.send_with_At(e, `检测到新的sessionToken，将自动更换绑定。如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
+
+                    getSave.add_user_token(e.user_id, User.session)
+
+                }
+            }
+        }
+
         try {
             const err = await User.buildRecord()
             if (err.length) {
@@ -254,139 +264,70 @@ class getdata {
             logger.error(err)
             return false
         }
-        let old = await this.getsave(e.user_id)
-
-        if (old) {
-            if (old.session) {
-                if (old.session == User.session) {
-                    // send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
-                } else {
-                    send.send_with_At(e, `检测到新的sessionToken，将自动删除之前的存档记录……`)
-
-                    let pluginData = await get.getpluginData(e.user_id, true)
-
-                    pluginData.rks = []
-                    pluginData.data = []
-                    pluginData.dan = []
-                    pluginData.scoreHistory = {}
-                    if (pluginData.plugin_data) {
-                        pluginData.plugin_data.task = []
-                        pluginData.plugin_data.CLGMOD = []
-                    }
-                    await get.putpluginData(e.user_id, pluginData)
-                }
-            }
-        }
-
-        let pluginData = await this.getpluginData(e.user_id, true)
 
         try {
             await this.putsave(e.user_id, User)
         } catch (err) {
-            send.send_with_At(e, `保存存档失败！\n${err}`)
+            send.send_with_At(e, `保存存档失败！` + err)
             logger.error(err)
             return false
         }
 
-        if (!pluginData) {
-            pluginData = {}
-        }
-
-        /**修正 */
-        if (!pluginData.version || pluginData.version < 1.0) {
-            /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
-            if (pluginData.update) {
-                delete pluginData.update
-            }
-            if (pluginData.task_update) {
-                delete pluginData.task_update
-            }
-            pluginData.version = 1
-        }
-        if (pluginData.version < 1.1) {
-            /**v1.1,更正scoreHistory */
-            delete pluginData.scoreHistory
-            pluginData.version = 1.1
-        }
-        if (pluginData.version < 1.2) {
-            /**v1.2,由于曲名错误，删除所有记录，曲名使用id记录 */
-            delete pluginData.scoreHistory
-            pluginData.version = 1.2
-        }
-
-
-        /**data历史记录 */
-        if (!pluginData.data) {
-            pluginData.data = []
-        }
-        /**rks历史记录 */
-        if (!pluginData.rks) {
-            pluginData.rks = []
-        }
-
 
         let now = new Save(User)
-        let date = User.saveInfo.modifiedAt.iso
+        // await now.init()
+        /**更新 */
+        let history = await getSave.getHistory(e.user_id)
+        history.update(now)
+        getSave.putHistory(e.user_id, history)
+
+
+        let pluginData = await getNotes.getNotesData(e.user_id)
+        /**修正 */
+        if (pluginData.update || pluginData.task_update) {
+            /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
+            /**v1.1,更正scoreHistory */
+            /**v1.2,由于曲名错误，删除所有记录，曲名使用id记录 */
+            delete pluginData.update
+            delete pluginData.task_update
+        }
 
         /**note数量变化 */
         let add_money = 0
 
-        for (let song in now.gameRecord) {
-            if (old && song in old.gameRecord) {
-                for (let i in now['gameRecord'][song]) {
-                    if (now['gameRecord'][song][i]) {
-                        let nowRecord = now['gameRecord'][song][i]
-                        let oldRecord = old['gameRecord'][song][i]
-                        if (oldRecord && ((nowRecord.acc != oldRecord.acc) || (nowRecord.score != oldRecord.score) || (nowRecord.fc != oldRecord.fc))) {
-                            add_money += add_new_score(pluginData, this.Level[i], song, nowRecord, oldRecord, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
-                        } else if (!oldRecord) {
-                            add_money += add_new_score(pluginData, this.Level[i], song, nowRecord, undefined, new Date(now.saveInfo.updatedAt), new Date(old.saveInfo.updatedAt))
+        let task = pluginData?.plugin_data?.task
+        if (task) {
+            for (let id in now.gameRecord) {
+                for (let i in task) {
+                    if (!task[i]) continue
+                    if (!task[i].finished && id == task[i].song) {
+                        let level = Level.indexOf(task[i].request.rank)
+                        switch (task[i].request.type) {
+                            case 'acc': {
+                                if (now.gameRecord[id][level].acc >= task[i].request.value) {
+                                    pluginData.plugin_data.task[i].finished = true
+                                    pluginData.plugin_data.money += task[i].reward
+                                    add_money += task[i].reward
+                                }
+                                break
+                            }
+                            case 'score': {
+                                if (now.gameRecord[id][level].score >= task[i].request.value) {
+                                    pluginData.plugin_data.task[i].finished = true
+                                    pluginData.plugin_data.money += task[i].reward
+                                    add_money += task[i].reward
+                                }
+                                break
+                            }
                         }
                     }
                 }
-            } else {
-                for (let i in now['gameRecord'][song]) {
-                    if (now['gameRecord'][song][i]) {
-                        let nowRecord = now['gameRecord'][song][i]
-                        add_money += add_new_score(pluginData, this.Level[i], song, nowRecord, undefined, new Date(now.saveInfo.updatedAt), undefined)
-                    }
-                }
             }
         }
-
-
-        if (pluginData.data.length >= 2 && now.gameProgress.money == pluginData.data[pluginData.data.length - 2]['value']) {
-            pluginData.data[pluginData.data.length - 1] = {
-                "date": date,
-                "value": now.gameProgress.money
-            }
-        } else {
-            pluginData.data.push({
-                "date": date,
-                "value": now.gameProgress.money
-            })
-        }
-
-        if (pluginData.rks.length >= 2 && now.saveInfo.summary.rankingScore == pluginData.rks[pluginData.rks.length - 2]['value']) {
-            pluginData.rks[pluginData.rks.length - 1] = {
-                "date": date,
-                "value": now.saveInfo.summary.rankingScore
-            }
-        } else {
-            pluginData.rks.push({
-                "date": date,
-                "value": now.saveInfo.summary.rankingScore
-            })
-        }
-
-        /**rks变化 */
-        let add_rks = 0
-        if (pluginData.rks.length >= 2) {
-            add_rks = now.saveInfo.summary.rankingScore - pluginData.rks[pluginData.rks.length - 2]['value']
-        }
-
         await this.putpluginData(e.user_id, pluginData)
 
+        /**rks变化 */
+        let add_rks = old ? now.saveInfo.summary.rankingScore - old.saveInfo.summary.rankingScore : 0
         return [add_rks, add_money]
     }
 
@@ -441,7 +382,7 @@ class getdata {
      * @return 网址或文件地址
     */
     getill(name, kind = 'common') {
-        return info.getill(name, kind)
+        return getInfo.getill(name, kind)
     }
 
     /**
@@ -450,7 +391,7 @@ class getdata {
      * @returns {string} file name
      */
     idgetavatar(id) {
-        return info.idgetavatar(id)
+        return getInfo.idgetavatar(id)
     }
 
     /**
@@ -459,7 +400,7 @@ class getdata {
      * @returns 原名
      */
     idgetsong(id) {
-        return info.idgetsong(id)
+        return getInfo.idgetsong(id)
     }
 
     /**
@@ -468,7 +409,7 @@ class getdata {
      * @returns 曲目id
      */
     SongGetId(song) {
-        return info.SongGetId(song)
+        return getInfo.SongGetId(song)
     }
 
     /**
@@ -528,53 +469,44 @@ export default get
  * @param {Date} new_date 新存档时间
  * @param {Date} old_date 旧存档时间
  */
-function add_new_score(pluginData, level, songsid, nowRecord, oldRecord, new_date, old_date) {
+function add_new_score(pluginData, level, nowRecord) {
 
 
-    if (!pluginData.scoreHistory) {
-        pluginData.scoreHistory = {}
-    }
-    let song = get.idgetsong(songsid)
-    if (!pluginData.scoreHistory[songsid]) {
-        pluginData.scoreHistory[songsid] = {}
-        if (oldRecord) {
-            pluginData.scoreHistory[songsid][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date, oldRecord.fc)]
-        }
-    }
-    if (!pluginData.scoreHistory[songsid][level]) {
-        pluginData.scoreHistory[songsid][level] = []
-    }
-    pluginData.scoreHistory[songsid][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date, nowRecord.fc))
+    // if (!pluginData.scoreHistory) {
+    //     pluginData.scoreHistory = {}
+    // }
+    // let song = get.idgetsong(songsid)
+    // if (!pluginData.scoreHistory[songsid]) {
+    //     pluginData.scoreHistory[songsid] = {}
+    //     if (oldRecord) {
+    //         pluginData.scoreHistory[songsid][level] = [scoreHistory.create(oldRecord.acc, oldRecord.score, old_date, oldRecord.fc)]
+    //     }
+    // }
+    // if (!pluginData.scoreHistory[songsid][level]) {
+    //     pluginData.scoreHistory[songsid][level] = []
+    // }
+    // pluginData.scoreHistory[songsid][level].push(scoreHistory.create(nowRecord.acc, nowRecord.score, new_date, nowRecord.fc))
 
-    let task
-    if (pluginData.plugin_data) {
-        task = pluginData.plugin_data.task
-    }
+    let task = pluginData?.plugin_data?.task
     let add_money = 0
     if (task) {
         for (let i in task) {
             if (!task[i]) continue
             if (!task[i].finished && song == task[i].song && level == task[i].request.rank) {
-                let isfinished = false
-                let reward = 0
                 switch (task[i].request.type) {
                     case 'acc': {
                         if (nowRecord.acc >= task[i].request.value) {
-                            isfinished = true
                             pluginData.plugin_data.task[i].finished = true
                             pluginData.plugin_data.money += task[i].reward
                             add_money += task[i].reward
-                            reward = task[i].reward
                         }
                         break
                     }
                     case 'score': {
                         if (nowRecord.score >= task[i].request.value) {
-                            isfinished = true
                             pluginData.plugin_data.task[i].finished = true
                             pluginData.plugin_data.money += task[i].reward
                             add_money += task[i].reward
-                            reward = task[i].reward
                         }
                         break
                     }

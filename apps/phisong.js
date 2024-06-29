@@ -4,6 +4,7 @@ import common from "../../../lib/common/common.js"
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 import getInfo from '../model/getInfo.js'
+import getPic from '../model/getPic.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
@@ -43,8 +44,8 @@ export class phisong extends plugin {
                     fnc: 'randmic'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)nick.*$`,
-                    fnc: 'nick'
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)alias.*$`,
+                    fnc: 'alias'
                 }
             ]
         })
@@ -379,9 +380,10 @@ export class phisong extends plugin {
         return true
     }
 
-    nick(e) {
-        let msg = e.msg.replace(/[#/](.*?)nick(\s*)/, "")
-        let song = getInfo.fuzzysongsnick(msg)
+    /**查询歌曲别名 */
+    alias(e) {
+        let msg = e.msg.replace(/[#/](.*?)alias(\s*)/, "")
+        let song = getInfo.idgetsong(msg) || getInfo.fuzzysongsnick(msg)
         if (song[0]) {
             let info = getInfo.info(song[0])
             let nick = ''
@@ -392,7 +394,9 @@ export class phisong extends plugin {
             for (let i in getInfo.nicklist[song[0]]) {
                 nick += `${getInfo.nicklist[song[0]][i]}\n`
             }
-            send.send_with_At(e, `${song[0]}\n${info.id}\n` + nick)
+            send.send_with_At(e, [`name: ${song[0]}\nid: ${info.id}\n`, getPic.getIll(song[0]), nick])
+        } else {
+            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！`, true)
         }
     }
 

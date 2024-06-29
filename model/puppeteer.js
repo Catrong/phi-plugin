@@ -3,7 +3,7 @@ import fs from 'fs'
 import puppeteer from 'puppeteer'
 import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../components/index.js'
 import { segment } from 'oicq';
-import { _path } from './path.js';
+import { _path, pluginResources } from './path.js';
 
 let pet = {}
 
@@ -59,8 +59,8 @@ export default new class newPuppeteer {
     async render(path, params, cfg) {
         let { e } = cfg
         let [app, tpl] = path.split('/')
-        let layoutPath = _path + `/plugins/${Plugin_Name}/resources/html/common/layout/`
-        let resPath = _path + `/plugins/${Plugin_Name}/resources/`
+        let layoutPath = pluginResources + `/html/common/layout/`
+        let resPath = pluginResources + `/`
 
 
         Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')

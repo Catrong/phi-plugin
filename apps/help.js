@@ -3,11 +3,11 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import get from '../model/getdata.js'
 import atlas from '../model/picmodle.js'
-import readFile from '../model/Doc.js'
+import getFile from '../model/getFile.js'
 import path from 'path'
 import { infoPath } from '../model/path.js'
 
-const helpGroup = await readFile.FileReader(path.join(infoPath, 'help.json'))
+const helpGroup = await getFile.FileReader(path.join(infoPath, 'help.json'))
 
 
 export class phihelp extends plugin {

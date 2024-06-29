@@ -1,4 +1,3 @@
-import LevelRecordInfo from "./LevelRecordInfo.js"
 
 export default class Save {
 
@@ -14,7 +13,7 @@ export default class Save {
      *      updatedAt: string,
      *      url: string
      *  },
-     *  modifiedAt: string,
+     *  modifiedAt: {"__type": "Date","iso": Date},
      *  objectId: string,
      *  summary: {
      *      updatedAt: string,
@@ -28,7 +27,7 @@ export default class Save {
      *      phi: [number, number, number, number]
      *  },
      *  updatedAt: string,
-     *  user: string,
+     *  user: {__type: "Pointer",className: "_User",objectId: string},
      *  PlayerId: string
      * },
      * saveUrl: string,
@@ -67,66 +66,102 @@ export default class Save {
     constructor(data) {
         this.session = data.session
         this.saveInfo = {
+            /**账户创建时间 2022-09-03T10:21:48.613Z */
             createdAt: data.saveInfo.createdAt,
             gameFile: {
+                /**存档创建时间 2023-10-05T07:41:24.503Z */
                 createdAt: data.saveInfo.gameFile.createdAt,
+                /**gamesaves/{32}/.save */
                 key: data.saveInfo.gameFile.key,
+                /**存档id {24} */
                 objectId: data.saveInfo.gameFile.objectId,
+                /**存档更新时间 2023-10-05T07:41:24.503Z */
                 updatedAt: data.saveInfo.gameFile.updatedAt,
+                /**https://rak3ffdi.tds1.tapfiles.cn/gamesaves/{32}/.save */
                 url: data.saveInfo.gameFile.url
             },
-            modifiedAt: data.saveInfo.modifiedAt,
+            /**存档上传时间 {__type："Date", "iso": "2023-10-06T03:46:33.000Z"} */
+            modifiedAt: {
+                __type: "Date",
+                /**存档上传时间 "2023-10-06T03:46:33.000Z" */
+                iso: new Date(data.saveInfo.modifiedAt.iso)
+            },
+            /**用户id {24} 与 gameFile 中的不同 */
             objectId: data.saveInfo.objectId,
             summary: {
-                updatedAt: data.saveInfo.summary.updatedAt, //存档更新时间
-                saveVersion: data.saveInfo.summary.saveVersion, //存档版本
-                challengeModeRank: data.saveInfo.summary.challengeModeRank, //课题分
-                rankingScore: data.saveInfo.summary.rankingScore, //rks
-                gameVersion: data.saveInfo.summary.gameVersion, //客户端版本号
-                avatar: data.saveInfo.summary.avatar, //头像
-                cleared: data.saveInfo.summary.cleared, //完成曲目数量
-                fullCombo: data.saveInfo.summary.fullCombo, //FC曲目数量
-                phi: data.saveInfo.summary.phi //AP曲目数量
+                /**插件获取存档时间 2023 Oct.06 11:46:33 */
+                updatedAt: data.saveInfo.summary.updatedAt,
+                /**存档版本 */
+                saveVersion: data.saveInfo.summary.saveVersion,
+                /**课题分 */
+                challengeModeRank: data.saveInfo.summary.challengeModeRank,
+                /**rks */
+                rankingScore: data.saveInfo.summary.rankingScore,
+                /**客户端版本号 */
+                gameVersion: data.saveInfo.summary.gameVersion,
+                /**头像 */
+                avatar: data.saveInfo.summary.avatar,
+                /**完成曲目数量 */
+                cleared: data.saveInfo.summary.cleared,
+                /**FC曲目数量 */
+                fullCombo: data.saveInfo.summary.fullCombo,
+                /**AP曲目数量 */
+                phi: data.saveInfo.summary.phi
             },
+            /**存档上传时间 2023 Oct.06 11:46:33 */
             updatedAt: data.saveInfo.updatedAt,
+            /**用户信息 */
             user: data.saveInfo.user,
+            /**用户名 */
             PlayerId: data.saveInfo.PlayerId
         }
         this.saveUrl = data.saveUrl
+        /**官方存档版本号 */
         this.Recordver = data.Recordver
-        this.gameProgress = null
-        if (data.gameProgress) {
-            this.gameProgress = {
-                isFirstRun: data.gameProgress.isFirstRun, //首次运行
-                legacyChapterFinished: data.gameProgress.legacyChapterFinished, //过去的章节已完成
-                alreadyShowCollectionTip: data.gameProgress.alreadyShowCollectionTip, //已展示收藏品Tip
-                alreadyShowAutoUnlockINTip: data.gameProgress.alreadyShowAutoUnlockINTip, //已展示自动解锁IN Tip
-                completed: data.gameProgress.completed, //剧情完成(显示全部歌曲和课题模式入口)
-                songUpdateInfo: data.gameProgress.songUpdateInfo, //？？？
-                challengeModeRank: data.gameProgress.challengeModeRank, //课题分
-                money: data.gameProgress.money, //data货币
-                unlockFlagOfSpasmodic: data.gameProgress.unlockFlagOfSpasmodic, //痉挛解锁
-                unlockFlagOfIgallta: data.gameProgress.unlockFlagOfIgallta, //Igallta解锁
-                unlockFlagOfRrharil: data.gameProgress.unlockFlagOfRrharil, //Rrhar'il解锁
-                flagOfSongRecordKey: data.gameProgress.flagOfSongRecordKey, //IN达到S(倒霉蛋,船,Shadow,心之所向,inferior,DESTRUCTION 3,2,1,Distorted Fate)
-                randomVersionUnlocked: data.gameProgress.randomVersionUnlocked, //Random切片解锁
-                chapter8UnlockBegin: data.gameProgress.chapter8UnlockBegin, //第八章入场
-                chapter8UnlockSecondPhase: data.gameProgress.chapter8UnlockSecondPhase, //第八章第二阶段
-                chapter8Passed: data.gameProgress.chapter8Passed, //第八章通过
-                chapter8SongUnlocked: data.gameProgress.chapter8SongUnlocked //第八章各曲目解锁
-            }
-        }
-        this.gameuser = null
-        if (data.gameuser) {
-            this.gameuser = {
-                name: data.gameuser.name,
-                version: data.gameuser.version,
-                showPlayerId: data.gameuser.showPlayerId,
-                selfIntro: data.gameuser.selfIntro,
-                avatar: data.gameuser.avatar,
-                background: data.gameuser.background,
-            }
-        }
+        this.gameProgress = data.gameProgress ? {
+            /**首次运行 */
+            isFirstRun: data.gameProgress.isFirstRun,
+            /**过去的章节已完成 */
+            legacyChapterFinished: data.gameProgress.legacyChapterFinished,
+            /**已展示收藏品Tip */
+            alreadyShowCollectionTip: data.gameProgress.alreadyShowCollectionTip,
+            /**已展示自动解锁IN Tip */
+            alreadyShowAutoUnlockINTip: data.gameProgress.alreadyShowAutoUnlockINTip,
+            /**剧情完成(显示全部歌曲和课题模式入口) */
+            completed: data.gameProgress.completed,
+            /**？？？ */
+            songUpdateInfo: data.gameProgress.songUpdateInfo,
+            /**课题分 */
+            challengeModeRank: data.gameProgress.challengeModeRank,
+            /**data货币 */
+            money: data.gameProgress.money,
+            /**痉挛解锁 */
+            unlockFlagOfSpasmodic: data.gameProgress.unlockFlagOfSpasmodic,
+            /**Igallta解锁 */
+            unlockFlagOfIgallta: data.gameProgress.unlockFlagOfIgallta,
+            /**Rrhar'il解锁 */
+            unlockFlagOfRrharil: data.gameProgress.unlockFlagOfRrharil,
+            /**IN达到S(倒霉蛋,船,Shadow,心之所向,inferior,DESTRUCTION 3,2,1,Distorted Fate) */
+            flagOfSongRecordKey: data.gameProgress.flagOfSongRecordKey,
+            /**Random切片解锁 */
+            randomVersionUnlocked: data.gameProgress.randomVersionUnlocked,
+            /**第八章入场 */
+            chapter8UnlockBegin: data.gameProgress.chapter8UnlockBegin,
+            /**第八章第二阶段 */
+            chapter8UnlockSecondPhase: data.gameProgress.chapter8UnlockSecondPhase,
+            /**第八章通过 */
+            chapter8Passed: data.gameProgress.chapter8Passed,
+            /**第八章各曲目解锁 */
+            chapter8SongUnlocked: data.gameProgress.chapter8SongUnlocked
+        } : null
+        this.gameuser = data.gameuser ? {
+            name: data.gameuser.name,
+            version: data.gameuser.version,
+            showPlayerId: data.gameuser.showPlayerId,
+            selfIntro: data.gameuser.selfIntro,
+            avatar: data.gameuser.avatar,
+            background: data.gameuser.background,
+        } : null
         this.gameRecord = {}
         for (let id in data.gameRecord) {
             this.gameRecord[id] = []
@@ -136,20 +171,41 @@ export default class Save {
                     this.gameRecord[id][level] = null
                     continue
                 }
-                this.gameRecord[id][level] = new LevelRecordInfo(data.gameRecord[id][level], id, level)
+                // this.gameRecord[id][level] = new (import('./LevelRecordInfo')).default(data.gameRecord[id][level], id, level)
+                this.gameRecord[id][level] = {
+                    id: id,
+                    level: level,
+                    fc: data.gameRecord[id][level].fc,
+                    score: data.gameRecord[id][level].score,
+                    acc: data.gameRecord[id][level].acc
+                }
             }
         }
     }
 
+    async init() {
+        let LevelRecordInfo = (await import('./LevelRecordInfo.js')).default
+        for (let id in this.gameRecord) {
+            for (let i in this.gameRecord[id]) {
+                let level = Number(i)
+                if (!this.gameRecord[id][level]) {
+                    continue
+                }
+                this.gameRecord[id][level] = new LevelRecordInfo(this.gameRecord[id][level], this.gameRecord[id][level].id, this.gameRecord[id][level].level)
+            }
+        }
+
+    }
+
     /**
      * 获取存档
-     * @returns 
+     * @returns 按照 rks 排序的数组
      */
     getRecord() {
         if (this.sortedRecord) {
             return this.sortedRecord
         }
-        const sortedRecord = []
+        let sortedRecord = []
         for (let song in this.gameRecord) {
             for (let level in song) {
                 if (level == 4) break
@@ -166,7 +222,7 @@ export default class Save {
 
     /**
      * 筛选满足ACC条件的成绩
-     * @param {Function} acc >= acc
+     * @param {number} acc ≥acc
      * @param {boolean} [same=false] 是否筛选最高rks
      * @returns 按照rks排序的数组
      */
@@ -184,10 +240,9 @@ export default class Save {
         }
         record.sort((a, b) => { return b.rks - a.rks })
         if (same) {
-            for (let i in record) {
+            for (let i = 0; i < record.length - 1; i++) {
                 if (record[i].rks != record[i + 1]?.rks) {
-                    record = record.slice(0, i + 1)
-                    break
+                    return record.slice(0, i + 1)
                 }
             }
         }

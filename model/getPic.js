@@ -1,5 +1,6 @@
 import atlas from "./picmodle.js"
-import info from "./getInfo.js"
+import getInfo from "./getInfo.js"
+import { imgPath } from "./path.js"
 
 export default new class pic {
 
@@ -12,9 +13,9 @@ export default new class pic {
      */
     GetSongsInfoAtlas(e, name, data = undefined) {
 
-        data = data ? data : info.info(name)
+        data = data ? data : getInfo.info(name)
         if (data) {
-            data.illustration = info.getill(name)
+            data.illustration = getInfo.getill(name)
             return atlas.atlas(e, data)
         } else {
             /**未找到曲目 */
@@ -33,8 +34,32 @@ export default new class pic {
         if (data) {
             return await atlas.ill(e, { illustration: data.illustration, illustrator: data.illustrator })
         } else {
-            return await atlas.ill(e, { illustration: info.getill(name), illustrator: info.info(name).illustrator })
+            return await atlas.ill(e, { illustration: getInfo.getill(name), illustrator: getInfo.info(name).illustrator })
         }
+    }
+
+    /**获取本地图片
+     * @param {string} img 文件名
+     * @param {string} style 文件格式，默认为png
+     */
+    getimg(img, style = 'png') {
+        // name = 'phi'
+        let url = `${imgPath}/${img}.${style}`
+        if (url) {
+            return segment.image(url)
+        }
+        logger.info('未找到 ' + `${img}.${style}`)
+        return false
+    }
+
+    /**
+     * 获取曲绘，返回地址，原名
+     * @param {string} name 原名
+     * @param {'common'|'blur'|'low'} [kind='common'] 清晰度
+     * @return {string} 网址或文件地址
+    */
+    getIll(name, kind = 'common') {
+        return segment.image(getInfo.getill(name, kind))
     }
 
 }()

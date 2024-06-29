@@ -1,3 +1,6 @@
+import { Level } from "../constNum.js"
+import Save from "./Save.js"
+
 export default class saveHistory {
 
     /**
@@ -5,49 +8,221 @@ export default class saveHistory {
      * @param {{
      * data:[{date:Date,value:[number,number,number,number,number]}],
      * rks:[{date:Date,value:number}],
-     * scoreHistory:{song:{dif:[[number,number,Date,boolean]]}}
+     * scoreHistory:{song:{dif:[[number,number,Date,boolean]]}},
+     * dan:Array,
+     * version:number
      * }
      * } data 
      */
     constructor(data) {
-        this.data = data.data || {}
-        this.rks = data.rks || {}
-        this.scoreHistory = data.scoreHistory || {}
+        /**data货币变更记录 [{date:Date,value:number}] */
+        this.data = data?.data || [];
+        /**rks变更记录 [{date:Date,value:number}] */
+        this.rks = data?.rks || [];
+        /**历史成绩 {id:{ez:[]}} */
+        this.scoreHistory = data?.scoreHistory || {};
+        /**民间考核 */
+        this.dan = data?.dan || [];
+        /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
+        /**v1.1,更正scoreHistory */
+        /**v1.2,由于曲名错误，删除所有记录，曲名使用id记录 */
+        /**历史记录版本号 */
+        this.version = data?.version
+
+        /**检查版本 */
+        if (!this.version || this.version < 2) {
+            if (this.scoreHistory) {
+                for (let i in this.scoreHistory) {
+                    if (!i.includes('.0')) {
+                        this.scoreHistory = {}
+                    }
+                    break
+                }
+            }
+            this.version = 2
+        }
     }
 
     /**
      * 合并记录
-     * @param {saveHistory} data 另一个存档
+     * @param {saveHistory} data 另一个 History 存档
      */
     add(data) {
-        merge(this.data, data.data)
-        merge(this.rks, data.rks)
+        this.data = merge(this.data, data.data)
+        this.rks = merge(this.rks, data.rks)
         for (let song in data.scoreHistory) {
             if (!this.scoreHistory[song]) this.scoreHistory[song] = {}
             for (let dif in data.scoreHistory[song]) {
                 if (this.scoreHistory[song] && this.scoreHistory[song][dif]) {
-                    merge(this.scoreHistory[song][dif], data.scoreHistory[song][dif])
+                    this.scoreHistory[song][dif] = this.scoreHistory[song][dif].concat(data.scoreHistory[song][dif])
+                    this.scoreHistory[song][dif].sort((a, b) => {
+                        return openHistory(a).date - openHistory(b).date
+                    })
                 } else {
                     this.scoreHistory[song][dif] = data.scoreHistory[song][dif]
+                }
+                let i = 1
+                while (i < this.scoreHistory[song][dif].length) {
+                    let last = openHistory(this.scoreHistory[song][dif][i - 1])
+                    let now = openHistory(this.scoreHistory[song][dif][i])
+                    if (last.date.toISOString() == now.date.toISOString()) {
+                        // console.info(last.date.toISOString(), now.date.toISOString())
+                        this.scoreHistory[song][dif].splice(i, 1)
+                    } else {
+                        ++i
+                    }
                 }
             }
         }
     }
+
+    /**
+     * 检查新存档中的变更并记录
+     * @param {Save} save 新存档
+     */
+    update(save) {
+        /**更新单曲成绩 */
+        for (let id in save.gameRecord) {
+            if (!this.scoreHistory[id]) this.scoreHistory[id] = {}
+            for (let i in save.gameRecord[id]) {
+                /**难度映射 */
+                let level = Level[i]
+                /**提取成绩 */
+                let now = save.gameRecord[id][i]
+                now.date = save.saveInfo.modifiedAt.iso
+                /**本地无记录 */
+                if (!this.scoreHistory[id][level] || !this.scoreHistory[id][level].length) {
+                    this.scoreHistory[id][level] = [createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc)];
+                    continue
+                }
+                /**新存档该难度无成绩 */
+                if (!save.gameRecord[id][i]) continue
+                /**本地记录日期为递增 */
+                for (let i = this.scoreHistory[id][level].length - 1; i >= 0; --i) {
+                    /**第i项记录 */
+                    let old = openHistory(this.scoreHistory[id][level][i])
+                    // console.info(old.date.toISOString(), new Date(now.date).toISOString(), old.date.toISOString() == new Date(now.date).toISOString())
+                    /**日期完全相同则认为已存储 */
+                    if (old.date.toISOString() == new Date(now.date).toISOString()) {
+                        /**标记已处理 */
+                        now = null
+                        break
+                    }
+                    /**找到第一个日期小于新成绩的日期 */
+                    if (old.date < new Date(now.date)) {
+                        /**历史记录acc仅保存4位，检查是否与第一个小于该日期的记录一致 */
+                        if (old.acc != Number(now.acc).toFixed(4) || old.score != now.score || old.fc != now.fc) {
+                            /**不一致在第i项插入 */
+                            this.scoreHistory[id][level].splice(i, 0, createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc))
+                        }
+                        /**标记已处理 */
+                        now = null
+                        break
+                    }
+                }
+                /**未被处理，有该难度记录，说明日期早于本地记录 */
+                if (now) {
+                    // console.info(11)
+                    this.scoreHistory[id][level].unshift(createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc))
+                }
+            }
+        }
+        /**更新rks记录 */
+        for (let i = this.rks.length - 1; i >= 0; i--) {
+            if (save.saveInfo.modifiedAt.iso > new Date(this.rks[i].date)) {
+                if (this.rks[i].value != save.saveInfo.summary.rankingScore || this.rks[i + 1]?.value != save.saveInfo.summary.rankingScore) {
+                    this.rks.splice(i + 1, 0, {
+                        date: save.saveInfo.modifiedAt.iso,
+                        value: save.saveInfo.summary.rankingScore
+                    })
+                }
+                break
+            }
+        }
+        if (!this.rks.length) {
+            this.rks.push({
+                date: save.saveInfo.modifiedAt.iso,
+                value: save.saveInfo.summary.rankingScore
+            })
+        }
+        /**更新data记录 */
+        for (let i = this.data.length - 1; i >= 0; i--) {
+            if (save.saveInfo.modifiedAt.iso > new Date(this.data[i].date)) {
+                if (checkValue(this.data[i].value, save.gameProgress.money) && checkValue(this.data[i + 1]?.value, save.gameProgress.money)) {
+                    this.data.splice(i + 1, 0, {
+                        date: save.saveInfo.modifiedAt.iso,
+                        value: save.gameProgress.money
+                    })
+                }
+                break
+            }
+        }
+        if (!this.data.length) {
+            this.data.push({
+                date: save.saveInfo.modifiedAt.iso,
+                value: save.gameProgress.money
+            })
+        }
+
+    }
 }
 
 /**
- * 数组合并并按照 date 排序去重
- * @param {Array} a 
- * @param {Array} b 
+ * 数组合并按照 date 排序并去重
+ * @param {Array} m 
+ * @param {Array} n 
  */
 function merge(m, n) {
-    m = m.concat(n)
-    m.sort((a, b) => {
-        return a.date - b.date
+    let t = m.concat(n)
+    t.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
     })
-    for (let i = 1; i <= m.length; ++i) {
-        if (m[i].date == m[i - 1].date) {
-            m.splice(i, 1)
+    let i = 1
+    while (i < t.length - 1) {
+        /**因绘制折线图需要，需要保留同一值两端 */
+        if (checkValue(t[i].value, t[i - 1].value) && checkValue(t[i].value, t[i + 1].value)) {
+            t.splice(i, 1)
+        } else {
+            ++i
         }
     }
+    return t
+}
+function createHistory(acc, score, date, fc) {
+    return [acc.toFixed(4), score, date, fc]
+}
+
+
+/**
+ * 展开信息
+ * @param {Array} data 历史成绩
+ */
+function openHistory(data) {
+    return {
+        acc: data[0],
+        score: data[1],
+        date: new Date(data[2]),
+        fc: data[3]
+    }
+}
+
+/**
+ * 比较两个数组
+ * @param {any} a 
+ * @param {any} b 
+ * @returns {boolean}
+ */
+function checkValue(a, b) {
+    /**非数组 */
+    if (Object.prototype.toString.call(a) != '[object Array]') {
+        return a == b
+    }
+    if (!a || !b) {
+        return false
+    }
+    /**数组 */
+    for (let i in a) {
+        if (a[i] != b[i]) return false
+    }
+    return true
 }

@@ -69,7 +69,7 @@ let Data = {
                 return JSON.parse(txt)
             }
         } catch (e) {
-            console.error(e)
+            logger.error(e)
         }
         return {}
     },
@@ -88,7 +88,7 @@ let Data = {
                 let data = await import(`file://${root}/${file}?t=${new Date() * 1}`)
                 return data || {}
             } catch (e) {
-                console.error(e)
+                logger.error(e)
             }
         }
         return {}
@@ -107,8 +107,8 @@ let Data = {
         let sysCfg = await Data.importModule(`config/system/${key}_system.js`)
         let diyCfg = await Data.importModule(`config/${key}.js`)
         if (diyCfg.isSys) {
-            console.error(`phi-plugin: config/${key}.js无效，已忽略`)
-            console.error(`如需配置请复制config/${key}_default.js为config/${key}.js，请勿复制config/system下的系统文件`)
+            logger.error(`phi-plugin: config/${key}.js无效，已忽略`)
+            logger.error(`如需配置请复制config/${key}_default.js为config/${key}.js，请勿复制config/system下的系统文件`)
             diyCfg = {}
         }
         return {

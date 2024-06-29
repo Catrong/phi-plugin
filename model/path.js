@@ -1,12 +1,13 @@
 import path from 'path'
 
+/**Yunzai-Bot 根目录 */
 const _path = process.cwd().replace(/\\/g, '/')
 
-// 插件名
+/**插件名 */
 const pluginName = path.basename(path.join(import.meta.url, '../../'))
-// 插件根目录
+/**插件根目录 */
 const pluginRoot = path.join(_path, 'plugins', pluginName)
-// 插件资源目录
+/**插件资源目录 */
 const pluginResources = path.join(pluginRoot, 'resources')
 
 
@@ -46,6 +47,9 @@ const originalIllPath = path.join(pluginResources, 'original_ill')
 /**音频资源 */
 const guessMicPath = path.join(pluginResources, 'splited_music')
 
+/**备份路径 */
+const backupPath = path.join(pluginRoot, 'backup')
+
 
 export {
     _path,
@@ -63,4 +67,5 @@ export {
     ortherIllPath,
     originalIllPath,
     guessMicPath,
+    backupPath,
 }

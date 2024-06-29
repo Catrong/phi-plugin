@@ -4,7 +4,7 @@
 
 [![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
 [![phi-plugin](https://img.shields.io/badge/Gitee仓库-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
-![version](https://img.shields.io/badge/%E7%89%88%E6%9C%AC-0.9.6-9cf?style=for-the-badge)
+![version](https://img.shields.io/badge/%E7%89%88%E6%9C%AC-0.9.7-9cf?style=for-the-badge)
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/TimeRainStarSky/Yunzai)
@@ -98,6 +98,8 @@ pnpm install -P #安装插件所需依赖
 
 | 功能名称 | 功能说明
 | :- | :-
+| `#phi backup (back)?` | 备份存档文件，+ back 发送该备份文件，自动保存在 /phi-plugin/backup/ 目录下
+| `#phi restore` | 从备份中还原，不会丢失已有数据，需要将文件放在 /phi-plugin/backup/ 目录下
 | `#phi(设置别名\|setnick) xxx ---> xxx` | 设置某一歌曲的别名，格式为 原名(或已有别名) ---> 别名（会自动过滤--->两边的空格） 
 | `#phi(删除别名\|delnick) xxx` | 删除某一歌曲的别名 
 | `#phi(强制\|qz)?(更新\|gx)` | 更新本插件 

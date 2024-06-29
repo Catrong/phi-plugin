@@ -4,6 +4,7 @@ import get from '../model/getdata.js'
 import send from '../model/send.js'
 import atlas from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
+import getSave from '../model/getSave.js'
 
 
 let tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
@@ -58,7 +59,6 @@ export class phiuser extends plugin {
     async info(e) {
         /**背景 */
         let bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
-        console.info(bksong)
         if (bksong) {
             let tem = get.fuzzysongsnick(bksong)[0]
             if (tem) {
@@ -179,16 +179,16 @@ export class phiuser extends plugin {
             EX: dan?.EX,
         }
 
-        const user_data = await get.getpluginData(e.user_id)
+        let user_data = await getSave.getHistory(e.user_id)
 
         let rks_history_ = []
         let data_history_ = []
         let user_rks_data = user_data.rks
         let user_data_data = user_data.data
-        const rks_range = [17, 0]
-        const data_range = [1e9, 0]
-        const rks_date = [new Date(user_rks_data[0].date).getTime(), 0]
-        const data_date = [new Date(user_data_data[0].date).getTime(), 0]
+        let rks_range = [17, 0]
+        let data_range = [1e9, 0]
+        let rks_date = [new Date(user_rks_data[0].date).getTime(), 0]
+        let data_date = [new Date(user_data_data[0].date).getTime(), 0]
 
         for (let i in user_rks_data) {
             user_rks_data[i].date = new Date(user_rks_data[i].date)
@@ -201,9 +201,10 @@ export class phiuser extends plugin {
             }
             rks_date[1] = user_rks_data[i].date.getTime()
         }
+        
 
         for (let i in user_data_data) {
-            const value = user_data_data[i]['value']
+            let value = user_data_data[i]['value']
             user_data_data[i].value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
             user_data_data[i].date = new Date(user_data_data[i].date)
             if (i <= 1 || user_data_data[i].value != data_history_[data_history_.length - 2].value) {
@@ -244,7 +245,7 @@ export class phiuser extends plugin {
         }
 
 
-        const unit = ["KiB", "MiB", "GiB", "TiB", "Pib"]
+        let unit = ["KiB", "MiB", "GiB", "TiB", "Pib"]
 
         for (let i in [1, 2, 3, 4]) {
             if (Math.floor(data_range[0] / (Math.pow(1024, i))) < 1024) {

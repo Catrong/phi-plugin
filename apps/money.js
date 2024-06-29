@@ -3,7 +3,7 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
-import money from '../model/getNotes.js'
+import getNotes from '../model/getNotes.js'
 
 const illlist = []
 const theme = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }]
@@ -55,7 +55,7 @@ export class phimoney extends plugin {
 
     /**签到 */
     async sign(e) {
-        let data = await money.getMoneyData(e.user_id, true)
+        let data = await getNotes.getNotesData(e.user_id, true)
         let last_sign = new Date(data.plugin_data.sign_in)
         let now_time = new Date().toString()
         let request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
@@ -75,9 +75,7 @@ export class phimoney extends plugin {
             data.plugin_data.sign_in = now_time
 
 
-            console.info(1)
-            await money.putMoneyData(e.user_id, data)
-            console.info(2)
+            await getNotes.putMoneyData(e.user_id, data)
             /**判断时间段 */
             let time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
             let time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
@@ -147,7 +145,7 @@ export class phimoney extends plugin {
             return false
         }
 
-        let data = await money.getMoneyData(e.user_id, true)
+        let data = await getNotes.getNotesData(e.user_id, true)
         let last_task = new Date(data.plugin_data.task_time)
         let now_time = new Date().toString()
         let request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
@@ -186,7 +184,7 @@ export class phimoney extends plugin {
             return true
         }
 
-        money.putMoneyData(e.user_id, data)
+        getNotes.putMoneyData(e.user_id, data)
 
         now_time = new Date()
         /**判断时间段 */
@@ -297,7 +295,7 @@ export class phimoney extends plugin {
             Remsg1 = `(∪.∪ )...zzz`
         }
 
-        let data = await money.getMoneyData(e.user_id)
+        let data = await getNotes.getNotesData(e.user_id)
         let task_time = data.plugin_data.task_time.split(' ')
 
         /**添加曲绘 */
@@ -368,7 +366,7 @@ export class phimoney extends plugin {
             return true
         }
 
-        let sender_data = await money.getMoneyData(e.user_id, true)
+        let sender_data = await getNotes.getNotesData(e.user_id, true)
 
         if (target == e.user_id) {
             await send.send_with_At(e, `转账成……唔？这个目标……在拿我寻开心嘛！`)
@@ -396,7 +394,7 @@ export class phimoney extends plugin {
         sender_data.plugin_data.money -= num
         await get.putpluginData(e.user_id, sender_data)
 
-        let target_data = await money.getMoneyData(target, true)
+        let target_data = await getNotes.getNotesData(target, true)
         target_data.plugin_data.money += Math.ceil(num * 0.8)
         await get.putpluginData(target, target_data)
         let target_card = await Bot.pickMember(e.group_id, target)
@@ -411,7 +409,7 @@ export class phimoney extends plugin {
             send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getDefOrConfig('config', 'cmdhead')} theme 0-2`)
             return false
         }
-        await money.getMoneyData(e.user_id)
+        await getNotes.getNotesData(e.user_id)
         const plugin_data = await get.getpluginData(e.user_id)
         plugin_data.plugin_data.theme = theme[aim].id
 

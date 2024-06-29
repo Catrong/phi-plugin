@@ -1,4 +1,5 @@
-import get from '../getdata.js'
+import fCompute from '../fCompute.js';
+import getInfo from '../getInfo.js';
 
 export default class LevelRecordInfo {
     /**
@@ -11,17 +12,17 @@ export default class LevelRecordInfo {
         this.score = data.score;
         this.acc = data.acc;
 
-        let info = get.info(get.idgetsong(id), true)
+        let info = getInfo.info(getInfo.idgetsong(id), true)
 
-        this.rank = get.Level[rank] //AT IN HD EZ LEGACY 
+        this.rank = getInfo.Level[rank] //AT IN HD EZ LEGACY 
         this.song = info.song //曲名
-        this.illustration = get.getill(this.song) //曲绘链接
+        this.illustration = getInfo.getill(this.song) //曲绘链接
         this.Rating = Rating(this.score, this.fc) //V S A 
 
 
         if (info.chart && info.chart[this.rank]?.difficulty) {
             this.difficulty = info.chart[this.rank]['difficulty'] //难度
-            this.rks = get.getrks(this.acc, this.difficulty) //等效rks
+            this.rks = fCompute.rks(this.acc, this.difficulty) //等效rks
         } else {
             this.difficulty = 0
             this.rks = 0

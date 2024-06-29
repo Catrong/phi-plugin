@@ -1,10 +1,10 @@
-
 import common from '../../../lib/common/common.js'
 import fs from 'node:fs'
 import YAML from 'yaml'
-import { _path, dataPath, pluginDataPath, savePath } from "./path.js";
+import { dataPath, pluginDataPath, savePath } from "./path.js";
 import csv from 'csvtojson'
 import path from 'node:path';
+
 
 
 class readFile {
@@ -166,7 +166,8 @@ class readFile {
                                             data: json_.data,
                                             rks: json_.rks,
                                             scoreHistory: json_.scoreHistory,
-                                            dan: json_.dan,
+                                            CLGMOD: json_.CLGMOD,
+                                            version: json_.version,
                                         }
                                         this.SetFile(path.join(savePath, session, 'history.json'), tem_file)
                                     }
@@ -192,6 +193,8 @@ class readFile {
 
         }
     }
+
+
 }
 
 export default new readFile()
