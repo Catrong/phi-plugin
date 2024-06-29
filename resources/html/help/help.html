@@ -21,6 +21,7 @@
         {{/if}}
     </div>
     {{each helpGroup group}}
+    {{if group.auth!="master"||isMaster}}
     {{set len = group?.list?.length || 0 }}
     <div class="help_box">
         <div class="help-group">——·{{group.group}}·——</div>
@@ -56,6 +57,7 @@
         {{/each}}
         {{/if}}
     </div>
+    {{/if}}
     {{/each}}
 
     <div class="createdbox">

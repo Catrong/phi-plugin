@@ -37,20 +37,14 @@ export class phihelp extends plugin {
         let head = Config.getDefOrConfig('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await get.getpluginData(e.user_id)
-        if (head) {
-            e.reply(await atlas.help(e, {
-                helpGroup: helpGroup,
-                cmdHead: head,
-                background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
-                theme: pluginData?.plugin_data?.theme || 'star'
-            }), true)
-        } else {
-            e.reply(await atlas.help(e, {
-                helpGroup: helpGroup,
-                background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
-                theme: pluginData?.plugin_data?.theme || 'star'
-            }), true)
-        }
+        e.reply(await atlas.help(e, {
+            helpGroup: helpGroup,
+            cmdHead: head || null,
+            isMaster: e.isMaster,
+            background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
+            theme: pluginData?.plugin_data?.theme || 'star'
+        }), true)
+
         /**
         await e.reply(`⌈phi-plugin 帮助⌋ (所有/均可用#代替,空格均可省略)\n` +
             `⌈/${head}bind <sessionToken>⌋ 绑定sessionToken\n` +

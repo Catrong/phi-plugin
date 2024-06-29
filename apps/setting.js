@@ -44,8 +44,8 @@ export class phiset extends plugin {
     }
 
     async restartpu(e) {
-        if (!(this.e.is_admin || this.e.isMaster)) {
-            return true
+        if (!this.e.isMaster) {
+            return false
         }
         try {
             await atlas.restart()
@@ -56,8 +56,8 @@ export class phiset extends plugin {
     }
 
     async backup(e) {
-        if (!(this.e.is_admin || this.e.isMaster)) {
-            return true
+        if (!e.isMaster) {
+            return false
         }
         try {
             let zip = await getBackup.backup()
@@ -72,8 +72,8 @@ export class phiset extends plugin {
     }
 
     restore(e) {
-        if (!(this.e.is_admin || this.e.isMaster)) {
-            return true
+        if (!e.isMaster) {
+            return false
         }
         try {
             let msg = ''
@@ -91,8 +91,8 @@ export class phiset extends plugin {
 
     async doRestore() {
         let e = this.e
-        if (!(this.e.is_admin || this.e.isMaster)) {
-            return true
+        if (!e.isMaster) {
+            return false
         }
 
         try {

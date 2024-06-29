@@ -352,8 +352,21 @@ export class phib19 extends plugin {
         song = song[0]
 
         let Record = save.gameRecord
-
         let ans
+
+        for (let i in Record) {
+            let now = await get.idgetsong(i)
+            if (now == song) {
+                ans = Record[i]
+                break
+            }
+        }
+
+        if (!ans) {
+            send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
+            return true
+        }
+
 
         /**取出信息 */
         let rkslist = []
@@ -374,18 +387,6 @@ export class phib19 extends plugin {
         let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
         if (minuprks < 0) {
             minuprks += 0.01
-        }
-        for (let i in Record) {
-            let now = await get.idgetsong(i)
-            if (now == song) {
-                ans = Record[i]
-                break
-            }
-        }
-
-        if (!ans) {
-            send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
-            return true
         }
 
         const dan = await get.getDan(e.user_id)
