@@ -152,7 +152,7 @@ export class phisstk extends plugin {
             }
         }
 
-        let newnum = tot_update[time_vis[date_to_string(now.saveInfo.modifiedAt.iso)]].update_num || 0
+        let newnum = tot_update[time_vis[date_to_string(now.saveInfo.modifiedAt.iso)]]?.update_num || 0
 
         tot_update.sort((a, b) => new Date(b.date) - new Date(a.date))
 
