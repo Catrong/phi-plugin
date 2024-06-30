@@ -103,7 +103,7 @@ export default class saveHistory {
                     let old = openHistory(this.scoreHistory[id][level][i])
                     // console.info(old.date.toISOString(), new Date(now.date).toISOString(), old.date.toISOString() == new Date(now.date).toISOString())
                     /**日期完全相同则认为已存储 */
-                    if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
+                    if (old.score == now.score && old.acc == now.acc && old.fc == now.fc) {
                         /**标记已处理 */
                         now = null
                         break
@@ -186,7 +186,7 @@ export default class saveHistory {
     getSongsLastRecord(id) {
         let t = { ...this.scoreHistory[id] }
         for (i in t) {
-            t[i] = t[i].at(-1) ? openHistory(t[i].at(-1)) : null
+            t[i] = t[i] ? openHistory(t[i].at(-1)) : null
         }
         return t
     }
