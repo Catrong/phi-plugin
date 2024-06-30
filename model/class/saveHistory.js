@@ -127,12 +127,12 @@ export default class saveHistory {
                 }
                 /**查重 */
                 let j = 1
-                while (j < this.scoreHistory[song][dif].length) {
-                    let last = openHistory(this.scoreHistory[song][dif][j - 1])
-                    let now = openHistory(this.scoreHistory[song][dif][j])
+                while (j < this.scoreHistory[id][dif].length) {
+                    let last = openHistory(this.scoreHistory[id][dif][j - 1])
+                    let now = openHistory(this.scoreHistory[id][dif][j])
                     if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
                         // console.info(last.date.toISOString(), now.date.toISOString())
-                        this.scoreHistory[song][dif].splice(j, 1)
+                        this.scoreHistory[id][dif].splice(j, 1)
                     } else {
                         ++i
                     }
@@ -185,7 +185,7 @@ export default class saveHistory {
      */
     getSongsLastRecord(id) {
         let t = { ...this.scoreHistory[id] }
-        for (i in t) {
+        for (let i in t) {
             t[i] = t[i] ? openHistory(t[i].at(-1)) : null
         }
         return t
