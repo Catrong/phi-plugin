@@ -127,14 +127,14 @@ export default class saveHistory {
                 }
                 /**查重 */
                 let j = 1
-                while (j < this.scoreHistory[id][dif].length) {
-                    let last = openHistory(this.scoreHistory[id][dif][j - 1])
-                    let now = openHistory(this.scoreHistory[id][dif][j])
+                while (j < this.scoreHistory[id][level].length) {
+                    let last = openHistory(this.scoreHistory[id][level][j - 1])
+                    let now = openHistory(this.scoreHistory[id][level][j])
                     if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
                         // console.info(last.date.toISOString(), now.date.toISOString())
-                        this.scoreHistory[id][dif].splice(j, 1)
+                        this.scoreHistory[id][level].splice(j, 1)
                     } else {
-                        ++i
+                        ++j
                     }
                 }
             }
