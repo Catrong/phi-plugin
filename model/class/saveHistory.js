@@ -126,13 +126,13 @@ export default class saveHistory {
                     this.scoreHistory[id][level].unshift(createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc))
                 }
                 /**查重 */
-                let i = 1
-                while (i < this.scoreHistory[song][dif].length) {
-                    let last = openHistory(this.scoreHistory[song][dif][i - 1])
-                    let now = openHistory(this.scoreHistory[song][dif][i])
+                let j = 1
+                while (j < this.scoreHistory[song][dif].length) {
+                    let last = openHistory(this.scoreHistory[song][dif][j - 1])
+                    let now = openHistory(this.scoreHistory[song][dif][j])
                     if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
                         // console.info(last.date.toISOString(), now.date.toISOString())
-                        this.scoreHistory[song][dif].splice(i, 1)
+                        this.scoreHistory[song][dif].splice(j, 1)
                     } else {
                         ++i
                     }
@@ -177,6 +177,20 @@ export default class saveHistory {
         }
 
     }
+
+    /**
+     * 获取歌曲最新的历史记录
+     * @param {string} id 曲目id
+     * @returns 
+     */
+    getSongsLastRecord(id) {
+        let t = { ...this.scoreHistory[id] }
+        for (i in t) {
+            t[i] = t[i].at(-1) ? openHistory(t[i].at(-1)) : null
+        }
+        return t
+    }
+
 }
 
 /**
