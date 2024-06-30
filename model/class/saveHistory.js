@@ -65,7 +65,7 @@ export default class saveHistory {
                 while (i < this.scoreHistory[song][dif].length) {
                     let last = openHistory(this.scoreHistory[song][dif][i - 1])
                     let now = openHistory(this.scoreHistory[song][dif][i])
-                    if (last.date.toISOString() == now.date.toISOString()) {
+                    if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
                         // console.info(last.date.toISOString(), now.date.toISOString())
                         this.scoreHistory[song][dif].splice(i, 1)
                     } else {
@@ -103,7 +103,7 @@ export default class saveHistory {
                     let old = openHistory(this.scoreHistory[id][level][i])
                     // console.info(old.date.toISOString(), new Date(now.date).toISOString(), old.date.toISOString() == new Date(now.date).toISOString())
                     /**日期完全相同则认为已存储 */
-                    if (old.date.toISOString() == new Date(now.date).toISOString()) {
+                    if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
                         /**标记已处理 */
                         now = null
                         break
@@ -124,6 +124,18 @@ export default class saveHistory {
                 if (now) {
                     // console.info(11)
                     this.scoreHistory[id][level].unshift(createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc))
+                }
+                /**查重 */
+                let i = 1
+                while (i < this.scoreHistory[song][dif].length) {
+                    let last = openHistory(this.scoreHistory[song][dif][i - 1])
+                    let now = openHistory(this.scoreHistory[song][dif][i])
+                    if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
+                        // console.info(last.date.toISOString(), now.date.toISOString())
+                        this.scoreHistory[song][dif].splice(i, 1)
+                    } else {
+                        ++i
+                    }
                 }
             }
         }
@@ -199,10 +211,10 @@ function createHistory(acc, score, date, fc) {
  */
 function openHistory(data) {
     return {
-        acc: data[0],
-        score: data[1],
+        acc: Number(data[0]),
+        score: Number(data[1]),
         date: new Date(data[2]),
-        fc: data[3]
+        fc: Boolean(data[3])
     }
 }
 
