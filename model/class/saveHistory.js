@@ -183,10 +183,14 @@ export default class saveHistory {
      * @param {string} id 曲目id
      * @returns 
      */
-    getSongsLastRecord(id) {
+    async getSongsLastRecord(id) {
         let t = { ...this.scoreHistory[id] }
-        for (let i in t) {
-            t[i] = t[i] ? openHistory(t[i].at(-1)) : null
+        let LevelRecordInfo = (await import('./LevelRecordInfo.js')).default
+        for (let level in t) {
+            t[level] = t[level] ? openHistory(t[level].at(-1)) : null
+            let date = t[level].date
+            t[level] = new LevelRecordInfo(t[level],id,level)
+            t[level].date = date
         }
         return t
     }
