@@ -649,7 +649,7 @@ export class phib19 extends plugin {
             for (let nick in chap) {
                 Remsg += `${nick}：${chap[nick]}\n`
             }
-            send.send_with_At(e, common.makeForwardMsg(e, Remsg))
+            e.reply(common.makeForwardMsg(e, Remsg))
             return true
         }
         if (msg != 'ALL' && !chap[msg]) {
