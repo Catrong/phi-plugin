@@ -695,7 +695,7 @@ export class phib19 extends plugin {
                 song_box[song] = { illustration: getInfo.getill(song), chart: {} }
                 let id = getInfo.idssong[song]
                 let Record1 = save.getSongsRecord(id)
-                let Record2 = history.getSongsLastRecord(id)
+                let Record2 = await history.getSongsLastRecord(id)
                 let info = getInfo.info(song, true)
                 for (let level in info.chart) {
                     let i = LevelNum[level]
