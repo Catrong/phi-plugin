@@ -1,0 +1,341 @@
+@import '../common/common.css';
+
+body {
+    width: 2048px;
+    height: 1080px;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+}
+
+body p {
+    white-space: nowrap;
+}
+
+.illustration {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.illustration img {
+    width: 100%;
+    height: 100%;
+}
+
+.bar {
+    position: relative;
+    width: 80%;
+    padding-left: 10%;
+    background-color: #000000cc;
+    backdrop-filter: blur(5px);
+    clip-path: polygon(18.156% 0px, 0% 100%, 100% 100%, 100% 0%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player {
+    height: 5%;
+    width: 75%;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 23%;
+    top: 3%;
+    justify-content: space-between;
+}
+
+.player p {
+    font-size: 38px;
+    color: white;
+}
+
+.count {
+    height: 5%;
+    width: 75%;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 21%;
+    top: 9%;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.count img {
+    height: 100%;
+}
+
+.count p {
+    font-size: 35px;
+    color: white;
+}
+
+.song-box {
+    height: 70%;
+    width: 95%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.song {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    color: white;
+    position: relative;
+}
+
+.song_1 {
+    height: 16%;
+}
+
+.song_2 {
+    height: 5%;
+}
+
+.ill {
+    height: 100%;
+    width: min-content;
+    z-index: 2;
+    position: relative;
+}
+
+.ill img {
+    height: inherit;
+    width: fit-content;
+}
+
+.ill .name {
+    position: absolute;
+    width: 81.844%;
+    right: 0px;
+    top: 0px;
+    padding-left: 2%;
+    padding-right: 2%;
+    font-size: 9px;
+    display: flex;
+    height: 11px;
+    flex-direction: row;
+    align-items: center;
+    line-height: 15px;
+    justify-content: center;
+    background: -webkit-linear-gradient(top, black, #ffffff00);
+}
+
+.info {
+    display: flex;
+    position: relative;
+    height: 100%;
+    margin-left: 7px;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    z-index: 1;
+}
+
+.rank {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-left: -40px;
+    padding-left: 30px;
+    position: relative;
+}
+
+.rating {
+    height: 100%;
+}
+
+.rating img {
+    height: 100%;
+}
+
+.dif,
+.score,
+.acc,
+.suggest,
+.rks,
+.date {
+    font-size: 14px;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
+.suggest {
+    color: greenyellow;
+}
+
+.rks {
+    color: gold;
+}
+
+.EZ {
+    background: -webkit-linear-gradient(left, var(--EZ), #ffffff00);
+}
+
+.HD {
+    background: -webkit-linear-gradient(left, var(--HD), #ffffff00);
+}
+
+.IN {
+    background: -webkit-linear-gradient(left, var(--IN), #ffffff00);
+}
+
+.AT {
+    background: -webkit-linear-gradient(left, var(--AT), #ffffff00);
+}
+
+.progress {
+    background-color: rgba(0, 191, 255, 0.1);
+    position: absolute;
+    width: 65%;
+    height: 2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border-left: 2px solid skyblue;
+    border-right: 2px solid skyblue;
+}
+
+.progress-bar {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    border-right: 3.5px solid;
+    border-color: #fff;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.EZ-bar {
+    bottom: 12%;
+    left: 6.5%;
+}
+
+.EZ-bar .progress-bar {
+    background: repeating-linear-gradient(-71deg, #ffffff00, #ffffff00 2px, var(--EZ) 0, var(--EZ) 7px);
+}
+
+.HD-bar {
+    bottom: 9%;
+    left: 6.1%;
+}
+
+.HD-bar .progress-bar {
+    background: repeating-linear-gradient(-71deg, #ffffff00, #ffffff00 2px, var(--HD) 0, var(--HD) 7px);
+}
+
+.IN-bar {
+    bottom: 6%;
+    left: 5.7%;
+}
+
+.IN-bar .progress-bar {
+    background: repeating-linear-gradient(-71deg, #ffffff00, #ffffff00 2px, var(--IN) 0, var(--IN) 7px);
+}
+
+.AT-bar {
+    bottom: 3%;
+    left: 5.3%;
+}
+
+.AT-bar .progress-bar {
+    background: repeating-linear-gradient(-71deg, #ffffff00, #ffffff00 2px, var(--AT) 0, var(--AT) 7px);
+}
+
+.progress p {
+    color: white;
+    width: 0;
+    text-shadow: 0 0 2px black;
+}
+
+.score-bar {
+    position: absolute;
+    height: 90%;
+    width: auto;
+    left: -6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.song_1 .score-bar :nth-child(2) {
+    margin-left: -8px;
+}
+
+.song_1 .score-bar :nth-child(3) {
+    margin-left: -16px;
+}
+
+.song_1 .score-bar :nth-child(4) {
+    margin-left: -24px;
+}
+
+.song_2 .score-bar :nth-child(2) {
+    margin-left: -2.6px;
+}
+
+.song_2 .score-bar :nth-child(3) {
+    margin-left: -5.2px;
+}
+
+.song_2 .score-bar :nth-child(4) {
+    margin-left: -7.8px;
+}
+
+.song_1 .score-bar * {
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    margin-top: 30%;
+}
+
+.song_2 .score-bar * {
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+}
+
+.phi {
+    background-color: rgb(255, 253, 39);
+}
+
+.FC {
+    background-color: rgb(84, 150, 255);
+}
+
+.V,
+.S,
+.A,
+.B,
+.C,
+.F {
+    background-color: rgb(255, 255, 255);
+}
+
+.NEW {
+    background-color: rgb(255, 255, 255, 0);
+    box-sizing: border-box;
+    border: 1px solid rgb(255, 255, 255);
+}
+
+.phi-plugin p {
+    font-size: 50px;
+}
+
+.ver p {
+    font-size: 30px;
+}
+
+.createdbox {right: 4%;bottom: 0%;width: auto;position: absolute;}

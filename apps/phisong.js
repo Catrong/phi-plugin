@@ -5,6 +5,7 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import getInfo from '../model/getInfo.js'
 import getPic from '../model/getPic.js'
+import fCompute from '../model/fCompute.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
@@ -46,6 +47,10 @@ export class phisong extends plugin {
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)alias.*$`,
                     fnc: 'alias'
+                },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(com|计算).*$`,
+                    fnc: 'comrks'
                 }
             ]
         })
@@ -397,6 +402,19 @@ export class phisong extends plugin {
             send.send_with_At(e, [`\nname: ${song[0]}\nid: ${info.id}\n`, getPic.getIll(song[0]), nick])
         } else {
             send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！`, true)
+        }
+    }
+    
+    /**计算等效rks */
+    comrks(e) {
+        let msg = e.msg.replace(/^[#/].*(com|计算)\s*/, '')
+        let data = msg.match(/\d+/g)
+        if (data && data[1] && data[0] > 0 && data[0] <= 17 && data[1] > 0 && data[1] <= 100) {
+            send.send_with_At(e, `dif: ${data[0]} acc: ${data[1]}\n计算结果：${fCompute.rks(Number(data[1]), Number(data[0]))}`, true)
+            return true
+        } else {
+            send.send_with_At(e, `格式错误QAQ！\n${Config.getDefOrConfig('config', 'cmdhead')} <定数> <acc>`)
+            return false
         }
     }
 

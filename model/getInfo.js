@@ -173,6 +173,7 @@ export default new class getInfo {
      * 
      * @param {string} [song=undefined] 原曲曲名
      * @param {boolean} [original=false] 仅使用原版
+     * @returns {SongsInfo}
      */
     info(song, original = false) {
         let result
@@ -436,6 +437,18 @@ export default new class getInfo {
             ans = path.join(imgPath, 'phigros.png')
         }
         return ans
+    }
+
+    /**
+     * 返回章节封面 url
+     * @param {string} name 标准章节名
+     */
+    getChapIll(name) {
+        if (fs.existsSync(path.join(originalIllPath, "chap", `${name}.png`))) {
+            return path.join(originalIllPath, "chap", `${name}.png`)
+        } else {
+            return `https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main/chap/${name}.png`
+        }
     }
 
     /**

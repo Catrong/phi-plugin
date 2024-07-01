@@ -3,7 +3,7 @@ import fs from 'fs'
 import puppeteer from 'puppeteer'
 import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../components/index.js'
 import { segment } from 'oicq';
-import { _path, pluginResources } from './path.js';
+import { _path, pluginResources, imgPath } from './path.js';
 
 let pet = {}
 
@@ -71,6 +71,7 @@ export default new class newPuppeteer {
             tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.html`,
             pluResPath: resPath,
             _res_path: resPath,
+            _imgPath: imgPath + '/',
             _layout_path: layoutPath,
             defaultLayout: layoutPath + 'default.html',
             elemLayout: layoutPath + 'elem.html',

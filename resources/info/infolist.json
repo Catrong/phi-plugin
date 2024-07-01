@@ -2681,22 +2681,6 @@
             }
         }
     },
-    "零號車輛.seatrus": {
-        "bpm": "240",
-        "length": "2:24",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "594"
-            },
-            "HD": {
-                "combo": "1058"
-            },
-            "IN": {
-                "combo": "1240"
-            }
-        }
-    },
     "NowIsTheTimeDoIt.RoyMikelate": {
         "bpm": "158",
         "length": "2:14",
@@ -3534,6 +3518,159 @@
             },
             "IN": {
                 "combo": "1545"
+            }
+        }
+    },
+    "BRAINHACKER.SOMON": {
+        "bpm": "158",
+        "length": "2:01",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "230"
+            },
+            "HD": {
+                "combo": "372"
+            },
+            "IN": {
+                "combo": "780"
+            }
+        }
+    },
+    "零號車輛.seatrus": {
+        "bpm": "240",
+        "length": "2:24",
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集",
+        "chart": {
+            "EZ": {
+                "combo": "594"
+            },
+            "HD": {
+                "combo": "1058"
+            },
+            "IN": {
+                "combo": "1240"
+            }
+        }
+    },
+    "Xenolith.Tatsh": {
+        "bpm": "170",
+        "length": "2:18",
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集",
+        "chart": {
+            "EZ": {
+                "combo": "202"
+            },
+            "HD": {
+                "combo": "533"
+            },
+            "IN": {
+                "combo": "789"
+            }
+        }
+    },
+    "ArtificialExistence.JunKuroda": {
+        "bpm": "191",
+        "length": "2:14",
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集",
+        "chart": {
+            "EZ": {
+                "combo": "200"
+            },
+            "HD": {
+                "combo": "400"
+            },
+            "IN": {
+                "combo": "800"
+            }
+        }
+    },
+    "IndelibleScar.Noah": {
+        "bpm": "223",
+        "length": "2:17",
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集",
+        "chart": {
+            "EZ": {
+                "combo": "316"
+            },
+            "HD": {
+                "combo": "733"
+            },
+            "IN": {
+                "combo": "844"
+            },
+            "AT": {
+                "combo": "1207"
+            }
+        }
+    },
+    "Antithese.Blacklolita": {
+        "bpm": "172",
+        "length": "2:20",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "313"
+            },
+            "HD": {
+                "combo": "801"
+            },
+            "IN": {
+                "combo": "1063"
+            },
+            "AT": {
+                "combo": "1200"
+            }
+        }
+    },
+    "PRAGMATISMRESURRECTION.Laur": {
+        "bpm": "174",
+        "length": "2:41",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "1057"
+            },
+            "HD": {
+                "combo": "661"
+            },
+            "IN": {
+                "combo": "999"
+            },
+            "AT": {
+                "combo": "1156"
+            }
+        }
+    },
+    "ShineAfter.ADeanJocularACE": {
+        "bpm": "170",
+        "length": "2:45",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "262"
+            },
+            "HD": {
+                "combo": "647"
+            },
+            "IN": {
+                "combo": "800"
+            }
+        }
+    },
+    "Bloom.targ麻团qwq": {
+        "bpm": "150",
+        "length": "2:39",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "183"
+            },
+            "HD": {
+                "combo": "724"
+            },
+            "IN": {
+                "combo": "1053"
             }
         }
     }

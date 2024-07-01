@@ -41,7 +41,7 @@ class send {
 
         const sessionToken = await getSave.get_user_token(e.user_id)
 
-        const user_save = await get.getsave(e.user_id)
+        const user_save = await getSave.getSave(e.user_id)
 
         if (!sessionToken) {
             this.send_with_At(e, `请先绑定sessionToken哦！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)

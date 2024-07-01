@@ -1,0 +1,82 @@
+{{block 'css'}}
+
+<head>
+    <link rel="stylesheet" href="{{_res_path}}html/chap/chap.css">
+</head>
+{{/block}}
+<body>
+    <div class="illustration">
+        <img src="{{chapIll}}" alt="{{chapIll}}">
+    </div>
+    <div class="bar">
+        <div class="player">
+            <p>Player: {{player.id}}</p>
+            <p>chap: {{chapName}}</p>
+        </div>
+        <div class="count">
+            {{each count value index}}
+            {{if index == 'tot'}}
+            <p>tot: {{value}}</p>
+            {{else}}
+            <img src="{{_imgPath}}/{{index}}.png" alt="{{index}}">
+            <p>{{value}}</p>
+            {{/if}}
+            {{/each}}
+        </div>
+        <div class="song-box">
+            {{set song_style = (num <= 36) ? 1 : 2}}
+            {{set song_num = (num <= 36) ? 6 : 20}}
+            {{set tem = 0}}
+            {{each song_box song}}
+            <div class="song song_{{song_style}}" style="margin-left: {{(-200 / (song_num - 1)) * (tem % song_num) + (tem < song_num) * 100}}px;">
+                <div class="common_ill ill"> 
+                    <img src="{{song.illustration}}" alt="{{illustration}}">
+                </div>
+                <div class="info">
+                    {{if num <= 12}}
+                    {{each song.chart chart rank}}
+                    <div class="rank {{rank}}" style="height: {{song.chart.AT ? 23 : 30}}%;">
+                        <div class="rating">
+                            <img src="{{_imgPath}}/{{chart.Rating}}.png" alt="{{chart.Rating}}">
+                        </div>
+                        <div class="dif">{{chart.difficulty}}</div>
+                        {{if chart.acc && num <= 6}}
+                        <div class="score">{{chart.score}}</div>
+                        <div class="acc">{{chart.acc}}%</div>
+                        <div class="rks">= {{chart.rks}}</div>
+                        <div class="suggest">>> {{chart.suggest}}</div>
+                        <div class="date">at {{chart.date}}</div>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                    {{else}}
+                    <div class="score-bar">
+                        {{each song.chart value}}
+                        <div class="{{value.Rating}}"></div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            <% ++tem %>
+            {{/each}}
+        </div>
+
+        {{each progress value index}} 
+        <div class="progress {{index}}-bar">
+            <div class="progress-bar" style="width: {{value}}%;"></div>
+            <p>&ensp;{{value.toFixed(4)}}%</p>
+        </div>
+        {{/each}}
+
+        <div class="createdbox">
+            <div class="phi-plugin">
+                <p>{{_plugin}}</p>
+            </div>
+            <div class="ver">
+                <p>{{Version.ver}}</p>
+            </div>
+        </div>
+        
+    </div>
+</body>

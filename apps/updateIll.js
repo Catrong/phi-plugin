@@ -23,7 +23,7 @@ export class phiupdateIll extends plugin {
             priority: 1001,
             rule: [
                 {
-                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getDefOrConfig('config', 'cmdhead')}))(\\s*)下载曲绘$`,
+                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getDefOrConfig('config', 'cmdhead')}))(\\s*)(下载|更新|download|update|down|up)\s*(曲绘|ILL|ill)$`,
                     fnc: "update",
                 },
             ],

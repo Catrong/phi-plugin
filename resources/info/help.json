@@ -48,6 +48,11 @@
                 "desc": "获取指定范围内的成绩统计图\neg1: /lvsco 15+\neg2: /lvsco 14 IN HD\neg3: /lvsco 12-15 IN AT"
             },
             {
+                "title": "/chap",
+                "eg": "/chap <章节名称>",
+                "desc": "查询章节成绩，/chap help 可以获取支持的章节名称\neg: /chap c0"
+            },
+            {
                 "title": "/list",
                 "eg": "/list [定数] [难度] [评级]",
                 "desc": "列出所有匹配的成绩\neg: /list 15 F"
@@ -169,7 +174,7 @@
                 "desc": "重启puppeteer，仅支持最新版喵崽"
             },
             {
-                "title": "/下载曲绘",
+                "title": "/下载曲绘|/down ill",
                 "eg": "/下载曲绘",
                 "desc": "下载曲绘到本地"
             },

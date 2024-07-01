@@ -73,6 +73,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi (rks\|pgr\|b19)` | 查询rks，会提供得出的b21结果 
 | `#phi info(1\|2)?` | 查询个人统计信息 
 | `#phi (lvsco(re)\|scolv) <定数范围> <难度>` | 获取区间成绩 
+| `#phi chap <章节名称\|help>` | 获取章节成绩
 | `#phi list <定数范围> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩 
 | `#phi best1(+)` | 查询文字版b19（或更多），最高b99 
 | `#phi (score\|单曲成绩)xxx` | 获取单曲成绩及这首歌的推分建议 
@@ -104,7 +105,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi(删除别名\|delnick) xxx` | 删除某一歌曲的别名 
 | `#phi(强制\|qz)?(更新\|gx)` | 更新本插件 
 | `#phi repu` | 重启puppeteer 
-| `#下载曲绘` | 下载曲绘到本地 
+| `#下载曲绘\|down ill` | 下载曲绘到本地 
 
 ------
 

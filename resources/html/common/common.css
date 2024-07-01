@@ -53,6 +53,13 @@
     src: url("./font/NotoColorEmoji-Regular.ttf") format('truetype');
 }
 
+:root {
+    --AT: #6e6e6e;
+    --IN: #ff0000;
+    --HD: #00b0f0;
+    --EZ: #92d050;
+}
+
 body {
     font-family: 'PHI', 'NotoSansArabic', 'NotoSansSymbols2', 'NOTO', 'NotoSansJP', 'NotoSansKannada', 'NotoSansCanadianAboriginal', 'NotoColorEmoji-Regular', 'HIMALAYA', '吞弥恰俊';
     margin: 0;
@@ -145,4 +152,9 @@ body {
     -webkit-background-clip: text;
     -moz-background-clip: text;
     -ms-background-clip: text
+}
+
+.common_ill {
+    clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+    overflow: hidden;
 }

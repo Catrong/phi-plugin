@@ -11,12 +11,11 @@ export default new class pic {
      * @param {any} data 自定义数据
      * @returns 
      */
-    GetSongsInfoAtlas(e, name, data = undefined) {
-
+    async GetSongsInfoAtlas(e, name, data = undefined) {
         data = data ? data : getInfo.info(name)
         if (data) {
             data.illustration = getInfo.getill(name)
-            return atlas.atlas(e, data)
+            return await atlas.atlas(e, data)
         } else {
             /**未找到曲目 */
             return `未找到${name}的相关曲目信息!QAQ`
@@ -38,6 +37,10 @@ export default new class pic {
         }
     }
 
+    async GetChap(e, data) {
+        return await atlas.chap(e, data)
+    }
+
     /**获取本地图片
      * @param {string} img 文件名
      * @param {string} style 文件格式，默认为png
@@ -57,7 +60,7 @@ export default new class pic {
      * @param {string} name 原名
      * @param {'common'|'blur'|'low'} [kind='common'] 清晰度
      * @return {string} 网址或文件地址
-    */
+     */
     getIll(name, kind = 'common') {
         return segment.image(getInfo.getill(name, kind))
     }

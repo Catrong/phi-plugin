@@ -276,4 +276,13 @@ export default class Save {
         }
         return error
     }
+
+    /**
+     * 
+     * @param {string} id 曲目id
+     * @returns {LevelRecordInfo}
+     */
+    getSongsRecord(id) {
+        return {...this.gameRecord[id]}
+    }
 }

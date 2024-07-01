@@ -166,6 +166,23 @@ class atlas {
         })
     }
 
+    /**
+     * 
+     * @param {*} e 
+     * @param {'task'|'b19'|'update'|'lvsco'|'list'|'ill'|'guess'|'rand'|'help'|'chap'} kind 
+     * @param {*} data
+     * @returns 
+     */
+    async common (e, kind ,data) {
+        return await this.render(`${kind}/${kind}`, {
+            ...data,
+            waitUntil: 'networkidle0'
+        }, {
+            e,
+            scale: Config.getDefOrConfig('config', 'renderScale') / 100,
+        })
+    }
+
     async render(path, params, cfg) {
         // return await puppeteer.render(path, params, cfg)
 

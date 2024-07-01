@@ -8,11 +8,56 @@ import PhigrosUser from '../lib/PhigrosUser.js';
 import altas from '../model/picmodle.js'
 import scoreHistory from '../model/class/scoreHistory.js';
 import fCompute from '../model/fCompute.js';
+import getInfo from '../model/getInfo.js';
+import getSave from '../model/getSave.js';
+import { LevelNum } from '../model/constNum.js';
 
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
 const Level = ['EZ', 'HD', 'IN', 'AT', null] //存档的难度映射
+
+const chap = {
+    S: "单曲精选集",
+    C0: "Chapter Legacy 过去的章节",
+    旧章: "Chapter Legacy 过去的章节",
+    Legacy: "Chapter Legacy 过去的章节",
+    C5: "Chapter 5 霓虹灯牌",
+    霓虹灯牌: "Chapter 5 霓虹灯牌",
+    C6: "Chapter 6 方舟蜃景",
+    方舟蜃景: "Chapter 6 方舟蜃景",
+    C7: "Chapter 7 时钟链接",
+    时钟链接: "Chapter 7 时钟链接",
+    C8: "Chapter 8 凌日潮汐",
+    凌日潮汐: "Chapter 8 凌日潮汐",
+    S1: "Side Story 1 忘忧宫",
+    忘忧宫: "Side Story 1 忘忧宫",
+    S2: "Side Story 2 弭刻日",
+    弭刻日: "Side Story 2 弭刻日",
+    S3: "Side Story 3 盗乐行",
+    盗乐行: "Side Story 3 盗乐行",
+    EX: "Extra Story Chapter 极星卫",
+    极星卫: "Extra Story Chapter 极星卫",
+    黑皇帝: "Chapter EX-Rising Sun Traxx 精选集",
+    HYUN: "Chapter EX-HyuN 精选集",
+    GOOD: "Chapter EX-GOOD 精选集",
+    WAVEAT: "Chapter EX-WAVEAT 精选集",
+    喵斯: "Chapter EX-Muse Dash 精选集",
+    MUSE: "Chapter EX-Muse Dash 精选集",
+    KALPA: "Chapter EX-KALPA 精选集",
+    LANOTA: "Chapter EX-Lanota 精选集",
+    盘子: "Chapter EX-Lanota 精选集",
+    江米条: "Chapter EX-姜米條 精选集",
+    姜米條: "Chapter EX-姜米條 精选集",
+    茶鸣: "Chapter EX-茶鸣拾贰律 精选集",
+    OR: "Chapter EX-OverRapid 精选集",
+    方向盘: "Chapter EX-Rotaeno 精选集",
+    ROTEANO: "Chapter EX-Rotaeno 精选集",
+    中二: "Chapter EX-CHUNITHM 精选集",
+    范式: "Chapter EX-Paradigm：Reboot 精选集",
+    SHINOBI: "Chapter EX- SHINOBI SLASH 精选集",
+    千恋万花: "Chapter EX-SHINOBI SLASH 精选集",
+}
 
 export class phib19 extends plugin {
     constructor() {
@@ -37,12 +82,11 @@ export class phib19 extends plugin {
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(suggest|推分(建议)?)$`,
                     fnc: 'suggest'
+                },
+                {
+                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)chap.*$`,
+                    fnc: 'chap'
                 }
-                // {
-                //     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(com|计算).*$`,
-                //     fnc: 'suggest'
-                // }
-
             ]
         })
 
@@ -55,7 +99,7 @@ export class phib19 extends plugin {
             return true
         }
 
-        
+
         let nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
 
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
@@ -116,7 +160,7 @@ export class phib19 extends plugin {
         // console.info(philist)
         phi = philist[Math.floor(Math.random() * philist.length)]
 
-        if (phi.rks) {
+        if (phi?.rks) {
             com_rks += Number(phi.rks) //计算rks
             phi.rks = phi.rks.toFixed(2)
             phi.acc = phi.acc.toFixed(2)
@@ -593,6 +637,122 @@ export class phib19 extends plugin {
         }
     }
 
+    /**查询章节成绩 */
+    async chap(e) {
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return false
+        }
+        let msg = e.msg.replace(/^[#/].*chap\s*/, '').toUpperCase()
+        if (msg == 'HELP') {
+            let Remsg = '别名：章节名称\n'
+            for (let nick in chap) {
+                Remsg += `${nick}：${chap[nick]}\n`
+            }
+            send.send_with_At(e, common.makeForwardMsg(e, Remsg))
+            return true
+        }
+        if (msg != 'ALL' && !chap[msg]) {
+            send.send_with_At(e, `未找到${msg}章节QAQ！可以使用 /${Config.getDefOrConfig('config', 'cmdhead')} chap help 来查询支持的名称嗷！`)
+            return false
+        }
+
+        let song_box = {}
+        let history = await getSave.getHistory(e.user_id)
+
+        /**统计各评分出现次数 */
+        let count = {
+            tot: 0,
+            phi: 0,
+            FC: 0,
+            V: 0,
+            S: 0,
+            A: 0,
+            B: 0,
+            C: 0,
+            F: 0,
+            NEW: 0
+        }
+
+        /**统计各难度出现次数 */
+        let rank = {
+            EZ: 0,
+            HD: 0,
+            IN: 0,
+            AT: 0
+        }
+
+        /**统计各难度ACC和 */
+        let rankAcc = {
+            EZ: 0,
+            HD: 0,
+            IN: 0,
+            AT: 0
+        }
+
+        for (let song in getInfo.ori_info) {
+            if (getInfo.ori_info[song].chapter == chap[msg] || msg == 'ALL') {
+                song_box[song] = { illustration: getInfo.getill(song), chart: {} }
+                let id = getInfo.idssong[song]
+                let Record1 = save.getSongsRecord(id)
+                let Record2 = history.getSongsLastRecord(id)
+                let info = getInfo.info(song, true)
+                for (let level in info.chart) {
+                    let i = LevelNum[level]
+                    /**跳过旧谱 */
+                    if (!level) continue
+                    let Record = {}
+                    if (Record1[i]) {
+                        Record1[i].date = save.saveInfo.modifiedAt.iso
+                        if (Record2[level]) {
+                            /**取最早 */
+                            if (comRecord(Record1, Record2)) {
+                                Record = Record1[i].date < Record2[level].date ? Record1[i] : Record2[level]
+                            } else {
+                                Record = Record1[i].date > Record2[level].date ? Record1[i] : Record2[level]
+                            }
+                        }
+                    }
+                    song_box[song].chart[level] = {
+                        difficulty: info.chart[level].difficulty,
+                        score: Record.score || null,
+                        Rating: Record.Rating || 'NEW',
+                        acc: Record.acc ? Number(Record.acc).toFixed(4) : null,
+                        rks: Record.rks ? Number(Record.rks).toFixed(4) : null,
+                        fc: Record1.fc || null,
+                        date: date_to_string(Record.date) || null,
+                        suggest: fCompute.suggest(Record.rks, info.chart[level].difficulty, 4) || null
+                    }
+                    ++count.tot
+                    if (Record.Rating) {
+                        ++count[Record.Rating]
+                        rankAcc[level] += Number(Record.acc)
+                    } else {
+                        ++count.NEW
+                    }
+                    ++rank[level]
+                }
+            }
+        }
+
+        let progress = {}
+        for (let level in rank) {
+            if (rank[level]) {
+                progress[level] = rankAcc[level] / rank[level]
+            }
+        }
+
+        send.send_with_At(e, await altas.common(e, 'chap', {
+            player: { id: save.saveInfo.PlayerId },
+            count,
+            song_box,
+            progress,
+            num: rank.EZ,
+            chapName: msg == 'ALL' ? 'AllSong' : chap[msg],
+            chapIll: getInfo.getChapIll(msg == 'ALL' ? 'AllSong' : chap[msg]),
+        }))
+
+    }
 }
 
 function cmp() {
@@ -628,4 +788,8 @@ function date_to_string(date) {
     let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
 
     return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
+}
+
+function comRecord(a, b) {
+    return Number(a.acc).toFixed(4) == Number(b.acc).toFixed(4) && Number(a.score) == Number(b.score) && Number(a.rks) == Number(b.rks)
 }

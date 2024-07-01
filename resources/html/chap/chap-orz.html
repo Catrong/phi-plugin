@@ -1,0 +1,93 @@
+<head>
+    <link rel="stylesheet" href="./chap.css">
+</head>
+
+<body>
+    <div class="illustration">
+        <img src="../../original_ill/chap/AllSong.png" alt="{{illustration}}">
+    </div>
+    <div class="bar">
+        <div class="player">
+            <p>Player: {{player.id}}</p>
+            <p>chap: 全部曲目</p>
+        </div>
+        <!-- <div class="count">
+            <p>tot: {{count.tot}}</p>
+            <img src="../otherimg/phi.png" alt="{{count.phi}}">
+            <p>{{count.phi}}</p>
+        </div> -->
+        <div class="count">
+            <p>tot: 000</p>
+            <img src="../otherimg/phi.png" alt="{{song.rating}}">
+            <p>000</p>
+            <img src="../otherimg/FC.png" alt="{{song.rating}}">
+            <p>000</p>
+            <img src="../otherimg/V.png" alt="{{song.rating}}">
+            <p>000</p>
+            <img src="../otherimg/S.png" alt="{{song.rating}}">
+            <p>000</p>
+            <img src="../otherimg/A.png" alt="{{song.rating}}">
+            <p>000</p>
+            <img src="../otherimg/B.png" alt="{{song.rating}}">
+            <p>000</p>
+            <img src="../otherimg/C.png" alt="{{song.rating}}">
+            <p>000</p>
+            <img src="../otherimg/F.png" alt="{{song.rating}}">
+            <p>000</p>
+        </div>
+        <div class="song-box" id="2">
+            <!--
+             2 25 -25
+             3 35 0 -35
+             4 45 15 -15 -45
+             5 50 25 0 -25 -50  
+              -->
+            <div class="song song_1" style="margin-left: 60px;" id="1">
+                <div class="common_ill ill">
+                    <div class="name">bye</div>
+                    <img src="../../original_ill/ill/bye.DingerBox.png" alt="{{illustration}}">
+                </div>
+                <div class="rank IN" style="height: 30%;">
+                    <div class="rating">
+                        <img src="../otherimg/phi.png" alt="{{chart.rating}}">
+                    </div>
+                    <div class="dif">{{chart.difficult}}</div>
+                    <div class="acc">{{chart.acc}}%</div>
+                </div>
+            </div>
+            <script>
+                let t = document.getElementById("1")
+                let m = document.getElementById("2")
+                for (let i = 1; i < 12; i++) {
+                    let t2 = t.cloneNode(true)
+                    t2.style = `margin-left: ${-120 / 6 * (i % 6) + (i > 5 ? 0 : 60)}px;`
+                    m.appendChild(t2)
+                }
+            </script>
+        </div>
+        <div class="progress EZ-bar">
+            <div class="progress-bar" style="width: 100%;"></div>
+            <p>&ensp;50.0000%</p>
+        </div>
+        <div class="progress HD-bar">
+            <div class="progress-bar" style="width: 100%;"></div>
+            <p>&ensp;50.0000%</p>
+        </div>
+        <div class="progress IN-bar">
+            <div class="progress-bar" style="width: 100%;"></div>
+            <p>&ensp;50.0000%</p>
+        </div>
+        <div class="progress AT-bar">
+            <div class="progress-bar" style="width: 100%;"></div>
+            <p>&ensp;50.0000%</p>
+        </div>
+        <div class="createdbox">
+            <div class="phi-plugin">
+                <p>{{_plugin}}</p>
+            </div>
+            <div class="ver">
+                <p>{{Version.ver}}</p>
+            </div>
+        </div>
+    </div>
+</body>
