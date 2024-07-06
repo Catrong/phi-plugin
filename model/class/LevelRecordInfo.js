@@ -14,6 +14,10 @@ export default class LevelRecordInfo {
 
         let info = getInfo.info(getInfo.idgetsong(id), true)
 
+        if(!info) {
+            return
+        }
+
         this.rank = getInfo.Level[rank] //AT IN HD EZ LEGACY 
         this.song = info.song //曲名
         this.illustration = getInfo.getill(this.song) //曲绘链接
