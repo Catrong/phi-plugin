@@ -1,7 +1,8 @@
 import path from 'path'
 
 /**Yunzai-Bot 根目录 */
-const _path = process.cwd().replace(/\\/g, '/')
+const _path = process.cwd()
+// const _path = process.cwd().replace(/\\/g, '/')
 
 /**插件名 */
 const pluginName = path.basename(path.join(import.meta.url, '../../'))
