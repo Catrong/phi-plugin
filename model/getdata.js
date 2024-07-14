@@ -1,4 +1,5 @@
 import { dataPath, imgPath, pluginDataPath } from "./path.js";
+import Config from "../components/Config.js";
 import readFile from './getFile.js';
 import atlas from "./picmodle.js";
 import LevelRecord from "./class/LevelRecordInfo.js";

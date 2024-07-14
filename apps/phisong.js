@@ -404,16 +404,18 @@ export class phisong extends plugin {
             send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！`, true)
         }
     }
-    
+
     /**计算等效rks */
     comrks(e) {
         let msg = e.msg.replace(/^[#/].*(com|计算)\s*/, '')
-        let data = msg.match(/\d+/g)
+        let data = msg.split(' ')
+        data[0] = Number(data[0])
+        data[1] = Number(data[1])
         if (data && data[1] && data[0] > 0 && data[0] <= 17 && data[1] > 0 && data[1] <= 100) {
             send.send_with_At(e, `dif: ${data[0]} acc: ${data[1]}\n计算结果：${fCompute.rks(Number(data[1]), Number(data[0]))}`, true)
             return true
         } else {
-            send.send_with_At(e, `格式错误QAQ！\n${Config.getDefOrConfig('config', 'cmdhead')} <定数> <acc>`)
+            send.send_with_At(e, `格式错误QAQ！\n格式：${Config.getDefOrConfig('config', 'cmdhead')} com <定数> <acc>`)
             return false
         }
     }

@@ -101,6 +101,11 @@
                 "title": "/alias",
                 "eg": "/alias <id或别名>",
                 "desc": "查询歌曲别名\neg1: /alias 996\neg2: /alias AnotherMe.DAAN"
+            },
+            {
+                "title": "/com\n/计算",
+                "eg": "/com <定数> <ACC>",
+                "desc": "计算等效rks\neg: /com 15.9 99.50"
             }
         ]
     },
@@ -174,7 +179,7 @@
                 "desc": "重启puppeteer，仅支持最新版喵崽"
             },
             {
-                "title": "/下载曲绘|/down ill",
+                "title": "/下载曲绘\n/down ill",
                 "eg": "/下载曲绘",
                 "desc": "下载曲绘到本地"
             },
