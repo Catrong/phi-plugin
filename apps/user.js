@@ -201,7 +201,7 @@ export class phiuser extends plugin {
             }
             rks_date[1] = user_rks_data[i].date.getTime()
         }
-        
+
 
         for (let i in user_data_data) {
             let value = user_data_data[i]['value']
@@ -614,8 +614,13 @@ export class phiuser extends plugin {
         let data = []
 
         for (let id in Record) {
-            const info = get.info(get.idgetsong(id), true)
-            const record = Record[id]
+            let song = get.idgetsong(id)
+            if (!song) {
+                logger.warn('[phi-plugin]', id, '曲目无信息')
+                continue
+            }
+            let info = get.info(song, true)
+            let record = Record[id]
             for (let lv in [0, 1, 2, 3]) {
                 if (!info.chart[Level[lv]]) continue
                 let difficulty = info.chart[Level[lv]].difficulty

@@ -3673,5 +3673,53 @@
                 "combo": "1053"
             }
         }
+    },
+    "幽世桔梗.Capchiifeatまるもこ": {
+        "bpm": "182",
+        "length": "2:34",
+        "chapter": "Chapter EX-SHINOBI FLASH 精选集",
+        "chart": {
+            "EZ": {
+                "combo": "223"
+            },
+            "HD": {
+                "combo": "562"
+            },
+            "IN": {
+                "combo": "981"
+            }
+        }
+    },
+    "千紫万紅.r0yvsWABI": {
+        "bpm": "203",
+        "length": "2:27",
+        "chapter": "Chapter EX-SHINOBI FLASH 精选集",
+        "chart": {
+            "EZ": {
+                "combo": "240"
+            },
+            "HD": {
+                "combo": "779"
+            },
+            "IN": {
+                "combo": "1200"
+            }
+        }
+    },
+    "明鏡烈火.MUEvsRekuMochizuki": {
+        "bpm": "200",
+        "length": "2:12",
+        "chapter": "Chapter EX-SHINOBI FLASH 精选集",
+        "chart": {
+            "EZ": {
+                "combo": "376"
+            },
+            "HD": {
+                "combo": "566"
+            },
+            "IN": {
+                "combo": "886"
+            }
+        }
     }
 }
