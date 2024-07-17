@@ -7,7 +7,6 @@ import getInfo from '../model/getInfo.js'
 import getSave from '../model/getSave.js'
 
 
-let tot = [0, 0, 0, 0] //'EZ', 'HD', 'IN', 'AT'
 const Level = ['EZ', 'HD', 'IN', 'AT']
 const illlist = get.illlist
 
@@ -57,6 +56,8 @@ export class phiuser extends plugin {
     }
 
     async info(e) {
+        /**'EZ', 'HD', 'IN', 'AT' */
+        let tot = [0, 0, 0, 0] 
         /**背景 */
         let bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
         if (bksong) {
