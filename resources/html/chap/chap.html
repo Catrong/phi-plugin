@@ -24,11 +24,11 @@
             {{/each}}
         </div>
         <div class="song-box">
-            {{set song_style = (num <= 36) ? 1 : 2}}
-            {{set song_num = (num <= 36) ? 6 : 20}}
+            {{set song_style = (num <= 30) ? 1 : 2}}
+            {{set song_num = (num <= 30) ? 5 : 15}}
             {{set tem = 0}}
             {{each song_box song}}
-            <div class="song song_{{song_style}}" style="margin-left: {{(-200 / (song_num - 1)) * (tem % song_num) + (tem < song_num) * 100}}px;">
+            <div class="song song_{{song_style}}" style="left: {{((num <= 30) ? 100 : 130) + (((num <= 30) ? -200 : -230) / (song_num - 1)) * (tem % song_num) + ((num <= 30) ? (num <= 10 ? 700 : 230) : 85) * ((tem - (tem % song_num)) / song_num)}}px;top: {{(((num <= 30) ? 600 : 690) / (song_num - 1)) * (tem % song_num)}}px;">
                 <div class="common_ill ill"> 
                     <img src="{{song.illustration}}" alt="{{illustration}}">
                 </div>

@@ -4,8 +4,8 @@ body {
     width: 2048px;
     height: 1080px;
     position: relative;
-    display: flex;
-    justify-content: flex-end;
+    /* display: flex; */
+    /* justify-content: flex-end; */
 }
 
 body p {
@@ -24,15 +24,17 @@ body p {
 }
 
 .bar {
-    position: relative;
+    position: absolute;
     width: 80%;
+    height: 100%;
     padding-left: 10%;
     background-color: #000000cc;
     backdrop-filter: blur(5px);
-    clip-path: polygon(18.156% 0px, 0% 100%, 100% 100%, 100% 0%);
+    clip-path: polygon(20.156% 0px, 0% 100%, 100% 100%, 100% 0%);
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 10%;
 }
 
 .player {
@@ -78,10 +80,9 @@ body p {
     width: 95%;
     position: relative;
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
 }
 
 .song {
@@ -90,7 +91,7 @@ body p {
     align-items: center;
     width: auto;
     color: white;
-    position: relative;
+    position: absolute;
 }
 
 .song_1 {
@@ -98,7 +99,7 @@ body p {
 }
 
 .song_2 {
-    height: 5%;
+    height: 6%;
 }
 
 .ill {
