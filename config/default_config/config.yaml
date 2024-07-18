@@ -11,11 +11,11 @@ b19size: 50
 #  渲染超时时间 ms
 timeout: 20000
 
-#  最大同时渲染数量
-maxRandering: 1
-
 #  等待渲染超时时间 ms
 waitingTimeout: 10000
+
+#  并行渲染数量
+renderNum: 1
 
 #  b19最大成绩数量
 B19MaxNum: 50
@@ -28,6 +28,7 @@ HistoryScoreNum: 50
 
 #  历史成绩展示天数
 HistoryScoreDate: 10
+
 
 #  ************ 【发送设置】 ************* 
 

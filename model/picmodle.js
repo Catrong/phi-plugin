@@ -1,15 +1,32 @@
-import puppeteer from './puppeteer.js'
 import Config from '../components/Config.js'
 import common from '../../../lib/common/common.js'
-import { Plugin_Path } from '../components/index.js'
+import puppeteer from './puppeteer.js'
 
 
 class atlas {
 
     constructor() {
+        /**待使用puppeteer */
         this.queue = []
-        this.randering = []
+        /**即将渲染id */
+        this.torender = 0
+        /**渲染中 */
+        this.rendering = []
+        /**
+         * puppeteer队列
+         * @param {[puppeteer]} puppeteer
+         */
+        this.puppeteer = []
         this.tot = 0
+    }
+
+    async init() {
+        let num = Config.getDefOrConfig('config', 'renderNum')
+        for (let i = 0; i < num; i++) {
+            this.puppeteer.push(new puppeteer(i))
+            this.puppeteer[i].init()
+            this.queue.push(i)
+        }
     }
 
     async atlas(e, info) {
@@ -173,7 +190,7 @@ class atlas {
      * @param {*} data
      * @returns 
      */
-    async common (e, kind ,data) {
+    async common(e, kind, data) {
         return await this.render(`${kind}/${kind}`, {
             ...data,
             waitUntil: 'networkidle0'
@@ -186,55 +203,42 @@ class atlas {
     async render(path, params, cfg) {
         // return await puppeteer.render(path, params, cfg)
 
-        const id = this.tot++
-        this.queue.push(id)
+        let id = this.tot++
+        let ans = null
+        for (let i = 0; i < Config.getDefOrConfig('config', 'waitingTimeout') / 100; i++) {
+            if (this.torender == id && this.queue.length != 0) {
+                let puppeteerNum = this.queue.shift()
+                console.info(this.torender, id, puppeteerNum, this.queue)
+                ++this.torender
+                try {
+                    setTimeout(() => {
+                        if (this.rendering.indexOf(id) == -1) return
+                        this.puppeteer[puppeteerNum].restart()
+                        this.rendering.splice(this.rendering.indexOf(id), 1)
+                        this.queue.push(puppeteerNum)
+                    }, Config.getDefOrConfig('config', 'timeout'));
+                    this.rendering.push(id)
+                    ans = await this.puppeteer[puppeteerNum].render(path, params, cfg)
+                    this.rendering.splice(this.rendering.indexOf(id), 1)
+                    this.queue.push(puppeteerNum)
 
-
-        let cnt = 0
-        while (this.randering.length >= 1 || this.queue[0] != id) {
-            await common.sleep(500)
-            ++cnt
-            if (cnt * 500 >= Config.getDefOrConfig('config', 'waitingTimeout')) {
-
-
-                this.queue.splice(this.queue.indexOf(id), 1)
-                logger.error(`[Phi-Plugin] 渲染等待超时 id ${id}`)
-                logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
-                logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
-                return '等待超时，请重试QAQ！'
+                } catch (err) {
+                    logger.error(`[Phi-Plugin][渲染失败]`, id)
+                    logger.error(err)
+                    logger.warn(`[Phi-Plugin][渲染器]`, puppeteerNum)
+                    logger.warn(`[Phi-Plugin][空闲渲染器队列]`, this.queue)
+                    logger.warn(`[Phi-Plugin][渲染队列] `, this.rendering)
+                    logger.warn(`[Phi-Plugin][等待队列] `, this.tot - 1)
+                    ans = '渲染失败QAQ！\n' + err
+                }
+                break
             }
+            await common.sleep(100)
         }
 
-        this.queue.shift()
-        this.randering.push(id)
+        if (!ans) ans = '渲染超时，请稍后重试QAQ！'
 
-
-        let result
-
-
-
-        try {
-
-            setTimeout(() => {
-                puppeteer.restart()
-                this.randering.splice(this.randering.indexOf(id), 1)
-            }, Config.getDefOrConfig('config', 'timeout'));
-
-            result = await puppeteer.render(path, params, cfg)
-
-
-        } catch (err) {
-            logger.error(err)
-            logger.error(`[Phi-Plugin][渲染失败] id ${id}`)
-            logger.info(`[Phi-Plugin][等待渲染队列] ${this.queue}`)
-            logger.info(`[Phi-Plugin][渲染队列] ${this.randering}`)
-        }
-
-        this.randering.splice(this.randering.indexOf(id), 1)
-
-        result = result || '渲染失败，请重试QAQ！'
-
-        return result
+        return ans
 
     }
 
@@ -243,6 +247,6 @@ class atlas {
     }
 
 }
-
-
-export default new atlas()
+let result = new atlas()
+result.init()
+export default result

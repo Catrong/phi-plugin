@@ -60,7 +60,6 @@ class Config {
      * |'otherinfo'
      * |'LetterNum'
      * |'timeout'
-     * |'maxRandering'
      * |'waitingTimeout'
      * |'ban'
      * |'MicTipCd'
@@ -68,7 +67,8 @@ class Config {
      * |'HistoryScoreNum'
      * |'HistoryScoreDate'
      * |'LetterTimeLength'
-     * |'HistoryDayNum' } style key值
+     * |'HistoryDayNum'
+     * |'renderNum' } style key值
     */
     getDefOrConfig(name, style) {
         let def = this.getdefSet(name)

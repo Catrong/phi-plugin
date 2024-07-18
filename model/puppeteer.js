@@ -5,33 +5,13 @@ import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../comp
 import { segment } from 'oicq';
 import { _path, pluginResources, imgPath } from './path.js';
 
-let pet = {}
 
 
-try {
-    let puppeteer = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({});
-    pet = puppeteer;
-    logger.mark("[Phi-Plugin]导入新版puppteer");
-} catch (err) {
-    logger.error(`[Phi-Plugin]新版puppteer导入失败 ${err}`)
-}
-
-if (!pet) {
-    try {
-        let puppeteer = (await import("../../../lib/puppeteer/puppeteer.js")).default;
-        pet = puppeteer;
-        logger.mark("[Phi-Plugin]导入旧版puppteer，/repu将不可用");
-    } catch (err) {
-        logger.error(`[Phi-Plugin]导入puppeteer失败`);
-        logger.error(err);
-        pet = {};
-    }
-}
 
 let consvis = false
 
-export default new class newPuppeteer {
-    constructor() {
+export default class newPuppeteer {
+    constructor(e) {
         this.devices = {
             QQTheme: {
                 name: 'QQTheme',
@@ -47,7 +27,33 @@ export default new class newPuppeteer {
             },
             ...puppeteer.devices
         }
+        this.num = e
+        this.pet = {}
     }
+
+    async init() {
+        try {
+            let tem = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({});
+            this.pet = tem;
+            logger.mark("[Phi-Plugin]导入新版puppteer");
+        } catch (err) {
+            logger.error(`[Phi-Plugin]新版puppteer导入失败 ${err}`)
+        }
+
+        if (!this.pet) {
+            try {
+                let tem = (await import("../../../lib/puppeteer/puppeteer.js")).default;
+                this.pet = tem;
+                logger.mark("[Phi-Plugin]导入旧版puppteer，/repu将不可用");
+            } catch (err) {
+                logger.error(`[Phi-Plugin]导入puppeteer失败`);
+                logger.error(err);
+                this.pet = {};
+            }
+        }
+
+    }
+
 
 
     /**
@@ -101,7 +107,7 @@ export default new class newPuppeteer {
 
         /**返回图片信息 */
 
-        let base64 = await pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
+        let base64 = await this.pet.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
         let ret = true
         return base64 ? segment.image(base64) : base64
         // if (base64) {
@@ -111,7 +117,7 @@ export default new class newPuppeteer {
     }
 
     async restart() {
-        await pet.restart()
+        await this.pet.restart()
     }
 
-}()
+}

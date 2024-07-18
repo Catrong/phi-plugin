@@ -69,6 +69,18 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'renderNum',
+                    label: '并行渲染数量',
+                    bottomHelpMessage: '并行数量越多，占用的资源越多，建议谨慎修改，修改后重启生效',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 1,
+                        max: 10,
+                        placeholder: '请输入并行渲染数量',
+                    },
+                },
+                {
                     field: 'B19MaxNum',
                     label: 'B19最大限制',
                     bottomHelpMessage: '用户可以获取B19图片成绩的最大数量，建议不要太大',
@@ -284,7 +296,7 @@ export function supportGuoba() {
                     data.WordSuggImg = false
                 }
                 var vis = false
-                if (data.VikaToken.length != 23) {
+                if (data.VikaToken && data.VikaToken.length != 23) {
                     data.VikaToken = ''
                     vis = true
                 }
