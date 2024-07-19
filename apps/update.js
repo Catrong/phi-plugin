@@ -4,7 +4,7 @@ import lodash from "lodash";
 import { Restart } from '../../other/restart.js'
 import Config from "../components/Config.js";
 import common from "../../../lib/common/common.js";
-import get from "../model/getdata.js";
+import getInfo from "../model/getInfo.js";
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
@@ -58,7 +58,7 @@ export class phiupdate extends plugin {
                 await this.reply("更新完毕，正在重启云崽以应用更新")
                 setTimeout(() => this.restart(), 2000)
             } else {
-                get.init()
+                getInfo.init()
                 await this.reply("更新完毕，本次更新不需要进行重启")
             }
         }

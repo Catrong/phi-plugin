@@ -208,19 +208,17 @@ class atlas {
         for (let i = 0; i < Config.getDefOrConfig('config', 'waitingTimeout') / 100; i++) {
             if (this.torender == id && this.queue.length != 0) {
                 let puppeteerNum = this.queue.shift()
-                console.info(this.torender, id, puppeteerNum, this.queue)
+                // console.info(this.torender, id, puppeteerNum, this.queue)
                 ++this.torender
                 try {
                     setTimeout(() => {
                         if (this.rendering.indexOf(id) == -1) return
                         this.puppeteer[puppeteerNum].restart()
-                        this.rendering.splice(this.rendering.indexOf(id), 1)
-                        this.queue.push(puppeteerNum)
                     }, Config.getDefOrConfig('config', 'timeout'));
                     this.rendering.push(id)
                     ans = await this.puppeteer[puppeteerNum].render(path, params, cfg)
                     this.rendering.splice(this.rendering.indexOf(id), 1)
-                    this.queue.push(puppeteerNum)
+                    this.queue.unshift(puppeteerNum)
 
                 } catch (err) {
                     logger.error(`[Phi-Plugin][渲染失败]`, id)
@@ -236,7 +234,7 @@ class atlas {
             await common.sleep(100)
         }
 
-        if (!ans) ans = '渲染超时，请稍后重试QAQ！'
+        if (!ans) ans = '等待超时，请稍后重试QAQ！'
 
         return ans
 
