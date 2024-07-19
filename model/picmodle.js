@@ -218,7 +218,7 @@ class atlas {
                     this.rendering.push(id)
                     ans = await this.puppeteer[puppeteerNum].render(path, params, cfg)
                     this.rendering.splice(this.rendering.indexOf(id), 1)
-                    this.queue.unshift(puppeteerNum)
+                    this.queue.push(puppeteerNum)
 
                 } catch (err) {
                     logger.error(`[Phi-Plugin][渲染失败]`, id)
