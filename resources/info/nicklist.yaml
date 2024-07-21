@@ -215,6 +215,7 @@ Aphasia:
   - 狂喜
   - 狂喜兰舞
 Sparkle New Life:
+  - 闪耀新生活
   - SNL
   - 太空新生活
   - 闪亮新生活
@@ -283,6 +284,7 @@ Magenta Potion:
   - 防脱发药水
   - 紫色毒药
 Palescreen:
+  - 歌剧院
   - 男高音
   - U盘
   - 白屏
@@ -399,6 +401,8 @@ Luminescence:
   - 流光
   - 大冷光
 Protoflicker:
+  - pf
+  - proto
   - 守船石
   - flicker
   - 点划教学曲
@@ -730,6 +734,7 @@ Shadow:
   - 影子
   - 影
 Inverted World:
+  - iw
   - 反转世界
   - 倒打世界
   - 颠倒世界
@@ -744,6 +749,7 @@ Journey with You:
   - 和你旅行
   - jwy
 Bougainvillea:
+  - 梳子
   - 紫方块
   - 粉方块
   - 三角梅
@@ -878,9 +884,17 @@ WATER:
 mechanted:
   - 防毒面具
 今天不是明天:
+  - 今非明
   - 兰音
 Crave Wave:
   - CW
 Brave Notes:
   - 勇气之音
   - BN
+Shine After:
+  - sa
+Demiurge:
+  - 创世神
+  - 创
+Electron:
+  - 电子
