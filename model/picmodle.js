@@ -208,7 +208,6 @@ class atlas {
         for (let i = 0; i < Config.getDefOrConfig('config', 'waitingTimeout') / 100; i++) {
             if (this.torender == id && this.queue.length != 0) {
                 let puppeteerNum = this.queue.shift()
-                // console.info(this.torender, id, puppeteerNum, this.queue)
                 ++this.torender
                 try {
                     setTimeout(() => {
@@ -217,9 +216,6 @@ class atlas {
                     }, Config.getDefOrConfig('config', 'timeout'));
                     this.rendering.push(id)
                     ans = await this.puppeteer[puppeteerNum].render(path, params, cfg)
-                    this.rendering.splice(this.rendering.indexOf(id), 1)
-                    this.queue.push(puppeteerNum)
-
                 } catch (err) {
                     logger.error(`[Phi-Plugin][渲染失败]`, id)
                     logger.error(err)
@@ -229,6 +225,8 @@ class atlas {
                     logger.warn(`[Phi-Plugin][等待队列] `, this.tot - 1)
                     ans = '渲染失败QAQ！\n' + err
                 }
+                this.rendering.splice(this.rendering.indexOf(id), 1)
+                this.queue.push(puppeteerNum)
                 break
             }
             await common.sleep(100)
