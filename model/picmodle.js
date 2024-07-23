@@ -169,9 +169,10 @@ class atlas {
 
         let id = this.tot++
         let ans = null
+        let puppeteerNum
         for (let i = 0; i < Config.getDefOrConfig('config', 'waitingTimeout') / 100; i++) {
             if (this.torender == id && this.queue.length != 0) {
-                let puppeteerNum = this.queue.shift()
+                puppeteerNum = this.queue.shift()
                 ++this.torender
                 try {
                     this.rendering.push(id)
