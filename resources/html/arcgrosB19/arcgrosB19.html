@@ -1,0 +1,175 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+    <link rel="stylesheet" href="{{_res_path}}html/arcgrosB19/arcgrosB19.css">
+{{/block}}
+{{block 'main'}}
+
+<body style="scale: {{htmlScale}};">
+    <div class="background">
+        {{if theme == "star"}}
+        <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
+        <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
+            style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
+        {{else}}
+        {{if background}}
+        <img src="{{background}}" alt="曲绘-模糊">
+        {{else}}
+        <img src="{{_res_path}}html/otherimg/phigros.png" alt="曲绘-模糊">
+        {{/if}}
+        {{/if}}
+    </div>
+    <div class="phigros">
+        <img src="{{_res_path}}html/arcgrosB19/arcgros.png" alt="phigros">
+    </div>
+    <div class="player">
+        <div class="player_broad">
+            <img src="{{gameuser.backgroundUrl}}" alt="{{gameuser.backgroundUrl}}">
+        </div>
+        <div class="player_idBox">
+            <div class="player_id">
+                <p name="pvis">{{gameuser.PlayerId}}</p>
+            </div>
+        </div>
+        <div class="player_avatar">
+            <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
+        </div>
+        <div class="player_rks">
+            <div class="rks_broad rks0"></div>
+            <div class="rks_num">
+                <p><span>{{Math.floor(gameuser.rks)}}.</span>{{(gameuser.rks).toFixed(2).replace(/.*\./,'')}}</p>
+            </div>
+            <div class="Challenge_broad c-{{gameuser.ChallengeMode}}">
+            </div>
+            <div class="arcChallenge ac-{{gameuser.ChallengeMode}}">
+                <p>{{gameuser.ChallengeModeRank}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="date">
+        <p>Generated on:</p>
+        <p>{{Date}}</p>
+        <div class="date_broad"></div>
+    </div>
+    <div class="box">
+        <div class="song_box">
+            <div class="num_box">
+                <div class="num">
+                    <p>Phi</p>
+                </div>
+                <div class="num_broad"></div>
+                <num class="num_borad_bottom"></num>
+            </div>
+            {{if phi}}
+            <div class="difficulty_box {{phi.rank}}-box">
+                <div class="difficulty {{phi.rank}}">
+                    <p>{{phi.difficulty}}</p>
+                </div>
+            </div>
+            <div class="acc_box">
+                <div class="acc">
+                    <p>{{phi.acc}}%</p>
+                    <!-- <p>{{phi.suggest}}</p> -->
+                </div>
+            </div>
+            <div class="borad_up">
+                <div class="rks_box">
+                    <div class="ratingscore">
+                        <p>Rating Score</p>
+                    </div>
+                    <div class="rks">
+                        <p>{{phi.rks}}</p>
+                    </div>
+                    <div class="line_box">
+                        <div class="line_left"></div>
+                        <div class="square"></div>
+                        <div class="line_right"></div>
+                    </div>
+                    <div class="rating_box">
+                        <div class="rating_borad"></div>
+                        <img src="{{_res_path}}html/otherimg/{{phi.Rating}}.png" alt="{{phi.Rating}}">
+                    </div>
+                </div>
+                <div class="ill_box">
+                    <img src="{{phi.illustration}}" alt="{{phi.illustration}}">
+                    <div class="score">
+                        <p>{{fCompute.std_score(phi.score)}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="borad_down_box">
+                <div class="borad_down">
+                    <div class="name">
+                        <p name="pvis">{{phi.song}}</p>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="borad_up">
+                <p>当前还没有满分过任何曲目哦！</p>
+            </div>
+            <div class="borad_down_box">
+                <div class="borad_down">
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        {{each b19_list song}}
+        <div class="song_box">
+            <div class="num_box">
+                <div class="num">
+                    <p>#{{song.num}}</p>
+                </div>
+                <div class="num_broad"></div>
+                <num class="num_borad_bottom"></num>
+            </div>
+            <div class="difficulty_box {{song.rank}}-box">
+                <div class="difficulty {{song.rank}}">
+                    <p>{{song.difficulty}}</p>
+                </div>
+            </div>
+            <div class="acc_box">
+                <div class="acc">
+                    <p>{{song.acc}}%</p>
+                    <!-- <p>{{song.suggest}}</p> -->
+                </div>
+            </div>
+            <div class="borad_up">
+                <div class="rks_box">
+                    <div class="ratingscore">
+                        <p>Rating Score</p>
+                    </div>
+                    <div class="rks">
+                        <p>{{song.rks}}</p>
+                    </div>
+                    <div class="line_box">
+                        <div class="line_left"></div>
+                        <div class="square"></div>
+                        <div class="line_right"></div>
+                    </div>
+                    <div class="rating_box">
+                        <div class="rating_borad"></div>
+                        <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                    </div>
+                </div>
+                <div class="ill_box">
+                    <img src="{{song.illustration}}" alt="{{song.illustration}}">
+                    <div class="score">
+                        <p>{{fCompute.std_score(song.score)}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="borad_down_box">
+                <div class="borad_down">
+                    <div class="name">
+                        <p name="pvis">{{song.song}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        <div class="arc_created">
+            <p>Generated by Phi-Plugin</p>
+        </div>
+    </div>
+</body>
+{{/block}}

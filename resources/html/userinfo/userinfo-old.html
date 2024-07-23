@@ -1,4 +1,6 @@
-<head>
+{{extend defaultLayout}}
+{{block 'css'}}
+
     <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo-old.css">
     <style>
         .basis-box {
@@ -9,9 +11,11 @@
             width: 98.5%;
         }
     </style>
-</head>
+{{/block}}
 
-<body style="scale: {{size}};">
+{{block 'main'}}
+
+<body style="scale: {{htmlScale}};">
     <div class="basis-box">
         <div class="basis-box-out">
             <div class="box-in" id="basis">
@@ -224,3 +228,4 @@
         </div>
     </div>
 </body>
+{{/block}}

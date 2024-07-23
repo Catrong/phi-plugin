@@ -1,7 +1,9 @@
-<head>
-    <link rel="stylesheet" href="{{_res_path}}html/guess/guess.css">
-</head>
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/guess/guess.css">
+{{/block}}
 
+{{block 'main'}}
 {{if style}}
 
 <body style="width: 2048px;height: 1080px;">
@@ -26,3 +28,4 @@
     </div>
 </body>
 {{/if}}
+{{/block}}

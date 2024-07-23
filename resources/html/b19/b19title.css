@@ -73,6 +73,7 @@
     flex-direction: row;
     align-items: center;
     position: relative;
+    justify-content: flex-start;
 }
 
 .title .r .Challenge-r,

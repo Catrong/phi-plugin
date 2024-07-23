@@ -256,6 +256,10 @@ class getdata {
         }
 
         try {
+            let save_info = await User.getSaveInfo()
+            if (old.saveInfo.modifiedAt.iso.toISOString() == save_info.modifiedAt.iso) {
+                return [0, 0]
+            }
             const err = await User.buildRecord()
             if (err.length) {
                 send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
@@ -303,7 +307,7 @@ class getdata {
                     if (!task[i]) continue
                     if (!task[i].finished && getInfo.songsid[id] == task[i].song) {
                         let level = Level.indexOf(task[i].request.rank)
-                        if(!now.gameRecord[id][level]) continue
+                        if (!now.gameRecord[id][level]) continue
                         switch (task[i].request.type) {
                             case 'acc': {
                                 if (now.gameRecord[id][level].acc >= task[i].request.value) {

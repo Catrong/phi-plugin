@@ -5,6 +5,7 @@ import send from '../model/send.js'
 import atlas from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import getSave from '../model/getSave.js'
+import fCompute from '../model/fCompute.js'
 
 
 const Level = ['EZ', 'HD', 'IN', 'AT']
@@ -158,16 +159,16 @@ export class phiuser extends plugin {
         }
 
         const money = save.gameProgress.money
-        let userbackground = getbackground(save.gameuser.background)
+        let userbackground = fCompute.getBackground(save.gameuser.background)
 
         if (!userbackground) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
             logger.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
-        const dan = await get.getDan(e.user_id)
+        let dan = await get.getDan(e.user_id)
 
-        const gameuser = {
+        let gameuser = {
             avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
@@ -735,37 +736,6 @@ function date_to_string(date) {
     return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
 }
 
-function getbackground(name) {
-    let save_background = name
-    try {
-        save_background = name
-        switch (save_background) {
-            case 'Another Me ': {
-                save_background = 'Another Me (KALPA)'
-                break
-            }
-            case 'Another Me': {
-                save_background = 'Another Me (Rising Sun Traxx)'
-                break
-            }
-            case 'Re_Nascence (Psystyle Ver.) ': {
-                save_background = 'Re_Nascence (Psystyle Ver.)'
-                break
-            }
-            case 'Energy Synergy Matrix': {
-                save_background = 'ENERGY SYNERGY MATRIX'
-                break
-            }
-            default: {
-                save_background = name
-                break
-            }
-        }
-        return get.getill(save_background)
-    } catch (err) {
-        return false
-    }
-}
 
 /**
  * 捕获消息中的范围

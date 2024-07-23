@@ -1,11 +1,12 @@
-{{block 'css'}}
+{{extend defaultLayout}}
 
-<head>
-    <link rel="stylesheet" href="{{_res_path}}html/b19/b19.css">
-</head>
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/b19/b19.css">
 {{/block}}
 
-<body style="scale: {{size}};">
+{{block 'main'}}
+
+<body style="scale: {{htmlScale}};">
     <div class="background">
         {{if theme == "star"}}
         <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
@@ -29,22 +30,22 @@
         </div>
         <div class="m"></div>
         <div class="r">
-            <p>Player: {{PlayerId}}</p>
-            <p>RankingScore: {{Rks}}</p>
+            <p>Player: {{gameuser.PlayerId}}</p>
+            <p>RankingScore: {{gameuser.rks.toFixed(4)}}</p>
             <div class="Challenge">
                 <p>ChallengeMode:</p>
-                {{if dan}}
-                <div class="CLG {{dan.EX ? 'colorful' : ''}}">
-                    <p>{{dan.Dan}}</p>
+                {{if gameuser.dan}}
+                <div class="CLG {{gameuser.dan.EX ? 'colorful' : ''}}">
+                    <p>{{gameuser.dan.Dan}}</p>
                 </div>
                 {{/if}}
                 <div class="Challenge-r">
-                    <img src="{{_res_path}}html/otherimg/{{ChallengeMode}}.png" alt="Challenge">
-                    <p>{{ChallengeModeRank}}</p>
+                    <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="Challenge">
+                    <p>{{gameuser.ChallengeModeRank}}</p>
                 </div>
             </div>
-            {{if data}}
-            <p>Data: {{data}}</p>
+            {{if gameuser.data}}
+            <p>Data: {{gameuser.data}}</p>
             {{/if}}
             <p>Date: {{Date}}</p>
         </div>
@@ -61,7 +62,7 @@
                         <p>Phi</p>
                     </div>
                     <div class="ill">
-                        <img src="{{phi.illustration}}" alt="ill">
+                        <img src="{{phi.illustration}}" alt="{{phi.illustration}}">
                     </div>
                     <div class="rank-{{phi.rank}}">
                         <div class="org">
@@ -78,7 +79,7 @@
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
-                            <img src="{{_res_path}}html/otherimg/{{phi.Rating}}.png" alt="Rating">
+                            <img src="{{_res_path}}html/otherimg/{{phi.Rating}}.png" alt="{{phi.Rating}}">
                         </div>
                         <div class="chengji">
                             <div class="score">
@@ -144,7 +145,7 @@
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
-                            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="Rating">
+                            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
                         </div>
                         <div class="chengji">
                             <div class="score">
@@ -300,3 +301,4 @@
         window.onresize = adjustFontSize
     </script>
 </body>
+{{/block}}

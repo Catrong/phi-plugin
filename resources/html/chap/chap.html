@@ -1,9 +1,8 @@
+{{extend defaultLayout}}
 {{block 'css'}}
-
-<head>
     <link rel="stylesheet" href="{{_res_path}}html/chap/chap.css">
-</head>
 {{/block}}
+{{block 'main'}}
 <body>
     <div class="illustration">
         <img src="{{chapIll}}" alt="{{chapIll}}">
@@ -80,3 +79,4 @@
         
     </div>
 </body>
+{{/block}}

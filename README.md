@@ -71,6 +71,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi clean` | 删除所有记录 
 | `#phi (update\|更新存档)` | 更新存档 
 | `#phi (rks\|pgr\|b19)` | 查询rks，会提供得出的b21结果 
+| `杠批比三零` | 同上
 | `#phi info(1\|2)?` | 查询个人统计信息 
 | `#phi (lvsco(re)\|scolv) <定数范围> <难度>` | 获取区间成绩 
 | `#phi chap <章节名称\|help>` | 获取章节成绩

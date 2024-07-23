@@ -265,25 +265,6 @@ data_rks p {
     font-size: 60px;
 }
 
-.Challenge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    position: absolute;
-    color: white;
-    text-shadow: 0 0 20px #ffffff;
-}
-
-.Challenge img {
-    width: 100%;
-    height: auto;
-    margin-right: 0;
-    margin-left: 0;
-    border-radius: 0px;
-    margin-bottom: -65%;
-}
-
 #Challenge1 {
     width: 100px;
     height: 50px;

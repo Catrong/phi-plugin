@@ -1,3 +1,4 @@
+
 export default new class compute {
     /**
      * 计算等效rks
@@ -70,5 +71,63 @@ export default new class compute {
             console.error(err)
             await e.reply(`文件上传错误：${err.stack}`)
         }
+    }
+
+    /**
+     * 获取角色介绍背景曲绘
+     * @param {string} save_background 
+     * @returns 
+     */
+    async getBackground(save_background) {
+        try {
+            let getInfo = (await import('./getInfo.js')).default
+            switch (save_background) {
+                case 'Another Me ': {
+                    save_background = 'Another Me (KALPA)'
+                    break
+                }
+                case 'Another Me': {
+                    save_background = 'Another Me (Rising Sun Traxx)'
+                    break
+                }
+                case 'Re_Nascence (Psystyle Ver.) ': {
+                    save_background = 'Re_Nascence (Psystyle Ver.)'
+                    break
+                }
+                case 'Energy Synergy Matrix': {
+                    save_background = 'ENERGY SYNERGY MATRIX'
+                    break
+                }
+                default: {
+                    break
+                }
+            }
+            return getInfo.getill(save_background)
+        } catch (err) {
+            logger.error(`获取背景曲绘错误`, err)
+            return false
+        }
+    }
+
+    /**
+     * 为数字添加前导零
+     * @param {number} num 原数字
+     * @param {number} cover 总位数
+     * @returns 前导零数字
+     */
+    ped(num, cover) {
+        return String("0".repeat(cover) + num).slice(-cover)
+    }
+
+    /**
+     * 标准化分数
+     * @param {number} score 分数
+     * @returns 标准化的分数 0'000'000
+     */
+    std_score(score) {
+        let s1 = Math.floor(score / 1e6)
+        let s2 = Math.floor(score / 1e3) % 1e3
+        let s3 = score % 1e3
+        return `${s1}'${this.ped(s2, 3)}'${this.ped(s3, 3)}`
     }
 }()

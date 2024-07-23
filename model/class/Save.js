@@ -1,3 +1,4 @@
+import fCompute from '../fCompute.js'
 
 export default class Save {
 
@@ -155,11 +156,17 @@ export default class Save {
             chapter8SongUnlocked: data.gameProgress.chapter8SongUnlocked
         } : null
         this.gameuser = data.gameuser ? {
+            /**user */
             name: data.gameuser.name,
+            /**版本 */
             version: data.gameuser.version,
+            /**是否展示Id */
             showPlayerId: data.gameuser.showPlayerId,
+            /**简介 */
             selfIntro: data.gameuser.selfIntro,
+            /**头像 */
             avatar: data.gameuser.avatar,
+            /**背景 */
             background: data.gameuser.background,
         } : null
         this.gameRecord = {}
@@ -283,6 +290,57 @@ export default class Save {
      * @returns {LevelRecordInfo}
      */
     getSongsRecord(id) {
-        return {...this.gameRecord[id]}
+        return { ...this.gameRecord[id] }
+    }
+
+    /**
+     * 
+     * @param {number} num B几
+     * @returns phi, b19_list
+     */
+    async getB19(num) {
+        let getInfo = (await import('../getInfo.js')).default
+        /**计算得到的rks，仅作为测试使用 */
+        let com_rks = 0
+        /**满分且 rks 最高的成绩数组 */
+        let philist = this.findAccRecord(100, true)
+        /**随机抽取一个 b0 */
+        let phi = philist[Math.floor(Math.random() * philist.length)]
+        /**处理数据 */
+        if (phi?.rks) {
+            com_rks += Number(phi.rks) //计算rks
+            phi.rks = phi.rks.toFixed(2)
+            phi.acc = phi.acc.toFixed(2)
+            phi.illustration = getInfo.getill(phi.song)
+            phi.suggest = "无法推分"
+        }
+
+        /**所有成绩 */
+        let rkslist = this.getRecord()
+        /**真实 rks */
+        let userrks = this.saveInfo.summary.rankingScore
+        /**考虑屁股肉四舍五入原则的最小上升rks */
+        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
+        if (minuprks < 0) {
+            minuprks += 0.01
+        }
+
+        /**bestN 列表 */
+        let b19_list = []
+        for (let i = 0; i < num && i < rkslist.length; ++i) {
+            /**计算rks */
+            if (i < 19) com_rks += Number(rkslist[i].rks)
+            /**是 Best 几 */
+            rkslist[i].num = i + 1
+            /**推分建议 */
+            rkslist[i].suggest = fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
+            rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
+            rkslist[i].acc = Number(rkslist[i].acc).toFixed(2)
+            /**曲绘 */
+            rkslist[i].illustration = getInfo.getill(rkslist[i].song, 'common')
+            /**b19列表 */
+            b19_list.push(rkslist[i])
+        }
+        return { phi, b19_list }
     }
 }

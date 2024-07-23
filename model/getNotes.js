@@ -45,6 +45,7 @@ export default new class getNotes {
     /**
      * 获取并初始化用户数据
      * @param {string} user_id 
+     * @returns {{plugin_data:{money:number,sign_in:string,task_time:string,task:Array<object>,theme:string}}}
      */
     async getNotesData(user_id) {
         let data = await readFile.FileReader(path.join(pluginDataPath, `${user_id}_.json`))

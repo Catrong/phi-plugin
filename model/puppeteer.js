@@ -4,6 +4,7 @@ import puppeteer from 'puppeteer'
 import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../components/index.js'
 import { segment } from 'oicq';
 import { _path, pluginResources, imgPath } from './path.js';
+import fCompute from './fCompute.js';
 
 
 
@@ -33,7 +34,7 @@ export default class newPuppeteer {
 
     async init() {
         try {
-            let tem = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({});
+            let tem = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({ puppeteerTimeout: Config.getDefOrConfig('config', 'timeout') });
             this.pet = tem;
             logger.mark("[Phi-Plugin]导入新版puppteer");
         } catch (err) {
@@ -90,7 +91,9 @@ export default class newPuppeteer {
                 copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
             },
             Version: Version,
-            quality: Config.getDefOrConfig('config', 'randerQuality')
+            quality: Config.getDefOrConfig('config', 'randerQuality'),
+            Math,
+            fCompute,
         }
 
         if (process.argv.includes('web-debug')) {

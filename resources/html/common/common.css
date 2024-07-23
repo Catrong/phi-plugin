@@ -65,6 +65,7 @@ body {
     margin: 0;
     background: url('../otherimg/phigros.png') center no-repeat;
     background-size: cover;
+    transform-origin: top left;
 }
 
 .background {
@@ -157,4 +158,23 @@ body {
 .common_ill {
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
     overflow: hidden;
+}
+
+.Challenge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    color: white;
+    /* text-shadow: 0 0 20px #ffffff; */
+}
+
+.Challenge img {
+    width: 100%;
+    height: auto;
+    margin-right: 0;
+    margin-left: 0;
+    border-radius: 0px;
+    margin-bottom: -65%;
 }

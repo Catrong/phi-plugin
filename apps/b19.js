@@ -11,6 +11,7 @@ import fCompute from '../model/fCompute.js';
 import getInfo from '../model/getInfo.js';
 import getSave from '../model/getSave.js';
 import { LevelNum } from '../model/constNum.js';
+import getNotes from '../model/getNotes.js';
 
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
@@ -70,6 +71,10 @@ export class phib19 extends plugin {
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b[0-9]+|rks|pgr|PGR|B[0-9]+|RKS).*$`,
                     fnc: 'b19'
+                },
+                {
+                    reg: `^[#/杠刚钢纲](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)[a(arc)啊阿批屁劈](\\s*)((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
+                    fnc: 'arcgrosB19'
                 },
                 {
                     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
@@ -146,81 +151,88 @@ export class phib19 extends plugin {
             }
         }
 
+        let save_b19 = await save.getB19(nnum)
 
-        let phi = {}
-        let b19_list = []
-        let com_rks = 0 //计算得到的rks
-
-        phi.rks = 0
-
-        /**满分且 rks 最高的成绩数组 */
-        let philist = save.findAccRecord(100, true)
-
-        /**随机抽取一个 b0 */
-        // console.info(philist)
-        phi = philist[Math.floor(Math.random() * philist.length)]
-
-        if (phi?.rks) {
-            com_rks += Number(phi.rks) //计算rks
-            phi.rks = phi.rks.toFixed(2)
-            phi.acc = phi.acc.toFixed(2)
-            phi.illustration = get.getill(phi.song)
-            phi.suggest = "无法推分"
+        let dan = await get.getDan(e.user_id)
+        let money = save.gameProgress.money
+        let gameuser = {
+            avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save.saveInfo.summary.rankingScore,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: save.gameuser.selfIntro,
+            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            PlayerId: save.saveInfo.PlayerId,
+            dan: dan,
         }
-
-        /**所有成绩 */
-        let rkslist = save.getRecord()
-        /**真实 rks */
-        let userrks = save.saveInfo.summary.rankingScore
-        /**考虑屁股肉四舍五入原则 */
-        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
-        if (minuprks < 0) {
-            minuprks += 0.01
-        }
-
-        rkslist = rkslist.sort(cmp())
-        let illlist = []
-        for (let i = 0; i < nnum && i < rkslist.length; ++i) {
-            /**计算rks */
-            if (i < 19) com_rks += Number(rkslist[i].rks)
-            /**是 Best 几 */
-            rkslist[i].num = i + 1
-            /**推分建议 */
-            rkslist[i].suggest = fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
-
-            rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
-            rkslist[i].acc = Number(rkslist[i].acc).toFixed(2)
-            /**曲绘 */
-            rkslist[i].illustration = get.getill(rkslist[i].song, 'common')
-            /**b19列表 */
-            b19_list.push(rkslist[i])
-            /**背景列表 */
-            illlist.push(get.getill(rkslist[i].song, 'blur'))
-        }
-
-
 
         let data = {
-            phi,
-            b19_list,
-            data: undefined,
+            phi: save_b19.phi,
+            b19_list: save_b19.b19_list,
+            gameuser,
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             dan: await get.getDan(e.user_id),
-            background: bksong || illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
+            background: bksong || getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
             theme: plugin_data?.plugin_data?.theme || 'star',
             nnum: nnum,
-        }
-        if (save.gameProgress) {
-            let money = save.gameProgress.money
-            data.data = `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`
         }
 
 
         send.send_with_At(e, await altas.b19(e, data))
+    }
+
+    /**arc版查分图 */
+    async arcgrosB19(e) {
+
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return true
+        }
+
+
+        let nnum = e.msg.match(/(b|B)[0-9]*/g)
+        nnum = nnum ? Number(nnum.replace(/(b|B)/g, '')) : 29
+        if (!nnum) { nnum = 29 }
+
+        nnum = Math.max(nnum, 20)
+        nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
+
+        let save_b19 = await save.getB19(nnum)
+
+        let money = save.gameProgress.money
+        let gameuser = {
+            avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save.saveInfo.summary.rankingScore,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: save.gameuser.selfIntro,
+            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            PlayerId: save.saveInfo.PlayerId,
+        }
+        let plugin_data = await getNotes.getNotesData(e.user_id)
+
+        let data = {
+            phi: save_b19.phi,
+            b19_list: save_b19.b19_list,
+            gameuser,
+            PlayerId: save.saveInfo.PlayerId,
+            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
+            Date: save.saveInfo.updatedAt,
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            dan: await get.getDan(e.user_id),
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+            theme: plugin_data?.plugin_data?.theme || 'star',
+            nnum: nnum,
+        }
+
+        send.send_with_At(e, await altas.arcgros_b19(e, data))
     }
 
     /**获取bestn文字版 */
@@ -742,7 +754,7 @@ export class phib19 extends plugin {
             }
         }
 
-        send.send_with_At(e, await altas.common(e, 'chap', {
+        send.send_with_At(e, await altas.chap(e, {
             player: { id: save.saveInfo.PlayerId },
             count,
             song_box,
