@@ -249,7 +249,8 @@ class getdata {
                 } else {
                     send.send_with_At(e, `检测到新的sessionToken，将自动更换绑定。如果需要删除统计记录请 ⌈/${Config.getDefOrConfig('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
 
-                    getSave.add_user_token(e.user_id, User.session)
+                    await getSave.add_user_token(e.user_id, User.session)
+                    old = await this.getsave(e.user_id)
 
                 }
             }
