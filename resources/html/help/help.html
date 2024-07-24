@@ -30,7 +30,7 @@
         <div class="line">
             <div class="order">
                 {{if cmdHead}}
-                <p name="pvis">{{help.title.replace('/',`/${cmdHead} `)}}</p>
+                <p name="pvis">{{help.title.replace(/[\/杠钢刚]/g,`/${cmdHead} `)}}</p>
                 {{else}}
                 <p name="pvis">{{help.title}}</p>
                 {{/if}}
@@ -40,7 +40,7 @@
                     <div class="num">{{idx + 1}}</div>
                     <div class="song">
                         {{if cmdHead}}
-                        <p name="pvis">{{#(help.eg || help.title).replace('/',`/${cmdHead} `)}}</p>
+                        <p name="pvis">{{#(help.eg || help.title).replace(/[\/杠钢刚]/g,`/${cmdHead} `)}}</p>
                         {{else}}
                         <p name="pvis">{{#(help.eg || help.title)}}</p>
                         {{/if}}
