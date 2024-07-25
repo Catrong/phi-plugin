@@ -455,14 +455,15 @@ function randtask(save, task = []) {
     rank_line.push(18)
 
     /**将曲目分级并处理 */
-    for (let song in info) {
+    for (let id in info) {
+        if(id == 'テリトリーバトル.ツユ') continue
         for (let level in Level) {
-            if (info[song]['chart'][Level[level]]) {
-                if (!gameRecord[song] || !gameRecord[song][level] || gameRecord[song][level].acc != 100) {
-                    let dif = info[song]['chart'][Level[level]]['difficulty']
+            if (info[id]['chart'][Level[level]]) {
+                if (!gameRecord[id] || !gameRecord[id][level] || gameRecord[id][level].acc != 100) {
+                    let dif = info[id]['chart'][Level[level]]['difficulty']
                     for (let i in rank_line) {
                         if (dif < rank_line[i]) {
-                            ranked_songs[i].push({ song, level })
+                            ranked_songs[i].push({ song: id, level })
                             break
                         }
                     }
