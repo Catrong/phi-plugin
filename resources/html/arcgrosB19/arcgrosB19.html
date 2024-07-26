@@ -36,7 +36,7 @@
         <div class="player_rks">
             <div class="rks_broad rks0"></div>
             <div class="rks_num">
-                <p><span>{{Math.floor(gameuser.rks)}}.</span>{{(gameuser.rks).toFixed(2).replace(/.*\./,'')}}</p>
+                <p><span>{{(gameuser.rks).toFixed(2).replace(/\..*/,'')}}.</span>{{(gameuser.rks).toFixed(2).replace(/.*\./,'')}}</p>
             </div>
             <div class="Challenge_broad c-{{gameuser.ChallengeMode}}">
             </div>
