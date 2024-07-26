@@ -196,10 +196,10 @@ export class phib19 extends plugin {
 
 
         let nnum = e.msg.match(/(b|B)[0-9]*/g)
-        nnum = nnum ? Number(nnum.replace(/(b|B)/g, '')) : 29
+        nnum = nnum ? Number(nnum[0].replace(/(b|B)/g, '')) - 1 : 29
         if (!nnum) { nnum = 29 }
 
-        nnum = Math.max(nnum, 20)
+        nnum = Math.max(nnum, 19)
         nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
 
         let save_b19 = await save.getB19(nnum)
