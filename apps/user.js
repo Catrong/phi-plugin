@@ -159,7 +159,7 @@ export class phiuser extends plugin {
         }
 
         const money = save.gameProgress.money
-        let userbackground = fCompute.getBackground(save.gameuser.background)
+        let userbackground = await fCompute.getBackground(save.gameuser.background)
 
         if (!userbackground) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
