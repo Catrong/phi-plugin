@@ -11,6 +11,7 @@ import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
 import getInfo from '../model/getInfo.js'
+import getPic from '../model/getPic.js'
 
 let songsname = getInfo.songlist
 let songweights = {} //存储每首歌曲被抽取的权重
@@ -353,8 +354,19 @@ export class philetter extends plugin {
                             delete blurlist[group_id][num]
                             send.send_with_At(e, `恭喜你ww，答对啦喵，第${num}首答案是[${standard_song}]!ヾ(≧▽≦*)o `, true)
 
+                            /**发送曲绘 */
                             if (get.info(standard_song).illustration) { //如果有曲绘文件
-                                e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
+                                switch (Config.getDefOrConfig('config', 'LetterIllustration')) {
+                                    case "水印版": {
+                                        e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
+                                        break;
+                                    }
+                                    case "原版": {
+                                        e.reply(getPic.getIll(song[0]))
+                                    }
+                                    default:
+                                        break;
+                                }
                             }
 
                             winnerlist[group_id][num] = sender.card //记录猜对者

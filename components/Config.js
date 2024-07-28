@@ -68,7 +68,8 @@ class Config {
      * |'HistoryScoreDate'
      * |'LetterTimeLength'
      * |'HistoryDayNum'
-     * |'renderNum' } style key值
+     * |'renderNum'
+     * |'LetterIllustration' } style key值
     */
     getDefOrConfig(name, style) {
         let def = this.getdefSet(name)

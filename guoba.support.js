@@ -209,6 +209,28 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'LetterIllustration',
+                    label: '发送曲绘',
+                    bottomHelpMessage: '猜对后是否发送以及发送什么曲绘，水印版需要占用渲染资源，不发图片更快',
+                    component: 'Select',
+                    componentProps: {
+                        options: [
+                            {
+                                label: '水印版',
+                                value: "水印版"
+                            },
+                            {
+                                label: '原版',
+                                value: "原版"
+                            },
+                            {
+                                label: '不发送',
+                                value: "不发送"
+                            }
+                        ]
+                    }
+                },
+                {
                     field: 'LetterRevealCd',
                     label: '字母提示间隔',
                     bottomHelpMessage: '开字母的全局开字母间隔时间，单位：秒',

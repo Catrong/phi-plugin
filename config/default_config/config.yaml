@@ -56,14 +56,17 @@ GuessTipCd: 15
 #  猜字母条数
 LetterNum: 8
 
+#  猜对后是否发送以及发送什么曲绘 原版 水印版 不发送
+LetterIllustration: "水印版"
+
 #  猜字母群聊全局猜测冷却时间间隔(s)
-LetterGuessCd: 3
+LetterGuessCd: 0
 
 #  猜字母群聊全局翻开字母冷却时间间隔(s)
-LetterRevealCd: 12
+LetterRevealCd: 0
 
 #  猜字母群聊全局提示冷却时间间隔(s)
-LetterTipCd: 30
+LetterTipCd: 0
 
 #  猜字母超时时长(s)
 LetterTimeLength: 600
