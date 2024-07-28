@@ -9,7 +9,7 @@ class atlas {
         /**待使用puppeteer */
         this.queue = []
         /**即将渲染id */
-        this.torender = 0
+        this.torender = []
         /**渲染中 */
         this.rendering = []
         /**
@@ -168,12 +168,13 @@ class atlas {
         // return await puppeteer.render(path, params, cfg)
 
         let id = this.tot++
+        this.torender.push(id)
         let ans = null
         let puppeteerNum
         for (let i = 0; i < Config.getDefOrConfig('config', 'waitingTimeout') / 100; i++) {
-            if (this.torender == id && this.queue.length != 0) {
+            if (this.torender[0] == id && this.queue.length != 0) {
                 puppeteerNum = this.queue.shift()
-                ++this.torender
+                this.torender.shift()
                 try {
                     this.rendering.push(id)
                     ans = await this.puppeteer[puppeteerNum].render(path, params, cfg)
@@ -200,6 +201,7 @@ class atlas {
             logger.warn(`[Phi-Plugin][空闲渲染器队列]`, this.queue)
             logger.warn(`[Phi-Plugin][渲染队列] `, this.rendering)
             logger.warn(`[Phi-Plugin][等待队列] `, this.tot - 1)
+            this.torender.splice(this.torender.indexOf(id), 1)
         }
 
         return ans
