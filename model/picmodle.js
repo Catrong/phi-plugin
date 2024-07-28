@@ -207,7 +207,10 @@ class atlas {
     }
 
     async restart() {
-        await puppeteer.restart(true)
+        let num = Config.getDefOrConfig('config', 'renderNum')
+        for (let i = 0; i < num; i++) {
+            this.puppeteer[i].restart(true)
+        }
     }
 
 }

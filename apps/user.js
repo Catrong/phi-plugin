@@ -504,7 +504,7 @@ export class phiuser extends plugin {
             }
         }
 
-        let illustration = getbackground(save.gameuser.background)
+        let illustration = await fCompute.getBackground(save.gameuser.background)
 
         if (!illustration) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
