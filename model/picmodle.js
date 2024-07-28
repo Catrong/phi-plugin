@@ -184,7 +184,7 @@ class atlas {
                     logger.warn(`[Phi-Plugin][渲染器]`, puppeteerNum)
                     logger.warn(`[Phi-Plugin][空闲渲染器队列]`, this.queue)
                     logger.warn(`[Phi-Plugin][渲染队列] `, this.rendering)
-                    logger.warn(`[Phi-Plugin][等待队列] `, this.tot - 1)
+                    logger.warn(`[Phi-Plugin][等待队列] `, this.torender)
                     ans = '渲染失败QAQ！\n' + err
                 }
                 this.rendering.splice(this.rendering.indexOf(id), 1)
@@ -196,11 +196,10 @@ class atlas {
 
         if (!ans) {
             ans = '等待超时，请稍后重试QAQ！'
-            logger.error(`[Phi-Plugin][渲染失败]`, id)
-            logger.warn(`[Phi-Plugin][渲染器]`, puppeteerNum)
+            logger.error(`[Phi-Plugin][等待超时]`, id)
             logger.warn(`[Phi-Plugin][空闲渲染器队列]`, this.queue)
             logger.warn(`[Phi-Plugin][渲染队列] `, this.rendering)
-            logger.warn(`[Phi-Plugin][等待队列] `, this.tot - 1)
+            logger.warn(`[Phi-Plugin][等待队列] `, this.torender)
             this.torender.splice(this.torender.indexOf(id), 1)
         }
 
