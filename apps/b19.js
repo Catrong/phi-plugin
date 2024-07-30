@@ -58,7 +58,7 @@ const chap = {
     茶鸣十二律: "Chapter EX-茶鸣拾贰律 精选集",
     OverRapid: "Chapter EX-OverRapid 精选集",
     OR: "Chapter EX-OverRapid 精选集",
-    ROTEANO: "Chapter EX-Rotaeno 精选集",
+    ROTAENO: "Chapter EX-Rotaeno 精选集",
     方向盘: "Chapter EX-Rotaeno 精选集",
     CHUNITHM: "Chapter EX-CHUNITHM 精选集",
     中二: "Chapter EX-CHUNITHM 精选集",

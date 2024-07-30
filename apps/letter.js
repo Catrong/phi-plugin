@@ -74,7 +74,7 @@ export class philetter extends plugin {
         let { msg } = e // 提取消息
         msg = msg.replace(/[#/](.*)(letter|出你字母|猜曲名|开字母|猜字母)(\s*)/, "")
 
-        /**处理其他游戏曲库 */
+        /**TODO 处理其他游戏曲库 */
         let totNameList = []
         // console.info(getInfo.DLC_Info)
         gameSelectList[group_id] = []
