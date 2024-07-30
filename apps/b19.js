@@ -12,6 +12,7 @@ import getInfo from '../model/getInfo.js';
 import getSave from '../model/getSave.js';
 import { LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
+import getPic from '../model/getPic.js';
 
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
@@ -20,6 +21,8 @@ const Level = ['EZ', 'HD', 'IN', 'AT', null] //存档的难度映射
 
 const chap = {
     S: "单曲精选集",
+    单曲: "单曲精选集",
+    单曲精选集: "单曲精选集",
     C0: "Chapter Legacy 过去的章节",
     旧章: "Chapter Legacy 过去的章节",
     Legacy: "Chapter Legacy 过去的章节",
@@ -37,7 +40,7 @@ const chap = {
     弭刻日: "Side Story 2 弭刻日",
     S3: "Side Story 3 盗乐行",
     盗乐行: "Side Story 3 盗乐行",
-    EX: "Extra Story Chapter 极星卫",
+    EXS: "Extra Story Chapter 极星卫",
     极星卫: "Extra Story Chapter 极星卫",
     黑皇帝: "Chapter EX-Rising Sun Traxx 精选集",
     HYUN: "Chapter EX-HyuN 精选集",
@@ -51,13 +54,20 @@ const chap = {
     江米条: "Chapter EX-姜米條 精选集",
     姜米條: "Chapter EX-姜米條 精选集",
     茶鸣: "Chapter EX-茶鸣拾贰律 精选集",
+    茶鸣拾贰律: "Chapter EX-茶鸣拾贰律 精选集",
+    茶鸣十二律: "Chapter EX-茶鸣拾贰律 精选集",
+    OverRapid: "Chapter EX-OverRapid 精选集",
     OR: "Chapter EX-OverRapid 精选集",
-    方向盘: "Chapter EX-Rotaeno 精选集",
     ROTEANO: "Chapter EX-Rotaeno 精选集",
+    方向盘: "Chapter EX-Rotaeno 精选集",
+    CHUNITHM: "Chapter EX-CHUNITHM 精选集",
     中二: "Chapter EX-CHUNITHM 精选集",
     范式: "Chapter EX-Paradigm：Reboot 精选集",
-    SHINOBI: "Chapter EX- SHINOBI SLASH 精选集",
+    SHINOBI: "Chapter EX-SHINOBI SLASH 精选集",
     千恋万花: "Chapter EX-SHINOBI SLASH 精选集",
+    TAKUMI: "Chapter EX-TAKUMI³精选集",
+    塔库米: "Chapter EX-TAKUMI³精选集",
+    三次方: "Chapter EX-TAKUMI³精选集"
 }
 
 export class phib19 extends plugin {
@@ -657,11 +667,7 @@ export class phib19 extends plugin {
         }
         let msg = e.msg.replace(/^[#/].*chap\s*/, '').toUpperCase()
         if (msg == 'HELP') {
-            let Remsg = '别名：章节名称\n'
-            for (let nick in chap) {
-                Remsg += `${nick}：${chap[nick]}\n`
-            }
-            e.reply(common.makeForwardMsg(e, Remsg))
+            send.send_with_At(e, getPic.getimg('chapHelp'))
             return true
         }
         if (msg != 'ALL' && !chap[msg]) {

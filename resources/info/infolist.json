@@ -3721,5 +3721,56 @@
                 "combo": "886"
             }
         }
+    },
+    "Cuvism.Fl00tvsHalv": {
+        "bpm": "194",
+        "length": "2:40",
+        "chapter": "Chapter EX-TAKUMI³精选集",
+        "chart": {
+            "EZ": {
+                "combo": "222"
+            },
+            "HD": {
+                "combo": "761"
+            },
+            "IN": {
+                "combo": "830"
+            },
+            "AT": {
+                "combo": "1088"
+            }
+        }
+    },
+    "iLArtifact.Link0": {
+        "bpm": "184",
+        "length": "2:43",
+        "chapter": "Chapter EX-TAKUMI³精选集",
+        "chart": {
+            "EZ": {
+                "combo": "482"
+            },
+            "HD": {
+                "combo": "925"
+            },
+            "IN": {
+                "combo": "1279"
+            }
+        }
+    },
+    "atruthseekerCommunicationwithUtopiawillbelost.kuro": {
+        "bpm": "206",
+        "length": "2:02",
+        "chapter": "Chapter EX-TAKUMI³精选集",
+        "chart": {
+            "EZ": {
+                "combo": "328"
+            },
+            "HD": {
+                "combo": "555"
+            },
+            "IN": {
+                "combo": "986"
+            }
+        }
     }
 }

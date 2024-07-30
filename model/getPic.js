@@ -41,7 +41,8 @@ export default new class pic {
         return await atlas.chap(e, data)
     }
 
-    /**获取本地图片
+    /**
+     * 获取本地图片，文件格式默认png
      * @param {string} img 文件名
      * @param {string} style 文件格式，默认为png
      */

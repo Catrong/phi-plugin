@@ -2,7 +2,6 @@
 import fs from 'fs'
 import puppeteer from 'puppeteer'
 import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../components/index.js'
-import { segment } from 'oicq';
 import { _path, pluginResources, imgPath } from './path.js';
 import fCompute from './fCompute.js';
 
