@@ -25,15 +25,15 @@ export class phiDan extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(Dan|dan)(\\s*)update$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(Dan|dan)(\\s*)update$`,
                     fnc: 'danupdate'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(Dan|dan).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(Dan|dan).*$`,
                     fnc: 'dan'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(sessionToken)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(sessionToken)$`,
                     fnc: 'sstk'
                 },
 
@@ -57,7 +57,7 @@ export class phiDan extends plugin {
                 }
                 send.send_with_At(e, resmsg)
             } else {
-                send.send_with_At(e, [`唔，本地没有你的认证记录哦！如果提交过审核的话，可以试试更新一下嗷！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} dan update`, word])
+                send.send_with_At(e, [`唔，本地没有你的认证记录哦！如果提交过审核的话，可以试试更新一下嗷！\n格式：/${Config.getUserCfg('config', 'cmdhead')} dan update`, word])
             }
 
             return true

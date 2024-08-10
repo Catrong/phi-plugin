@@ -78,13 +78,14 @@ class readFile {
                     fs.writeFileSync(filepath, data, 'utf8')
                 }
                 default: {
-                    logger.error(`[phi-plugin][Set]不支持的文件格式`, style, filepath)
+                    // logger.error(`[phi-plugin][Set]不支持的文件格式`, style, filepath)
                     fs.writeFileSync(filepath, data, 'utf8')
                     break
                 }
             }
             return true
         } catch (error) {
+            console.info(error)
             logger.warn(`[phi-plugin]写入文件 ${filepath} 时遇到错误`)
             logger.warn(error)
             return false

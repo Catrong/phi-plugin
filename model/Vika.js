@@ -31,7 +31,7 @@ class VikaData {
             } catch { }
             logger.info(sessionToken)
             logger.info(response)
-            logger.info(Config.getDefOrConfig('config', 'VikaToken'))
+            logger.info(Config.getUserCfg('config', 'VikaToken'))
             if (response.success) {
                 return makeRespones(response);
             }
@@ -99,5 +99,5 @@ function makeRespones(response) {
 }
 
 
-export default new VikaData(Config.getDefOrConfig('config', 'VikaToken'));
+export default new VikaData(Config.getUserCfg('config', 'VikaToken'));
 

@@ -79,27 +79,27 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(b[0-9]+|rks|pgr|PGR|B[0-9]+|RKS).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(b[0-9]+|rks|pgr|PGR|B[0-9]+|RKS).*$`,
                     fnc: 'b19'
                 },
                 {
-                    reg: `^[#/杠刚钢纲](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)[a(arc)啊阿批屁劈](\\s*)((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
+                    reg: `^[#/杠刚钢纲](${Config.getUserCfg('config', 'cmdhead')})(\\s*)[a(arc)啊阿批屁劈](\\s*)((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
                     fnc: 'arcgrosB19'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
                     fnc: 'bestn'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(score|单曲成绩)[1-2]?.*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(score|单曲成绩)[1-2]?.*$`,
                     fnc: 'singlescore'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(suggest|推分(建议)?)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(suggest|推分(建议)?)$`,
                     fnc: 'suggest'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)chap.*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)chap.*$`,
                     fnc: 'chap'
                 }
             ]
@@ -123,7 +123,7 @@ export class phib19 extends plugin {
         }
 
         nnum = Math.max(nnum, 21)
-        nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
+        nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
         let bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
 
@@ -140,7 +140,7 @@ export class phib19 extends plugin {
         let plugin_data = await get.getpluginData(e.user_id)
 
 
-        if (!Config.getDefOrConfig('config', 'isGuild'))
+        if (!Config.getUserCfg('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
         /**自定义数量不更新存档 */
@@ -210,7 +210,7 @@ export class phib19 extends plugin {
         if (!nnum) { nnum = 29 }
 
         nnum = Math.max(nnum, 19)
-        nnum = Math.min(nnum, Config.getDefOrConfig('config', 'B19MaxNum'))
+        nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
         let save_b19 = await save.getB19(nnum)
 
@@ -303,7 +303,7 @@ export class phib19 extends plugin {
 
         rkslist = rkslist.sort(cmp())
 
-        if (Config.getDefOrConfig('config', 'isGuild')) {
+        if (Config.getUserCfg('config', 'isGuild')) {
             /**频道模式 */
 
             let Remsg = []
@@ -344,7 +344,7 @@ export class phib19 extends plugin {
             Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
 
 
-            if (Config.getDefOrConfig('config', 'WordB19Img')) {
+            if (Config.getUserCfg('config', 'WordB19Img')) {
 
                 if (phi.song) {
                     Remsg.push([`#φ:\n`,
@@ -406,7 +406,7 @@ export class phib19 extends plugin {
         let song = e.msg.replace(/[#/](.*)(score|单曲成绩)[1-2]?(\s*)/g, '')
 
         if (!song) {
-            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} score <曲名>`)
+            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} score <曲名>`)
             return true
         }
 
@@ -429,7 +429,7 @@ export class phib19 extends plugin {
         }
 
         if (!ans) {
-            send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} update`)
+            send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
             return true
         }
 
@@ -601,7 +601,7 @@ export class phib19 extends plugin {
 
         suggestlist = suggestlist.sort(cmpsugg())
 
-        if (Config.getDefOrConfig('config', 'isGuild')) {
+        if (Config.getUserCfg('config', 'isGuild')) {
             /**频道模式 */
             let Remsg = []
             let tmsg = ''
@@ -635,7 +635,7 @@ export class phib19 extends plugin {
             let Remsg = []
 
             /**判断是否发图 */
-            if (Config.getDefOrConfig('config', 'WordSuggImg')) {
+            if (Config.getUserCfg('config', 'WordSuggImg')) {
                 for (let i = 0; i < suggestlist.length; ++i) {
                     Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n`,
                     segment.image(get.getill(suggestlist[i].song, false)),
@@ -671,7 +671,7 @@ export class phib19 extends plugin {
             return true
         }
         if (msg != 'ALL' && !chap[msg]) {
-            send.send_with_At(e, `未找到${msg}章节QAQ！可以使用 /${Config.getDefOrConfig('config', 'cmdhead')} chap help 来查询支持的名称嗷！`)
+            send.send_with_At(e, `未找到${msg}章节QAQ！可以使用 /${Config.getUserCfg('config', 'cmdhead')} chap help 来查询支持的名称嗷！`)
             return false
         }
 

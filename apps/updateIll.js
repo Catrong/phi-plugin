@@ -23,7 +23,7 @@ export class phiupdateIll extends plugin {
             priority: 1001,
             rule: [
                 {
-                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getDefOrConfig('config', 'cmdhead')}))(\\s*)(下载|更新|download|update|down|up)\s*(曲绘|ILL|ill)$`,
+                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)(下载|更新|download|update|down|up)\s*(曲绘|ILL|ill)$`,
                     fnc: "update",
                 },
             ],
@@ -35,7 +35,10 @@ export class phiupdateIll extends plugin {
      * @returns
      */
     async update() {
-        if (!this.e.isMaster) return false;
+        if (!this.e.isMaster){
+            this.reply("无权限");
+            return false;
+        }
 
         /** 检查是否正在更新中 */
         if (uping) {
@@ -183,7 +186,7 @@ export class phiupdateIll extends plugin {
             if (str[1].includes("Merge branch")) continue;
             log.push(str[1]);
         }
-        if (!Config.getDefOrConfig('config', 'isGuild')) {
+        if (!Config.getUserCfg('config', 'isGuild')) {
             log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin-ill");
         }
 

@@ -17,19 +17,19 @@ export class phiset extends plugin {
             priority: 1000,
             rule: [
                 // {
-                //     reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(禁用|ban).*$`,
+                //     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(禁用|ban).*$`,
                 //     fnc: 'ban'
                 // },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})\\s*repu$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*repu$`,
                     fnc: 'restartpu'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})\\s*backup(\\s*back)?$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*backup(\\s*back)?$`,
                     fnc: 'backup'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})\\s*restore$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*restore$`,
                     fnc: 'restore'
                 },
             ]
@@ -39,7 +39,7 @@ export class phiset extends plugin {
 
     async ban(e) {
         if (e.msg.match(/guess|(猜)曲绘/g)) {
-            Config.getDefOrConfig('config', 'ban').includes(e)
+            Config.getUserCfg('config', 'ban').includes(e)
         }
     }
 

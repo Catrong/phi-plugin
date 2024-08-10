@@ -1,8 +1,7 @@
-import common from '../../../lib/common/common.js'
-import plugin from '../../../lib/plugins/plugin.js'
-import Config from '../components/Config.js'
-import get from '../model/getdata.js'
-import send from '../model/send.js'
+import common from '../../../../lib/common/common.js'
+import Config from '../../components/Config.js'
+import get from '../../model/getdata.js'
+import send from '../../model/send.js'
 
 let songsname = get.illlist
 let songweights = {} //存储每首歌曲被抽取的权重
@@ -13,38 +12,9 @@ shuffleArray(songsname)
 let gamelist = {}
 const eList = {}
 
-export class phiguess extends plugin {
-    constructor() {
-        super({
-            name: 'phi-game 猜曲绘',
-            dsc: 'phi-plugin 猜曲绘',
-            event: 'message',
-            priority: 1000,
-            rule: [
-                {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(guess|猜曲目|猜曲绘)$`,
-                    fnc: 'start'
-                },
-                {
-                    reg: `^.*$`,
-                    fnc: 'guess',
-                    log: false
-                },
-                {
-                    reg: `^[#/](曲绘|ill)(\\s*)(ans|答案|结束)$`,
-                    fnc: 'ans'
-                },
-                {
-                    reg: `^[#/](曲绘洗牌|illmix)$`,
-                    fnc: 'mix'
-                },
-            ]
-        })
-
-    }
-
+export default new class guessIll{
     /**猜曲绘 */
-    async start(e) {
+    async start(e, gameList) {
         const { group_id } = e
         if (gamelist[group_id]) {
             e.reply("请不要重复发起哦！", true)
@@ -80,13 +50,14 @@ export class phiguess extends plugin {
         }
 
         gamelist[group_id] = songs_info.song
+        gameList[group_id] = { gameType: "guessIll" }
         eList[group_id] = e
 
-        const w_ = randint(100, 140)
-        const h_ = randint(100, 140)
-        const x_ = randint(0, 2048 - w_)
-        const y_ = randint(0, 1080 - h_)
-        const blur_ = randint(9, 14)
+        let w_ = randint(100, 140)
+        let h_ = randint(100, 140)
+        let x_ = randint(0, 2048 - w_)
+        let y_ = randint(0, 1080 - h_)
+        let blur_ = randint(9, 14)
 
         let data = {
             illustration: get.getill(songs_info.song),
@@ -110,14 +81,14 @@ export class phiguess extends plugin {
         let fnc = [0, 1, 2, 3]
         logger.info(data)
 
-        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getDefOrConfig('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 /illans 结束游戏`)
-        if (Config.getDefOrConfig('config', 'GuessTipRecall'))
-            await e.reply(await get.getguess(e, data), false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') })
+        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getUserCfg('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 /ans 结束游戏`)
+        if (Config.getUserCfg('config', 'GuessTipRecall'))
+            await e.reply(await get.getguess(e, data), false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') })
         else
             await e.reply(await get.getguess(e, data))
 
         /**单局时间不超过4分半 */
-        const time = Config.getDefOrConfig('config', 'GuessTipCd')
+        const time = Config.getUserCfg('config', 'GuessTipCd')
         for (let i = 0; i < Math.min(270 / time, 30); ++i) {
 
 
@@ -181,8 +152,8 @@ export class phiguess extends plugin {
                 return true
             }
 
-            if (Config.getDefOrConfig('config', 'GuessTipRecall'))
-                e.reply(remsg, false, { recallMsg: Config.getDefOrConfig('config', 'GuessTipCd') + 1 })
+            if (Config.getUserCfg('config', 'GuessTipRecall'))
+                e.reply(remsg, false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') + 1 })
             else
                 e.reply(remsg)
 
@@ -205,7 +176,8 @@ export class phiguess extends plugin {
 
         const t = gamelist[group_id]
         delete eList[group_id]
-        delete (gamelist[group_id])
+        delete gamelist[group_id]
+        delete gameList[group_id]
         await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
 
         await e.reply(await get.GetSongsInfoAtlas(e, t))
@@ -215,7 +187,7 @@ export class phiguess extends plugin {
     }
 
     /**玩家猜测 */
-    async guess(e) {
+    async guess(e, gameList) {
         const { group_id, msg, user_id } = e
         if (gamelist[group_id]) {
             eList[group_id] = e
@@ -226,7 +198,8 @@ export class phiguess extends plugin {
                     for (let i in song) {
                         if (gamelist[group_id] == song[i]) {
                             const t = gamelist[group_id]
-                            delete (gamelist[group_id])
+                            delete gamelist[group_id]
+                            delete gameList[group_id]
                             send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
                             await e.reply(await get.GetSongsInfoAtlas(e, t))
                             return true
@@ -244,13 +217,12 @@ export class phiguess extends plugin {
         return false
     }
 
-    async ans(e) {
+    async ans(e, gameList) {
         const { group_id } = e
         if (gamelist[group_id]) {
-            eList[group_id] = e
             const t = gamelist[group_id]
             delete gamelist[group_id]
-            delete eList[group_id]
+            delete gameList[group_id]
             await e.reply('好吧，下面开始公布答案。', true)
             await e.reply(await get.GetSongsInfoAtlas(e, t))
             return true
@@ -280,7 +252,7 @@ export class phiguess extends plugin {
         await e.reply(`洗牌成功了www`, true)
         return true
     }
-}
+}()
 
 
 

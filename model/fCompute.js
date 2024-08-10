@@ -130,4 +130,27 @@ export default new class compute {
         let s3 = score % 1e3
         return `${s1}'${this.ped(s2, 3)}'${this.ped(s3, 3)}`
     }
+
+    /**
+     * 随机数，包含上下界
+     * @param {number} min 最小值
+     * @param {number} max 最大值
+     * @returns 随机数
+     */
+    randBetween(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
+    /**
+     * 随机打乱数组
+     * @param {Array} arr 原数组
+     * @returns 随机打乱的数组
+     */
+    randArray(arr) {
+        let newArr = []
+        while(arr.length > 0) {
+            newArr.push(arr.splice(Math.floor(Math.random() * arr.length), 1)[0])
+        }
+        return newArr
+    }
 }()

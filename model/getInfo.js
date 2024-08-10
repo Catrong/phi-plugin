@@ -86,8 +86,8 @@ export default new class getInfo {
         this.illlist = []
 
         /**自定义信息 */
-        let user_song = Config.getDefOrConfig('otherinfo')
-        if (Config.getDefOrConfig('config', 'otherinfo')) {
+        let user_song = Config.getUserCfg('otherinfo')
+        if (Config.getUserCfg('config', 'otherinfo')) {
             for (let i in user_song) {
                 if (user_song[i]['illustration_big']) {
                     this.illlist.push(user_song[i].song)
@@ -247,8 +247,8 @@ export default new class getInfo {
         this.illlist = []
 
         /**自定义信息 */
-        let user_song = Config.getDefOrConfig('otherinfo')
-        if (Config.getDefOrConfig('config', 'otherinfo')) {
+        let user_song = Config.getUserCfg('otherinfo')
+        if (Config.getUserCfg('config', 'otherinfo')) {
             for (let i in user_song) {
                 if (user_song[i]['illustration_big']) {
                     this.illlist.push(user_song[i].song)
@@ -336,17 +336,17 @@ export default new class getInfo {
      */
     info(song, original = false) {
         let result
-        switch (original ? 0 : Config.getDefOrConfig('config', 'otherinfo')) {
+        switch (original ? 0 : Config.getUserCfg('config', 'otherinfo')) {
             case 0: {
                 result = { ...this.ori_info, ...this.sp_info }
                 break;
             }
             case 1: {
-                result = { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
+                result = { ...this.ori_info, ...this.sp_info, ...Config.getUserCfg('otherinfo') }
                 break;
             }
             case 2: {
-                result = Config.getDefOrConfig('otherinfo')
+                result = Config.getUserCfg('otherinfo')
                 break;
             }
         }
@@ -359,15 +359,15 @@ export default new class getInfo {
      * @returns 
      */
     all_info(original = false) {
-        switch (original ? 0 : Config.getDefOrConfig('config', 'otherinfo')) {
+        switch (original ? 0 : Config.getUserCfg('config', 'otherinfo')) {
             case 0: {
                 return { ...this.ori_info, ...this.sp_info }
             }
             case 1: {
-                return { ...this.ori_info, ...this.sp_info, ...Config.getDefOrConfig('otherinfo') }
+                return { ...this.ori_info, ...this.sp_info, ...Config.getUserCfg('otherinfo') }
             }
             case 2: {
-                return Config.getDefOrConfig('otherinfo')
+                return Config.getUserCfg('otherinfo')
             }
         }
     }
@@ -379,7 +379,7 @@ export default new class getInfo {
      * @returns 原曲名称
      */
     songsnick(mic) {
-        let nickconfig = Config.getDefOrConfig('nickconfig', mic)
+        let nickconfig = Config.getUserCfg('nickconfig', mic)
         let all = []
 
         if (this.info(mic)) all.push(mic)
@@ -404,7 +404,7 @@ export default new class getInfo {
     /**
     * 根据参数模糊匹配返回原曲名称
     * @param {string} mic 别名
-    * @param {number} [Distance=0.85] 阈值
+    * @param {number} [Distance=0.85] 阈值 猜词0.95
     * @returns 原曲名称数组，按照匹配程度降序
     */
     fuzzysongsnick(mic, Distance = 0.85) {
@@ -429,7 +429,7 @@ export default new class getInfo {
         /**按照匹配程度排序 */
         let result = []
 
-        const usernick = Config.getDefOrConfig('nickconfig')
+        const usernick = Config.getUserCfg('nickconfig')
         const allinfo = this.all_info()
 
 
@@ -550,7 +550,7 @@ export default new class getInfo {
      * @param {string} nick 别名
      */
     async setnick(mic, nick) {
-        if (!Config.getDefOrConfig('nickconfig', mic)) {
+        if (!Config.getUserCfg('nickconfig', mic)) {
             Config.modify('nickconfig', nick, [mic])
         } else {
             Config.modifyarr('nickconfig', nick, mic, 'add')

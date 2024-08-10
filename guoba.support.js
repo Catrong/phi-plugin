@@ -3,14 +3,36 @@ import Config from './components/Config.js'
 // 支持锅巴
 export function supportGuoba() {
     return {
+        // 插件信息，将会显示在前端页面
+        // 如果你的插件没有在插件库里，那么需要填上补充信息
+        // 如果存在的话，那么填不填就无所谓了，填了就以你的信息为准
+        pluginInfo: {
+            name: 'phi-plugin',
+            title: 'Phi-Plugin',
+            author: '@Catrong',
+            authorLink: 'https://github.com/Catrong',
+            link: 'https://github.com/Catrong/phi-plugin',
+            isV3: true,
+            isV2: false,
+            description: 'Phigros查分及娱乐插件',
+            // 显示图标，此为个性化配置
+            // 图标可在 https://icon-sets.iconify.design 这里进行搜索
+            icon: 'icon-park-solid:pigeon',
+            // 图标颜色，例：#FF0000 或 rgb(255, 0, 0)
+            iconColor: '#000'
+        },
         // 配置项信息
         configInfo: {
             // 配置项 schemas
             schemas: [
                 {
+                  label: '渲染设置',
+                  component: 'Divider'
+                },
+                {
                     field: 'b19size',
                     label: '渲染体积',
-                    helpMessage: '标准（100）值的宽度为1800px，按照百分比进行缩放，图片越大渲染越慢',
+                    helpMessage: '标准（100）值的宽度为900px，按照百分比进行缩放，图片越大渲染越慢',
                     bottomHelpMessage: '选择b19和update图片的渲染体积，以缩减渲染所需时间，太大可能会炸掉 Chromium ',
                     component: 'InputNumber',
                     required: true,
@@ -129,6 +151,10 @@ export function supportGuoba() {
                     },
                 },
                 {
+                  label: '系统设置',
+                  component: 'Divider'
+                },
+                {
                     field: 'isGuild',
                     label: '频道模式',
                     bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息',
@@ -144,12 +170,6 @@ export function supportGuoba() {
                     field: 'WordSuggImg',
                     label: 'Suggest曲绘图片',
                     bottomHelpMessage: '关闭可大幅度提升发送速度',
-                    component: 'Switch',
-                },
-                {
-                    field: 'GuessTipRecall',
-                    label: '猜曲绘撤回',
-                    bottomHelpMessage: '是否在下一条提示发出的时候撤回上一条',
                     component: 'Switch',
                 },
                 {
@@ -185,8 +205,12 @@ export function supportGuoba() {
                     }
                 },
                 {
+                  label: '猜曲绘设置',
+                  component: 'Divider'
+                },
+                {
                     field: 'GuessTipCd',
-                    label: '曲绘提示间隔',
+                    label: '提示间隔',
                     bottomHelpMessage: '猜曲绘的提示间隔时间，单位：秒',
                     component: 'InputNumber',
                     required: true,
@@ -195,6 +219,16 @@ export function supportGuoba() {
                         max: 120,
                         placeholder: '请输入时间',
                     },
+                },
+                {
+                    field: 'GuessTipRecall',
+                    label: '猜曲绘撤回',
+                    bottomHelpMessage: '是否在下一条提示发出的时候撤回上一条',
+                    component: 'Switch',
+                },
+                {
+                  label: '开字母设置',
+                  component: 'Divider'
                 },
                 {
                     field: 'LetterNum',
@@ -279,9 +313,13 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    field: 'MicTipCd',
-                    label: '猜歌提示冷却',
-                    bottomHelpMessage: '猜歌的全局提示冷却时间，单位：秒',
+                  label: '提示猜歌设置',
+                  component: 'Divider'
+                },
+                {
+                    field: 'GuessTipsTipCD',
+                    label: '提示冷却',
+                    bottomHelpMessage: '提示猜歌提示的冷却时间间隔，单位：秒',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
@@ -289,6 +327,46 @@ export function supportGuoba() {
                         max: 120,
                         placeholder: '请输入时间',
                     },
+                },
+                {
+                    field: 'GuessTipsTipNum',
+                    label: '提示条数',
+                    bottomHelpMessage: '提示猜歌的提示条数（除曲绘外），若总提示条数小于17条则将会发送全部提示',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 0,
+                        max: 17,
+                        placeholder: '请输入条数',
+                    },
+                },
+                {
+                    field: 'GuessTipsTimeout',
+                    label: '游戏时长',
+                    bottomHelpMessage: '提示猜歌超时时长，单位：秒',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 30,
+                        max: 600,
+                        placeholder: '请输入时间',
+                    },
+                },
+                {
+                    field: 'GuessTipsAnsTime',
+                    label: '额外时间',
+                    bottomHelpMessage: '发送曲绘后多久公布答案，单位：秒',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 30,
+                        max: 600,
+                        placeholder: '请输入时间',
+                    },
+                },
+                {
+                  label: '其他设置',
+                  component: 'Divider'
                 },
                 {
                     field: 'VikaToken',
@@ -307,7 +385,7 @@ export function supportGuoba() {
 
                 let config = {}
                 for (var i in defset) {
-                    config[i] = Config.getDefOrConfig('config', i)
+                    config[i] = Config.getUserCfg('config', i)
                 }
                 return config
             },

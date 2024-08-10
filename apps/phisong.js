@@ -21,35 +21,35 @@ export class phisong extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(曲|song).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(曲|song).*$`,
                     fnc: 'song'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(查找|检索|search).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(查找|检索|search).*$`,
                     fnc: 'search'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(设置别名|setnic(k?)).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(设置别名|setnic(k?)).*$`,
                     fnc: 'setnick'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(删除别名|delnic(k?)).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(删除别名|delnic(k?)).*$`,
                     fnc: 'delnick'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(曲绘|ill|Ill).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(曲绘|ill|Ill).*$`,
                     fnc: 'ill'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(随机|rand(om)?).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(随机|rand(om)?).*$`,
                     fnc: 'randmic'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)alias.*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)alias.*$`,
                     fnc: 'alias'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(com|计算).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(com|计算).*$`,
                     fnc: 'comrks'
                 }
             ]
@@ -62,7 +62,7 @@ export class phisong extends plugin {
     async song(e) {
         let msg = e.msg.replace(/[#/](.*)(曲|song)(\s*)/, "")
         if (!msg) {
-            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} song <曲名>`)
+            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} song <曲名>`)
             return true
         }
         let songs = get.fuzzysongsnick(msg)
@@ -131,7 +131,7 @@ export class phisong extends plugin {
             }
         }
 
-        if (Config.getDefOrConfig('config', 'isGuild')) {
+        if (Config.getUserCfg('config', 'isGuild')) {
             let Resmsg = []
             let tot = 0
             let count = 1
@@ -265,7 +265,7 @@ export class phisong extends plugin {
     async ill(e) {
         let msg = e.msg.replace(/[#/](.*?)(曲绘|ill|Ill)(\s*)/, "")
         if (!msg) {
-            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} ill <曲名>`)
+            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ill <曲名>`)
             return true
         }
         let songs = get.fuzzysongsnick(msg)
@@ -313,7 +313,7 @@ export class phisong extends plugin {
         if (rank[0]) {
             if (rank[0].includes('+')) {
                 if (rank[1]) {
-                    send.send_with_At(e, `含有 '+' 的难度不支持指定范围哦！\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`, true)
+                    send.send_with_At(e, `含有 '+' 的难度不支持指定范围哦！\n/${Config.getUserCfg('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`, true)
                     return true
                 } else {
                     rank[0] = Number(rank[0].replace('+', ''))
@@ -323,7 +323,7 @@ export class phisong extends plugin {
             } else if (rank[0].includes('-') && !rank[1]) {
                 rank[0] = Number(rank[0].replace('-', ''))
                 if (rank[0] == NaN) {
-                    send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数>- <难度(可多选)>`, true)
+                    send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getUserCfg('config', 'cmdhead')} rand <定数>- <难度(可多选)>`, true)
                     return true
                 } else {
                     bottom = 0
@@ -334,14 +334,14 @@ export class phisong extends plugin {
                 if (rank[1]) {
                     rank[1] = Number(rank[1])
                     if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
-                        send.send_with_At(e, `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`, true)
+                        send.send_with_At(e, `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getUserCfg('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`, true)
                         return true
                     }
                     top = Math.max(rank[0], rank[1])
                     bottom = Math.min(rank[0], rank[1])
                 } else {
                     if (rank[0] == NaN) {
-                        send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getDefOrConfig('config', 'cmdhead')} rand <定数> <难度(可多选)>`, true)
+                        send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getUserCfg('config', 'cmdhead')} rand <定数> <难度(可多选)>`, true)
                         return true
                     } else {
                         top = bottom = rank[0]
@@ -392,7 +392,7 @@ export class phisong extends plugin {
         if (song[0]) {
             let info = getInfo.info(song[0])
             let nick = '======================\n'
-            let usernick = Config.getDefOrConfig('nickconfig', song[0])
+            let usernick = Config.getUserCfg('nickconfig', song[0])
             for (let i in usernick) {
                 nick += `${usernick[i]}\n`
             }
@@ -415,7 +415,7 @@ export class phisong extends plugin {
             send.send_with_At(e, `dif: ${data[0]} acc: ${data[1]}\n计算结果：${fCompute.rks(Number(data[1]), Number(data[0]))}`, true)
             return true
         } else {
-            send.send_with_At(e, `格式错误QAQ！\n格式：${Config.getDefOrConfig('config', 'cmdhead')} com <定数> <acc>`)
+            send.send_with_At(e, `格式错误QAQ！\n格式：${Config.getUserCfg('config', 'cmdhead')} com <定数> <acc>`)
             return false
         }
     }

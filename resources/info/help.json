@@ -5,12 +5,12 @@
             {
                 "title": "/bind",
                 "eg": "/bind <sessionToken>",
-                "desc": "绑定你的 sessionToken\neg: /bind abcdefghijklmnopqrstuvwxy"
+                "desc": "绑定你的 sessionToken<br>eg: /bind abcdefghijklmnopqrstuvwxy"
             },
             {
                 "title": "/unbind",
                 "eg": "/unbind",
-                "desc": "在 Bot 上删除储存的你的存档以及成绩记录，需要二次确认\neg: /unbind"
+                "desc": "在 Bot 上删除储存的你的存档以及成绩记录，需要二次确认<br>eg: /unbind"
             },
             {
                 "title": "/tk help",
@@ -25,62 +25,62 @@
             {
                 "title": "/update",
                 "eg": "/update",
-                "desc": "更新 Bot 端存储的成绩，/pgr 也可以自动更新\neg: /update"
+                "desc": "更新 Bot 端存储的成绩，/pgr 也可以自动更新<br>eg: /update"
             },
             {
                 "title": "/pgr",
                 "eg": "/pgr [背景(可选)]",
-                "desc": "获取 B19 成绩图，在主题不为⌈使一颗心免于哀伤⌋时可以选择背景曲绘\neg1: /pgr    eg2: /pgr df"
+                "desc": "获取 B19 成绩图，在主题不为⌈使一颗心免于哀伤⌋时可以选择背景曲绘<br>eg1: /pgr    eg2: /pgr df"
             },
             {
                 "title": "杠批比三零",
                 "eg": "杠批比三零 杠批B30",
-                "desc": "获取 B30 成绩图\neg1: 杠批比三零\neg2: 杠批B99"
+                "desc": "获取 B30 成绩图<br>eg1: 杠批比三零<br>eg2: 杠批B99"
             },
             {
                 "title": "/info",
                 "eg": "/info [背景(可选)]",
-                "desc": "获取你的个人统计信息\neg1: /info    eg2: /info df"
+                "desc": "获取你的个人统计信息<br>eg1: /info    eg2: /info df"
             },
             {
                 "title": "/score",
                 "eg": "/score <曲目>",
-                "desc": "获取单曲成绩\neg: /score df"
+                "desc": "获取单曲成绩<br>eg: /score df"
             },
             {
-                "title": "/lvsco\n/scolv",
+                "title": "/lvsco<br>/scolv",
                 "eg": "/lvsco [定数] [难度]",
-                "desc": "获取指定范围内的成绩统计图\neg1: /lvsco 15+\neg2: /lvsco 14 IN HD\neg3: /lvsco 12-15 IN AT"
+                "desc": "获取指定范围内的成绩统计图<br>eg1: /lvsco 15+<br>eg2: /lvsco 14 IN HD<br>eg3: /lvsco 12-15 IN AT"
             },
             {
                 "title": "/chap",
                 "eg": "/chap <章节名称>",
-                "desc": "查询章节成绩，/chap help 可以获取支持的章节名称\neg: /chap c0"
+                "desc": "查询章节成绩，/chap help 可以获取支持的章节名称<br>eg: /chap c0"
             },
             {
                 "title": "/list",
                 "eg": "/list [定数] [难度] [评级]",
-                "desc": "列出所有匹配的成绩\neg: /list 15 F"
+                "desc": "列出所有匹配的成绩<br>eg: /list 15 F"
             },
             {
                 "title": "/bN",
                 "eg": "/b<N>",
-                "desc": "B19 但是很长很长\neg: /b60"
+                "desc": "B19 但是很长很长<br>eg: /b60"
             },
             {
                 "title": "/bestN",
                 "eg": "/best <1-99>",
-                "desc": "获取文字版 B<N> 成绩，私聊获取完整版，建议私聊使用\neg: /best 19"
+                "desc": "获取文字版 B<N> 成绩，私聊获取完整版，建议私聊使用<br>eg: /best 19"
             },
             {
                 "title": "/suggest",
                 "eg": "/suggest",
-                "desc": "获取推分（使游戏内显示数值+0.01）建议，私聊获取完整版，建议私聊使用\neg: /suggest"
+                "desc": "获取推分（使游戏内显示数值+0.01）建议，私聊获取完整版，建议私聊使用<br>eg: /suggest"
             },
             {
                 "title": "/data",
                 "eg": "/data",
-                "desc": "获取 data 数量\neg: /data"
+                "desc": "获取 data 数量<br>eg: /data"
             }
         ]
     },
@@ -90,27 +90,27 @@
             {
                 "title": "/song",
                 "eg": "/song <曲目>",
-                "desc": "查询曲目图鉴\neg: /song 996"
+                "desc": "查询曲目图鉴<br>eg: /song 996"
             },
             {
                 "title": "/rand",
                 "eg": "/rand [定数] [难度]",
-                "desc": "随机谱面\neg1: /rand 13+\neg2: /rand 15-\neg3: /rand 14-16 AT"
+                "desc": "随机谱面<br>eg1: /rand 13+<br>eg2: /rand 15-<br>eg3: /rand 14-16 AT"
             },
             {
                 "title": "/search",
                 "eg": "/search [bpm N-N] [dif N-N] [cmb N-N]",
-                "desc": "查询符合条件的曲目，建议私聊使用\neg1: /search bpm 300\neg2: /search bpm 1-300 dif 15"
+                "desc": "查询符合条件的曲目，建议私聊使用<br>eg1: /search bpm 300<br>eg2: /search bpm 1-300 dif 15"
             },
             {
                 "title": "/alias",
                 "eg": "/alias <id或别名>",
-                "desc": "查询歌曲别名\neg1: /alias 996\neg2: /alias AnotherMe.DAAN"
+                "desc": "查询歌曲别名<br>eg1: /alias 996<br>eg2: /alias AnotherMe.DAAN"
             },
             {
-                "title": "/com\n/计算",
+                "title": "/com<br>/计算",
                 "eg": "/com <定数> <ACC>",
-                "desc": "计算等效rks\neg: /com 15.9 99.50"
+                "desc": "计算等效rks<br>eg: /com 15.9 99.50"
             }
         ]
     },
@@ -118,39 +118,44 @@
         "group": "娱乐 & 设定",
         "list": [
             {
-                "title": "/letter",
-                "eg": "/letter /第N个xx /ltr ans",
-                "desc": "开字母小游戏\neg1: /第一个996\neg2: /第一df"
+                "title": "/ltr",
+                "eg": "/ltr /nN.xx /ans /open x",
+                "desc": "开字母小游戏<br>eg1: /第一个996 /n1.df<br>eg2:/开 A /open A"
             },
             {
                 "title": "/guess",
-                "eg": "/guess (直接回答) /illans",
+                "eg": "/guess (直接回答) /ans",
                 "desc": "猜曲绘，回答直接发曲目，识别后 Bot 会回复正确与否"
+            },
+            {
+                "title": "/tipgame",
+                "eg": "/tipgame /tip (直接回答) /ans",
+                "desc": "提示猜歌，回答直接发曲目，识别后 Bot 会回复正确与否"
             },
             {
                 "title": "/theme",
                 "eg": "/theme [0-2]",
-                "desc": "切换主题，作用于 pgr update list task\neg: /theme 1"
+                "desc": "切换主题，作用于 pgr update list task<br>eg: /theme 1"
             },
             {
                 "title": "/sign",
                 "eg": "/sign",
-                "desc": "签到打卡获取 Notes 和任务卡片\neg: /sign"
+                "desc": "签到打卡获取 Notes 和任务卡片<br>eg: /sign"
             },
             {
                 "title": "/send",
                 "eg": "/send @ <N>",
-                "desc": "用于 Notes 转账，会从中扣除部分\neg: /send @xx 520"
+                "desc": "用于 Notes 转账，会从中扣除部分<br>eg: /send @xx 520"
             },
             {
                 "title": "/task",
                 "eg": "/task",
-                "desc": "查看自己的任务\neg: /task"
+                "desc": "查看自己的任务<br>eg: /task"
             },
             {
                 "title": "/retask",
                 "eg": "/retask",
-                "desc": "花费 20Notes 重置自己的任务，每日 /sgin 可视为一次 /retask ，每日第一次 reatask 免费\neg: /retask"
+                "desc": "花费 20Notes 重置自己的任务，每日 /sgin 可视为一次 /retask ，每日第一次 reatask 免费<br>eg: /retask"
             }
         ]
     },
@@ -169,14 +174,14 @@
                 "desc": "从备份中还原，不会丢失已有数据，需要将文件放在 /phi-plugin/backup/ 目录下"
             },
             {
-                "title": "/设置别名\n/setnick",
+                "title": "/设置别名<br>/setnick",
                 "eg": "/setnick <原名>---><别名>",
-                "desc": "设置某一歌曲的别名\neg: /setnick 996--->福报"
+                "desc": "设置某一歌曲的别名<br>eg: /setnick 996--->福报"
             },
             {
-                "title": "/删除别名\n/delnick",
+                "title": "/删除别名<br>/delnick",
                 "eg": "/delnick <别名>",
-                "desc": "删除某一歌曲的别名\neg: /delnick 福报"
+                "desc": "删除某一歌曲的别名<br>eg: /delnick 福报"
             },
             {
                 "title": "/repu",
@@ -184,12 +189,12 @@
                 "desc": "重启puppeteer，仅支持最新版喵崽"
             },
             {
-                "title": "/下载曲绘\n/down ill",
+                "title": "/下载曲绘<br>/down ill",
                 "eg": "/下载曲绘",
                 "desc": "下载曲绘到本地"
             },
             {
-                "title": "/更新\n/gx",
+                "title": "/更新<br>/gx",
                 "eg": "/[强制]更新",
                 "desc": "更新本插件"
             }

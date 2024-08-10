@@ -33,7 +33,7 @@ export default class newPuppeteer {
 
     async init() {
         try {
-            let tem = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({ puppeteerTimeout: Config.getDefOrConfig('config', 'timeout') });
+            let tem = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({ puppeteerTimeout: Config.getUserCfg('config', 'timeout') });
             this.pet = tem;
             logger.mark("[Phi-Plugin]导入新版puppteer");
         } catch (err) {
@@ -83,14 +83,14 @@ export default class newPuppeteer {
             elemLayout: layoutPath + 'elem.html',
             pageGotoParams: {
                 waitUntil: params.waitUntil || 'networkidle2',
-                timeout: Config.getDefOrConfig('config', 'timeout'),
+                timeout: Config.getUserCfg('config', 'timeout'),
             },
             sys: {
                 scale: `style=transform:scale(${cfg.scale || 1})`,
                 copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
             },
             Version: Version,
-            quality: Config.getDefOrConfig('config', 'randerQuality'),
+            quality: Config.getUserCfg('config', 'randerQuality'),
             Math,
             fCompute,
         }

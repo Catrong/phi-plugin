@@ -6,12 +6,11 @@
 */
 import { pinyin } from 'pinyin-pro'
 
-import plugin from '../../../lib/plugins/plugin.js'
-import Config from '../components/Config.js'
-import get from '../model/getdata.js'
-import send from '../model/send.js'
-import getInfo from '../model/getInfo.js'
-import getPic from '../model/getPic.js'
+import Config from '../../components/Config.js'
+import get from '../../model/getdata.js'
+import send from '../../model/send.js'
+import getInfo from '../../model/getInfo.js'
+import getPic from '../../model/getPic.js'
 
 let songsname = getInfo.songlist
 let songweights = {} //存储每首歌曲被抽取的权重
@@ -32,47 +31,12 @@ let lastTipTime = {} //存储群聊提示全局冷却时间
 let gameSelectList = {} //群聊游戏选择的游戏范围
 let isfuzzymatch = true
 
-export class philetter extends plugin {
-    constructor() {
-        super({
-            name: 'phi-lettergame',
-            dsc: 'phi-plugin出你字母',
-            event: 'message',
-            priority: 1000,
-            rule: [
-                {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(letter|出你字母|猜曲名|开字母|猜字母)[\\s(arc)(pgr)(orz)]*$`,
-                    fnc: 'start'
-                },
-                {
-                    reg: `^[#/](出|开|翻|揭|看|翻开|打开|揭开)(\\s*)[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\d\S]$`,
-                    fnc: 'reveal'
-                },
-                {
-                    reg: `^[#/]${Config.getDefOrConfig('config', 'isGuild') ? '?' : ''}(\\s*)第(\\s*)[1-9一二三四五六七八九十百千万](\\s*)(个|首)?.*$`,
-                    fnc: 'guess'
-                },
-                {
-                    reg: `^[#/](字母|letter|ltr)(ans|答案|结束)$`,
-                    fnc: 'ans'
-                },
-                {
-                    reg: `^[#/](提示|tip)$`,
-                    fnc: 'tip'
-                },
-                {
-                    reg: `^[#/](字母洗牌|lettermix)$`,
-                    fnc: 'mix'
-                },
-            ]
-        })
-
-    }
+export default new class guessLetter {
     /**发起出字母猜歌 **/
-    async start(e) {
+    async start(e, gameList) {
         const { group_id } = e // 使用对象解构提取group_id
         let { msg } = e // 提取消息
-        msg = msg.replace(/[#/](.*)(letter|出你字母|猜曲名|开字母|猜字母)(\s*)/, "")
+        msg = msg.replace(/[#/](.*)(ltr|开字母)(\s*)/, "")
 
         /**TODO 处理其他游戏曲库 */
         let totNameList = []
@@ -96,7 +60,7 @@ export class philetter extends plugin {
             return true
         }
 
-        if (songsname.length < Config.getDefOrConfig('config', 'LetterNum')) {
+        if (songsname.length < Config.getUserCfg('config', 'LetterNum')) {
             e.reply("曲库中曲目的数量小于开字母的条数哦！更改曲库后需要重启哦！")
             return true
         }
@@ -125,7 +89,7 @@ export class philetter extends plugin {
         // 存储单局抽到的曲目下标
         let chose = []
 
-        for (let i = 1; i <= Config.getDefOrConfig('config', 'LetterNum'); i++) {
+        for (let i = 1; i <= Config.getUserCfg('config', 'LetterNum'); i++) {
             // 根据曲目权重随机返回一首曲目名称
             let randsong = getRandomSong(e, totNameList)
 
@@ -149,16 +113,17 @@ export class philetter extends plugin {
 
             gamelist[group_id][i] = songs_info.song
             blurlist[group_id][i] = encrypt_song_name(songs_info.song)
+            gameList[group_id] = { gameType: "guessLetter" }
 
         }
 
         // 输出提示信息
-        e.reply(`出你字母开启成功！回复'/X个XXXX'命令猜歌，例如：/第1个Reimei;发送'/出X'来揭开字母(不区分大小写)，如'/出A';发送'/ltrans'结束并查看答案`)
+        e.reply(`开字母开启成功！回复'/nX.XXXX'命令猜歌，例如：/n1.Reimei;发送'/open X'来揭开字母(不区分大小写)，如'/open A';发送'/ans'结束并查看答案哦！`)
 
         // 延时1s
         await timeout(1 * 1000)
 
-        let output = '出你字母进行中：\n'
+        let output = '开字母进行中：\n'
         // /**添加游戏范围 */
         // output += `游戏范围：`
         // for(let i in gameSelectList[group_id]) {
@@ -172,7 +137,7 @@ export class philetter extends plugin {
         await e.reply(output, true)
 
         /**单局游戏不超过设定 */
-        for (let j = 0; j < Config.getDefOrConfig('config', 'LetterTimeLength'); ++j) {
+        for (let j = 0; j < Config.getUserCfg('config', 'LetterTimeLength'); ++j) {
             await timeout(1000)
             if (!gamelist[group_id]) {
                 return false
@@ -182,22 +147,22 @@ export class philetter extends plugin {
         if (gamelist[group_id]) {
             await e.reply('呜，怎么还没有人答对啊QAQ！只能说答案了喵……')
 
-            e.reply(gameover(group_id))
+            e.reply(gameover(group_id, gameList))
             return true
         }
         return true
     }
 
     /** 翻开字母 **/
-    async reveal(e) {
+    async reveal(e, gameList) {
         const { group_id: groupId, msg } = e
 
         if (!gamelist[groupId]) {
-            e.reply(`现在还没有进行的出你字母捏，赶快输入'/${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '/${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
+            e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} ltr'开始新的一局吧！`, true)
             return false
         }
 
-        const time = Config.getDefOrConfig('config', 'LetterRevealCd')
+        const time = Config.getUserCfg('config', 'LetterRevealCd')
         const currentTime = Date.now()
         const timetik = currentTime - lastRevealedTime[groupId]
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
@@ -209,7 +174,7 @@ export class philetter extends plugin {
 
         lastRevealedTime[groupId] = currentTime
 
-        const newMsg = msg.replace(/[#/](出|开|翻|揭|看|翻开|打开|揭开)(\s*)/g, '')
+        const newMsg = msg.replace(/[#/](出|开|翻|揭|看|翻开|打开|揭开|open)(\s*)/g, '')
 
         if (newMsg) {
             const letter = newMsg.toLowerCase()
@@ -288,6 +253,7 @@ export class philetter extends plugin {
                 delete alphalist[groupId]
                 delete blurlist[groupId]
                 delete gamelist[groupId]
+                delete gameList[groupId]
                 delete winnerlist[groupId]
             }
 
@@ -299,12 +265,12 @@ export class philetter extends plugin {
     }
 
     /** 猜测 **/
-    async guess(e) {
+    async guess(e, gameList) {
         const { group_id, msg, user_id, sender } = e //使用对象解构提取group_id,msg,user_id和sender
 
         //必须已经开始了一局
         if (gamelist[group_id]) {
-            const time = Config.getDefOrConfig('config', 'LetterGuessCd')
+            const time = Config.getUserCfg('config', 'LetterGuessCd')
             const currentTime = Date.now()
             const timetik = currentTime - lastGuessedTime[group_id]
             const timeleft = Math.floor((1000 * time - timetik) / 1000)
@@ -319,7 +285,15 @@ export class philetter extends plugin {
             lastGuessedTime[group_id] = currentTime
 
             const opened = `\n所有翻开的字母[ ${alphalist[group_id].replace(/\[object Object\]/g, '')}]\n`
-            const regex = /^[#/]\s*第\s*(\d+|[一二三四五六七八九十百]+)\s*(个|首)?(.*)$/
+            const regex = /^[#/]\s*[第n]\s*(\d+|[一二三四五六七八九十百]+)\s*[个首\.]?(.*)$/
+            /**
+             * [0] 完整匹配
+             * [1] Num
+             * [2] ans
+             * [3] index
+             * [4] input
+             * [5] groups
+             */
             const result = msg.match(regex)
 
             if (result) {
@@ -332,9 +306,9 @@ export class philetter extends plugin {
                     num = Number(result[1])
                 }
 
-                const content = result[3]
+                const content = result[2]
 
-                if (num > Config.getDefOrConfig('config', 'LetterNum')) {
+                if (num > Config.getUserCfg('config', 'LetterNum')) {
                     e.reply(`没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
                     return true
                 }
@@ -356,7 +330,7 @@ export class philetter extends plugin {
 
                             /**发送曲绘 */
                             if (get.info(standard_song).illustration) { //如果有曲绘文件
-                                switch (Config.getDefOrConfig('config', 'LetterIllustration')) {
+                                switch (Config.getUserCfg('config', 'LetterIllustration')) {
                                     case "水印版": {
                                         e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
                                         break;
@@ -373,7 +347,7 @@ export class philetter extends plugin {
                             const isEmpty = Object.getOwnPropertyNames(blurlist[group_id]).length === 0 //是否全部猜完
 
                             if (!isEmpty) {
-                                output.push('出你字母进行中：')
+                                output.push('开字母进行中：')
                                 output.push(opened)
 
                                 for (const m of Object.keys(gamelist[group_id])) {
@@ -394,7 +368,7 @@ export class philetter extends plugin {
                                 delete alphalist[group_id]
                                 delete blurlist[group_id]
 
-                                output.push('出你字母已结束，答案如下：\n')
+                                output.push('开字母已结束，答案如下：\n')
 
                                 for (const m of Object.keys(gamelist[group_id])) {
                                     output.push(`\n【${m}】${gamelist[group_id][m]}`)
@@ -406,6 +380,7 @@ export class philetter extends plugin {
 
                                 output.push(opened)
                                 delete gamelist[group_id]
+                                delete gameList[group_id]
                                 delete winnerlist[group_id]
 
                                 e.reply(output)
@@ -415,9 +390,9 @@ export class philetter extends plugin {
                     }
 
                     if (songs[1]) {
-                        e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/提示]呐≧ ﹏ ≦`, true)
+                        e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/tip]哦≧ ﹏ ≦`, true)
                     } else {
-                        e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/提示]呐≧ ﹏ ≦`, true)
+                        e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/tip]哦≧ ﹏ ≦`, true)
                     }
 
                     return false
@@ -436,37 +411,37 @@ export class philetter extends plugin {
     }
 
     /** 答案 **/
-    async ans(e) {
+    async ans(e, gameList) {
         const { group_id } = e//使用对象解构提取group_id
 
         if (gamelist[group_id]) {
             await e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
 
-            e.reply(gameover(group_id))
+            e.reply(gameover(group_id, gameList))
             return true
         }
 
-        e.reply(`现在还没有进行的出你字母捏，赶快输入'/${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '/${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
+        e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
         return false
     }
 
     /** 提示 **/
-    async tip(e) {
+    async getTip(e, gameList) {
         const { group_id } = e
 
         if (!gamelist[group_id]) {
-            e.reply(`现在还没有进行的出你字母捏，赶快输入'/${Config.getDefOrConfig('config', 'cmdhead')} letter' 或 '/${Config.getDefOrConfig('config', 'cmdhead')} 出你字母' 开始新的一局吧！`, true)
-            return true
+            e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
+            return false
         }
 
-        const time = Config.getDefOrConfig('config', 'LetterTipCd')
+        const time = Config.getUserCfg('config', 'LetterTipCd')
         const currentTime = Date.now()
         const timetik = currentTime - lastTipTime[group_id]
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
 
         if (timetik < 1000 * time) {
             e.reply(`使用提示的全局冷却时间还有${timeleft}s呐，还请先耐心等下哇QAQ`, true)
-            return true
+            return false
         }
 
         lastTipTime[group_id] = currentTime
@@ -546,7 +521,8 @@ export class philetter extends plugin {
                 output.push(` @${winnerlist[group_id][key]}`)
             }
 
-            delete (gamelist[e.group_id])
+            delete gamelist[e.group_id]
+            delete gameList[group_id]
             delete (winnerlist[e.group_id])
         }
 
@@ -618,7 +594,7 @@ export class philetter extends plugin {
         return Object.keys(blurlist[group_id]).length > 0
     }
 
-}
+}()
 
 /**
  * RandBetween
@@ -752,17 +728,18 @@ function getRandCharacter(str, blur) {
 }
 
 /**结束本群游戏，返回答案 */
-function gameover(group_id) {
+function gameover(group_id, gameList) {
 
     const t = gamelist[group_id]
     const winner = winnerlist[group_id]
 
     delete alphalist[group_id]
     delete gamelist[group_id]
+    delete gameList[group_id]
     delete blurlist[group_id]
     delete winnerlist[group_id]
 
-    const output = ['出你字母已结束，答案如下：']
+    const output = ['开字母已结束，答案如下：']
 
 
     for (const m of Object.keys(t)) {

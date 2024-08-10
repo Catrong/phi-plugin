@@ -21,7 +21,7 @@ class atlas {
     }
 
     async init() {
-        let num = Config.getDefOrConfig('config', 'renderNum')
+        let num = Config.getUserCfg('config', 'renderNum')
         for (let i = 0; i < num; i++) {
             this.puppeteer.push(new puppeteer(i))
             this.puppeteer[i].init()
@@ -63,28 +63,28 @@ class atlas {
             case 1: {
                 return await this.render('userinfo/userinfo', {
                     ...data,
-                    htmlScale: Config.getDefOrConfig('config', 'b19size') / 100,
+                    htmlScale: Config.getUserCfg('config', 'b19size') / 100,
                 }, {
                     e,
-                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                    scale: Config.getUserCfg('config', 'renderScale') / 100
                 })
             }
             case 2: {
                 return await this.render('userinfo/userinfo-old', {
                     ...data,
-                    htmlScale: Config.getDefOrConfig('config', 'b19size') / 100,
+                    htmlScale: Config.getUserCfg('config', 'b19size') / 100,
                 }, {
                     e,
-                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                    scale: Config.getUserCfg('config', 'renderScale') / 100
                 })
             }
             default: {
                 return await this.render('userinfo/userinfo', {
                     ...data,
-                    htmlScale: Config.getDefOrConfig('config', 'b19size') / 100,
+                    htmlScale: Config.getUserCfg('config', 'b19size') / 100,
                 }, {
                     e,
-                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                    scale: Config.getUserCfg('config', 'renderScale') / 100
                 })
             }
         }
@@ -108,10 +108,10 @@ class atlas {
             case 1: {
                 return await this.render('score/scoreInfo', {
                     ...data,
-                    htmlScale: Config.getDefOrConfig('config', 'b19size') / 100,
+                    htmlScale: Config.getUserCfg('config', 'b19size') / 100,
                 }, {
                     e,
-                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                    scale: Config.getUserCfg('config', 'renderScale') / 100
                 })
             }
 
@@ -120,7 +120,7 @@ class atlas {
                     ...data
                 }, {
                     e,
-                    scale: Config.getDefOrConfig('config', 'renderScale') / 100
+                    scale: Config.getUserCfg('config', 'renderScale') / 100
                 })
             }
         }
@@ -157,10 +157,10 @@ class atlas {
         return await this.render(`${kind}/${kind}`, {
             ...data,
             waitUntil: 'networkidle0',
-            htmlScale: Config.getDefOrConfig('config', 'b19size') / 100,
+            htmlScale: Config.getUserCfg('config', 'b19size') / 100,
         }, {
             e,
-            scale: Config.getDefOrConfig('config', 'renderScale') / 100,
+            scale: Config.getUserCfg('config', 'renderScale') / 100,
         })
     }
 
@@ -171,7 +171,7 @@ class atlas {
         this.torender.push(id)
         let ans = null
         let puppeteerNum
-        for (let i = 0; i < Config.getDefOrConfig('config', 'waitingTimeout') / 100; i++) {
+        for (let i = 0; i < Config.getUserCfg('config', 'waitingTimeout') / 100; i++) {
             if (this.torender[0] == id && this.queue.length != 0) {
                 puppeteerNum = this.queue.shift()
                 this.torender.shift()
@@ -208,7 +208,7 @@ class atlas {
     }
 
     async restart() {
-        let num = Config.getDefOrConfig('config', 'renderNum')
+        let num = Config.getUserCfg('config', 'renderNum')
         for (let i = 0; i < num; i++) {
             this.puppeteer[i].restart(true)
         }

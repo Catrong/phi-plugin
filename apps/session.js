@@ -17,19 +17,19 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(绑定.*[0-9a-zA-Z]{25}|bind).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(绑定.*[0-9a-zA-Z]{25}|bind).*$`,
                     fnc: 'bind'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(更新存档|update)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(更新存档|update)$`,
                     fnc: 'update'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(解绑|unbind)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(解绑|unbind)$`,
                     fnc: 'unbind'
                 },
                 {
-                    reg: `^[#/](${Config.getDefOrConfig('config', 'cmdhead')})(\\s*)(clean)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(clean)$`,
                     fnc: 'clean'
                 }
             ]
@@ -44,7 +44,7 @@ export class phisstk extends plugin {
                 await e.recall()
             }
             catch {
-                if (!Config.getDefOrConfig('config', 'isGuild')) {
+                if (!Config.getUserCfg('config', 'isGuild')) {
 
                     send.send_with_At(e, `\n请注意保护好自己的sessionToken哦！`, false, { recallMsg: 10 })
                     // return true
@@ -57,11 +57,11 @@ export class phisstk extends plugin {
 
 
         if (!sessionToken) {
-            send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！请将 ${e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "")} 替换为你Phigros账号的sessionToken哦！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`)
+            send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！请将 ${e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "")} 替换为你Phigros账号的sessionToken哦！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
 
-        if (!Config.getDefOrConfig('config', 'isGuild')) {
+        if (!Config.getUserCfg('config', 'isGuild')) {
 
             e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
             // return true
@@ -80,11 +80,11 @@ export class phisstk extends plugin {
     async update(e) {
         let session = await getSave.get_user_token(e.user_id)
         if (!session) {
-            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, true)
+            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
             return true
         }
 
-        if (!Config.getDefOrConfig('config', 'isGuild') || !e.isGroup) {
+        if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
             e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
         }
         try {
@@ -103,7 +103,7 @@ export class phisstk extends plugin {
             var User = new PhigrosUser(sessionToken)
         } catch (err) {
             logger.error(`[phi-plugin]绑定sessionToken错误`, err)
-            send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n帮助：/${Config.getDefOrConfig('config', 'cmdhead')} tk help\n格式：/${Config.getDefOrConfig('config', 'cmdhead')} bind <sessionToken>`, false, { recallMsg: 10 })
+            send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, false, { recallMsg: 10 })
             return true
         }
 
@@ -159,11 +159,11 @@ export class phisstk extends plugin {
         /**实际显示的数量 */
         let show = 0
         /**每日显示上限 */
-        const DayNum = Math.max(Config.getDefOrConfig('config', 'HistoryDayNum'), 2)
+        const DayNum = Math.max(Config.getUserCfg('config', 'HistoryDayNum'), 2)
         /**显示日期上限 */
-        const DateNum = Config.getDefOrConfig('config', 'HistoryScoreDate')
+        const DateNum = Config.getUserCfg('config', 'HistoryScoreDate')
         /**总显示上限 */
-        const TotNum = Config.getDefOrConfig('config', 'HistoryScoreNum')
+        const TotNum = Config.getUserCfg('config', 'HistoryScoreNum')
 
 
 
