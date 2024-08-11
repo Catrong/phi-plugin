@@ -78,7 +78,7 @@ export class phisstk extends plugin {
             sessionToken = await getQRcode.getSessionToken(result);
         }
 
-        send.send_with_At(e, `\n请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
+        send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
 
 
         if (!Config.getUserCfg('config', 'isGuild')) {
