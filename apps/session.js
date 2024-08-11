@@ -52,7 +52,7 @@ export class phisstk extends plugin {
 
         if (sessionToken == "qrcode") {
             let request = await getQRcode.getRequest();
-            send.send_with_At(e, [`请扫描二维码进行登录嗷！请勿错扫他人二维码，扫描错误导致的损失后果自负。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。任何损失与本插件作者无关。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))]);
+            send.send_with_At(e, [`请扫描二维码进行登录嗷！请勿错扫他人二维码，扫描错误导致的损失后果自负。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。任何损失与本插件作者无关。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 300 });
             let t1 = new Date();
             let result;
             /**是否发送过已扫描提示 */
@@ -61,7 +61,7 @@ export class phisstk extends plugin {
                 result = await getQRcode.checkQRCodeResult(request);
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
-                        send.send_with_At(e, `二维码已扫描，请确认登陆`);
+                        send.send_with_At(e, `二维码已扫描，请确认登陆`, false, { recallMsg: 10 });
                         flag = true;
                     }
                 } else {
@@ -76,20 +76,9 @@ export class phisstk extends plugin {
             }
 
             sessionToken = await getQRcode.getSessionToken(result);
-        } else {
-            if (e.isGroup) {
-                try {
-                    await e.recall()
-                }
-                catch {
-                    if (!Config.getUserCfg('config', 'isGuild')) {
-                        send.send_with_At(e, `\n请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config','cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
-                        // return true
-                    }
-                }
-            }
         }
 
+        send.send_with_At(e, `\n请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
 
 
         if (!Config.getUserCfg('config', 'isGuild')) {
