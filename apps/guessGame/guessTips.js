@@ -131,7 +131,7 @@ export default new class guessTips {
                     let gameData = gameList[group_id]
                     delete (gameList[group_id])
                     send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
-                    if (gameData.tipNum == gameData.tips.length + 2) {
+                    if (gameData.tipNum == gameData.tips.length + 1) {
                         e.reply(await atlas.guess(e, { ...gameData.ill, blur: 0, style: 0, }))
                     }
                     e.reply(await getPic.GetSongsInfoAtlas(e, gameData.song))

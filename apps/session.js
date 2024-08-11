@@ -6,8 +6,11 @@ import send from '../model/send.js'
 import Save from '../model/class/Save.js'
 import scoreHistory from '../model/class/scoreHistory.js'
 import getSave from '../model/getSave.js'
+import getQRcode from '../lib/getQRcode.js'
+import common from '../../../lib/common/common.js'
 
-const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
+let qrcodeUser = {}
+
 export class phisstk extends plugin {
     constructor() {
         super({
@@ -17,7 +20,7 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(绑定.*[0-9a-zA-Z]{25}|bind).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(绑定|bind).*([0-9a-zA-Z]{25}|qrcode).*$`,
                     fnc: 'bind'
                 },
                 {
@@ -38,28 +41,56 @@ export class phisstk extends plugin {
     }
 
     async bind(e) {
+        let sessionToken = e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
 
-        if (e.isGroup) {
-            try {
-                await e.recall()
-            }
-            catch {
-                if (!Config.getUserCfg('config', 'isGuild')) {
-
-                    send.send_with_At(e, `\n请注意保护好自己的sessionToken哦！`, false, { recallMsg: 10 })
-                    // return true
-                }
-            }
-        }
-
-        let sessionToken = e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}/g)
         sessionToken = sessionToken ? sessionToken[0] : null
-
 
         if (!sessionToken) {
             send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！请将 ${e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "")} 替换为你Phigros账号的sessionToken哦！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
             return true
         }
+
+        if (sessionToken == "qrcode") {
+            let request = await getQRcode.getRequest();
+            send.send_with_At(e, [`请扫描二维码进行登录嗷！请勿错扫他人二维码，扫描错误导致的损失后果自负。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。任何损失与本插件作者无关。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))]);
+            let t1 = new Date();
+            let result;
+            /**是否发送过已扫描提示 */
+            let flag = false;
+            while (new Date() - t1 < request.data.expires_in * 1000) {
+                result = await getQRcode.checkQRCodeResult(request);
+                if (!result.success) {
+                    if (result.data.error == "authorization_waiting" && !flag) {
+                        send.send_with_At(e, `二维码已扫描，请确认登陆`);
+                        flag = true;
+                    }
+                } else {
+                    break
+                }
+                await common.sleep(2000)
+            }
+
+            if (!result.success) {
+                send.send_with_At(e, `操作超时，请重试！`);
+                return
+            }
+
+            sessionToken = await getQRcode.getSessionToken(result);
+        } else {
+            if (e.isGroup) {
+                try {
+                    await e.recall()
+                }
+                catch {
+                    if (!Config.getUserCfg('config', 'isGuild')) {
+                        send.send_with_At(e, `\n请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config','cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
+                        // return true
+                    }
+                }
+            }
+        }
+
+
 
         if (!Config.getUserCfg('config', 'isGuild')) {
 

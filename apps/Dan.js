@@ -128,6 +128,7 @@ export class phiDan extends plugin {
 
         let save = await send.getsave_result(e)
         if (!save) {
+            send.send_with_At(e, `未绑定存档，请先绑定存档嗷！`)
             return true
         }
 
