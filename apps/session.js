@@ -52,7 +52,7 @@ export class phisstk extends plugin {
 
         if (sessionToken == "qrcode") {
             let request = await getQRcode.getRequest();
-            send.send_with_At(e, [`请扫描二维码进行登录嗷！请勿错扫他人二维码，扫描错误导致的损失后果自负。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。任何损失与本插件作者无关。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 300 });
+            let qrCodeMsg = await send.send_with_At(e, [`请扫描二维码进行登录嗷！请勿错扫他人二维码，扫描错误导致的损失后果自负。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。任何损失与本插件作者无关。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
             let t1 = new Date();
             let result;
             /**是否发送过已扫描提示 */
@@ -62,6 +62,11 @@ export class phisstk extends plugin {
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
                         send.send_with_At(e, `二维码已扫描，请确认登陆`, false, { recallMsg: 10 });
+                        if (e.group?.recallMsg) {
+                            e.group.recallMsg(qrCodeMsg.message_id)
+                        } else if (e.friend?.recallMsg) {
+                            e.friend.recallMsg(qrCodeMsg.message_id)
+                        }
                         flag = true;
                     }
                 } else {

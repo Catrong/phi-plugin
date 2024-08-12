@@ -17,14 +17,14 @@ class send {
     async send_with_At(e, msg, quote = false, data = {}) {
         if (e.isGroup) {
             if (typeof msg == 'string') {
-                e.reply([segment.at(e.user_id), ` ${msg}`], quote, data)
+                return e.reply([segment.at(e.user_id), ` ${msg}`], quote, data)
             } else if (Object.prototype.toString.call(msg) == '[object Array]') {
-                e.reply([segment.at(e.user_id), ...msg], quote, data)
+                return e.reply([segment.at(e.user_id), ...msg], quote, data)
             } else {
-                e.reply([segment.at(e.user_id), msg], quote, data)
+                return e.reply([segment.at(e.user_id), msg], quote, data)
             }
         } else {
-            e.reply(msg, quote, data)
+            return e.reply(msg, quote, data)
         }
     }
 
