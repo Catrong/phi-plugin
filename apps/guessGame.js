@@ -103,9 +103,6 @@ export class phiGames extends plugin {
             case "guessLetter": {
                 return await guessLetter.getTip(e, gameList)
             }
-            case "guessIll": {
-                return await guessIll.getTip(e, gameList)
-            }
             default: {
                 return false
             }
