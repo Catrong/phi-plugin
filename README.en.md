@@ -67,7 +67,7 @@ pnpm install -P # Install the plugin dependencies
 | `#phi (rks\|pgr\|b19)` | Querying the rks will provide the resulting b21 results 
 | `#phi info(1\|2)?` | Inquiries for personal information 
 | `#phi (lvsco(re)\|scolv) <DIF range>` | Get interval scores 
-| `#phi list <DIF range> <EZ|HD|IN|AT> <NEW|C|B|A|S|V|FC|PHI>` | 获取区间每首曲目的成绩
+| `#phi list <range of dif> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩
 | `#phi best1(+)` | Query text version b19 (or more), up to b99 
 | `#phi (score\|单曲成绩)xxx` | Get track scores and score suggestions 
 | `#phi (suggest\|推分)` | Get the track information that can make RKS+0.01 and its required ACC 
