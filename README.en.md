@@ -8,18 +8,16 @@
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/TimeRainStarSky/Yunzai)
-[![Guild](https://img.shields.io/badge/QQGuild-Hutao114Pgr939-9cf?style=for-the-badge&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
+[![QQGuild](https://img.shields.io/badge/QQGuild-Hutao114Pgr939-9cf?style=for-the-badge&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Stars)](../../stargazers)
 
-[![phi-plugin](https://img.shields.io/badge/语言-中文-FF0000?style=for-the-badge)](https://github.com/Catrong/phi-plugin/blob/main/README.md)
-[![phi-plugin](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](https://github.com/Catrong/phi-plugin/blob/main/README.en.md)
+### English | [中文](https://github.com/Catrong/phi-plugin/)
+
 
   </div>
   
 <br>
-
-#### **The author is about to take the college entrance examination and will stop updating for the time being :(**
 
 ---
 
@@ -105,7 +103,6 @@ pnpm install -P # Install the plugin dependencies
  
 - [ ] Dotted phi's song
 
-- [ ] You can scan the code to obtain a sessionToken
 
 ---
 
@@ -120,35 +117,35 @@ pnpm install -P # Install the plugin dependencies
 ---
 
 #### Best19 rendering
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/e55e7fec-c0cc-447e-8529-71dfa13b370b" width="30%">
+<img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242" width="50%">
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)  
 
 #### Single song score info rendering
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8f4606da-dbc4-476f-b7c9-8a32dda72758" width="30%">  
+<img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="50%">
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)
 
 #### Single song score info rendering(Legacy)
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="30%">  
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="50%"> 
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)
 
 #### Range Score Info rendering
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="30%">  
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="50%">
 
-Renderings from@Eastown
+Renderings from[@Eastown](https://space.bilibili.com/171389567)
 
 #### Single song information rendering
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="30%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="50%">
 
-#### User information renderings(Legacy)
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="30%">  
+#### User information rendering(Legacy)
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="50%">
 
-Renderings from@Eastown
+Renderings from[@Eastown](https://space.bilibili.com/171389567)
 
-#### User information renderings
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c576dd76-4011-4e5f-9f58-b1f2e5015d56" width="30%">  
+#### User information rendering
+<img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432" width="50%">
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)
 
