@@ -37,6 +37,10 @@ export default new class getBackup {
         /**data目录下user_token */
         zip.file('user_token.json', fs.readFileSync(path.join(dataPath, 'user_token.json')));
         let zipName = `${(new Date()).toISOString().replace(/[\:\.]/g, '-')}.zip`
+        if (!fs.existsSync(backupPath)) {
+            // 递归创建目录
+            fs.mkdirSync(backupPath, { recursive: true });
+        }
         fs.writeFileSync(path.join(backupPath, zipName), await zip.generateAsync({
             type: 'nodebuffer',
             /**压缩算法 */
