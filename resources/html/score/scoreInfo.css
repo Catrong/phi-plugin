@@ -2,7 +2,8 @@ body {
     height: 1300px;
 }
 
-.left,.right {
+.left,
+.right {
     height: 1100px;
 }
 
@@ -13,6 +14,10 @@ body {
     align-items: center;
     justify-content: center;
     background: #0079ab66;
+}
+
+.song_Id p {
+    font-size: 30px;
 }
 
 .LEGACY {

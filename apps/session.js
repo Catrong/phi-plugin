@@ -47,12 +47,17 @@ export class phisstk extends plugin {
 
         if (!sessionToken) {
             send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！请将 ${e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "")} 替换为你Phigros账号的sessionToken哦！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
-            return true
+            return false
         }
 
         if (sessionToken == "qrcode") {
             let request = await getQRcode.getRequest();
-            let qrCodeMsg = await send.send_with_At(e, [`请扫描二维码进行登录嗷！请勿错扫他人二维码，扫描错误导致的损失后果自负。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。任何损失与本插件作者无关。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
+            let qrCodeMsg;
+            if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
+                qrCodeMsg = await send.send_with_At(e, [`请扫描二维码进行登录嗷！请勿错扫他人二维码，扫描错误导致的损失后果自负。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。任何损失与本插件作者无关。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
+            } else {
+                qrCodeMsg = await send.send_with_At(e, `请点击链接进行登录嗷！请勿使用他人的链接，进错网址导致的损失后果自负。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。任何损失与本插件作者无关。\n${request.data.qrcode_url}`, false, { recallMsg: 60 });
+            }
             let t1 = new Date();
             let result;
             /**是否发送过已扫描提示 */
@@ -77,10 +82,15 @@ export class phisstk extends plugin {
 
             if (!result.success) {
                 send.send_with_At(e, `操作超时，请重试！`);
-                return
+                return true
             }
-
-            sessionToken = await getQRcode.getSessionToken(result);
+            try {
+                sessionToken = await getQRcode.getSessionToken(result);
+            } catch (err) {
+                logger.error(err)
+                send.send_with_At(e, `获取sessionToken失败QAQ！请确认您的Phigros账号已绑定TapTap！\n错误信息：${err}`)
+                return true
+            }
         }
 
         send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })

@@ -26,8 +26,8 @@ export function supportGuoba() {
             // 配置项 schemas
             schemas: [
                 {
-                  label: '渲染设置',
-                  component: 'Divider'
+                    label: '渲染设置',
+                    component: 'Divider'
                 },
                 {
                     field: 'b19size',
@@ -151,13 +151,19 @@ export function supportGuoba() {
                     },
                 },
                 {
-                  label: '系统设置',
-                  component: 'Divider'
+                    label: '系统设置',
+                    component: 'Divider'
                 },
                 {
                     field: 'isGuild',
                     label: '频道模式',
                     bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息',
+                    component: 'Switch',
+                },
+                {
+                    field: 'TapTapLoginQRcode',
+                    label: '绑定二维码',
+                    bottomHelpMessage: '登录TapTap绑定是否发送二维码，开启仅发送二维码，关闭直接发送链接',
                     component: 'Switch',
                 },
                 {
@@ -205,8 +211,8 @@ export function supportGuoba() {
                     }
                 },
                 {
-                  label: '猜曲绘设置',
-                  component: 'Divider'
+                    label: '猜曲绘设置',
+                    component: 'Divider'
                 },
                 {
                     field: 'GuessTipCd',
@@ -227,8 +233,8 @@ export function supportGuoba() {
                     component: 'Switch',
                 },
                 {
-                  label: '开字母设置',
-                  component: 'Divider'
+                    label: '开字母设置',
+                    component: 'Divider'
                 },
                 {
                     field: 'LetterNum',
@@ -313,8 +319,8 @@ export function supportGuoba() {
                     },
                 },
                 {
-                  label: '提示猜歌设置',
-                  component: 'Divider'
+                    label: '提示猜歌设置',
+                    component: 'Divider'
                 },
                 {
                     field: 'GuessTipsTipCD',
@@ -365,8 +371,8 @@ export function supportGuoba() {
                     },
                 },
                 {
-                  label: '其他设置',
-                  component: 'Divider'
+                    label: '其他设置',
+                    component: 'Divider'
                 },
                 {
                     field: 'VikaToken',
