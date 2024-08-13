@@ -58,7 +58,7 @@ export class phiuser extends plugin {
 
     async info(e) {
         /**'EZ', 'HD', 'IN', 'AT' */
-        let tot = [0, 0, 0, 0] 
+        let tot = [0, 0, 0, 0]
         /**背景 */
         let bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
         if (bksong) {
@@ -135,7 +135,7 @@ export class phiuser extends plugin {
                 if (record[lv].score >= 700000) {
                     ++stats[lv].cleared
                 }
-                if (record[lv].fc) {
+                if (record[lv].fc || record[lv].score == 1000000) {
                     ++stats[lv].fc
                 }
                 if (record[lv].score == 1000000) {
@@ -487,7 +487,7 @@ export class phiuser extends plugin {
                     if (record[lv].score >= 700000) {
                         ++totcleared
                     }
-                    if (record[lv].fc) {
+                    if (record[lv].fc || record[lv].score == 1000000) {
                         ++totfc
                     }
                     if (record[lv].score == 1000000) {
