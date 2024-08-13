@@ -391,7 +391,7 @@ export class phisong extends plugin {
         let song = getInfo.idgetsong(msg) || getInfo.fuzzysongsnick(msg)
         if (song[0]) {
             let info = getInfo.info(song[0])
-            let nick = '======================\n'
+            let nick = '======================\n已有别名：\n'
             let usernick = Config.getUserCfg('nickconfig', song[0])
             for (let i in usernick) {
                 nick += `${usernick[i]}\n`

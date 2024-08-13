@@ -12,8 +12,8 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Star)](../../stargazers)
 
-[![phi-plugin](https://img.shields.io/badge/语言-中文-FF0000?style=for-the-badge)](https://github.com/Catrong/phi-plugin/blob/main/README.md)
-[![phi-plugin](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](https://github.com/Catrong/phi-plugin/blob/main/README.en.md)
+### 中文 | [English](https://github.com/Catrong/phi-plugin/blob/main/README.en.md)
+
 
   </div>
   
@@ -37,9 +37,9 @@
 ------
 
 ### 安装：
-在云崽目录下运行
+在Yunzai目录下运行
 
-> 使用github
+> 使用Github
 
 ```
 git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/ #安装插件本体
@@ -47,7 +47,7 @@ cd ./plugins/phi-plugin/
 pnpm install -P
 ```
 
-> 使用gitee
+> 使用Gitee
 
 ```
 git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/ #安装插件本体
@@ -116,7 +116,7 @@ pnpm install -P #安装插件所需依赖
  
 - [ ] 点phi的歌
 
-- [ ] 支持扫码获取sessionToken
+- [ ] 优化扫码获取sessionToken
 
 - [ ] …
 
@@ -133,29 +133,29 @@ pnpm install -P #安装插件所需依赖
 ------
 
 #### Best19效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/e55e7fec-c0cc-447e-8529-71dfa13b370b" width="30%">
+<img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242" width="50%">
 
 效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
 #### 单曲成绩效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8f4606da-dbc4-476f-b7c9-8a32dda72758" width="30%">
+<img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="50%">
 
 效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
 #### 单曲成绩效果图（Legacy）
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="30%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="50%">
 
 #### 范围成绩效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="30%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="50%">
 
-效果图来自@东城Eastown
+效果图来自[@东城Eastown](https://space.bilibili.com/171389567)
 #### 单曲图鉴效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="30%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="50%">
 
 #### 个人信息效果图（Legacy） 
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="30%">
+<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="50%">
 
-效果图来自@东城Eastown
+效果图来自[@东城Eastown](https://space.bilibili.com/171389567)
 #### 个人信息效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/8525d6ef-46d4-48e0-be3b-dd6bcdf2c56b" width="30%">
+<img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432" width="50%">
 
 效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
 
