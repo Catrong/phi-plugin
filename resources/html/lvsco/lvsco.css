@@ -84,7 +84,7 @@ body p {
 .user_info {
     position: absolute;
     display: flex;
-    top: 20;
+    top: 20px;
     filter: drop-shadow(-4px 4px 0px #00000088);
 }
 
@@ -150,8 +150,8 @@ body p {
     background-color: #fff;
     display: flex;
     align-items: center;
-    margin-left: -10;
-    padding-left: 10;
+    margin-left: -10px;
+    padding-left: 10px;
     clip-path: polygon(100% 0%, 96% 100%, 0 100%, 0% 0%);
     justify-content: center;
 }
@@ -164,17 +164,18 @@ body p {
 
 .Challenge {
     width: 80px;
-    height: 20;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    position: relative;
 }
 
 .Challenge p {
     font-size: 25px;
     text-shadow: 0 0 20px #ffffff;
-    margin-top: -45;
+    margin-top: -45px;
 }
 
 .Challenge img {
@@ -197,7 +198,7 @@ body p {
     width: 100%;
     height: 100px;
     background: linear-gradient(#00000000 0, #000000c7 100%);
-    top: 139;
+    top: 139px;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-end;
@@ -449,7 +450,7 @@ body p {
 }
 
 .progress_bar-in-fc p {
-    margin-top: -60;
+    margin-top: -60px;
 }
 
 .right_title {
@@ -546,8 +547,8 @@ body p {
 #score {
     margin: 0;
     position: absolute;
-    top: 240;
-    left: 400;
+    top: 240px;
+    left: 400px;
 }
 
 #real-score p {
@@ -562,7 +563,7 @@ body p {
     margin: 0;
     position: absolute;
     width: 800px;
-    top: 500;
+    top: 500px;
     left: 0;
     display: flex;
     align-items: center;
@@ -590,15 +591,15 @@ body p {
 #highest {
     margin: 0;
     position: absolute;
-    top: 400;
-    left: 350;
+    top: 400px;
+    left: 350px;
 }
 
 #lowest {
     margin: 0;
     position: absolute;
-    top: 400;
-    left: 900;
+    top: 400px;
+    left: 900px;
 }
 
 #real-highlow p {
@@ -614,7 +615,7 @@ body p {
     width: 500px;
     height: 100px;
     left: 100px;
-    top: 800;
+    top: 800px;
     align-items: center;
     justify-content: space-around;
     position: absolute;
@@ -654,8 +655,8 @@ body p {
 .rating_stats {
     display: flex;
     position: absolute;
-    top: 520;
-    left: 700;
+    top: 520px;
+    left: 700px;
     align-items: center;
     flex-wrap: wrap;
     flex-direction: row;
@@ -666,8 +667,8 @@ body p {
 .rating_stats_group {
     display: flex;
     align-items: center;
-    width: 200;
-    margin-left: 20;
+    width: 200px;
+    margin-left: 20px;
     justify-content: space-around;
 }
 
@@ -680,7 +681,7 @@ body p {
 }
 
 .createdbox {
-    margin-top: 70;
+    margin-top: 70px;
 }
 
 .phi-plugin p {

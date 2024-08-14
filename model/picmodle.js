@@ -63,7 +63,7 @@ class atlas {
             case 1: {
                 return await this.render('userinfo/userinfo', {
                     ...data,
-                    htmlScale: Config.getUserCfg('config', 'b19size') / 100,
+                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -72,7 +72,7 @@ class atlas {
             case 2: {
                 return await this.render('userinfo/userinfo-old', {
                     ...data,
-                    htmlScale: Config.getUserCfg('config', 'b19size') / 100,
+                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -81,7 +81,7 @@ class atlas {
             default: {
                 return await this.render('userinfo/userinfo', {
                     ...data,
-                    htmlScale: Config.getUserCfg('config', 'b19size') / 100,
+                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -108,7 +108,7 @@ class atlas {
             case 1: {
                 return await this.render('score/scoreInfo', {
                     ...data,
-                    htmlScale: Config.getUserCfg('config', 'b19size') / 100,
+                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -117,7 +117,8 @@ class atlas {
 
             default: {
                 return await this.render('score/score', {
-                    ...data
+                    ...data,
+                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -157,7 +158,7 @@ class atlas {
         return await this.render(`${kind}/${kind}`, {
             ...data,
             waitUntil: 'networkidle0',
-            htmlScale: Config.getUserCfg('config', 'b19size') / 100,
+
         }, {
             e,
             scale: Config.getUserCfg('config', 'renderScale') / 100,

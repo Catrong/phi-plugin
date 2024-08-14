@@ -4,6 +4,7 @@ body {
     margin: 0;
     height: fit-content;
     width: fit-content;
+    display: flex;
 }
 
 body p {
@@ -22,7 +23,8 @@ body p {
     display: flex;
     align-items: center;
     flex-direction: row;
-    margin-top: -54px;
+    position: absolute;
+    bottom: 12px;
 }
 
 .phi {

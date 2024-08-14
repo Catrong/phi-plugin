@@ -30,19 +30,6 @@ export function supportGuoba() {
                     component: 'Divider'
                 },
                 {
-                    field: 'b19size',
-                    label: '渲染体积',
-                    helpMessage: '标准（100）值的宽度为900px，按照百分比进行缩放，图片越大渲染越慢',
-                    bottomHelpMessage: '选择b19和update图片的渲染体积，以缩减渲染所需时间，太大可能会炸掉 Chromium ',
-                    component: 'InputNumber',
-                    required: true,
-                    componentProps: {
-                        min: 1,
-                        max: 9999,
-                        placeholder: '缩放百分比',
-                    },
-                },
-                {
                     field: 'randerQuality',
                     label: '渲染质量',
                     bottomHelpMessage: '对所有的图片生效，设置渲染的质量',

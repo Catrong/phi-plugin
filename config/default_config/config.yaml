@@ -5,9 +5,6 @@ renderScale: 100
 #  渲染质量 可选值50~100
 randerQuality: 100
 
-#  渲染大小 可选任意值
-b19size: 100
-
 #  渲染超时时间 ms
 timeout: 20000
 

@@ -614,6 +614,7 @@ export class phiuser extends plugin {
         let Record = save.gameRecord
 
         let data = []
+        let minUpRks = save.minUpRks();
 
         for (let id in Record) {
             let song = get.idgetsong(id)
@@ -629,7 +630,8 @@ export class phiuser extends plugin {
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
                     if ((!record[lv] && !scoreAsk.NEW)) continue
                     if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()]) continue
-                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'blur'), difficulty: difficulty, rank: Level[lv] })
+                    record[lv].suggest = fCompute.suggest(minUpRks, difficulty, 4)
+                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'common'), difficulty: difficulty, rank: Level[lv] })
                 }
             }
         }
