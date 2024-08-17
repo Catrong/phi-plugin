@@ -48,7 +48,7 @@ export default new class getSave {
      * @returns 
      */
     async getSaveBySessionToken(Token) {
-        console.info(Token)
+        // console.info(Token)
         let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'save.json')) : null
         if (result) {
             let tem = new Save(result)
