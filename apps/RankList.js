@@ -45,8 +45,6 @@ export class phiRankList extends plugin {
 
         data.totDataNum = (await getRksRank.getAllRank()).length
         let list = await getRksRank.getRankUser(0, 10)
-        console.info(rankNum)
-        console.info(list)
         for (let i = 0; i < 3; i++) {
             data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[i])))
         }
@@ -74,7 +72,6 @@ export class phiRankList extends plugin {
             }
 
             list = await getRksRank.getRankUser(rankNum - 3, rankNum + 4)
-            console.info(list)
             for (let i = 0; i < 3; ++i) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
             }
