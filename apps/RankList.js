@@ -47,6 +47,7 @@ export class phiRankList extends plugin {
         let list = await getRksRank.getRankUser(0, 10)
         for (let i = 0; i < 3; i++) {
             data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[i])))
+            data.users[i].index = i
         }
 
         if (rankNum <= 3) {
@@ -54,33 +55,41 @@ export class phiRankList extends plugin {
 
             for (let i = 3; i < 10; i++) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
+                data.users[i].index = i
             }
         } else if (rankNum <= 10) {
             for (let i = 3; i < rankNum; i++) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
+                data.users[i].index = i
             }
 
             data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[rankNum])))
             data.users[rankNum].me = true
+            data.users[rankNum].index = rankNum
 
             for (let i = rankNum + 1; i < 10; i++) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
+                data.users[i].index = i
             }
         } else {
             for (let i = 3; i < 5; i++) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
+                data.users[i].index = i
             }
 
             list = await getRksRank.getRankUser(rankNum - 3, rankNum + 4)
             for (let i = 0; i < 3; ++i) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
+                data.users[5 + i].index = rankNum - 3 + i
             }
 
             data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[3])))
             data.users[8].me = true
+            data.users[8].index = rankNum
 
             for (let i = 4; i < list.length; ++i) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
+                data.users[5 + i].index = rankNum
             }
         }
         send.send_with_At(e, await atlas.common(e, 'rankingList', data))

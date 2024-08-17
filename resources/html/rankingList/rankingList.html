@@ -26,7 +26,7 @@
             <p>总统计量：{{totDataNum}}</p>
             <p>数据来源：{{BotNick}}</p>
         </div>
-        {{each users user index}}
+        {{each users user}}
         {{if user.backgroundurl}}
         <div class="lLine{{user.me?' me':''}}">
             <div class="profileIll">
@@ -36,7 +36,7 @@
                 <img src="{{_res_path}}html/avatar/{{user.avatar}}.png" alt="{{user.avatar}}">
             </div>
             <div class="rankNum">
-                <p>#{{index + 1}}</p>
+                <p>#{{user.index + 1}}</p>
             </div>
             <div class="info_box">
                 <div class="playerId">
@@ -76,7 +76,7 @@
                 <img src="{{_res_path}}html/avatar/{{user.avatar}}.png" alt="{{user.avatar}}">
             </div>
             <div class="info">
-                <p>#{{index + 1}} {{user.playerId}}</p>
+                <p>#{{user.index + 1}} {{user.playerId}}</p>
                 <div class="line"></div>
                 <div class="Challenge">
                     <img src="{{_res_path}}html/otherimg/{{user.ChallengeMode}}.png" alt="{{user.ChallengeMode}}">
