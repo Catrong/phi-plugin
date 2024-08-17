@@ -67,7 +67,7 @@ export default new class getSave {
     async putSave(user_id, data) {
         let session = data.session
         this.add_user_token(user_id, session)
-        await getRksRank.addUserRks(session, data.getRks())
+        await getRksRank.addUserRks(session, data.saveInfo.summary.rankingScore)
         return await readFile.SetFile(path.join(savePath, session, 'save.json'), data)
     }
 

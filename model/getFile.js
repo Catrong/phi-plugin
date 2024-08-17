@@ -210,6 +210,7 @@ class readFile {
                 await getRksRank.addUserRks(user_token[id], save.getRks())
                 ++already
             }
+            logger.mark('[phi-plugin][数据转移，请勿中断进程]', `${already}/${tot}`)
 
             // list = await getRksRank.getAllRank()
 
