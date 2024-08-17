@@ -206,6 +206,7 @@ class readFile {
                 logger.mark('[phi-plugin][数据转移，请勿中断进程]', `${already}/${tot}`)
                 await getSave.add_user_token(id, user_token[id])
                 let save = await getSave.getSave(id)
+                if (!save) continue
                 // console.info(id, save.getRks())
                 await getRksRank.addUserRks(user_token[id], save.getRks())
                 ++already
