@@ -207,8 +207,16 @@ class readFile {
                 await getSave.add_user_token(id, user_token[id])
                 let save = await getSave.getSave(id)
                 if (!save) continue
+                if (save.getRks() == NaN) {
+                    logger.mark('[phi-plugin][数据转移，请勿中断进程]', `奇怪的rks ${save?.saveInfo?.summary?.rankingScore}`)
+                    continue
+                }
                 // console.info(id, save.getRks())
-                await getRksRank.addUserRks(user_token[id], save.getRks())
+                try {
+                    await getRksRank.addUserRks(user_token[id], save.getRks())
+                } catch (err) {
+                    logger.error('[phi-plugin][数据转移，请勿中断进程]', err, `跳过该用户${id} ${user_token[id]}`)
+                }
                 ++already
             }
             logger.mark('[phi-plugin][数据转移，请勿中断进程]', `${already}/${tot}`)
