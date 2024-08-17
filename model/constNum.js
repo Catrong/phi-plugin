@@ -10,6 +10,9 @@ const LevelNum = {
     LEGACY: 4,
 }
 
+/**redis路径前缀 */
+const redisPath = "phiPlugin"
+
 export {
-    Level, LevelNum
+    Level, LevelNum, redisPath
 }

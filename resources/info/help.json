@@ -88,6 +88,11 @@
         "group": "图鉴 & 功能",
         "list": [
             {
+                "title": "/ranklist<br>/排行榜",
+                "eg": "/ranklist",
+                "desc": "放榜<br>eg: /ranklist"
+            },
+            {
                 "title": "/song",
                 "eg": "/song <曲目>",
                 "desc": "查询曲目图鉴<br>eg: /song 996"

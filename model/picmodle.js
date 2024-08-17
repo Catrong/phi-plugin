@@ -150,7 +150,7 @@ class atlas {
     /**
      * 
      * @param {*} e 
-     * @param {'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'guess'|'rand'|'help'|'chap'} kind 
+     * @param {'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'guess'|'rand'|'help'|'chap'|'rankingList'} kind 
      * @param {*} data
      * @returns 
      */

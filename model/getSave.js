@@ -4,33 +4,25 @@ import readFile from "./getFile.js"
 import Save from './class/Save.js'
 import fs from 'fs'
 import saveHistory from './class/saveHistory.js'
+import { redisPath } from './constNum.js'
+import getRksRank from './getRksRank.js'
+// import { redis } from 'yunzai'
 
 export default new class getSave {
 
-    constructor() {
-        this.user_token = {}
-    }
-
     /**添加 user_id 号对应的 Token */
     async add_user_token(user_id, session) {
-        this.user_token[user_id] = session
-        await readFile.SetFile(path.join(dataPath, 'user_token.json'), this.user_token)
+        return await redis.set(`${redisPath}:userToken:${user_id}`, session)
     }
 
     /**获取 user_id 号对应的 Token */
     async get_user_token(user_id) {
-        return this.user_token[user_id]
+        return await redis.get(`${redisPath}:userToken:${user_id}`)
     }
 
     /**移除 user_id 对应的 Token */
     async del_user_token(user_id) {
-        delete this.user_token[user_id]
-        await readFile.SetFile(path.join(dataPath, 'user_token.json'), this.user_token)
-    }
-
-    /**进行一次 Token 保存 */
-    async save_user_token() {
-        await readFile.SetFile(path.join(dataPath, 'user_token.json'), this.user_token)
+        return await redis.del(`${redisPath}:userToken:${user_id}`)
     }
 
     /**
@@ -39,8 +31,25 @@ export default new class getSave {
      * @returns {Promise<Save>}
      */
     async getSave(user_id) {
-        let session = await this.get_user_token(user_id)
-        let result = session ? await readFile.FileReader(path.join(savePath, session, 'save.json')) : null
+        let Token = await this.get_user_token(user_id)
+        let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'save.json')) : null
+        if (result) {
+            let tem = new Save(result)
+            await tem.init()
+            return tem
+        } else {
+            return null
+        }
+    }
+
+    /**
+     * 获取 sessionToken 对应的存档文件
+     * @param {string} Token 
+     * @returns 
+     */
+    async getSaveBySessionToken(Token) {
+        console.info(Token)
+        let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'save.json')) : null
         if (result) {
             let tem = new Save(result)
             await tem.init()
@@ -53,12 +62,12 @@ export default new class getSave {
     /**
      * 保存 user_id 对应的存档文件
      * @param {String} user_id user_id
-     * @param {Object} data 
+     * @param {Save} data 
      */
     async putSave(user_id, data) {
         let session = data.session
         this.add_user_token(user_id, session)
-        // console.info(path.join(savePath, session, 'save.json'), data)
+        await getRksRank.addUserRks(session, data.getRks())
         return await readFile.SetFile(path.join(savePath, session, 'save.json'), data)
     }
 

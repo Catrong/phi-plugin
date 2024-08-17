@@ -49,7 +49,7 @@ export class phiDan extends plugin {
         let name = e.msg.replace(/[#/].*(dan|Dan)(\s*)/g, '')
         if (!name) {
             let dan = await getSave.getDan(e.user_id, true)
-            if (dan) {
+            if (dan[0]) {
                 let resmsg = [`你的认证段位为`]
                 for (let i in dan) {
                     resmsg.push(`\n${dan[i].Dan.replace('/', ' ')} ${dan[i].EX ? 'EX' : ''}`)

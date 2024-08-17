@@ -97,7 +97,7 @@ export default class Save {
                 /**课题分 */
                 challengeModeRank: data.saveInfo.summary.challengeModeRank,
                 /**rks */
-                rankingScore: data.saveInfo.summary.rankingScore,
+                rankingScore: Number(data.saveInfo.summary.rankingScore),
                 /**客户端版本号 */
                 gameVersion: data.saveInfo.summary.gameVersion,
                 /**头像 */
@@ -299,6 +299,9 @@ export default class Save {
      * @returns phi, b19_list
      */
     async getB19(num) {
+        if (this.B19List) {
+            return this.B19List
+        }
         let getInfo = (await import('../getInfo.js')).default
         /**计算得到的rks，仅作为测试使用 */
         let com_rks = 0
@@ -341,6 +344,33 @@ export default class Save {
             /**b19列表 */
             b19_list.push(rkslist[i])
         }
+
+        this.B19List = { phi, b19_list }
+        this.b19_rks = b19_list[Math.min(b19_list.length, 18)].rks
         return { phi, b19_list }
+    }
+
+    async getSuggest(id, count) {
+        if (!this.b19_rks) {
+            let record = this.getRecord()
+            this.b19_rks = record[Math.min(record.length, 18)]
+        }
+        return fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id].rks) + this.minUpRks() * 20, this.gameRecord[id].difficulty, count)
+    }
+
+    /**
+     * 获取存档RKS
+     * @returns {number}
+     */
+    getRks() {
+        return Number(this.saveInfo.summary.rankingScore)
+    }
+
+    /**
+     * 获取存档sessionToken
+     * @returns {SaveInfo}
+     */
+    getSessionToken() {
+        return this.session
     }
 }

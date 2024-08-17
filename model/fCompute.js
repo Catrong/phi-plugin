@@ -1,3 +1,4 @@
+import getPic from './getPic.js'
 
 export default new class compute {
     /**
@@ -148,9 +149,19 @@ export default new class compute {
      */
     randArray(arr) {
         let newArr = []
-        while(arr.length > 0) {
+        while (arr.length > 0) {
             newArr.push(arr.splice(Math.floor(Math.random() * arr.length), 1)[0])
         }
         return newArr
+    }
+
+    /**
+     * 转换时间格式
+     * @param {Date|string} date 时间
+     * @returns 2020/10/8 10:08:08
+     */
+    formatDate(date) {
+        date = new Date(date)
+        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
     }
 }()

@@ -1,4 +1,4 @@
-import { dataPath, imgPath, pluginDataPath } from "./path.js";
+import { _path, dataPath, pluginDataPath } from "./path.js";
 import Config from "../components/Config.js";
 import readFile from './getFile.js';
 import atlas from "./picmodle.js";
@@ -7,7 +7,6 @@ import SongsInfo from './class/SongsInfo.js';
 import Save from './class/Save.js';
 import PhigrosUser from '../lib/PhigrosUser.js';
 import send from './send.js';
-import scoreHistory from './class/scoreHistory.js'
 import path from 'node:path';
 import getSave from './getSave.js';
 import getNotes from './getNotes.js'
@@ -15,6 +14,7 @@ import getInfo from './getInfo.js';
 import pic from './getPic.js';
 import { Level } from "./constNum.js";
 import getPic from "./getPic.js";
+// import { redis } from 'yunzai'
 
 
 class getdata {
@@ -47,10 +47,12 @@ class getdata {
     async init() {
 
         try {
-            /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
-            readFile.rmEmptyDir(dataPath)
-            /**移动json文件 */
-            readFile.movJsonFile(dataPath)
+            if (await readFile.FileReader(path.join(_path, 'user_token.json')) || !(await redis.keys("phiPlugin:userToken:*"))[0]) {
+                /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
+                readFile.rmEmptyDir(dataPath)
+                /**移动json文件 */
+                readFile.movJsonFile(dataPath)
+            }
         } catch (error) {
             logger.error(error)
         }

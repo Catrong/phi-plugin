@@ -9,7 +9,6 @@ import getSave from '../model/getSave.js'
 import getQRcode from '../lib/getQRcode.js'
 import common from '../../../lib/common/common.js'
 
-let qrcodeUser = {}
 
 export class phisstk extends plugin {
     constructor() {

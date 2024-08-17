@@ -4,6 +4,7 @@ import YAML from 'yaml'
 import { dataPath, pluginDataPath, savePath } from "./path.js";
 import csv from 'csvtojson'
 import path from 'node:path';
+import getRksRank from './getRksRank.js';
 
 
 
@@ -136,7 +137,7 @@ class readFile {
         }
     }
 
-    /**更改数据储存位置 */
+    /**更改数据储存位置,user_id和sessionToken关系转移到redis中 */
     async movJsonFile(_path) {
         let user_token = await this.FileReader(path.join(_path, 'user_token.json')) || {}
         if (!fs.existsSync(`${_path}`)) { return false }
@@ -182,15 +183,39 @@ class readFile {
 
             async function check() {
                 while (already < tot) {
-                    logger.mark('[phi-plugin][数据整合]', `${already}/${tot}`)
+                    logger.mark('[phi-plugin][数据整合，请勿中断进程]', `${already}/${tot}`)
                     await common.sleep(1000);
                 }
                 logger.mark('[phi-plugin][数据整合]', `${already}/${tot}`)
             }
 
-            await check()
-            if (tot) { await this.SetFile(path.join(dataPath, 'user_token.json'), user_token) }
-            (await import('./getSave.js')).default.user_token = user_token
+            await check();
+
+            // let list = await getRksRank.getAllRank()
+
+            // for (let i = 0; i < list.length; i++) {
+            //     await getRksRank.delUserRks(list[i])
+            // }
+
+            await this.SetFile("user_token.json", user_token)
+
+            let getSave = (await import("./getSave.js")).default
+            already = 0
+            tot = Object.keys(user_token).length
+            for (let id in user_token) {
+                logger.mark('[phi-plugin][数据转移，请勿中断进程]', `${already}/${tot}`)
+                await getSave.add_user_token(id, user_token[id])
+                let save = await getSave.getSave(id)
+                // console.info(id, save.getRks())
+                await getRksRank.addUserRks(user_token[id], save.getRks())
+                ++already
+            }
+
+            // list = await getRksRank.getAllRank()
+
+
+            await this.DelFile(path.join(dataPath, 'user_token.json'));
+
 
         }
     }

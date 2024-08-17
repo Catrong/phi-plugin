@@ -223,7 +223,7 @@ p {
 }
 
 .ac-5 p {
-    text-shadow: 0 0 3px #00d2ff, 0 0 3px #49ff00, 0 0 3px #ff5151;
+    text-shadow: -1px 0 3px #00d2ff, 0 0 3px #49ff00, 0 0 3px #ff5151;
 }
 
 .Challenge_broad {
