@@ -37,6 +37,8 @@ export default new class getSave {
             let tem = new Save(result)
             if (tem.saveInfo) {
                 await tem.init()
+            } else {
+                return null
             }
             return tem
         } else {
@@ -56,6 +58,8 @@ export default new class getSave {
             let tem = new Save(result)
             if (tem.saveInfo) {
                 await tem.init()
+            } else {
+                return null
             }
             return tem
         } else {
