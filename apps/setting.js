@@ -120,8 +120,8 @@ export class phiset extends plugin {
         if (!e.isMaster) {
             return false
         }
-        let msg = e.msg.match(/[0-9]*$/)[0]
-        let token = await getRksRank.getRankUser(msg - 1)
+        let msg = Number(e.msg.match(/[0-9]*$/)[0])
+        let token = await getRksRank.getRankUser(msg - 1, msg - 1)[0]
     }
 
     async del(e) {
