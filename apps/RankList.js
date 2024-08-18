@@ -89,7 +89,7 @@ export class phiRankList extends plugin {
 
             for (let i = 4; i < list.length; ++i) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
-                data.users[5 + i].index = rankNum
+                data.users[5 + i].index = rankNum + i - 3
             }
         }
         send.send_with_At(e, await atlas.common(e, 'rankingList', data))
