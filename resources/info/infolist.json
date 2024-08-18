@@ -3772,5 +3772,69 @@
                 "combo": "986"
             }
         }
-    }
+    },
+    "今天不是明天.PIKASONICfeat兰音Reine": {
+        "bpm": "125",
+        "length": "2:53",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "294"
+            },
+            "HD": {
+                "combo": "549"
+            },
+            "IN": {
+                "combo": "913"
+            }
+        }
+    },
+    "BoundedQuietude.FiniteLimitvsSiLiS": {
+        "bpm": "280",
+        "length": "2:32",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "1127"
+            },
+            "HD": {
+                "combo": "303"
+            },
+            "IN": {
+                "combo": "1286"
+            }
+        }
+    },
+    "君往何处QuoVadis.M2U": {
+            "bpm": "160",
+        "length": "2:25",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "208"
+            },
+            "HD": {
+                "combo": "390"
+            },
+            "IN": {
+                "combo": "935"
+            }
+        }
+    },
+    "暗夜苏醒REANIMATE.Warak": {
+            "bpm": "174",
+        "length": "2:36",
+        "chapter": "单曲精选集",
+        "chart": {
+            "EZ": {
+                "combo": "236"
+            },
+            "HD": {
+                "combo": "842"
+            },
+            "IN": {
+                "combo": "1262"
+            }
+        }
+    },
 }
