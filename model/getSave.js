@@ -128,7 +128,22 @@ export default new class getSave {
         let fPath = path.join(savePath, session)
         await readFile.DelFile(path.join(fPath, 'save.json'))
         await readFile.DelFile(path.join(fPath, 'history.json'))
+        await getRksRank.delUserRks(session)
         fs.rmSync(path.join(savePath, session), { recursive: true, force: true });
+        this.del_user_token(user_id)
+        return true
+    }
+
+    /**
+     * 删除 user_id 对应的存档文件
+     * @param {String} user_id user_id
+     */
+    async delSaveBySessionToken(Token) {
+        let fPath = path.join(savePath, Token)
+        await readFile.DelFile(path.join(fPath, 'save.json'))
+        await readFile.DelFile(path.join(fPath, 'history.json'))
+        await getRksRank.delUserRks(Token)
+        fs.rmSync(path.join(savePath, Token), { recursive: true, force: true });
         this.del_user_token(user_id)
         return true
     }

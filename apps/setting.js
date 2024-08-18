@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import { backupPath } from '../model/path.js';
 import path from 'node:path';
 import fCompute from '../model/fCompute.js';
+import getRksRank from '../model/getRksRank.js';
 
 export class phiset extends plugin {
     constructor() {
@@ -32,6 +33,14 @@ export class phiset extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*restore$`,
                     fnc: 'restore'
                 },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*get .*$`,
+                    fnc: 'get'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*del .*$`,
+                    fnc: 'del'
+                }
             ]
         })
 
@@ -107,4 +116,19 @@ export class phiset extends plugin {
         this.finish('doRestore', false)
     }
 
+    async get(e) {
+        if (!e.isMaster) {
+            return false
+        }
+        let msg = e.msg.match(/[0-9]*$/)[0]
+        let token = await getRksRank.getRankUser(msg - 1)
+    }
+
+    async del(e) {
+        if (!e.isMaster) {
+            return false
+        }
+        let msg = e.msg.match(/[a-z][A-Z][0-9]{25}$/)[0]
+        await getRksRank.delUserRks(msg)
+    }
 }

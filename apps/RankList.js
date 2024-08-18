@@ -42,11 +42,6 @@ export class phiRankList extends plugin {
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
             theme: plugin_data?.plugin_data?.theme || 'star',
         }
-        let allUser = await getRksRank.getAllRank()
-        while (!await getSave.getSaveBySessionToken(allUser[0])) {
-            await getRksRank.delUserRks(allUser[0])
-            allUser.shift()
-        }
         data.totDataNum = (await getRksRank.getAllRank()).length
         let list = await getRksRank.getRankUser(0, 10)
         for (let i = 0; i < 3; i++) {
