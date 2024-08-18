@@ -42,9 +42,13 @@ export class phiRankList extends plugin {
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
             theme: plugin_data?.plugin_data?.theme || 'star',
         }
-
-        data.totDataNum = (await getRksRank.getAllRank()).length
+        let allUser = await getRksRank.getAllRank()
+        data.totDataNum = allUser.length
         let list = await getRksRank.getRankUser(0, 10)
+        while (!getSave.getSaveBySessionToken(allUser[0])) {
+            await getRksRank.delUserRks(allUser[0])
+            allUser.shift()
+        }
         for (let i = 0; i < 3; i++) {
             data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[i])))
             data.users[i].index = i
@@ -101,6 +105,11 @@ export class phiRankList extends plugin {
  * @param {Save} save 
  */
 async function makeLargeLine(save) {
+    if (!save) {
+        return {
+            playerId: "无效用户"
+        }
+    }
     // console.info(save)
     let user = {
         backgroundurl: null,

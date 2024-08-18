@@ -186,6 +186,10 @@ export default class Save {
                     score: data.gameRecord[id][level].score,
                     acc: data.gameRecord[id][level].acc
                 }
+                if (data.gameRecord[id][level].acc > 100) {
+                    this = {}
+                    return false
+                }
             }
         }
     }

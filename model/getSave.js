@@ -35,7 +35,9 @@ export default new class getSave {
         let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'save.json')) : null
         if (result) {
             let tem = new Save(result)
-            await tem.init()
+            if (tem) {
+                await tem.init()
+            }
             return tem
         } else {
             return null
@@ -52,7 +54,9 @@ export default new class getSave {
         let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'save.json')) : null
         if (result) {
             let tem = new Save(result)
-            await tem.init()
+            if (tem) {
+                await tem.init()
+            }
             return tem
         } else {
             return null
