@@ -32,6 +32,9 @@ export default new class getSave {
      */
     async getSave(user_id) {
         let Token = await this.get_user_token(user_id)
+        if (await this.isBanSessionToken(Token)) {
+            throw new Error(`${Token} 已被禁用`)
+        }
         let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'save.json')) : null
         if (result) {
             let tem = new Save(result)
@@ -53,6 +56,9 @@ export default new class getSave {
      */
     async getSaveBySessionToken(Token) {
         // console.info(Token)
+        if (await this.isBanSessionToken(Token)) {
+            throw new Error(`${Token} 已被禁用`)
+        }
         let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'save.json')) : null
         if (result) {
             let tem = new Save(result)
@@ -74,6 +80,9 @@ export default new class getSave {
      */
     async putSave(user_id, data) {
         let session = data.session
+        if (await this.isBanSessionToken(session)) {
+            throw new Error(`${session} 已被禁用`)
+        }
         this.add_user_token(user_id, session)
         await getRksRank.addUserRks(session, data.saveInfo.summary.rankingScore)
         return await readFile.SetFile(path.join(savePath, session, 'save.json'), data)
@@ -144,8 +153,19 @@ export default new class getSave {
         await readFile.DelFile(path.join(fPath, 'history.json'))
         await getRksRank.delUserRks(Token)
         fs.rmSync(path.join(savePath, Token), { recursive: true, force: true });
-        this.del_user_token(user_id)
         return true
+    }
+
+    async banSessionToken(token) {
+        return await redis.set(`${redisPath}:banSessionToken:${token}`, 1)
+    }
+
+    async unbanSessionToken(token) {
+        return await redis.del(`${redisPath}:banSessionToken:${token}`)
+    }
+
+    async isBanSessionToken(token) {
+        return await redis.get(`${redisPath}:banSessionToken:${token}`)
     }
 
 }()

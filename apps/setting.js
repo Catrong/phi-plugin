@@ -8,6 +8,7 @@ import { backupPath } from '../model/path.js';
 import path from 'node:path';
 import fCompute from '../model/fCompute.js';
 import getRksRank from '../model/getRksRank.js';
+import getSave from '../model/getSave.js';
 
 export class phiset extends plugin {
     constructor() {
@@ -40,6 +41,10 @@ export class phiset extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*del .*$`,
                     fnc: 'del'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*unban .*$`,
+                    fnc: 'unban'
                 }
             ]
         })
@@ -121,7 +126,9 @@ export class phiset extends plugin {
             return false
         }
         let msg = Number(e.msg.match(/[0-9]*$/)[0])
-        let token = await getRksRank.getRankUser(msg - 1, msg - 1)[0]
+        console.info(msg)
+        let token = await getRksRank.getRankUser(msg - 1, msg)
+        console.info(token)
         send.send_with_At(e, token)
     }
 
@@ -129,8 +136,20 @@ export class phiset extends plugin {
         if (!e.isMaster) {
             return false
         }
-        let msg = e.msg.match(/[a-z][A-Z][0-9]{25}$/)[0]
-        await getRksRank.delUserRks(msg)
+        let msg = e.msg.match(/[0-9a-zA-Z]{25}$/)[0]
+        await getSave.delSaveBySessionToken(msg)
+        await getSave.banSessionToken(msg)
+        send.send_with_At(e, '成功')
+    }
+
+    async unban(e) {
+        if (!e.isMaster) {
+            return false
+        }
+        let msg = e.msg.match(/[0-9a-zA-Z]{25}$/)[0]
+        console.info(msg)
+        await getSave.unbanSessionToken(msg)
+        console.info(await getSave.isBanSessionToken(msg))
         send.send_with_At(e, '成功')
     }
 }
