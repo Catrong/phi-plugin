@@ -8,8 +8,8 @@ import getSave from '../model/getSave.js'
 import fCompute from '../model/fCompute.js'
 
 
-const Level = ['EZ', 'HD', 'IN', 'AT']
-const illlist = get.illlist
+let Level = ['EZ', 'HD', 'IN', 'AT']
+let illlist = get.illlist
 
 export class phiuser extends plugin {
     constructor() {
@@ -73,15 +73,15 @@ export class phiuser extends plugin {
             bksong = get.getill(illlist[randint(0, illlist.length - 1)], 'blur')
         }
 
-        const save = await send.getsave_result(e, 1.0)
+        let save = await send.getsave_result(e, 1.0)
 
         if (!save) {
             return true
         }
 
-        const Record = save.gameRecord
+        let Record = save.gameRecord
 
-        const stats_ = {
+        let stats_ = {
             tatle: '',
             Rating: '',
             unlock: 0,
@@ -126,7 +126,7 @@ export class phiuser extends plugin {
         stats[3].tatle = Level[3]
 
         for (let id in Record) {
-            const record = Record[id]
+            let record = Record[id]
             for (let lv in [0, 1, 2, 3]) {
                 if (!record[lv]) continue
 
@@ -158,7 +158,7 @@ export class phiuser extends plugin {
             }
         }
 
-        const money = save.gameProgress.money
+        let money = save.gameProgress.money
         let userbackground = await fCompute.getBackground(save.gameuser.background)
 
         if (!userbackground) {
@@ -227,10 +227,10 @@ export class phiuser extends plugin {
             i = Number(i)
 
             if (!rks_history_[i + 1]) break
-            const x1 = range(rks_history_[i].date, rks_date)
-            const y1 = range(rks_history_[i].value, rks_range)
-            const x2 = range(rks_history_[i + 1].date, rks_date)
-            const y2 = range(rks_history_[i + 1].value, rks_range)
+            let x1 = range(rks_history_[i].date, rks_date)
+            let y1 = range(rks_history_[i].value, rks_range)
+            let x2 = range(rks_history_[i + 1].date, rks_date)
+            let y2 = range(rks_history_[i + 1].value, rks_range)
             rks_history.push([x1, y1, x2, y2])
         }
 
@@ -239,10 +239,10 @@ export class phiuser extends plugin {
             i = Number(i)
 
             if (!data_history_[i + 1]) break
-            const x1 = range(data_history_[i].date, data_date)
-            const y1 = range(data_history_[i].value, data_range)
-            const x2 = range(data_history_[i + 1].date, data_date)
-            const y2 = range(data_history_[i + 1].value, data_range)
+            let x1 = range(data_history_[i].date, data_date)
+            let y1 = range(data_history_[i].value, data_range)
+            let x2 = range(data_history_[i + 1].date, data_date)
+            let y2 = range(data_history_[i + 1].value, data_range)
             data_history.push([x1, y1, x2, y2])
         }
 
@@ -264,18 +264,18 @@ export class phiuser extends plugin {
 
         /**统计在要求acc>=i的前提下，玩家的rks为多少 */
         /**存档 */
-        const acc_rksRecord = save.getRecord()
+        let acc_rksRecord = save.getRecord()
         /**phi列表 */
-        const acc_rks_phi = save.findAccRecord(100)
+        let acc_rks_phi = save.findAccRecord(100)
         /**所有rks节点 */
-        const acc_rks_data = []
+        let acc_rks_data = []
         /**转换成坐标的节点 */
-        const acc_rks_data_ = []
+        let acc_rks_data_ = []
         /**rks上下界 */
-        const acc_rks_range = [100, 0]
+        let acc_rks_range = [100, 0]
 
         /**原本b19中最小acc 要展示的acc序列 */
-        const acc_rks_AccRange = [100]
+        let acc_rks_AccRange = [100]
 
         for (let i = 0; i < Math.min(acc_rksRecord.length, 19); i++) {
             acc_rks_AccRange[0] = Math.min(acc_rks_AccRange[0], acc_rksRecord[i].acc)
@@ -305,6 +305,10 @@ export class phiuser extends plugin {
             acc_rks_range[0] = Math.min(acc_rks_range[0], tem_rks)
             acc_rks_range[1] = Math.max(acc_rks_range[1], tem_rks)
         }
+        
+        if (acc_rks_AccRange[acc_rks_AccRange.length - 1] < 100) {
+            acc_rks_AccRange.push(100)
+        }
         // console.info(acc_rks_AccRange)
 
         for (let i = 1; i < acc_rks_data.length; ++i) {
@@ -317,16 +321,13 @@ export class phiuser extends plugin {
         // console.info(acc_rks_data_)
 
         /**处理acc显示区间，防止横轴数字重叠 */
-        if (acc_rks_AccRange[acc_rks_AccRange.length - 1] < 100) {
-            acc_rks_AccRange.push(100)
-        }
         if (acc_rks_AccRange[0] == 100) {
             acc_rks_AccRange[0] = 0
         }
-        const acc_length = (100 - acc_rks_AccRange[0])
-        const min_acc = acc_rks_AccRange[0]
+        let acc_length = (100 - acc_rks_AccRange[0])
+        let min_acc = acc_rks_AccRange[0]
         /**要传的数组 */
-        const acc_rks_AccRange_position = []
+        let acc_rks_AccRange_position = []
         while (100 - acc_rks_AccRange[acc_rks_AccRange.length - 2] < acc_length / 10) {
             acc_rks_AccRange.splice(acc_rks_AccRange.length - 2, 1)
         }
@@ -356,13 +357,15 @@ export class phiuser extends plugin {
             background: bksong,
         }
 
+        console.info(acc_rks_AccRange_position)
+
         let kind = Number(e.msg.replace(/\/.*info/g, ''))
         send.send_with_At(e, await get.getuser_info(e, data, kind))
     }
 
     async lvscore(e) {
 
-        const save = await send.getsave_result(e, 1.0)
+        let save = await send.getsave_result(e, 1.0)
 
         if (!save) {
             return true
@@ -467,8 +470,8 @@ export class phiuser extends plugin {
 
 
         for (let id in Record) {
-            const info = get.info(get.idgetsong(id), true)
-            const record = Record[id]
+            let info = get.info(get.idgetsong(id), true)
+            let record = Record[id]
             let vis = false
             for (let lv in [0, 1, 2, 3]) {
                 if (!info.chart[Level[lv]]) continue
@@ -572,13 +575,13 @@ export class phiuser extends plugin {
 
     async list(e) {
 
-        const save = await send.getsave_result(e)
+        let save = await send.getsave_result(e)
 
         if (!save) {
             return true
         }
 
-        const range = [0, getInfo.MAX_DIFFICULTY]
+        let range = [0, getInfo.MAX_DIFFICULTY]
 
         let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
 
@@ -781,7 +784,7 @@ function match_range(msg, range) {
 
 //定义生成指定区间整数随机数的函数
 function randint(min, max) {
-    const range = max - min + 1
-    const randomOffset = Math.floor(Math.random() * range)
+    let range = max - min + 1
+    let randomOffset = Math.floor(Math.random() * range)
     return (randomOffset + min) % range + min
 }
