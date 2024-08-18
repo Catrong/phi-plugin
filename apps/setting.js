@@ -122,6 +122,7 @@ export class phiset extends plugin {
         }
         let msg = Number(e.msg.match(/[0-9]*$/)[0])
         let token = await getRksRank.getRankUser(msg - 1, msg - 1)[0]
+        send.send_with_At(e, token)
     }
 
     async del(e) {
@@ -130,5 +131,6 @@ export class phiset extends plugin {
         }
         let msg = e.msg.match(/[a-z][A-Z][0-9]{25}$/)[0]
         await getRksRank.delUserRks(msg)
+        send.send_with_At(e, '成功')
     }
 }
