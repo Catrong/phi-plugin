@@ -43,7 +43,7 @@ export class phiRankList extends plugin {
             theme: plugin_data?.plugin_data?.theme || 'star',
         }
         let allUser = await getRksRank.getAllRank()
-        while (!getSave.getSaveBySessionToken(allUser[0])) {
+        while (!await getSave.getSaveBySessionToken(allUser[0])) {
             await getRksRank.delUserRks(allUser[0])
             allUser.shift()
         }
