@@ -35,7 +35,7 @@ export default new class getBackup {
             }
         });
         /**data目录下user_token */
-        zip.file('user_token.json', fs.readFileSync(path.join(dataPath, 'user_token.json')));
+        // zip.file('user_token.json', fs.readFileSync(path.join(dataPath, 'user_token.json')));
         let zipName = `${(new Date()).toISOString().replace(/[\:\.]/g, '-')}.zip`
         if (!fs.existsSync(backupPath)) {
             // 递归创建目录
@@ -60,47 +60,53 @@ export default new class getBackup {
      */
     async restore(zipPath) {
         let zip = await JSZip.loadAsync(fs.readFileSync(zipPath))
-        /**存档相关 */
-        zip.folder('saveData').forEach((session) => {
-            /**阻止遍历文件夹 */
-            if (!session.includes('.json')) {
-                /**history */
-                getFile.FileReader(path.join(savePath, session, 'history.json')).then((old) => {
-                    zip.folder('saveData').folder(session).file('history.json').async('string').then((history) => {
-                        /**格式化为 JSON */
-                        let now = new saveHistory(JSON.parse(history))
-                        /**有本地记录，合并；无本地记录，直接覆盖 */
-                        now.add(new saveHistory(old))
-                        getFile.SetFile(path.join(savePath, session, 'history.json'), now)
+        try {
+            /**存档相关 */
+            zip.folder('saveData').forEach((session) => {
+                /**阻止遍历文件夹 */
+                if (!session.includes('.json')) {
+                    /**history */
+                    getFile.FileReader(path.join(savePath, session, 'history.json')).then((old) => {
+                        zip.folder('saveData').folder(session).file('history.json').async('string').then((history) => {
+                            /**格式化为 JSON */
+                            let now = new saveHistory(JSON.parse(history))
+                            /**有本地记录，合并；无本地记录，直接覆盖 */
+                            now.add(new saveHistory(old))
+                            getFile.SetFile(path.join(savePath, session, 'history.json'), now)
+                        })
                     })
-                })
-                /**save */
-                getFile.FileReader(path.join(savePath, session, 'save.json')).then((old) => {
-                    zip.folder('saveData').folder(session).file('save.json').async('string').then((save) => {
-                        /**格式化为 JSON */
-                        let now = JSON.parse(save)
-                        /**有本地记录，保留最新记录；无本地记录，直接覆盖 */
-                        if (new Date(old?.saveInfo?.modifiedAt?.iso) > new Date(now?.saveInfo?.modifiedAt?.iso)) { now = old }
-                        getFile.SetFile(path.join(savePath, session, 'save.json'), now)
+                    /**save */
+                    getFile.FileReader(path.join(savePath, session, 'save.json')).then((old) => {
+                        zip.folder('saveData').folder(session).file('save.json').async('string').then((save) => {
+                            /**格式化为 JSON */
+                            let now = JSON.parse(save)
+                            /**有本地记录，保留最新记录；无本地记录，直接覆盖 */
+                            if (new Date(old?.saveInfo?.modifiedAt?.iso) > new Date(now?.saveInfo?.modifiedAt?.iso)) { now = old }
+                            getFile.SetFile(path.join(savePath, session, 'save.json'), now)
 
+                        })
                     })
-                })
-            }
+                }
 
-        });
-        /**插件数据相关 */
-        zip.folder('pluginData').forEach((fileName, file) => {
-            file.async('string').then((data) => {
-                getFile.SetFile(path.join(pluginDataPath, fileName), JSON.parse(data))
+            });
+        } catch (e) { }
+        try {
+            /**插件数据相关 */
+            zip.folder('pluginData').forEach((fileName, file) => {
+                file.async('string').then((data) => {
+                    getFile.SetFile(path.join(pluginDataPath, fileName), JSON.parse(data))
+                })
             })
-        })
-        /**绑定数据 */
-        zip.file('user_token.json').async('string').then((data) => {
-            let now = JSON.parse(data)
-            let old = getSave.user_token
-            now = { ...old, ...now }
-            getSave.user_token = now
-            getSave.save_user_token()
-        })
+        } catch (e) { }
+        try {
+            /**绑定数据 */
+            zip.file('user_token.json').async('string').then((data) => {
+                let now = JSON.parse(data)
+                let old = getSave.user_token
+                now = { ...old, ...now }
+                getSave.user_token = now
+                getSave.save_user_token()
+            })
+        } catch (e) { }
     }
 }()
