@@ -32,8 +32,6 @@ export class phiRankList extends plugin {
         if (!save) {
             return true
         }
-        let sessionToken = save.getSessionToken()
-        let rankNum = await getRksRank.getUserRank(sessionToken)
         let plugin_data = await getNotes.getPluginData(e.user_id)
         let data = {
             totDataNum: 0,
@@ -42,7 +40,19 @@ export class phiRankList extends plugin {
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
             theme: plugin_data?.plugin_data?.theme || 'star',
         }
+        let msg = e.msg.match(/\d+/)
+
+        let rankNum
         data.totDataNum = (await getRksRank.getAllRank()).length
+
+        if (msg) {
+            rankNum = Math.max(Math.min(msg[0], data.totDataNum), 0)
+        } else {
+            let sessionToken = save.getSessionToken()
+            rankNum = await getRksRank.getUserRank(sessionToken)
+        }
+
+
         let list = await getRksRank.getRankUser(0, 10)
         for (let i = 0; i < 3; i++) {
             data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[i])))
@@ -120,7 +130,7 @@ async function makeLargeLine(save) {
     }
     user.backgroundurl = await fCompute.getBackground(save?.gameuser?.background)
     let b19 = await save.getB19(19)
-    user.b19.push({ difficulty: b19.phi.difficulty, acc: b19.phi.acc, Rating: b19.phi.Rating })
+    user.b19.push({ difficulty: b19?.phi?.difficulty, acc: b19?.phi?.acc, Rating: b19?.phi?.Rating })
     for (let i = 0; i < 19; i++) {
         user.b19.push({ difficulty: b19.b19_list[i].difficulty, acc: b19.b19_list[i].acc, Rating: b19.b19_list[i].Rating })
     }

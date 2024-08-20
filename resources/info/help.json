@@ -4,8 +4,8 @@
         "list": [
             {
                 "title": "/bind",
-                "eg": "/bind <sessionToken>",
-                "desc": "绑定你的 sessionToken<br>eg: /bind abcdefghijklmnopqrstuvwxy"
+                "eg": "/bind <sessionToken|qrcode>",
+                "desc": "绑定你的 sessionToken<br>eg1: /bind abcdefghijklmnopqrstuvwxy<br>eg2: /bind qrcode"
             },
             {
                 "title": "/unbind",
@@ -89,8 +89,8 @@
         "list": [
             {
                 "title": "/ranklist<br>/排行榜",
-                "eg": "/ranklist",
-                "desc": "放榜<br>eg: /ranklist"
+                "eg": "/ranklist [名次]",
+                "desc": "放榜<br>eg1: /ranklist<br>eg2: /ranklist 520"
             },
             {
                 "title": "/song",
