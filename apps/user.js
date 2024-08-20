@@ -357,7 +357,7 @@ export class phiuser extends plugin {
             background: bksong,
         }
 
-        console.info(acc_rks_AccRange_position)
+        // console.info(acc_rks_AccRange_position)
 
         let kind = Number(e.msg.replace(/\/.*info/g, ''))
         send.send_with_At(e, await get.getuser_info(e, data, kind))
