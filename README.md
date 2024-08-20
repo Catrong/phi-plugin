@@ -111,6 +111,13 @@ pnpm install -P #安装插件所需依赖
 
 ------
 
+<details><summary>支持我的创作</summary>
+
+[爱发电](https://afdian.com/a/Feijiang_)
+感谢！鸣谢名单可能更新不及时，欢迎来QQ催我！
+
+</details>
+
 #### Todo
 
 - [ ] 优化界面设计
