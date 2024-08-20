@@ -30,7 +30,7 @@
         <td align="center" valign="top" width="10%"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Code">🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/S-t-e-v-e-e"><img src="https://avatars.githubusercontent.com/u/117198625?v=4?s=100" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=S-t-e-v-e-e" title="Code">🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/7aGiven"><img src="https://avatars.githubusercontent.com/u/77519196?v=4?s=100" style="border-radius: 50%" width="50px;" alt="文酱"/><br /><sub><b>@7aGiven</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=7aGiven" title="Code">🌸</a></td>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/MYS-KISO"><img src="https://avatars.githubusercontent.com/u/101465504?v=4?s=100" style="border-radius: 50%" width="50px;" alt="Moist_Crystal"/><br /><sub><b>@Moist_Crystal</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=MYS-KISO" title="Code">🌸</a></td>
+        <td align="center" valign="top" width="10%"><a href="https://github.com/MYS-KISO"><img src="https://avatars.githubusercontent.com/u/101465504?v=4?s=100" style="border-radius: 50%" width="50px;" alt="MoistCrystal"/><br /><sub><b>@MoistCrystal</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=MYS-KISO" title="Code">🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/yt6983138"><img src="https://avatars.githubusercontent.com/u/83499886?v=4?s=100" style="border-radius: 50%" width="50px;" alt="yt6983138"/><br /><sub><b>@static_void</b></sub></a><br /><a href="https://github.com/yt6983138" title="Code">🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/wms26"><img src="https://avatars.githubusercontent.com/u/50258919?v=4?s=100" style="border-radius: 50%" width="50px;" alt="wms26"/><br /><sub><b>@千柒</b></sub></a><br /><a href="https://github.com/wms26" title="Code">🌸</a></td>
     </tr>
@@ -42,13 +42,13 @@
 ### Install:
 
 Run in Yunzai directory  
-> Install using GitHub
+> Install by using GitHub
 ```
 git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/ # Install plugin ontology
 cd ./plugins/phi-plugin/ # Go to the plugins directory
 pnpm install -P # Install the plugin dependencies
 ```
-> Install using Gitee
+> Install by using Gitee
 ```
 git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/ # Install plugin ontology
 cd ./plugins/phi-plugin/ # Go to the plugins directory
@@ -57,36 +57,38 @@ pnpm install -P # Install the plugin dependencies
 ---
 
 ### List of features:
-> The following # can be used instead of /, and the command header can be customized
+> The following # can be replaced with /, and the command header can be customized
 #### **User features below**
 | **Function name** | **Function Description** 
 | :- | :- 
 | `#phi帮助` | Get help 
 | `#phi (bind\|绑定)xxx` | Bind sessionToken 
 | `#phi (unbind\|解绑)` | Delete sessionToken and save records on the bot) 
-| `#phi clean` | Delete all of the persenal date 
+| `#phi clean` | Delete all of the personal data
 | `#phi (update\|更新存档)` | Update save on the bot 
-| `#phi (rks\|pgr\|b19)` | Querying the rks will provide the resulting b21 results 
-| `#phi info(1\|2)?` | Inquiries for personal information 
-| `#phi (lvsco(re)\|scolv) <DIF range>` | Get interval scores 
-| `#phi list <range of dif> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩
-| `#phi best1(+)` | Query text version b19 (or more), up to b99 
-| `#phi (score\|单曲成绩)xxx` | Get track scores and score suggestions 
-| `#phi (suggest\|推分)` | Get the track information that can make RKS+0.01 and its required ACC 
-| `#phi data` | Gets the number of user data 
-| `#phi (guess\|猜曲绘)` | Guess the song, answer without special orders, reply directly, if it is not the song title will not speak, if it is not the correct song title will reply. '#illans' End of guessing 
-| `#phi mic` | Listen to music clips and guess the song, answer that you need to send '/gu'<song>; For example '/gu Distorted Fate', if more fragments are needed to send '/phi mictip', answer '/micans' 
+| `#phi (rks\|pgr\|b19)` | Querying the rks (Get the resulting b21 results)
+| `#phi info(1\|2)?` | Get personal information 
+| `#phi (lvsco(re)\|scolv) <DIF range>` | Get comprehensive scores for different difficulty ranges
+| `#phi chap <章节名称\|help>` | Obtain the scores of all songs in any one chapter 
+| `#phi list <range of dif> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | Get scores of all thesongs which in different difficulty ranges
+| `#phi best1(+)` | Get b19 in text version (or more), up to b99 
+| `#phi (score\|单曲成绩)xxx` | Get track scores,acc and acc suggestions 
+| `#phi (suggest\|推分)` | Get suggestions and the acc which can make your RKS +0.01 
+| `#phi (ranklist\|排行榜)` | Get RKS leaderboard
+| `#phi data` | Get the quantity of data
+| `#phi (guess\|猜曲绘)` | Guess the song, answer without special orders,just reply directly. bot will not reply if it your answer is not the song title, if it is not the correct song title,it will reply. '#illans' to stop guessing and get answer.
+| `#phi mic` | Listen to music clips and guess the song, guess by '/gu'<song>; For example '/gu Distorted Fate', if more fragments are needed to send '/phi mictip', '/micans' to stop guessing and get answer.
 | `#phi (曲绘洗牌\|illmix)` | Shuffle the order of the track list in the guess plot and normalize the weights 
-| `#phi (letter\|出你字母\|猜曲名)` | Guess the title of the song according to the letters, '#出...' Opens the specified letter, '#第n个...' Answer, '#letterans' to get the answer 
+| `#phi (letter\|出你字母\|猜曲名)` | Guess the title of the song according to the letters, '#出...' Opens the specified letter, guess by'#第n个...' , '#letterans' to stop guessing and get answer.
 | `#phi (字母洗牌\|lettermix)` | The order of the track list in the title will be shuffled according to the letter guess and the weights will be normalized 
-| `#phi (song\|曲) xxx` | Query Phigros song info, also supports aliasing 
+| `#phi (song\|曲) xxx` | Get Phigros song info, also supports aliasing 
 | `#phi (rand\|随机) <condition>` | According to the conditional random tracks, the condition supports difficulty, fixed number, difficulty can be multi-select, in - interval 
-| `#phi (曲绘\|ill\|Ill) xxx` | Query the artwork of a track in Phigros 
+| `#phi (曲绘\|ill\|Ill) xxx` | Query the illustration of a song in Phigros 
 | `#phi (search\|查询\|检索) <condition, value>` | Retrieve tracks in the library, support BPM constant quantity, condition bpm dif cmb, the value can be interval, with - interval 
-| `#phi (theme\|主题) [0-2]` | Toggles the drawing theme, only for b19, update
-| `sign/签到` | Check in to get Notes and task 
+| `#phi (theme\|主题) [0-2]` | Toggles the drawing theme, only for b19 And update
+| `sign/签到` | sign for Notes and task 
 | `task/我的任务` | Review your tasks 
-| `retask/刷新任务` | Refreshing the task costs 20Notes 
+| `retask/刷新任务` | Refreshing the task by costing 20 Notes 
 | `#phi (send\|送\|转) <target> <quantity>` | Send to the target Note, support @ or QQ number 
 #### **Admin functions below**
 | **Function name** | **Function Description** 
