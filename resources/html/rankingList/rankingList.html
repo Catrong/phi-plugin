@@ -63,7 +63,7 @@
                     {{each user.b19 song}}
                     <div class="aSong">
                         <div class="difficulty">{{song.difficulty}}</div>
-                        <div class="acc">{{song.acc}}</div>
+                        <div class="acc">{{song.acc.toFixed(2)}}</div>
                         <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
                     </div>
                     {{/each}}
