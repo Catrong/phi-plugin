@@ -168,4 +168,8 @@ export default new class getSave {
         return await redis.get(`${redisPath}:banSessionToken:${token}`)
     }
 
+    async getGod() {
+        return await redis.get(`${redisPath}:banSessionToken:*`)
+    }
+
 }()

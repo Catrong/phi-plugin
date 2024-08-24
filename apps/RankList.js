@@ -8,6 +8,7 @@ import send from '../model/send.js'
 import atlas from '../model/picmodle.js'
 import Config from '../components/Config.js'
 import getNotes from '../model/getNotes.js'
+import PhigrosUser from '../lib/PhigrosUser.js'
 
 export class phiRankList extends plugin {
 
@@ -21,6 +22,10 @@ export class phiRankList extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(排行榜|ranklist).*$`,
                     fnc: 'rankList'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(封神榜|godlist)$`,
+                    fnc: 'godList'
                 }
             ]
 
@@ -34,6 +39,7 @@ export class phiRankList extends plugin {
         }
         let plugin_data = await getNotes.getPluginData(e.user_id)
         let data = {
+            Title: "RankingScore排行榜",
             totDataNum: 0,
             BotNick: Bot.nickname,
             users: [],
@@ -59,14 +65,14 @@ export class phiRankList extends plugin {
             data.users[i].index = i
         }
 
-        if (rankNum <= 3) {
+        if (rankNum < 3) {
             data.users[rankNum].me = true
 
             for (let i = 3; i < 10; i++) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
                 data.users[i].index = i
             }
-        } else if (rankNum <= 10) {
+        } else if (rankNum < 10) {
             for (let i = 3; i < rankNum; i++) {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
                 data.users[i].index = i
@@ -100,6 +106,36 @@ export class phiRankList extends plugin {
                 data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
                 data.users[5 + i].index = rankNum + i - 3
             }
+        }
+        send.send_with_At(e, await atlas.common(e, 'rankingList', data))
+    }
+
+    async godList(e) {
+        let list = await getSave.getGod()
+        let plugin_data = await getNotes.getPluginData(e.user_id)
+        let data = {
+            Title: "封神榜",
+            totDataNum: 0,
+            BotNick: Bot.nickname,
+            users: [],
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+            theme: plugin_data?.plugin_data?.theme || 'star',
+        }
+
+        if (!list) {
+            data.totDataNum = 0
+            send.send_with_At(e, await atlas.common(e, 'rankingList', data))
+            return true
+        }
+
+        data.totDataNum = list.length
+
+        for (let i = 0; i < list.length; i++) {
+            let godRecord = new PhigrosUser(list[i])
+            await god.buildRecord()
+            let god = new Save(godRecord)
+            await god.init()
+            data.users.push(await makeLargeLine(god))
         }
         send.send_with_At(e, await atlas.common(e, 'rankingList', data))
     }

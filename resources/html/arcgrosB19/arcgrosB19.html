@@ -66,7 +66,8 @@
             </div>
             <div class="acc_box">
                 <div class="acc">
-                    <p>{{phi.acc}}%</p>
+                    <p>{{phi.acc.toFixed(4).replace(/\..*/,'')}}</p>
+                    <p>{{phi.acc.toFixed(4).replace(/.*\./,'')}}</p>
                     <!-- <p>{{phi.suggest}}</p> -->
                 </div>
             </div>
@@ -76,7 +77,7 @@
                         <p>Rating Score</p>
                     </div>
                     <div class="rks">
-                        <p>{{phi.rks}}</p>
+                        <p>{{phi.rks.toFixed(2)}}</p>
                     </div>
                     <div class="line_box">
                         <div class="line_left"></div>
@@ -128,7 +129,8 @@
             </div>
             <div class="acc_box">
                 <div class="acc">
-                    <p>{{song.acc}}%</p>
+                    <p>{{song.acc.toFixed(4).replace(/\..*/,'')}}</p>
+                    <p>{{song.acc.toFixed(4).replace(/.*\./,'')}}</p>
                     <!-- <p>{{song.suggest}}</p> -->
                 </div>
             </div>
@@ -138,7 +140,7 @@
                         <p>Rating Score</p>
                     </div>
                     <div class="rks">
-                        <p>{{song.rks}}</p>
+                        <p>{{song.rks.toFixed(2)}}</p>
                     </div>
                     <div class="line_box">
                         <div class="line_left"></div>

@@ -551,11 +551,13 @@ p {
 }
 
 .acc :nth-child(1) {
-    font-size: 9px;
+    font-size: 16px;
+    line-height: 16px;
 }
 
 .acc :nth-child(2) {
-    font-size: 5px;
+    font-size: 8px;
+    line-height: 5px;
 }
 
 .difficulty_box {

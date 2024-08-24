@@ -315,8 +315,6 @@ export default class Save {
         /**处理数据 */
         if (phi?.rks) {
             com_rks += Number(phi.rks) //计算rks
-            phi.rks = phi.rks.toFixed(2)
-            phi.acc = phi.acc.toFixed(2)
             phi.illustration = getInfo.getill(phi.song)
             phi.suggest = "无法推分"
         }
@@ -340,8 +338,6 @@ export default class Save {
             rkslist[i].num = i + 1
             /**推分建议 */
             rkslist[i].suggest = fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
-            rkslist[i].rks = Number(rkslist[i].rks).toFixed(2)
-            rkslist[i].acc = Number(rkslist[i].acc).toFixed(2)
             /**曲绘 */
             rkslist[i].illustration = getInfo.getill(rkslist[i].song, 'common')
             /**b19列表 */
