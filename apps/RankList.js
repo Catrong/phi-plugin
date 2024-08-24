@@ -131,11 +131,13 @@ export class phiRankList extends plugin {
         data.totDataNum = list.length
 
         for (let i = 0; i < list.length; i++) {
-            let godRecord = new PhigrosUser(list[i])
-            await god.buildRecord()
-            let god = new Save(godRecord)
-            await god.init()
-            data.users.push(await makeLargeLine(god))
+            try {
+                let godRecord = new PhigrosUser(list[i].match(/[a-zA-Z0-9]{25}/))
+                await god.buildRecord()
+                let god = new Save(godRecord)
+                await god.init()
+                data.users.push(await makeLargeLine(god))
+            } catch (e) { }
         }
         send.send_with_At(e, await atlas.common(e, 'rankingList', data))
     }
