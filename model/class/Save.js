@@ -63,8 +63,9 @@ export default class Save {
      * },
      * gameRecord: {}
      * }} data 
+     * @param {boolean} ignore 跳过存档检查
      */
-    constructor(data) {
+    constructor(data, ignore = false) {
         this.session = data.session
         this.saveInfo = {
             /**账户创建时间 2022-09-03T10:21:48.613Z */
@@ -186,6 +187,7 @@ export default class Save {
                     score: data.gameRecord[id][level].score,
                     acc: data.gameRecord[id][level].acc
                 }
+                if (ignore) continue
                 if (data.gameRecord[id][level].acc > 100) {
                     logger.error(`acc > 100 ${this.session}`)
                 }

@@ -134,7 +134,7 @@ export class phiRankList extends plugin {
             try {
                 let godRecord = new PhigrosUser(list[i].match(/[a-zA-Z0-9]{25}/)[0])
                 await godRecord.buildRecord()
-                let god = new Save(godRecord)
+                let god = new Save(godRecord, true)
                 await god.init()
                 data.users.push(await makeLargeLine(god))
                 data.users[data.users.length].index = i
