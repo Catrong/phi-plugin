@@ -61,11 +61,13 @@
                 </div>
                 <div class="b19Box">
                     {{each user.b19 song}}
+                    {{if song.acc}}
                     <div class="aSong">
                         <div class="difficulty">{{song.difficulty}}</div>
                         <div class="acc">{{song.acc.toFixed(2)}}</div>
                         <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
                     </div>
+                    {{/if}}
                     {{/each}}
                 </div>
             </div>

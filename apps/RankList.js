@@ -169,8 +169,10 @@ async function makeLargeLine(save) {
     }
     user.backgroundurl = await fCompute.getBackground(save?.gameuser?.background)
     let b19 = await save.getB19(19)
-    user.b19.push({ difficulty: b19?.phi?.difficulty, acc: b19?.phi?.acc, Rating: b19?.phi?.Rating })
-    for (let i = 0; i < 19; i++) {
+    if (b19?.phi?.score) {
+        user.b19.push({ difficulty: b19.phi.difficulty, acc: b19.phi.acc, Rating: b19.phi.Rating })
+    }
+    for (let i = 0; i < b19.b19_list.length; i++) {
         user.b19.push({ difficulty: b19.b19_list[i].difficulty, acc: b19.b19_list[i].acc, Rating: b19.b19_list[i].Rating })
     }
     return user
