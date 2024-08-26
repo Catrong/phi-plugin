@@ -222,7 +222,7 @@ export default class Save {
             for (let level in song) {
                 if (level == 4) break
                 let tem = this.gameRecord[song][level]
-                if (!tem.score) continue
+                if (!tem?.score) continue
                 sortedRecord.push(tem)
             }
         }
