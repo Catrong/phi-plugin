@@ -1,6 +1,7 @@
 "996":
   - 打工人
 DESTRUCTION 3,2,1:
+  - 煤气灶
   - d321
   - "321"
   - 幽蓝边界
@@ -9,6 +10,7 @@ DESTRUCTION 3,2,1:
 TECHNOPOLIS 2085:
   - "2085"
 Glaciaxion:
+  - 冰封世界
   - 冰川
   - 梦启地
   - 梦开始的地方
@@ -84,6 +86,7 @@ NO ONE YES MAN:
   - 没人是人
   - 没有一个是人
 "[PRAW]":
+  - 扭曲
   - PRAW
 Pixel Rebelz:
   - 像素三人组
@@ -94,6 +97,7 @@ Cereris:
   - 谷神星
   - 科目二
   - 老司机
+  - CARRY YOU FLY
 Non-Melodic Ragez (MUG Edit):
   - Non-Melodic Ragez
   - NMR
@@ -115,6 +119,7 @@ Class Memories:
   - SURREALISM
 Bonus Time:
   - 奖励时间
+  - 奖励时刻
   - BT
 ENERGY SYNERGY MATRIX:
   - ESM
@@ -127,6 +132,7 @@ JunXion Between Life And Death(VIP Mix):
   - 俊雄半死不活
   - 俊雄 
 Reimei:
+  - 黎明
   - reimei
   - 影虎
 Leave All Behind:
@@ -168,6 +174,7 @@ Chronomia:
   - 天文钟
 Rrhar'il:
   - rr
+  - 啊啊
   - 猫娘
 Ποσειδών:
   - 海底捞
@@ -204,6 +211,7 @@ INFiNiTE ENERZY -Overdoze-:
   - 陶土花盆
   - 儿童金曲
 MARENOL:
+  - 噩梦醇
   - 骂人OL
   - 美穗
   - 血池地狱
@@ -216,6 +224,8 @@ MARENOL:
   - 匿名信
   - 万吨
 RIPPER:
+  - 碎嘴说唱
+  - RAPPER
   - 撕裂者
 Aphasia:
   - 失语症
@@ -234,7 +244,9 @@ Sparkle New Life:
   - 新生活
 Khronostasis Katharsis:
   - 紫时停
+  - 小时停
   - KK
+  - 停表现象
   - 时溃
 Snow Desert:
   - 雪沙漠
@@ -253,6 +265,7 @@ Aleph-0:
   - 数学课堂
   - 数学小课堂
   - 草先生的数学课堂
+  - LeaF的数学课堂
 Rubbish Sorting:
   - 你是什么垃圾
   - 垃圾分类
@@ -336,6 +349,7 @@ Wavetapper:
   - 打电话
   - 电话
 大和撫子 -Wild Dances-:
+  - 太和舞子
   - 大和抚子
   - 大和
   - 大和无子
@@ -538,6 +552,7 @@ Poison AND÷OR Affection:
   - 毒药和爱
   - Pandora
 Cervelle Connexion:
+  - 企鹅
   - 大脑链接
   - 大脑连接
   - 脑链接
@@ -630,13 +645,19 @@ Sigma(Haocore Mix)～105秒の伝説～:
   - sigmaSP1
   - sigma表谱
   - sigma105
+  - 绿sigma
 Sigma(Haocore Mix)～Regrets of The Yellow Tulip～:
   - sigma里SP
   - sigmaSP2
+  - 黄色郁金香的遗憾
+  - 郁金香
+  - Sigma郁金香
   - sigma里谱
+  - 黄sigma
 SIGMA:
   - 西格玛
   - Σ
+  - 红sigma
 Christmas:
   - 圣诞SP
   - 圣诞快乐
@@ -662,6 +683,7 @@ Christmas:
   - LIKWW
   - 九仙街
 S.A.T.E.L.L.I.T.E.:
+  - 山茶花
   - 卫星
   - satelite
 +ERABY+E CONNEC+10N:
@@ -674,6 +696,7 @@ S.A.T.E.L.L.I.T.E.:
   - 字节
   - TERABYTE CONNECTION
   - 原神
+  - 下原神
   - terabyte
   - TB连接
   - 太字节传输
@@ -690,6 +713,7 @@ Compute It With Some Devilish Alcoholic Steampunk Engines:
   - ciwsdase
   - 名字最长曲
 Dance with Silence:
+  - 与沉默共舞
   - 静舞
   - dws
   - 寂舞
@@ -761,6 +785,7 @@ Bitterblossom:
   - 苦海无边
   - 苦茶花
 Shadow:
+  - 星旅
   - 影子
   - 影
 Inverted World:
@@ -824,6 +849,7 @@ Manifold Hypothesis:
 XING:
   - 性
 Re：End of a Dream:
+  - ReDr
   - 终梦
   - 重置梦境
 ストレイソウル・アラウンド:
@@ -847,6 +873,7 @@ Dash:
   - 冲
   - 冲撞
 PANIC PARADISE:
+  - 可口可乐
   - pp
   - 恐怖天堂
   - 恐慌天堂
@@ -859,12 +886,14 @@ With You:
   - 与你一起
   - 和你
 End Me:
+  - 当gino失去梦想
   - 终结自我
 Next Time:
   - 后会有期
 Another Round:
   - 街头青年
 Broken Sky:
+  - 破天
   - 刘佳宜
   - bs
   - 破碎苍穹
@@ -891,6 +920,7 @@ Retribution ~ Cycle of Redemption ~:
   - 报应SP
   - 2024愚人节
 BRAIN HACKER:
+  - 大脑黑客
   - 牢大
   - BH
 风屿:
@@ -931,6 +961,7 @@ Brave Notes:
 Shine After:
   - sa
 Demiurge:
+  - 造物主
   - 创世神
   - 创
 Electron:
@@ -949,6 +980,7 @@ Cuvism³:
   - 三次方
   - 库维斯
 a truth seeker -Communication with Utopia will be lost-:
+  - 寻真者
   - a truth seeker
   - 一个卡车
   - 求真者
@@ -974,12 +1006,15 @@ Upshift:
 Khalid:
   - kh
 幽世桔梗:
+  - 桔梗
   - 幽世
 暗夜苏醒 (REANIMATE):
+  - 暗夜
   - 暗夜苏醒
   - REANIMATE
 君往何处 (Quo Vadis):
   - 君往何处
   - Quo Vadis
   - qv
-  
+Destination:
+  - 目的地
