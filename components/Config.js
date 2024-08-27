@@ -73,7 +73,8 @@ class Config {
      * |'GuessTipsTipCD'
      * |'GuessTipsTimeout'
      * |'GuessTipsAnsTime'
-     * |'TapTapLoginQRcode' } style key值
+     * |'TapTapLoginQRcode'
+     * |'listScoreMaxNum' } style key值
     */
     getUserCfg(name, style) {
         let def = this.getdefSet(name)

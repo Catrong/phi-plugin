@@ -114,6 +114,18 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'listScoreMaxNum',
+                    label: '/list 最大数量',
+                    bottomHelpMessage: '/list 最大渲染成绩数量，建议为3的倍数',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 3,
+                        max: 10000,
+                        placeholder: '请输入最大限制',
+                    },
+                },
+                {
                     field: 'HistoryScoreNum',
                     label: '历史成绩展示数量',
                     bottomHelpMessage: '/update 展现历史成绩的最大数量',

@@ -164,4 +164,27 @@ export default new class compute {
         date = new Date(date)
         return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
     }
+
+    /**
+     * 
+     * @param {string} richText 
+     * @returns 
+     */
+    convertRichText(richText) {
+        let reg = [/<color\s*=[^>]*?>(.*?)<\/color>/, /<size\s*=[^>]*?>(.*?)<\/size>/]
+        if (richText.match(reg[0])) {
+            let txt = richText.match(reg[0])[1]
+            let color = richText.match(reg[0])[0].match(/color\s*=[^>]*?([^>]*)/)[1].replace(/[\s\"]/g, '')
+            return this.convertRichText(richText.replace(reg[0], `<span style="color:${color}">${txt}</span>`))
+        }
+        if (richText.match(reg[1])) {
+            let txt = richText.match(reg[1])[1]
+            let size = richText.match(reg[1])[0].match(/size\s*=[^>]*?([^>]*)/)[1]
+            return this.convertRichText(richText.replace(reg[1], `<span style="font-size:${size}">${txt}</span>`))
+        }
+        if (richText.match(/\n\r?/)) {
+            return richText.replace(/\n\r?/g, '<br>')
+        }
+        return richText
+    }
 }()

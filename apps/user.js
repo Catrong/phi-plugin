@@ -174,9 +174,9 @@ export class phiuser extends plugin {
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
-            selfIntro: save.gameuser.selfIntro,
+            selfIntro: fCompute.convertRichText(save.gameuser.selfIntro),
             backgroundurl: userbackground,
-            PlayerId: save.saveInfo.PlayerId,
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             CLGMOD: dan?.Dan,
             EX: dan?.EX,
         }
@@ -305,7 +305,7 @@ export class phiuser extends plugin {
             acc_rks_range[0] = Math.min(acc_rks_range[0], tem_rks)
             acc_rks_range[1] = Math.max(acc_rks_range[1], tem_rks)
         }
-        
+
         if (acc_rks_AccRange[acc_rks_AccRange.length - 1] < 100) {
             acc_rks_AccRange.push(100)
         }
@@ -557,7 +557,7 @@ export class phiuser extends plugin {
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
-            PlayerId: save.saveInfo.PlayerId,
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
         }
 
         // let remsg = ''
@@ -639,7 +639,7 @@ export class phiuser extends plugin {
             }
         }
 
-        if (data.length > 180) {
+        if (data.length > Config.getUserCfg('config', 'listScoreMaxNum')) {
             send.send_with_At(e, "谱面数量过多，请缩小搜索范围QAQ！")
             return true
         }

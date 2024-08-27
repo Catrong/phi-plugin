@@ -173,7 +173,7 @@ export class phib19 extends plugin {
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: save.gameuser.selfIntro,
             backgroundUrl: await fCompute.getBackground(save.gameuser.background),
-            PlayerId: save.saveInfo.PlayerId,
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             dan: dan,
         }
 
@@ -181,7 +181,7 @@ export class phib19 extends plugin {
             phi: save_b19.phi,
             b19_list: save_b19.b19_list,
             gameuser,
-            PlayerId: save.saveInfo.PlayerId,
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
@@ -231,7 +231,7 @@ export class phib19 extends plugin {
             phi: save_b19.phi,
             b19_list: save_b19.b19_list,
             gameuser,
-            PlayerId: save.saveInfo.PlayerId,
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,

@@ -8,6 +8,7 @@ import scoreHistory from '../model/class/scoreHistory.js'
 import getSave from '../model/getSave.js'
 import getQRcode from '../lib/getQRcode.js'
 import common from '../../../lib/common/common.js'
+import fCompute from '../model/fCompute.js'
 
 
 export class phisstk extends plugin {
@@ -281,7 +282,7 @@ export class phisstk extends plugin {
         }
 
         let data = {
-            PlayerId: now.saveInfo.PlayerId,
+            PlayerId: fCompute.convertRichText(now.saveInfo.PlayerId),
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
             Date: now.saveInfo.updatedAt,
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,

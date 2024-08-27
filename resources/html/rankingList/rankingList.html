@@ -40,7 +40,7 @@
             </div>
             <div class="info_box">
                 <div class="playerId">
-                    <p name="pvis">{{user.playerId}}</p>
+                    <p name="pvis">{{#user.playerId}}</p>
                 </div>
                 <div class="rks">{{user.rks.toFixed(9)}}</div>
                 <div class="Challenge">
@@ -54,7 +54,7 @@
                 </div>
                 <div class="selfIntor">
                     {{if user.selfIntro}}
-                    <p name="pvis">{{#user.selfIntro.replace(/\n\r?/g,'<br>')}}</p>
+                    <p name="pvis">{{#user.selfIntro}}</p>
                     {{else}}
                     <p style="color: #005273;" name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
                     {{/if}}

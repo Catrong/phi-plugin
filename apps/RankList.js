@@ -158,13 +158,13 @@ async function makeLargeLine(save) {
     let user = {
         backgroundurl: null,
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
-        playerId: save.saveInfo.PlayerId,
+        playerId: fCompute.convertRichText(save.saveInfo.PlayerId),
         rks: save.saveInfo.summary.rankingScore,
         ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
         ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
         created: fCompute.formatDate(save.saveInfo.createdAt),
         updated: fCompute.formatDate(save.saveInfo.gameFile.updatedAt),
-        selfIntro: save?.gameuser?.selfIntro,
+        selfIntro: fCompute.convertRichText(save?.gameuser?.selfIntro),
         b19: []
     }
     user.backgroundurl = await fCompute.getBackground(save?.gameuser?.background)
@@ -186,7 +186,7 @@ async function makeSmallLine(save) {
     // console.info(save)
     return {
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
-        playerId: save.saveInfo.PlayerId,
+        playerId: fCompute.convertRichText(save.saveInfo.PlayerId),
         rks: save.saveInfo.summary.rankingScore,
         ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
         ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
