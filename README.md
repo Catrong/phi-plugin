@@ -12,10 +12,9 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Star)](../../stargazers)
 
-### 中文 | [English](https://github.com/Catrong/phi-plugin/blob/main/README.en.md)
+### 中文 | [English](./README_en.md)
 
-
-  </div>
+</div>
   
 <br>
 
@@ -45,8 +44,8 @@
 
 ```
 git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/ #安装插件本体
-cd ./plugins/phi-plugin/
-pnpm install -P
+cd ./plugins/phi-plugin/ #进入插件目录
+pnpm install -P #安装插件所需依赖
 ```
 
 > 使用Gitee
@@ -113,10 +112,9 @@ pnpm install -P #安装插件所需依赖
 
 <details><summary>支持我的创作</summary>
 
-[爱发电](https://afdian.com/a/Feijiang_)
-感谢！鸣谢名单可能更新不及时，欢迎来QQ催我！
+[![爱发电](https://github.com/user-attachments/assets/8c181f08-a2b6-4e67-8b61-bd2e4027a6a4)](https://afdian.com/a/Feijiang_)
 
-</details>
+感谢您的支持，您的支持就是我创作的最大动力！鸣谢名单可能更新不及时，欢迎来QQ催我！</details>
 
 #### Todo
 
@@ -134,7 +132,7 @@ pnpm install -P #安装插件所需依赖
 
 ------
 
-## 友情链接
+### 友情链接
 
 [Yunzai-Bot 相关内容索引](https://github.com/yhArcadia/Yunzai-Bot-plugins-index)
 
@@ -144,32 +142,13 @@ pnpm install -P #安装插件所需依赖
 
 ------
 
-#### Best19效果图
-<img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242" width="50%">
+### 预览
 
-效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
-#### 单曲成绩效果图
-<img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="50%">
+|Best19效果图<br><img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242"><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e) | 单曲成绩效果图<br><img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="60%"><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>单曲成绩效果图（Legacy）<br><img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="60%"><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>单曲图鉴效果图<br><img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="60%"> |
+|:-------------------:|:------------------------:|
+| 范围成绩效果图<br><img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65"><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567) <br><br>个人信息效果图<br><img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432"><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)| 个人信息效果图（Legacy）<br> <img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%"><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567)|
 
-效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
-#### 单曲成绩效果图（Legacy）
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="50%">
 
-#### 范围成绩效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65" width="50%">
-
-效果图来自[@东城Eastown](https://space.bilibili.com/171389567)
-#### 单曲图鉴效果图
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="50%">
-
-#### 个人信息效果图（Legacy） 
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="50%">
-
-效果图来自[@东城Eastown](https://space.bilibili.com/171389567)
-#### 个人信息效果图
-<img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432" width="50%">
-
-效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)
 
 ------
 
