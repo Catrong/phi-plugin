@@ -77,7 +77,7 @@ export default new class getInfo {
         })
 
         /**Tips */
-        this.tips = await readFile.FileReader(path.join(infoPath, 'tips.json'))
+        this.tips = await readFile.FileReader(path.join(infoPath, 'tips.yaml'))
 
 
         /**原版信息 */
