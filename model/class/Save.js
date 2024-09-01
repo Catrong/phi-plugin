@@ -357,14 +357,16 @@ export default class Save {
      * @param {string} id 
      * @param {number} lv 
      * @param {number} count 保留位数
+     * @param {number} difficulty 
      * @returns 
      */
-    getSuggest(id, lv, count) {
+    getSuggest(id, lv, count, difficulty) {
         if (!this.b19_rks) {
             let record = this.getRecord()
             this.b19_rks = record[Math.min(record.length, 18)].rks
         }
-        return fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks) + this.minUpRks() * 20, this.gameRecord[id][lv].difficulty, count)
+        console.info(this.b19_rks, this.gameRecord[id][lv].rks || 0, this.gameRecord[id])
+        return fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks || 0) + this.minUpRks() * 20, difficulty, count)
     }
 
     /**

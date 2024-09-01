@@ -633,7 +633,11 @@ export class phiuser extends plugin {
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
                     if ((!record[lv] && !scoreAsk.NEW)) continue
                     if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()]) continue
-                    record[lv].suggest = save.getSuggest(id, lv, 4)
+                    if (!record[lv]) {
+                        record[lv] = {}
+                    }
+                    console.info(getInfo.info(getInfo.idgetsong(id)).chart)
+                    record[lv].suggest = save.getSuggest(id, lv, 4, record[lv].difficulty || getInfo.info(getInfo.idgetsong(id)).chart[Level[lv]].difficulty)
                     data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'common'), difficulty: difficulty, rank: Level[lv] })
                 }
             }
