@@ -48,7 +48,12 @@
                 </div>
                 <div class="down">
                     <div class="desc">
+                        {{if help.desc}}
                         <p name="pvis">{{#help.desc.replace(/\s/g,'&ensp;')}}</p>
+                        {{/if}}
+                        {{if help.img}}
+                        <img src="{{_res_path}}html/otherimg/{{help.img}}" alt="{{help.img}}">
+                        {{/if}}
                     </div>
                 </div>
             </div>
