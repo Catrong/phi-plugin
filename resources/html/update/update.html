@@ -175,8 +175,12 @@
                             <p>{{song.score_new}}</p>
                         </div>
                         <div class="acc">
-                            <p style="font-size: unset;">{{song.acc_new - song.acc_new % 1}}</p>
-                            <p style="font-size: xx-small;">.{{((song.acc_new % 1).toFixed(4)).replace('0.','')}}%</p>
+                            <div class="acc_1">
+                                <p>{{song.acc_new - song.acc_new % 1}}</p>
+                            </div>
+                            <div class="acc_2">
+                                <p>.{{((song.acc_new % 1).toFixed(4)).replace('0.','')}}%</p>
+                            </div>
                         </div>
                         {{if song.rks_new}}
                         <div class="rks">
