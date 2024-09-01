@@ -242,6 +242,7 @@ export default class Save {
         let record = []
         for (let song in this.gameRecord) {
             for (let level in song) {
+                /**LEGACY */
                 if (level == 4) break
                 let tem = this.gameRecord[song][level]
                 if (!tem) continue
@@ -351,12 +352,19 @@ export default class Save {
         return { phi, b19_list }
     }
 
-    async getSuggest(id, count) {
+    /**
+     * 
+     * @param {string} id 
+     * @param {number} lv 
+     * @param {number} count 保留位数
+     * @returns 
+     */
+    getSuggest(id, lv, count) {
         if (!this.b19_rks) {
             let record = this.getRecord()
-            this.b19_rks = record[Math.min(record.length, 18)]
+            this.b19_rks = record[Math.min(record.length, 18)].rks
         }
-        return fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id].rks) + this.minUpRks() * 20, this.gameRecord[id].difficulty, count)
+        return fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks) + this.minUpRks() * 20, this.gameRecord[id][lv].difficulty, count)
     }
 
     /**

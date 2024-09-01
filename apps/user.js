@@ -633,7 +633,7 @@ export class phiuser extends plugin {
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
                     if ((!record[lv] && !scoreAsk.NEW)) continue
                     if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()]) continue
-                    record[lv].suggest = fCompute.suggest(minUpRks, difficulty, 4)
+                    record[lv].suggest = save.getSuggest(id, lv, 4)
                     data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'common'), difficulty: difficulty, rank: Level[lv] })
                 }
             }
@@ -653,9 +653,7 @@ export class phiuser extends plugin {
         let request = []
         request.push(`${range[0]} - ${range[1]}`)
 
-        for (let lv in isask) {
 
-        }
 
         send.send_with_At(e, await atlas.list(e, {
             song: data,

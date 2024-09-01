@@ -29,6 +29,9 @@ HistoryScoreDate: 10
 #  /list 最大渲染成绩数量
 listScoreMaxNum: 180
 
+#  在线曲绘地址
+onLinePhiIllUrl: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+
 #  ************ 【发送设置】 *************
 
 #  是否开启频道模式（文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息，把@改为回复）

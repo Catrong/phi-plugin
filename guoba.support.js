@@ -30,6 +30,28 @@ export function supportGuoba() {
                     component: 'Divider'
                 },
                 {
+                    field: 'onLinePhiIllUrl',
+                    label: '在线曲绘来源',
+                    bottomHelpMessage: '仅在未下载曲绘时有效，不影响下载曲绘指令。在线曲绘将重复下载曲绘资源，建议使用 /下载曲绘 将曲绘缓存到本地',
+                    component: 'Select',
+                    componentProps: {
+                        options: [
+                            {
+                                label: 'gitee',
+                                value: "https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main"
+                            },
+                            {
+                                label: 'github',
+                                value: "https://github.com/Catrong/phi-plugin-ill/blob/main"
+                            },
+                            {
+                                label: 'github代理',
+                                value: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                            }
+                        ]
+                    }
+                },
+                {
                     field: 'randerQuality',
                     label: '渲染质量',
                     bottomHelpMessage: '对所有的图片生效，设置渲染的质量',

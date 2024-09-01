@@ -427,11 +427,11 @@ export default new class getInfo {
                 }
             } else if (!ans) {
                 if (kind == 'common') {
-                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    ans = `${Config.getUserCfg('config','onLinePhiIllUrl')}/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 } else if (kind == 'blur') {
-                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    ans = `${Config.getUserCfg('config','onLinePhiIllUrl')}/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 } else if (kind == 'low') {
-                    ans = `https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    ans = `${Config.getUserCfg('config','onLinePhiIllUrl')}/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 }
             }
         }
