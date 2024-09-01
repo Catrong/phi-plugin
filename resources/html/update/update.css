@@ -247,7 +247,7 @@ body p {
 .songsinfo_ed p,
 .songsinfo_un p {
     font-size: xx-small;
-    line-height: 80%;
+    line-height: 75%;
     filter: drop-shadow(0px 0px 5px #000000aa);
 }
 
@@ -287,7 +287,7 @@ body p {
 }
 
 .acc_1 p {
-    font-size: 30px;
+    font-size: 15px;
 }
 
 .acc_2 p {
@@ -301,7 +301,7 @@ body p {
 }
 
 .rks p {
-    font-size: xx-small;
+    font-size: 11px;
 }
 
 .Nosignal {
