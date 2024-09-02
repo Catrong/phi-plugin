@@ -184,6 +184,11 @@ async function makeLargeLine(save) {
  */
 async function makeSmallLine(save) {
     // console.info(save)
+    if (!save) {
+        return {
+            playerId: "无效用户"
+        }
+    }
     return {
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
         playerId: fCompute.convertRichText(save.saveInfo.PlayerId),
