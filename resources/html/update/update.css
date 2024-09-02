@@ -425,7 +425,7 @@ body p {
     flex-direction: row;
     align-items: flex-start;
     margin-top: 5%;
-    margin-bottom: 5%;
+    margin-bottom: 5.5%;
     writing-mode: horizontal-tb;
     justify-content: center;
 }

@@ -132,13 +132,13 @@ body {
 
 .tips {
     position: absolute;
-    bottom: 10px;
-    left: 1%;
+    bottom: 0px;
+    left: 5px;
     writing-mode: horizontal-tb;
 }
 
 .tips p {
-    font-size: unset;
+    font-size: 14px;
 }
 
 .colorful p {
