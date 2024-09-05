@@ -53,6 +53,11 @@
     src: url("./font/NotoColorEmoji-Regular.ttf") format('truetype');
 }
 
+@font-face {
+    font-family: 'NotoSansMath-Regular';
+    src: url("./font/NotoSansMath-Regular.ttf") format('truetype');
+}
+
 :root {
     --AT: #6e6e6e;
     --IN: #ff0000;
@@ -61,7 +66,7 @@
 }
 
 body {
-    font-family: 'PHI', 'NotoSansArabic', 'NotoSansSymbols2', 'NOTO', 'NotoSansJP', 'NotoSansKannada', 'NotoSansCanadianAboriginal', 'NotoColorEmoji-Regular', 'HIMALAYA', '吞弥恰俊';
+    font-family: 'PHI', 'NotoSansArabic', 'NotoSansSymbols2', 'NOTO', 'NotoSansJP', 'NotoSansKannada', 'NotoSansCanadianAboriginal', 'NotoColorEmoji-Regular', 'HIMALAYA', '吞弥恰俊', 'NotoSansMath-Regular';
     margin: 0;
     background: url('../otherimg/phigros.png') center no-repeat;
     background-size: cover;
