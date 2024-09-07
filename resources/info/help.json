@@ -121,6 +121,11 @@
                 "title": "/com<br>/计算",
                 "eg": "/com <定数> <ACC>",
                 "desc": "计算等效rks<br>eg: /com 15.9 99.50"
+            },
+            {
+                "title": "/tips",
+                "eg": "/tips",
+                "desc": "随机tips"
             }
         ]
     },
@@ -170,6 +175,23 @@
         ]
     },
     {
+        "group": "反馈 & 提议",
+        "list": [
+            {
+                "title": "别名提案",
+                "eg": "别名提案",
+                "desc": "扫描二维码进入文档",
+                "img": "nickSuggest.png"
+            },
+            {
+                "title": "问题反馈",
+                "eg": "问题反馈",
+                "desc": "扫描二维码进入文档",
+                "img": "callback.png"
+            }
+        ]
+    },
+    {
         "group": "管理员命令",
         "auth": "master",
         "list": [
@@ -207,23 +229,6 @@
                 "title": "/更新<br>/gx",
                 "eg": "/[强制]更新",
                 "desc": "更新本插件"
-            }
-        ]
-    },
-    {
-        "group": "反馈 & 提议",
-        "list": [
-            {
-                "title": "别名提案",
-                "eg": "别名提案",
-                "desc": "扫描二维码进入文档",
-                "img": "nickSuggest.png"
-            },
-            {
-                "title": "问题反馈",
-                "eg": "问题反馈",
-                "desc": "扫描二维码进入文档",
-                "img": "callback.png"
             }
         ]
     }

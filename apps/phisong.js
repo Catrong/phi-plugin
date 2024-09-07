@@ -51,6 +51,10 @@ export class phisong extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(com|计算).*$`,
                     fnc: 'comrks'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)tips$`,
+                    fnc: 'tips'
                 }
             ]
         })
@@ -418,6 +422,11 @@ export class phisong extends plugin {
             send.send_with_At(e, `格式错误QAQ！\n格式：${Config.getUserCfg('config', 'cmdhead')} com <定数> <acc>`)
             return false
         }
+    }
+
+    /**随机tips */
+    tips(e) {
+        send.send_with_At(e, getInfo.tips[fCompute.randBetween(0, getInfo.tips.length - 1)])
     }
 
 }

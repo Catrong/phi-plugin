@@ -86,6 +86,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi (ltr\|开字母)` | 根据字母猜曲名，#出/#open... 开指定的字母，#第n个/#nX.xxx 进行回答，#ans 获取答案 
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名 
+| `#phi tips` | 随机tips 
 | `#phi nick xxx` | 查询某一曲目的别名 
 | `#phi (rand\|随机) <条件>` | 根据条件随机曲目，条件支持难度、定数，难度可以多选，定数以-作为分隔 
 | `#phi (曲绘\|ill\|Ill) xxx` | 查询phigros中某一曲目的曲绘 

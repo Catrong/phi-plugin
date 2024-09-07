@@ -76,7 +76,9 @@ export default new class getInfo {
             }
         })
 
-        /**Tips */
+        /**
+         * Tips []
+         */
         this.tips = await readFile.FileReader(path.join(infoPath, 'tips.yaml'))
 
 

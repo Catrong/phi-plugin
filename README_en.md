@@ -82,6 +82,7 @@ pnpm install -P # Install the plugin dependencies
 | `#phi (letter\|出你字母\|猜曲名)` | Guess the title of the song according to the letters, '#出...' Opens the specified letter, guess by'#第n个...' , '#letterans' to stop guessing and get answer.
 | `#phi (字母洗牌\|lettermix)` | The order of the track list in the title will be shuffled according to the letter guess and the weights will be normalized 
 | `#phi (song\|曲) xxx` | Get Phigros song info, also supports aliasing 
+| `#phi tips` | Random tips 
 | `#phi (rand\|随机) <condition>` | According to the conditional random tracks, the condition supports difficulty, fixed number, difficulty can be multi-select, in - interval 
 | `#phi (曲绘\|ill\|Ill) xxx` | Query the illustration of a song in Phigros 
 | `#phi (search\|查询\|检索) <condition, value>` | Retrieve tracks in the library, support BPM constant quantity, condition bpm dif cmb, the value can be interval, with - interval 
