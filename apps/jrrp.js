@@ -11,7 +11,6 @@ import send from '../model/send.js'
 
 /**一言 */
 let sentence = await readFile.FileReader(path.join(infoPath, 'sentences.json'))
-let word = await readFile.FileReader(path.join(infoPath, 'jrrp.json'))
 
 
 export class phihelp extends plugin {
@@ -36,9 +35,9 @@ export class phihelp extends plugin {
         let jrrp = await redis.get(`${redisPath}:jrrp:${e.user_id}`)
         if (!jrrp) {
             jrrp = [Math.round(easeOutCubic(Math.random()) * 100), Math.floor(Math.random() * sentence.length)]
-            let good = [...word.good]
-            let bad = [...word.bad]
-            let common = [...word.common]
+            let good = [...getInfo.word.good]
+            let bad = [...getInfo.word.bad]
+            let common = [...getInfo.word.common]
             for (let i = 0; i < 4; i++) {
                 let id = Math.floor(Math.random() * (good.length + common.length))
                 if (id < good.length) {

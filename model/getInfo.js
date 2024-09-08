@@ -15,66 +15,61 @@ export default new class getInfo {
     async init() {
 
         /**之前改过一次名称，修正别名 */
-        readFile.FileReader(path.join(configPath, 'nickconfig.yaml'), "TXT").then((nick) => {
-            if (nick) {
-                const waitToReplace = {
-                    "Winter↑cube↓": "Winter ↑cube↓",
-                    "Cipher: /2&//<|0": "Cipher : /2&//<|0",
-                    "NYA!!!(Phigros ver.)": "NYA!!! (Phigros ver.)",
-                    "JunXion Between Life And Death(VIP Mix)": "JunXion Between Life And Death(VIP Mix)",
-                    "Dash from SOUL NOTES": "Dash",
-                    "Drop It from SOUL NOTES": "Drop It",
-                    "Diamond Eyes from SOUL NOTES": "Diamond Eyes",
-                }
-                let flag = false
-                for (let i in waitToReplace) {
-                    if (nick.includes(i)) {
-                        flag = true
-                        nick = nick.replace(i, waitToReplace[i])
-                    }
-                }
-                if (flag) {
-                    readFile.SetFile(path.join(configPath, 'nickconfig.yaml'), nick, "TXT")
-                    logger.mark('[phi-plugin]自动修正别名')
+        let nick = await readFile.FileReader(path.join(configPath, 'nickconfig.yaml'), "TXT")
+        if (nick) {
+            const waitToReplace = {
+                "Winter↑cube↓": "Winter ↑cube↓",
+                "Cipher: /2&//<|0": "Cipher : /2&//<|0",
+                "NYA!!!(Phigros ver.)": "NYA!!! (Phigros ver.)",
+                "JunXion Between Life And Death(VIP Mix)": "JunXion Between Life And Death(VIP Mix)",
+                "Dash from SOUL NOTES": "Dash",
+                "Drop It from SOUL NOTES": "Drop It",
+                "Diamond Eyes from SOUL NOTES": "Diamond Eyes",
+            }
+            let flag = false
+            for (let i in waitToReplace) {
+                if (nick.includes(i)) {
+                    flag = true
+                    nick = nick.replace(i, waitToReplace[i])
                 }
             }
-        })
+            if (flag) {
+                readFile.SetFile(path.join(configPath, 'nickconfig.yaml'), nick, "TXT")
+                logger.mark('[phi-plugin]自动修正别名')
+            }
+        }
 
-        /**默认别名 */
-        readFile.FileReader(path.join(infoPath, 'nicklist.yaml')).then((nicklist) => {
-            /**以曲名为key */
-            this.nicklist = nicklist
-            /**以别名为key */
-            this.songnick = {}
-            for (let i in nicklist) {
-                for (let j in nicklist[i]) {
-                    if (this.songnick[nicklist[i][j]]) {
-                        this.songnick[nicklist[i][j]].push(i)
-                    } else {
-                        this.songnick[nicklist[i][j]] = [i]
-                    }
+        /**默认别名,以曲名为key */
+        this.nicklist = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml'))
+        /**以别名为key */
+        this.songnick = {}
+        for (let i in this.nicklist) {
+            for (let j in this.nicklist[i]) {
+                if (this.songnick[this.nicklist[i][j]]) {
+                    this.songnick[this.nicklist[i][j]].push(i)
+                } else {
+                    this.songnick[this.nicklist[i][j]] = [i]
                 }
             }
-        })
+        }
 
 
 
         /**扩增曲目信息 */
         this.DLC_Info = {}
         let files = fs.readdirSync(DlcInfoPath).filter(file => file.endsWith('.json'))
-        files.forEach((file) => {
-            this.DLC_Info[path.basename(file, '.json')] = readFile.FileReader(path.join(DlcInfoPath, file))
+        files.forEach(async (file) => {
+            this.DLC_Info[path.basename(file, '.json')] = await readFile.FileReader(path.join(DlcInfoPath, file))
         })
 
 
 
         /**头像id */
-        readFile.FileReader(path.join(infoPath, 'avatar.csv')).then((csv_avatar) => {
-            this.avatarid = {}
-            for (let i in csv_avatar) {
-                this.avatarid[csv_avatar[i].id] = csv_avatar[i].name
-            }
-        })
+        let csv_avatar = await readFile.FileReader(path.join(infoPath, 'avatar.csv'))
+        this.avatarid = {}
+        for (let i in csv_avatar) {
+            this.avatarid[csv_avatar[i].id] = csv_avatar[i].name
+        }
 
         /**
          * Tips []
@@ -102,14 +97,12 @@ export default new class getInfo {
         }
 
         /**SP信息 */
-        readFile.FileReader(path.join(infoPath, 'spinfo.json')).then((info) => {
-            this.sp_info = info
-            for (let i in info) {
-                if (info[i]['illustration_big']) {
-                    this.illlist.push(info[i].song)
-                }
+        this.sp_info = await readFile.FileReader(path.join(infoPath, 'spinfo.json'))
+        for (let i in this.sp_info) {
+            if (this.sp_info[i]['illustration_big']) {
+                this.illlist.push(this.sp_info[i].song)
             }
-        })
+        }
 
 
         /**难度映射 */
@@ -168,6 +161,9 @@ export default new class getInfo {
             this.illlist.push(CsvInfo[i].song)
             this.songlist.push(CsvInfo[i].song)
         }
+
+        /**jrrp */
+        this.word = await readFile.FileReader(path.join(infoPath, 'jrrp.json'))
 
     }
 
