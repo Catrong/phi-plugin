@@ -75,7 +75,6 @@ export class phihelp extends plugin {
             good: jrrp.slice(2, 6),
             bad: jrrp.slice(6, 10),
         }
-        console.info(data)
         send.send_with_At(e, await atlas.common(e, 'jrrp', data))
     }
 
