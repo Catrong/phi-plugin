@@ -126,6 +126,9 @@ export class phiuser extends plugin {
         stats[3].tatle = Level[3]
 
         for (let id in Record) {
+            if (!getInfo.idgetsong(id)) {
+                continue
+            }
             let record = Record[id]
             for (let lv in [0, 1, 2, 3]) {
                 if (!record[lv]) continue
@@ -163,7 +166,7 @@ export class phiuser extends plugin {
 
         if (!userbackground) {
             e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
-            logger.error(`未找到${save.gameuser.background}的曲绘！`)
+            logger.error(`未找到${save.gameuser.background}对应的曲绘！`)
         }
 
         let dan = await get.getDan(e.user_id)
