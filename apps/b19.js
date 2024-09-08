@@ -608,7 +608,7 @@ export class phib19 extends plugin {
 
             /**防止消息过长发送失败每条消息10行 */
             let tot = 1
-            tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} CLG MOD: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
+            tmsg += `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} CLG MOD: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
             for (let i = 0; i < suggestlist.length; ++i) {
                 if (tot <= 10) {
                     tmsg += `\n#${i + 1}: ${suggestlist[i].song}<${suggestlist[i].rank}>${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% -> ${suggestlist[i].suggest}`

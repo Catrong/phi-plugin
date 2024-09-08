@@ -1,5 +1,3 @@
-import getPic from './getPic.js'
-
 export default new class compute {
     /**
      * 计算等效rks
@@ -166,19 +164,19 @@ export default new class compute {
     }
 
     /**
-     * 
+     * 转换unity富文本
      * @param {string} richText 
+     * @param {boolean} [onlyText=false] 是否只返回文本
      * @returns 
      */
-    convertRichText(richText) {
-        richText = richText.replace(/</g, '\\<');
-        richText = richText.replace(/>/g, '\\>');
+    convertRichText(richText, onlyText = false) {
+        richText = richText.replace(/</g, '\\<').replace(/>/g, '\\>');
         let reg = [/\\<color\s*=[^\\]*?\\>(.*?)\\<\/color\\>/, /\\<size\s*=[^\\]*?\\>(.*?)\\<\/size\\>/]
         while (1) {
             if (richText.match(reg[0])) {
                 let txt = richText.match(reg[0])[1]
                 let color = richText.match(reg[0])[0].match(/color\s*=[^>]*?([^>]*)/)[1].replace(/[\s\"\\]/g, '')
-                richText = richText.replace(reg[0], `<span style="color:${color}">${txt}</span>`)
+                richText = richText.replace(reg[0], onlyText ? txt : `<span style="color:${color}">${txt}</span>`)
                 continue
             }
             // if (richText.match(reg[1])) {
@@ -190,6 +188,9 @@ export default new class compute {
                 richText.replace(/\n\r?/g, '<br>')
             }
             break
+        }
+        if (onlyText) {
+            richText = richText.replace(/\\</g, '<').replace(/\\>/g, '>');
         }
         return richText
     }

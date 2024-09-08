@@ -31,12 +31,7 @@ export class phiDan extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(Dan|dan).*$`,
                     fnc: 'dan'
-                },
-                {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(sessionToken)$`,
-                    fnc: 'sstk'
-                },
-
+                }
             ]
         })
 
@@ -120,19 +115,4 @@ export class phiDan extends plugin {
         return true
     }
 
-    async sstk(e) {
-        if (e.isGroup) {
-            send.send_with_At(e, `请私聊使用嗷`)
-            return false
-        }
-
-        let save = await send.getsave_result(e)
-        if (!save) {
-            send.send_with_At(e, `未绑定存档，请先绑定存档嗷！`)
-            return true
-        }
-
-        send.send_with_At(e, `sessionToken: ${save.session}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}`)
-
-    }
 }

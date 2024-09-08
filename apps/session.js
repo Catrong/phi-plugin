@@ -34,6 +34,10 @@ export class phisstk extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(clean)$`,
                     fnc: 'clean'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(sessionToken)$`,
+                    fnc: 'getSstk'
                 }
             ]
         })
@@ -300,7 +304,7 @@ export class phisstk extends plugin {
             theme: pluginData?.plugin_data?.theme || 'star',
         }
 
-        send.send_with_At(e, await get.getupdate(e, data))
+        send.send_with_At(e, [`PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`, await get.getupdate(e, data)])
 
         return false
     }
@@ -401,6 +405,21 @@ export class phisstk extends plugin {
             send.send_with_At(e, `取消成功！`)
         }
         this.finish('doClean', false)
+    }
+    async getSstk(e) {
+        if (e.isGroup) {
+            send.send_with_At(e, `请私聊使用嗷`)
+            return false
+        }
+
+        let save = await send.getsave_result(e)
+        if (!save) {
+            send.send_with_At(e, `未绑定存档，请先绑定存档嗷！`)
+            return true
+        }
+
+        send.send_with_At(e, `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)}\nsessionToken: ${save.session}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}`)
+
     }
 
 }
