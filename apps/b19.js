@@ -181,7 +181,7 @@ export class phib19 extends plugin {
             phi: save_b19.phi,
             b19_list: save_b19.b19_list,
             gameuser,
-            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
+            PlayerId: gameuser.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,

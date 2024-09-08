@@ -1,0 +1,58 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/jrrp/jrrp.css">
+
+{{/block}}
+
+{{block 'main'}}
+
+    <div class="jrrpBkg">
+        <img src="{{bkg}}" alt="{{bkg}}">
+    </div>
+    <div class="upperImg">
+        <img src="{{_res_path}}html/jrrp/ShineAfter.removebg.png" alt="upper">
+    </div>
+    <div class="title">
+        <p>——·今日运势·——</p>
+    </div>
+    <div class="lucky ac-{{luckRank}}">
+        <p>{{lucky}}</p>
+    </div>
+    <div class="date">
+        <div class="year">
+            <p>{{year}}</p>
+            <p>YYYY</p>
+        </div>
+        <div class="mounth">
+            <p>{{month}}</p>
+            <p>MM</p>
+        </div>
+        <div class="day">
+            <p>{{day}}</p>
+            <p>DD</p>
+        </div>
+    </div>
+    <div class="left">
+        <div class="afont">
+            <p><i>宜</i></p>
+        </div>
+        {{each good word}}
+        <p>{{word}}</p>
+        {{/each}}
+    </div>
+    <div class="right">
+        <div class="afont">
+            <p><i>忌</i></p>
+        </div>
+        {{each bad word}}
+        <p>{{word}}</p>
+        {{/each}}
+    </div>
+    <div class="sentences">
+        <p name="pvis">{{sentence.hitokoto}}</p>
+    </div>
+    <div class="from">
+        <p name="pvis">——「{{sentence.from}}」</p>
+    </div>
+
+{{/block}}

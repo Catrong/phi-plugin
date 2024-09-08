@@ -122,55 +122,53 @@ export default new class getInfo {
         this.songlist = []
 
         /**信息文件 */
-        readFile.FileReader(path.join(infoPath, 'info.csv')).then((CsvInfo) => {
-            readFile.FileReader(path.join(infoPath, 'difficulty.csv')).then((Csvdif) => {
-                readFile.FileReader(path.join(infoPath, 'infolist.json')).then((Jsoninfo) => {
-                    // console.info(CsvInfo, Csvdif, Jsoninfo)
-                    for (let i in CsvInfo) {
-                        switch (CsvInfo[i].id) {
-                            case 'AnotherMe.DAAN': {
-                                CsvInfo[i].song = 'Another Me (KALPA)';
-                                break;
-                            }
-                            case 'AnotherMe.NeutralMoon': {
-                                CsvInfo[i].song = 'Another Me (Rising Sun Traxx)';
-                                break;
-                            }
-                            default: {
-                                break;
-                            }
-                        }
-                        this.songsid[CsvInfo[i].id + '.0'] = CsvInfo[i].song
-                        this.idssong[CsvInfo[i].song] = CsvInfo[i].id + '.0'
+        let CsvInfo = await readFile.FileReader(path.join(infoPath, 'info.csv'))
+        let Csvdif = await readFile.FileReader(path.join(infoPath, 'difficulty.csv'))
+        let Jsoninfo = await readFile.FileReader(path.join(infoPath, 'infolist.json'))
+        // console.info(CsvInfo, Csvdif, Jsoninfo)
+        for (let i in CsvInfo) {
+            switch (CsvInfo[i].id) {
+                case 'AnotherMe.DAAN': {
+                    CsvInfo[i].song = 'Another Me (KALPA)';
+                    break;
+                }
+                case 'AnotherMe.NeutralMoon': {
+                    CsvInfo[i].song = 'Another Me (Rising Sun Traxx)';
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+            this.songsid[CsvInfo[i].id + '.0'] = CsvInfo[i].song
+            this.idssong[CsvInfo[i].song] = CsvInfo[i].id + '.0'
 
-                        this.ori_info[CsvInfo[i].song] = Jsoninfo[CsvInfo[i].id]
-                        if (!this.ori_info[CsvInfo[i].song]) {
-                            /**illustration_big = 'null'为特殊标记，getill时会返回默认图片 */
-                            this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, illustration_big: 'null', chapter: '', bpm: '', length: '', chart: {} }
-                            logger.mark(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
-                        }
-                        this.ori_info[CsvInfo[i].song].song = CsvInfo[i].song
-                        this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
-                        this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
-                        this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
-                        for (let j in this.Level) {
-                            const level = this.Level[j]
-                            if (CsvInfo[i][level]) {
-                                if (!this.ori_info[CsvInfo[i].song].chart[level]) {
-                                    this.ori_info[CsvInfo[i].song].chart[level] = {}
-                                }
-                                this.ori_info[CsvInfo[i].song].chart[level].charter = CsvInfo[i][level]
-                                this.ori_info[CsvInfo[i].song].chart[level].difficulty = Csvdif[i][level]
-                                /**最高定数 */
-                                this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))
-                            }
-                        }
-                        this.illlist.push(CsvInfo[i].song)
-                        this.songlist.push(CsvInfo[i].song)
+            this.ori_info[CsvInfo[i].song] = Jsoninfo[CsvInfo[i].id]
+            if (!this.ori_info[CsvInfo[i].song]) {
+                /**illustration_big = 'null'为特殊标记，getill时会返回默认图片 */
+                this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, illustration_big: 'null', chapter: '', bpm: '', length: '', chart: {} }
+                logger.mark(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
+            }
+            this.ori_info[CsvInfo[i].song].song = CsvInfo[i].song
+            this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
+            this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
+            this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
+            for (let j in this.Level) {
+                const level = this.Level[j]
+                if (CsvInfo[i][level]) {
+                    if (!this.ori_info[CsvInfo[i].song].chart[level]) {
+                        this.ori_info[CsvInfo[i].song].chart[level] = {}
                     }
-                })
-            })
-        })
+                    this.ori_info[CsvInfo[i].song].chart[level].charter = CsvInfo[i][level]
+                    this.ori_info[CsvInfo[i].song].chart[level].difficulty = Csvdif[i][level]
+                    /**最高定数 */
+                    this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))
+                }
+            }
+            this.illlist.push(CsvInfo[i].song)
+            this.songlist.push(CsvInfo[i].song)
+        }
+
     }
 
     /**
@@ -429,11 +427,11 @@ export default new class getInfo {
                 }
             } else if (!ans) {
                 if (kind == 'common') {
-                    ans = `${Config.getUserCfg('config','onLinePhiIllUrl')}/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 } else if (kind == 'blur') {
-                    ans = `${Config.getUserCfg('config','onLinePhiIllUrl')}/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 } else if (kind == 'low') {
-                    ans = `${Config.getUserCfg('config','onLinePhiIllUrl')}/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 }
             }
         }

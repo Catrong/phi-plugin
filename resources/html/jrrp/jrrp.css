@@ -1,0 +1,250 @@
+@import '../common/common.css';
+
+body {
+    width: 2048px;
+    height: 1080px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body p {
+    color: white;
+    margin: 0;
+}
+
+.jrrpBkg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+.jrrpBkg img {
+    width: 100%;
+}
+
+.upperImg {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+}
+
+.upperImg img {
+    width: 100%;
+    backdrop-filter: drop-shadow(0px 0px 20px #ffffff88);
+}
+
+.title {
+    position: absolute;
+    top: 60px;
+    backdrop-filter: blur(10px);
+}
+
+.title p {
+    font-size: 40px;
+}
+
+.lucky {
+    position: absolute;
+    top: 25px;
+}
+
+.lucky p {
+    font-size: 300px;
+    color: #ffffff;
+}
+
+.ac-0 p {
+    text-shadow: 0 0 10px #ffffff;
+}
+
+.ac-1 p {
+    text-shadow: 0 0 10px #49ff00;
+}
+
+.ac-2 p {
+    text-shadow: 0 0 10px #00d2ff;
+}
+
+.ac-3 p {
+    text-shadow: 0 0 10px #ff5151;
+}
+
+.ac-4 p {
+    text-shadow: 0 0 10px #fbff00;
+}
+
+.ac-5 p {
+    text-shadow: -5px 0px 10px #00d2ff99, 0 0px 10px #49ff0099, 5px 0px 10px #ff515199;
+}
+
+.date {
+    position: absolute;
+    bottom: 350px;
+}
+
+.date p {
+    font-size: 120px;
+}
+
+.year,
+.mounth,
+.day {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: 100px;
+    align-items: center;
+}
+
+.year :first-child,
+.mounth :first-child,
+.day :first-child {
+    color: white;
+    text-shadow: 0 0 10px skyblue;
+}
+
+.year :last-child,
+.mounth :last-child,
+.day :last-child {
+    color: #87cfeb6b;
+    position: absolute;
+    z-index: -1;
+}
+
+.left,
+.right {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+    top: 300px;
+    width: 140px;
+    white-space: nowrap;
+}
+
+.left {
+    left: 450px;
+    text-shadow: 0 0 10px gold;
+}
+
+.left p {
+    font-size: 70px;
+}
+
+.right {
+    right: 450px;
+    text-shadow: 0 0 10px blue;
+}
+
+.right p {
+    font-size: 70px;
+}
+
+.afont {
+    position: absolute;
+    left: -150%;
+    z-index: -1;
+}
+
+.afont p {
+    font-size: 500px;
+    color: #87ceeb66;
+    text-shadow: none;
+}
+
+.sentences,.from {
+    position: absolute;
+    backdrop-filter: blur(10px);
+    background-color: #ffffffbb;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+    box-shadow: 0 0 10px black;
+}
+
+.sentences {
+    top: 830px;
+    width: 60%;
+    height: 7.5%;
+}
+
+.from {
+    top: 920px;
+    right: 662px;
+    width: 517px;
+    height: 50px;
+}
+
+.sentences p,
+.from p {
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(0, #425482), color-stop(0.5, #a98aa8), color-stop(1, #697ba3));
+    color: transparent;
+    background-clip: text;
+    font-size: 40px;
+}
+
+.suggest {
+    position: absolute;
+    right: 10px;
+}
+
+.suggest p {
+    font-size: 40px;
+}
+
+.song {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    position: relative;
+    justify-content: flex-start;
+}
+
+.ill {
+    width: 350px;
+    z-index: 1;
+}
+
+.ill img {
+    width: 100%;
+    clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+}
+
+.info {
+    width: 102%;
+    height: 122%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+    position: absolute;
+    justify-content: flex-end;
+}
+
+.info p {
+    font-size: 30px;
+    white-space: nowrap;
+}
+
+.EZ {
+    background-color: var(--EZ);
+}
+
+.HD {
+    background-color: var(--HD);
+}
+
+.IN {
+    background-color: var(--IN);
+}
+
+.AT {
+    background-color: var(--AT);
+}
