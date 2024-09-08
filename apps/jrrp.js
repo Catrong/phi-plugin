@@ -7,6 +7,7 @@ import readFile from '../model/getFile.js'
 import atlas from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import fCompute from '../model/fCompute.js'
+import send from '../model/send.js'
 
 /**一言 */
 let sentence = await readFile.FileReader(path.join(infoPath, 'sentences.json'))
@@ -75,7 +76,7 @@ export class phihelp extends plugin {
             bad: jrrp.slice(6, 10),
         }
         console.info(data)
-        atlas.common(e, 'jrrp', data);
+        send.send_with_At(e, await atlas.common(e, 'jrrp', data))
     }
 
 }
