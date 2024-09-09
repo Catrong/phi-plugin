@@ -206,4 +206,16 @@ export default new class compute {
         }
         return richText
     }
+
+    /**是否是管理员 */
+    is_admin(e) {
+        switch (e?.member?.permissions[1]) {
+            case 2:
+            case 4:
+            case 5:
+                return true;
+            default:
+                return false;
+        }
+    }
 }()

@@ -159,7 +159,7 @@ export class phiset extends plugin {
     }
 
     async ban(e) {
-        if (!e.isAdmin && !e.isMaster) {
+        if (!fCompute.is_admin(e) && !e.isMaster) {
             return false
         }
         if (!e.group_id) {
