@@ -185,7 +185,7 @@ export class phiset extends plugin {
                 break
             }
         }
-        console.info(await redis.keys(`${redisPath}:banGroup:*`))
+        // console.info(await redis.keys(`${redisPath}:banGroup:*`))
         send.send_with_At(e, `当前群聊: ${e.group_id}\n已禁用:\n${(await redis.keys(`${redisPath}:banGroup:${e.group_id}:*`)).join('\n').replace(new RegExp(`${redisPath}:banGroup:${e.group_id}:`, 'g'), '')}`)
     }
     async unban(e) {
@@ -214,7 +214,7 @@ export class phiset extends plugin {
                 break
             }
         }
-        console.info(await redis.keys(`${redisPath}:banGroup:*`))
+        // console.info(await redis.keys(`${redisPath}:banGroup:*`))
         send.send_with_At(e, `当前群聊: ${e.group_id}\n已禁用:\n${(await redis.keys(`${redisPath}:banGroup:${e.group_id}:*`)).join('\n').replace(new RegExp(`${redisPath}:banGroup:${e.group_id}:`, 'g'), '')}`)
     }
 }
