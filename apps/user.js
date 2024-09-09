@@ -6,6 +6,7 @@ import atlas from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import getSave from '../model/getSave.js'
 import fCompute from '../model/fCompute.js'
+import getBanGroup from '../model/getBanGroup.js';
 
 
 let Level = ['EZ', 'HD', 'IN', 'AT']
@@ -42,6 +43,12 @@ export class phiuser extends plugin {
 
     /**查询data */
     async data(e) {
+
+        if (await getBanGroup.get(e.group_id, 'data')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let User = await get.getsave(e.user_id)
         if (User) {
             if (User.gameProgress) {
@@ -57,6 +64,12 @@ export class phiuser extends plugin {
     }
 
     async info(e) {
+
+        if (await getBanGroup.get(e.group_id, 'info')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         /**'EZ', 'HD', 'IN', 'AT' */
         let tot = [0, 0, 0, 0]
         /**背景 */
@@ -368,6 +381,12 @@ export class phiuser extends plugin {
 
     async lvscore(e) {
 
+        if (await getBanGroup.get(e.group_id, 'lvscore')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+
         let save = await send.getsave_result(e, 1.0)
 
         if (!save) {
@@ -577,6 +596,12 @@ export class phiuser extends plugin {
     }
 
     async list(e) {
+
+        if (await getBanGroup.get(e.group_id, 'list')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
 
         let save = await send.getsave_result(e)
 

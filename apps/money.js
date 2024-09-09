@@ -4,6 +4,7 @@ import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
 import getNotes from '../model/getNotes.js'
+import getBanGroup from '../model/getBanGroup.js';
 
 const illlist = []
 const theme = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }]
@@ -38,7 +39,7 @@ export class phimoney extends plugin {
                 },
                 {
                     reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(retask|刷新任务)$`,
-                    fnc: 'gettask'
+                    fnc: 'retask'
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(send|送|转)(.*)$`,
@@ -55,6 +56,12 @@ export class phimoney extends plugin {
 
     /**签到 */
     async sign(e) {
+
+        if (await getBanGroup.get(e.group_id, 'sign')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let data = await getNotes.getNotesData(e.user_id, true)
         let last_sign = new Date(data.plugin_data.sign_in)
         let now_time = new Date().toString()
@@ -115,7 +122,7 @@ export class phimoney extends plugin {
             if (save) {
                 if (last_task < request_time) {
                     /**如果有存档并且没有刷新过任务自动刷新 */
-                    this.gettask(e)
+                    this.retask(e)
                     Remsg.push(`\n已自动为您刷新任务！您今日份的任务如下：`)
                 } else {
                     this.tasks(e)
@@ -137,7 +144,13 @@ export class phimoney extends plugin {
     }
 
     /**刷新任务并发送图片 */
-    async gettask(e) {
+    async retask(e) {
+
+        if (await getBanGroup.get(e.group_id, 'retask')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let save = await get.getsave(e.user_id)
 
         if (!save) {
@@ -259,6 +272,12 @@ export class phimoney extends plugin {
     }
 
     async tasks(e) {
+
+        if (await getBanGroup.get(e.group_id, 'tasks')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let now = await send.getsave_result(e)
 
         if (!now) {
@@ -338,6 +357,12 @@ export class phimoney extends plugin {
 
     /**转账 */
     async send(e) {
+
+        if (await getBanGroup.get(e.group_id, 'send')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let msg = e.msg.replace(/[#/](.*)(send|送|转)(\s*)/g, "")
         msg = msg.replace(/[\<\>]/g, "")
         let target = e.at
@@ -403,6 +428,12 @@ export class phimoney extends plugin {
 
     /**主题相关 */
     async theme(e) {
+
+        if (await getBanGroup.get(e.group_id, 'theme')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let aim = e.msg.replace(/.*?theme\s*/g, '')
         aim = Number(aim)
         if (typeof aim != 'number' || aim < 0 || aim > 2) {

@@ -103,6 +103,11 @@
                 "desc": "查询曲目图鉴<br>eg: /song 996"
             },
             {
+                "title": "/ill",
+                "eg": "/ill <曲目>",
+                "desc": "查询曲目曲绘<br>eg: /ill 996"
+            },
+            {
                 "title": "/rand",
                 "eg": "/rand [定数] [难度]",
                 "desc": "随机谱面<br>eg1: /rand 13+<br>eg2: /rand 15-<br>eg3: /rand 14-16 AT"
@@ -126,11 +131,6 @@
                 "title": "/tips",
                 "eg": "/tips",
                 "desc": "随机tips"
-            },
-            {
-                "title": "/jrrp",
-                "eg": "/jrrp",
-                "desc": "查询今日人品；仅供娱乐嗷！"
             }
         ]
     },
@@ -176,6 +176,11 @@
                 "title": "/retask",
                 "eg": "/retask",
                 "desc": "花费 20Notes 重置自己的任务，每日 /sgin 可视为一次 /retask ，每日第一次 reatask 免费<br>eg: /retask"
+            },
+            {
+                "title": "/jrrp",
+                "eg": "/jrrp",
+                "desc": "查询今日人品；仅供娱乐嗷！"
             }
         ]
     },
@@ -234,6 +239,31 @@
                 "title": "/更新<br>/gx",
                 "eg": "/[强制]更新",
                 "desc": "更新本插件"
+            },
+            {
+                "title": "/get",
+                "eg": "/get <名次>",
+                "desc": "获取排行榜上某一名次的sessionToken"
+            },
+            {
+                "title": "/del",
+                "eg": "/del <sessionToken>",
+                "desc": "禁用某一sessionToken"
+            },
+            {
+                "title": "/allow",
+                "eg": "/allow <sessionToken>",
+                "desc": "恢复某一sessionToken"
+            },
+            {
+                "title": "/ban",
+                "eg": "/ban <功能>",
+                "desc": "禁用某一类功能"
+            },
+            {
+                "title": "/unban",
+                "eg": "/unban <功能>",
+                "desc": "恢复使用某一类功能\n可选参数: all help bind b19 wb19 song ranklist fnc tipgame guessgame ltrgame sign setting dan"
             }
         ]
     }

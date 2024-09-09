@@ -109,6 +109,28 @@ pnpm install -P #安装插件所需依赖
 | `#phi(强制\|qz)?(更新\|gx)` | 更新本插件 
 | `#phi repu` | 重启puppeteer 
 | `#下载曲绘\|down ill` | 下载曲绘到本地 
+| `#phi get <名次>` | 获取排行榜上某一名次的sessionToken
+| `#phi del <sessionToken>` | 禁用某一sessionToken
+| `#phi allow <sessionToken>` | 恢复某一sessionToken
+| `#phi ban <功能>` | 禁用某一类功能，详见下表
+
+##### 功能参数说明
+
+| 参数 | 功能 | 影响指令
+| :- | :- | :-
+| help | 帮助功能 | /help /tkhelp
+| bind | 绑定功能 | /bind /unbind
+| b19 | 图片查分功能 | /pgr /update /info /list /pb30 /score /lvsco /chap
+| wb19 | 文字查分功能 | /suggest /data /best
+| song | 图鉴功能 | /song /ill /search /alias /rand
+| ranklist | 排行榜功能，不会禁用用户排名 | /ranklist /godlist
+| fnc | 小功能 | /com /tips
+| tipgame | tip猜歌 | /tipgame
+| guessgame | 猜歌 | /guess
+| ltrgame | 猜字母 | /letter /ltr
+| sign | 娱乐功能 | /sign /send /task /retask /jrrp
+| setting | 系统设置 | /theme
+| dan | 段位认证相关 | /dan /danupdate
 
 ------
 

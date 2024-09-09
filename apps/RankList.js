@@ -9,6 +9,7 @@ import atlas from '../model/picmodle.js'
 import Config from '../components/Config.js'
 import getNotes from '../model/getNotes.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
+import getBanGroup from '../model/getBanGroup.js';
 
 export class phiRankList extends plugin {
 
@@ -33,6 +34,12 @@ export class phiRankList extends plugin {
     }
 
     async rankList(e) {
+
+        if (await getBanGroup.get(e.group_id, 'rankList')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let save = await send.getsave_result(e)
         if (!save) {
             return true
@@ -52,7 +59,7 @@ export class phiRankList extends plugin {
         data.totDataNum = (await getRksRank.getAllRank()).length
 
         if (msg) {
-            rankNum = Math.max(Math.min(msg[0], data.totDataNum), 0)
+            rankNum = Math.max(Math.min(msg[0], data.totDataNum), 0) - 1
         } else {
             let sessionToken = save.getSessionToken()
             rankNum = await getRksRank.getUserRank(sessionToken)
@@ -111,6 +118,12 @@ export class phiRankList extends plugin {
     }
 
     async godList(e) {
+
+        if (await getBanGroup.get(e.group_id, 'godList')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let list = await getSave.getGod()
         let plugin_data = await getNotes.getPluginData(e.user_id)
         let data = {

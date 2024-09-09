@@ -160,7 +160,7 @@ export default new class getSave {
         return await redis.set(`${redisPath}:banSessionToken:${token}`, 1)
     }
 
-    async unbanSessionToken(token) {
+    async allowSessionToken(token) {
         return await redis.del(`${redisPath}:banSessionToken:${token}`)
     }
 

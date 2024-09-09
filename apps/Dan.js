@@ -5,6 +5,7 @@ import get from '../model/getdata.js'
 import Vika from '../model/Vika.js'
 import { segment } from 'oicq'
 import getSave from '../model/getSave.js'
+import getBanGroup from '../model/getBanGroup.js';
 
 const read = 'https://www.bilibili.com/read/cv27354116'
 const sheet = 'https://f.kdocs.cn/g/fxsg4EM2/'
@@ -41,6 +42,12 @@ export class phiDan extends plugin {
         if (!cancanneed) {
             return false
         }
+
+        if (await getBanGroup.get(e.group_id, 'dan')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let name = e.msg.replace(/[#/].*(dan|Dan)(\s*)/g, '')
         if (!name) {
             let dan = await getSave.getDan(e.user_id, true)
@@ -83,6 +90,12 @@ export class phiDan extends plugin {
         if (!cancanneed) {
             return false
         }
+
+        if (await getBanGroup.get(e.group_id, 'danupdate')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         /**检查是否绑定并提示 */
         let save = await send.getsave_result(e)
         if (!save) {

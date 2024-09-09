@@ -97,7 +97,29 @@ pnpm install -P # Install the plugin dependencies
 | :- | :- 
 | `#phi(设置别名\|setnick) xxx ---> xxx` | Set an alias for a song in the format Original name (or already an alias) ---> alias (spaces on both sides of the ---> are automatically filtered) 
 | `#phi(删除别名\|delnick) xxx` | Delete an alias for a song 
-| `#phi(强制)?更新` | Update this plugin 
+| `#phi(强制)?更新` | Update this plugin | `#download illustration|down ill` | Download illustrations to local storage 
+| `#phi get <rank>` | Get the sessionToken of a user at a specific rank on the leaderboard
+| `#phi del <sessionToken>` | Disable a specific sessionToken
+| `#phi allow <sessionToken>` | Restore a specific sessionToken
+| `#phi ban <function>` | Disable a certain type of function, see the table below
+
+#### Function Parameter Description
+
+| Parameter | Function | Affected Commands
+| :- | :- | :-
+| help | Help feature | /help /tkhelp
+| bind | Binding feature | /bind /unbind
+| b19 | Image score lookup feature | /pgr /update /info /list /pb30 /score /lvsco /chap
+| wb19 | Text score lookup feature | /suggest /data /best
+| song | Song guide feature | /song /ill /search /alias /rand
+| ranklist | Leaderboard feature (does not disable user rankings) | /ranklist /godlist
+| fnc | Small features | /com /tips
+| tipgame | Tip guessing game | /tipgame
+| guessgame | Guessing game | /guess
+| ltrgame | Letter guessing game | /letter /ltr
+| sign | Entertainment features | /sign /send /task /retask /jrrp
+| setting | System settings | /theme
+| dan | Rank certification related | /dan /danupdate
 
 ---
 

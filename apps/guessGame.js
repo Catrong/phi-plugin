@@ -4,6 +4,7 @@ import send from '../model/send.js';
 import guessTips from './guessGame/guessTips.js';
 import guessLetter from './guessGame/guessLetter.js';
 import guessIll from './guessGame/guessIll.js';
+import getBanGroup from '../model/getBanGroup.js';
 
 let games = "(提示猜曲|tipgame|ltr|letter|开字母|guess|猜曲绘)"
 let gameList = {}
@@ -50,15 +51,33 @@ export class phiGames extends plugin {
         switch (msg) {
             case "tipgame":
             case "提示猜曲": {
+
+                if (await getBanGroup.get(e.group_id, 'tipgame')) {
+                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                    return false
+                }
+
                 return await guessTips.start(e, gameList)
             }
             case "letter":
             case "ltr":
             case "开字母": {
+
+                if (await getBanGroup.get(e.group_id, 'ltrgame')) {
+                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                    return false
+                }
+
                 return await guessLetter.start(e, gameList)
             }
             case "guess":
             case "猜曲绘": {
+
+                if (await getBanGroup.get(e.group_id, 'guessgame')) {
+                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                    return false
+                }
+
                 return await guessIll.start(e, gameList)
             }
             default: {

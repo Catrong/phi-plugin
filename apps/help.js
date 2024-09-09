@@ -6,6 +6,7 @@ import atlas from '../model/picmodle.js'
 import getFile from '../model/getFile.js'
 import path from 'path'
 import { infoPath } from '../model/path.js'
+import getBanGroup from '../model/getBanGroup.js';
 
 const helpGroup = await getFile.FileReader(path.join(infoPath, 'help.json'))
 
@@ -32,6 +33,12 @@ export class phihelp extends plugin {
 
     }
     async help(e) {
+
+        if (await getBanGroup.get(e.group_id, 'help')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await get.getpluginData(e.user_id)
@@ -46,6 +53,12 @@ export class phihelp extends plugin {
     }
 
     async tkhelp(e) {
-        send.send_with_At(e, `sessionToken有关帮助：\n【推荐】：使用浏览器扫码登录TapTap获取token\n指令：/${Config.getUserCfg('config','cmdhead')} bind qrcode\n【基础方法】https://potent-cartwheel-e81.notion.site/Phigros-Bot-f154a4b0ea6446c28f62149587cd5f31\n绑定sessionToken指令：\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+
+        if (await getBanGroup.get(e.group_id, 'tkhelp')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        send.send_with_At(e, `sessionToken有关帮助：\n【推荐】：扫码登录TapTap获取token\n指令：/${Config.getUserCfg('config','cmdhead')} bind qrcode\n【基础方法】https://potent-cartwheel-e81.notion.site/Phigros-Bot-f154a4b0ea6446c28f62149587cd5f31\n绑定sessionToken指令：\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
     }
 }

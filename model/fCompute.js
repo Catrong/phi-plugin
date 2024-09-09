@@ -171,7 +171,7 @@ export default new class compute {
      */
     convertRichText(richText, onlyText = false) {
         richText = richText.replace(/</g, '\\<').replace(/>/g, '\\>');
-        let reg = [/\\<color\s*=[^\\]*?\\>(.*?)\\<\/color\\>/, /\\<size\s*=[^\\]*?\\>(.*?)\\<\/size\\>/]
+        let reg = [/\\<color\s*=[^\\]*?\\>(.*)\\<\/color\\>/, /\\<size\s*=[^\\]*?\\>(.*)\\<\/size\\>/, /\\<i>(.*)\\<\/i\\>/, /\\<b>(.*)\\<\/b\\>/]
         while (1) {
             if (richText.match(reg[0])) {
                 let txt = richText.match(reg[0])[1]
@@ -179,9 +179,21 @@ export default new class compute {
                 richText = richText.replace(reg[0], onlyText ? txt : `<span style="color:${color}">${txt}</span>`)
                 continue
             }
+
+            if (richText.match(reg[2])) {
+                let txt = richText.match(reg[2])[1]
+                richText = richText.replace(reg[2], onlyText ? txt : `<i>${txt}</i>`)
+                continue
+            }
+
+            if (richText.match(reg[3])) {
+                let txt = richText.match(reg[3])[1]
+                richText = richText.replace(reg[3], onlyText ? txt : `<b>${txt}</b>`)
+                continue
+            }
             // if (richText.match(reg[1])) {
             //     let txt = richText.match(reg[1])[1]
-            //     let size = richText.match(reg[1])[0].match(/size\s*=[^>]*?([^>]*)/)[1]
+            //     let size = richText.match(reg[1])[0].match(/size\s*=[^>]*?([^>]*)/)[1]o
             //     return this.convertRichText(richText.replace(reg[1], `<span style="font-size:${size}px">${txt}</span>`))
             // }
             if (richText.match(/\n\r?/)) {

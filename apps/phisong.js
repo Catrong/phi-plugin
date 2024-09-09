@@ -6,6 +6,7 @@ import send from '../model/send.js'
 import getInfo from '../model/getInfo.js'
 import getPic from '../model/getPic.js'
 import fCompute from '../model/fCompute.js'
+import getBanGroup from '../model/getBanGroup.js';
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
@@ -64,6 +65,12 @@ export class phisong extends plugin {
 
     /**歌曲图鉴 */
     async song(e) {
+
+        if (await getBanGroup.get(e.group_id, 'song')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let msg = e.msg.replace(/[#/](.*)(曲|song)(\s*)/, "")
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} song <曲名>`)
@@ -91,6 +98,12 @@ export class phisong extends plugin {
     }
 
     async search(e) {
+
+        if (await getBanGroup.get(e.group_id, 'search')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let msg = e.msg.replace(/[#/](.*)(查找|检索|search)(\s*)/g, "").toLowerCase()
 
         const patterns = {
@@ -267,6 +280,12 @@ export class phisong extends plugin {
     }
 
     async ill(e) {
+
+        if (await getBanGroup.get(e.group_id, 'ill')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let msg = e.msg.replace(/[#/](.*?)(曲绘|ill|Ill)(\s*)/, "")
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ill <曲名>`)
@@ -297,6 +316,12 @@ export class phisong extends plugin {
 
     /**随机定级范围内曲目 */
     async randmic(e) {
+
+        if (await getBanGroup.get(e.group_id, 'randmic')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let msg = e.msg.replace(/^[#/](.*)(随机|rand)(\s*)/, "")
         let isask = [1, 1, 1, 1]
 
@@ -390,7 +415,13 @@ export class phisong extends plugin {
     }
 
     /**查询歌曲别名 */
-    alias(e) {
+    async alias(e) {
+
+        if (await getBanGroup.get(e.group_id, 'alias')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let msg = e.msg.replace(/[#/](.*?)alias(\s*)/, "")
         let song = getInfo.idgetsong(msg) || getInfo.fuzzysongsnick(msg)
         if (song[0]) {
@@ -410,7 +441,13 @@ export class phisong extends plugin {
     }
 
     /**计算等效rks */
-    comrks(e) {
+    async comrks(e) {
+
+        if (await getBanGroup.get(e.group_id, 'comrks')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let msg = e.msg.replace(/^[#/].*(com|计算)\s*/, '')
         let data = msg.split(' ')
         data[0] = Number(data[0])
@@ -425,7 +462,13 @@ export class phisong extends plugin {
     }
 
     /**随机tips */
-    tips(e) {
+    async tips(e) {
+
+        if (await getBanGroup.get(e.group_id, 'tips')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         send.send_with_At(e, getInfo.tips[fCompute.randBetween(0, getInfo.tips.length - 1)])
     }
 

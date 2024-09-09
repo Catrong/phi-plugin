@@ -94,8 +94,5 @@ GuessTipsTimeout: 600
 GuessTipsAnsTime: 30
 
 #  ************ 【其他设置】 *************
-#  群聊禁用功能（频道请勿手动修改）
-banguess: []
-
 #  认证 Token
 VikaToken: ""

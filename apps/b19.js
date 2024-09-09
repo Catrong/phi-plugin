@@ -13,6 +13,7 @@ import getSave from '../model/getSave.js';
 import { LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
+import getBanGroup from '../model/getBanGroup.js';
 
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
@@ -104,10 +105,14 @@ export class phib19 extends plugin {
                 }
             ]
         })
-
     }
 
     async b19(e) {
+
+        if (await getBanGroup.get(e.group_id, 'b19')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
 
         let save = await send.getsave_result(e)
         if (!save) {
@@ -199,6 +204,11 @@ export class phib19 extends plugin {
     /**arc版查分图 */
     async arcgrosB19(e) {
 
+        if (await getBanGroup.get(e.group_id, 'arcgrosB19')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let save = await send.getsave_result(e)
         if (!save) {
             return true
@@ -248,6 +258,9 @@ export class phib19 extends plugin {
     /**获取bestn文字版 */
     async bestn(e) {
 
+        if (await getBanGroup.get(e.group_id, 'bestn')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+        }
 
         const save = await send.getsave_result(e)
 
@@ -394,6 +407,12 @@ export class phib19 extends plugin {
 
 
     async singlescore(e) {
+
+        if (await getBanGroup.get(e.group_id, 'singlescore')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         const save = await send.getsave_result(e)
 
         if (!save) {
@@ -556,6 +575,11 @@ export class phib19 extends plugin {
     /**推分建议，建议的是RKS+0.01的所需值 */
     async suggest(e) {
 
+        if (await getBanGroup.get(e.group_id, 'suggest')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         const save = await send.getsave_result(e)
 
         if (!save) {
@@ -661,6 +685,12 @@ export class phib19 extends plugin {
 
     /**查询章节成绩 */
     async chap(e) {
+
+        if (await getBanGroup.get(e.group_id, 'chap')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let save = await send.getsave_result(e)
         if (!save) {
             return false

@@ -8,6 +8,7 @@ import atlas from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import fCompute from '../model/fCompute.js'
 import send from '../model/send.js'
+import getBanGroup from '../model/getBanGroup.js';
 
 /**一言 */
 let sentence = await readFile.FileReader(path.join(infoPath, 'sentences.json'))
@@ -32,6 +33,12 @@ export class phihelp extends plugin {
     }
 
     async jrrp(e) {
+
+        if (await getBanGroup.get(e.group_id, 'jrrp')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let jrrp = await redis.get(`${redisPath}:jrrp:${e.user_id}`)
         if (!jrrp) {
             jrrp = [Math.round(easeOutCubic(Math.random()) * 100), Math.floor(Math.random() * sentence.length)]
@@ -59,7 +66,7 @@ export class phihelp extends plugin {
                 }
             }
             /**有效期到第二天凌晨0点 */
-            redis.set(`${redisPath}:jrrp:${e.user_id}`, JSON.stringify(jrrp), { PX: (new Date() - (new Date() - (new Date() % 86400000)) + 86400000) })
+            redis.set(`${redisPath}:jrrp:${e.user_id}`, JSON.stringify(jrrp), { PX: 86400000 - (new Date() % 86400000)})
         } else {
             jrrp = JSON.parse(jrrp)
         }

@@ -9,6 +9,7 @@ import getSave from '../model/getSave.js'
 import getQRcode from '../lib/getQRcode.js'
 import common from '../../../lib/common/common.js'
 import fCompute from '../model/fCompute.js'
+import getBanGroup from '../model/getBanGroup.js';
 
 
 export class phisstk extends plugin {
@@ -45,6 +46,12 @@ export class phisstk extends plugin {
     }
 
     async bind(e) {
+
+        if (await getBanGroup.get(e.group_id, 'bind')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let sessionToken = e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
 
         sessionToken = sessionToken ? sessionToken[0] : null
@@ -117,6 +124,12 @@ export class phisstk extends plugin {
     }
 
     async update(e) {
+
+        if (await getBanGroup.get(e.group_id, 'update')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
         let session = await getSave.get_user_token(e.user_id)
         if (!session) {
             e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
@@ -312,6 +325,12 @@ export class phisstk extends plugin {
 
 
     async unbind(e) {
+
+        if (await getBanGroup.get(e.group_id, 'unbind')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
 
         if (!getSave.get_user_token(e.user_id)) {
             send.send_with_At(e, '没有找到你的存档信息嗷！')
