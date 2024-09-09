@@ -118,6 +118,7 @@ pnpm install -P #安装插件所需依赖
 
 | 参数 | 功能 | 影响指令
 | :- | :- | :-
+| all | 全部功能 | -.-
 | help | 帮助功能 | /help /tkhelp
 | bind | 绑定功能 | /bind /unbind
 | b19 | 图片查分功能 | /pgr /update /info /list /pb30 /score /lvsco /chap

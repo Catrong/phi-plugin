@@ -107,6 +107,7 @@ pnpm install -P # Install the plugin dependencies
 
 | Parameter | Function | Affected Commands
 | :- | :- | :-
+| all | all | all
 | help | Help feature | /help /tkhelp
 | bind | Binding feature | /bind /unbind
 | b19 | Image score lookup feature | /pgr /update /info /list /pb30 /score /lvsco /chap
