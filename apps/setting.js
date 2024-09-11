@@ -152,7 +152,7 @@ export class phiset extends plugin {
             return false
         }
         let msg = e.msg.match(/[0-9a-zA-Z]{25}$/)[0]
-        console.info(msg)
+        // console.info(msg)
         await getSave.allowSessionToken(msg)
         console.info(await getSave.isBanSessionToken(msg))
         send.send_with_At(e, '成功')

@@ -171,7 +171,7 @@ export default new class compute {
      */
     convertRichText(richText, onlyText = false) {
         richText = richText.replace(/</g, '\\<').replace(/>/g, '\\>');
-        let reg = [/\\<color\s*=[^\\]*?\\>(.*)\\<\/color\\>/, /\\<size\s*=[^\\]*?\\>(.*)\\<\/size\\>/, /\\<i>(.*)\\<\/i\\>/, /\\<b>(.*)\\<\/b\\>/]
+        let reg = [/\\<color\s*=[^\\]*?\\>(.*?)\\<\/color\\>/, /\\<size\s*=[^\\]*?\\>(.*?)\\<\/size\\>/, /\\<i>(.*?)\\<\/i\\>/, /\\<b>(.*?)\\<\/b\\>/]
         while (1) {
             if (richText.match(reg[0])) {
                 let txt = richText.match(reg[0])[1]
@@ -209,9 +209,15 @@ export default new class compute {
 
     /**是否是管理员 */
     is_admin(e) {
+        console.info(e)
         switch (e?.member?.permissions[1]) {
-            case 2:
+            /**频道主 */
             case 4:
+            /**超管 */
+            case 2:
+            /**分组管理 */
+            case 7:
+            /**子频道管理 */
             case 5:
                 return true;
             default:
