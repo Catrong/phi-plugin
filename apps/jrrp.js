@@ -73,7 +73,7 @@ export class phihelp extends plugin {
         let data = {
             bkg: getInfo.getill("Shine After"),
             lucky: jrrp[0],
-            luckRank: jrrp[1] == 100 ? 5 : (jrrp[1] >= 80 ? 4 : (jrrp[1] >= 60 ? 3 : (jrrp[1] >= 40 ? 2 : (jrrp[1] >= 20 ? 1 : 0)))),
+            luckRank: jrrp[0] == 100 ? 5 : (jrrp[0] >= 80 ? 4 : (jrrp[0] >= 60 ? 3 : (jrrp[0] >= 40 ? 2 : (jrrp[0] >= 20 ? 1 : 0)))),
             year: new Date().getFullYear(),
             month: fCompute.ped(new Date().getMonth() + 1, 2),
             day: fCompute.ped(new Date().getDate(), 2),

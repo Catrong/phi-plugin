@@ -170,12 +170,12 @@ export default new class compute {
      * @returns 
      */
     convertRichText(richText, onlyText = false) {
-        richText = richText.replace(/</g, '\\<').replace(/>/g, '\\>');
-        let reg = [/\\<color\s*=[^\\]*?\\>(.*?)\\<\/color\\>/, /\\<size\s*=[^\\]*?\\>(.*?)\\<\/size\\>/, /\\<i>(.*?)\\<\/i\\>/, /\\<b>(.*?)\\<\/b\\>/]
+        richText = richText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        let reg = [/&lt;color\s*=\s*.*?&gt;(.*?)&lt;\/color&gt;/, /&lt;size\s*=\s*.*?&gt;(.*?)&lt;\/size&gt;/, /&lt;i&gt;(.*?)&lt;\/i&gt;/, /&lt;b&gt;(.*?)&lt;\/b&gt;/]
         while (1) {
             if (richText.match(reg[0])) {
                 let txt = richText.match(reg[0])[1]
-                let color = richText.match(reg[0])[0].match(/color\s*=[^>]*?([^>]*)/)[1].replace(/[\s\"\\]/g, '')
+                let color = richText.match(reg[0])[0].match(/&lt;color\s*=\s*(.*?)&gt;/)[1].replace(/[\s\"]/g, '')
                 richText = richText.replace(reg[0], onlyText ? txt : `<span style="color:${color}">${txt}</span>`)
                 continue
             }
@@ -202,7 +202,7 @@ export default new class compute {
             break
         }
         if (onlyText) {
-            richText = richText.replace(/\\</g, '<').replace(/\\>/g, '>');
+            richText = richText.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
         }
         return richText
     }
