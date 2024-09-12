@@ -77,7 +77,7 @@ export class phisstk extends plugin {
                 result = await getQRcode.checkQRCodeResult(request);
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
-                        send.send_with_At(e, `二维码已扫描，请确认登陆`, false, { recallMsg: 10 });
+                        send.send_with_At(e, `登录二维码已扫描，请确认登录`, false, { recallMsg: 10 });
                         if (e.group?.recallMsg) {
                             e.group.recallMsg(qrCodeMsg.message_id)
                         } else if (e.friend?.recallMsg) {
