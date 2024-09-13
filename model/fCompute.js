@@ -209,7 +209,10 @@ export default new class compute {
 
     /**是否是管理员 */
     is_admin(e) {
-        console.info(e)
+        //console.info(e)
+        if (!e?.member?.permissions) {
+            return false;
+        }
         switch (e?.member?.permissions[1]) {
             /**频道主 */
             case 4:
