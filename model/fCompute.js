@@ -170,6 +170,9 @@ export default new class compute {
      * @returns 
      */
     convertRichText(richText, onlyText = false) {
+        if (!richText) {
+            return richText
+        }
         richText = richText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         let reg = [/&lt;color\s*=\s*.*?&gt;(.*?)&lt;\/color&gt;/, /&lt;size\s*=\s*.*?&gt;(.*?)&lt;\/size&gt;/, /&lt;i&gt;(.*?)&lt;\/i&gt;/, /&lt;b&gt;(.*?)&lt;\/b&gt;/]
         while (1) {
