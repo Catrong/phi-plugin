@@ -14,7 +14,7 @@ export default class LevelRecordInfo {
 
         let info = getInfo.info(getInfo.idgetsong(id), true)
 
-        if(!info) {
+        if (!info) {
             return
         }
 
@@ -41,6 +41,8 @@ function Rating(score, fc) {
         return 'phi'
     else if (fc)
         return 'FC'
+    else if (!score) 
+        return 'NEW'
     else if (score < 700000)
         return 'F'
     else if (score < 820000)

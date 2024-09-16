@@ -37,8 +37,8 @@ export default new class getBanGroup {
             case 'singlescore':
             case 'lvscore':
             case 'chap':
-                return await this.redis(group, 'b19')
             case 'suggest':
+                return await this.redis(group, 'b19')
             case 'bestn':
             case 'data':
                 return await this.redis(group, 'wb19')

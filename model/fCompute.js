@@ -1,3 +1,5 @@
+import { MAX_DIFFICULTY } from './constNum.js'
+
 export default new class compute {
     /**
      * 计算等效rks
@@ -229,5 +231,86 @@ export default new class compute {
             default:
                 return false;
         }
+    }
+
+    /**
+     * 捕获消息中的范围
+     * @param {string} msg 消息字符串
+     * @param {Array} range 范围数组
+     */
+    match_range(msg, range) {
+        range[0] = 0
+        range[1] = MAX_DIFFICULTY
+        if (msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)) {
+            /**0-16.9 */
+            msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)[0]
+            let result = msg.split(/\s*[-～~]\s*/g)
+            range[0] = Number(result[0])
+            range[1] = Number(result[1])
+            if (range[0] > range[1]) {
+                let tem = range[1]
+                range[1] = range[0]
+                range[0] = tem
+            }
+            if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
+        } else if (msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)) {
+            /**16.9- 15+ */
+            msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)[0]
+            let result = msg.replace(/\s*[-+]/g, '')
+            if (msg.includes('+')) {
+                range[0] = result
+            } else {
+                range[1] = result
+                if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
+            }
+        } else if (msg.match(/[0-9]+(.[0-9]+)?/g)) {
+            /**15 */
+            msg = msg.match(/[0-9]+(.[0-9]+)?/g)[0]
+            range[0] = range[1] = Number(msg)
+            if (!msg.includes('.')) {
+                range[1] += 0.9
+            }
+        }
+
+    }
+
+    /**
+     * 匹配消息中对成绩的筛选
+     * @param {string} msg 
+     * @returns 
+     */
+    match_request(e_msg) {
+        let range = [0, MAX_DIFFICULTY]
+
+        let msg = e_msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
+
+        /**EZ HD IN AT */
+        let isask = [true, true, true, true]
+
+        msg = msg.toUpperCase()
+
+        if (msg.includes('EZ') || msg.includes('HD') || msg.includes('IN') || msg.includes('AT')) {
+            isask = [false, false, false, false]
+            if (msg.includes('EZ')) { isask[0] = true }
+            if (msg.includes('HD')) { isask[1] = true }
+            if (msg.includes('IN')) { isask[2] = true }
+            if (msg.includes('AT')) { isask[3] = true }
+        }
+        msg = msg.replace(/(list|AT|IN|HD|EZ)*/g, "")
+
+        let scoreAsk = { NEW: true, F: true, C: true, B: true, A: true, S: true, V: true, FC: true, PHI: true }
+
+        if (msg.includes(' NEW') || msg.includes(' F') || msg.includes(' C') || msg.includes(' B') || msg.includes(' A') || msg.includes(' S') || msg.includes(' V') || msg.includes(' FC') || msg.includes(' PHI')) {
+            scoreAsk = { NEW: false, F: false, C: false, B: false, A: false, S: false, V: false, FC: false, PHI: false }
+            let rating = ['NEW', 'F', 'C', 'B', 'A', 'S', 'V', 'FC', 'PHI']
+            for (let i in rating) {
+                if (msg.includes(` ${rating[i]}`)) { scoreAsk[rating[i]] = true }
+            }
+        }
+        if (msg.includes(` AP`)) { scoreAsk.PHI = true }
+        msg = msg.replace(/(NEW|F|C|B|A|S|V|FC|PHI|AP)*/g, "")
+
+        this.match_range(e_msg, range)
+        return { range, isask, scoreAsk }
     }
 }()

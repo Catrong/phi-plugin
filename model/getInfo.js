@@ -4,7 +4,7 @@ import path from 'path'
 import Config from '../components/Config.js'
 import SongsInfo from './class/SongsInfo.js'
 import fs from 'fs'
-import { Level } from './constNum.js'
+import { Level, MAX_DIFFICULTY } from './constNum.js'
 
 
 export default new class getInfo {
@@ -160,6 +160,10 @@ export default new class getInfo {
             }
             this.illlist.push(CsvInfo[i].song)
             this.songlist.push(CsvInfo[i].song)
+        }
+
+        if (this.MAX_DIFFICULTY != MAX_DIFFICULTY) {
+            console.error('[phi-plugin] MAX_DIFFICULTY 常量未更新，请回报作者！')
         }
 
         /**jrrp */

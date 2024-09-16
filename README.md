@@ -121,8 +121,8 @@ pnpm install -P #安装插件所需依赖
 | all | 全部功能 | -.-
 | help | 帮助功能 | /help /tkhelp
 | bind | 绑定功能 | /bind /unbind
-| b19 | 图片查分功能 | /pgr /update /info /list /pb30 /score /lvsco /chap
-| wb19 | 文字查分功能 | /suggest /data /best
+| b19 | 图片查分功能 | /pgr /update /info /list /pb30 /score /lvsco /chap /suggest
+| wb19 | 文字查分功能 | /data /best
 | song | 图鉴功能 | /song /ill /search /alias /rand
 | ranklist | 排行榜功能，不会禁用用户排名 | /ranklist /godlist
 | fnc | 小功能 | /com /tips

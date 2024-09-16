@@ -19,6 +19,21 @@ body p {
     margin-inline: 0;
 }
 
+.head_title {
+    display: flex;
+    width: 94%;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.head_title p {
+    font-size: 50px;
+    text-shadow: 0 0 20px rgb(0 186 255);
+    font-family: 'Aldrich', 'PHI';
+    color: white;
+}
+
 .background img {
     height: 100%;
     min-width: 100%;
@@ -44,7 +59,7 @@ body p {
     overflow: auto;
     flex-wrap: wrap;
     align-content: center;
-    margin-top: 100px;
+    /* margin-top: 100px; */
     margin-bottom: 100px;
 }
 

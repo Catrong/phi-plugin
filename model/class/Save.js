@@ -266,7 +266,7 @@ export default class Save {
     minUpRks() {
         /**考虑屁股肉四舍五入原则 */
         let minuprks = Math.floor(this.saveInfo.summary.rankingScore * 100) / 100 + 0.005 - this.saveInfo.summary.rankingScore
-        return minuprks < 0 ? minuprks += 0.01 : minuprks
+        return minuprks < 0 ? minuprks + 0.01 : minuprks
     }
 
     /**简单检查存档是否存在问题 */
@@ -364,9 +364,11 @@ export default class Save {
         if (!this.b19_rks) {
             let record = this.getRecord()
             this.b19_rks = record[Math.min(record.length, 18)].rks
+            this.b0_rks = this.findAccRecord(100, true)[0]?.rks
         }
-        console.info(this.b19_rks, this.gameRecord[id][lv].rks || 0, this.gameRecord[id])
-        return fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks || 0) + this.minUpRks() * 20, difficulty, count)
+        // console.info(this.b19_rks, this.gameRecord[id][lv]?.rks ? this.gameRecord[id][lv].rks : 0, this.gameRecord[id])
+        let suggest = fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv]?.rks ? this.gameRecord[id][lv].rks : 0) + this.minUpRks() * 20, difficulty, count)
+        return suggest.includes('无') ? (difficulty > this.b0_rks ? Number(100).toFixed(count) + '%' : suggest) : suggest
     }
 
     /**

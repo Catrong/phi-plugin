@@ -110,8 +110,8 @@ pnpm install -P # Install the plugin dependencies
 | all | all | all
 | help | Help feature | /help /tkhelp
 | bind | Binding feature | /bind /unbind
-| b19 | Image score lookup feature | /pgr /update /info /list /pb30 /score /lvsco /chap
-| wb19 | Text score lookup feature | /suggest /data /best
+| b19 | Image score lookup feature | /pgr /update /info /list /pb30 /score /lvsco /chap /suggest
+| wb19 | Text score lookup feature | /data /best
 | song | Song guide feature | /song /ill /search /alias /rand
 | ranklist | Leaderboard feature (does not disable user rankings) | /ranklist /godlist
 | fnc | Small features | /com /tips

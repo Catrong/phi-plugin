@@ -645,7 +645,6 @@ export class phiuser extends plugin {
         let Record = save.gameRecord
 
         let data = []
-        let minUpRks = save.minUpRks();
 
         for (let id in Record) {
             let song = get.idgetsong(id)
@@ -664,15 +663,14 @@ export class phiuser extends plugin {
                     if (!record[lv]) {
                         record[lv] = {}
                     }
-                    console.info(getInfo.info(getInfo.idgetsong(id)).chart)
-                    record[lv].suggest = save.getSuggest(id, lv, 4, record[lv].difficulty || getInfo.info(getInfo.idgetsong(id)).chart[Level[lv]].difficulty)
-                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'common'), difficulty: difficulty, rank: Level[lv] })
+                    record[lv].suggest = save.getSuggest(id, lv, 4, difficulty)
+                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'low'), difficulty: difficulty, rank: Level[lv] })
                 }
             }
         }
 
         if (data.length > Config.getUserCfg('config', 'listScoreMaxNum')) {
-            send.send_with_At(e, "谱面数量过多，请缩小搜索范围QAQ！")
+            send.send_with_At(e, `谱面数量过多(${data.length})大于设置的最大值(${Config.getUserCfg('config', 'listScoreMaxNum')})，请缩小搜索范围QAQ！`)
             return true
         }
 
@@ -688,6 +686,7 @@ export class phiuser extends plugin {
 
 
         send.send_with_At(e, await atlas.list(e, {
+            head_title: "成绩筛选",
             song: data,
             background: get.getill(illlist[randint(0, illlist.length - 1)]),
             theme: plugin_data?.plugin_data?.theme || 'star',

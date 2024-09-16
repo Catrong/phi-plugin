@@ -394,11 +394,11 @@ export class phimoney extends plugin {
         let sender_data = await getNotes.getNotesData(e.user_id, true)
 
         if (target == e.user_id) {
-            await send.send_with_At(e, `转账成……唔？这个目标……在拿我寻开心嘛！`)
+            await send.send_with_At(e, `转账成……欸？这个目标……在拿我寻开心嘛！`)
             await common.sleep(1000)
             await send.send_with_At(e, `转账失败！扣除 20 Notes！`)
             if (sender_data.plugin_data.money < 20) {
-                await send.send_with_At(e, `唔，你怎么连20 Note都没有哇`)
+                await send.send_with_At(e, `a，你怎么连20 Note都没有哇`)
                 await send.send_with_At(e, `www，算了，我今天心情好，不和你计较了，哼！`)
             } else {
                 sender_data.plugin_data.money -= 20

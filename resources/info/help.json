@@ -73,9 +73,9 @@
                 "desc": "获取文字版 B<N> 成绩，私聊获取完整版，建议私聊使用<br>eg: /best 19"
             },
             {
-                "title": "/suggest",
+                "title": "/suggest [定数] [难度] [评级]",
                 "eg": "/suggest",
-                "desc": "获取推分（使游戏内显示数值+0.01）建议，私聊获取完整版，建议私聊使用<br>eg: /suggest"
+                "desc": "获取推分（使游戏内显示数值+0.01）建议<br>eg: /suggest 15 F"
             },
             {
                 "title": "/data",

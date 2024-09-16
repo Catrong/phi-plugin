@@ -14,7 +14,7 @@ import { LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
-
+import atlas from '../model/picmodle.js';
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
@@ -586,101 +586,64 @@ export class phib19 extends plugin {
             return true
         }
 
-        let Record = save.gameRecord
+        /**处理范围要求 */
+        let { range, isask, scoreAsk } = fCompute.match_request(e.msg)
 
         /**取出信息 */
-        let rkslist = []
-        for (let song in Record) {
-            for (let level in song) {
-                if (level == 4) break
-                let tem = Record[song][level]
-                if (!tem) continue
-                rkslist.push(tem)
-            }
-        }
-
-        rkslist = rkslist.sort(cmp())
-        /**b19最低rks */
-        let minrks = rkslist[Math.min(18, rkslist.length)]
-        let userrks = save.saveInfo.summary.rankingScore
-        /**考虑屁股肉四舍五入原则 */
-        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
-        if (minuprks < 0) {
-            minuprks += 0.01
-        }
+        let Record = save.gameRecord
 
         /**计算 */
-        let suggestlist = []
-        for (let i in rkslist) {
-            let tem = rkslist[i]
-            let suggest = fCompute.suggest(Number((i < 18) ? tem.rks : minrks.rks) + minuprks * 20, Number(tem.difficulty), 4)
-            if (!suggest.includes("无")) {
-                tem.acc = tem.acc
-                tem.rks = tem.rks
-                tem.suggest = suggest
-                suggestlist.push(tem)
+        let data = []
+
+        for (let id in Record) {
+            let song = get.idgetsong(id)
+            if (!song) {
+                logger.warn('[phi-plugin]', id, '曲目无信息')
+                continue
+            }
+            let info = get.info(song, true)
+            let record = Record[id]
+            for (let lv in [0, 1, 2, 3]) {
+                if (!info.chart[Level[lv]]) continue
+                let difficulty = info.chart[Level[lv]].difficulty
+                if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
+                    if ((!record[lv] && !scoreAsk.NEW)) continue
+                    if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()]) continue
+                    if (!record[lv]) {
+                        record[lv] = {}
+                    }
+                    record[lv].suggest = save.getSuggest(id, lv, 4, difficulty)
+                    if (record[lv].suggest.includes('无')) {
+                        continue
+                    }
+                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'low'), difficulty: difficulty, rank: Level[lv] })
+                }
             }
         }
 
-
-        suggestlist = suggestlist.sort(cmpsugg())
-
-        if (Config.getUserCfg('config', 'isGuild')) {
-            /**频道模式 */
-            let Remsg = []
-            let tmsg = ''
-
-            /**防止消息过长发送失败每条消息10行 */
-            let tot = 1
-            tmsg += `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} CLG MOD: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
-            for (let i = 0; i < suggestlist.length; ++i) {
-                if (tot <= 10) {
-                    tmsg += `\n#${i + 1}: ${suggestlist[i].song}<${suggestlist[i].rank}>${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% -> ${suggestlist[i].suggest}`
-                } else {
-                    Remsg.push(tmsg)
-                    tmsg = `#${i + 1}: ${suggestlist[i].song}<${suggestlist[i].rank}>${suggestlist[i].difficulty} ${suggestlist[i].acc.toFixed(4)}% -> ${suggestlist[i].suggest}`
-                    tot = 0
-                }
-                ++tot
-            }
-            Remsg.push(tmsg)
-
-            if (e.isGroup) {
-                /**群聊只发送10条 */
-                send.send_with_At(e, Remsg[0])
-                /**频道模式群聊自动转发私聊 */
-                // send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                // send.pick_send(e, await common.makeForwardMsg(e, Remsg))
-            } else {
-                await e.reply(await common.makeForwardMsg(e, Remsg))
-            }
-
-        } else {
-            let Remsg = []
-
-            /**判断是否发图 */
-            if (Config.getUserCfg('config', 'WordSuggImg')) {
-                for (let i = 0; i < suggestlist.length; ++i) {
-                    Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n`,
-                    segment.image(get.getill(suggestlist[i].song, false)),
-                    `\n` +
-                    `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
-                    `${suggestlist[i].score} ${suggestlist[i].Rating}\n` +
-                    `${suggestlist[i].acc.toFixed(4)}% ${suggestlist[i].rks.toFixed(4)}\n` +
-                    `推分: ${suggestlist[i].suggest}`])
-                }
-            } else {
-                for (let i = 0; i < suggestlist.length; ++i) {
-                    Remsg.push([`# ${i + 1}: ${suggestlist[i].song}\n` +
-                        `${suggestlist[i].rank} ${suggestlist[i].difficulty}\n` +
-                        `${suggestlist[i].score} ${suggestlist[i].Rating}\n` +
-                        `${suggestlist[i].acc.toFixed(4)}% ${suggestlist[i].rks.toFixed(4)}\n` +
-                        `推分: ${suggestlist[i].suggest}`])
-                }
-            }
-
-            await e.reply(common.makeForwardMsg(e, Remsg))
+        if (data.length > Config.getUserCfg('config', 'listScoreMaxNum')) {
+            send.send_with_At(e, `谱面数量过多(${data.length})大于设置的最大值(${Config.getUserCfg('config', 'listScoreMaxNum')})，只显示前${Config.getUserCfg('config', 'listScoreMaxNum')}条！`)
         }
+
+        data.splice(Config.getUserCfg('config', 'listScoreMaxNum'))
+
+        data = data.sort(cmpsugg())
+
+        let plugin_data = get.getpluginData(e.user_id)
+
+        send.send_with_At(e, await altas.list(e, {
+            head_title: "推分建议",
+            song: data,
+            background: get.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
+            theme: plugin_data?.plugin_data?.theme || 'star',
+            PlayerId: save.saveInfo.PlayerId,
+            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
+            Date: save.saveInfo.updatedAt,
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            dan: await get.getDan(e.user_id)
+        }))
+
     }
 
     /**查询章节成绩 */
