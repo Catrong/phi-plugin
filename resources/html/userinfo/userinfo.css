@@ -17,7 +17,7 @@ body p {
     font-size: 16px;
 }
 
-data_rks p {
+.data_rks p {
     font-size: 10px;
 }
 
@@ -484,7 +484,7 @@ circle {
 }
 
 .line line {
-    marker-start: url(#dot)
+    marker-start: url(#dot);
 }
 
 .line line:last-child {
@@ -493,7 +493,7 @@ circle {
 
 .svg-box {
     padding: 5px;
-    border: skyblue 1px solid;
+    border: #87ceeb 1px solid;
     background-color: #87ceeb4a;
     width: 91.8%;
     height: 192px;

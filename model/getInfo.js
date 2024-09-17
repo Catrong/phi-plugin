@@ -163,7 +163,7 @@ export default new class getInfo {
         }
 
         if (this.MAX_DIFFICULTY != MAX_DIFFICULTY) {
-            console.error('[phi-plugin] MAX_DIFFICULTY 常量未更新，请回报作者！')
+            console.error('[phi-plugin] MAX_DIFFICULTY 常量未更新，请回报作者！', MAX_DIFFICULTY, this.MAX_DIFFICULTY)
         }
 
         /**jrrp */
