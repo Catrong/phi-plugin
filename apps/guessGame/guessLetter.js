@@ -516,14 +516,14 @@ export default new class guessLetter {
             delete (alphalist[group_id])
             delete (blurlist[group_id])
             output.push('\n字母已被全部翻开，答案如下：')
-            if (winnerlist[group_id][key]) {
+            for (let key in gamelist[group_id]) {
                 output.push(`\n【${key}】${gamelist[group_id][key]}`)
-                output.push(` @${winnerlist[group_id][key]}`)
+                if (winnerlist[group_id][key]) {
+                    output.push(` @${winnerlist[group_id][key]}`)
+                }
             }
-
-            delete gamelist[e.group_id]
             delete gameList[group_id]
-            delete (winnerlist[e.group_id])
+            delete (winnerlist[group_id])
         }
 
         e.reply(output, true)
