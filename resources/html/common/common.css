@@ -185,3 +185,7 @@ body {
     border-radius: 0px;
     margin-bottom: -65%;
 }
+
+.ill-clip {
+    clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+}

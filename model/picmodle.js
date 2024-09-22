@@ -24,7 +24,7 @@ class atlas {
         let num = Config.getUserCfg('config', 'renderNum')
         for (let i = 0; i < num; i++) {
             this.puppeteer.push(new puppeteer(i))
-            this.puppeteer[i].init()
+            this.puppeteer[i].init(i)
             this.queue.push(i)
         }
     }

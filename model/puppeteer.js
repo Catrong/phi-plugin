@@ -31,7 +31,7 @@ export default class newPuppeteer {
         this.pet = {}
     }
 
-    async init() {
+    async init(id) {
         try {
             let tem = new (await import("../../../renderers/puppeteer/lib/puppeteer.js")).default({ puppeteerTimeout: Config.getUserCfg('config', 'timeout') });
             this.pet = tem;
@@ -51,6 +51,8 @@ export default class newPuppeteer {
                 this.pet = {};
             }
         }
+
+        this.id = id
 
     }
 
@@ -73,7 +75,7 @@ export default class newPuppeteer {
         let data = {
             ...params,
             _plugin: Display_Plugin_Name,
-            saveId: params.saveId || params.save_id || tpl,
+            saveId: (params.saveId || params.save_id || tpl) + `${this.id}`,
             tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.html`,
             pluResPath: resPath,
             _res_path: resPath,
