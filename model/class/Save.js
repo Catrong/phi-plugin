@@ -348,7 +348,7 @@ export default class Save {
         }
 
         this.B19List = { phi, b19_list }
-        this.b19_rks = b19_list[Math.min(b19_list.length, 18)].rks
+        this.b19_rks = b19_list[Math.min(b19_list.length - 1, 18)].rks
         return { phi, b19_list }
     }
 
