@@ -21,7 +21,7 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(绑定|bind).*([0-9a-zA-Z]{25}|qrcode).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(绑定|bind)(.*([0-9a-zA-Z]{25}|qrcode).*)?$`,
                     fnc: 'bind'
                 },
                 {
@@ -57,7 +57,7 @@ export class phisstk extends plugin {
         sessionToken = sessionToken ? sessionToken[0] : null
 
         if (!sessionToken) {
-            send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！请将 ${e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "")} 替换为你Phigros账号的sessionToken哦！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+            send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
 
