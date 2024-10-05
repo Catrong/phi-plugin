@@ -44,6 +44,10 @@ export class phiGames extends plugin {
 
     async start(e) {
         let msg = e.msg.match(new RegExp(games))[0]
+        if(!e.group_id) {
+            send.send_with_At(e, '请在群聊中使用这个功能嗷！')
+            return false
+        }
         if (gameList[e.group_id]) {
             send.send_with_At(e, `当前存在其他未结束的游戏嗷！如果想要开启新游戏请 /${Config.getUserCfg('config', 'cmdhead')} ans 结束进行的游戏嗷！`)
             return false
