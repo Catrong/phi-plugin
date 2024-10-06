@@ -1,0 +1,107 @@
+@import '../common/common.css';
+
+body {
+    width: 800px;
+}
+
+.background img {
+    filter: none;
+}
+
+.box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lineBox {
+    width: 90%;
+    margin: 10px;
+    clip-path: polygon(0 50%, 2% 0, 98% 0, 100% 50%, 98% 100%, 2% 100%);
+}
+
+.line {
+    width: 100%;
+    display: flex;
+    background: #00000088;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+}
+
+.line p {
+    color: white;
+    margin: 0;
+}
+
+.square {
+    height: 25px;
+    width: 15px;
+    clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+    background: white;
+    margin: 10px;
+}
+
+.title {
+    height: 33px;
+}
+
+.title p {
+    font-size: 26px;
+}
+
+.info p {
+    font-size: 10px;
+    color: #e2e2e2;
+}
+
+.right {
+    display: flex;
+    position: absolute;
+    right: 10px;
+    height: 100%;
+    width: 110px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.drc {
+    height: 100%;
+    width: max-content;
+}
+
+.space {
+    width: 75px;
+    height: 25px;
+    background: #ffffff;
+    clip-path: polygon(0 50%, 11% 0, 89% 0, 100% 50%, 89% 100%, 11% 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.space p {
+    font-size: 15px;
+    color: black;
+    margin: 0;
+}
+
+.switch {
+    height: 25px;
+    width: 15px;
+    clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+    background: #ffffff;
+    /* margin: 10px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.switch .false {
+    width: 80%;
+    height: 80%;
+    clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+    background: #000000;
+}

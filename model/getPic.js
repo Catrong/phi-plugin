@@ -12,9 +12,9 @@ export default new class pic {
      * @returns 
      */
     async GetSongsInfoAtlas(e, name, data = undefined) {
-        data = data ? data : getInfo.info(name)
+        data = data || getInfo.info(name)
         if (data) {
-            data.illustration = getInfo.getill(name)
+            if (!data.illustration) { data.illustration = getInfo.getill(name) }
             return await atlas.atlas(e, data)
         } else {
             /**未找到曲目 */

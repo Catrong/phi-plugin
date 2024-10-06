@@ -72,6 +72,7 @@ body {
     background-size: cover;
     background-position: center;
     transform-origin: top left;
+    position: absolute;
 }
 
 .background {

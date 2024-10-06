@@ -2,3839 +2,1221 @@
     "Introduction": {
         "bpm": "138",
         "length": "2:30",
-        "chapter": "--",
-        "chart": {
-            "EZ": {
-                "combo": "93"
-            }
-        }
+        "chapter": "--"
     },
     "Glaciaxion.SunsetRay": {
         "bpm": "140",
         "length": "2:43",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "66"
-            },
-            "HD": {
-                "combo": "418"
-            },
-            "IN": {
-                "combo": "729"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "EradicationCatastrophe.NceS": {
         "bpm": "120",
         "length": "2:06",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "181"
-            },
-            "HD": {
-                "combo": "200"
-            },
-            "IN": {
-                "combo": "593"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "Credits.Frums": {
         "bpm": "179",
         "length": "1:40",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "188"
-            },
-            "HD": {
-                "combo": "355"
-            },
-            "IN": {
-                "combo": "535"
-            },
-            "AT": {
-                "combo": "638"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "Dlyrotz.Likey": {
         "bpm": "175",
         "length": "2:01",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "392"
-            },
-            "HD": {
-                "combo": "458"
-            },
-            "IN": {
-                "combo": "584"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "EnginexStartmelodymix.CrossingSound": {
         "bpm": "186",
         "length": "1:31",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "126"
-            },
-            "HD": {
-                "combo": "262"
-            },
-            "IN": {
-                "combo": "433"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "光.姜米條": {
         "bpm": "180",
         "length": "2:11",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "249"
-            },
-            "HD": {
-                "combo": "453"
-            },
-            "IN": {
-                "combo": "517"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "Wintercube.CtymaxfeatNceS": {
         "bpm": "104",
         "length": "2:35",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "401"
-            },
-            "HD": {
-                "combo": "696"
-            },
-            "IN": {
-                "combo": "733"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "Cipher20.TetrajectoryfeatCtymax": {
         "bpm": "179",
         "length": "2:34",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "401"
-            },
-            "HD": {
-                "combo": "473"
-            },
-            "IN": {
-                "combo": "1041"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "混乱Confusion.OnlyMyBlackScore": {
         "bpm": "180",
         "length": "2:07",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "290"
-            },
-            "HD": {
-                "combo": "602"
-            },
-            "IN": {
-                "combo": "978"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "FULiAUTOSHOOTER.MYUKKE": {
         "bpm": "145",
         "length": "2:09",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "165"
-            },
-            "HD": {
-                "combo": "537"
-            },
-            "IN": {
-                "combo": "843"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "HumaN.SOTUI": {
         "bpm": "180",
         "length": "2:14",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "182"
-            },
-            "HD": {
-                "combo": "382"
-            },
-            "IN": {
-                "combo": "554"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "PRAW.Bluewind": {
         "bpm": "210",
         "length": "2:36",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "419"
-            },
-            "HD": {
-                "combo": "692"
-            },
-            "IN": {
-                "combo": "1171"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "PixelRebelz.Normal1zer": {
         "bpm": "150",
         "length": "2:22",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "250"
-            },
-            "HD": {
-                "combo": "698"
-            },
-            "IN": {
-                "combo": "941"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "Cereris.SunsetRayNceS": {
         "bpm": "175",
         "length": "2:47",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "490"
-            },
-            "HD": {
-                "combo": "701"
-            },
-            "IN": {
-                "combo": "898"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "NonMelodicRagezMUGEdit.Normal1zer": {
         "bpm": "205",
         "length": "2:19",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "347"
-            },
-            "HD": {
-                "combo": "675"
-            },
-            "IN": {
-                "combo": "1235"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "SultanRage.MonstDeath": {
         "bpm": "155",
         "length": "1:56",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "159"
-            },
-            "HD": {
-                "combo": "334"
-            },
-            "IN": {
-                "combo": "485"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "ClassMemories.AntistarfeatCtymax": {
         "bpm": "145",
         "length": "2:27",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "393"
-            },
-            "HD": {
-                "combo": "771"
-            },
-            "IN": {
-                "combo": "1194"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "SURREALISM.Itsuki": {
         "bpm": "180",
         "length": "2:33",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "338"
-            },
-            "HD": {
-                "combo": "571"
-            },
-            "IN": {
-                "combo": "914"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "BonusTime.MegaloPaleWhite": {
         "bpm": "180",
         "length": "1:55",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "190"
-            },
-            "HD": {
-                "combo": "319"
-            },
-            "IN": {
-                "combo": "689"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "ENERGYSYNERGYMATRIX.Tanchiky": {
         "bpm": "160",
         "length": "2:05",
-        "chapter": "Chapter Legacy 过去的章节",
-        "chart": {
-            "EZ": {
-                "combo": "450"
-            },
-            "HD": {
-                "combo": "580"
-            },
-            "IN": {
-                "combo": "750"
-            }
-        }
+        "chapter": "Chapter Legacy 过去的章节"
     },
     "NYA.FLuoRiTe姜米條": {
         "bpm": "154",
         "length": "2:35",
-        "chapter": "Chapter 5 霓虹灯牌",
-        "chart": {
-            "EZ": {
-                "combo": "122"
-            },
-            "HD": {
-                "combo": "428"
-            },
-            "IN": {
-                "combo": "666"
-            }
-        }
+        "chapter": "Chapter 5 霓虹灯牌"
     },
     "JunXionBetweenLifeAndDeathVIPMix.1N6Fs": {
         "bpm": "164",
         "length": "2:22",
-        "chapter": "Chapter 5 霓虹灯牌",
-        "chart": {
-            "EZ": {
-                "combo": "262"
-            },
-            "HD": {
-                "combo": "593"
-            },
-            "IN": {
-                "combo": "722"
-            }
-        }
+        "chapter": "Chapter 5 霓虹灯牌"
     },
     "cryout.JuE": {
         "bpm": "180",
         "length": "2:04",
-        "chapter": "Chapter 5 霓虹灯牌",
-        "chart": {
-            "EZ": {
-                "combo": "221"
-            },
-            "HD": {
-                "combo": "529"
-            },
-            "IN": {
-                "combo": "733"
-            }
-        }
+        "chapter": "Chapter 5 霓虹灯牌"
     },
     "Reimei.影虎": {
         "bpm": "185",
         "length": "2:28",
-        "chapter": "Chapter 5 霓虹灯牌",
-        "chart": {
-            "EZ": {
-                "combo": "325"
-            },
-            "HD": {
-                "combo": "644"
-            },
-            "IN": {
-                "combo": "983"
-            }
-        }
+        "chapter": "Chapter 5 霓虹灯牌"
     },
     "尊師TheGuru.rider": {
         "bpm": "152",
         "length": "2:05",
-        "chapter": "Chapter 5 霓虹灯牌",
-        "chart": {
-            "EZ": {
-                "combo": "386"
-            },
-            "HD": {
-                "combo": "565"
-            },
-            "IN": {
-                "combo": "738"
-            }
-        }
+        "chapter": "Chapter 5 霓虹灯牌"
     },
     "Spasmodic.姜米條颶風元力上人": {
         "bpm": "200",
         "length": "2:34",
-        "chapter": "Chapter 5 霓虹灯牌",
-        "chart": {
-            "EZ": {
-                "combo": "637"
-            },
-            "HD": {
-                "combo": "904"
-            },
-            "IN": {
-                "combo": "1389"
-            },
-            "AT": {
-                "combo": "1671"
-            }
-        }
+        "chapter": "Chapter 5 霓虹灯牌"
     },
     "LeaveAllBehind.rider": {
         "bpm": "150",
         "length": "2:07",
-        "chapter": "Chapter 5 霓虹灯牌",
-        "chart": {
-            "EZ": {
-                "combo": "210"
-            },
-            "HD": {
-                "combo": "394"
-            },
-            "IN": {
-                "combo": "523"
-            }
-        }
+        "chapter": "Chapter 5 霓虹灯牌"
     },
     "ColorfulDays.P4koofeatつゆり花鈴": {
         "bpm": "136",
         "length": "1:39",
-        "chapter": "Chapter 6 方舟蜃景",
-        "chart": {
-            "EZ": {
-                "combo": "156"
-            },
-            "HD": {
-                "combo": "186"
-            },
-            "IN": {
-                "combo": "407"
-            }
-        }
+        "chapter": "Chapter 6 方舟蜃景"
     },
     "microwav.dandeless": {
         "bpm": "172",
         "length": "2:04",
-        "chapter": "Chapter 6 方舟蜃景",
-        "chart": {
-            "EZ": {
-                "combo": "196"
-            },
-            "HD": {
-                "combo": "459"
-            },
-            "IN": {
-                "combo": "649"
-            }
-        }
+        "chapter": "Chapter 6 方舟蜃景"
     },
     "重生.姜米條": {
         "bpm": "195",
         "length": "2:23",
-        "chapter": "Chapter 6 方舟蜃景",
-        "chart": {
-            "EZ": {
-                "combo": "354"
-            },
-            "HD": {
-                "combo": "650"
-            },
-            "IN": {
-                "combo": "900"
-            }
-        }
+        "chapter": "Chapter 6 方舟蜃景"
     },
     "NOONEYESMAN.MYUKKE": {
         "bpm": "170",
         "length": "2:04",
-        "chapter": "Chapter 6 方舟蜃景",
-        "chart": {
-            "EZ": {
-                "combo": "394"
-            },
-            "HD": {
-                "combo": "612"
-            },
-            "IN": {
-                "combo": "844"
-            }
-        }
+        "chapter": "Chapter 6 方舟蜃景"
     },
     "望影の方舟Six.SeURa": {
         "bpm": "209",
         "length": "1:52",
-        "chapter": "Chapter 6 方舟蜃景",
-        "chart": {
-            "EZ": {
-                "combo": "276"
-            },
-            "HD": {
-                "combo": "526"
-            },
-            "IN": {
-                "combo": "1066"
-            }
-        }
+        "chapter": "Chapter 6 方舟蜃景"
     },
     "Igallta.SeURa": {
         "bpm": "230",
         "length": "2:02",
-        "chapter": "Chapter 6 方舟蜃景",
-        "chart": {
-            "EZ": {
-                "combo": "414"
-            },
-            "HD": {
-                "combo": "601"
-            },
-            "IN": {
-                "combo": "1018"
-            },
-            "AT": {
-                "combo": "1114"
-            }
-        }
+        "chapter": "Chapter 6 方舟蜃景"
     },
     "ClockParadox.WyvernP": {
         "bpm": "140",
         "length": "2:30",
-        "chapter": "Chapter 7 时钟链接",
-        "chart": {
-            "EZ": {
-                "combo": "188"
-            },
-            "HD": {
-                "combo": "312"
-            },
-            "IN": {
-                "combo": "520"
-            }
-        }
+        "chapter": "Chapter 7 时钟链接"
     },
     "Chronologika.Hundotte": {
         "bpm": "180",
         "length": "2:14",
-        "chapter": "Chapter 7 时钟链接",
-        "chart": {
-            "EZ": {
-                "combo": "271"
-            },
-            "HD": {
-                "combo": "456"
-            },
-            "IN": {
-                "combo": "776"
-            }
-        }
+        "chapter": "Chapter 7 时钟链接"
     },
     "NickofTime.P4koo": {
         "bpm": "175",
         "length": "2:22",
-        "chapter": "Chapter 7 时钟链接",
-        "chart": {
-            "EZ": {
-                "combo": "328"
-            },
-            "HD": {
-                "combo": "429"
-            },
-            "IN": {
-                "combo": "745"
-            }
-        }
+        "chapter": "Chapter 7 时钟链接"
     },
     "Chronomia.Lime": {
         "bpm": "227",
         "length": "2:26",
-        "chapter": "Chapter 7 时钟链接",
-        "chart": {
-            "EZ": {
-                "combo": "338"
-            },
-            "HD": {
-                "combo": "663"
-            },
-            "IN": {
-                "combo": "992"
-            }
-        }
+        "chapter": "Chapter 7 时钟链接"
     },
     "ChronosCollapseLaCampanella.SunsetRay": {
         "bpm": "180",
         "length": "2:33",
-        "chapter": "Chapter 7 时钟链接",
-        "chart": {
-            "EZ": {
-                "combo": "350"
-            },
-            "HD": {
-                "combo": "773"
-            },
-            "IN": {
-                "combo": "1500"
-            }
-        }
+        "chapter": "Chapter 7 时钟链接"
     },
     "Rrharil.TeamGrimoire": {
         "bpm": "190",
         "length": "2:12",
-        "chapter": "Chapter 7 时钟链接",
-        "chart": {
-            "EZ": {
-                "combo": "446"
-            },
-            "HD": {
-                "combo": "700"
-            },
-            "IN": {
-                "combo": "1300"
-            },
-            "AT": {
-                "combo": "1300"
-            }
-        }
+        "chapter": "Chapter 7 时钟链接"
     },
     "CraveWave.LandRoot": {
         "bpm": "150",
         "length": "2:08",
-        "chapter": "Chapter 8 凌日潮汐",
-        "chart": {
-            "EZ": {
-                "combo": "177"
-            },
-            "HD": {
-                "combo": "396"
-            },
-            "IN": {
-                "combo": "816"
-            }
-        }
+        "chapter": "Chapter 8 凌日潮汐"
     },
     "TheChariotREVIIVAL.Attoclef": {
         "bpm": "190",
         "length": "2:26",
-        "chapter": "Chapter 8 凌日潮汐",
-        "chart": {
-            "EZ": {
-                "combo": "520"
-            },
-            "HD": {
-                "combo": "660"
-            },
-            "IN": {
-                "combo": "1009"
-            }
-        }
+        "chapter": "Chapter 8 凌日潮汐"
     },
     "Luminescence.米虾Fomiki初云CLoudie": {
         "bpm": "184",
         "length": "2:35",
-        "chapter": "Chapter 8 凌日潮汐",
-        "chart": {
-            "EZ": {
-                "combo": "443"
-            },
-            "HD": {
-                "combo": "689"
-            },
-            "IN": {
-                "combo": "987"
-            }
-        }
+        "chapter": "Chapter 8 凌日潮汐"
     },
     "Retribution.nmyKryexe": {
         "bpm": "190",
         "length": "2:25",
-        "chapter": "Chapter 8 凌日潮汐",
-        "chart": {
-            "EZ": {
-                "combo": "555"
-            },
-            "HD": {
-                "combo": "868"
-            },
-            "IN": {
-                "combo": "1358"
-            }
-        }
+        "chapter": "Chapter 8 凌日潮汐"
     },
     "DESTRUCTION321.Normal1zervsBrokenNerdz": {
         "bpm": "321.321",
         "length": "2:38",
-        "chapter": "Chapter 8 凌日潮汐",
-        "chart": {
-            "EZ": {
-                "combo": "1060"
-            },
-            "HD": {
-                "combo": "1250"
-            },
-            "IN": {
-                "combo": "1532"
-            },
-            "AT": {
-                "combo": "2330"
-            }
-        }
+        "chapter": "Chapter 8 凌日潮汐"
     },
     "DistortedFate.Sakuzyo": {
         "bpm": "150",
         "length": "2:42",
-        "chapter": "Chapter 8 凌日潮汐",
-        "chart": {
-            "EZ": {
-                "combo": "594"
-            },
-            "HD": {
-                "combo": "970"
-            },
-            "IN": {
-                "combo": "1449"
-            },
-            "AT": {
-                "combo": "1283"
-            }
-        }
+        "chapter": "Chapter 8 凌日潮汐"
     },
     "Doppelganger.LeaF": {
         "bpm": "280",
         "length": "2:25",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "436"
-            },
-            "HD": {
-                "combo": "591"
-            },
-            "IN": {
-                "combo": "921"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "もぺもぺ.LeaF": {
         "bpm": "100",
         "length": "1:50",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "125"
-            },
-            "HD": {
-                "combo": "289"
-            },
-            "IN": {
-                "combo": "412"
-            },
-            "AT": {
-                "combo": "720"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "MARENOL.LeaF": {
         "bpm": "140",
         "length": "2:29",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "95"
-            },
-            "HD": {
-                "combo": "467"
-            },
-            "IN": {
-                "combo": "689"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "萤火虫の怨.闫东炜": {
         "bpm": "100",
         "length": "2:38",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "245"
-            },
-            "HD": {
-                "combo": "746"
-            },
-            "IN": {
-                "combo": "885"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "万吨匿名信.闫东炜": {
         "bpm": "120",
         "length": "2:44",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "307"
-            },
-            "HD": {
-                "combo": "648"
-            },
-            "IN": {
-                "combo": "781"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "风屿.闫东炜": {
         "bpm": "170",
         "length": "2:59",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "368"
-            },
-            "HD": {
-                "combo": "802"
-            },
-            "IN": {
-                "combo": "1156"
-            },
-            "AT": {
-                "combo": "1236"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "dBdoll.YUESTEVENuen": {
         "bpm": "128",
         "length": "1:48",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "60"
-            },
-            "HD": {
-                "combo": "124"
-            },
-            "IN": {
-                "combo": "237"
-            },
-            "AT": {
-                "combo": "377"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Dash.小红Akane李祥辉": {
         "bpm": "128",
         "length": "1:54",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "114"
-            },
-            "HD": {
-                "combo": "210"
-            },
-            "IN": {
-                "combo": "346"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "云女孩.符白牙SiYFics": {
         "bpm": "155",
         "length": "2:58",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "220"
-            },
-            "HD": {
-                "combo": "538"
-            },
-            "IN": {
-                "combo": "669"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "DropIt.Asuka": {
         "bpm": "126",
         "length": "3:22",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "505"
-            },
-            "HD": {
-                "combo": "602"
-            },
-            "IN": {
-                "combo": "1031"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "RIPPER.Friedwav": {
         "bpm": "150",
         "length": "3:19",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "520"
-            },
-            "HD": {
-                "combo": "704"
-            },
-            "IN": {
-                "combo": "1186"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Aphasia.闫东炜": {
         "bpm": "128",
         "length": "1:56",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "283"
-            },
-            "HD": {
-                "combo": "362"
-            },
-            "IN": {
-                "combo": "553"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "开心病.闫东炜": {
         "bpm": "131",
         "length": "1:55",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "399"
-            },
-            "HD": {
-                "combo": "601"
-            },
-            "IN": {
-                "combo": "840"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "華灯爱.闫东炜": {
         "bpm": "120",
         "length": "1:54",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "312"
-            },
-            "HD": {
-                "combo": "357"
-            },
-            "IN": {
-                "combo": "520"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "FindMe.Kforest": {
         "bpm": "191",
         "length": "2:07",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "465"
-            },
-            "HD": {
-                "combo": "657"
-            },
-            "IN": {
-                "combo": "836"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Sein.朔Apo11oprogramvsお月さま交響曲ftkuroa荒巻": {
         "bpm": "210",
         "length": "1:59",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "203"
-            },
-            "HD": {
-                "combo": "473"
-            },
-            "IN": {
-                "combo": "721"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "狂喜蘭舞.LeaF": {
         "bpm": "230",
         "length": "2:41",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "472"
-            },
-            "HD": {
-                "combo": "651"
-            },
-            "IN": {
-                "combo": "968"
-            },
-            "AT": {
-                "combo": "1325"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "SparkleNewLife.rider": {
         "bpm": "150",
         "length": "2:17",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "305"
-            },
-            "HD": {
-                "combo": "497"
-            },
-            "IN": {
-                "combo": "684"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "KhronostasisKatharsis.Halv": {
         "bpm": "188",
         "length": "2:14",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "369"
-            },
-            "HD": {
-                "combo": "644"
-            },
-            "IN": {
-                "combo": "861"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "SnowDesert.WyvernP": {
         "bpm": "125",
         "length": "2:22",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "364"
-            },
-            "HD": {
-                "combo": "459"
-            },
-            "IN": {
-                "combo": "655"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Burn.NceS": {
         "bpm": "148",
         "length": "2:17",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "278"
-            },
-            "HD": {
-                "combo": "497"
-            },
-            "IN": {
-                "combo": "707"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Aleph0.LeaF": {
         "bpm": "35~400",
         "length": "2:20",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "153"
-            },
-            "HD": {
-                "combo": "531"
-            },
-            "IN": {
-                "combo": "885"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "NextTime.SaMZIng": {
         "bpm": "175",
         "length": "1:50",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "240"
-            },
-            "HD": {
-                "combo": "303"
-            },
-            "IN": {
-                "combo": "387"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "RubbishSorting.CtymaxvsNceS": {
         "bpm": "128",
         "length": "2:46",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "229"
-            },
-            "HD": {
-                "combo": "475"
-            },
-            "IN": {
-                "combo": "613"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "AnotherMe.NeutralMoon": {
         "bpm": "175",
         "length": "2:19",
-        "chapter": "Chapter EX-Rising Sun Traxx 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "318"
-            },
-            "HD": {
-                "combo": "425"
-            },
-            "IN": {
-                "combo": "564"
-            }
-        }
+        "chapter": "Chapter EX-Rising Sun Traxx 精选集"
     },
     "mechanted.rareguy": {
         "bpm": "172",
         "length": "1:55",
-        "chapter": "Chapter EX-Rising Sun Traxx 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "184"
-            },
-            "HD": {
-                "combo": "500"
-            },
-            "IN": {
-                "combo": "662"
-            }
-        }
+        "chapter": "Chapter EX-Rising Sun Traxx 精选集"
     },
     "lifeflashesbeforeweebeyes.BilliumMoto": {
         "bpm": "227",
         "length": "2:36",
-        "chapter": "Chapter EX-Rising Sun Traxx 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "567"
-            },
-            "HD": {
-                "combo": "960"
-            },
-            "IN": {
-                "combo": "1065"
-            }
-        }
+        "chapter": "Chapter EX-Rising Sun Traxx 精选集"
     },
     "BreakThroughTheBarrier.lixound": {
         "bpm": "176",
         "length": "2:12",
-        "chapter": "Chapter EX-Rising Sun Traxx 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "419"
-            },
-            "HD": {
-                "combo": "581"
-            },
-            "IN": {
-                "combo": "1090"
-            }
-        }
+        "chapter": "Chapter EX-Rising Sun Traxx 精选集"
     },
     "Chronostasis.黒皇帝": {
         "bpm": "196",
         "length": "2:22",
-        "chapter": "Chapter EX-Rising Sun Traxx 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "291"
-            },
-            "HD": {
-                "combo": "821"
-            },
-            "IN": {
-                "combo": "1148"
-            }
-        }
+        "chapter": "Chapter EX-Rising Sun Traxx 精选集"
     },
     "DeadSoul.SoundSouler": {
         "bpm": "132",
         "length": "2:27",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "273"
-            },
-            "HD": {
-                "combo": "613"
-            },
-            "IN": {
-                "combo": "787"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "InfinityHeaven.HyuN": {
         "bpm": "160",
         "length": "2:34",
-        "chapter": "Chapter EX-HyuN 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "164"
-            },
-            "HD": {
-                "combo": "422"
-            },
-            "IN": {
-                "combo": "1029"
-            }
-        }
+        "chapter": "Chapter EX-HyuN 精选集"
     },
     "Disorder.HyuNfeatYURI": {
         "bpm": "193",
         "length": "2:14",
-        "chapter": "Chapter EX-HyuN 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "444"
-            },
-            "HD": {
-                "combo": "629"
-            },
-            "IN": {
-                "combo": "918"
-            }
-        }
+        "chapter": "Chapter EX-HyuN 精选集"
     },
     "CROSSSOUL.HyuNfeatSyepias": {
         "bpm": "200",
         "length": "2:19",
-        "chapter": "Chapter EX-HyuN 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "517"
-            },
-            "HD": {
-                "combo": "892"
-            },
-            "IN": {
-                "combo": "1305"
-            }
-        }
+        "chapter": "Chapter EX-HyuN 精选集"
     },
     "SpeedUp.DarTokki": {
         "bpm": "145",
         "length": "2:20",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "262"
-            },
-            "HD": {
-                "combo": "463"
-            },
-            "IN": {
-                "combo": "711"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "MagentaPotion.EmoCo": {
         "bpm": "150",
         "length": "2:27",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "334"
-            },
-            "HD": {
-                "combo": "631"
-            },
-            "IN": {
-                "combo": "791"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "GetBack.CAP3": {
         "bpm": "128",
         "length": "2:24",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "321"
-            },
-            "HD": {
-                "combo": "550"
-            },
-            "IN": {
-                "combo": "708"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Palescreen.WyvernPfeatMadol": {
         "bpm": "173",
         "length": "2:25",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "224"
-            },
-            "HD": {
-                "combo": "772"
-            },
-            "IN": {
-                "combo": "1059"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "GOODTEK.EBIMAYO": {
         "bpm": "190",
         "length": "2:05",
-        "chapter": "Chapter EX-GOOD 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "295"
-            },
-            "HD": {
-                "combo": "609"
-            },
-            "IN": {
-                "combo": "873"
-            }
-        }
+        "chapter": "Chapter EX-GOOD 精选集"
     },
     "GOODBOUNCE.EBIMAYO": {
         "bpm": "180",
         "length": "2:12",
-        "chapter": "Chapter EX-GOOD 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "588"
-            },
-            "HD": {
-                "combo": "797"
-            },
-            "IN": {
-                "combo": "898"
-            }
-        }
+        "chapter": "Chapter EX-GOOD 精选集"
     },
     "GOODWORLD.EBIMAYO": {
         "bpm": "165",
         "length": "2:11",
-        "chapter": "Chapter EX-GOOD 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "215"
-            },
-            "HD": {
-                "combo": "805"
-            },
-            "IN": {
-                "combo": "960"
-            }
-        }
+        "chapter": "Chapter EX-GOOD 精选集"
     },
     "GOODFORTUNE.EBIMAYO": {
         "bpm": "170",
         "length": "2:13",
-        "chapter": "Chapter EX-GOOD 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "455"
-            },
-            "HD": {
-                "combo": "733"
-            },
-            "IN": {
-                "combo": "1011"
-            }
-        }
+        "chapter": "Chapter EX-GOOD 精选集"
     },
     "GOODRAGE.EBIMAYO": {
         "bpm": "222",
         "length": "2:01",
-        "chapter": "Chapter EX-GOOD 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "308"
-            },
-            "HD": {
-                "combo": "628"
-            },
-            "IN": {
-                "combo": "1034"
-            }
-        }
+        "chapter": "Chapter EX-GOOD 精选集"
     },
     "TheMountainEater.PaulBazooka": {
         "bpm": "127",
         "length": "2:03",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "210"
-            },
-            "HD": {
-                "combo": "386"
-            },
-            "IN": {
-                "combo": "697"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Orthodox.tokiwa": {
         "bpm": "170",
         "length": "2:21",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "304"
-            },
-            "HD": {
-                "combo": "627"
-            },
-            "IN": {
-                "combo": "962"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "EndMe.ZxNXasDelaina": {
         "bpm": "100~120",
         "length": "2:10",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "217"
-            },
-            "HD": {
-                "combo": "320"
-            },
-            "IN": {
-                "combo": "724"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "ParallelRetrogressionGameVer.Tetrajectory": {
         "bpm": "175",
         "length": "2:22",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "507"
-            },
-            "HD": {
-                "combo": "697"
-            },
-            "IN": {
-                "combo": "851"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Starduster.Quree": {
         "bpm": "110",
         "length": "2:09",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "280"
-            },
-            "HD": {
-                "combo": "578"
-            },
-            "IN": {
-                "combo": "874"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Electron.ElousFZ": {
         "bpm": "134",
         "length": "2:08",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "219"
-            },
-            "HD": {
-                "combo": "423"
-            },
-            "IN": {
-                "combo": "576"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "SIGMA.Kryexe": {
         "bpm": "200",
         "length": "2:01",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "352"
-            },
-            "HD": {
-                "combo": "516"
-            },
-            "IN": {
-                "combo": "785"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "HardcoreKwaya.EnFr": {
         "bpm": "200",
         "length": "2:00",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "340"
-            },
-            "HD": {
-                "combo": "611"
-            },
-            "IN": {
-                "combo": "852"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Aventyr.GrandThawRigelTheatre": {
         "bpm": "114~132",
         "length": "2:40",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "345"
-            },
-            "HD": {
-                "combo": "626"
-            },
-            "IN": {
-                "combo": "954"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Trane.MALVA": {
         "bpm": "135",
         "length": "2:26",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "148"
-            },
-            "HD": {
-                "combo": "420"
-            },
-            "IN": {
-                "combo": "661"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "雪降りメリクリ.A39": {
         "bpm": "180",
         "length": "2:38",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "316"
-            },
-            "HD": {
-                "combo": "559"
-            },
-            "IN": {
-                "combo": "939"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "CervelleConnexion.SCTL": {
         "bpm": "142",
         "length": "2:27",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "301"
-            },
-            "HD": {
-                "combo": "569"
-            },
-            "IN": {
-                "combo": "563"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "modulus.PTB10": {
         "bpm": "158",
         "length": "2:00",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "258"
-            },
-            "HD": {
-                "combo": "482"
-            },
-            "IN": {
-                "combo": "774"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Wavetapper.Frums": {
         "bpm": "112",
         "length": "2:41",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "470"
-            },
-            "HD": {
-                "combo": "507"
-            },
-            "IN": {
-                "combo": "866"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "大和撫子WildDances.adapatorvsDRIVE": {
         "bpm": "158",
         "length": "2:07",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "274"
-            },
-            "HD": {
-                "combo": "549"
-            },
-            "IN": {
-                "combo": "1002"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Eltaw.Fl00t": {
         "bpm": "193",
         "length": "2:15",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "391"
-            },
-            "HD": {
-                "combo": "608"
-            },
-            "IN": {
-                "combo": "855"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Initialize.iF": {
         "bpm": "128",
         "length": "2:07",
-        "chapter": "Chapter EX-WAVEAT 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "117"
-            },
-            "HD": {
-                "combo": "354"
-            },
-            "IN": {
-                "combo": "581"
-            }
-        }
+        "chapter": "Chapter EX-WAVEAT 精选集"
     },
     "桜樹街道.kozatosnow": {
         "bpm": "135",
         "length": "2:24",
-        "chapter": "Chapter EX-WAVEAT 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "292"
-            },
-            "HD": {
-                "combo": "421"
-            },
-            "IN": {
-                "combo": "459"
-            }
-        }
+        "chapter": "Chapter EX-WAVEAT 精选集"
     },
     "GetReady.iF": {
         "bpm": "142",
         "length": "2:10",
-        "chapter": "Chapter EX-WAVEAT 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "363"
-            },
-            "HD": {
-                "combo": "584"
-            },
-            "IN": {
-                "combo": "819"
-            }
-        }
+        "chapter": "Chapter EX-WAVEAT 精选集"
     },
     "volcanic.DETROakaルゼ": {
         "bpm": "191~382",
         "length": "2:16",
-        "chapter": "Chapter EX-WAVEAT 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "1052"
-            },
-            "HD": {
-                "combo": "985"
-            },
-            "IN": {
-                "combo": "1178"
-            },
-            "AT": {
-                "combo": "1650"
-            }
-        }
+        "chapter": "Chapter EX-WAVEAT 精选集"
     },
     "BetterGraphicAnimation.ルゼ": {
         "bpm": "180",
         "length": "1:42",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "178"
-            },
-            "HD": {
-                "combo": "469"
-            },
-            "IN": {
-                "combo": "616"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "XING.ginkiha": {
         "bpm": "177",
         "length": "2:16",
-        "chapter": "Chapter EX-Muse Dash 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "310"
-            },
-            "HD": {
-                "combo": "587"
-            },
-            "IN": {
-                "combo": "711"
-            }
-        }
+        "chapter": "Chapter EX-Muse Dash 精选集"
     },
     "FinalStep.Lime": {
         "bpm": "180",
         "length": "2:17",
-        "chapter": "Chapter EX-Muse Dash 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "355"
-            },
-            "HD": {
-                "combo": "604"
-            },
-            "IN": {
-                "combo": "931"
-            }
-        }
+        "chapter": "Chapter EX-Muse Dash 精选集"
     },
     "Cthugha.USAO": {
         "bpm": "213",
         "length": "2:34",
-        "chapter": "Chapter EX-Muse Dash 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "378"
-            },
-            "HD": {
-                "combo": "697"
-            },
-            "IN": {
-                "combo": "1333"
-            },
-            "AT": {
-                "combo": "1444"
-            }
-        }
+        "chapter": "Chapter EX-Muse Dash 精选集"
     },
     "WithYou.Cashew": {
         "bpm": "170",
         "length": "2:06",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "226"
-            },
-            "HD": {
-                "combo": "654"
-            },
-            "IN": {
-                "combo": "774"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "UnorthodoxThoughts.Joulez": {
         "bpm": "146",
         "length": "2:23",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "512"
-            },
-            "HD": {
-                "combo": "644"
-            },
-            "IN": {
-                "combo": "729"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Apocalyptic.ZClaxxSumaiLight": {
         "bpm": "160",
         "length": "2:09",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "282"
-            },
-            "HD": {
-                "combo": "329"
-            },
-            "IN": {
-                "combo": "676"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "游园地.椒盐菠萝": {
         "bpm": "128",
         "length": "2:07",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "220"
-            },
-            "HD": {
-                "combo": "444"
-            },
-            "IN": {
-                "combo": "481"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "energytrixxx.KAH": {
         "bpm": "160",
         "length": "2:25",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "252"
-            },
-            "HD": {
-                "combo": "477"
-            },
-            "IN": {
-                "combo": "930"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Nhelv.Silentroom": {
         "bpm": "174.59",
         "length": "2:39",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "196"
-            },
-            "HD": {
-                "combo": "571"
-            },
-            "IN": {
-                "combo": "833"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Arkhei.SeraAmagi": {
         "bpm": "112",
         "length": "2:37",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "462"
-            },
-            "HD": {
-                "combo": "454"
-            },
-            "IN": {
-                "combo": "644"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Kerberos.Zris": {
         "bpm": "197",
         "length": "2:07",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "262"
-            },
-            "HD": {
-                "combo": "683"
-            },
-            "IN": {
-                "combo": "978"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "parsey.siqlo": {
         "bpm": "180",
         "length": "2:04",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "181"
-            },
-            "HD": {
-                "combo": "449"
-            },
-            "IN": {
-                "combo": "777"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Concvssion.Halv": {
         "bpm": "190",
         "length": "2:31",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "450"
-            },
-            "HD": {
-                "combo": "700"
-            },
-            "IN": {
-                "combo": "1000"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "ジングルベルJingleBell.A39沙包P": {
         "bpm": "175",
         "length": "2:47",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "639"
-            },
-            "HD": {
-                "combo": "492"
-            },
-            "IN": {
-                "combo": "1239"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "TimetoNightSkyfeatLeeYuJin.HyuNKLYDIX": {
         "bpm": "128",
         "length": "2:11",
-        "chapter": "Chapter EX-KALPA 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "165"
-            },
-            "HD": {
-                "combo": "559"
-            },
-            "IN": {
-                "combo": "540"
-            }
-        }
+        "chapter": "Chapter EX-KALPA 精选集"
     },
     "HAZARD.Limpid": {
         "bpm": "128",
         "length": "2:07",
-        "chapter": "Chapter EX-KALPA 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "283"
-            },
-            "HD": {
-                "combo": "507"
-            },
-            "IN": {
-                "combo": "588"
-            }
-        }
+        "chapter": "Chapter EX-KALPA 精选集"
     },
     "AnotherMe.DAAN": {
         "bpm": "210",
         "length": "2:46",
-        "chapter": "Chapter EX-KALPA 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "455"
-            },
-            "HD": {
-                "combo": "715"
-            },
-            "IN": {
-                "combo": "1449"
-            }
-        }
+        "chapter": "Chapter EX-KALPA 精选集"
     },
     "DontNeverAround.HAMA": {
         "bpm": "175",
         "length": "1:59",
-        "chapter": "Chapter EX-KALPA 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "308"
-            },
-            "HD": {
-                "combo": "639"
-            },
-            "IN": {
-                "combo": "1028"
-            }
-        }
+        "chapter": "Chapter EX-KALPA 精选集"
     },
     "RESSiSTANCE.ぐるたみん": {
         "bpm": "205",
         "length": "2:28",
-        "chapter": "Chapter EX-KALPA 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "499"
-            },
-            "HD": {
-                "combo": "744"
-            },
-            "IN": {
-                "combo": "1026"
-            }
-        }
+        "chapter": "Chapter EX-KALPA 精选集"
     },
     "Dreamland.z1onkyrrin": {
         "bpm": "120",
         "length": "2:32",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "338"
-            },
-            "HD": {
-                "combo": "476"
-            },
-            "IN": {
-                "combo": "627"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "AnotherRound.JustinDai": {
         "bpm": "128",
         "length": "2:24",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "136"
-            },
-            "HD": {
-                "combo": "353"
-            },
-            "IN": {
-                "combo": "505"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "996.李化禹": {
         "bpm": "140",
         "length": "2:34",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "392"
-            },
-            "HD": {
-                "combo": "453"
-            },
-            "IN": {
-                "combo": "996"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "FutureMind.RayNauticaRekuMochizuki": {
         "bpm": "180",
         "length": "2:13",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "365"
-            },
-            "HD": {
-                "combo": "570"
-            },
-            "IN": {
-                "combo": "866"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Luminescent.Daison": {
         "bpm": "141",
         "length": "2:37",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "330"
-            },
-            "HD": {
-                "combo": "608"
-            },
-            "IN": {
-                "combo": "650"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "FULiAUTOBUSTER.MYUKKE": {
         "bpm": "145",
         "length": "2:04",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "285"
-            },
-            "HD": {
-                "combo": "596"
-            },
-            "IN": {
-                "combo": "755"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "IMustSayNo.TangJuan": {
         "bpm": "175",
         "length": "1:56",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "76"
-            },
-            "HD": {
-                "combo": "364"
-            },
-            "IN": {
-                "combo": "470"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "opia.rN": {
         "bpm": "193",
         "length": "2:29",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "233"
-            },
-            "HD": {
-                "combo": "548"
-            },
-            "IN": {
-                "combo": "793"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Apocalypse.アリスシャッハと魔法の楽団": {
         "bpm": "220",
         "length": "2:45",
-        "chapter": "Chapter EX-Lanota 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "207"
-            },
-            "HD": {
-                "combo": "382"
-            },
-            "IN": {
-                "combo": "676"
-            }
-        }
+        "chapter": "Chapter EX-Lanota 精选集"
     },
     "Protoflicker.Silentroom": {
         "bpm": "140",
         "length": "2:48",
-        "chapter": "Chapter EX-Lanota 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "259"
-            },
-            "HD": {
-                "combo": "511"
-            },
-            "IN": {
-                "combo": "1210"
-            }
-        }
+        "chapter": "Chapter EX-Lanota 精选集"
     },
     "HorizonBlue.NothingButRequiemfeatAikapinChiyoko": {
         "bpm": "200",
         "length": "2:47",
-        "chapter": "Chapter EX-Lanota 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "519"
-            },
-            "HD": {
-                "combo": "733"
-            },
-            "IN": {
-                "combo": "1084"
-            }
-        }
+        "chapter": "Chapter EX-Lanota 精选集"
     },
     "YouaretheMiserable.tpazolite": {
         "bpm": "163",
         "length": "2:43",
-        "chapter": "Chapter EX-Lanota 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "486"
-            },
-            "HD": {
-                "combo": "762"
-            },
-            "IN": {
-                "combo": "893"
-            },
-            "AT": {
-                "combo": "1344"
-            }
-        }
+        "chapter": "Chapter EX-Lanota 精选集"
     },
     "Stasis.Maozon": {
         "bpm": "180",
         "length": "2:34",
-        "chapter": "Chapter EX-Lanota 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "446"
-            },
-            "HD": {
-                "combo": "902"
-            },
-            "IN": {
-                "combo": "1322"
-            },
-            "AT": {
-                "combo": "1700"
-            }
-        }
+        "chapter": "Chapter EX-Lanota 精选集"
     },
     "いざ参ります.Uskefeat棗いつき": {
         "bpm": "188",
         "length": "1:42",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "188"
-            },
-            "HD": {
-                "combo": "441"
-            },
-            "IN": {
-                "combo": "865"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "月下缭乱.月見静華vsLUNARiUM": {
         "bpm": "175",
         "length": "2:29",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "419"
-            },
-            "HD": {
-                "combo": "533"
-            },
-            "IN": {
-                "combo": "969"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "OnAndOn.ETIAfeatJenga": {
         "bpm": "170",
         "length": "2:00",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "195"
-            },
-            "HD": {
-                "combo": "323"
-            },
-            "IN": {
-                "combo": "830"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "DataErr0r.Cosmograph": {
         "bpm": "180",
         "length": "2:04",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "50"
-            },
-            "HD": {
-                "combo": "400"
-            },
-            "IN": {
-                "combo": "613"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Shadow.SumaiLightvs姜米條": {
         "bpm": "172",
         "length": "2:23",
-        "chapter": "Chapter EX-姜米條 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "393"
-            },
-            "HD": {
-                "combo": "549"
-            },
-            "IN": {
-                "combo": "840"
-            },
-            "AT": {
-                "combo": "1089"
-            }
-        }
+        "chapter": "Chapter EX-姜米條 精选集"
     },
     "心之所向.姜米條": {
         "bpm": "180",
         "length": "2:16",
-        "chapter": "Chapter EX-姜米條 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "226"
-            },
-            "HD": {
-                "combo": "422"
-            },
-            "IN": {
-                "combo": "713"
-            }
-        }
+        "chapter": "Chapter EX-姜米條 精选集"
     },
     "inferior.姜米條": {
         "bpm": "200",
         "length": "2:03",
-        "chapter": "Chapter EX-姜米條 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "226"
-            },
-            "HD": {
-                "combo": "489"
-            },
-            "IN": {
-                "combo": "755"
-            }
-        }
+        "chapter": "Chapter EX-姜米條 精选集"
     },
     "csqn.Aoi": {
         "bpm": "174",
         "length": "2:04",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "330"
-            },
-            "HD": {
-                "combo": "755"
-            },
-            "IN": {
-                "combo": "1066"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "BraveNotes.TurquoiseDRIVENota": {
         "bpm": "192",
         "length": "1:58",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "299"
-            },
-            "HD": {
-                "combo": "442"
-            },
-            "IN": {
-                "combo": "768"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "盏茗.茶鸣拾贰律": {
         "bpm": "131",
         "length": "2:10",
-        "chapter": "Chapter EX-茶鸣拾贰律 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "83"
-            },
-            "HD": {
-                "combo": "176"
-            },
-            "IN": {
-                "combo": "706"
-            }
-        }
+        "chapter": "Chapter EX-茶鸣拾贰律 精选集"
     },
     "青芽.茶鸣拾贰律": {
         "bpm": "108",
         "length": "2:27",
-        "chapter": "Chapter EX-茶鸣拾贰律 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "366"
-            },
-            "HD": {
-                "combo": "520"
-            },
-            "IN": {
-                "combo": "1102"
-            }
-        }
+        "chapter": "Chapter EX-茶鸣拾贰律 精选集"
     },
     "EternalSnow.AbyssIdols": {
         "bpm": "140",
         "length": "2:35",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "288"
-            },
-            "HD": {
-                "combo": "533"
-            },
-            "IN": {
-                "combo": "700"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "RainySeason.AbyssIdols": {
         "bpm": "188",
         "length": "1:53",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "304"
-            },
-            "HD": {
-                "combo": "594"
-            },
-            "IN": {
-                "combo": "660"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "ElCondorPasaPhigrosEdit.PlasticFruits": {
         "bpm": "150",
         "length": "2:12",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "259"
-            },
-            "HD": {
-                "combo": "585"
-            },
-            "IN": {
-                "combo": "1140"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "BreakOver.Kforest": {
         "bpm": "185",
         "length": "2:08",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "300"
-            },
-            "HD": {
-                "combo": "919"
-            },
-            "IN": {
-                "combo": "910"
-            },
-            "AT": {
-                "combo": "570"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "BelieveLightfeat果丸哒呦.ScalerMestie果丸哒呦": {
         "bpm": "150",
         "length": "2:50",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "264"
-            },
-            "HD": {
-                "combo": "580"
-            },
-            "IN": {
-                "combo": "972"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Pontdessouvenirs.VeetaCrushvsitsufeatitsu": {
         "bpm": "185",
         "length": "2:45",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "461"
-            },
-            "HD": {
-                "combo": "567"
-            },
-            "IN": {
-                "combo": "899"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "青丘.BLACK0": {
         "bpm": "180",
         "length": "2:47",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "284"
-            },
-            "HD": {
-                "combo": "534"
-            },
-            "IN": {
-                "combo": "1304"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "瓷岁.茶鸣拾贰律": {
         "bpm": "128",
         "length": "2:54",
-        "chapter": "Chapter EX-茶鸣拾贰律 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "120"
-            },
-            "HD": {
-                "combo": "309"
-            },
-            "IN": {
-                "combo": "365"
-            }
-        }
+        "chapter": "Chapter EX-茶鸣拾贰律 精选集"
     },
     "Feast远东之宴.茶鸣拾贰律": {
         "bpm": "128",
         "length": "2:40",
-        "chapter": "Chapter EX-茶鸣拾贰律 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "600"
-            },
-            "HD": {
-                "combo": "800"
-            },
-            "IN": {
-                "combo": "1000"
-            }
-        }
+        "chapter": "Chapter EX-茶鸣拾贰律 精选集"
     },
     "インフェルノシティ.Ponchifeatはぁち": {
         "bpm": "215",
         "length": "2:04",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "352"
-            },
-            "HD": {
-                "combo": "578"
-            },
-            "IN": {
-                "combo": "1275"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Upshift.Iriss-Frantzz": {
         "bpm": "155",
         "length": "2:21",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "630"
-            },
-            "HD": {
-                "combo": "545"
-            },
-            "IN": {
-                "combo": "946"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "PoisonANDORAffection.LeaF": {
         "bpm": "120",
         "length": "2:05",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "140"
-            },
-            "HD": {
-                "combo": "278"
-            },
-            "IN": {
-                "combo": "888"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Random.SobremSilentroom": {
         "bpm": "132",
         "length": "2:16",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "275"
-            },
-            "HD": {
-                "combo": "568"
-            },
-            "IN": {
-                "combo": "732"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "NowIsTheTimeDoIt.RoyMikelate": {
         "bpm": "158",
         "length": "2:14",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "246"
-            },
-            "HD": {
-                "combo": "777"
-            },
-            "IN": {
-                "combo": "795"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Bougainvillea.Jade": {
         "bpm": "120",
         "length": "1:56",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "300"
-            },
-            "HD": {
-                "combo": "347"
-            },
-            "IN": {
-                "combo": "662"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "神話.PicaM2U": {
         "bpm": "130",
         "length": "2:30",
-        "chapter": "Chapter EX-OverRapid 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "289"
-            },
-            "HD": {
-                "combo": "433"
-            },
-            "IN": {
-                "combo": "735"
-            }
-        }
+        "chapter": "Chapter EX-OverRapid 精选集"
     },
     "Elúltimobaile.Θ": {
         "bpm": "175",
         "length": "2:08",
-        "chapter": "Chapter EX-OverRapid 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "261"
-            },
-            "HD": {
-                "combo": "477"
-            },
-            "IN": {
-                "combo": "610"
-            }
-        }
+        "chapter": "Chapter EX-OverRapid 精选集"
     },
     "Trojan.litmus": {
         "bpm": "128",
         "length": "2:43",
-        "chapter": "Chapter EX-OverRapid 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "345"
-            },
-            "HD": {
-                "combo": "741"
-            },
-            "IN": {
-                "combo": "1305"
-            }
-        }
+        "chapter": "Chapter EX-OverRapid 精选集"
     },
     "TemporalShifting.LureRabbitVC": {
         "bpm": "155",
         "length": "2:30",
-        "chapter": "Chapter EX-OverRapid 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "127"
-            },
-            "HD": {
-                "combo": "465"
-            },
-            "IN": {
-                "combo": "959"
-            }
-        }
+        "chapter": "Chapter EX-OverRapid 精选集"
     },
     "Adastraperaspera.RabbitHouse": {
         "bpm": "197",
         "length": "2:35",
-        "chapter": "Chapter EX-OverRapid 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "696"
-            },
-            "HD": {
-                "combo": "924"
-            },
-            "IN": {
-                "combo": "1454"
-            }
-        }
+        "chapter": "Chapter EX-OverRapid 精选集"
     },
     "Ajourneytothemoonlight.Yesod": {
         "bpm": "174",
         "length": "2:35",
-        "chapter": "Chapter EX-OverRapid 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "242"
-            },
-            "HD": {
-                "combo": "555"
-            },
-            "IN": {
-                "combo": "1199"
-            }
-        }
+        "chapter": "Chapter EX-OverRapid 精选集"
     },
     "RainyHeart.BelieverInYou阿卡姆巫师": {
         "bpm": "140",
         "length": "2:32",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "194"
-            },
-            "HD": {
-                "combo": "331"
-            },
-            "IN": {
-                "combo": "440"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Realms.HinkikAHimitsu": {
         "bpm": "174",
         "length": "2:08",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "216"
-            },
-            "HD": {
-                "combo": "562"
-            },
-            "IN": {
-                "combo": "673"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "ぱぴぷぴぷぴぱ.ころねぽちWith立秋": {
         "bpm": "100",
         "length": "2:58",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "637"
-            },
-            "HD": {
-                "combo": "1290"
-            },
-            "IN": {
-                "combo": "1243"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "TriumphRegret.typeMARS": {
         "bpm": "175",
         "length": "2:04",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "423"
-            },
-            "HD": {
-                "combo": "694"
-            },
-            "IN": {
-                "combo": "1014"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "SATELLITE.かめりあ": {
         "bpm": "150",
         "length": "3:12",
-        "chapter": "Extra Story Chapter 极星卫",
-        "chart": {
-            "EZ": {
-                "combo": "345"
-            },
-            "HD": {
-                "combo": "600"
-            },
-            "IN": {
-                "combo": "897"
-            },
-            "AT": {
-                "combo": "1098"
-            }
-        }
+        "chapter": "Extra Story Chapter 极星卫"
     },
     "DancewithSilence.かめりあ": {
         "bpm": "128",
         "length": "2:59",
-        "chapter": "Extra Story Chapter 极星卫",
-        "chart": {
-            "EZ": {
-                "combo": "170"
-            },
-            "HD": {
-                "combo": "552"
-            },
-            "IN": {
-                "combo": "1125"
-            }
-        }
+        "chapter": "Extra Story Chapter 极星卫"
     },
     "LabyrinthinKowloonWalledWorld.かめりあ": {
         "bpm": "190",
         "length": "3:00",
-        "chapter": "Extra Story Chapter 极星卫",
-        "chart": {
-            "EZ": {
-                "combo": "491"
-            },
-            "HD": {
-                "combo": "968"
-            },
-            "IN": {
-                "combo": "1150"
-            }
-        }
+        "chapter": "Extra Story Chapter 极星卫"
     },
     "ComputeItWithSomeDevilishAlcoholicSteampunkEngines.かめりあ": {
         "bpm": "165",
         "length": "2:51",
-        "chapter": "Extra Story Chapter 极星卫",
-        "chart": {
-            "EZ": {
-                "combo": "330"
-            },
-            "HD": {
-                "combo": "723"
-            },
-            "IN": {
-                "combo": "1213"
-            }
-        }
+        "chapter": "Extra Story Chapter 极星卫"
     },
     "ERABYECONNEC10N.かめりあ": {
         "bpm": "230",
         "length": "2:48",
-        "chapter": "Extra Story Chapter 极星卫",
-        "chart": {
-            "EZ": {
-                "combo": "492"
-            },
-            "HD": {
-                "combo": "904"
-            },
-            "IN": {
-                "combo": "1530"
-            },
-            "AT": {
-                "combo": "1579"
-            }
-        }
+        "chapter": "Extra Story Chapter 极星卫"
     },
     "DiamondEyes.SYNTHETIC": {
         "bpm": "140",
         "length": "2:17",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "340"
-            },
-            "HD": {
-                "combo": "429"
-            },
-            "IN": {
-                "combo": "774"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Bitterblossom.imvi": {
         "bpm": "180",
         "length": "2:24",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "152"
-            },
-            "HD": {
-                "combo": "581"
-            },
-            "IN": {
-                "combo": "597"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "SilenceisGoldenSpeechisGolden.NIWASHI": {
         "bpm": "177",
         "length": "2:44",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "376"
-            },
-            "HD": {
-                "combo": "795"
-            },
-            "IN": {
-                "combo": "1273"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "FracturedAngel.DJRaisei": {
         "bpm": "301",
         "length": "3:00",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "626"
-            },
-            "HD": {
-                "combo": "796"
-            },
-            "IN": {
-                "combo": "1084"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "JourneywithYou.Iris": {
         "bpm": "150",
         "length": "2:11",
-        "chapter": "Chapter EX-Rotaeno 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "60"
-            },
-            "HD": {
-                "combo": "175"
-            },
-            "IN": {
-                "combo": "562"
-            }
-        }
+        "chapter": "Chapter EX-Rotaeno 精选集"
     },
     "SecretIllumination.Yooh": {
         "bpm": "160",
         "length": "2:37",
-        "chapter": "Chapter EX-Rotaeno 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "281"
-            },
-            "HD": {
-                "combo": "863"
-            },
-            "IN": {
-                "combo": "901"
-            }
-        }
+        "chapter": "Chapter EX-Rotaeno 精选集"
     },
     "InvertedWorld.ARForest": {
         "bpm": "180",
         "length": "2:13",
-        "chapter": "Chapter EX-Rotaeno 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "246"
-            },
-            "HD": {
-                "combo": "614"
-            },
-            "IN": {
-                "combo": "820"
-            }
-        }
+        "chapter": "Chapter EX-Rotaeno 精选集"
     },
-    "テリトリーバトル.ツユ": {
-        "bpm": "140",
-        "length": "2:30",
-        "chapter": "Chapter EX-CHUNITHM 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "172"
-            },
-            "HD": {
-                "combo": "589"
-            },
-            "IN": {
-                "combo": "974"
-            },
-            "AT": {
-                "combo": "1417"
-            }
-        }
+    "月詠に鳴る.Feryquitousfeat藍月なくる": {
+        "bpm": "180",
+        "length": "2:15",
+        "chapter": "Chapter EX-CHUNITHM 精选集"
     },
     "TECHNOPOLIS2085.PRASTIKDANCEFLOOR": {
         "bpm": "134",
         "length": "2:18",
-        "chapter": "Chapter EX-CHUNITHM 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "141"
-            },
-            "HD": {
-                "combo": "443"
-            },
-            "IN": {
-                "combo": "820"
-            },
-            "AT": {
-                "combo": "824"
-            }
-        }
+        "chapter": "Chapter EX-CHUNITHM 精选集"
     },
     "祈-我ら神祖と共に歩む者なり-.光吉猛修VS穴山大輔VSKaiVS水野健治VS大国奏音": {
         "bpm": "219",
         "length": "2:58",
-        "chapter": "Chapter EX-CHUNITHM 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "666"
-            },
-            "HD": {
-                "combo": "1111"
-            },
-            "IN": {
-                "combo": "2222"
-            },
-            "AT": {
-                "combo": "2222"
-            }
-        }
+        "chapter": "Chapter EX-CHUNITHM 精选集"
     },
     "bye.DingerBox": {
         "bpm": "160",
         "length": "2:40",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "186"
-            },
-            "HD": {
-                "combo": "333"
-            },
-            "IN": {
-                "combo": "725"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "聖夜讃歌.A39沙包P": {
         "bpm": "178",
         "length": "3:06",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "402"
-            },
-            "HD": {
-                "combo": "593"
-            },
-            "IN": {
-                "combo": "1339"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "ストレイソウルアラウンド.みーに": {
         "bpm": "150",
         "length": "2:17",
-        "chapter": "Chapter EX-Rotaeno 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "324"
-            },
-            "HD": {
-                "combo": "486"
-            },
-            "IN": {
-                "combo": "908"
-            }
-        }
+        "chapter": "Chapter EX-Rotaeno 精选集"
     },
     "ManifoldHypothesis.cybermisofeattigerlily": {
         "bpm": "174",
         "length": "2:28",
-        "chapter": "Chapter EX-Rotaeno 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "187"
-            },
-            "HD": {
-                "combo": "401"
-            },
-            "IN": {
-                "combo": "895"
-            }
-        }
+        "chapter": "Chapter EX-Rotaeno 精选集"
     },
     "KMoeVIP.ZxNX": {
         "bpm": "175",
         "length": "2:09",
-        "chapter": "Chapter EX-Rotaeno 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "123"
-            },
-            "HD": {
-                "combo": "432"
-            },
-            "IN": {
-                "combo": "1060"
-            }
-        }
+        "chapter": "Chapter EX-Rotaeno 精选集"
     },
     "Poseidon.1112vsStar": {
         "bpm": "175",
         "length": "2:03",
-        "chapter": "Side Story 1 忘忧宫",
-        "chart": {
-            "EZ": {
-                "combo": "533"
-            },
-            "HD": {
-                "combo": "397"
-            },
-            "IN": {
-                "combo": "450"
-            }
-        }
+        "chapter": "Side Story 1 忘忧宫"
     },
     "WATER.A39沙包P": {
         "bpm": "170",
         "length": "2:36",
-        "chapter": "Side Story 1 忘忧宫",
-        "chart": {
-            "EZ": {
-                "combo": "338"
-            },
-            "HD": {
-                "combo": "703"
-            },
-            "IN": {
-                "combo": "643"
-            }
-        }
+        "chapter": "Side Story 1 忘忧宫"
     },
     "MiracleForestVIPMix.Rinthlive": {
         "bpm": "192",
         "length": "2:50",
-        "chapter": "Side Story 1 忘忧宫",
-        "chart": {
-            "EZ": {
-                "combo": "323"
-            },
-            "HD": {
-                "combo": "586"
-            },
-            "IN": {
-                "combo": "839"
-            }
-        }
+        "chapter": "Side Story 1 忘忧宫"
     },
     "MOBILYS.Dachs": {
         "bpm": "144",
         "length": "2:43",
-        "chapter": "Side Story 1 忘忧宫",
-        "chart": {
-            "EZ": {
-                "combo": "311"
-            },
-            "HD": {
-                "combo": "530"
-            },
-            "IN": {
-                "combo": "938"
-            }
-        }
+        "chapter": "Side Story 1 忘忧宫"
     },
     "Lyrith迷宮リリス.ユメミド": {
         "bpm": "177",
         "length": "2:27",
-        "chapter": "Side Story 1 忘忧宫",
-        "chart": {
-            "EZ": {
-                "combo": "248"
-            },
-            "HD": {
-                "combo": "700"
-            },
-            "IN": {
-                "combo": "1267"
-            },
-            "AT": {
-                "combo": "1236"
-            }
-        }
+        "chapter": "Side Story 1 忘忧宫"
     },
     "Demiurge.Rabpit": {
         "bpm": "111",
         "length": "2:49",
-        "chapter": "Side Story 2 弭刻日",
-        "chart": {
-            "EZ": {
-                "combo": "100"
-            },
-            "HD": {
-                "combo": "445"
-            },
-            "IN": {
-                "combo": "520"
-            }
-        }
+        "chapter": "Side Story 2 弭刻日"
     },
     "Demonkin.ForgedReigns": {
         "bpm": "192",
         "length": "2:18",
-        "chapter": "Side Story 2 弭刻日",
-        "chart": {
-            "EZ": {
-                "combo": "426"
-            },
-            "HD": {
-                "combo": "513"
-            },
-            "IN": {
-                "combo": "829"
-            }
-        }
+        "chapter": "Side Story 2 弭刻日"
     },
     "Re_NascencePsystyleVer.Rinth_live": {
         "bpm": "150",
         "length": "2:27",
-        "chapter": "Side Story 2 弭刻日",
-        "chart": {
-            "EZ": {
-                "combo": "378"
-            },
-            "HD": {
-                "combo": "806"
-            },
-            "IN": {
-                "combo": "827"
-            }
-        }
+        "chapter": "Side Story 2 弭刻日"
     },
     "Ark.kanoryo": {
         "bpm": "180",
         "length": "2:38",
-        "chapter": "Side Story 2 弭刻日",
-        "chart": {
-            "EZ": {
-                "combo": "290"
-            },
-            "HD": {
-                "combo": "523"
-            },
-            "IN": {
-                "combo": "726"
-            }
-        }
+        "chapter": "Side Story 2 弭刻日"
     },
     "AfterDawn.S9ryne": {
         "bpm": "110",
         "length": "2:22",
-        "chapter": "Side Story 2 弭刻日",
-        "chart": {
-            "EZ": {
-                "combo": "194"
-            },
-            "HD": {
-                "combo": "478"
-            },
-            "IN": {
-                "combo": "975"
-            }
-        }
+        "chapter": "Side Story 2 弭刻日"
     },
     "INFiNiTEENERZYOverdoze.RekuMochizuki": {
         "bpm": "180",
         "length": "1:57",
-        "chapter": "Side Story 2 弭刻日",
-        "chart": {
-            "EZ": {
-                "combo": "333"
-            },
-            "HD": {
-                "combo": "666"
-            },
-            "IN": {
-                "combo": "888"
-            },
-            "AT": {
-                "combo": "888"
-            }
-        }
+        "chapter": "Side Story 2 弭刻日"
     },
     "CrushBETA.shadow_bling": {
         "bpm": "200",
         "length": "2:15",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "270"
-            },
-            "HD": {
-                "combo": "666"
-            },
-            "IN": {
-                "combo": "977"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "BrokenSky.JungoMAX3feat刘佳宜Snow幻影刃shadow": {
         "bpm": "130",
         "length": "2:35(?)",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "169"
-            },
-            "HD": {
-                "combo": "352"
-            },
-            "IN": {
-                "combo": "459"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Khalid.Dolphin": {
         "bpm": "128",
         "length": "2:10",
-        "chapter": "Side Story 3 盗乐行",
-        "chart": {
-            "EZ": {
-                "combo": "190"
-            },
-            "HD": {
-                "combo": "356"
-            },
-            "IN": {
-                "combo": "631"
-            }
-        }
+        "chapter": "Side Story 3 盗乐行"
     },
     "QuantumHyperspace.D_AAN": {
         "bpm": "200",
         "length": "1:58",
-        "chapter": "Side Story 3 盗乐行",
-        "chart": {
-            "EZ": {
-                "combo": "443"
-            },
-            "HD": {
-                "combo": "790"
-            },
-            "IN": {
-                "combo": "888"
-            }
-        }
+        "chapter": "Side Story 3 盗乐行"
     },
     "FreakyUndulationsNobleKnightsofTune.JehezukielKURORAK": {
         "bpm": "202",
         "length": "2:18",
-        "chapter": "Side Story 3 盗乐行",
-        "chart": {
-            "EZ": {
-                "combo": "292"
-            },
-            "HD": {
-                "combo": "621"
-            },
-            "IN": {
-                "combo": "1020"
-            }
-        }
+        "chapter": "Side Story 3 盗乐行"
     },
     "PANICPARADISE.DJSHIONY": {
         "bpm": "170",
         "length": "2:08",
-        "chapter": "Side Story 3 盗乐行",
-        "chart": {
-            "EZ": {
-                "combo": "367"
-            },
-            "HD": {
-                "combo": "533"
-            },
-            "IN": {
-                "combo": "881"
-            }
-        }
+        "chapter": "Side Story 3 盗乐行"
     },
     "ReEndofaDream.umavsモリモリあつし": {
         "bpm": "212",
         "length": "2:21",
-        "chapter": "Side Story 3 盗乐行",
-        "chart": {
-            "EZ": {
-                "combo": "421"
-            },
-            "HD": {
-                "combo": "856"
-            },
-            "IN": {
-                "combo": "1186"
-            },
-            "AT": {
-                "combo": "1377"
-            }
-        }
+        "chapter": "Side Story 3 盗乐行"
     },
     "GVNGlitterVomitusandNeon.SaltySaltUnfold33": {
         "bpm": "175",
         "length": "2:41",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "635"
-            },
-            "HD": {
-                "combo": "900"
-            },
-            "IN": {
-                "combo": "1545"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "BRAINHACKER.SOMON": {
         "bpm": "158",
         "length": "2:01",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "230"
-            },
-            "HD": {
-                "combo": "372"
-            },
-            "IN": {
-                "combo": "780"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "零號車輛.seatrus": {
         "bpm": "240",
         "length": "2:24",
-        "chapter": "Chapter EX-Paradigm：Reboot 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "594"
-            },
-            "HD": {
-                "combo": "1058"
-            },
-            "IN": {
-                "combo": "1240"
-            }
-        }
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集"
     },
     "Xenolith.Tatsh": {
         "bpm": "170",
         "length": "2:18",
-        "chapter": "Chapter EX-Paradigm：Reboot 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "202"
-            },
-            "HD": {
-                "combo": "533"
-            },
-            "IN": {
-                "combo": "789"
-            }
-        }
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集"
     },
     "ArtificialExistence.JunKuroda": {
         "bpm": "191",
         "length": "2:14",
-        "chapter": "Chapter EX-Paradigm：Reboot 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "200"
-            },
-            "HD": {
-                "combo": "400"
-            },
-            "IN": {
-                "combo": "800"
-            }
-        }
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集"
     },
     "IndelibleScar.Noah": {
         "bpm": "223",
         "length": "2:17",
-        "chapter": "Chapter EX-Paradigm：Reboot 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "316"
-            },
-            "HD": {
-                "combo": "733"
-            },
-            "IN": {
-                "combo": "844"
-            },
-            "AT": {
-                "combo": "1207"
-            }
-        }
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集"
     },
     "Antithese.Blacklolita": {
         "bpm": "172",
         "length": "2:20",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "313"
-            },
-            "HD": {
-                "combo": "801"
-            },
-            "IN": {
-                "combo": "1063"
-            },
-            "AT": {
-                "combo": "1200"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "PRAGMATISMRESURRECTION.Laur": {
         "bpm": "174",
         "length": "2:41",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "1057"
-            },
-            "HD": {
-                "combo": "661"
-            },
-            "IN": {
-                "combo": "999"
-            },
-            "AT": {
-                "combo": "1156"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "ShineAfter.ADeanJocularACE": {
         "bpm": "170",
         "length": "2:45",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "262"
-            },
-            "HD": {
-                "combo": "647"
-            },
-            "IN": {
-                "combo": "800"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "Bloom.targ麻团qwq": {
         "bpm": "150",
         "length": "2:39",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "183"
-            },
-            "HD": {
-                "combo": "724"
-            },
-            "IN": {
-                "combo": "1053"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "幽世桔梗.Capchiifeatまるもこ": {
         "bpm": "182",
         "length": "2:34",
-        "chapter": "Chapter EX-SHINOBI FLASH 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "223"
-            },
-            "HD": {
-                "combo": "562"
-            },
-            "IN": {
-                "combo": "981"
-            }
-        }
+        "chapter": "Chapter EX-SHINOBI FLASH 精选集"
     },
     "千紫万紅.r0yvsWABI": {
         "bpm": "203",
         "length": "2:27",
-        "chapter": "Chapter EX-SHINOBI FLASH 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "240"
-            },
-            "HD": {
-                "combo": "779"
-            },
-            "IN": {
-                "combo": "1200"
-            }
-        }
+        "chapter": "Chapter EX-SHINOBI FLASH 精选集"
     },
     "明鏡烈火.MUEvsRekuMochizuki": {
         "bpm": "200",
         "length": "2:12",
-        "chapter": "Chapter EX-SHINOBI FLASH 精选集",
-        "chart": {
-            "EZ": {
-                "combo": "376"
-            },
-            "HD": {
-                "combo": "566"
-            },
-            "IN": {
-                "combo": "886"
-            }
-        }
+        "chapter": "Chapter EX-SHINOBI FLASH 精选集"
     },
     "Cuvism.Fl00tvsHalv": {
         "bpm": "194",
         "length": "2:40",
-        "chapter": "Chapter EX-TAKUMI³精选集",
-        "chart": {
-            "EZ": {
-                "combo": "222"
-            },
-            "HD": {
-                "combo": "761"
-            },
-            "IN": {
-                "combo": "830"
-            },
-            "AT": {
-                "combo": "1088"
-            }
-        }
+        "chapter": "Chapter EX-TAKUMI³精选集"
     },
     "iLArtifact.Link0": {
         "bpm": "184",
         "length": "2:43",
-        "chapter": "Chapter EX-TAKUMI³精选集",
-        "chart": {
-            "EZ": {
-                "combo": "482"
-            },
-            "HD": {
-                "combo": "925"
-            },
-            "IN": {
-                "combo": "1279"
-            }
-        }
+        "chapter": "Chapter EX-TAKUMI³精选集"
     },
     "atruthseekerCommunicationwithUtopiawillbelost.kuro": {
         "bpm": "206",
         "length": "2:02",
-        "chapter": "Chapter EX-TAKUMI³精选集",
-        "chart": {
-            "EZ": {
-                "combo": "328"
-            },
-            "HD": {
-                "combo": "555"
-            },
-            "IN": {
-                "combo": "986"
-            }
-        }
+        "chapter": "Chapter EX-TAKUMI³精选集"
     },
     "今天不是明天.PIKASONICfeat兰音Reine": {
         "bpm": "125",
         "length": "2:53",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "294"
-            },
-            "HD": {
-                "combo": "549"
-            },
-            "IN": {
-                "combo": "913"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "BoundedQuietude.FiniteLimitvsSiLiS": {
         "bpm": "280",
         "length": "2:32",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "1127"
-            },
-            "HD": {
-                "combo": "303"
-            },
-            "IN": {
-                "combo": "1286"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "君往何处QuoVadis.M2U": {
         "bpm": "160",
         "length": "2:25",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "208"
-            },
-            "HD": {
-                "combo": "390"
-            },
-            "IN": {
-                "combo": "935"
-            }
-        }
+        "chapter": "单曲精选集"
     },
     "暗夜苏醒REANIMATE.Warak": {
         "bpm": "174",
         "length": "2:36",
-        "chapter": "单曲精选集",
-        "chart": {
-            "EZ": {
-                "combo": "236"
-            },
-            "HD": {
-                "combo": "842"
-            },
-            "IN": {
-                "combo": "1262"
-            }
-        }
+        "chapter": "单曲精选集"
+    },
+    "Grimheart.Puru": {
+        "bpm": "170",
+        "length": "2:30",
+        "chapter": "单曲精选集"
+    },
+    "Thrashforce.KAHvsE0ri4": {
+        "bpm": "190",
+        "length": "2:28",
+        "chapter": "单曲精选集"
+    },
+    "Originally.SNKSMizku": {
+        "bpm": "200",
+        "length": "2:24",
+        "chapter": "单曲精选集"
+    },
+    "心の記憶.A39沙包P": {
+        "bpm": "150",
+        "length": "2:45",
+        "chapter": "Side Story 4 无相乡"
+    },
+    "Spotlight.Ardolf": {
+        "bpm": "160",
+        "length": "2:09",
+        "chapter": "Side Story 4 无相乡"
+    },
+    "NightTheater.わかどり": {
+        "bpm": "151",
+        "length": "2:00",
+        "chapter": "Side Story 4 无相乡"
+    },
+    "Ramification.rareguyReina": {
+        "bpm": "175",
+        "length": "2:17",
+        "chapter": "Side Story 4 无相乡"
+    },
+    "DerRichter.Ωμεγα": {
+        "bpm": "192",
+        "length": "2:27",
+        "chapter": "Side Story 4 无相乡"
+    },
+    "ATHAZA.LeaF": {
+        "bpm": "240~280",
+        "length": "2:42",
+        "chapter": "Side Story 4 无相乡"
     }
 }

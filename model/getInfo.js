@@ -114,6 +114,9 @@ export default new class getInfo {
         /**所有曲目曲名列表 */
         this.songlist = []
 
+        /**note统计 */
+        this.notesInfo = await readFile.FileReader(path.join(infoPath, 'notesInfo.json'))
+
         /**信息文件 */
         let CsvInfo = await readFile.FileReader(path.join(infoPath, 'info.csv'))
         let Csvdif = await readFile.FileReader(path.join(infoPath, 'difficulty.csv'))
@@ -146,14 +149,22 @@ export default new class getInfo {
             this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
             this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
             this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
+            this.ori_info[CsvInfo[i].song].chart = {}
             for (let j in this.Level) {
                 const level = this.Level[j]
+                let id = CsvInfo[i].id
                 if (CsvInfo[i][level]) {
                     if (!this.ori_info[CsvInfo[i].song].chart[level]) {
                         this.ori_info[CsvInfo[i].song].chart[level] = {}
                     }
                     this.ori_info[CsvInfo[i].song].chart[level].charter = CsvInfo[i][level]
                     this.ori_info[CsvInfo[i].song].chart[level].difficulty = Csvdif[i][level]
+                    this.ori_info[CsvInfo[i].song].chart[level].tap = this.notesInfo[id][level].tap
+                    this.ori_info[CsvInfo[i].song].chart[level].drag = this.notesInfo[id][level].drag
+                    this.ori_info[CsvInfo[i].song].chart[level].hold = this.notesInfo[id][level].hold
+                    this.ori_info[CsvInfo[i].song].chart[level].flicke = this.notesInfo[id][level].flicke
+                    this.ori_info[CsvInfo[i].song].chart[level].combo = this.notesInfo[id][level].tap + this.notesInfo[id][level].drag + this.notesInfo[id][level].hold + this.notesInfo[id][level].flicke
+
                     /**最高定数 */
                     this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))
                 }
@@ -165,6 +176,7 @@ export default new class getInfo {
         if (this.MAX_DIFFICULTY != MAX_DIFFICULTY) {
             console.error('[phi-plugin] MAX_DIFFICULTY 常量未更新，请回报作者！', MAX_DIFFICULTY, this.MAX_DIFFICULTY)
         }
+
 
         /**jrrp */
         this.word = await readFile.FileReader(path.join(infoPath, 'jrrp.json'))

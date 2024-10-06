@@ -35,38 +35,48 @@
                             {{/if}}
                         </div>
                     </div>
-                    <div class="chart-info-box">
-                        <div class="chart-info">
-                            <div class="common">
-                                <span>Illustrator: {{illustrator}}</span>
-                                <span>Bpm:&ensp;{{bpm}}&ensp;&ensp;&ensp;&ensp;Chapter:&ensp;{{chapter}}</span>
-                                <span>Charts:</span>
+                    <div class="chart">
+                        <div class="rankbkg">
+                            <div class="sqr"></div>
+                            {{each chart}}
+                            <div class="sqr rank-{{$index}}" style="background-color: rgba({{$value.rgba}});"></div>
+                            {{/each}}
+                        </div>
+                        <div class="rank">
+                            <p>\</p>
+                            {{each chart}}
+                            <p>{{$index}}</p>
+                            {{/each}}
+                        </div>
+                        <div class="rank-box">
+                            <div class="charter">
+                                <p>Charter</p>
                             </div>
-                            <div class="chart">
-                                {{each chart}}
-
-                                <div class="up">
-                                    {{if $index == 'SP'}}
-                                    <span style="color: rgb(0, 0, 0);">SP&ensp;</span>
-                                    {{else if $index == 'AT'}}
-                                    <span style="color: rgb(213, 213, 213);">AT&ensp;</span>
-                                    {{else if $index == 'IN'}}
-                                    <span style="color: rgb(255, 159, 159);">IN&ensp;</span>
-                                    {{else if $index == 'HD'}}
-                                    <span style="color: rgb(165, 187, 227);">HD&ensp;</span>
-                                    {{else if $index == 'EZ'}}
-                                    <span style="color: rgb(192, 221, 173);">EZ&ensp;</span>
-                                    {{else}}
-                                    <span style="color: rgba({{$value.rgba}});">{{$index}}&ensp;</span>
-                                    {{/if}}
-                                    <span>&ensp;{{$value.difficulty}}&ensp;</span>
-                                    <span>&ensp;{{$value.combo}}&ensp;Notes</span>
-                                </div>
-                                <span>Charter:&ensp;{{$value.charter}}</span>
-                                {{/each}}
-
-
+                            <div class="chart-info"> 
+                                <p>Difficulty</p>
+                                <p>Tap</p>
+                                <p>Drag</p>
+                                <p>Hold</p>
+                                <p>Flicke</p>
                             </div>
+                            {{each chart}}
+                            <div class="charter">
+                                <p>{{$value.charter}}</p>
+                            </div>
+                            <div class="chart-info">
+                                <p>{{$value.difficulty}}</p>
+                                <p>{{$value.tap}}</p>
+                                <p>{{$value.drag}}</p>
+                                <p>{{$value.hold}}</p>
+                                <p>{{$value.flicke}}</p>
+                            </div>
+                            {{/each}}
+                        </div>
+                        <div class="note-box">
+                            <p>Total</p>
+                            {{each chart}}
+                            <p>{{$value.combo}}</p>
+                            {{/each}}
                         </div>
                     </div>
                 </div>
@@ -75,39 +85,65 @@
                 <img src="{{illustration}}" alt="曲绘">
             </div>
         </div>
+        <div class="other-info">
+            <div class="other-box">
+                <div class="title">
+                    <p>Illustrator</p>
+                </div>
+                <div class="dcr">
+                    <p>{{illustrator}}</p>
+                </div>
+            </div>
+            <div class="other-box">
+                <div class="title">
+                    <p>BPM</p>
+                </div>
+                <div class="dcr">
+                    <p>{{bpm}}</p>
+                </div>
+            </div>
+            <div class="other-box">
+                <div class="title">
+                    <p>Chapter</p>
+                </div>
+                <div class="dcr">
+                    <p>{{chapter}}</p>
+                </div>
+            </div>
+        </div>
         <div class="leave">
             <div class="leave-box">
                 {{each chart}}
 
                 {{if $index == 'EZ'}}
                 <div class="leave-ez">
-                    {{else if $index == 'HD'}}
-                    <div class="leave-hd">
-                        {{else if $index == 'IN'}}
-                        <div class="leave-in">
-                            {{else if $index == 'AT'}}
-                            <div class="leave-at">
-                                {{else if $index == 'SP'}}
-                                <div class="leave-sp">
-                                    {{else}}
-                                    <div class="leave-sp" style="background-color: rgba({{$value.rgba}});">
-                                        {{/if}}
-                                        <p style="margin-left: 3px;">{{$value.difficulty}}</p>
-                                        <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
-                                    </div>
+                {{else if $index == 'HD'}}
+                <div class="leave-hd">
+                {{else if $index == 'IN'}}
+                <div class="leave-in">
+                {{else if $index == 'AT'}}
+                <div class="leave-at">
+                {{else if $index == 'SP'}}
+                <div class="leave-sp">
+                {{else}}
+                <div class="leave-sp" style="background-color: rgba({{$value.rgba}});">
+                {{/if}}
+                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                </div>
 
-                                    {{/each}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="createdbox">
-                            <div class="phi-plugin">
-                                <p>{{_plugin}}</p>
-                            </div>
-                            <div class="ver">
-                                <p>{{Version.ver}}</p>
-                            </div>
-                        </div>
-                        <div class="snow-box"> </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
+<div class="createdbox">
+    <div class="phi-plugin">
+        <p>{{_plugin}}</p>
+    </div>
+    <div class="ver">
+        <p>{{Version.ver}}</p>
+    </div>
+</div>
+<div class="snow-box"> </div>
 
 {{/block}}

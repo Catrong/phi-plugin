@@ -1,6 +1,10 @@
 @import "../common/common.css";
 @import "../common/snow.css";
 
+:root {
+    --rankHight: 52px;
+}
+
 body {
     height: 1080px;
     width: 2048px;
@@ -85,7 +89,7 @@ body {
 }
 
 .charts-box {
-    height: 359px;
+    height: 356px;
     width: 760;
     background-color: rgba(0, 183, 240, 0.3);
     border-left: 12px solid;
@@ -98,7 +102,9 @@ body {
 }
 
 .charts-box p {
-    font-size: 14px;
+    font-size: 17px;
+    z-index: 1;
+    text-shadow: 0 0 1px BLACK;
 }
 
 .charts-box .length {
@@ -165,34 +171,106 @@ body {
     color: white;
 }
 
-.chart-info-box {
-    width: 87%;
-    height: 73%;
+.chart {
+    margin-left: 19px;
     display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.chart p {
+    color: white;
+}
+
+.rankbkg {
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+}
+
+.sqr {
+    width: 100%;
+    height: var(--rankHight);
+}
+
+.rank-EZ {
+    background-color: #92d05088;
+}
+
+.rank-HD {
+    background-color: #00b0f088;
+}
+
+.rank-IN {
+    background-color: #ff000088;
+}
+
+.rank-AT {
+    background-color: #6e6e6e88;
+}
+
+.rank {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.rank p {
+    font-size: 35px;
+    height: var(--rankHight);
+}
+
+.rank-box {
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    margin-left: 5px;
+}
+
+.charter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 26px;
+    width: 100%;
 }
 
 .chart-info {
     display: flex;
-    flex-direction: column;
-    color: white;
+    justify-content: space-around;
+    width: 100%;
+    height: 26px;
 }
 
-.chart {
-    margin-left: 40px;
+.chart-info :nth-child(2) {
+    color: skyblue;
+}
+
+.chart-info :nth-child(3) {
+    color: gold;
+}
+
+.chart-info :nth-child(4) {
+    color: skyblue;
+}
+
+.chart-info :nth-child(5) {
+    color: pink;
+}
+
+.note-box {
     display: flex;
     flex-direction: column;
-    width: fit-content;
+    align-items: center;
+    margin-left: 5px;
 }
 
-.up {
+.note-box p {
+    font-size: 27px;
+    height: var(--rankHight);
     display: flex;
-    justify-content: space-between;
-}
-
-
-.chart p {
-    color: white;
-    width: fit-content;
+    justify-content: center;
 }
 
 .ill-box {
@@ -212,9 +290,38 @@ body {
     z-index: 2;
 }
 
+.other-info {
+    display: flex;
+    position: absolute;
+    right: 1282px;
+    bottom: 273px;
+    flex-direction: row;
+}
+
+.other-box {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    margin-left: 50px;
+    align-items: flex-end;
+}
+
+.other-info p {
+    color: white;
+    font-size: 25px;
+    margin: 0;
+    text-shadow: 0 0 3px black;
+}
+
+.title {
+    margin-right: -10px;
+}
+
+.dcr {}
+
 .leave {
     margin-top: 40px;
-    width: 2040;
+    width: 100%;
     display: flex;
 }
 
@@ -222,7 +329,7 @@ body {
     z-index: 4;
     display: flex;
     filter: drop-shadow(0px 0px 30px #000);
-    margin-left: 795px;
+    margin-left: 37%;
 }
 
 .leave-box p {

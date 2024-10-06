@@ -41,6 +41,8 @@ const chap = {
     弭刻日: "Side Story 2 弭刻日",
     S3: "Side Story 3 盗乐行",
     盗乐行: "Side Story 3 盗乐行",
+    S4: "Side Story 4 无相乡",
+    无相乡: "Side Story 4 无相乡",
     EXS: "Extra Story Chapter 极星卫",
     极星卫: "Extra Story Chapter 极星卫",
     黑皇帝: "Chapter EX-Rising Sun Traxx 精选集",
@@ -68,7 +70,7 @@ const chap = {
     千恋万花: "Chapter EX-SHINOBI SLASH 精选集",
     TAKUMI: "Chapter EX-TAKUMI³精选集",
     塔库米: "Chapter EX-TAKUMI³精选集",
-    三次方: "Chapter EX-TAKUMI³精选集"
+    三次方: "Chapter EX-TAKUMI³精选集",
 }
 
 export class phib19 extends plugin {

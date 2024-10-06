@@ -1,22 +1,43 @@
-/data/*
-/config/config/*
-/backup/
-/node_modules/
-resources/original_ill/
-/package-lock.json
-/resources/splited_music/
-chart/
 
-/model/233.js
-/model/tem.txt
-/lib/tem.js
-/lib/2333.json
+lain.support.js# 忽略数据文件
+/data/*
+
+# 忽略配置文件
+/config/config/*
+
+# 忽略备份文件
+/backup/
+
+# 忽略 node_modules 目录
+/node_modules/
+
+# 忽略资源文件
+resources/original_ill/
+/resources/splited_music/
 /resources/info/songsurl.yaml
 /resources/otherill/chu.png
 /resources/otherill/wen.png
-/apps/guessName.js
+
+# 忽略特定文件
+/package-lock.json
 /.hintrc
 tem.js
 lain.support.js
+
+# 忽略特定目录和文件
+chart/
+plugin-ill/
+
+# 忽略 model 目录中的特定文件
+/model/233.js
+/model/tem.txt
+
+# 忽略 lib 目录中的特定文件
+/lib/tem.js
+/lib/2333.json
+
+# 忽略 apps 目录中的特定文件
+/apps/guessName.js
+/apps/chart.js
 /apps/chart.js
 plugin-ill/

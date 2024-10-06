@@ -52,18 +52,6 @@ export function supportGuoba() {
                     }
                 },
                 {
-                    field: 'randerQuality',
-                    label: '渲染质量',
-                    bottomHelpMessage: '对所有的图片生效，设置渲染的质量',
-                    component: 'InputNumber',
-                    required: true,
-                    componentProps: {
-                        min: 1,
-                        max: 100,
-                        placeholder: '请输入渲染质量',
-                    },
-                },
-                {
                     field: 'renderScale',
                     label: '渲染精度',
                     bottomHelpMessage: '对所有的图片生效，设置渲染精度',
@@ -73,6 +61,18 @@ export function supportGuoba() {
                         min: 50,
                         max: 200,
                         placeholder: '请输入渲染精度',
+                    },
+                },
+                {
+                    field: 'randerQuality',
+                    label: '渲染质量',
+                    bottomHelpMessage: '对所有的图片生效，设置渲染的质量',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 1,
+                        max: 100,
+                        placeholder: '请输入渲染质量',
                     },
                 },
                 {
