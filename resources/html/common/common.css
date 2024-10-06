@@ -95,7 +95,7 @@ body {
     position: absolute;
     overflow: hidden;
     transform: scale(1.2);
-    filter: blur(50px) brightness(75%);
+    filter: blur(20px) brightness(75%);
     z-index: -1;
 }
 
