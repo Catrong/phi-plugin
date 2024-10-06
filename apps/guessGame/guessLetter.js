@@ -56,7 +56,7 @@ export default new class guessLetter {
         // console.info(totNameList)
 
         if (gamelist[group_id]) {
-            e.reply("喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'/第X个XXXX'来猜曲名或者'/出X'来揭开字母吧！", true)
+            e.reply(`喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'/第X个XXXX'来猜曲名或者'/出X'来揭开字母吧！结束请发 /${Config.getUserCfg('config', 'cmdhead')} ans 嗷！`, true)
             return true
         }
 
