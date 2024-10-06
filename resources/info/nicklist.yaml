@@ -245,6 +245,8 @@ Aphasia:
 狂喜蘭舞:
   - 狂喜
   - 狂喜兰舞
+  - 狂喜蓝舞
+  - 狂喜澜舞
 Sparkle New Life:
   - 闪耀新生活
   - SNL
@@ -298,6 +300,7 @@ Chronostasis:
   - 时停
   - 黑皇帝
   - 黒皇帝
+  - 黒皇帝：时停
 Dead Soul:
   - 第四大道
   - 死鬼
@@ -1033,6 +1036,7 @@ modulus:
 Upshift:
   - 呐呐呐呐
   - 升档
+  - 育碧
 Khalid:
   - kh
 幽世桔梗:
@@ -1052,6 +1056,7 @@ Der Richter:
   - der
   - 法官
   - DR
+  - 教官
 Grimheart:
   - 冷心
   - 冷酷的心
@@ -1069,6 +1074,7 @@ NightTheater:
 Crush BETA:
   - 过年回家
   - CB
+  - beta
 Ramification:
   - 支流
 Spotlight:
