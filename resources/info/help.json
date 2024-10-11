@@ -206,6 +206,11 @@
         "auth": "master",
         "list": [
             {
+                "title": "/set",
+                "eg": "/set<功能><参数>",
+                "desc": "修改设置，建议先/set查看功能名称，没有空格"
+            },
+            {
                 "title": "/backup",
                 "eg": "/backup [back]",
                 "desc": "备份存档文件，+ back 发送该备份文件，自动保存在 /phi-plugin/backup/ 目录下"
