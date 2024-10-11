@@ -1,7 +1,7 @@
 import { _path, dataPath, pluginDataPath } from "./path.js";
 import Config from "../components/Config.js";
 import readFile from './getFile.js';
-import atlas from "./picmodle.js";
+import picmodle from "./picmodle.js";
 import LevelRecord from "./class/LevelRecordInfo.js";
 import SongsInfo from './class/SongsInfo.js';
 import Save from './class/Save.js';
@@ -342,47 +342,47 @@ class getdata {
 
     /**获取best19图片 */
     async getb19(e, data) {
-        return await atlas.b19(e, data)
+        return await picmodle.b19(e, data)
     }
 
     /**获取update图片 */
     async getupdate(e, data) {
-        return await atlas.update(e, data)
+        return await picmodle.update(e, data)
     }
 
     /**获取任务列表图片 */
     async gettasks(e, data) {
-        return await atlas.tasks(e, data)
+        return await picmodle.tasks(e, data)
     }
 
     /**获取个人信息图片 */
     async getuser_info(e, data, kind) {
-        return await atlas.user_info(e, data, kind)
+        return await picmodle.user_info(e, data, kind)
     }
 
     /**获取定级区间成绩 */
     async getlvsco(e, data) {
-        return await atlas.lvsco(e, data)
+        return await picmodle.lvsco(e, data)
     }
 
     /**获取单曲成绩 */
     async getsingle(e, data) {
-        return await atlas.score(e, data)
+        return await picmodle.score(e, data)
     }
 
     /**获取曲绘图鉴 */
-    async getillatlas(e, data) {
-        return await atlas.ill(e, data)
+    async getillpicmodle(e, data) {
+        return await picmodle.ill(e, data)
     }
 
     /**获取猜曲绘图片 */
     async getguess(e, data) {
-        return await atlas.guess(e, data)
+        return await picmodle.guess(e, data)
     }
 
     /**获取随机曲目图片 */
     async getrand(e, data) {
-        return await atlas.rand(e, data)
+        return await picmodle.rand(e, data)
     }
 
     /**获取曲绘，返回地址，原名

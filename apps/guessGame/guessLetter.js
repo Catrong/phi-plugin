@@ -332,7 +332,7 @@ export default new class guessLetter {
                             if (get.info(standard_song).illustration) { //如果有曲绘文件
                                 switch (Config.getUserCfg('config', 'LetterIllustration')) {
                                     case "水印版": {
-                                        e.reply(await get.getillatlas(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
+                                        e.reply(await get.getillpicmodle(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
                                         break;
                                     }
                                     case "原版": {

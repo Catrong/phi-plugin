@@ -3,7 +3,7 @@ import common from '../../../lib/common/common.js'
 import puppeteer from './puppeteer.js'
 
 
-class atlas {
+class picmodle {
 
     constructor() {
         /**待使用puppeteer */
@@ -30,8 +30,8 @@ class atlas {
     }
 
     /**曲目图鉴 */
-    async atlas(e, info) {
-        return await this.common(e, 'atlas', {
+    async picmodle(e, info) {
+        return await this.common(e, 'picmodle', {
             ...info,
             length: info.length.replace(':', "'") + "''",
         })
@@ -216,6 +216,6 @@ class atlas {
     }
 
 }
-let result = new atlas()
+let result = new picmodle()
 result.init()
 export default result

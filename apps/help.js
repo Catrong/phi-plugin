@@ -2,7 +2,7 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 import get from '../model/getdata.js'
-import atlas from '../model/picmodle.js'
+import picmodle from '../model/picmodle.js'
 import getFile from '../model/getFile.js'
 import path from 'path'
 import { infoPath } from '../model/path.js'
@@ -42,7 +42,7 @@ export class phihelp extends plugin {
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await get.getpluginData(e.user_id)
-        e.reply(await atlas.help(e, {
+        e.reply(await picmodle.help(e, {
             helpGroup: helpGroup,
             cmdHead: head || null,
             isMaster: e.isMaster,

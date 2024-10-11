@@ -3,7 +3,7 @@ import fCompute from "../../model/fCompute.js"
 import getInfo from "../../model/getInfo.js"
 import { Level } from "../../model/constNum.js"
 import send from "../../model/send.js"
-import atlas from "../../model/picmodle.js"
+import picmodle from "../../model/picmodle.js"
 import getPic from "../../model/getPic.js"
 
 
@@ -76,7 +76,7 @@ export default new class guessTips {
         e.reply(resMsg)
         setTimeout(async (id) => {
             if (gameList[e.group_id] && gameList[e.group_id].id == id) {
-                e.reply([`呜……很遗憾，没有人答对喵！正确答案是：${gameData.song}`, gameData.tipNum > gameData.tips.length ? await atlas.guess(e, { ...gameData.ill, blur: 0, style: 1, }) : false])
+                e.reply([`呜……很遗憾，没有人答对喵！正确答案是：${gameData.song}`, gameData.tipNum > gameData.tips.length ? await picmodle.guess(e, { ...gameData.ill, blur: 0, style: 1, }) : false])
             }
         }, Config.getUserCfg('config', 'GuessTipsTimeout') * 1000, id);
         return true
@@ -102,12 +102,12 @@ export default new class guessTips {
                 if (gameList[e.group_id] && gameList[e.group_id].id == id) {
                     let gameData = gameList[e.group_id]
                     delete gameList[e.group_id]
-                    e.reply([`呜……很遗憾，没有人答对喵！正确答案是：${gameData.song}`, await atlas.guess(e, { ...gameData.ill, blur: 0, style: 1, })])
+                    e.reply([`呜……很遗憾，没有人答对喵！正确答案是：${gameData.song}`, await picmodle.guess(e, { ...gameData.ill, blur: 0, style: 1, })])
                     e.reply(await getPic.GetSongsInfoAtlas(e, gameData.song))
                 }
             }, 30 * 1000, gameData.id)
             e.reply(`接下来是曲绘提示哦！如果在${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒内没有回答正确的话，将会自动公布答案哦！`)
-            rev.push(await atlas.guess(e, { ...gameData.ill, blur: 0, style: 0, }))
+            rev.push(await picmodle.guess(e, { ...gameData.ill, blur: 0, style: 0, }))
         } else {
             ++gameData.tipNum
         }
@@ -132,7 +132,7 @@ export default new class guessTips {
                     delete (gameList[group_id])
                     send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
                     if (gameData.tipNum == gameData.tips.length + 1) {
-                        e.reply(await atlas.guess(e, { ...gameData.ill, blur: 0, style: 0, }))
+                        e.reply(await picmodle.guess(e, { ...gameData.ill, blur: 0, style: 0, }))
                     }
                     e.reply(await getPic.GetSongsInfoAtlas(e, gameData.song))
                     return true
@@ -154,7 +154,7 @@ export default new class guessTips {
         }
         let gameData = gameList[e.group_id]
         delete gameList[e.group_id]
-        e.reply([`好吧，下面开始公布答案。正确答案是：${gameData.song}`, gameData.tipNum > gameData.tips.length ? await atlas.guess(e, { ...gameData.ill, blur: 0, style: 1, }) : false])
+        e.reply([`好吧，下面开始公布答案。正确答案是：${gameData.song}`, gameData.tipNum > gameData.tips.length ? await picmodle.guess(e, { ...gameData.ill, blur: 0, style: 1, }) : false])
         e.reply(await getPic.GetSongsInfoAtlas(e, gameData.song))
     }
 }()

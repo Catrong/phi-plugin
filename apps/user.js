@@ -2,7 +2,7 @@ import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import get from '../model/getdata.js'
 import send from '../model/send.js'
-import atlas from '../model/picmodle.js'
+import picmodle from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import getSave from '../model/getSave.js'
 import fCompute from '../model/fCompute.js'
@@ -685,7 +685,7 @@ export class phiuser extends plugin {
 
 
 
-        send.send_with_At(e, await atlas.list(e, {
+        send.send_with_At(e, await picmodle.list(e, {
             head_title: "成绩筛选",
             song: data,
             background: get.getill(illlist[randint(0, illlist.length - 1)]),

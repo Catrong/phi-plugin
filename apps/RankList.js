@@ -5,7 +5,7 @@ import getInfo from '../model/getInfo.js'
 import getRksRank from '../model/getRksRank.js'
 import getSave from '../model/getSave.js'
 import send from '../model/send.js'
-import atlas from '../model/picmodle.js'
+import picmodle from '../model/picmodle.js'
 import Config from '../components/Config.js'
 import getNotes from '../model/getNotes.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
@@ -114,7 +114,7 @@ export class phiRankList extends plugin {
                 data.users[5 + i].index = rankNum + i - 3
             }
         }
-        send.send_with_At(e, await atlas.common(e, 'rankingList', data))
+        send.send_with_At(e, await picmodle.common(e, 'rankingList', data))
     }
 
     async godList(e) {
@@ -137,7 +137,7 @@ export class phiRankList extends plugin {
 
         if (!list) {
             data.totDataNum = 0
-            send.send_with_At(e, await atlas.common(e, 'rankingList', data))
+            send.send_with_At(e, await picmodle.common(e, 'rankingList', data))
             return true
         }
 
@@ -153,7 +153,7 @@ export class phiRankList extends plugin {
                 data.users[data.users.length].index = i
             } catch (e) { }
         }
-        send.send_with_At(e, await atlas.common(e, 'rankingList', data))
+        send.send_with_At(e, await picmodle.common(e, 'rankingList', data))
     }
 }
 

@@ -4,7 +4,7 @@ import path from 'path'
 import { infoPath } from '../model/path.js'
 import { redisPath } from '../model/constNum.js'
 import readFile from '../model/getFile.js'
-import atlas from '../model/picmodle.js'
+import picmodle from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import fCompute from '../model/fCompute.js'
 import send from '../model/send.js'
@@ -81,7 +81,7 @@ export class phihelp extends plugin {
             good: jrrp.slice(2, 6),
             bad: jrrp.slice(6, 10),
         }
-        send.send_with_At(e, await atlas.common(e, 'jrrp', data))
+        send.send_with_At(e, await picmodle.common(e, 'jrrp', data))
     }
 
 }

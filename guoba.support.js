@@ -61,6 +61,7 @@ export function supportGuoba() {
                         min: 50,
                         max: 200,
                         placeholder: '请输入渲染精度',
+                        addonAfter: "%"
                     },
                 },
                 {
@@ -73,6 +74,7 @@ export function supportGuoba() {
                         min: 1,
                         max: 100,
                         placeholder: '请输入渲染质量',
+                        addonAfter: "%"
                     },
                 },
                 {
@@ -85,6 +87,7 @@ export function supportGuoba() {
                         min: 1000,
                         max: 120000,
                         placeholder: '请输入渲染超时时间',
+                        addonAfter: "ms"
                     },
                 },
                 {
@@ -97,6 +100,7 @@ export function supportGuoba() {
                         min: 1000,
                         max: 120000,
                         placeholder: '请输入等待超时时间',
+                        addonAfter: "ms"
                     },
                 },
                 {
@@ -245,6 +249,7 @@ export function supportGuoba() {
                         min: 0,
                         max: 120,
                         placeholder: '请输入时间',
+                        addonAfter: "s"
                     },
                 },
                 {
@@ -301,6 +306,7 @@ export function supportGuoba() {
                         min: 0,
                         max: 120,
                         placeholder: '请输入时间',
+                        addonAfter: "s"
                     },
                 },
                 {
@@ -313,6 +319,7 @@ export function supportGuoba() {
                         min: 0,
                         max: 120,
                         placeholder: '请输入时间',
+                        addonAfter: "s"
                     },
                 },
                 {
@@ -325,6 +332,7 @@ export function supportGuoba() {
                         min: 0,
                         max: 120,
                         placeholder: '请输入时间',
+                        addonAfter: "s"
                     },
                 },
                 {
@@ -337,6 +345,7 @@ export function supportGuoba() {
                         min: 0,
                         max: 9999999,
                         placeholder: '请输入时间',
+                        addonAfter: "s"
                     },
                 },
                 {
@@ -353,6 +362,7 @@ export function supportGuoba() {
                         min: 0,
                         max: 120,
                         placeholder: '请输入时间',
+                        addonAfter: "s"
                     },
                 },
                 {
@@ -377,6 +387,7 @@ export function supportGuoba() {
                         min: 30,
                         max: 600,
                         placeholder: '请输入时间',
+                        addonAfter: "s"
                     },
                 },
                 {
@@ -389,6 +400,7 @@ export function supportGuoba() {
                         min: 30,
                         max: 600,
                         placeholder: '请输入时间',
+                        addonAfter: "s"
                     },
                 },
                 {

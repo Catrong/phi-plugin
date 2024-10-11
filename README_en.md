@@ -101,6 +101,7 @@ pnpm install -P # Install the plugin dependencies
 | `#phi get <rank>` | Get the sessionToken of a user at a specific rank on the leaderboard
 | `#phi del <sessionToken>` | Disable a specific sessionToken
 | `#phi allow <sessionToken>` | Restore a specific sessionToken
+| `#phi (set|设置)<function><value>` | Modify settings, it is recommended to use /phi set to view function names first, no spaces
 | `#phi ban <function>` | Disable a certain type of function, see the table below
 
 #### Function Parameter Description

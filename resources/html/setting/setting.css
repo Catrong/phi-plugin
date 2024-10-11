@@ -5,7 +5,7 @@ body {
 }
 
 .background img {
-    filter: none;
+    filter: blur(1px);
 }
 
 .box {
@@ -17,15 +17,16 @@ body {
 
 .lineBox {
     width: 90%;
-    margin: 10px;
+    margin: 1px;
     clip-path: polygon(0 50%, 2% 0, 98% 0, 100% 50%, 98% 100%, 2% 100%);
 }
 
 .line {
     width: 100%;
     display: flex;
-    background: #00000088;
-    backdrop-filter: blur(10px);
+    background: #000000cc;
+    /* backdrop-filter: blur(10px); */
+    position: relative;
     display: flex;
     align-items: center;
 }
@@ -63,23 +64,26 @@ body {
     height: 100%;
     width: 110px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .drc {
-    height: 100%;
     width: max-content;
 }
 
 .space {
-    width: 75px;
+    width: 65px;
     height: 25px;
+    padding-left: 7px;
+    padding-right: 7px;
     background: #ffffff;
     clip-path: polygon(0 50%, 11% 0, 89% 0, 100% 50%, 89% 100%, 11% 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-right: 4px;
+    position: relative;
 }
 
 .space p {
@@ -88,20 +92,56 @@ body {
     margin: 0;
 }
 
-.switch {
+.switch-true,
+.switch-false {
     height: 25px;
-    width: 15px;
-    clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
-    background: #ffffff;
-    /* margin: 10px; */
+    width: 35px;
+    clip-path: polygon(0 50%, 25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%);
+    background: #00000088;
+    position: absolute;
+}
+
+.switch-true {
+    right: 4px;
+}
+
+.switch-false {
+    left: 4px;
+}
+
+.switchDrc-true,
+.switchDrc-false {
+    position: absolute;
+    width: 34px;
     display: flex;
-    align-items: center;
     justify-content: center;
 }
 
-.switch .false {
-    width: 80%;
-    height: 80%;
-    clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+.switchDrc-false {
+    right: 4px;
+}
+
+.switchDrc-true {
+    left: 4px;
+}
+
+.divider .line {
+    background: none;
+}
+
+.divider .title {
+    height: auto;
+}
+
+.divider .line {
+    background: #ffffffcc;
+    border-top: 2px solid;
+}
+
+.divider .square {
     background: #000000;
+}
+
+.divider p {
+    color: #000000;
 }

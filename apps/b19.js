@@ -14,7 +14,7 @@ import { LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
-import atlas from '../model/picmodle.js';
+import picmodle from '../model/picmodle.js';
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 

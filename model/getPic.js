@@ -1,4 +1,4 @@
-import atlas from "./picmodle.js"
+import picmodle from "./picmodle.js"
 import getInfo from "./getInfo.js"
 import { imgPath } from "./path.js"
 
@@ -15,7 +15,7 @@ export default new class pic {
         data = data || getInfo.info(name)
         if (data) {
             if (!data.illustration) { data.illustration = getInfo.getill(name) }
-            return await atlas.atlas(e, data)
+            return await picmodle.picmodle(e, data)
         } else {
             /**未找到曲目 */
             return `未找到${name}的相关曲目信息!QAQ`
@@ -31,14 +31,14 @@ export default new class pic {
      */
     async GetSongsIllAtlas(e, name, data = undefined) {
         if (data) {
-            return await atlas.ill(e, { illustration: data.illustration, illustrator: data.illustrator })
+            return await picmodle.ill(e, { illustration: data.illustration, illustrator: data.illustrator })
         } else {
-            return await atlas.ill(e, { illustration: getInfo.getill(name), illustrator: getInfo.info(name).illustrator })
+            return await picmodle.ill(e, { illustration: getInfo.getill(name), illustrator: getInfo.info(name).illustrator })
         }
     }
 
     async GetChap(e, data) {
-        return await atlas.chap(e, data)
+        return await picmodle.chap(e, data)
     }
 
     /**
