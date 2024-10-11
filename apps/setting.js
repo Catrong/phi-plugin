@@ -27,7 +27,7 @@ export class phihelp extends plugin {
     }
 
     async set(e) {
-        if (!e.isMaster){
+        if (!e.isMaster) {
             e.reply("无权限");
             return false;
         }
@@ -131,7 +131,7 @@ export class phihelp extends plugin {
         let plugin_data = await getNotes.getPluginData(e.user_id)
         e.reply(await picmodle.common(e, 'setting', {
             data,
-            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
             theme: plugin_data?.plugin_data?.theme || 'star'
         }))
     }
