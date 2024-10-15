@@ -31,7 +31,7 @@ class picmodle {
 
     /**曲目图鉴 */
     async picmodle(e, info) {
-        return await this.common(e, 'picmodle', {
+        return await this.common(e, 'atlas', {
             ...info,
             length: info.length.replace(':', "'") + "''",
         })
