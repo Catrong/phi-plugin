@@ -112,7 +112,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi get <名次>` | 获取排行榜上某一名次的sessionToken
 | `#phi del <sessionToken>` | 禁用某一sessionToken
 | `#phi allow <sessionToken>` | 恢复某一sessionToken
-| `#phi (set|设置)<功能><值>` | 修改设置，建议先/phi set查看功能名称，没有空格
+| `#phi (set\|设置)<功能><值>` | 修改设置，建议先/phi set查看功能名称，没有空格
 | `#phi ban <功能>` | 禁用某一类功能，详见下表
 
 ##### 功能参数说明
