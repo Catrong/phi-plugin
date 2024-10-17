@@ -252,7 +252,9 @@ body p {
     height: 100%;
 }
 
-.createdbox {padding: 38px;}
+.createdbox {
+    padding: 38px;
+}
 
 .phi-plugin p {
     font-size: 40px;

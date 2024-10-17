@@ -5,7 +5,22 @@ body {
 }
 
 .background img {
-    /* filter: blur(1px); */
+    filter: blur(3px) brightness(75%);
+}
+
+.big-title {
+    display: flex;
+    width: 100%;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+.big-title p {
+    font-size: 32px;
+    text-shadow: 0 0 20px rgb(0 186 255);
+    font-family: 'Aldrich', 'PHI';
+    color: white;
 }
 
 .box {
@@ -25,7 +40,7 @@ body {
     width: 100%;
     display: flex;
     background: #000000cc;
-    /* backdrop-filter: blur(10px); */
+    backdrop-filter: blur(10px);
     position: relative;
     display: flex;
     align-items: center;
@@ -45,15 +60,15 @@ body {
 }
 
 .title {
-    height: 33px;
+    height: 24px;
 }
 
 .title p {
-    font-size: 26px;
+    font-size: 20px;
 }
 
 .info p {
-    font-size: 10px;
+    font-size: 11px;
     color: #e2e2e2;
 }
 
@@ -135,7 +150,7 @@ body {
 
 .divider .line {
     background: #ffffffcc;
-    border-top: 2px solid;
+    /* border-top: 2px solid; */
 }
 
 .divider .square {
@@ -144,4 +159,12 @@ body {
 
 .divider p {
     color: #000000;
+}
+
+.phi-plugin p {
+    font-size: 30px;
+}
+
+.ver p {
+    font-size: 20px;
 }

@@ -17,6 +17,9 @@
     {{/if}}
     {{/if}}
 </div>
+<div class="big-title">
+    <p>Phi-Plugin 控制面板</p>
+</div>
 <div class="box">
     {{each data as value}}
     <div class="lineBox{{value.type == "divider"?" divider":''}}">
@@ -57,5 +60,13 @@
         </div>
     </div>
     {{/each}}
+</div>
+<div class="createdbox">
+    <div class="phi-plugin">
+        <p>{{_plugin}}</p>
+    </div>
+    <div class="ver">
+        <p>{{Version.ver}}</p>
+    </div>
 </div>
 {{/block}}
