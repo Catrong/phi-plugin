@@ -1,6 +1,10 @@
 <div align="center">
 
-# <img src="https://github.com/Catrong/phi-plugin/assets/117198625/3d952c50-80b5-4031-9104-666027fbddcb" width="80%">
+<a href="/">
+<picture>
+  <source srcset="https://github.com/user-attachments/assets/b9dd395d-b983-4532-a6b1-12abfaba5cea" type="image/avif" width="80%" />  
+  <img src="https://github.com/Catrong/phi-plugin/assets/117198625/3d952c50-80b5-4031-9104-666027fbddcb" width="80%">
+  <picture/>
 
 [![phi-plugin](https://img.shields.io/badge/GitHub_repository-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
 [![phi-plugin](https://img.shields.io/badge/GitHub_repository-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
@@ -9,6 +13,7 @@
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/TimeRainStarSky/Yunzai)
 [![QQGuild](https://img.shields.io/badge/QQGuild-Hutao114Pgr939-9cf?style=for-the-badge&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
+[![QQGuild](https://img.shields.io/badge/Discord-9cf?style=for-the-badge&logo=discord)](https://discord.gg/KJ8Bs8XTyf)
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Stars)](../../stargazers)
 
@@ -178,6 +183,10 @@ Renderings from[@Eastown](https://space.bilibili.com/171389567)
 <img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432" width="50%">
 
 Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)
+
+|Best19 rendering<br><picture><source srcset="https://github.com/user-attachments/assets/63f5e474-c30a-4d66-8d10-402016bad61d" type="image/avif" width="80%" /><img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242" width="80%" /></picture><br>Renderings from[@Steve~](https://github.com/S-t-e-v-e-e) | Single song score info rendering<br><picture><source srcset="https://github.com/user-attachments/assets/8c723d88-2729-4f5e-baf7-644f5fdf9001" type="image/avif" width="60%" /><img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="60%"></picture><br>Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)<br><br>Single song score info rendering(Legacy)<br><picture><source srcset="https://github.com/user-attachments/assets/83296c38-2181-479f-ad26-dfb2e09bccf8" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="60%"></picture><br>Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)<br><br>Single song information rendering<br><picture><source srcset="https://github.com/user-attachments/assets/e332c88d-ecd0-49e7-aa6b-310645f14a5a" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="60%"></picture> |
+|:-------------------:|:------------------------:|
+|Range Score Info rendering<br><picture><source srcset="https://github.com/user-attachments/assets/b1a4ff41-d26b-4ccc-942d-087797ff02b3" type="image/avif" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65"></picture><br>效果图来自Renderings from[@Eastown](https://space.bilibili.com/171389567) <br><br>User information rendering<br><picture><source srcset="https://github.com/user-attachments/assets/1361b1e9-510f-4140-a87d-a74b2ee70337" type="image/avif" /><img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432"></picture><br>Renderings from[@Steve~](https://github.com/S-t-e-v-e-e)|User information rendering(Legacy)<br><picture><source srcset="https://github.com/user-attachments/assets/c876119b-d98f-4751-85ba-675e6f2ba55f" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%"></picture><br>Renderings from[@Eastown](https://space.bilibili.com/171389567)|
 
 ---
 
