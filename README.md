@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%">
+  <picture>
+    <source srcset="https://github.com/user-attachments/assets/c18cd28c-220e-445d-9001-3f7a8f25ac51" type="image/avif" width="80%" />
+    <img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%" />
+</picture>
 
 [![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
 [![phi-plugin](https://img.shields.io/badge/Gitee仓库-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
@@ -112,7 +115,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi get <名次>` | 获取排行榜上某一名次的sessionToken
 | `#phi del <sessionToken>` | 禁用某一sessionToken
 | `#phi allow <sessionToken>` | 恢复某一sessionToken
-| `#phi (set|设置)<功能><值>` | 修改设置，建议先/phi set查看功能名称，没有空格
+| `#phi (set\|设置)<功能><值>` | 修改设置，建议先/phi set查看功能名称，没有空格
 | `#phi ban <功能>` | 禁用某一类功能，详见下表
 
 ##### 功能参数说明
@@ -171,9 +174,9 @@ pnpm install -P #安装插件所需依赖
 
 ### 预览
 
-|Best19效果图<br><img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242"><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e) | 单曲成绩效果图<br><img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="60%"><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>单曲成绩效果图（Legacy）<br><img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="60%"><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>单曲图鉴效果图<br><img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="60%"> |
+|Best19效果图<br><picture><source srcset="https://github.com/user-attachments/assets/63f5e474-c30a-4d66-8d10-402016bad61d" type="image/avif" width="80%" /><img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242" width="80%" /></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e) | 单曲成绩效果图<br><picture><source srcset="https://github.com/user-attachments/assets/8c723d88-2729-4f5e-baf7-644f5fdf9001" type="image/avif" width="60%" /><img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="60%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>单曲成绩效果图（Legacy）<br><picture><source srcset="https://github.com/user-attachments/assets/83296c38-2181-479f-ad26-dfb2e09bccf8" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="60%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>单曲图鉴效果图<br><img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="60%"> |
 |:-------------------:|:------------------------:|
-| 范围成绩效果图<br><img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65"><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567) <br><br>个人信息效果图<br><img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432"><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)| 个人信息效果图（Legacy）<br> <img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%"><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567)|
+| 范围成绩效果图<br><picture><source srcset="https://github.com/user-attachments/assets/b1a4ff41-d26b-4ccc-942d-087797ff02b3" type="image/avif" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65"></picture><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567) <br><br>个人信息效果图<br><picture><source srcset="https://github.com/user-attachments/assets/1361b1e9-510f-4140-a87d-a74b2ee70337" type="image/avif" /><img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)| 个人信息效果图（Legacy）<br><source srcset="https://github.com/user-attachments/assets/c876119b-d98f-4751-85ba-675e6f2ba55f" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%"></picture><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567)|
 
 
 
