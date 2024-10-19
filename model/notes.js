@@ -59,4 +59,4 @@ for (let i in files) {
 
 console.info(ans)
 
-readFile.SetFile("./chart.json", ans)
+readFile.SetFile("../resources/info/notesInfo.json", ans)
