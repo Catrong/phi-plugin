@@ -75,7 +75,8 @@ class Config {
      * |'GuessTipsAnsTime'
      * |'TapTapLoginQRcode'
      * |'listScoreMaxNum'
-     * |'onLinePhiIllUrl' } style key值
+     * |'onLinePhiIllUrl'
+     * |'autoPullPhiIll' } style key值
     */
     getUserCfg(name, style) {
         let def = this.getdefSet(name)

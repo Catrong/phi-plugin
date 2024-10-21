@@ -180,6 +180,12 @@ export function supportGuoba() {
                     component: 'Divider'
                 },
                 {
+                    field: 'autoPullPhiIll',
+                    label: '自动更新曲绘',
+                    bottomHelpMessage: '开启后手动更新插件时自动更新曲绘文件',
+                    component: 'Switch',
+                },
+                {
                     field: 'isGuild',
                     label: '频道模式',
                     bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息',

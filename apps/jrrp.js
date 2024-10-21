@@ -65,7 +65,7 @@ export class phihelp extends plugin {
                     common.splice(id - bad.length, 1)
                 }
             }
-            /**有效期到第二天凌晨0点 */
+            /**有效期到第二天8点 */
             redis.set(`${redisPath}:jrrp:${e.user_id}`, JSON.stringify(jrrp), { PX: 86400000 - (new Date() % 86400000)})
         } else {
             jrrp = JSON.parse(jrrp)
