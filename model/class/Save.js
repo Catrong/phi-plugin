@@ -342,7 +342,7 @@ export default class Save {
             /**推分建议 */
             rkslist[i].suggest = fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
             if (rkslist[i].suggest.includes('无') &&(phi?.rks && rkslist[i].rks > phi?.rks)) {
-                rkslist[i].suggest = "100.0000%"
+                rkslist[i].suggest = "100.00%"
             }
             /**曲绘 */
             rkslist[i].illustration = getInfo.getill(rkslist[i].song, 'common')
