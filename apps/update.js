@@ -5,6 +5,7 @@ import { Restart } from '../../other/restart.js'
 import Config from "../components/Config.js";
 import common from "../../../lib/common/common.js";
 import getInfo from "../model/getInfo.js";
+import fs from 'node:fs';
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
