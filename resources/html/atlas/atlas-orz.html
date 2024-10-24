@@ -12,10 +12,10 @@
             <div class="info-box">
                 <div class="name-box">
                     <div class="song">
-                        <p id="song-name">{{song}}</p>
+                        <p name="pvis">{{song}}</p>
                     </div>
                     <div class="composer">
-                        <p>{{composer}}</p>
+                        <p name="pvis">{{composer}}</p>
                     </div>
                 </div>
                 <div class="charts-box">
@@ -45,22 +45,27 @@
                             <p>IN</p>
                             <p>AT</p>
                         </div>
+                        <div class="note-box">
+                            <p>Difficulty</p>
+                            <p>14.0</p>
+                            <p>14.0</p>
+                            <p>14.0</p>
+                            <p>14.0</p>
+                        </div>
                         <div class="rank-box">
                             <div class="charter">
                                 <p>Charter</p>
                             </div>
                             <div class="chart-info">
-                                <p>Difficulty</p>
                                 <p>Tap</p>
                                 <p>Drag</p>
                                 <p>Hold</p>
                                 <p>Flicke</p>
                             </div>
                             <div class="charter">
-                                <p>Barbarianerman & NerSAN in the ICU</p>
+                                <p name="pvis">Barbarianerman, Main theme within the somnium</p>
                             </div>
                             <div class="chart-info">
-                                <p>14.0</p>
                                 <p>1000</p>
                                 <p>1000</p>
                                 <p>1000</p>
@@ -70,7 +75,6 @@
                                 <p>Barbarianerman & NerSAN in the ICU</p>
                             </div>
                             <div class="chart-info">
-                                <p>14.0</p>
                                 <p>1000</p>
                                 <p>1000</p>
                                 <p>1000</p>
@@ -80,7 +84,6 @@
                                 <p>Barbarianerman & NerSAN in the ICU</p>
                             </div>
                             <div class="chart-info">
-                                <p>14.0</p>
                                 <p>1000</p>
                                 <p>1000</p>
                                 <p>1000</p>
@@ -90,7 +93,6 @@
                                 <p>Barbarianerman & NerSAN in the ICU</p>
                             </div>
                             <div class="chart-info">
-                                <p>14.0</p>
                                 <p>1000</p>
                                 <p>1000</p>
                                 <p>1000</p>
@@ -114,18 +116,18 @@
         <div class="other-info">
             <div class="other-box">
                 <div class="title">
-                    <p>Illustrator</p>
-                </div>
-                <div class="dcr">
-                    <p>李化禹</p>
-                </div>
-            </div>
-            <div class="other-box">
-                <div class="title">
                     <p>BPM</p>
                 </div>
                 <div class="dcr">
                     <p>180</p>
+                </div>
+            </div>
+            <div class="other-box">
+                <div class="title">
+                    <p>Illustrator</p>
+                </div>
+                <div class="dcr">
+                    <p>李化禹</p>
                 </div>
             </div>
             <div class="other-box">
@@ -140,24 +142,24 @@
         <div class="leave">
             <div class="leave-box">
                 <div class="leave-ez">
-                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                    <p name="pvis" style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p name="pvis" style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
                 </div>
                 <div class="leave-hd">
-                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                    <p name="pvis" style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p name="pvis" style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
                 </div>
                 <div class="leave-in">
-                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                    <p name="pvis" style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p name="pvis" style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
                 </div>
                 <div class="leave-at">
-                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                    <p name="pvis" style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p name="pvis" style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
                 </div>
                 <div class="leave-sp" style="background-color: rgb(0, 255, 149);">
-                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                    <p name="pvis" style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p name="pvis" style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
                 </div>
             </div>
         </div>
@@ -174,32 +176,32 @@
     <!-- 曲目名称自适应name-box的宽度 -->
     <script>
         function adjustFontSize() {
+            //获取p元素
+            var a = document.getElementsByName('pvis')
+            for (var i = 0; i < a.length; ++i) {
 
-            /**
-             * @param {string} id id
-             * @param {number} maxFontSize 最大字体大小
-             */
-            function work(id, maxFontSize = 50) {
+                const songName = a[i]
 
-                //获取song-name和composer滴元素
-                var songName = document.getElementById(id)
+                if (!songName) continue
+
 
                 /*调整曲目名称字体大小*/
                 var parentElement = songName.parentElement
 
+                // var maxFontSize = 100 //设置最大字体大小
 
-                //如果字体宽度小于父元素宽度，则增大字体大小
-                while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
-                    var fontSize = parseFloat(style)
+                // //如果字体宽度小于父元素宽度，则增大字体大小
+                // while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
+                //     var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                //     var fontSize = parseFloat(style)
 
-                    //检查是否已经达到最大字体大小
-                    if (fontSize >= maxFontSize) {
-                        break
-                    }
+                //     //检查是否已经达到最大字体大小
+                //     if (fontSize >= maxFontSize) {
+                //         break
+                //     }
 
-                    songName.style.fontSize = (fontSize + 1) + "px"
-                }
+                //     songName.style.fontSize = (fontSize + 1) + "px"
+                // }
 
                 // 如果字体宽度大于父元素宽度，则减小字体大小
                 while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
@@ -208,14 +210,8 @@
                     songName.style.fontSize = (fontSize - 1) + "px";
                 }
             }
-
-            work('song-name')
-            work('song-info', 25)
-            work('other-info', 25)
-
         }
         window.onload = adjustFontSize
         window.onresize = adjustFontSize
     </script>
-
 </body>

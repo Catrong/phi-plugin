@@ -23,7 +23,7 @@
                 </div>
                 <div class="charts-box">
                     <div class="length">
-                        <p>{{length}}</p>
+                        <p name="pvis">{{length}}</p>
                     </div>
                     <div class="txt">
                         <div class="sqrt">
@@ -48,12 +48,17 @@
                             <p>{{$index}}</p>
                             {{/each}}
                         </div>
+                        <div class="note-box">
+                            <p>Difficulty</p>
+                            {{each chart}}
+                            <p>{{$value.difficulty}}</p>
+                            {{/each}}
+                        </div>
                         <div class="rank-box">
                             <div class="charter">
                                 <p>Charter</p>
                             </div>
                             <div class="chart-info"> 
-                                <p>Difficulty</p>
                                 <p>Tap</p>
                                 <p>Drag</p>
                                 <p>Hold</p>
@@ -61,10 +66,9 @@
                             </div>
                             {{each chart}}
                             <div class="charter">
-                                <p>{{$value.charter}}</p>
+                                <p name="pvis">{{$value.charter}}</p>
                             </div>
                             <div class="chart-info">
-                                <p>{{$value.difficulty}}</p>
                                 <p>{{$value.tap}}</p>
                                 <p>{{$value.drag}}</p>
                                 <p>{{$value.hold}}</p>
@@ -88,18 +92,18 @@
         <div class="other-info">
             <div class="other-box">
                 <div class="title">
-                    <p>Illustrator</p>
-                </div>
-                <div class="dcr">
-                    <p>{{illustrator}}</p>
-                </div>
-            </div>
-            <div class="other-box">
-                <div class="title">
                     <p>BPM</p>
                 </div>
                 <div class="dcr">
                     <p>{{bpm}}</p>
+                </div>
+            </div>
+            <div class="other-box">
+                <div class="title">
+                    <p>Illustrator</p>
+                </div>
+                <div class="dcr">
+                    <p>{{illustrator}}</p>
                 </div>
             </div>
             <div class="other-box">
@@ -128,8 +132,8 @@
                 {{else}}
                 <div class="leave-sp" style="background-color: rgba({{$value.rgba}});">
                 {{/if}}
-                    <p style="margin-left: 3px;">{{$value.difficulty}}</p>
-                    <p style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                    <p name="pvis" style="margin-left: 3px;">{{$value.difficulty}}</p>
+                    <p name="pvis" style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
                 </div>
 
             {{/each}}
