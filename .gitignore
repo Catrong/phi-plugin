@@ -25,6 +25,7 @@ tem.js
 lain.support.js
 
 # 忽略特定目录和文件
+tem/
 chart/
 plugin-ill/
 

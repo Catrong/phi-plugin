@@ -244,20 +244,20 @@ body {
     align-items: center;
 }
 
+.chart-info :nth-child(1) {
+    color: var(--tap);
+}
+
 .chart-info :nth-child(2) {
-    color: skyblue;
+    color: var(--drag);
 }
 
 .chart-info :nth-child(3) {
-    color: gold;
+    color: var(--hold);
 }
 
 .chart-info :nth-child(4) {
-    color: skyblue;
-}
-
-.chart-info :nth-child(5) {
-    color: pink;
+    color: var(--flicke);
 }
 
 .note-box {
