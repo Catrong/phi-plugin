@@ -59,10 +59,16 @@ export class phihelp extends plugin {
                     case 'Switch':
                         switch (value) {
                             case 'true':
+                            case 'ON':
+                            case 'on':
+                            case '开启':
                             case '开':
                                 Config.modify('config', schema.field, true)
                                 break;
                             case 'false':
+                            case 'OFF':
+                            case 'off':
+                            case '关闭':
                             case '关':
                                 Config.modify('config', schema.field, false)
                                 break;
