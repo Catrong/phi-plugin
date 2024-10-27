@@ -60,7 +60,7 @@ export class phiupdate extends plugin {
         var ifrestart = await this.runUpdate(isForce);
 
         if (Config.getUserCfg('config', 'autoPullPhiIll')) {
-            this.ill_runUpdate()
+            this.ill_update()
         }
 
 
