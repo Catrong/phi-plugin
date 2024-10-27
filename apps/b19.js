@@ -14,7 +14,6 @@ import { LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
-import picmodle from '../model/picmodle.js';
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
@@ -71,6 +70,9 @@ const chap = {
     TAKUMI: "Chapter EX-TAKUMI³精选集",
     塔库米: "Chapter EX-TAKUMI³精选集",
     三次方: "Chapter EX-TAKUMI³精选集",
+    节奏大师: "Chapter EX-节奏大师精选集",
+    齐秦太帅: "Chapter EX-节奏大师精选集",
+    jzds: "Chapter EX-节奏大师精选集",
 }
 
 export class phib19 extends plugin {
