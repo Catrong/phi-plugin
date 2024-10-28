@@ -80,7 +80,7 @@ export class phiset extends plugin {
         }
         try {
             let zip = await getBackup.backup()
-            send.send_with_At(e, `${zip.replace(".zip", '')} 成功备份到 ./backup 目录下`)
+            send.send_with_At(e, `${zip.zipName.replace(".zip", '')} 成功备份到 ./backup 目录下`)
             if (e.msg.replace(/^[#/].*backup/, '').includes('back')) {
                 fCompute.sendFile(e, await zip.zip.generateAsync({ type: 'nodebuffer' }), zip.zipName)
             }
