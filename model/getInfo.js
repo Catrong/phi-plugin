@@ -425,8 +425,7 @@ export default new class getInfo {
         let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans)) {
             ans = path.join(ortherIllPath, ans)
-        }
-        if (this.ori_info[name]) {
+        } else if (this.ori_info[name]) {
             if (fs.existsSync(path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png')))) {
                 ans = path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png'))
             } else if (fs.existsSync(path.join(originalIllPath, "ill", this.SongGetId(name).replace(/.0$/, '.png')))) {
@@ -437,7 +436,13 @@ export default new class getInfo {
                 } else if (kind == 'low') {
                     ans = path.join(originalIllPath, "illLow", this.SongGetId(name).replace(/.0$/, '.png'))
                 }
-            } else if (!ans) {
+            }
+            try {
+                fs.accessSync(ans)
+            } catch (e) {
+                ans = null
+            }
+            if (!ans) {
                 if (kind == 'common') {
                     ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
                 } else if (kind == 'blur') {
