@@ -215,6 +215,9 @@ export default new class compute {
     /**是否是管理员 */
     is_admin(e) {
         //console.info(e)
+        if (e?.member?.is_admin) {
+            return true;
+        }
         if (!e?.member?.permissions) {
             return false;
         }
