@@ -470,7 +470,7 @@ export class phib19 extends plugin {
 
         rkslist = rkslist.sort(cmp())
         /**b19最低rks */
-        let minrks = rkslist[Math.min(18, rkslist.length)]
+        let minrks = rkslist[Math.min(18, rkslist.length - 1)]
         let userrks = save.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则 */
         let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
