@@ -92,6 +92,10 @@ export class phib19 extends plugin {
                     fnc: 'arcgrosB19'
                 },
                 {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)lmtacc.*$`,
+                    fnc: 'lmtAcc'
+                },
+                {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
                     fnc: 'bestn'
                 },
@@ -257,6 +261,46 @@ export class phib19 extends plugin {
         }
 
         send.send_with_At(e, await altas.arcgros_b19(e, data))
+    }
+
+    /**限制最低acc后的rks */
+    async lmtAcc(e) {
+        if (await getBanGroup.get(e.group_id, 'lmtAcc')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return false
+        }
+
+        let acc = Number(e.msg.replace(/^.*lmtacc\s*/g, ''))
+
+        if(!acc || acc < 0 || acc > 100) {
+            send.send_with_At(e, `我听不懂 ${e.msg.replace(/^.*lmtacc\s*/g, '')} 是多少喵！请指定一个0-100的数字喵！\n格式：/${Config.getUserCfg('config', 'cmdhead')} lmtAcc <0-100>`)
+            return false
+        }
+
+        let record = save.findAccRecord(acc)
+
+        let phi = save.findAccRecord(100, true)
+        
+        let ans = 0
+
+        if (phi) {
+            ans += phi[0].rks
+        }
+
+        for (let i in record) {
+            if(i == 19) break
+            ans += record[i].rks
+        }
+
+        ans /= 20
+
+        send.send_with_At(e, `acc: ${acc}%\nRKS: ${ans}`)
+
     }
 
     /**获取bestn文字版 */

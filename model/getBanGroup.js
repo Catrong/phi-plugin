@@ -53,6 +53,7 @@ export default new class getBanGroup {
                 return await this.redis(group, 'ranklist')
             case 'comrks':
             case 'tips':
+            case 'lmtAcc':
                 return await this.redis(group, 'fnc')
             case 'tipgame':
                 return await this.redis(group, 'tipgame')

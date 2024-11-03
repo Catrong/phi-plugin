@@ -79,6 +79,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi (rks\|pgr\|b19)` | 查询rks，会提供得出的b21结果 
 | `杠批比三零` | 同上
 | `#phi info(1\|2)?` | 查询个人统计信息 
+| `#phi lmtacc [0-100]` | 计算限制最低 ACC 后的 RKS
 | `#phi (lvsco(re)\|scolv) <定数范围> <难度>` | 获取区间成绩 
 | `#phi chap <章节名称\|help>` | 获取章节成绩
 | `#phi list <定数范围> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩 
@@ -131,7 +132,7 @@ pnpm install -P #安装插件所需依赖
 | wb19 | 文字查分功能 | /data /best
 | song | 图鉴功能 | /song /ill /search /alias /rand
 | ranklist | 排行榜功能，不会禁用用户排名 | /ranklist /godlist
-| fnc | 小功能 | /com /tips
+| fnc | 小功能 | /com /tips /lmtacc
 | tipgame | tip猜歌 | /tipgame
 | guessgame | 猜歌 | /guess
 | ltrgame | 猜字母 | /letter /ltr

@@ -68,6 +68,11 @@
                 "desc": "B19 但是很长很长<br>eg: /b60"
             },
             {
+                "title": "/lmtacc",
+                "eg": "/lmtacc <0-100>",
+                "desc": "计算限制最低 ACC 后的 RKS <br>eg: /lmtacc 98.5"
+            },
+            {
                 "title": "/bestN",
                 "eg": "/best <1-99>",
                 "desc": "获取文字版 B<N> 成绩，私聊获取完整版，建议私聊使用<br>eg: /best 19"

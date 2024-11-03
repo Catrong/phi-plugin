@@ -73,6 +73,7 @@ pnpm install -P # Install the plugin dependencies
 | `#phi (update\|更新存档)` | Update save on the bot 
 | `#phi (rks\|pgr\|b19)` | Querying the rks (Get the resulting b21 results)
 | `#phi info(1\|2)?` | Get personal information 
+| `#phi lmtacc [0-100]` | Calculate the RKS after limiting the minimum ACC
 | `#phi (lvsco(re)\|scolv) <DIF range>` | Get comprehensive scores for different difficulty ranges
 | `#phi chap <章节名称\|help>` | Obtain the scores of all songs in any one chapter 
 | `#phi list <range of dif> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | Get scores of all thesongs which in different difficulty ranges
@@ -120,7 +121,7 @@ pnpm install -P # Install the plugin dependencies
 | wb19 | Text score lookup feature | /data /best
 | song | Song guide feature | /song /ill /search /alias /rand
 | ranklist | Leaderboard feature (does not disable user rankings) | /ranklist /godlist
-| fnc | Small features | /com /tips
+| fnc | Small features | /com /tips /lmtacc
 | tipgame | Tip guessing game | /tipgame
 | guessgame | Guessing game | /guess
 | ltrgame | Letter guessing game | /letter /ltr
