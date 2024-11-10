@@ -141,8 +141,7 @@ export default new class getInfo {
 
             this.ori_info[CsvInfo[i].song] = Jsoninfo[CsvInfo[i].id]
             if (!this.ori_info[CsvInfo[i].song]) {
-                /**illustration_big = 'null'为特殊标记，getill时会返回默认图片 */
-                this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, illustration_big: 'null', chapter: '', bpm: '', length: '', chart: {} }
+                this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, chapter: '', bpm: '', length: '', chart: {} }
                 logger.mark(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
             }
             this.ori_info[CsvInfo[i].song].song = CsvInfo[i].song

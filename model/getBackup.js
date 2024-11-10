@@ -5,6 +5,7 @@ import getFile from "./getFile.js";
 import { backupPath, pluginDataPath, savePath, dataPath } from "./path.js";
 import saveHistory from "./class/saveHistory.js";
 import getSave from "./getSave.js";
+import { redisPath } from "./constNum.js";
 
 export default new class getBackup {
 
@@ -34,8 +35,16 @@ export default new class getBackup {
                 zip.folder('pluginData').file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
             }
         });
-        /**data目录下user_token */
-        // zip.file('user_token.json', fs.readFileSync(path.join(dataPath, 'user_token.json')));
+        /**提取redis中user_id数据 */
+        let user_token = {}
+        let keys = await redis.keys(`${redisPath}:userToken:*`)
+        for (let key of keys) {
+            let user_id = key.split(':')[2]
+            user_token[user_id] = await redis.get(key)
+        }
+        console.info(user_token)
+        zip.file('user_token.json', JSON.stringify(user_token))
+        /**压缩 */
         let zipName = `${(new Date()).toISOString().replace(/[\:\.]/g, '-')}.zip`
         if (!fs.existsSync(backupPath)) {
             // 递归创建目录
@@ -55,7 +64,7 @@ export default new class getBackup {
     }
 
     /**
-     * 
+     * 从zip中恢复
      * @param {path} zipPath 
      */
     async restore(zipPath) {
@@ -99,13 +108,12 @@ export default new class getBackup {
             })
         } catch (e) { }
         try {
-            /**绑定数据 */
+            /**user_id->tk */
             zip.file('user_token.json').async('string').then((data) => {
                 let now = JSON.parse(data)
-                let old = getSave.user_token
-                now = { ...old, ...now }
-                getSave.user_token = now
-                getSave.save_user_token()
+                for (let user_id in now) {
+                    redis.set(`${redisPath}:userToken:${user_id}`, now[user_id])
+                }
             })
         } catch (e) { }
     }
