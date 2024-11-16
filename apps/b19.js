@@ -277,7 +277,7 @@ export class phib19 extends plugin {
 
         let acc = Number(e.msg.replace(/^.*lmtacc\s*/g, ''))
 
-        if(!acc || acc < 0 || acc > 100) {
+        if (!acc || acc < 0 || acc > 100) {
             send.send_with_At(e, `我听不懂 ${e.msg.replace(/^.*lmtacc\s*/g, '')} 是多少喵！请指定一个0-100的数字喵！\n格式：/${Config.getUserCfg('config', 'cmdhead')} lmtAcc <0-100>`)
             return false
         }
@@ -285,7 +285,7 @@ export class phib19 extends plugin {
         let record = save.findAccRecord(acc)
 
         let phi = save.findAccRecord(100, true)
-        
+
         let ans = 0
 
         if (phi) {
@@ -293,7 +293,7 @@ export class phib19 extends plugin {
         }
 
         for (let i in record) {
-            if(i == 19) break
+            if (i == 19) break
             ans += record[i].rks
         }
 
@@ -717,7 +717,6 @@ export class phib19 extends plugin {
         }
 
         let song_box = {}
-        let history = await getSave.getHistory(e.user_id)
 
         /**统计各评分出现次数 */
         let count = {
@@ -753,39 +752,29 @@ export class phib19 extends plugin {
             if (getInfo.ori_info[song].chapter == chap[msg] || msg == 'ALL') {
                 song_box[song] = { illustration: getInfo.getill(song), chart: {} }
                 let id = getInfo.idssong[song]
-                let Record1 = save.getSongsRecord(id)
-                let Record2 = await history.getSongsLastRecord(id)
+                /**曲目成绩对象 */
+                let songRecord = save.getSongsRecord(id)
                 let info = getInfo.info(song, true)
                 for (let level in info.chart) {
                     let i = LevelNum[level]
                     /**跳过旧谱 */
                     if (!level) continue
-                    let Record = {}
-                    if (Record1[i]) {
-                        Record1[i].date = save.saveInfo.modifiedAt.iso
-                        if (Record2[level]) {
-                            /**取最早 */
-                            if (comRecord(Record1, Record2)) {
-                                Record = Record1[i].date < Record2[level].date ? Record1[i] : Record2[level]
-                            } else {
-                                Record = Record1[i].date > Record2[level].date ? Record1[i] : Record2[level]
-                            }
-                        }
-                    }
+                    let Record = songRecord[i]
                     song_box[song].chart[level] = {
                         difficulty: info.chart[level].difficulty,
-                        score: Record.score || null,
-                        Rating: Record.Rating || 'NEW',
-                        acc: Record.acc ? Number(Record.acc).toFixed(4) : null,
-                        rks: Record.rks ? Number(Record.rks).toFixed(4) : null,
-                        fc: Record1.fc || null,
-                        date: date_to_string(Record.date) || null,
-                        suggest: fCompute.suggest(Record.rks, info.chart[level].difficulty, 4) || null
+                        Rating: Record?.Rating || 'NEW',
+                        suggest: save.getSuggest(id, i, 4, info.chart[level].difficulty)
+                    }
+                    if (Record) {
+                        song_box[song].chart[level].score = Record.score
+                        song_box[song].chart[level].acc = Record.acc.toFixed(4)
+                        song_box[song].chart[level].rks = Record.rks.toFixed(4)
+                        song_box[song].chart[level].fc = Record.fc
                     }
                     ++count.tot
-                    if (Record.Rating) {
+                    if (Record?.Rating) {
                         ++count[Record.Rating]
-                        rankAcc[level] += Number(Record.acc)
+                        rankAcc[level] += Number(Record.acc || 0)
                     } else {
                         ++count.NEW
                     }

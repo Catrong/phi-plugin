@@ -147,13 +147,17 @@ body p {
     align-items: center;
     flex-direction: row;
     justify-content: flex-start;
-    margin-left: -40px;
-    padding-left: 30px;
+    padding-left: 40px;
     position: relative;
 }
 
 .rating {
     height: 100%;
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    filter: drop-shadow(0px 0px 2px #fff);
 }
 
 .rating img {
@@ -168,7 +172,7 @@ body p {
 .date {
     font-size: 28px;
     white-space: nowrap;
-    margin-left: 5px;
+    margin-left: 20px;
 }
 
 .suggest {
@@ -181,18 +185,22 @@ body p {
 
 .EZ {
     background: -webkit-linear-gradient(left, var(--EZ), #ffffff00);
+    margin-left: -50px;
 }
 
 .HD {
     background: -webkit-linear-gradient(left, var(--HD), #ffffff00);
+    margin-left: -60px;
 }
 
 .IN {
     background: -webkit-linear-gradient(left, var(--IN), #ffffff00);
+    margin-left: -70px;
 }
 
 .AT {
     background: -webkit-linear-gradient(left, var(--AT), #ffffff00);
+    margin-left: -80px;
 }
 
 .progress {
@@ -258,7 +266,7 @@ body p {
 .progress p {
     color: white;
     width: 0;
-    text-shadow: 0 0 2px black;
+    text-shadow: 0 0 3px #ffffff;
 }
 
 .score-bar {

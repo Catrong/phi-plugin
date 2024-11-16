@@ -140,14 +140,14 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    field: 'listScoreMaxNum',
-                    label: '/list 最大数量',
-                    bottomHelpMessage: '/list 最大渲染成绩数量，建议为3的倍数',
+                    field: 'HistoryScoreDate',
+                    label: '历史成绩展示天数',
+                    bottomHelpMessage: '/update 展现历史成绩的最大天数',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
-                        min: 3,
-                        max: 10000,
+                        min: 1,
+                        max: 100,
                         placeholder: '请输入最大限制',
                     },
                 },
@@ -164,14 +164,14 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    field: 'HistoryScoreDate',
-                    label: '历史成绩展示天数',
-                    bottomHelpMessage: '/update 展现历史成绩的最大天数',
+                    field: 'listScoreMaxNum',
+                    label: '/list 最大数量',
+                    bottomHelpMessage: '/list 最大渲染成绩数量，建议为3的倍数',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
-                        min: 1,
-                        max: 100,
+                        min: 3,
+                        max: 10000,
                         placeholder: '请输入最大限制',
                     },
                 },
@@ -188,7 +188,7 @@ export function supportGuoba() {
                 {
                     field: 'isGuild',
                     label: '频道模式',
-                    bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息',
+                    bottomHelpMessage: '开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为长消息',
                     component: 'Switch',
                 },
                 {
@@ -271,7 +271,7 @@ export function supportGuoba() {
                 {
                     field: 'LetterNum',
                     label: '字母条数',
-                    bottomHelpMessage: '开字母的条数，最大为99999最小为1',
+                    bottomHelpMessage: '开字母的条数',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
@@ -330,8 +330,8 @@ export function supportGuoba() {
                 },
                 {
                     field: 'LetterTipCd',
-                    label: '字母猜测间隔',
-                    bottomHelpMessage: '开字母的全局猜测间隔时间，单位：秒',
+                    label: '字母提示间隔',
+                    bottomHelpMessage: '开字母的全局提示间隔时间，单位：秒',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
@@ -374,7 +374,7 @@ export function supportGuoba() {
                 {
                     field: 'GuessTipsTipNum',
                     label: '提示条数',
-                    bottomHelpMessage: '提示猜歌的提示条数（除曲绘外），若总提示条数小于17条则将会发送全部提示',
+                    bottomHelpMessage: '提示猜歌的提示条数（除曲绘外），若总提示条数小于设定条数则将会发送全部提示',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
@@ -403,7 +403,7 @@ export function supportGuoba() {
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
-                        min: 30,
+                        min: 5,
                         max: 600,
                         placeholder: '请输入时间',
                         addonAfter: "s"

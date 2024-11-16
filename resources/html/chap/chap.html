@@ -38,12 +38,13 @@
                             <img src="{{_imgPath}}/{{chart.Rating}}.png" alt="{{chart.Rating}}">
                         </div>
                         <div class="dif">{{chart.difficulty}}</div>
-                        {{if chart.acc && num <= 6}}
+                        {{if chart.acc && num <= 12}}
                         <div class="score">{{chart.score}}</div>
                         <div class="acc">{{chart.acc}}%</div>
+                        {{if num <= 6}}
                         <div class="rks">= {{chart.rks}}</div>
                         <div class="suggest">>> {{chart.suggest}}</div>
-                        <div class="date">at {{chart.date}}</div>
+                        {{/if}}
                         {{/if}}
                     </div>
                     {{/each}}

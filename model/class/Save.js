@@ -370,8 +370,13 @@ export default class Save {
             this.b0_rks = this.findAccRecord(100, true)[0]?.rks
         }
         // console.info(this.b19_rks, this.gameRecord[id][lv]?.rks ? this.gameRecord[id][lv].rks : 0, this.gameRecord[id])
-        let suggest = fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv]?.rks ? this.gameRecord[id][lv].rks : 0) + this.minUpRks() * 20, difficulty, count)
-        return suggest.includes('无') ? (difficulty > this.b0_rks ? Number(100).toFixed(count) + '%' : suggest) : suggest
+        let suggest = ''
+        if (!this.gameRecord[id] || !this.gameRecord[id][lv]) {
+            suggest = fCompute.suggest(Math.max(this.b19_rks, 0) + this.minUpRks() * 20, difficulty, count)
+        } else {
+            suggest = fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks) + this.minUpRks() * 20, difficulty, count)
+        }
+        return suggest.includes('无') ? (difficulty > this.b0_rks + this.minUpRks() * 20 ? Number(100).toFixed(count) + '%' : suggest) : suggest
     }
 
     /**
