@@ -701,16 +701,17 @@ export class phib19 extends plugin {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
+        let msg = e.msg.replace(/^[#/].*chap\s*/, '').toUpperCase()
+        if (msg == 'HELP' || !msg) {
+            send.send_with_At(e, getPic.getimg('chapHelp'))
+            return true
+        }
 
         let save = await send.getsave_result(e)
         if (!save) {
             return false
         }
-        let msg = e.msg.replace(/^[#/].*chap\s*/, '').toUpperCase()
-        if (msg == 'HELP') {
-            send.send_with_At(e, getPic.getimg('chapHelp'))
-            return true
-        }
+        
         if (msg != 'ALL' && !chap[msg]) {
             send.send_with_At(e, `未找到${msg}章节QAQ！可以使用 /${Config.getUserCfg('config', 'cmdhead')} chap help 来查询支持的名称嗷！`)
             return false
