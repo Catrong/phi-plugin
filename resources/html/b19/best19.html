@@ -73,7 +73,7 @@
                     </div>
                     <div class="songinfo">
                         <div class="Rating">
-                            <img src="./res/phi.png" alt="Rating">
+                            <img src="../otherimg/phi.png" alt="Rating">
                         </div>
                         <div class="chengji">
                             <div class="score">
@@ -526,24 +526,9 @@
             <p>v0.9.4</p>
         </div>
     </div>
-    <div class="snow-box">
-    </div>
 
     <!-- 曲目名称自适应name-box的宽度 -->
     <script>
-        function addSnow() {
-            var snow = document.createElement("div")
-            snow.innerHTML = `<img src="../otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
-            snow.className = "snow"
-            snow.style.left = `${Math.random() * 100}%`
-            snow.style.bottom = `${Math.random() * 100}%`
-            snow.style.width = `${Math.random() * 4}%`
-            snow.style.rotate = `${Math.random() * 360}deg`
-            snow.style.transform = `rotate3d(${Math.random()}, ${Math.random()}, ${Math.random()}, ${Math.random() * 360}deg)`
-            snow.style.filter = `blur(${Math.random() * 2}px)`
-            const tar = document.getElementsByClassName("snow-box")[0]
-            tar.appendChild(snow)
-        }
         function adjustFontSize() {
             //获取p元素
             var a = document.getElementsByName('pvis')
@@ -580,13 +565,6 @@
                 }
             }
 
-            if (document.getElementsByClassName("snow-box")[0]) {
-                var sum = Math.floor(Math.random() * 100) + 50
-                while (sum--) {
-                    addSnow()
-                }
-
-            }
         }
         window.onload = adjustFontSize
         window.onresize = adjustFontSize

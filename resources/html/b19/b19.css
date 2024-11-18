@@ -23,7 +23,6 @@ body p {
 }
 
 .b19 {
-    writing-mode: horizontal-tb;
     display: flex;
     z-index: 1;
 }
@@ -38,7 +37,7 @@ body p {
 }
 
 .b19 .L {
-    display: flex;
+    /* display: flex; */
     width: 50%;
     flex-direction: column;
     align-items: center;
@@ -54,38 +53,34 @@ body p {
 .song {
     width: 90%;
     height: 100px;
-    display: flex;
+    /* display: flex; */
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
 }
 
 .song .ill-box {
     width: 50%;
     height: auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
     z-index: 1;
     filter: drop-shadow(2px 4px 10px #00000055);
     position: relative;
 }
 
 .num {
-    writing-mode: horizontal-tb;
-    width: 8%;
+    width: 10%;
     height: 16%;
     padding-left: 3.5%;
     padding-right: 4.5%;
     top: 4%;
-    left: 2%;
-    display: flex;
+    left: 1%;
     background-color: rgba(255, 255, 255, 1);
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
-    justify-content: center;
-    align-items: center;
     position: absolute;
+    text-align: center;
 }
 
 .num p {
@@ -96,17 +91,15 @@ body p {
 }
 
 .ill {
-    writing-mode: horizontal-tb;
     width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
+    /* height: 94.92px; */
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
     overflow: hidden;
 }
 
 .ill img {
     width: 100%;
+    display: block;
 }
 
 .rank-AT,
@@ -115,12 +108,8 @@ body p {
 .rank-EZ {
     width: 33%;
     height: 33%;
-    bottom: 0;
+    bottom: 0px;
     position: absolute;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
     margin-left: -13%;
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
 }
@@ -143,15 +132,14 @@ body p {
 
 .org,
 .rel {
-    display: flex;
     width: auto;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
 }
 
 .org {
     height: 35%;
-    margin-left: 10%;
+    margin-left: 5%;
+    margin-top: 2%;
 }
 
 .org p {
@@ -173,16 +161,15 @@ body p {
 .info-HD,
 .info-EZ {
     margin-left: -9.1%;
-    padding-left: 5%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
+    padding-left: 7%;
     border-right: 3px solid;
     width: 49%;
     height: 90%;
     filter: drop-shadow(2px 4px 10px #00000055);
     backdrop-filter: blur(3px);
+    position: absolute;
+    right: 4%;
+    top: 5%;
 }
 
 .info-AT {
@@ -200,9 +187,7 @@ body p {
 .songname {
     width: 95%;
     height: 25%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-left: 5%;
 }
 
 .songname p {
@@ -214,37 +199,32 @@ body p {
 .songinfo {
     width: 100%;
     height: 70%;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
+    text-align: center;
+    position: relative;
 }
 
 .Rating {
     width: 20%;
     height: auto;
-    display: flex;
+    position: absolute;
+    top: 30%;
 }
 
 .Rating img {
     width: 100%;
     filter: drop-shadow(0px 0px 10px #ffffffbb);
+    display: block;
 }
 
 .chengji {
     width: 80%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    margin-left: 20%;
 }
 
 .score {
     width: 100%;
-    height: 45%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: auto;
 }
 
 .score p {
@@ -254,17 +234,12 @@ body p {
 .acc-box {
     width: 100%;
     height: 45%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
 }
 
 .acc {
     width: auto;
     height: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    display: inline-block;
 }
 
 .acc p {
@@ -274,7 +249,8 @@ body p {
 .suggest {
     width: auto;
     height: 30%;
-    display: flex;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .suggest p {
@@ -298,6 +274,7 @@ body p {
     align-items: flex-start;
     justify-content: center;
     background-color: rgba(112, 112, 112, 0.4);
+    margin-left: 5%;
 }
 
 .border_corner {
