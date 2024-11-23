@@ -118,7 +118,7 @@ export default new class guessLetter {
         }
 
         // 输出提示信息
-        e.reply(`开字母开启成功！回复'/nX.XXXX'命令猜歌，例如：/n1.Reimei;发送'/open X'来揭开字母(不区分大小写)，如'/open A';发送'/ans'结束并查看答案哦！`)
+        e.reply(`开字母开启成功！回复'/nX.XXXX'命令猜歌，例如：/n1.Reimei;发送'/open X'来揭开字母(不区分大小写，不需要指令头)，如'/open A';发送'/${Config.getUserCfg('config','cmdhead')} ans'结束并查看答案哦！`)
 
         // 延时1s
         await timeout(1 * 1000)
@@ -390,9 +390,9 @@ export default new class guessLetter {
                     }
 
                     if (songs[1]) {
-                        e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/tip]哦≧ ﹏ ≦`, true)
+                        e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config','cmdhead')} tip]哦≧ ﹏ ≦`, true)
                     } else {
-                        e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/tip]哦≧ ﹏ ≦`, true)
+                        e.reply(`第${num}首不是[${songs[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config','cmdhead')} tip]哦≧ ﹏ ≦`, true)
                     }
 
                     return false

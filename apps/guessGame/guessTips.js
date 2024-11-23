@@ -68,7 +68,7 @@ export default new class guessTips {
                 y: y_,
             }
         }
-        e.reply(`下面开始进行猜曲绘哦！可以直接发送曲名进行回答哦！每过${Config.getUserCfg('config', 'GuessTipsTipCD')}秒后可以请求下一条提示，共有${Config.getUserCfg('config', 'GuessTipsTipNum') + 1}条提示嗷！所有提示发送完毕${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒后会自动结束游戏嗷！发送 /ans 也可以提前结束游戏呐！`)
+        e.reply(`下面开始进行猜曲绘哦！可以直接发送曲名进行回答哦！每过${Config.getUserCfg('config', 'GuessTipsTipCD')}秒后可以请求下一条提示，共有${Config.getUserCfg('config', 'GuessTipsTipNum') + 1}条提示嗷！所有提示发送完毕${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒后会自动结束游戏嗷！发送 /${Config.getUserCfg('config','cmdhead')} ans 也可以提前结束游戏呐！`)
         let resMsg = ''
         for (let i = 0; i < gameList[e.group_id].tipNum; i++) {
             resMsg += `${i + 1}.${gameList[e.group_id].tips[i]}\n`
