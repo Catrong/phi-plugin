@@ -30,15 +30,15 @@ export class phimoney extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(sign|sign in|签到|打卡)$`,
+                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(sign|sign in|签到|打卡)$`,
                     fnc: 'sign'
                 },
                 {
-                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(task|我的任务)$`,
+                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(task|我的任务)$`,
                     fnc: 'tasks'
                 },
                 {
-                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(retask|刷新任务)$`,
+                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(retask|刷新任务)$`,
                     fnc: 'retask'
                 },
                 {
