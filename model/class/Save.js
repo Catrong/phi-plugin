@@ -366,14 +366,15 @@ export default class Save {
     getSuggest(id, lv, count, difficulty) {
         if (!this.b19_rks) {
             let record = this.getRecord()
-            this.b19_rks = record[Math.min(record.length, 18)].rks
+            this.b19_rks = record[Math.min(record.length - 1, 18)].rks
             this.b0_rks = this.findAccRecord(100, true)[0]?.rks
         }
         // console.info(this.b19_rks, this.gameRecord[id][lv]?.rks ? this.gameRecord[id][lv].rks : 0, this.gameRecord[id])
         let suggest = ''
-        if (!this.gameRecord[id] || !this.gameRecord[id][lv]) {
+        if (!this.gameRecord[id] || !this.gameRecord[id][lv] || !this.gameRecord[id][lv].rks) {
             suggest = fCompute.suggest(Math.max(this.b19_rks, 0) + this.minUpRks() * 20, difficulty, count)
         } else {
+            console.info(this.gameRecord[id][lv])
             suggest = fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks) + this.minUpRks() * 20, difficulty, count)
         }
         return suggest.includes('无') ? (difficulty > this.b0_rks + this.minUpRks() * 20 ? Number(100).toFixed(count) + '%' : suggest) : suggest
