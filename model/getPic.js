@@ -14,7 +14,7 @@ export default new class pic {
     async GetSongsInfoAtlas(e, name, data = undefined) {
         data = data || getInfo.info(name)
         if (data) {
-            if (!data.illustration) { data.illustration = getInfo.getill(name) }
+            data.illustration = getInfo.getill(name)
             return await picmodle.picmodle(e, data)
         } else {
             /**未找到曲目 */

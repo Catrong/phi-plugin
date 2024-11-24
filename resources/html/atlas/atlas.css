@@ -341,9 +341,10 @@ body {
 
 .leave-box p {
     color: white;
-    font-size: 35px;
+    font-size: 30px;
     margin: 0;
     white-space: nowrap;
+    /* line-height: 35px; */
 }
 
 
