@@ -65,7 +65,7 @@ export class phisstk extends plugin {
             let request = await getQRcode.getRequest();
             let qrCodeMsg;
             if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
-                qrCodeMsg = await send.send_with_At(e, [`请扫描二维码进行登录嗷！TapTap无法使用本地相册，如只有一个设备请长按识别二维码登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
+                qrCodeMsg = await send.send_with_At(e, [`请扫描二维码进行登录！如只有一个设备请直接长按识别二维码登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
             } else {
                 qrCodeMsg = await send.send_with_At(e, `请点击链接进行登录嗷！请勿使用他人的链接。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n${request.data.qrcode_url}`, false, { recallMsg: 60 });
             }
