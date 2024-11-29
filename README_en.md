@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="/">
+<a href="">
 <picture>
   <source srcset="https://github.com/user-attachments/assets/b9dd395d-b983-4532-a6b1-12abfaba5cea" type="image/avif" width="80%" />  
   <img src="https://github.com/Catrong/phi-plugin/assets/117198625/3d952c50-80b5-4031-9104-666027fbddcb" width="80%">
@@ -13,7 +13,7 @@
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/TimeRainStarSky/Yunzai)
 [![QQGuild](https://img.shields.io/badge/QQGuild-Hutao114Pgr939-9cf?style=for-the-badge&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
-[![Guild](https://img.shields.io/badge/Discord-RkBwFBaRqa-9cf?style=for-the-badge&logo=Discord)](https://discord.com/invite/RkBwFBaRqa)
+[![Guild](https://img.shields.io/badge/Discord-RkBwFBaRqa-9cf?style=for-the-badge&logo=Discord)](https://discord.gg/invite/RkBwFBaRqa)
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Stars)](../../stargazers)
 
