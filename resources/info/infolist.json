@@ -1233,5 +1233,25 @@
         "bpm": "240~280",
         "length": "2:42",
         "chapter": "Side Story 4 无相乡"
+    },
+    "Schadenfreude.ZxNX": {
+        "bpm": "198",
+        "length": "2:32",
+        "chapter": "单曲精选集"
+    },
+    "Letempsperdu.Daison": {
+        "bpm": "188",
+        "length": "2:27",
+        "chapter": "单曲精选集"
+    },
+    "FixationsTowardtheStars.Foodbot": {
+        "bpm": "150",
+        "length": "2:49",
+        "chapter": "单曲精选集"
+    },
+    "CometFeat符白牙.CNHKSS": {
+        "bpm": "180",
+        "length": "2:31",
+        "chapter": "单曲精选集"
     }
 }
