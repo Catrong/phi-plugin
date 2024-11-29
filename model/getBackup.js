@@ -42,7 +42,6 @@ export default new class getBackup {
             let user_id = key.split(':')[2]
             user_token[user_id] = await redis.get(key)
         }
-        console.info(user_token)
         zip.file('user_token.json', JSON.stringify(user_token))
         /**压缩 */
         let zipName = `${(new Date()).toISOString().replace(/[\:\.]/g, '-')}.zip`
