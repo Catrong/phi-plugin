@@ -9,6 +9,7 @@
 [![phi-plugin](https://img.shields.io/badge/GitHub_repository-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
 [![phi-plugin](https://img.shields.io/badge/GitHub_repository-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
 ![version](https://img.shields.io/badge/version-0.9.6-9cf?style=for-the-badge)
+![version](https://img.shields.io/badge/Phigros-3.10.2-9cf?style=for-the-badge)
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0.0-9cf?style=for-the-badge&logo=dependabot)](https://github.com/TimeRainStarSky/Yunzai)
