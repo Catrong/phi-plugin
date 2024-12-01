@@ -72,7 +72,7 @@ const chap = {
     三次方: "Chapter EX-TAKUMI³精选集",
     节奏大师: "Chapter EX-节奏大师精选集",
     齐秦太帅: "Chapter EX-节奏大师精选集",
-    jzds: "Chapter EX-节奏大师精选集",
+    JZDS: "Chapter EX-节奏大师精选集",
 }
 
 export class phib19 extends plugin {
