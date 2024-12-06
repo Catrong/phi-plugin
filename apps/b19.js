@@ -485,41 +485,11 @@ export class phib19 extends plugin {
         song = song[0]
 
         let Record = save.gameRecord
-        let ans
-
-        for (let i in Record) {
-            let now = await get.idgetsong(i)
-            if (now == song) {
-                ans = Record[i]
-                break
-            }
-        }
+        let ans = Record[await getInfo.SongGetId(song)]
 
         if (!ans) {
             send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
             return true
-        }
-
-
-        /**取出信息 */
-        let rkslist = []
-        for (let i in Record) {
-            for (let level in i) {
-                if (level == 4) break
-                let tem = Record[i][level]
-                if (!tem) continue
-                rkslist.push(tem)
-            }
-        }
-
-        rkslist = rkslist.sort(cmp())
-        /**b19最低rks */
-        let minrks = rkslist[Math.min(18, rkslist.length - 1)]
-        let userrks = save.saveInfo.summary.rankingScore
-        /**考虑屁股肉四舍五入原则 */
-        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
-        if (minuprks < 0) {
-            minuprks += 0.01
         }
 
         const dan = await get.getDan(e.user_id)
@@ -576,8 +546,7 @@ export class phib19 extends plugin {
                         ans[i].rks = ans[i].rks.toFixed(2)
                         data[Level[i]] = {
                             ...ans[i],
-                            //      b19最低rks          当前曲目rks     最低提升的rks          定数              保留位数
-                            suggest: fCompute.suggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4)
+                            suggest: save.getSuggest(getInfo.SongGetId(song), i, 4, songsinfo['chart'][Level[i]]['difficulty']),
                         }
                     } else {
                         data[Level[i]] = {
@@ -603,7 +572,7 @@ export class phib19 extends plugin {
                         ans[i].rks = ans[i].rks.toFixed(4)
                         data.scoreData[Level[i]] = {
                             ...ans[i],
-                            suggest: fCompute.suggest(Math.max(Number(minrks.rks), Number(ans[i].rks)) + minuprks * 20, Number(ans[i].difficulty), 4),
+                            suggest: save.getSuggest(getInfo.SongGetId(song), i, 4, songsinfo['chart'][Level[i]]['difficulty']),
                         }
                     } else {
                         data.scoreData[Level[i]] = {
@@ -711,7 +680,7 @@ export class phib19 extends plugin {
         if (!save) {
             return false
         }
-        
+
         if (msg != 'ALL' && !chap[msg]) {
             send.send_with_At(e, `未找到${msg}章节QAQ！可以使用 /${Config.getUserCfg('config', 'cmdhead')} chap help 来查询支持的名称嗷！`)
             return false

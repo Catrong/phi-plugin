@@ -53,7 +53,7 @@ export default new class scoreHistory {
                 song: song,
                 rank: level,
                 illustration: getInfo.getill(song),
-                Rating: Rating(now[1]),
+                Rating: Rating(now[1], now[3]),
                 acc_new: now[0],
                 acc_old: old ? old[0] : undefined,
                 score_new: now[1],
