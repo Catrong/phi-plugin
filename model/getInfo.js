@@ -39,20 +39,6 @@ export default new class getInfo {
             }
         }
 
-        /**默认别名,以曲名为key */
-        this.nicklist = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml'))
-        /**以别名为key */
-        this.songnick = {}
-        for (let i in this.nicklist) {
-            for (let j in this.nicklist[i]) {
-                if (this.songnick[this.nicklist[i][j]]) {
-                    this.songnick[this.nicklist[i][j]].push(i)
-                } else {
-                    this.songnick[this.nicklist[i][j]] = [i]
-                }
-            }
-        }
-
 
 
         /**扩增曲目信息 */
@@ -176,6 +162,21 @@ export default new class getInfo {
             console.error('[phi-plugin] MAX_DIFFICULTY 常量未更新，请回报作者！', MAX_DIFFICULTY, this.MAX_DIFFICULTY)
         }
 
+
+        /**默认别名,以曲名为key */
+        this.nicklist = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml'))
+        /**以别名为key */
+        this.songnick = {}
+        for (let id in this.nicklist) {
+            for (let j in this.nicklist[id]) {
+                let song = this.idgetsong(id + '.0')
+                if (this.songnick[this.nicklist[id][j]]) {
+                    this.songnick[this.nicklist[id][j]].push(song)
+                } else {
+                    this.songnick[this.nicklist[id][j]] = [song]
+                }
+            }
+        }
 
         /**jrrp */
         this.word = await readFile.FileReader(path.join(infoPath, 'jrrp.json'))
