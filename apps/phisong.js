@@ -428,12 +428,14 @@ export class phisong extends plugin {
             let info = getInfo.info(song[0])
             let nick = '======================\n已有别名：\n'
             let usernick = Config.getUserCfg('nickconfig', song[0])
-            for (let i in usernick) {
-                nick += `${usernick[i]}\n`
+            if (usernick) {
+                nick += usernick.join('\n') + '\n'
             }
-            for (let i in getInfo.nicklist[song[0]]) {
-                nick += `${getInfo.nicklist[song[0]][i]}\n`
+            if (getInfo.nicklist[info.song]) {
+                nick += getInfo.nicklist[info.song].join('\n')
             }
+            // console.info(getInfo.nicklist)
+            // console.info(info.song)
             send.send_with_At(e, [`\nname: ${song[0]}\nid: ${info.id}\n`, getPic.getIll(song[0]), nick])
         } else {
             send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！`, true)

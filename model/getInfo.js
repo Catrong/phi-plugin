@@ -163,17 +163,19 @@ export default new class getInfo {
         }
 
 
+        let nicklistTemp = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml'))
         /**默认别名,以曲名为key */
-        this.nicklist = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml'))
+        this.nicklist = {}
         /**以别名为key */
         this.songnick = {}
-        for (let id in this.nicklist) {
-            for (let j in this.nicklist[id]) {
-                let song = this.idgetsong(id + '.0')
-                if (this.songnick[this.nicklist[id][j]]) {
-                    this.songnick[this.nicklist[id][j]].push(song)
+        for (let id in nicklistTemp) {
+            let song = this.idgetsong(id + '.0')
+            this.nicklist[song] = nicklistTemp[id]
+            for (let j in nicklistTemp[id]) {
+                if (this.songnick[nicklistTemp[id][j]]) {
+                    this.songnick[nicklistTemp[id][j]].push(song)
                 } else {
-                    this.songnick[this.nicklist[id][j]] = [song]
+                    this.songnick[nicklistTemp[id][j]] = [song]
                 }
             }
         }
