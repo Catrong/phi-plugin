@@ -1,3 +1,6 @@
+
+@import "./snow.css";
+
 @font-face {
     font-family: '吞弥恰俊';
     src: url("./font/吞弥恰俊.ttf") format('truetype');
