@@ -2,10 +2,8 @@
 
 <a href="">
   <picture>
-
     <source srcset="https://github.com/user-attachments/assets/c18cd28c-220e-445d-9001-3f7a8f25ac51" type="image/avif" width="80%" />
     <img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%" />
-
 </picture>
 
 [![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
@@ -26,7 +24,6 @@
 ### 中文 | [English](./README_en.md)
 
 </div>
-
 <br>
 
 ------
@@ -35,7 +32,6 @@
 
 <table style="border-radius: 20px">
   <tbody style="border-radius: 20px">
-
     <tr>
         <td align="center" valign="top" width="10%"><a href="https://github.com/Walkersifolia"><img src="https://avatars.githubusercontent.com/u/129571444?v=4?s=100" style="border-radius: 50%" width="50px;" alt="圈圈"/><br /><sub><b>@Walkersifolia</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=Walkersifolia" title="Contributor">🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Contributor">🌸</a></td>
@@ -45,7 +41,6 @@
         <td align="center" valign="top" width="10%"><a href="https://github.com/yt6983138"><img src="https://avatars.githubusercontent.com/u/83499886?v=4?s=100" style="border-radius: 50%" width="50px;" alt="yt6983138"/><br /><sub><b>@static_void</b></sub></a><br /><a href="https://github.com/yt6983138" title="Contributor">🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/wms26"><img src="https://avatars.githubusercontent.com/u/50258919?v=4?s=100" style="border-radius: 50%" width="50px;" alt="wms26"/><br /><sub><b>@千柒</b></sub></a><br /><a href="https://github.com/wms26" title="Contributor">🌸</a></td>
     </tr>
-
   </tbody>
 </table>
 
