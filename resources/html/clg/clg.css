@@ -205,6 +205,7 @@ body p {
 
 .tot_clg p {
     font-size: 120px;
+    text-shadow: 0 0 3px black, 0 0 10px white;
 }
 
 .createdbox {
