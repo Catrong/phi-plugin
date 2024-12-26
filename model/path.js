@@ -18,6 +18,8 @@ const infoPath = path.join(pluginResources, 'info')
 /**额外曲目名称信息（开字母用） */
 const DlcInfoPath = path.join(pluginResources, 'info', 'DLC')
 
+/**上个版本曲目信息 */
+const OldInfoPath = path.join(pluginResources, 'info', 'oldInfo')
 
 /**数据路径 */
 const dataPath = path.join(pluginRoot, 'data')
@@ -59,6 +61,7 @@ export {
     pluginResources,
     infoPath,
     DlcInfoPath,
+    OldInfoPath,
     dataPath,
     pluginDataPath,
     savePath,

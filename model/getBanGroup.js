@@ -47,6 +47,7 @@ export default new class getBanGroup {
             case 'search':
             case 'alias':
             case 'randmic':
+            case 'randClg':
                 return await this.redis(group, 'song')
             case 'rankList':
             case 'godList':
@@ -54,7 +55,7 @@ export default new class getBanGroup {
             case 'comrks':
             case 'tips':
             case 'lmtAcc':
-            case 'randClg':
+            case 'new':
                 return await this.redis(group, 'fnc')
             case 'tipgame':
                 return await this.redis(group, 'tipgame')

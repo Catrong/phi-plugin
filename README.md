@@ -2,14 +2,19 @@
 
 <a href="">
   <picture>
+
     <source srcset="https://github.com/user-attachments/assets/c18cd28c-220e-445d-9001-3f7a8f25ac51" type="image/avif" width="80%" />
     <img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%" />
+
 </picture>
 
 [![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
 [![phi-plugin](https://img.shields.io/badge/Gitee仓库-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
+
 ![version](https://img.shields.io/badge/%E7%89%88%E6%9C%AC-0.9.7-9cf?style=for-the-badge)
+
 ![version](https://img.shields.io/badge/Phigros-3.10.2-9cf?style=for-the-badge)
+
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/TimeRainStarSky/Yunzai)
@@ -27,8 +32,10 @@
 ------
 
 ### 特别鸣谢
+
 <table style="border-radius: 20px">
   <tbody style="border-radius: 20px">
+
     <tr>
         <td align="center" valign="top" width="10%"><a href="https://github.com/Walkersifolia"><img src="https://avatars.githubusercontent.com/u/129571444?v=4?s=100" style="border-radius: 50%" width="50px;" alt="圈圈"/><br /><sub><b>@Walkersifolia</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=Walkersifolia" title="Contributor">🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Contributor">🌸</a></td>
@@ -38,12 +45,14 @@
         <td align="center" valign="top" width="10%"><a href="https://github.com/yt6983138"><img src="https://avatars.githubusercontent.com/u/83499886?v=4?s=100" style="border-radius: 50%" width="50px;" alt="yt6983138"/><br /><sub><b>@static_void</b></sub></a><br /><a href="https://github.com/yt6983138" title="Contributor">🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/wms26"><img src="https://avatars.githubusercontent.com/u/50258919?v=4?s=100" style="border-radius: 50%" width="50px;" alt="wms26"/><br /><sub><b>@千柒</b></sub></a><br /><a href="https://github.com/wms26" title="Contributor">🌸</a></td>
     </tr>
+
   </tbody>
 </table>
 
 ------
 
 ### 安装：
+
 在Yunzai目录下运行
 
 > 使用Github
@@ -93,6 +102,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi (ltr\|开字母)` | 根据字母猜曲名，#出/#open... 开指定的字母，#第n个/#nX.xxx 进行回答，#ans 获取答案
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名
+| `#phi new` | 查询更新的曲目
 | `#phi tips` | 随机tips
 | `#phi jrrp` | 今日人品
 | `#phi nick xxx` | 查询某一曲目的别名
@@ -134,7 +144,7 @@ pnpm install -P #安装插件所需依赖
 | wb19 | 文字查分功能 | /data /best
 | song | 图鉴功能 | /song /ill /search /alias /rand /randclg
 | ranklist | 排行榜功能，不会禁用用户排名 | /ranklist /godlist
-| fnc | 小功能 | /com /tips /lmtacc
+| fnc | 小功能 | /com /tips /lmtacc /new
 | tipgame | tip猜歌 | /tipgame
 | guessgame | 猜歌 | /guess
 | ltrgame | 猜字母 | /letter /ltr
@@ -153,17 +163,17 @@ pnpm install -P #安装插件所需依赖
 
 #### Todo
 
-- [ ] 优化界面设计
+* [ ] 优化界面设计
 
-- [ ] 加入收集品、头像等的图鉴
+* [ ] 加入收集品、头像等的图鉴
 
-- [ ] 点phi的歌
+* [ ] 点phi的歌
 
-- [ ] 优化扫码获取sessionToken
+* [ ] 优化扫码获取sessionToken
 
-- [ ] 指令修改设置
+* [ ] 指令修改设置
 
-- [ ] …
+* [ ] …
 
 ------
 
@@ -182,8 +192,6 @@ pnpm install -P #安装插件所需依赖
 |Best19效果图<br><picture><source srcset="https://github.com/user-attachments/assets/63f5e474-c30a-4d66-8d10-402016bad61d" type="image/avif" width="80%" /><img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242" width="80%" /></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e) | 单曲成绩效果图<br><picture><source srcset="https://github.com/user-attachments/assets/8c723d88-2729-4f5e-baf7-644f5fdf9001" type="image/avif" width="60%" /><img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="60%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>单曲成绩效果图（Legacy）<br><picture><source srcset="https://github.com/user-attachments/assets/83296c38-2181-479f-ad26-dfb2e09bccf8" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="60%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>单曲图鉴效果图<br><picture><source srcset="https://github.com/user-attachments/assets/e332c88d-ecd0-49e7-aa6b-310645f14a5a" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="60%"></picture> |
 |:-------------------:|:------------------------:|
 |范围成绩效果图<br><picture><source srcset="https://github.com/user-attachments/assets/b1a4ff41-d26b-4ccc-942d-087797ff02b3" type="image/avif" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65"></picture><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567) <br><br>个人信息效果图<br><picture><source srcset="https://github.com/user-attachments/assets/1361b1e9-510f-4140-a87d-a74b2ee70337" type="image/avif" /><img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)|个人信息效果图（Legacy）<br><picture><source srcset="https://github.com/user-attachments/assets/c876119b-d98f-4751-85ba-675e6f2ba55f" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%"></picture><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567)|
-
-
 
 ------
 

@@ -45,7 +45,7 @@ export class phisong extends plugin {
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)randclg.*$`,
-                    fnc: randClg.name
+                    fnc: 'randClg'
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(随机|rand(om)?).*$`,
@@ -62,6 +62,10 @@ export class phisong extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)tips$`,
                     fnc: 'tips'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)new$`,
+                    fnc: 'new'
                 }
             ]
         })
@@ -564,7 +568,45 @@ export class phisong extends plugin {
             send.send_with_At(e, `未找到符合条件的谱面QAQ！`)
         }
 
-        return;
+        return true;
+    }
+
+    async new(e) {
+
+        if (await getBanGroup.get(e.group_id, 'new')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let ans = '新曲速递：\n'
+        for (let i in getInfo.updatedSong) {
+            let info = getInfo.info(getInfo.updatedSong[i])
+            ans += `${info.song}\n`
+            for (let j in info.chart) {
+                ans += `  ${j} ${info.chart[j].difficulty} ${info.chart[j].combo}\n`
+            }
+        }
+
+        ans += '\n定数&谱面修改：\n'
+        for (let song in getInfo.updatedChart) {
+            let tem = getInfo.updatedChart[song]
+            ans += song + '\n'
+            for (let level in tem) {
+                ans += `  ${level}:\n`
+                if (tem[level].isNew) {
+                    delete tem[level].isNew
+                    for (let obj in tem[level]) {
+                        ans += `    ${obj}: ${tem[level][obj][0]}\n`
+                    }
+                } else {
+                    for (let obj in tem[level]) {
+                        ans += `    ${obj}: ${tem[level][obj][0]} -> ${tem[level][obj][1]}\n`
+                    }
+                }
+            }
+        }
+
+        send.send_with_At(e, ans)
     }
 
 }
