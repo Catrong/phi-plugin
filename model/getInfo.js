@@ -131,7 +131,7 @@ export default new class getInfo {
                 logger.mark(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
             }
             this.ori_info[CsvInfo[i].song].song = CsvInfo[i].song
-            this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id
+            this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id + '.0'
             this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
             this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
             this.ori_info[CsvInfo[i].song].chart = {}
@@ -143,7 +143,7 @@ export default new class getInfo {
                         this.ori_info[CsvInfo[i].song].chart[level] = {}
                     }
                     this.ori_info[CsvInfo[i].song].chart[level].charter = CsvInfo[i][level]
-                    this.ori_info[CsvInfo[i].song].chart[level].difficulty = Csvdif[i][level]
+                    this.ori_info[CsvInfo[i].song].chart[level].difficulty = Number(Csvdif[i][level])
                     this.ori_info[CsvInfo[i].song].chart[level].tap = this.notesInfo[id][level].tap
                     this.ori_info[CsvInfo[i].song].chart[level].drag = this.notesInfo[id][level].drag
                     this.ori_info[CsvInfo[i].song].chart[level].hold = this.notesInfo[id][level].hold
@@ -183,6 +183,26 @@ export default new class getInfo {
         /**jrrp */
         this.word = await readFile.FileReader(path.join(infoPath, 'jrrp.json'))
 
+        /**按dif分的info */
+        this.info_by_difficulty = {}
+        for (let song in this.ori_info) {
+            for (let level in this.ori_info[song].chart) {
+                let info = this.ori_info[song]
+                if (this.info_by_difficulty[info.chart[level].difficulty]) {
+                    this.info_by_difficulty[info.chart[level].difficulty].push({
+                        id: info.id,
+                        rank: level,
+                        ...info.chart[level],
+                    })
+                } else {
+                    this.info_by_difficulty[info.chart[level].difficulty] = [{
+                        id: info.id,
+                        rank: level,
+                        ...info.chart[level],
+                    }]
+                }
+            }
+        }
     }
 
     /**

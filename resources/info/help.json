@@ -118,6 +118,11 @@
                 "desc": "随机谱面<br>eg1: /rand 13+<br>eg2: /rand 15-<br>eg3: /rand 14-16 AT"
             },
             {
+                "title": "/randclg",
+                "eg": "/randclg [课题总值] [难度] ([曲目定数范围])",
+                "desc": "随机课题<br>eg1: /randclg 40+ IN<br>eg2: /rand 40 (IN 13-15)<br>eg3: /rand 40-48 AT IN (15+)"
+            },
+            {
                 "title": "/search",
                 "eg": "/search [bpm N-N] [dif N-N] [cmb N-N]",
                 "desc": "查询符合条件的曲目，建议私聊使用<br>eg1: /search bpm 300<br>eg2: /search bpm 1-300 dif 15"

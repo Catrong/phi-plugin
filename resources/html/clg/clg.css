@@ -1,0 +1,225 @@
+@import '../common/common.css';
+
+body {
+    width: 1920px;
+    height: 1200px;
+    /* scale: 0.3; */
+}
+
+body p {
+    color: #fff;
+}
+
+.background img {
+    filter: none;
+    transform: none;
+}
+
+
+
+.box {
+    height: 88%;
+    width: 96.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+
+.box-0 {
+    margin-left: 7%;
+    margin-bottom: 2%;
+}
+
+.box-2 {
+    margin-left: -7%;
+    margin-top: 2%;
+}
+
+.song-box {
+    width: 82%;
+    height: 19.3%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    background-color: #000000bb;
+    clip-path: polygon(3.5% 0, 100% 0, 96.5% 100%, 0 100%);
+    backdrop-filter: blur(10px);
+}
+
+.ill-box {
+    display: flex;
+    width: 52%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    clip-path: polygon(0 100%, 6.7% 0%, 100% 0%, 93.3% 100%);
+    position: relative;
+}
+
+.ill {
+    width: 100%;
+}
+
+.ill img {
+    width: 100%;
+}
+
+.info-box {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+.info-box p {
+    text-shadow: 0 0 5px #000;
+}
+
+.song_name {
+    height: 40%;
+    width: 77%;
+    position: absolute;
+    left: 3%;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.song_name p {
+    font-size: 56px;
+    color: #fff;
+}
+
+.charter-box {
+    display: flex;
+    position: absolute;
+    right: 2.8%;
+    top: 1%;
+    height: 30%;
+    width: 77%;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.charter-box p {
+    font-size: 33px;
+    color: #fff;
+    height: 50%;
+    line-height: 100%;
+}
+
+.dif {
+    height: 58%;
+    width: 42%;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    right: 4.5%;
+    top: 0;
+    align-items: center;
+}
+
+.dif p {
+    font-size: 80px;
+}
+
+.notes-box {
+    width: 45%;
+    height: 31%;
+    position: absolute;
+    bottom: 10%;
+    right: 4%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.notes-info {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.notes_num {
+    height: 70%;
+    text-align: center;
+}
+
+.notes_num p {
+    font-size: 42px;
+    line-height: 100%;
+}
+
+.notes_title {
+    height: 30%;
+    text-align: center;
+}
+
+.notes_title p {
+    font-size: 18px;
+}
+
+.tap p {
+    color: var(--tap);
+}
+
+.hold p {
+    color: var(--hold);
+}
+
+.flicke p {
+    color: var(--flicke);
+}
+
+.drag p {
+    color: var(--drag);
+}
+
+.tot-box {
+    width: 39%;
+    height: 13%;
+    position: absolute;
+    bottom: 12%;
+    right: 7%;
+    clip-path: polygon(0 100%, 5% 0, 100% 0, 95% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tot-box img {
+    height: 100%;
+    position: absolute;
+    bottom: -20%;
+}
+
+.tot_clg {
+    height: unset;
+    position: absolute;
+}
+
+.tot_clg p {
+    font-size: 120px;
+}
+
+.createdbox {
+    position: absolute;
+    bottom: 3%;
+}
+
+.createdbox p {
+    font-size: 70px;
+}
+
+.phi-plugin p {
+    font-size: 60px;
+}
+
+.ver p {
+    font-size: 30px;
+}

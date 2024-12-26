@@ -5,8 +5,10 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import getInfo from '../model/getInfo.js'
 import getPic from '../model/getPic.js'
+import picmodle from '../model/picmodle.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
+import { LevelNum } from '../model/constNum.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
@@ -40,6 +42,10 @@ export class phisong extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(曲绘|ill|Ill).*$`,
                     fnc: 'ill'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)randclg.*$`,
+                    fnc: randClg.name
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(随机|rand(om)?).*$`,
@@ -474,6 +480,93 @@ export class phisong extends plugin {
         send.send_with_At(e, getInfo.tips[fCompute.randBetween(0, getInfo.tips.length - 1)])
     }
 
+    async randClg(e) {
+        if (await getBanGroup.get(e.group_id, 'randclg')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let songReg = /[\(（].*[\)）]/
+        let songReq = ""
+        let arg = e.msg.replace(/^.*randclg\s*/, '')
+        // console.info(arg.match(songReg))
+        if (arg.match(songReg)) {
+            songReq = arg.match(songReg)[0].replace(/[\(\)（）]/g, "")
+            arg = arg.replace(arg.match(songReg)[0], "")
+        }
+
+        let songAsk = fCompute.match_request(songReq)
+
+        // console.info(songAsk, songReq)
+
+        let { isask, range } = fCompute.match_request(arg, 48)
+
+        let NumList = []
+        for (let i = range[0]; i <= range[1]; i++) {
+            NumList.push(i)
+        }
+
+        let chartList = {}
+        for (let dif in getInfo.info_by_difficulty) {
+            if (Number(dif) < range[1]) {
+                for (let i in getInfo.info_by_difficulty[dif]) {
+                    let chart = getInfo.info_by_difficulty[dif][i]
+                    let difficulty = Math.floor(chart.difficulty)
+                    if (isask[LevelNum[chart.rank]] && chartMatchReq(songAsk, chart)) {
+                        if (chartList[difficulty]) {
+                            chartList[difficulty].push(chart)
+                        } else {
+                            chartList[difficulty] = [chart]
+                        }
+                    }
+                }
+            }
+        }
+
+        NumList = fCompute.randArray(NumList)
+
+
+        let res = randClg(NumList.shift(), { ...chartList })
+        while (!res && NumList.length) {
+            res = randClg(NumList.shift(), { ...chartList })
+        }
+        // console.info(res)
+        if (res) {
+
+            let songs = []
+
+            let plugin_data = await get.getpluginData(e.user_id)
+
+            for (let i in res) {
+                let info = getInfo.info(getInfo.idgetsong(res[i].id))
+                songs.push({
+                    id: info.id,
+                    song: info.song,
+                    rank: res[i].rank,
+                    difficulty: res[i].difficulty,
+                    illustration: getInfo.getill(info.song),
+                    ...info.chart[res[i].rank]
+                })
+            }
+
+            send.send_with_At(e, await picmodle.common(e, 'clg', {
+                songs,
+                tot_clg: Math.floor(res[0].difficulty) + Math.floor(res[1].difficulty) + Math.floor(res[2].difficulty),
+                background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+                theme: plugin_data?.plugin_data?.theme || 'star',
+            }))
+
+            // ans += `${getInfo.idgetsong(res[0].id)} ${res[0].rank} ${res[0].difficulty}\n`
+            // ans += `${getInfo.idgetsong(res[1].id)} ${res[1].rank} ${res[1].difficulty}\n`
+            // ans += `${getInfo.idgetsong(res[2].id)} ${res[2].rank} ${res[2].difficulty}\n`
+            // ans += `difficulty: ${Math.floor(res[0].difficulty) + Math.floor(res[1].difficulty) + Math.floor(res[2].difficulty)}`
+        } else {
+            send.send_with_At(e, `未找到符合条件的谱面QAQ！`)
+        }
+
+        return;
+    }
+
 }
 
 /**
@@ -482,4 +575,69 @@ export class phisong extends plugin {
  */
 function randbt(top, bottom = 0) {
     return Math.floor((Math.random() * (top - bottom + 1))) + bottom
+}
+
+
+function randClg(clgNum, chartList) {
+    let difList = null;
+    let rand1 = [], rand2 = []
+    // console.info(getInfo.MAX_DIFFICULTY)
+    for (let i = 1; i <= Math.min(getInfo.MAX_DIFFICULTY, clgNum - 2); i++) {
+        // console.info(i, chartList[i])
+        if (chartList[i]) {
+            rand1.push(i)
+            rand2.push(i)
+        }
+    }
+    rand1 = fCompute.randArray(rand1);
+    rand2 = fCompute.randArray(rand2);
+    // console.info(clgNum, rand1, rand2)
+    for (let i in rand1) {
+        // console.info(rand1[i])
+        for (let j in rand2) {
+            let a = rand1[i]
+            let b = rand2[j]
+            if (a + b >= clgNum) continue
+            let c = clgNum - a - b
+            let tem = {}
+            tem[a] = 1
+            tem[b] ? ++tem[b] : tem[b] = 1
+            tem[c] ? ++tem[c] : tem[c] = 1
+            let flag = false
+            for (let i in tem) {
+                if (!chartList[i] || tem[i] > chartList[i].length) {
+                    flag = true
+                    break
+                }
+            }
+            if (flag) continue
+            difList = [a, b, c]
+            break;
+        }
+        if (difList) break;
+    }
+    if (!difList) {
+        return;
+    }
+    // console.info(difList)
+    let ans = []
+    for (let i in difList) {
+        if (!chartList[difList[i]]) {
+            logger.error(difList[i], chartList)
+        }
+        let tem = chartList[difList[i]].splice(fCompute.randBetween(0, chartList[difList[i]].length - 1), 1)[0]
+        ans.push(tem)
+    }
+    // console.info(clgNum, ans)
+    return ans;
+}
+
+function chartMatchReq(ask, chart) {
+    if (ask.isask[LevelNum[chart.rank]]) {
+        if (chart.difficulty >= ask.range[0] && chart.difficulty <= ask.range[1]) {
+            return true
+        }
+    }
+    // console.info(ask, chart)
+    return false
 }

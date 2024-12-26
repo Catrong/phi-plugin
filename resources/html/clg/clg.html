@@ -1,0 +1,91 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+    <link rel="stylesheet" type="text/css" href="{{_res_path}}html/clg/clg.css">
+{{/block}}
+
+{{block 'main'}}
+
+    <div class="box">
+        {{each songs song}}
+        <div class="song-box box-{{$index}}">
+            <div class="ill-box">
+                <div class="ill">
+                    <img src="{{song.illustration}}" alt="{{song.illustration}}">
+                </div>
+                <div class="info-box">
+                    <div class="song_name">
+                        <p name="pvis">{{song.song}}</p>
+                    </div>
+                    <div class="charter-box">
+                        <p>charter</p>
+                        <p name="pvis">{{song.charter}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dif">
+                <p>{{song.rank}}</p>
+                <p>{{song.difficulty}}</p>
+            </div>
+            <div class="notes-box">
+                <div class="notes-info tap">
+                    <div class="notes_num">
+                        <p>{{song.tap}}</p>
+                    </div>
+                    <div class="notes_title">
+                        <p>Tap</p>
+                    </div>
+                </div>
+                <div class="notes-info drag">
+                    <div class="notes_num">
+                        <p>{{song.drag}}</p>
+                    </div>
+                    <div class="notes_title">
+                        <p>Drag</p>
+                    </div>
+                </div>
+                <div class="notes-info hold">
+                    <div class="notes_num">
+                        <p>{{song.hold}}</p>
+                    </div>
+                    <div class="notes_title">
+                        <p>Hold</p>
+                    </div>
+                </div>
+                <div class="notes-info flicke">
+                    <div class="notes_num">
+                        <p>{{song.flicke}}</p>
+                    </div>
+                    <div class="notes_title">
+                        <p>Flicke</p>
+                    </div>
+                </div>
+                <div class="notes-info">
+                    <div class="notes_num">
+                        <p>{{song.combo}}</p>
+                    </div>
+                    <div class="notes_title">
+                        <p>Combo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="tot-box">
+        <img src="{{_res_path}}html//otherimg/5.png" alt="Challenge">
+        <div class="tot_clg">
+            <p>{{tot_clg}}</p>
+        </div>
+    </div>
+
+
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>{{_plugin}}</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
+{{/block}}

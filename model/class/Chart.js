@@ -1,12 +1,17 @@
 export default class Chart {
 
     /**
-     * @param {{level:string, difficulty:string, combo:string, charter: string}} data 
+     * @param {} data 
      */
     constructor(data) {
-        this.level = Number(data.level)
-        this.difficulty = Number(data.difficulty)
-        this.combo = Number(data.combo)
+        this.id = data?.id
+        this.rank = data?.rank
         this.charter = data.charter
+        this.difficulty = Number(data.difficulty)
+        this.tap = Number(data.tap)
+        this.drag = Number(data.drag)
+        this.hold = Number(data.hold)
+        this.flicke = Number(data.flicke)
+        this.combo = Number(data.combo)
     }
 }

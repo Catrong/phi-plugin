@@ -1,9 +1,8 @@
-
 @import "./snow.css";
 
 @font-face {
-    font-family: '吞弥恰俊';
-    src: url("./font/吞弥恰俊.ttf") format('truetype');
+    font-family: 'åžå¼¥æ°ä¿Š';
+    src: url("./font/åžå¼¥æ°ä¿Š.ttf") format('truetype');
 }
 
 @font-face {
@@ -73,13 +72,17 @@
 }
 
 body {
-    font-family: 'PHI', 'NotoSansArabic', 'NotoSansSymbols2', 'NOTO', 'NotoSansJP', 'NotoSansKannada', 'NotoSansCanadianAboriginal', 'NotoColorEmoji-Regular', 'HIMALAYA', '吞弥恰俊', 'NotoSansMath-Regular';
+    font-family: 'PHI', 'NotoSansArabic', 'NotoSansSymbols2', 'NOTO', 'NotoSansJP', 'NotoSansKannada', 'NotoSansCanadianAboriginal', 'NotoColorEmoji-Regular', 'HIMALAYA', 'åžå¼¥æ°ä¿Š', 'NotoSansMath-Regular';
     margin: 0;
     background: url('../otherimg/phigros.png') center no-repeat;
     background-size: cover;
     background-position: center;
     transform-origin: top left;
     position: absolute;
+}
+
+body p {
+    margin: 0;
 }
 
 .background {
@@ -96,7 +99,7 @@ body {
 }
 
 .background img {
-    min-width: 100%;
+    height: 100%;
     min-width: 100%;
     min-height: 100%;
     position: absolute;
