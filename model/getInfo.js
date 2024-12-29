@@ -1,5 +1,5 @@
 import readFile from './getFile.js'
-import { DlcInfoPath, configPath, imgPath, infoPath, originalIllPath, ortherIllPath, OldInfoPath } from './path.js'
+import { DlcInfoPath, configPath, imgPath, infoPath, originalIllPath, ortherIllPath, oldInfoPath } from './path.js'
 import path from 'path'
 import Config from '../components/Config.js'
 import SongsInfo from './class/SongsInfo.js'
@@ -106,8 +106,8 @@ export default new class getInfo {
         let Csvdif = await readFile.FileReader(path.join(infoPath, 'difficulty.csv'))
         let Jsoninfo = await readFile.FileReader(path.join(infoPath, 'infolist.json'))
 
-        let oldDif = await readFile.FileReader(path.join(OldInfoPath, 'difficulty.csv'))
-        let oldNotes = await readFile.FileReader(path.join(OldInfoPath, 'notesInfo.json'))
+        let oldDif = await readFile.FileReader(path.join(oldInfoPath, 'difficulty.csv'))
+        let oldNotes = await readFile.FileReader(path.join(oldInfoPath, 'notesInfo.json'))
         let OldDifList = []
         for (let i in oldDif) {
             OldDifList[oldDif[i].id] = oldDif[i]
@@ -185,7 +185,7 @@ export default new class getInfo {
                                 this.updatedChart[CsvInfo[i].song] = {}
                             }
                             this.updatedChart[CsvInfo[i].song][level] = tem
-                            console.log(this.updatedChart)
+                            // console.log(this.updatedChart)
                         }
                     }
 
