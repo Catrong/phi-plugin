@@ -293,10 +293,10 @@ export default class Save {
     /**
      * 
      * @param {string} id 曲目id
-     * @returns {[LevelRecordInfo]}
+     * @returns {{LevelRecordInfo}}
      */
     getSongsRecord(id) {
-        return [...this.gameRecord[id]]
+        return { ...this.gameRecord[id] }
     }
 
     /**

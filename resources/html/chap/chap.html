@@ -31,17 +31,17 @@
                     <img src="{{song.illustration}}" alt="{{illustration}}">
                 </div>
                 <div class="info">
-                    {{if num <= 12}}
+                    {{if num <= 10}}
                     {{each song.chart chart rank}}
                     <div class="rank {{rank}}" style="height: {{song.chart.AT ? 23 : 30}}%;">
                         <div class="rating">
                             <img src="{{_imgPath}}/{{chart.Rating}}.png" alt="{{chart.Rating}}">
                         </div>
                         <div class="dif">{{chart.difficulty}}</div>
-                        {{if chart.acc && num <= 12}}
+                        {{if chart.acc && num <= 10}}
                         <div class="score">{{chart.score}}</div>
                         <div class="acc">{{chart.acc}}%</div>
-                        {{if num <= 6}}
+                        {{if num <= 5}}
                         <div class="rks">= {{chart.rks}}</div>
                         <div class="suggest">>> {{chart.suggest}}</div>
                         {{/if}}
