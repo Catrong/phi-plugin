@@ -239,7 +239,7 @@ class getdata {
      * 更新存档
      * @param {*} e 
      * @param {PhigrosUser} User 
-     * @returns {[number,number]} [rks变化值，note变化值]，失败返回 false
+     * @returns {Promise<[number,number]>} [rks变化值，note变化值]，失败返回 false
      */
     async buildingRecord(e, User) {
         let old = await this.getsave(e.user_id)

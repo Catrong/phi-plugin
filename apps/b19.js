@@ -156,22 +156,18 @@ export class phib19 extends plugin {
         if (!Config.getUserCfg('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
-        /**自定义数量不更新存档 */
-        if (nnum == 21) {
+        try {
+            await get.buildingRecord(e, new PhigrosUser(save.session))
 
-            try {
-                get.buildingRecord(e, new PhigrosUser(save.session))
+            save = await send.getsave_result(e)
 
-                save = await send.getsave_result(e)
-
-                if (!save) {
-                    return true
-                }
-
-            } catch (err) {
-                send.send_with_At(e, err)
-                logger.error(err)
+            if (!save) {
+                return true
             }
+
+        } catch (err) {
+            send.send_with_At(e, err)
+            logger.error(err)
         }
 
         let save_b19 = await save.getB19(nnum)

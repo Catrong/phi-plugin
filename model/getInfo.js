@@ -220,7 +220,7 @@ export default new class getInfo {
         /**以别名为key */
         this.songnick = {}
         for (let id in nicklistTemp) {
-            let song = this.idgetsong(id + '.0')
+            let song = this.idgetsong(id + '.0') || id
             this.nicklist[song] = nicklistTemp[id]
             for (let j in nicklistTemp[id]) {
                 if (this.songnick[nicklistTemp[id][j]]) {
