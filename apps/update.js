@@ -54,7 +54,7 @@ export class phiupdate extends plugin {
         /** 检查git安装 */
         if (!(await this.checkGit())) return;
 
-        const isForce = this.e.msg.includes("强制");
+        const isForce = this.e.msg.includes("强制") || this.e.msg.includes("qz");
 
         /** 执行更新 */
         var ifrestart = await this.runUpdate(isForce);
