@@ -99,6 +99,10 @@ export default new class compute {
                     save_background = 'ENERGY SYNERGY MATRIX'
                     break
                 }
+                case 'Le temps perdu-': {
+                    save_background = 'Le temps perdu'
+                    break
+                }
                 default: {
                     break
                 }
