@@ -1,4 +1,6 @@
+import { MAX_DIFFICULTY } from '../constNum.js'
 import fCompute from '../fCompute.js'
+import getRksRank from '../getRksRank.js'
 
 export default class Save {
 
@@ -170,6 +172,10 @@ export default class Save {
             /**背景 */
             background: data.gameuser.background,
         } : null
+        if (this.saveInfo.summary.rankingScore > MAX_DIFFICULTY) {
+            getRksRank.delUserRks(this.session)
+            throw new Error(`您的存档rks异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
+        }
         this.gameRecord = {}
         for (let id in data.gameRecord) {
             this.gameRecord[id] = []
