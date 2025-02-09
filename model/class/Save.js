@@ -172,7 +172,7 @@ export default class Save {
             /**背景 */
             background: data.gameuser.background,
         } : null
-        if (this.saveInfo.summary.rankingScore > MAX_DIFFICULTY) {
+        if (this.saveInfo.summary.rankingScore > MAX_DIFFICULTY || (!this.saveInfo.summary.rankingScore && this.saveInfo.summary.rankingScore != 0) || this.saveInfo.summary.challengeModeRank % 100 > 48) {
             getRksRank.delUserRks(this.session)
             throw new Error(`您的存档rks异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
         }
