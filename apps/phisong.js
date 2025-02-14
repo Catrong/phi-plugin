@@ -464,7 +464,7 @@ export class phisong extends plugin {
         let data = msg.split(' ')
         data[0] = Number(data[0])
         data[1] = Number(data[1])
-        if (data && data[1] && data[0] > 0 && data[0] <= 17 && data[1] > 0 && data[1] <= 100) {
+        if (data && data[1] && data[0] > 0 && data[0] <= 18 && data[1] > 0 && data[1] <= 100) {
             send.send_with_At(e, `dif: ${data[0]} acc: ${data[1]}\n计算结果：${fCompute.rks(Number(data[1]), Number(data[0]))}`, true)
             return true
         } else {
