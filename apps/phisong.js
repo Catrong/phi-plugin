@@ -606,6 +606,13 @@ export class phisong extends plugin {
             }
         }
 
+        // getFile.SetFile('updatedSong.txt', ans, 'TXT')
+
+        if (ans.length > 500) {
+            send.send_with_At(e, '新曲速递内容过长，请试图查阅其他途径！', true)
+            return false
+        }
+
         send.send_with_At(e, ans)
     }
 

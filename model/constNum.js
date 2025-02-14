@@ -14,7 +14,7 @@ const LevelNum = {
 const redisPath = "phiPlugin"
 
 /**最大难度 */
-const MAX_DIFFICULTY = 16.8
+const MAX_DIFFICULTY = 17.6
 
 export {
     Level, LevelNum, redisPath, MAX_DIFFICULTY
