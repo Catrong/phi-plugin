@@ -132,10 +132,10 @@ export class phib19 extends plugin {
 
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
         if (!nnum) {
-            nnum = 36
+            nnum = 33
         }
 
-        nnum = Math.max(nnum, 36)
+        nnum = Math.max(nnum, 33)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
         let bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
