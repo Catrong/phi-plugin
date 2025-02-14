@@ -320,4 +320,22 @@ export default new class compute {
         this.match_range(e_msg, range)
         return { range, isask, scoreAsk }
     }
+
+    // score_note(score, note) {
+    //     for (let maxCombo = 1; maxCombo <= note; maxCombo++) {
+    //         let comboScore = Math.round(maxCombo / note * 1e5)
+    //         let maxHit = 
+    //         if (comboScore + Math.round(maxCombo / note * 0.65 * 9e5) > score) {
+    //             /**全good仍大 */
+    //             continue
+    //         }
+    //         if () {
+
+    //         }
+    //     }
+    // }
 }()
+
+function dfs_score_note(score, note, maxCombo, perfect, ans) {
+
+}

@@ -144,6 +144,7 @@ export class phiGames extends plugin {
                 return await guessIll.ans(e, gameList)
             }
             default: {
+                e.reply(`当前没有进行中的游戏嗷！`)
                 return false
             }
         }

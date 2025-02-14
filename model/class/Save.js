@@ -172,7 +172,7 @@ export default class Save {
             /**背景 */
             background: data.gameuser.background,
         } : null
-        if (this.saveInfo.summary.rankingScore > MAX_DIFFICULTY || (!this.saveInfo.summary.rankingScore && this.saveInfo.summary.rankingScore != 0) || this.saveInfo.summary.challengeModeRank % 100 > 48) {
+        if (this.saveInfo.summary.rankingScore > MAX_DIFFICULTY || (!this.saveInfo.summary.rankingScore && this.saveInfo.summary.rankingScore != 0) || this.saveInfo.summary.challengeModeRank % 100 > 51) {
             getRksRank.delUserRks(this.session)
             throw new Error(`您的存档rks异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
         }
@@ -356,9 +356,11 @@ export default class Save {
             b19_list.push(rkslist[i])
         }
 
+        console.info(com_rks / 20, userrks)
+
         this.B19List = { phi, b19_list }
         this.b19_rks = b19_list[Math.min(b19_list.length - 1, 18)].rks
-        return { phi, b19_list }
+        return { phi, b19_list, com_rks: com_rks / 20 }
     }
 
     /**

@@ -202,7 +202,7 @@ export class phib19 extends plugin {
         }
 
 
-        send.send_with_At(e, await altas.b19(e, data))
+        send.send_with_At(e, [await altas.b19(e, data),`请注意，当前版本可能更改了计算规则\n计算rks: ${save_b19.com_rks}\n标准rks: ${save.saveInfo.summary.rankingScore}`])
     }
 
     /**arc版查分图 */
