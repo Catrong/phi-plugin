@@ -201,8 +201,11 @@ export class phib19 extends plugin {
             nnum: nnum,
         }
 
-
-        send.send_with_At(e, [await altas.b19(e, data),`请注意，当前版本可能更改了计算规则\n计算rks: ${save_b19.com_rks}\n标准rks: ${save.saveInfo.summary.rankingScore}`])
+        let res = [await altas.b19(e, data)]
+        if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 0.1) {
+            res.push(`请注意，当前版本可能更改了计算规则\n计算rks: ${save_b19.com_rks}\n标准rks: ${save.saveInfo.summary.rankingScore}`)
+        }
+        send.send_with_At(e, res)
     }
 
     /**arc版查分图 */
@@ -326,7 +329,7 @@ export class phib19 extends plugin {
 
         let bastlist = save.getB19(num)
 
-        let rkslist = bastlist.b19_list 
+        let rkslist = bastlist.b19_list
         let phi = bastlist.phi
 
         if (Config.getUserCfg('config', 'isGuild')) {
