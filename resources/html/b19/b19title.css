@@ -18,14 +18,15 @@
 }
 
 .title img {
-    width: 125px;
-    margin-left: 3%;
+    height: 80%;
+    margin-left: 4%;
     margin-right: 3%;
     border-radius: 25%;
 }
 
 .title .l {
-    width: 450px;
+    max-width: 450px;
+    width: 50%;
     height: 100%;
     z-index: 1;
     writing-mode: horizontal-tb;
@@ -44,13 +45,14 @@
 
 .title .r {
     height: 100%;
-    width: 350px;
+    width: 40%;
+    max-width: 350px;
     border-radius: 36px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     /* margin-left: -5%; */
-    padding-left: 6%;
+    padding-left: 3%;
 }
 
 .title .r p {
@@ -68,7 +70,7 @@
 
 .title .r .Challenge-r,
 .title .r .Challenge-r_1 {
-    width: 14%;
+    width: 45px;
     display: flex;
     align-items: center;
     justify-content: center;

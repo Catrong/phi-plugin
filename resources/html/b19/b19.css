@@ -28,7 +28,9 @@ body p {
     flex-wrap: wrap;
 }
 
-.b19 .L,.b19 .M,.b19 .R {
+.b19 .L,
+.b19 .M,
+.b19 .R {
     display: flex;
     flex-direction: column;
     align-items: center;
