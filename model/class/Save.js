@@ -320,10 +320,10 @@ export default class Save {
         let sum_rks = 0
         /**满分且 rks 最高的成绩数组 */
         let philist = this.findAccRecord(100)
-        /**随机抽取一个 b0 */
+        /**p3 */
         let phi = philist.splice(0, Math.min(philist.length, 3))
 
-        console.info(phi)
+        // console.info(phi)
         /**处理数据 */
 
         for (let i in phi) {
@@ -354,7 +354,7 @@ export default class Save {
             rkslist[i].num = i + 1
             /**推分建议 */
             rkslist[i].suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty, 2)
-            if (rkslist[i].suggest.includes('无') && (!phi?.rks || rkslist[i].rks > phi?.rks)) {
+            if (rkslist[i].suggest.includes('无') && ((phi && rkslist[i].rks > phi[phi.length + 1].rks) || !phi)) {
                 rkslist[i].suggest = "100.00%"
             }
             /**曲绘 */
