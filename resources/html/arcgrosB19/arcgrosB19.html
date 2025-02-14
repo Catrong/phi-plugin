@@ -38,25 +38,27 @@
         <div class="date_broad"></div>
     </div>
     <div class="box">
+        {{each phi song}}
+
         <div class="song_box">
             <div class="num_box">
                 <div class="num">
-                    <p>Phi</p>
+                    <p>P{{$index}}</p>
                 </div>
                 <div class="num_broad"></div>
                 <num class="num_borad_bottom"></num>
             </div>
             {{if phi}}
-            <div class="difficulty_box {{phi.rank}}-box">
-                <div class="difficulty {{phi.rank}}">
-                    <p>{{phi.difficulty}}</p>
+            <div class="difficulty_box {{song.rank}}-box">
+                <div class="difficulty {{song.rank}}">
+                    <p>{{song.difficulty}}</p>
                 </div>
             </div>
             <div class="acc_box">
                 <div class="acc">
-                    <p>{{phi.acc.toFixed(4).replace(/\..*/,'')}}</p>
-                    <p>{{phi.acc.toFixed(4).replace(/.*\./,'')}}</p>
-                    <!-- <p>{{phi.suggest}}</p> -->
+                    <p>{{song.acc.toFixed(4).replace(/\..*/,'')}}</p>
+                    <p>{{song.acc.toFixed(4).replace(/.*\./,'')}}</p>
+                    <!-- <p>{{song.suggest}}</p> -->
                 </div>
             </div>
             <div class="borad_up">
@@ -65,7 +67,7 @@
                         <p>Rating Score</p>
                     </div>
                     <div class="rks">
-                        <p>{{phi.rks.toFixed(2)}}</p>
+                        <p>{{song.rks.toFixed(2)}}</p>
                     </div>
                     <div class="line_box">
                         <div class="line_left"></div>
@@ -74,20 +76,20 @@
                     </div>
                     <div class="rating_box">
                         <div class="rating_borad"></div>
-                        <img src="{{_res_path}}html/otherimg/{{phi.Rating}}.png" alt="{{phi.Rating}}">
+                        <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
                     </div>
                 </div>
                 <div class="ill_box">
-                    <img src="{{phi.illustration}}" alt="{{phi.illustration}}">
+                    <img src="{{song.illustration}}" alt="{{song.illustration}}">
                     <div class="score">
-                        <p>{{fCompute.std_score(phi.score)}}</p>
+                        <p>{{fCompute.std_score(song.score)}}</p>
                     </div>
                 </div>
             </div>
             <div class="borad_down_box">
                 <div class="borad_down">
                     <div class="name">
-                        <p name="pvis">{{phi.song}}</p>
+                        <p name="pvis">{{song.song}}</p>
                     </div>
                 </div>
             </div>
@@ -101,6 +103,7 @@
             </div>
             {{/if}}
         </div>
+        {{/each}}
         {{each b19_list song}}
         <div class="song_box">
             <div class="num_box">

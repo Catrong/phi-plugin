@@ -12,28 +12,29 @@
     z-index: 1;
     flex-direction: row;
     margin-bottom: 5%;
-    justify-content: flex-start;
+    justify-content: space-around;
     /* writing-mode: vertical-lr; */
     align-items: center;
 }
 
 .title img {
-    width: 26%;
+    width: 125px;
     margin-left: 3%;
     margin-right: 3%;
     border-radius: 25%;
 }
 
 .title .l {
-    width: 57%;
+    width: 450px;
     height: 100%;
     z-index: 1;
     writing-mode: horizontal-tb;
-    clip-path: polygon(100% 0%, 90% 100%, 0% 100%, 0px 0px);
+    border-radius: 36px;
     display: flex;
     flex-direction: row;
     /* margin-right: -6%; */
     align-items: center;
+    /* margin-left: 3%; */
 }
 
 .title .l .doc p {
@@ -41,19 +42,10 @@
     margin: 4px;
 }
 
-.title .m {
-    background-color: white;
-    clip-path: polygon(100% 0%, 5% 100%, 0% 100%, 95% 0px);
-    height: 100%;
-    width: 6%;
-    z-index: 2;
-    margin: -5.7%;
-}
-
 .title .r {
-    clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 11% 0px);
-    height: 90%;
-    width: 42.4%;
+    height: 100%;
+    width: 350px;
+    border-radius: 36px;
     display: flex;
     flex-direction: column;
     justify-content: center;

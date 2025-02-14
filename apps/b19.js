@@ -95,10 +95,10 @@ export class phib19 extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)lmtacc.*$`,
                     fnc: 'lmtAcc'
                 },
-                {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
-                    fnc: 'bestn'
-                },
+                // {
+                //     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
+                //     fnc: 'bestn'
+                // },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(score|单曲成绩)[1-2]?.*$`,
                     fnc: 'singlescore'
@@ -132,10 +132,10 @@ export class phib19 extends plugin {
 
         nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
         if (!nnum) {
-            nnum = 21
+            nnum = 36
         }
 
-        nnum = Math.max(nnum, 21)
+        nnum = Math.max(nnum, 36)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
         let bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
@@ -220,10 +220,10 @@ export class phib19 extends plugin {
 
 
         let nnum = e.msg.match(/(b|B)[0-9]*/g)
-        nnum = nnum ? Number(nnum[0].replace(/(b|B)/g, '')) - 1 : 29
-        if (!nnum) { nnum = 29 }
+        nnum = nnum ? Number(nnum[0].replace(/(b|B)/g, '')) - 1 : 32
+        if (!nnum) { nnum = 32 }
 
-        nnum = Math.max(nnum, 19)
+        nnum = Math.max(nnum, 30)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
         let save_b19 = await save.getB19(nnum)
@@ -324,41 +324,10 @@ export class phib19 extends plugin {
         if (!num)
             num = 19 //未指定默认b19
 
-        let Record = save.gameRecord
-        let phi = {}
+        let bastlist = save.getB19(num)
 
-        phi.rks = 0
-
-        /**取出信息 */
-        let rkslist = []
-        for (let song in Record) {
-            for (let level in song) {
-                if (level == 4) break
-                let tem = Record[song][level]
-
-                if (!tem) continue
-
-
-                if (!tem) continue
-                if (tem.acc >= 100) {
-                    if (tem.rks > phi.rks) {
-                        phi = tem
-                    }
-                }
-                rkslist.push(tem)
-            }
-        }
-
-        phi.suggest = "无法推分"
-
-        let userrks = save.saveInfo.summary.rankingScore
-        /**考虑屁股肉四舍五入原则 */
-        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
-        if (minuprks < 0) {
-            minuprks += 0.01
-        }
-
-        rkslist = rkslist.sort(cmp())
+        let rkslist = bastlist.b19_list 
+        let phi = bastlist.phi
 
         if (Config.getUserCfg('config', 'isGuild')) {
             /**频道模式 */

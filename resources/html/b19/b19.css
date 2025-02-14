@@ -5,7 +5,7 @@ body {
     /* writing-mode: vertical-lr; */
     flex-direction: column;
     display: flex;
-    width: 800px;
+    width: 1200px;
     height: fit-content;
 }
 
@@ -25,24 +25,28 @@ body p {
 .b19 {
     display: flex;
     z-index: 1;
+    flex-wrap: wrap;
 }
 
-.b19 .R {
+.b19 .L,.b19 .M,.b19 .R {
     display: flex;
-    width: 50%;
     flex-direction: column;
     align-items: center;
-    margin-top: 8%;
+    justify-content: flex-start;
     margin-right: -1%;
+    width: 400px;
 }
 
 .b19 .L {
-    /* display: flex; */
-    width: 50%;
-    flex-direction: column;
-    align-items: center;
     margin-left: 2%;
-    margin-right: -1%;
+}
+
+.b19 .M {
+    margin-top: 5%;
+}
+
+.b19 .R {
+    margin-top: 8%;
 }
 
 .Nosignal,
@@ -51,14 +55,14 @@ body p {
 }
 
 .song {
-    width: 90%;
+    width: 360px;
     height: 100px;
     /* display: flex; */
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 35px;
+    margin-right: 0;
     position: relative;
 }
 
@@ -71,10 +75,11 @@ body p {
 }
 
 .num {
-    width: 10%;
+    width: 12%;
     height: 16%;
     padding-left: 3.5%;
     padding-right: 4.5%;
+    margin-left: -2%;
     top: 4%;
     left: 1%;
     background-color: rgba(255, 255, 255, 1);

@@ -311,21 +311,28 @@ export default class Save {
      * @returns phi, b19_list
      */
     async getB19(num) {
+
         if (this.B19List) {
             return this.B19List
         }
         let getInfo = (await import('../getInfo.js')).default
         /**计算得到的rks，仅作为测试使用 */
-        let com_rks = 0
+        let sum_rks = 0
         /**满分且 rks 最高的成绩数组 */
-        let philist = this.findAccRecord(100, true)
+        let philist = this.findAccRecord(100)
         /**随机抽取一个 b0 */
-        let phi = philist[Math.floor(Math.random() * philist.length)]
+        let phi = philist.splice(0, Math.min(philist.length, 3))
+
+        console.info(phi)
         /**处理数据 */
-        if (phi?.rks) {
-            com_rks += Number(phi.rks) //计算rks
-            phi.illustration = getInfo.getill(phi.song)
-            phi.suggest = "无法推分"
+
+        for (let i in phi) {
+            let tem = phi[i]
+            if (tem?.rks) {
+                sum_rks += Number(tem.rks) //计算rks
+                tem.illustration = getInfo.getill(tem.song)
+                tem.suggest = "无法推分"
+            }
         }
 
         /**所有成绩 */
@@ -342,11 +349,11 @@ export default class Save {
         let b19_list = []
         for (let i = 0; i < num && i < rkslist.length; ++i) {
             /**计算rks */
-            if (i < 19) com_rks += Number(rkslist[i].rks)
+            if (i < 27) sum_rks += Number(rkslist[i].rks)
             /**是 Best 几 */
             rkslist[i].num = i + 1
             /**推分建议 */
-            rkslist[i].suggest = fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 2)
+            rkslist[i].suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty, 2)
             if (rkslist[i].suggest.includes('无') && (!phi?.rks || rkslist[i].rks > phi?.rks)) {
                 rkslist[i].suggest = "100.00%"
             }
@@ -356,11 +363,12 @@ export default class Save {
             b19_list.push(rkslist[i])
         }
 
-        console.info(com_rks / 20, userrks)
+        let com_rks = sum_rks / 30
 
         this.B19List = { phi, b19_list }
-        this.b19_rks = b19_list[Math.min(b19_list.length - 1, 18)].rks
-        return { phi, b19_list, com_rks: com_rks / 20 }
+
+        this.b19_rks = b19_list[Math.min(b19_list.length - 1, 26)].rks
+        return { phi, b19_list, com_rks }
     }
 
     /**
@@ -374,17 +382,17 @@ export default class Save {
     getSuggest(id, lv, count, difficulty) {
         if (!this.b19_rks) {
             let record = this.getRecord()
-            this.b19_rks = record.length > 18 ? record[18].rks : 0
+            this.b19_rks = record.length > 26 ? record[26].rks : 0
             this.b0_rks = this.findAccRecord(100, true)[0]?.rks
         }
         // console.info(this.b19_rks, this.gameRecord[id][lv]?.rks ? this.gameRecord[id][lv].rks : 0, this.gameRecord[id])
         let suggest = ''
         if (!this.gameRecord[id] || !this.gameRecord[id][lv] || !this.gameRecord[id][lv].rks) {
-            suggest = fCompute.suggest(Math.max(this.b19_rks, 0) + this.minUpRks() * 20, difficulty, count)
+            suggest = fCompute.suggest(Math.max(this.b19_rks, 0) + this.minUpRks() * 30, difficulty, count)
         } else {
-            suggest = fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks) + this.minUpRks() * 20, difficulty, count)
+            suggest = fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks) + this.minUpRks() * 30, difficulty, count)
         }
-        return suggest.includes('无') ? (difficulty > this.b0_rks + this.minUpRks() * 20 ? Number(100).toFixed(count) + '%' : suggest) : suggest
+        return suggest.includes('无') ? (difficulty > this.b0_rks + this.minUpRks() * 30 ? Number(100).toFixed(count) + '%' : suggest) : suggest
     }
 
     /**
