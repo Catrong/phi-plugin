@@ -273,7 +273,7 @@ body p {
 }
 
 .Nosignal {
-    width: 87%;
+    width: 330px;
     height: 100px;
     display: flex;
     position: relative;
@@ -281,7 +281,8 @@ body p {
     align-items: flex-start;
     justify-content: center;
     background-color: rgba(112, 112, 112, 0.4);
-    margin-left: 5%;
+    margin-left: 3%;
+    margin-right: 2.5%;
 }
 
 .border_corner {
@@ -328,7 +329,7 @@ body p {
 .Nosignal .border_corner,
 .Nosignal .line,
 .Nosignal .sqrt {
-    filter: drop-shadow(0 0 5px #fff);
+    /* filter: drop-shadow(0 0 5px #fff); */
 }
 
 .Nosignal .timeout,
@@ -340,19 +341,19 @@ body p {
 }
 
 .Nosignal .timeout p {
-    text-shadow:
+    /* text-shadow:
         0 0 1px #d8f9ffab,
         1px 0 2px #d8f9ffab,
         -1px 0 2px #d8f9ffab,
         1px 0 5px #d8f9ffab,
-        -1px 0 10px #d8f9ffab;
+        -1px 0 10px #d8f9ffab; */
     margin-left: 5%;
     font-size: x-large;
     color: white;
 }
 
 .Nosignal .client p {
-    text-shadow: 0 0 1px #8eeeff88, 1px 0 2px #8eeeff88, -1px 0 5px #8eeeff88;
+    /* text-shadow: 0 0 1px #8eeeff88, 1px 0 2px #8eeeff88, -1px 0 5px #8eeeff88; */
     margin-left: 5%;
     font-size: x-small;
     color: #00B0F0;
@@ -378,7 +379,7 @@ body p {
     justify-content: center;
     align-items: center;
     background: repeating-linear-gradient(-45deg, #ffffff, #ffffff 5px, rgb(255 255 255 / 0%) 0, rgb(255 255 255 / 0%) 10px);
-    filter: drop-shadow(0px 0px 3px #ffffff);
+    /* filter: drop-shadow(0px 0px 3px #ffffff); */
 }
 
 .Nosignal .sqrt p {
