@@ -326,8 +326,12 @@ export default class Save {
         // console.info(phi)
         /**处理数据 */
 
-        for (let i in phi) {
+        for (let i = 0; i < 3; ++i) {
             let tem = phi[i]
+            if (!tem) {
+                phi[i] = false
+                continue
+            }
             if (tem?.rks) {
                 sum_rks += Number(tem.rks) //计算rks
                 tem.illustration = getInfo.getill(tem.song)
@@ -354,7 +358,7 @@ export default class Save {
             rkslist[i].num = i + 1
             /**推分建议 */
             rkslist[i].suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty, 2)
-            if (rkslist[i].suggest.includes('无') && ((phi && rkslist[i].rks > phi[phi.length - 1].rks) || !phi) && rkslist[i].rks < 100) {
+            if (rkslist[i].suggest.includes('无') && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks)) && rkslist[i].rks < 100) {
                 rkslist[i].suggest = "100.00%"
             }
             /**曲绘 */
