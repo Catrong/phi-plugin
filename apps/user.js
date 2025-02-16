@@ -433,7 +433,7 @@ export class phiuser extends plugin {
 
 
 
-        range[1] = Math.min(range[1], 16.9)
+        range[1] = Math.min(range[1], getInfo.MAX_DIFFICULTY)
         range[0] = Math.max(range[0], 0)
 
         let unlockcharts = 0
@@ -580,6 +580,7 @@ export class phiuser extends plugin {
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
+            background: get.getill(illlist[randint(0, illlist.length - 1)], 'blur'),
         }
 
         // let remsg = ''

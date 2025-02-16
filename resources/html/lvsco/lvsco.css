@@ -128,7 +128,7 @@ body p {
     width: 100%;
     display: flex;
     align-items: center;
-    height: 45.6;
+    height: 45.6px;
 }
 
 .user_name p {
@@ -376,7 +376,7 @@ body p {
     flex-direction: column;
     align-items: center;
     z-index: 0;
-    background: linear-gradient(#ffffff17 90%, #ffffff0d 100%);
+    background: linear-gradient(#00bfff33 90%, #00bfff00 100%);
 }
 
 .file-content {
