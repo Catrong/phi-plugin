@@ -41,7 +41,7 @@
 
     {{if song}}
 
-    <div class="song">
+    <div class="song phi_song">
         <div class="ill-box">
             <div class="num">
                 <p name="pvis">P{{$index+1}}</p>
@@ -107,7 +107,7 @@
 
     {{each b19_list song}}
 
-    <div class="song">
+    <div class="song {{$index<27?'b_song':''}}">
         <div class="ill-box">
             <div class="num">
                 <p name="pvis">#{{song.num}}</p>

@@ -68,6 +68,14 @@ body p {
     position: relative;
 }
 
+.phi_song {
+    filter: drop-shadow(0 0 10px #fbff00);
+}
+
+.b_song {
+    filter: drop-shadow(0 0 10px #ffffff);
+}
+
 .song .ill-box {
     width: 50%;
     height: auto;
@@ -150,7 +158,7 @@ body p {
 }
 
 .org p {
-    font-size: xx-small;
+    font-size: 12px;
 }
 
 .rel {
@@ -159,7 +167,7 @@ body p {
 }
 
 .rel p {
-    font-size: xx-small;
+    font-size: 13px;
 }
 
 
@@ -195,12 +203,15 @@ body p {
     width: 95%;
     height: 25%;
     margin-left: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .songname p {
-    font-size: unset;
     margin: 0;
     text-align: center;
+    font-size: 15px;
 }
 
 .songinfo {
