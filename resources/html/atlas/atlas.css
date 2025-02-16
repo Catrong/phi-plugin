@@ -347,7 +347,6 @@ body {
     /* line-height: 35px; */
 }
 
-
 .leave-ez,
 .leave-hd,
 .leave-in,
@@ -381,6 +380,31 @@ body {
 
 .leave-sp {
     background-color: #000000;
+}
+
+.ldif,
+.lrank {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50%;
+    width: 73%;
+    z-index: 1;
+    justify-content: center;
+    margin-bottom: -12px;
+}
+
+.ldif {
+    margin-left: 8px;
+    height: 60%;
+}
+
+.lrank {
+    margin-right: 9px;
+}
+
+.lrank p {
+    font-size: 15px;
 }
 
 .createdbox {

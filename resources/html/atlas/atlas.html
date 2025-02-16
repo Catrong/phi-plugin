@@ -132,8 +132,12 @@
                 {{else}}
                 <div class="leave-sp" style="background-color: rgba({{$value.rgba}});">
                 {{/if}}
-                    <p name="pvis" style="margin-left: 3px;">{{$value.difficulty}}</p>
-                    <p name="pvis" style="font-size: 15px; margin-right: 13px;">{{$index}}</p>
+                <div class="ldif">
+                    <p name="pvis">{{$value.difficulty}}</p>
+                </div>
+                <div class="lrank">
+                    <p name="pvis">{{$index}}</p>
+                </div>
                 </div>
 
             {{/each}}
