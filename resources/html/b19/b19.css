@@ -69,11 +69,11 @@ body p {
 }
 
 .phi_song {
-    filter: drop-shadow(0 0 10px #fbff00);
+    filter: drop-shadow(0 0 10px #fbff00aa);
 }
 
 .b_song {
-    filter: drop-shadow(0 0 10px #ffffff);
+    filter: drop-shadow(0 0 10px #ffffffaa);
 }
 
 .song .ill-box {
@@ -152,9 +152,9 @@ body p {
 }
 
 .org {
-    height: 35%;
+    height: 39%;
     margin-left: 5%;
-    margin-top: 2%;
+    margin-top: 0%;
 }
 
 .org p {
