@@ -13,7 +13,7 @@
 
 <body class="elem-{{element||elem||`hydro`}} {{displayMode || mode || `default`}}-mode  {{bodyClass}}" {{sys.scale}}>
 
-    
+
     <div class="background">
         {{if theme == "star"}}
         <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
@@ -47,27 +47,24 @@
 
                 /*调整曲目名称字体大小*/
                 let parentElement = songName.parentElement
-                let maxFontSize = 100 //设置最大字体大小
-                songName.style.fontSize = maxFontSize + "px"
 
-                // 如果字体宽度大于父元素宽度，则减小字体大小
-                let fontSize = maxFontSize;
+                if (!(songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight)) continue
+
+                let fontSize = Number(window.getComputedStyle(songName, null).getPropertyValue('font-size').replace("px", ""));
+
+
+                for (let i = 31; i > 0; i--) {
+                    if (!(fontSize & (1 << i)))
+                        continue
+                    fontSize -= (1 << i)
+                    songName.style.fontSize = fontSize + "px"
+                    if (!(songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight)) {
+                        fontSize += (1 << i)
+                    }
+                }
+
+                --fontSize;
                 songName.style.fontSize = fontSize + "px";
-
-                // 使用倍增算法快速减小字体大小
-                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
-                    fontSize = Math.floor(fontSize / 2);
-                    songName.style.fontSize = fontSize + "px";
-                }
-
-                // 逐步增加字体大小，找到最合适的大小
-                while (songName.scrollWidth <= parentElement.offsetWidth && songName.scrollHeight <= parentElement.offsetHeight && fontSize < maxFontSize) {
-                    fontSize += 1;
-                    songName.style.fontSize = fontSize + "px";
-                }
-
-                // 回退到合适的字体大小
-                songName.style.fontSize = (fontSize - 1) + "px";
             }
 
         }
