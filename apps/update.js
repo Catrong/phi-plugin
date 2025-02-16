@@ -57,10 +57,22 @@ export class phiupdate extends plugin {
         const isForce = this.e.msg.includes("强制") || this.e.msg.includes("qz");
 
         /** 执行更新 */
-        var ifrestart = await this.runUpdate(isForce);
+        var ifrestart
+
+        try {
+            ifrestart = await this.runUpdate(isForce);
+        } catch (err) {
+            this.e.reply("phi-plugin更新失败QAQ!" + err)
+            console.error(err)
+        }
 
         if (Config.getUserCfg('config', 'autoPullPhiIll')) {
-            this.ill_update()
+            try {
+                await this.ill_update()
+            } catch (err) {
+                this.e.reply("曲绘文件更新失败QAQ!" + err)
+                console.error(err)
+            }
         }
 
 
