@@ -73,7 +73,11 @@ export class phisstk extends plugin {
             let result;
             /**是否发送过已扫描提示 */
             let flag = false;
-            while (new Date() - t1 < request.data.expires_in * 1000) {
+            /**判断adapter是否为QQBot，如果是并且超时时间大于270秒则将超时时间改为270秒，以免被动消息回复超时**/
+            let QRCodetimeout = request.data.expires_in
+            if (e.bot?.adapter?.name === 'QQBot' && request.data.expires_in > 270) QRCodetimeout = 270
+            
+            while (new Date() - t1 < QRCodetimeout * 1000) {
                 result = await getQRcode.checkQRCodeResult(request);
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
