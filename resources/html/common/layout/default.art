@@ -35,6 +35,9 @@
     <!-- 曲目名称自适应name-box的宽度 -->
 
     <script>
+        function isBiggerThanParent(songName, parentElement) {
+            return songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight
+        }
         function adjustFontSize() {
             //获取p元素
             let a = document.getElementsByName('pvis')
@@ -48,23 +51,20 @@
                 /*调整曲目名称字体大小*/
                 let parentElement = songName.parentElement
 
-                if (!(songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight)) continue
+                if (!isBiggerThanParent(songName, parentElement)) continue
 
                 let fontSize = Number(window.getComputedStyle(songName, null).getPropertyValue('font-size').replace("px", ""));
 
-
-                for (let i = 31; i > 0; i--) {
-                    if (!(fontSize & (1 << i)))
-                        continue
-                    fontSize -= (1 << i)
-                    songName.style.fontSize = fontSize + "px"
-                    if (!(songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight)) {
-                        fontSize += (1 << i)
+                let l = 0, r = fontSize;
+                while (l < r) {
+                    let mid = Math.floor((l + r) / 2);
+                    songName.style.fontSize = mid + "px";
+                    if (isBiggerThanParent(songName, parentElement)) {
+                        r = mid;
+                    } else {
+                        l = mid + 1;
                     }
                 }
-
-                --fontSize;
-                songName.style.fontSize = fontSize + "px";
             }
 
         }
