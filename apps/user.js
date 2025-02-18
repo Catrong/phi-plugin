@@ -69,9 +69,6 @@ export class phiuser extends plugin {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-
-        /**'EZ', 'HD', 'IN', 'AT' */
-        let tot = [0, 0, 0, 0]
         /**背景 */
         let bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
         if (bksong) {
@@ -92,87 +89,7 @@ export class phiuser extends plugin {
             return true
         }
 
-        let Record = save.gameRecord
-
-        let stats_ = {
-            tatle: '',
-            Rating: '',
-            unlock: 0,
-            tot: 0,
-            cleared: 0,
-            fc: 0,
-            phi: 0,
-            real_score: 0,
-            tot_score: 0,
-            highest: 0,
-            lowest: 18,
-        }
-
-        let stats = [{ ...stats_ }, { ...stats_ }, { ...stats_ }, { ...stats_ }]
-
-        for (let song in get.ori_info) {
-            let info = get.ori_info[song]
-            if (info.chart['AT'] && Number(info.chart['AT'].difficulty)) {
-                ++tot[3]
-            }
-            if (info.chart['IN'] && Number(info.chart['IN'].difficulty)) {
-                ++tot[2]
-            }
-            if (info.chart['HD'] && Number(info.chart['HD'].difficulty)) {
-                ++tot[1]
-            }
-            if (info.chart['EZ'] && Number(info.chart['EZ'].difficulty)) {
-                ++tot[0]
-            }
-        }
-
-        stats[0].tot = tot[0]
-        stats[0].tatle = Level[0]
-
-        stats[1].tot = tot[1]
-        stats[1].tatle = Level[1]
-
-        stats[2].tot = tot[2]
-        stats[2].tatle = Level[2]
-
-        stats[3].tot = tot[3]
-        stats[3].tatle = Level[3]
-
-        for (let id in Record) {
-            if (!getInfo.idgetsong(id)) {
-                continue
-            }
-            let record = Record[id]
-            for (let lv in [0, 1, 2, 3]) {
-                if (!record[lv]) continue
-
-                ++stats[lv].unlock
-
-                if (record[lv].score >= 700000) {
-                    ++stats[lv].cleared
-                }
-                if (record[lv].fc || record[lv].score == 1000000) {
-                    ++stats[lv].fc
-                }
-                if (record[lv].score == 1000000) {
-                    ++stats[lv].phi
-                }
-
-
-                stats[lv].real_score += record[lv].score
-                stats[lv].tot_score += 1000000
-
-                stats[lv].highest = Math.max(record[lv].rks, stats[lv].highest)
-                stats[lv].lowest = Math.min(record[lv].rks, stats[lv].lowest)
-            }
-        }
-
-        for (let lv in [0, 1, 2, 3]) {
-            stats[lv].Rating = Rate(stats[lv].real_score, stats[lv].tot_score, stats[lv].fc == stats[lv].unlock)
-            if (stats[lv].lowest == 18) {
-                stats[lv].lowest = 0
-            }
-        }
+        let stats = await save.getStats()
 
         let money = save.gameProgress.money
         let userbackground = await fCompute.getBackground(save.gameuser.background)

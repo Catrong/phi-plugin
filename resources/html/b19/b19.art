@@ -7,32 +7,75 @@
 {{block 'main'}}
 
 <div class="title">
-    <div class="l">
-        <img src="{{_res_path}}html/otherimg/Phigros_Icon_3.0.0.png" alt="icon">
-        <div class="doc">
-            <p>Phigros</p>
-            <p>RankingScore查询</p>
+    <div class="playerInfo">
+        <div class="blackBlock"></div>
+        <div class="avatar">
+            <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
+        </div>
+        <div class="playerId">
+            <p name="pvis">{{#gameuser.PlayerId}}</p>
+        </div>
+        <div class="rks">
+            <p>{{gameuser.rks.toFixed(4)}}</p>
+        </div>
+        <div class="clgBox">
+            <div class="Challenge">
+            <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="Challenge">
+            <p>{{gameuser.ChallengeModeRank}}</p>
+            </div>
+        </div>
+        <div class="date">
+            <p>{{Date}}</p>
+        </div>
+        <div class="dataBox">
+            <img src="{{_res_path}}html/otherimg/data.png" alt="data">
+            <p>{{gameuser.data}}</p>
         </div>
     </div>
-    <div class="r">
-        <p>Player: {{#gameuser.PlayerId}}</p>
-        <p>RankingScore: {{gameuser.rks.toFixed(4)}}</p>
-        <div class="Challenge">
-            <p>ChallengeMode:</p>
-            {{if gameuser.dan}}
-            <div class="CLG {{gameuser.dan.EX ? 'colorful' : ''}}">
-                <p>{{gameuser.dan.Dan}}</p>
+    <div class="recordInfo">
+        <div class="whiteLine"></div>
+        <div class="sheet">
+            <div class="row">
+                <div class="poz">
+                    <p>\</p>
+                </div>
+                {{each stats v i}}
+                <div class="poz">
+                    <p>{{v.title}}</p>
+                </div>
+                {{/each}}
             </div>
-            {{/if}}
-            <div class="Challenge-r">
-                <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="Challenge">
-                <p>{{gameuser.ChallengeModeRank}}</p>
+            <div class="row">
+                <div class="poz">
+                    <p>C</p>
+                </div>
+                {{each stats v i}}
+                <div class="poz">
+                    <p>{{v.cleared}}</p>
+                </div>
+                {{/each}}
+            </div>
+            <div class="row">
+                <div class="poz">
+                    <p>FC</p>
+                </div>
+                {{each stats v i}}
+                <div class="poz">
+                    <p>{{v.fc}}</p>
+                </div>
+                {{/each}}
+            </div>
+            <div class="row">
+                <div class="poz">
+                    <p>Phi</p>
+                </div>
+                {{each stats v i}}
+                <div class="poz">
+                    <p>{{v.phi}}</p>
+                </div>
+                {{/each}}
             </div>
         </div>
-        {{if gameuser.data}}
-        <p>Data: {{gameuser.data}}</p>
-        {{/if}}
-        <p>Date: {{Date}}</p>
     </div>
 </div>
 <div class="b19">

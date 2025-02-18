@@ -14,6 +14,7 @@ import getInfo from './getInfo.js';
 import pic from './getPic.js';
 import { Level } from "./constNum.js";
 import getPic from "./getPic.js";
+import fs from 'node:fs';
 // import { redis } from 'yunzai'
 
 
@@ -47,7 +48,7 @@ class getdata {
     async init() {
 
         try {
-            if (await readFile.FileReader(path.join(_path, 'user_token.json')) || !(await redis.keys("phiPlugin:userToken:*"))[0]) {
+            if (await fs.existsSync(path.join(dataPath, 'user_token.json'))) {
                 /**之前写错了，一不小心把.json的文件也当成文件夹创建了，这里要去清除空文件夹 */
                 readFile.rmEmptyDir(dataPath)
                 /**移动json文件 */

@@ -1,5 +1,4 @@
 @import "../common/common.css";
-@import "./b19title.css";
 
 body {
     /* writing-mode: vertical-lr; */
@@ -20,6 +19,208 @@ body p {
     height: 100%;
     width: auto;
     /* filter: blur(100px) brightness(75%); */
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 7rem;
+    position: relative;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    top: 0;
+}
+
+.playerInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 50%;
+    height: 5rem;
+    position: absolute;
+    left: 7%;
+}
+
+.blackBlock {
+    width: 100%;
+    height: 91%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    --rpoz: 21px;
+    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    z-index: 0;
+}
+
+.avatar {
+    height: 200%;
+    z-index: 2;
+    clip-path: polygon(100% 25%, 86% 75%, 0 75%, 13% 25%);
+}
+
+.avatar img {
+    height: 100%;
+}
+
+.playerId {
+    position: absolute;
+    height: 80%;
+    width: 51%;
+    right: 6%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playerId p {
+    font-size: 2rem;
+}
+
+.rks {
+    width: 18%;
+    height: 30%;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    background-color: white;
+    clip-path: polygon(100% 0%, 93% 100%, 0 100%, 0% 0%);
+    z-index: 1;
+    justify-content: center;
+    position: absolute;
+    left: 23%;
+    bottom: 13%;
+}
+
+.rks p {
+    font-size: 1.3rem;
+    color: black;
+}
+
+.clgBox {
+    width: 4rem;
+    height: 1rem;
+    left: 28%;
+    top: 17%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clgBox p {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.date {
+    position: absolute;
+    right: -6px;
+    top: -20px;
+}
+
+.dataBox {
+    position: absolute;
+    height: 25%;
+    bottom: -31%;
+    left: -1%;
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.5);
+    --rpoz: 4.5px;
+    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    align-items: center;
+    justify-content: center;
+    padding-right: 0.3rem;
+}
+
+.dataBox img {
+    height: 100%;
+    padding: 4%;
+    box-sizing: border-box;
+}
+
+.recordInfo {
+    position: absolute;
+    height: 100%;
+    width: 21%;
+    right: 9%;
+    background-color: rgba(0, 0, 0, 0.5);
+    --rpoz: 29px;
+    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    padding-left: 3%;
+}
+
+.whiteLine {
+    --rpoz: 29px;
+    width: 33px;
+    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    height: 100%;
+    background-color: white;
+    position: absolute;
+    left: 0;
+}
+
+:root {
+    --row: 2%;
+    --Poz: 3rem;
+}
+
+.sheet {
+    height: 100%;
+}
+
+.row {
+    position: relative;
+    height: 25%;
+    display: flex;
+    align-items: center;
+}
+
+.row:nth-child(1) {
+    left: calc(var(--row) * 3);
+}
+
+.row:nth-child(2) {
+    left: calc(var(--row) * 2);
+}
+
+.row:nth-child(3) {
+    left: calc(var(--row) * 1);
+}
+
+.row:nth-child(4) {
+    left: 0;
+}
+
+.poz {
+    width: 0;
+    height: 0;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.poz:nth-child(2) {
+    left: var(--Poz);
+}
+
+.poz:nth-child(3) {
+    left: calc(var(--Poz) * 2);
+}
+
+.poz:nth-child(4) {
+    left: calc(var(--Poz) * 3);
+}
+
+.poz:nth-child(5) {
+    left: calc(var(--Poz) * 4);
+}
+
+.poz p {
+    font-size: 1rem;
+    color: white;
 }
 
 .b19 {

@@ -171,6 +171,8 @@ export class phib19 extends plugin {
         }
 
         let save_b19 = await save.getB19(nnum)
+        let stats = await save.getStats()
+
 
         let dan = await get.getDan(e.user_id)
         let money = save.gameProgress.money
@@ -189,7 +191,6 @@ export class phib19 extends plugin {
         let data = {
             phi: save_b19.phi,
             b19_list: save_b19.b19_list,
-            gameuser,
             PlayerId: gameuser.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.updatedAt,
@@ -198,7 +199,9 @@ export class phib19 extends plugin {
             dan: await get.getDan(e.user_id),
             background: bksong || getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
             theme: plugin_data?.plugin_data?.theme || 'star',
-            nnum: nnum,
+            gameuser,
+            nnum,
+            stats,
         }
 
         let res = [await altas.b19(e, data)]

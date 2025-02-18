@@ -321,6 +321,36 @@ export default new class compute {
         return { range, isask, scoreAsk }
     }
 
+    /**
+     * 
+     * @param {number} real_score 真实成绩
+     * @param {number} tot_score 总成绩
+     * @param {boolean} fc 是否fc
+     * @returns 
+     */
+    rate(real_score, tot_score, fc) {
+    
+        if (!real_score) {
+            return 'F'
+        } else if (real_score == tot_score) {
+            return 'phi'
+        } else if (fc) {
+            return 'FC'
+        } else if (real_score >= tot_score * 0.96) {
+            return 'V'
+        } else if (real_score >= tot_score * 0.92) {
+            return 'S'
+        } else if (real_score >= tot_score * 0.88) {
+            return 'A'
+        } else if (real_score >= tot_score * 0.82) {
+            return 'B'
+        } else if (real_score >= tot_score * 0.70) {
+            return 'C'
+        } else {
+            return 'F'
+        }
+    }
+
     // score_note(score, note) {
     //     for (let maxCombo = 1; maxCombo <= note; maxCombo++) {
     //         let comboScore = Math.round(maxCombo / note * 1e5)
