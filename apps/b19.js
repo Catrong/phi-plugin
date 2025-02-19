@@ -188,8 +188,6 @@ export class phib19 extends plugin {
             dan: dan,
         }
 
-        console.info(save_b19.phi)
-
         let data = {
             phi: save_b19.phi,
             b19_list: save_b19.b19_list,
