@@ -98,6 +98,7 @@ The following # can be replaced with /, and the command header can be customized
 | `#phi (ltr\|开字母)` | Guess the song name based on the letters, #出/#open... open the specified letter, #第n个/#nX.xxx answer, #ans get the answer
 | `#phi (tipgame\|提示猜曲)` | Guess the song name based on the prompt, #tip get the next prompt, #ans get the answer, answer directly reply
 | `#phi (song\|曲) xxx` | Query a song in phigros, support setting aliases
+| `#phi (table\|定数表) <difficuty>` | phigros chart constant table (BiliBili @yuhao7370)
 | `#phi new` | Query updated songs
 | `#phi tips` | Random tips
 | `#phi jrrp` | Today's fortune
@@ -138,7 +139,7 @@ The following # can be replaced with /, and the command header can be customized
 | bind | Bind function | /bind /unbind
 | b19 | Image score query function | /pgr /update /info /list /pb30 /score /lvsco /chap /suggest
 | wb19 | Text score query function | /data /best
-| song | Illustration function | /song /ill /search /alias /rand /randclg
+| song | Illustration function | /song /ill /search /alias /rand /randclg /table
 | ranklist | Leaderboard function, will not disable user ranking | /ranklist /godlist
 | fnc | Small functions | /com /tips /lmtacc /new
 | tipgame | Tip guessing game | /tipgame

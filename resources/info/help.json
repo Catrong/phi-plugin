@@ -108,6 +108,11 @@
                 "desc": "查询曲目图鉴<br>eg: /song 996"
             },
             {
+                "title": "/table",
+                "eg": "/table <定数>",
+                "desc": "查询定数表 from @yuhao7370"
+            },
+            {
                 "title": "/ill",
                 "eg": "/ill <曲目>",
                 "desc": "查询曲目曲绘<br>eg: /ill 996"

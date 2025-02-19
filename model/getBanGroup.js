@@ -48,6 +48,7 @@ export default new class getBanGroup {
             case 'alias':
             case 'randmic':
             case 'randClg':
+            case 'table':
                 return await this.redis(group, 'song')
             case 'rankList':
             case 'godList':

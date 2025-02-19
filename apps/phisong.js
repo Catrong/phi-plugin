@@ -9,6 +9,7 @@ import picmodle from '../model/picmodle.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
 import { LevelNum } from '../model/constNum.js'
+import { segment } from 'oicq'
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
@@ -66,7 +67,12 @@ export class phisong extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)new$`,
                     fnc: 'new'
-                }
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(table|定数表)\\s*[0-9]+$`,
+                    fnc: 'table'
+                },
+
             ]
         })
 
@@ -614,6 +620,26 @@ export class phisong extends plugin {
         }
 
         send.send_with_At(e, ans)
+    }
+
+    async table(e) { 
+
+        if (await getBanGroup.get(e.group_id, 'table')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let dif = Number(e.msg.match(/[0-9]+/)?.[0])
+
+        if(!dif) {
+            send.send_with_At(e, `请输入定数嗷！\n/格式：${Config.getUserCfg('config', 'cmdhead')} table <定数>`, true)
+            return false
+        }
+
+        console.info(dif)
+
+        send.send_with_At(e, segment.image(getInfo.getTableImg(dif)))
+
     }
 
 }

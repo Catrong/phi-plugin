@@ -531,6 +531,14 @@ export default new class getInfo {
         return ans
     }
 
+    getTableImg(dif) {
+        if (fs.existsSync(path.join(originalIllPath, "table", `${dif}.png`))) {
+            return path.join(originalIllPath, "table", `${dif}.png`)
+        } else {
+            return `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/table/${dif}.png`
+        }
+    }
+
     /**
      * 返回章节封面 url
      * @param {string} name 标准章节名
@@ -539,7 +547,7 @@ export default new class getInfo {
         if (fs.existsSync(path.join(originalIllPath, "chap", `${name}.png`))) {
             return path.join(originalIllPath, "chap", `${name}.png`)
         } else {
-            return `https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main/chap/${name}.png`
+            return `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/chap/${name}.png`
         }
     }
 

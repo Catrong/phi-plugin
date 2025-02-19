@@ -91,6 +91,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi (ltr\|开字母)` | 根据字母猜曲名，#出/#open... 开指定的字母，#第n个/#nX.xxx 进行回答，#ans 获取答案
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名
+| `#phi (table\|定数表) <定数>` | 查询phigros定数表（B站@yuhao7370）
 | `#phi new` | 查询更新的曲目
 | `#phi tips` | 随机tips
 | `#phi jrrp` | 今日人品
@@ -129,7 +130,7 @@ pnpm install -P #安装插件所需依赖
 | bind | 绑定功能 | /bind /unbind
 | b19 | 图片查分功能 | /pgr /update /info /list /pb30 /score /lvsco /chap /suggest
 | wb19 | 文字查分功能 | /data /best
-| song | 图鉴功能 | /song /ill /search /alias /rand /randclg
+| song | 图鉴功能 | /song /ill /search /alias /rand /randclg /table
 | ranklist | 排行榜功能，不会禁用用户排名 | /ranklist /godlist
 | fnc | 小功能 | /com /tips /lmtacc /new
 | tipgame | tip猜歌 | /tipgame
