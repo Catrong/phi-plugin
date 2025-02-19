@@ -160,7 +160,7 @@ export default class saveHistory {
         /**更新data记录 */
         for (let i = this.data.length - 1; i >= 0; i--) {
             if (save.saveInfo.modifiedAt.iso > new Date(this.data[i].date)) {
-                if (checkValue(this.data[i].value, save.gameProgress.money) && checkValue(this.data[i + 1]?.value, save.gameProgress.money)) {
+                if (!this.data[i + 1] || (checkValue(this.data[i].value, save.gameProgress.money) && checkValue(this.data[i + 1]?.value, save.gameProgress.money))) {
                     this.data.splice(i + 1, 0, {
                         date: save.saveInfo.modifiedAt.iso,
                         value: save.gameProgress.money
@@ -189,7 +189,7 @@ export default class saveHistory {
         for (let level in t) {
             t[level] = t[level] ? openHistory(t[level].at(-1)) : null
             let date = t[level].date
-            t[level] = new LevelRecordInfo(t[level],id,level)
+            t[level] = new LevelRecordInfo(t[level], id, level)
             t[level].date = date
         }
         return t
