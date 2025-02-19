@@ -142,7 +142,7 @@ export default class saveHistory {
         /**更新rks记录 */
         for (let i = this.rks.length - 1; i >= 0; i--) {
             if (save.saveInfo.modifiedAt.iso > new Date(this.rks[i].date)) {
-                if (this.rks[i].value != save.saveInfo.summary.rankingScore || this.rks[i + 1]?.value != save.saveInfo.summary.rankingScore) {
+                if (!this.rks[i + 1] || (this.rks[i].value != save.saveInfo.summary.rankingScore || this.rks[i + 1]?.value != save.saveInfo.summary.rankingScore)) {
                     this.rks.splice(i + 1, 0, {
                         date: save.saveInfo.modifiedAt.iso,
                         value: save.saveInfo.summary.rankingScore
