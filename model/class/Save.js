@@ -323,19 +323,22 @@ export default class Save {
         /**p3 */
         let phi = philist.splice(0, Math.min(philist.length, 3))
 
+
         // console.info(phi)
         /**处理数据 */
 
         for (let i = 0; i < 3; ++i) {
-            let tem = phi[i]
-            if (!tem) {
+            if (!phi[i]) {
                 phi[i] = false
                 continue
             }
-            if (tem?.rks) {
-                sum_rks += Number(tem.rks) //计算rks
-                tem.illustration = getInfo.getill(tem.song)
-                tem.suggest = "无法推分"
+            if (phi[i]?.rks) {
+                let tem = {}
+                Object.assign(tem, phi[i])
+                phi[i] = tem
+                sum_rks += Number(phi[i].rks) //计算rks
+                phi[i].illustration = getInfo.getill(phi[i].song)
+                phi[i].suggest = "无法推分"
             }
         }
 
@@ -357,9 +360,13 @@ export default class Save {
             /**是 Best 几 */
             rkslist[i].num = i + 1
             /**推分建议 */
-            rkslist[i].suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty, 2)
-            if (rkslist[i].suggest.includes('无') && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks)) && rkslist[i].rks < 100) {
-                rkslist[i].suggest = "100.00%"
+            if (rkslist[i].rks < 100) {
+                rkslist[i].suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty, 2)
+                if (rkslist[i].suggest.includes('无') && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks)) && rkslist[i].rks < 100) {
+                    rkslist[i].suggest = "100.00%"
+                }
+            } else {
+                rkslist[i].suggest = "无法推分"
             }
             /**曲绘 */
             rkslist[i].illustration = getInfo.getill(rkslist[i].song, 'common')
@@ -420,11 +427,11 @@ export default class Save {
      * @returns 
      */
     async getStats() {
-        
+
         let getInfo = (await import('../getInfo.js')).default
         /**'EZ', 'HD', 'IN', 'AT' */
         let tot = [0, 0, 0, 0]
-        
+
         let Record = this.gameRecord
         let Level = getInfo.Level
 
