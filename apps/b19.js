@@ -104,7 +104,7 @@ export class phib19 extends plugin {
                     fnc: 'singlescore'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(suggest|推分(建议)?)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(suggest|推分(建议)?).*$`,
                     fnc: 'suggest'
                 },
                 {

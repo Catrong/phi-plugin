@@ -415,6 +415,10 @@ export default class Save {
         return this.session
     }
 
+    /**
+     * 获取存档成绩总览
+     * @returns 
+     */
     async getStats() {
         
         let getInfo = (await import('../getInfo.js')).default
