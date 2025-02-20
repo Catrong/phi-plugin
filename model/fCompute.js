@@ -329,7 +329,7 @@ export default new class compute {
      * @returns 
      */
     rate(real_score, tot_score, fc) {
-    
+
         if (!real_score) {
             return 'F'
         } else if (real_score == tot_score) {
@@ -348,6 +348,38 @@ export default new class compute {
             return 'C'
         } else {
             return 'F'
+        }
+    }
+
+
+    /**
+     * 转换时间格式
+     * @param {Date|string} date 时间
+     * @returns 2020/10/8 10:08:08
+     */
+    date_to_string(date) {
+        if (!date) return undefined
+        date = new Date(date)
+
+        let month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+        let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+
+        return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
+    }
+
+
+
+    /**
+     * 计算百分比
+     * @param {Number} value 值
+     * @param {Array} range 区间数组 (0,..,1)
+     * @returns 百分数，单位%
+     */
+    range(value, range) {
+        if (range[0] == range[range.length - 1]) {
+            return 50
+        } else {
+            return (value - range[0]) / (range[range.length - 1] - range[0]) * 100
         }
     }
 

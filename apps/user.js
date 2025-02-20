@@ -116,83 +116,7 @@ export class phiuser extends plugin {
 
         let user_data = await getSave.getHistory(e.user_id)
 
-        let rks_history_ = []
-        let data_history_ = []
-        let user_rks_data = user_data.rks
-        let user_data_data = user_data.data
-        let rks_range = [17, 0]
-        let data_range = [1e9, 0]
-        let rks_date = [new Date(user_rks_data[0].date).getTime(), 0]
-        let data_date = [new Date(user_data_data[0].date).getTime(), 0]
-
-        for (let i in user_rks_data) {
-            user_rks_data[i].date = new Date(user_rks_data[i].date)
-            if (i <= 1 || user_rks_data[i].value != rks_history_[rks_history_.length - 2].value) {
-                rks_history_.push(user_rks_data[i])
-                rks_range[0] = Math.min(rks_range[0], user_rks_data[i].value)
-                rks_range[1] = Math.max(rks_range[1], user_rks_data[i].value)
-            } else {
-                rks_history_[rks_history_.length - 1].date = user_rks_data[i].date
-            }
-            rks_date[1] = user_rks_data[i].date.getTime()
-        }
-
-
-        for (let i in user_data_data) {
-            let value = user_data_data[i]['value']
-            user_data_data[i].value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
-            user_data_data[i].date = new Date(user_data_data[i].date)
-            if (i <= 1 || user_data_data[i].value != data_history_[data_history_.length - 2].value) {
-                data_history_.push(user_data_data[i])
-                data_range[0] = Math.min(data_range[0], user_data_data[i].value)
-                data_range[1] = Math.max(data_range[1], user_data_data[i].value)
-            } else {
-                data_history_[data_history_.length - 1].date = user_data_data[i].date
-            }
-            data_date[1] = user_data_data[i].date.getTime()
-        }
-
-        let rks_history = []
-        let data_history = []
-
-        for (let i in rks_history_) {
-
-            i = Number(i)
-
-            if (!rks_history_[i + 1]) break
-            let x1 = range(rks_history_[i].date, rks_date)
-            let y1 = range(rks_history_[i].value, rks_range)
-            let x2 = range(rks_history_[i + 1].date, rks_date)
-            let y2 = range(rks_history_[i + 1].value, rks_range)
-            rks_history.push([x1, y1, x2, y2])
-        }
-
-        for (let i in data_history_) {
-
-            i = Number(i)
-
-            if (!data_history_[i + 1]) break
-            let x1 = range(data_history_[i].date, data_date)
-            let y1 = range(data_history_[i].value, data_range)
-            let x2 = range(data_history_[i + 1].date, data_date)
-            let y2 = range(data_history_[i + 1].value, data_range)
-            data_history.push([x1, y1, x2, y2])
-        }
-
-
-        let unit = ["KiB", "MiB", "GiB", "TiB", "Pib"]
-
-        for (let i in [1, 2, 3, 4]) {
-            if (Math.floor(data_range[0] / (Math.pow(1024, i))) < 1024) {
-                data_range[0] = `${Math.floor(data_range[0] / (Math.pow(1024, i)))}${unit[i]}`
-            }
-        }
-
-        for (let i in [1, 2, 3, 4]) {
-            if (Math.floor(data_range[1] / (Math.pow(1024, i))) < 1024) {
-                data_range[1] = `${Math.floor(data_range[1] / (Math.pow(1024, i)))}${unit[i]}`
-            }
-        }
+        let { rks_history, data_history, rks_range, data_range, rks_date, data_date } = user_data.getRksAndDataLine()
 
 
         /**统计在要求acc>=i的前提下，玩家的rks为多少 */
@@ -246,9 +170,9 @@ export class phiuser extends plugin {
 
         for (let i = 1; i < acc_rks_data.length; ++i) {
             if (acc_rks_data_[0] && acc_rks_data[i - 1][1] == acc_rks_data[i][1]) {
-                acc_rks_data_[acc_rks_data_.length - 1][2] = range(acc_rks_data[i][0], acc_rks_AccRange)
+                acc_rks_data_[acc_rks_data_.length - 1][2] = fCompute.range(acc_rks_data[i][0], acc_rks_AccRange)
             } else {
-                acc_rks_data_.push([range(acc_rks_data[i - 1][0], acc_rks_AccRange), range(acc_rks_data[i - 1][1], acc_rks_range), range(acc_rks_data[i][0], acc_rks_AccRange), range(acc_rks_data[i][1], acc_rks_range)])
+                acc_rks_data_.push([fCompute.range(acc_rks_data[i - 1][0], acc_rks_AccRange), fCompute.range(acc_rks_data[i - 1][1], acc_rks_range), fCompute.range(acc_rks_data[i][0], acc_rks_AccRange), fCompute.range(acc_rks_data[i][1], acc_rks_range)])
             }
         }
         // console.info(acc_rks_data_)
@@ -282,8 +206,8 @@ export class phiuser extends plugin {
             data_history: data_history,
             rks_range: rks_range,
             data_range: data_range,
-            data_date: [date_to_string(data_date[0]), date_to_string(data_date[1])],
-            rks_date: [date_to_string(rks_date[0]), date_to_string(rks_date[1])],
+            data_date: [fCompute.date_to_string(data_date[0]), fCompute.date_to_string(data_date[1])],
+            rks_date: [fCompute.date_to_string(rks_date[0]), fCompute.date_to_string(rks_date[1])],
             acc_rks_data: acc_rks_data_,
             acc_rks_range: acc_rks_range,
             acc_rks_AccRange: acc_rks_AccRange_position,
@@ -621,20 +545,6 @@ export class phiuser extends plugin {
 
 }
 
-/**
- * 计算百分比
- * @param {Number} value 值
- * @param {Array} range 区间数组 (0,..,1)
- * @returns 百分数，单位%
- */
-function range(value, range) {
-    if (range[0] == range[range.length - 1]) {
-        return 50
-    } else {
-        return (value - range[0]) / (range[range.length - 1] - range[0]) * 100
-    }
-}
-
 /**进度条 */
 function progress_bar(value, length) {
     let result = '['
@@ -676,16 +586,6 @@ function Rate(real_score, tot_score, fc) {
     } else {
         return 'F'
     }
-}
-
-/**
- * 转换时间格式
- * @param {Date|string} date 时间
- * @returns 2020/10/8 10:08:08
- */
-function date_to_string(date) {
-    date = new Date(date)
-    return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
 }
 
 

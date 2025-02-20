@@ -10,14 +10,6 @@
 
     
     <div class="title">
-        <div class="l">
-            <img src="{{_res_path}}html/otherimg/Phigros_Icon_3.0.0.png" alt="icon">
-            <div class="doc">
-                <p>{{update_ans}}</p>
-                <p>Update 结果</p>
-            </div>
-        </div>
-        <div class="m"></div>
         <div class="r">
             <p>Player: {{#PlayerId}}</p>
             <p>RankingScore: {{Rks}}
@@ -40,6 +32,37 @@
                     style="color: {{added_rks_notes[1].includes('+')?'gold':'red'}};">{{added_rks_notes[1]}}</span>{{/if}}
             </p>
             <p>Date: {{Date}}</p>
+        </div>
+        <div class="rks_line">
+            <div class="svg-box">
+                {{if rks_history[0]}}
+                <div class="value_box">
+                    <p>{{rks_range[1].toFixed(4)}}</p>
+                    <p>{{rks_range[0].toFixed(4)}}</p>
+                </div>
+                <div class="line-box">
+                    <div class="line">
+                        <svg>
+                            <defs>
+                                <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="2" refY="2">
+                                    <circle cx="2" cy="2" r="1"></circle>
+                                </marker>
+                            </defs>
+                            {{each rks_history}}
+                            <line x1="{{$value[0]}}%" y1="{{$value[1]}}%" x2="{{$value[2]}}%" y2="{{$value[3]}}%">
+                            </line>
+                            {{/each}}
+                        </svg>
+                    </div>
+                    <div class="date_box">
+                        <p>{{rks_date[0]}}</p>
+                        <p>{{rks_date[1]}}</p>
+                    </div>
+                </div>
+                {{else}}
+                <p>NO_INFO</p>
+                {{/if}}
+            </div>
         </div>
     </div>
     {{if box_line[0]||task_data}}
