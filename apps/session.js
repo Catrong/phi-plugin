@@ -10,6 +10,7 @@ import getQRcode from '../lib/getQRcode.js'
 import common from '../../../lib/common/common.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
+import { redisPath } from "../model/constNum.js"
 
 
 export class phisstk extends plugin {
@@ -63,7 +64,7 @@ export class phisstk extends plugin {
 
         if (sessionToken == "qrcode") {
             /**用户若已经触发且未绑定，则发送原来的二维码 */
-            let key = `Yz:phi-plugin:qrcode:${e.user_id}`
+            let key = `${redisPath}:qrcode:${e.user_id}`
             let qrcode = await redis.get(key)
             if(qrcode) {
                 let qrcodeTimeOut = await redis.ttl(key)
