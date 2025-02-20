@@ -74,6 +74,7 @@ export default class newPuppeteer {
         Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
         let data = {
             ...params,
+            waitUntil: ['networkidle0', 'load'],
             _plugin: Display_Plugin_Name,
             saveId: (params.saveId || params.save_id || tpl) + `${this.id}`,
             tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.art`,

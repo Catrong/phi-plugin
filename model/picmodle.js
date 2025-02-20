@@ -63,7 +63,6 @@ class picmodle {
             case 1: {
                 return await this.render('userinfo/userinfo', {
                     ...data,
-                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -72,7 +71,6 @@ class picmodle {
             case 2: {
                 return await this.render('userinfo/userinfo-old', {
                     ...data,
-                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -81,7 +79,6 @@ class picmodle {
             default: {
                 return await this.render('userinfo/userinfo', {
                     ...data,
-                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -106,9 +103,8 @@ class picmodle {
 
         switch (picversion) {
             case 1: {
-                return await this.render('score/scoreInfo', {
+                return await this.render('score/score', {
                     ...data,
-                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -116,9 +112,8 @@ class picmodle {
             }
 
             default: {
-                return await this.render('score/score', {
+                return await this.render('score/scoreOld', {
                     ...data,
-                    waitUntil: 'networkidle0',
                 }, {
                     e,
                     scale: Config.getUserCfg('config', 'renderScale') / 100
@@ -157,8 +152,6 @@ class picmodle {
     async common(e, kind, data) {
         return await this.render(`${kind}/${kind}`, {
             ...data,
-            waitUntil: 'networkidle0',
-
         }, {
             e,
             scale: Config.getUserCfg('config', 'renderScale') / 100,
