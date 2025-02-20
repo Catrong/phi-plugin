@@ -57,14 +57,15 @@
 
                 let l = 0, r = fontSize;
                 while (l < r) {
-                    let mid = Math.floor((l + r) / 2);
+                    let mid = Math.floor((l + r + 1) / 2);
                     songName.style.fontSize = mid + "px";
                     if (isBiggerThanParent(songName, parentElement)) {
-                        r = mid;
+                        r = mid - 1;
                     } else {
-                        l = mid + 1;
+                        l = mid;
                     }
                 }
+                songName.style.fontSize = l + "px";
             }
 
         }

@@ -636,7 +636,6 @@ export class phisong extends plugin {
             return false
         }
 
-        console.info(dif)
 
         send.send_with_At(e, segment.image(getInfo.getTableImg(dif)))
 
