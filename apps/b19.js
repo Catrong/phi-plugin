@@ -480,7 +480,7 @@ export class phib19 extends plugin {
             for (let i in HistoryData) {
                 for (let j in HistoryData[i]) {
                     const tem = scoreHistory.extend(get.SongGetId(song), i, HistoryData[i][j])
-                    tem.date_new = date_to_string(tem.date_new)
+                    tem.date_new = fCompute.date_to_string(tem.date_new)
                     history.push(tem)
                 }
             }
@@ -762,22 +762,6 @@ function cmpsugg() {
     }
 }
 
-
-
-/**
- * 转换时间格式
- * @param {Date|string} date 时间
- * @returns 2020/10/8 10:08:08
- */
-function date_to_string(date) {
-    if (!date) return undefined
-    date = new Date(date)
-
-    let month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
-    let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
-
-    return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
-}
 
 function comRecord(a, b) {
     return Number(a.acc).toFixed(4) == Number(b.acc).toFixed(4) && Number(a.score) == Number(b.score) && Number(a.rks) == Number(b.rks)
