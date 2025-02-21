@@ -16,15 +16,11 @@
                     <div class="song_name">
                         <p name="pvis">{{song.song}}</p>
                     </div>
-                    <div class="charter-box">
-                        <p>charter</p>
-                        <p name="pvis">{{song.charter}}</p>
-                    </div>
                 </div>
             </div>
             <div class="dif">
                 <p>{{song.rank}}</p>
-                <p>{{song.difficulty}}</p>
+                <p>{{song.difficulty.toFixed(1)}}</p>
             </div>
             <div class="notes-box">
                 <div class="notes-info tap">
