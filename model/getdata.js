@@ -269,7 +269,11 @@ class getdata {
                 send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
             }
         } catch (err) {
-            send.send_with_At(e, "绑定失败！QAQ\n" + err)
+            if(e.bot?.adapter?.name !== 'QQBot') {
+                send.send_with_At(e, "更新失败！QAQ\n" + err)
+            } else {
+                send.send_with_At(e, "更新失败！QAQ\n请稍后重试")
+            }
             logger.error(err)
             return false
         }
