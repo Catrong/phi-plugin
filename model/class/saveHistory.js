@@ -1,5 +1,6 @@
 import { Level } from "../constNum.js"
 import Save from "./Save.js"
+import fCompute from "../fCompute.js";
 
 export default class saveHistory {
 
@@ -193,6 +194,100 @@ export default class saveHistory {
             t[level].date = date
         }
         return t
+    }
+
+
+    /**
+     * 折线图数据
+     * @returns 
+     */
+    getRksAndDataLine() {
+
+        let rks_history_ = []
+        let data_history_ = []
+        let user_rks_data = this.rks
+        let user_data_data = this.data
+        let rks_range = [17, 0]
+        let data_range = [1e9, 0]
+        let rks_date = [new Date(user_rks_data[0].date).getTime(), 0]
+        let data_date = [new Date(user_data_data[0].date).getTime(), 0]
+
+        for (let i in user_rks_data) {
+            user_rks_data[i].date = new Date(user_rks_data[i].date)
+            if (i <= 1 || user_rks_data[i].value != rks_history_[rks_history_.length - 2].value) {
+                rks_history_.push(user_rks_data[i])
+                rks_range[0] = Math.min(rks_range[0], user_rks_data[i].value)
+                rks_range[1] = Math.max(rks_range[1], user_rks_data[i].value)
+            } else {
+                rks_history_[rks_history_.length - 1].date = user_rks_data[i].date
+            }
+            rks_date[1] = user_rks_data[i].date.getTime()
+        }
+
+
+        for (let i in user_data_data) {
+            let value = user_data_data[i]['value']
+            user_data_data[i].value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
+            user_data_data[i].date = new Date(user_data_data[i].date)
+            if (i <= 1 || user_data_data[i].value != data_history_[data_history_.length - 2].value) {
+                data_history_.push(user_data_data[i])
+                data_range[0] = Math.min(data_range[0], user_data_data[i].value)
+                data_range[1] = Math.max(data_range[1], user_data_data[i].value)
+            } else {
+                data_history_[data_history_.length - 1].date = user_data_data[i].date
+            }
+            data_date[1] = user_data_data[i].date.getTime()
+        }
+
+        let rks_history = []
+        let data_history = []
+
+        for (let i in rks_history_) {
+
+            i = Number(i)
+
+            if (!rks_history_[i + 1]) break
+            let x1 = fCompute.range(rks_history_[i].date, rks_date)
+            let y1 = fCompute.range(rks_history_[i].value, rks_range)
+            let x2 = fCompute.range(rks_history_[i + 1].date, rks_date)
+            let y2 = fCompute.range(rks_history_[i + 1].value, rks_range)
+            rks_history.push([x1, y1, x2, y2])
+        }
+
+        for (let i in data_history_) {
+
+            i = Number(i)
+
+            if (!data_history_[i + 1]) break
+            let x1 = fCompute.range(data_history_[i].date, data_date)
+            let y1 = fCompute.range(data_history_[i].value, data_range)
+            let x2 = fCompute.range(data_history_[i + 1].date, data_date)
+            let y2 = fCompute.range(data_history_[i + 1].value, data_range)
+            data_history.push([x1, y1, x2, y2])
+        }
+
+
+        let unit = ["KiB", "MiB", "GiB", "TiB", "Pib"]
+
+        for (let i in [1, 2, 3, 4]) {
+            if (Math.floor(data_range[0] / (Math.pow(1024, i))) < 1024) {
+                data_range[0] = `${Math.floor(data_range[0] / (Math.pow(1024, i)))}${unit[i]}`
+            }
+        }
+
+        for (let i in [1, 2, 3, 4]) {
+            if (Math.floor(data_range[1] / (Math.pow(1024, i))) < 1024) {
+                data_range[1] = `${Math.floor(data_range[1] / (Math.pow(1024, i)))}${unit[i]}`
+            }
+        }
+        return {
+            rks_history,
+            data_history,
+            rks_range,
+            data_range,
+            rks_date,
+            data_date
+        }
     }
 
 }

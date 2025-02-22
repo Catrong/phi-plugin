@@ -1,0 +1,230 @@
+{{block 'css'}}
+
+    <link rel="stylesheet" href="{{_res_path}}html//score/scoreOld.css">
+
+{{/block}}
+{{block 'main'}}
+
+    <div class="background">
+        <img src="{{illustration}}" alt="曲绘-模糊">
+    </div>
+    <div class="playerbox">
+        <div class="player">
+            <div class="playerid-right"></div>
+            <div class="playerid">
+                <p>{{#PlayerId}}</p>
+            </div>
+            <div class="avatar">
+                <img src="{{_res_path}}html/avatar/{{avatar}}.png" alt="{{avatar}}">
+            </div>
+            <div class="player-info">
+
+                <div class="Challenge">
+                    <img src="{{_res_path}}html/otherimg/{{ChallengeMode}}.png" alt="{{ChallengeMode}}">
+                    <p>{{ChallengeModeRank}}</p>
+                </div>
+                <div class="player-rks">
+                    <p>{{Rks}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="song">
+            <div class="ill-box">
+                <img src="{{illustration}}" alt="曲绘">
+            </div>
+            <div class="score-box">
+                <div class="box-up">
+                    <div class="rank-AT">
+                        {{if AT}}
+                        {{if AT.Rating == 'NEW'}}
+                        <img src="{{_res_path}}html/otherimg/{{AT.Rating}}.png" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        {{else}}
+                        <div class="Rating">
+                            <img src="{{_res_path}}html/otherimg/{{AT.Rating}}.png" alt="{{AT.Rating}}">
+                        </div>
+                        {{/if}}
+                        <div class="rank">
+                            <p>AT</p>
+                        </div>
+                        {{if AT.score}}
+
+                        <div class="info">
+                            <div class="score">
+                                <p>{{AT.score}}</p>
+                            </div>
+                            <div class="line"></div>
+                            <div class="acc-box">
+                                <div class="acc">
+                                    <p>{{AT.acc}}%</p>
+                                </div>
+                                <div class="rks">
+                                    <p>{{AT.rks}}</p>
+                                </div>
+                            </div>
+                            <div class="suggest">
+                                <p>>> {{AT.suggest}}</p>
+                            </div>
+                        </div>
+
+                        {{/if}}
+                        {{else}}
+                        <p style="margin-left: -35%;">NO_INFO</p>
+                        {{/if}}
+                    </div>
+                    <div class="rank-IN">
+                        {{if IN}}
+                        {{if IN.Rating == 'NEW'}}
+                        <img src="{{_res_path}}html/otherimg/{{IN.Rating}}.png" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        {{else}}
+                        <div class="Rating">
+                            <img src="{{_res_path}}html/otherimg/{{IN.Rating}}.png" alt="{{IN.Rating}}">
+                        </div>
+                        {{/if}}
+                        <div class="rank">
+                            <p>IN</p>
+                        </div>
+                        {{if IN.score}}
+
+                        <div class="info">
+                            <div class="score">
+                                <p>{{IN.score}}</p>
+                            </div>
+                            <div class="line"></div>
+                            <div class="acc-box">
+                                <div class="acc">
+                                    <p>{{IN.acc}}%</p>
+                                </div>
+                                <div class="rks">
+                                    <p>{{IN.rks}}</p>
+                                </div>
+                            </div>
+                            <div class="suggest">
+                                <p>>> {{IN.suggest}}</p>
+                            </div>
+                        </div>
+
+                        {{/if}}
+                        {{else}}
+                        <p style="margin-left: -35%;">NO_INFO</p>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="box-down">
+                    <div class="rank-HD">
+                        {{if HD}}
+                        {{if HD.Rating == 'NEW'}}
+                        <img src="{{_res_path}}html/otherimg/{{HD.Rating}}.png" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        {{else}}
+                        <div class="Rating">
+                            <img src="{{_res_path}}html/otherimg/{{HD.Rating}}.png" alt="{{HD.Rating}}">
+                        </div>
+                        {{/if}}
+                        <div class="rank">
+                            <p>HD</p>
+                        </div>
+                        {{if HD.score}}
+
+                        <div class="info">
+                            <div class="score">
+                                <p>{{HD.score}}</p>
+                            </div>
+                            <div class="line"></div>
+                            <div class="acc-box">
+                                <div class="acc">
+                                    <p>{{HD.acc}}%</p>
+                                </div>
+                                <div class="rks">
+                                    <p>{{HD.rks}}</p>
+                                </div>
+                            </div>
+                            <div class="suggest">
+                                <p>>> {{HD.suggest}}</p>
+                            </div>
+                        </div>
+
+                        {{/if}}
+                        {{else}}
+                        <p style="margin-left: -35%;">NO_INFO</p>
+                        {{/if}}
+                    </div>
+                    <div class="rank-EZ">
+                        {{if EZ}}
+                        {{if EZ.Rating == 'NEW'}}
+                        <img src="{{_res_path}}html/otherimg/{{EZ.Rating}}.png" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        {{else}}
+                        <div class="Rating">
+                            <img src="{{_res_path}}html/otherimg/{{EZ.Rating}}.png" alt="{{EZ.Rating}}">
+                        </div>
+                        {{/if}}
+                        <div class="rank">
+                            <p>EZ</p>
+                        </div>
+                        {{if EZ.score}}
+
+                        <div class="info">
+                            <div class="score">
+                                <p>{{EZ.score}}</p>
+                            </div>
+                            <div class="line"></div>
+                            <div class="acc-box">
+                                <div class="acc">
+                                    <p>{{EZ.acc}}%</p>
+                                </div>
+                                <div class="rks">
+                                    <p>{{EZ.rks}}</p>
+                                </div>
+                            </div>
+                            <div class="suggest">
+                                <p>>> {{EZ.suggest}}</p>
+                            </div>
+                        </div>
+
+                        {{/if}}
+                        {{else}}
+                        <p style="margin-left: -35%;">NO_INFO</p>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="leave">
+        <div class="leave-box">
+            {{if AT}}
+            <div class="leave-at">
+                <p style="margin-left: 3px;">{{AT.difficulty}}</p>
+                <p style="font-size: 15px; margin-right: 13px;">AT</p>
+            </div>
+            {{/if}}
+            {{if IN}}
+            <div class="leave-in">
+                <p style="margin-left: 3px;">{{IN.difficulty}}</p>
+                <p style="font-size: 15px; margin-right: 13px;">IN</p>
+            </div>
+            {{/if}}
+            {{if HD}}
+            <div class="leave-hd">
+                <p style="margin-left: 3px;">{{HD.difficulty}}</p>
+                <p style="font-size: 15px; margin-right: 13px;">HD</p>
+            </div>
+            {{/if}}
+            {{if EZ}}
+            <div class="leave-ez">
+                <p style="margin-left: 3px;">{{EZ.difficulty}}</p>
+                <p style="font-size: 15px; margin-right: 13px;">EZ</p>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>{{_plugin}}</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+
+    </div>
+{{/block}}

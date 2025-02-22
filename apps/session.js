@@ -10,6 +10,7 @@ import getQRcode from '../lib/getQRcode.js'
 import common from '../../../lib/common/common.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
+import { redisPath } from "../model/constNum.js"
 
 
 export class phisstk extends plugin {
@@ -63,12 +64,12 @@ export class phisstk extends plugin {
 
         if (sessionToken == "qrcode") {
             /**用户若已经触发且未绑定，则发送原来的二维码 */
-            let key = `Yz:phi-plugin:qrcode:${e.user_id}`
+            let key = `${redisPath}:qrcode:${e.user_id}`
             let qrcode = await redis.get(key)
-            if(qrcode) {
+            if (qrcode) {
                 let qrcodeTimeOut = await redis.ttl(key)
                 let recallTime = qrcodeTimeOut
-                if(qrcodeTimeOut >= 60) recallTime = 60
+                if (qrcodeTimeOut >= 60) recallTime = 60
                 if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
                     await send.send_with_At(e, [`请扫描二维码进行登录！如只有一个设备请长按识别二维码登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n二维码剩余时间:${qrcodeTimeOut}`, segment.image(await getQRcode.getQRcode(qrcode))], false, { recallMsg: recallTime });
                 } else {
@@ -76,7 +77,7 @@ export class phisstk extends plugin {
                 }
                 return
             }
-            
+
             let request = await getQRcode.getRequest();
             let qrCodeMsg;
             if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
@@ -93,7 +94,7 @@ export class phisstk extends plugin {
             if (e.bot?.adapter?.name === 'QQBot' && request.data.expires_in > 270) QRCodetimeout = 270
             /**存储二维码链接，设置超时时间以防代码意外终止未删除该键值 */
             redis.set(key, request.data.qrcode_url, { EX: QRCodetimeout })
-            
+
             while (new Date() - t1 < QRCodetimeout * 1000) {
                 result = await getQRcode.checkQRCodeResult(request);
                 if (!result.success) {
@@ -216,7 +217,7 @@ export class phisstk extends plugin {
             for (let level in tem) {
                 let history = tem[level]
                 for (let i in history) {
-                    let score_date = date_to_string(scoreHistory.date(history[i]))
+                    let score_date = fCompute.date_to_string(scoreHistory.date(history[i]))
                     let score_info = scoreHistory.extend(song, level, history[i], history[i - 1])
                     if (time_vis[score_date] == undefined) {
                         time_vis[score_date] = tot_update.length
@@ -228,7 +229,7 @@ export class phisstk extends plugin {
             }
         }
 
-        let newnum = tot_update[time_vis[date_to_string(now.saveInfo.modifiedAt.iso)]]?.update_num || 0
+        let newnum = tot_update[time_vis[fCompute.date_to_string(now.saveInfo.modifiedAt.iso)]]?.update_num || 0
 
         tot_update.sort((a, b) => new Date(b.date) - new Date(a.date))
 
@@ -305,7 +306,7 @@ export class phisstk extends plugin {
 
         /**添加任务信息 */
         let task_data = pluginData?.plugin_data?.task
-        let task_time = date_to_string(pluginData?.plugin_data?.task_time)
+        let task_time = fCompute.date_to_string(pluginData?.plugin_data?.task_time)
 
         /**添加曲绘 */
         if (task_data) {
@@ -321,6 +322,12 @@ export class phisstk extends plugin {
                 }
             }
         }
+
+
+
+        let user_data = await getSave.getHistory(e.user_id)
+
+        let { rks_history, data_history, rks_range, data_range, rks_date, data_date } = user_data.getRksAndDataLine()
 
         let data = {
             PlayerId: fCompute.convertRichText(now.saveInfo.PlayerId),
@@ -339,6 +346,8 @@ export class phisstk extends plugin {
             dan: await get.getDan(e.user_id),
             added_rks_notes: added_rks_notes,
             theme: pluginData?.plugin_data?.theme || 'star',
+            rks_date: [fCompute.date_to_string(rks_date[0]), fCompute.date_to_string(rks_date[1])],
+            rks_history, rks_range,
         }
 
         send.send_with_At(e, [`PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`, await get.getupdate(e, data)])
@@ -467,21 +476,6 @@ export class phisstk extends plugin {
 
 }
 
-
-/**
- * 转换时间格式
- * @param {Date|string} date 时间
- * @returns 2020/10/8 10:08:08
- */
-function date_to_string(date) {
-    if (!date) return undefined
-    date = new Date(date)
-
-    let month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
-    let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
-
-    return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
-}
 
 // 定义一个函数，接受一个整数参数，返回它的十六进制形式
 function toHex(num) {
