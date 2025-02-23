@@ -94,12 +94,14 @@ export class phisstk extends plugin {
             let QRCodetimeout = request.data.expires_in
             if (e.bot?.adapter?.name === 'QQBot' && request.data.expires_in > 270) QRCodetimeout = 270
             /**利用redis的超时机制，设置一个生命与超时时间一致的键值作为倒计时器，不存储值仅提供倒计时 */
-            await redis.set(timeOutKey, '1', { EX: QRCodetimeout } )
+            await redis.set(timeOutKey, '1', { EX: QRCodetimeout })
 
             while (new Date() - t1 < QRCodetimeout * 1000) {
-                /**存储二维码链接，生命为3秒，以便在代码意外被终止再次触发时不会阻塞正常绑定 */
-                await redis.set(key, request.data.qrcode_url, { EX: 3 })
                 result = await getQRcode.checkQRCodeResult(request);
+                if (!flag) {
+                    /**存储二维码链接，生命为3秒，以便在代码意外被终止再次触发时不会阻塞正常绑定 */
+                    await redis.set(key, request.data.qrcode_url, { EX: 3 })
+                }
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
                         send.send_with_At(e, `登录二维码已扫描，请确认登录`, false, { recallMsg: 10 });
