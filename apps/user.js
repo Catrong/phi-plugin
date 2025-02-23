@@ -131,10 +131,21 @@ export class phiuser extends plugin {
         /**rks上下界 */
         let acc_rks_range = [100, 0]
 
+        /**预处理 */
+        let phi_rks = 0;
+
+        for (let i = 0; i < 3; ++i) {
+            if (acc_rks_phi[i]) {
+                phi_rks += acc_rks_phi[i].rks
+            } else {
+                break
+            }
+        }
+
         /**原本b19中最小acc 要展示的acc序列 */
         let acc_rks_AccRange = [100]
 
-        for (let i = 0; i < Math.min(acc_rksRecord.length, 19); i++) {
+        for (let i = 0; i < Math.min(acc_rksRecord.length, 27); i++) {
             acc_rks_AccRange[0] = Math.min(acc_rks_AccRange[0], acc_rksRecord[i].acc)
         }
 
@@ -142,7 +153,7 @@ export class phiuser extends plugin {
             let sum_rks = 0
             if (!acc_rksRecord[0]) break
             for (let j = 0; j < acc_rksRecord.length; j++) {
-                if (j >= 19) break
+                if (j >= 27) break
                 if (acc_rksRecord[j]?.acc < i) {
                     /**预处理展示的acc数字 */
                     acc_rks_AccRange.push(i)
@@ -157,7 +168,7 @@ export class phiuser extends plugin {
                 }
             }
             // console.info(acc_rksRecord[0])
-            let tem_rks = (sum_rks + (acc_rks_phi[0]?.rks || 0)) / 20
+            let tem_rks = (sum_rks + phi_rks) / 30
             acc_rks_data.push([i, tem_rks])
             acc_rks_range[0] = Math.min(acc_rks_range[0], tem_rks)
             acc_rks_range[1] = Math.max(acc_rks_range[1], tem_rks)
