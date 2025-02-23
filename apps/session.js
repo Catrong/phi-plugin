@@ -65,9 +65,10 @@ export class phisstk extends plugin {
         if (sessionToken == "qrcode") {
             /**用户若已经触发且未绑定，则发送原来的二维码 */
             let key = `${redisPath}:qrcode:${e.user_id}`
+            let timeOutKey = `${redisPath}:qrcodeTimeOut:${e.user_id}`
             let qrcode = await redis.get(key)
             if (qrcode) {
-                let qrcodeTimeOut = await redis.ttl(key)
+                let qrcodeTimeOut = await redis.ttl(timeOutKey)
                 let recallTime = qrcodeTimeOut
                 if (qrcodeTimeOut >= 60) recallTime = 60
                 if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
@@ -92,6 +93,8 @@ export class phisstk extends plugin {
             /**判断adapter是否为QQBot，如果是并且超时时间大于270秒则将超时时间改为270秒，以免被动消息回复超时**/
             let QRCodetimeout = request.data.expires_in
             if (e.bot?.adapter?.name === 'QQBot' && request.data.expires_in > 270) QRCodetimeout = 270
+            /**利用redis的超时机制，设置一个生命与超时时间一致的键值作为倒计时器，不存储值仅提供倒计时 */
+            await redis.set(timeOutKey, '1', { EX: QRCodetimeout } )
 
             while (new Date() - t1 < QRCodetimeout * 1000) {
                 /**存储二维码链接，生命为3秒，以便在代码意外被终止再次触发时不会阻塞正常绑定 */
@@ -114,6 +117,7 @@ export class phisstk extends plugin {
             }
 
             redis.del(key) //绑定完成、超时后删除键值
+            redis.del(timeOutKey)
 
             if (!result.success) {
                 send.send_with_At(e, `操作超时，请重试！`);
