@@ -172,11 +172,11 @@ export default new class getInfo {
                                 if (oldNotes[id][level].hold != notesInfo[id][level].hold) {
                                     Object.assign(tem, { hold: [oldNotes[id][level].hold, notesInfo[id][level].hold] })
                                 }
-                                if (oldNotes[id][level].flicke != notesInfo[id][level].flicke) {
-                                    Object.assign(tem, { flicke: [oldNotes[id][level].flicke, notesInfo[id][level].flicke] })
+                                if (oldNotes[id][level].flick != notesInfo[id][level].flick) {
+                                    Object.assign(tem, { flick: [oldNotes[id][level].flick, notesInfo[id][level].flick] })
                                 }
-                                let oldCombo = oldNotes[id][level].tap + oldNotes[id][level].drag + oldNotes[id][level].hold + oldNotes[id][level].flicke
-                                let newCombo = notesInfo[id][level].tap + notesInfo[id][level].drag + notesInfo[id][level].hold + notesInfo[id][level].flicke
+                                let oldCombo = oldNotes[id][level].tap + oldNotes[id][level].drag + oldNotes[id][level].hold + oldNotes[id][level].flick
+                                let newCombo = notesInfo[id][level].tap + notesInfo[id][level].drag + notesInfo[id][level].hold + notesInfo[id][level].flick
                                 if (oldCombo != newCombo) {
                                     Object.assign(tem, { combo: [oldCombo, newCombo] })
                                 }
@@ -197,8 +197,8 @@ export default new class getInfo {
                     this.ori_info[CsvInfo[i].song].chart[level].tap = notesInfo[id][level].tap
                     this.ori_info[CsvInfo[i].song].chart[level].drag = notesInfo[id][level].drag
                     this.ori_info[CsvInfo[i].song].chart[level].hold = notesInfo[id][level].hold
-                    this.ori_info[CsvInfo[i].song].chart[level].flicke = notesInfo[id][level].flicke
-                    this.ori_info[CsvInfo[i].song].chart[level].combo = notesInfo[id][level].tap + notesInfo[id][level].drag + notesInfo[id][level].hold + notesInfo[id][level].flicke
+                    this.ori_info[CsvInfo[i].song].chart[level].flick = notesInfo[id][level].flick
+                    this.ori_info[CsvInfo[i].song].chart[level].combo = notesInfo[id][level].tap + notesInfo[id][level].drag + notesInfo[id][level].hold + notesInfo[id][level].flick
 
                     /**最高定数 */
                     this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))

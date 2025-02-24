@@ -47,9 +47,9 @@
                         <p>Hold</p>
                     </div>
                 </div>
-                <div class="notes-info flicke">
+                <div class="notes-info flick">
                     <div class="notes_num">
-                        <p>{{song.flicke}}</p>
+                        <p>{{song.flick}}</p>
                     </div>
                     <div class="notes_title">
                         <p>Flicke</p>

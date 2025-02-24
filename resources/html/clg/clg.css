@@ -172,8 +172,8 @@ body p {
     color: var(--hold);
 }
 
-.flicke p {
-    color: var(--flicke);
+.flick p {
+    color: var(--flick);
 }
 
 .drag p {

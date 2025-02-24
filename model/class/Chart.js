@@ -11,7 +11,7 @@ export default class Chart {
         this.tap = Number(data.tap)
         this.drag = Number(data.drag)
         this.hold = Number(data.hold)
-        this.flicke = Number(data.flicke)
+        this.flick = Number(data.flick)
         this.combo = Number(data.combo)
     }
 }

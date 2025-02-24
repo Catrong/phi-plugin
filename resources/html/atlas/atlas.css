@@ -257,7 +257,7 @@ body {
 }
 
 .chart-info :nth-child(4) {
-    color: var(--flicke);
+    color: var(--flick);
 }
 
 .note-box {
