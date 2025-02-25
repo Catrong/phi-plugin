@@ -11,7 +11,7 @@ export function supportGuoba() {
             title: 'Phi-Plugin',
             author: '@Catrong',
             authorLink: 'https://github.com/Catrong',
-            link: 'https://github.com/Catrong/phi-plugin',
+            link: 'https://gitee.com/Catrong/phi-plugin',
             isV3: true,
             isV2: false,
             description: 'Phigros查分及娱乐插件',
