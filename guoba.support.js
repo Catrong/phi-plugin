@@ -46,7 +46,7 @@ export function supportGuoba() {
                             },
                             {
                                 label: 'github代理',
-                                value: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                                value: "https://ghfast.top/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
                             }
                         ]
                     }
