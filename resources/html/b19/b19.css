@@ -279,7 +279,7 @@ body p {
     filter: drop-shadow(0 0 10px #fbff00aa);
 }
 
-.b_song {
+.b_song, .over_flow {
     filter: drop-shadow(0 0 10px #ffffffaa);
 }
 
