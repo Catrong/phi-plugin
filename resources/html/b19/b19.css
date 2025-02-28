@@ -45,19 +45,21 @@ body p {
 }
 
 .blackBlock {
-    width: 100%;
+    width: 98%;
     height: 91%;
     background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
-    --rpoz: 21px;
+    --rpoz: 28px;
     clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
     z-index: 0;
+    right: 0px;
 }
 
 .avatar {
     height: 200%;
     z-index: 2;
-    clip-path: polygon(100% 25%, 86% 75%, 0 75%, 13% 25%);
+    --rpoz: 31px;
+    clip-path: polygon(100% 25%, calc(100% - var(--rpoz)) 75%, 0 75%, var(--rpoz) 25%);
 }
 
 .avatar img {
@@ -89,7 +91,7 @@ body p {
     z-index: 1;
     justify-content: center;
     position: absolute;
-    left: 23%;
+    left: 22%;
     bottom: 13%;
 }
 
@@ -101,7 +103,7 @@ body p {
 .clgBox {
     width: 4rem;
     height: 1rem;
-    left: 28%;
+    left: 27%;
     top: 17%;
     position: absolute;
     display: flex;
@@ -122,47 +124,52 @@ body p {
 
 .dataBox {
     position: absolute;
+    /* width: 91px; */
     height: 25%;
     bottom: -31%;
-    left: -1%;
+    left: -1.5%;
     display: flex;
     background-color: rgba(0, 0, 0, 0.5);
-    --rpoz: 4.5px;
+    --rpoz: 7.5px;
     clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
     align-items: center;
     justify-content: center;
-    padding-right: 0.3rem;
+    padding-right: 0.6rem;
+    white-space: nowrap;
 }
 
 .dataBox img {
     height: 100%;
-    padding: 4%;
+    padding: 4px;
+    padding-left: 10px;
     box-sizing: border-box;
 }
 
 .recordInfo {
     position: absolute;
     height: 100%;
-    width: 21%;
-    right: 9%;
+    width: 22%;
+    right: 12%;
     background-color: rgba(0, 0, 0, 0.5);
-    --rpoz: 29px;
-    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
     padding-left: 3%;
 }
 
 .whiteLine {
-    --rpoz: 29px;
-    width: 33px;
-    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    width: 44px;
     height: 100%;
     background-color: white;
     position: absolute;
     left: 0;
 }
 
+.recordInfo,
+.whiteLine {
+    --rpoz: 41px;
+    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+}
+
 :root {
-    --row: 2%;
+    --row: 3.5%;
     --Poz: 3rem;
 }
 
@@ -252,8 +259,7 @@ body p {
     margin-top: 8%;
 }
 
-.Nosignal,
-.song {
+.Nosignal, .song, .over_flow {
     margin-bottom: 2%;
 }
 
@@ -294,7 +300,7 @@ body p {
     top: 4%;
     left: 1%;
     background-color: rgba(255, 255, 255, 1);
-    clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+    clip-path: polygon(100% 0, 84.844% 100%, 0 100%, 15.156% 0);
     position: absolute;
     text-align: center;
 }
@@ -598,6 +604,65 @@ body p {
     color: white;
     font-size: 40px;
     filter: blur(3px);
+}
+
+.over_flow {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.flow_line_box_l,
+.flow_line_box_r {
+    display: flex;
+    width: 38%;
+    justify-content: center;
+}
+
+.flow_line {
+    background-color: #ffffff;
+    height: 15px;
+    --rpoz: 5.5px;
+    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    /* border-radius: 5px; */
+    overflow: hidden;
+}
+
+.flow_line_box_l .flow_line:nth-child(1),
+.flow_line_box_r .flow_line:nth-child(6) {
+    width: 50%;
+}
+
+.flow_line_box_l .flow_line:nth-child(2),
+.flow_line_box_r .flow_line:nth-child(5) {
+    width: 25%;
+}
+
+.flow_line_box_l .flow_line:nth-child(3),
+.flow_line_box_r .flow_line:nth-child(4) {
+    width: 12.5%;
+}
+
+.flow_line_box_l .flow_line:nth-child(4),
+.flow_line_box_r .flow_line:nth-child(3) {
+    width: 6.25%;
+}
+
+.flow_line_box_l .flow_line:nth-child(5),
+.flow_line_box_r .flow_line:nth-child(2) {
+    width: 3.125%;
+}
+
+.flow_line_box_l .flow_line:nth-child(6),
+.flow_line_box_r .flow_line:nth-child(1) {
+    width: 1.5625%;
+}
+
+.over_flow p {
+    font-size: 25px;
+    font-family: 'Aldrich', 'PHI';
 }
 
 .createdbox {
