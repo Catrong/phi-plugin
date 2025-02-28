@@ -5,14 +5,27 @@ import Config from '../components/Config.js'
 import SongsInfo from './class/SongsInfo.js'
 import fs from 'fs'
 import { Level, MAX_DIFFICULTY } from './constNum.js'
+import chokidar from 'chokidar'
 
 
 export default new class getInfo {
+
+    static initIng = false
+
     constructor() {
         this.init()
+        chokidar.watch(infoPath).on('change', () => {
+            this.init()
+        })
     }
 
     async init() {
+
+        if (this.initIng) return
+
+        logger.info(`[phi-plugin]初始化曲目信息`)
+
+        this.initIng = true
 
         /**之前改过一次名称，修正别名 */
         let nick = await readFile.FileReader(path.join(configPath, 'nickconfig.yaml'), "TXT")
@@ -254,6 +267,9 @@ export default new class getInfo {
                 }
             }
         }
+
+        this.initIng = false
+        logger.info(`[phi-plugin]初始化曲目信息完成`)
     }
 
     /**
