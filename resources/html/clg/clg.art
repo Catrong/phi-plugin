@@ -52,7 +52,7 @@
                         <p>{{song.flick}}</p>
                     </div>
                     <div class="notes_title">
-                        <p>Flicke</p>
+                        <p>Flick</p>
                     </div>
                 </div>
                 <div class="notes-info">

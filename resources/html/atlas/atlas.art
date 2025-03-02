@@ -62,7 +62,7 @@
                                 <p>Tap</p>
                                 <p>Drag</p>
                                 <p>Hold</p>
-                                <p>Flicke</p>
+                                <p>Flick</p>
                             </div>
                             {{each chart}}
                             <div class="charter">
