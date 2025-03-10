@@ -128,6 +128,7 @@ pnpm install -P #安装插件所需依赖
 | `#phi ban <功能>` | 禁用某一类功能，详见 [功能参数说明](#phi-ban-%E5%8A%9F%E8%83%BD%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E)
 
 <details open>  
+<summary>功能参数说明</summary>
 
 #### `#phi ban` 功能参数说明
 | 参数 | 功能 | 影响指令
