@@ -67,8 +67,8 @@ export default class newPuppeteer {
     async render(path, params, cfg) {
         let { e } = cfg
         let [app, tpl] = path.split('/')
-        let layoutPath = pluginResources + `/html/common/layout/`
-        let resPath = pluginResources + `/`
+        let layoutPath = pluginResources.replace(/\\/g, '/') + `/html/common/layout/`
+        let resPath = pluginResources.replace(/\\/g, '/') + `/`
 
 
         Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')

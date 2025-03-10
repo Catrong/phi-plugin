@@ -66,7 +66,7 @@ export class phisong extends plugin {
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)new$`,
-                    fnc: 'new'
+                    fnc: 'newSong'
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(table|定数表)\\s*[0-9]+$`,
@@ -577,9 +577,9 @@ export class phisong extends plugin {
         return true;
     }
 
-    async new(e) {
+    async newSong(e) {
 
-        if (await getBanGroup.get(e.group_id, 'new')) {
+        if (await getBanGroup.get(e.group_id, 'newSong')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
