@@ -29,10 +29,7 @@ for (let i in files) {
     let name = files[i].replace('.js', '')
 
     if (ret[i].status != 'fulfilled') {
-        logger.error(`[phi-plugin]载入插件错误：${logger.red(name)}`)
-        logger.error(ret[i].reason)
-        errvis = true
-        continue
+        throw new Error(ret[i].reason)
     }
     apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
 }
