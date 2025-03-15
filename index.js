@@ -24,10 +24,17 @@ files.forEach((file) => {
 
 ret = await Promise.allSettled(ret)
 
+//检查依赖
+import { checkPackage } from './components/check.js'
+let passed = await checkPackage()
+if (!passed) {
+    throw '缺少必要的依赖项'
+}
+
 let apps = {}
 for (let i in files) {
     let name = files[i].replace('.js', '')
-
+    
     if (ret[i].status != 'fulfilled') {
         throw new Error(ret[i].reason)
     }
