@@ -108,7 +108,7 @@ export class phisong extends plugin {
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }
         } else {
-            e.reply(`未找到${msg}的相关曲目信息QAQ`, true)
+            e.reply(`未找到${msg}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
         }
         return true
     }
@@ -454,7 +454,7 @@ export class phisong extends plugin {
             // console.info(info.song)
             send.send_with_At(e, [`\nname: ${song[0]}\nid: ${info.id}\n`, getPic.getIll(song[0]), nick])
         } else {
-            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！`, true)
+            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
         }
     }
 
