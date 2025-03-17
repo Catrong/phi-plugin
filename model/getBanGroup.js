@@ -30,6 +30,7 @@ export default new class getBanGroup {
             case 'unbind':
                 return await this.redis(group, 'bind')
             case 'b19':
+            case 'p30':
             case 'arcgrosB19':
             case 'update':
             case 'info':

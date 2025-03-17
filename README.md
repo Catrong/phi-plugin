@@ -41,6 +41,17 @@
   </tbody>
 </table>
 
+
+### 发电鸣谢
+
+<table style="border-radius: 20px">
+  <tbody style="border-radius: 20px">
+    <tr>
+        <td align="center" valign="top" width="10%"><a href="https://github.com/qilinX88"><img src="https://avatars.githubusercontent.com/u/92022485?v=4?s=100" style="border-radius: 50%" width="50px;" alt="Loser_X"/><br /><sub><b>@Loser_X</b></sub></a><br /><a href="https://github.com/qilinX88" title="Contributor">🌸 20 🌸</a></td>
+    </tr>
+  </tbody>
+</table>
+
 ------
 ### 安装：
 

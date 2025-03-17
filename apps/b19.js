@@ -88,6 +88,10 @@ export class phib19 extends plugin {
                     fnc: 'b19'
                 },
                 {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|P)[0-9]+.*$`,
+                    fnc: 'p30'
+                },
+                {
                     reg: `^[#/杠刚钢纲](${Config.getUserCfg('config', 'cmdhead')})(\\s*)[a(arc)啊阿批屁劈](\\s*)((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
                     fnc: 'arcgrosB19'
                 },
@@ -207,6 +211,103 @@ export class phib19 extends plugin {
         let res = [await altas.b19(e, data)]
         if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 0.1) {
             res.push(`请注意，当前版本可能更改了计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+        }
+        send.send_with_At(e, res)
+    }
+
+    /**P30 */
+    async p30(e) {
+
+        if (await getBanGroup.get(e.group_id, 'p30')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return true
+        }
+
+
+        let nnum = e.msg.match(/(p|P)[0-9]*/g)[0]
+
+        nnum = Number(nnum.replace(/(p|P)/g, ''))
+        if (!nnum) {
+            nnum = 33
+        }
+
+        nnum = Math.max(nnum, 33)
+        nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
+
+        let bksong = e.msg.replace(/^.*(p|P)[0-9]*\s*/g, '')
+
+        if (bksong) {
+            let tem = get.fuzzysongsnick(bksong)[0]
+            if (tem) {
+                // console.info(tem)
+                bksong = get.getill(tem, 'blur')
+            } else {
+                bksong = undefined
+            }
+        }
+
+        let plugin_data = await get.getpluginData(e.user_id)
+
+
+        if (!Config.getUserCfg('config', 'isGuild'))
+            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+
+        try {
+            await get.buildingRecord(e, new PhigrosUser(save.session))
+
+            save = await send.getsave_result(e)
+
+            if (!save) {
+                return true
+            }
+
+        } catch (err) {
+            send.send_with_At(e, err)
+            logger.error(err)
+        }
+
+        let save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
+        let stats = await save.getStats()
+
+
+        let dan = await get.getDan(e.user_id)
+        let money = save.gameProgress.money
+        let gameuser = {
+            avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save_b19.com_rks,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: save.gameuser.selfIntro,
+            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
+            dan: dan,
+        }
+
+        let data = {
+            phi: save_b19.phi,
+            b19_list: save_b19.b19_list,
+            PlayerId: gameuser.PlayerId,
+            Rks: save_b19.com_rks.toFixed(4),
+            Date: save.saveInfo.updatedAt,
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            dan: await get.getDan(e.user_id),
+            background: bksong || getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+            theme: plugin_data?.plugin_data?.theme || 'star',
+            gameuser,
+            nnum,
+            stats,
+        }
+
+        let res = [await altas.b19(e, data)]
+        if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 0.1) {
+            res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         }
         send.send_with_At(e, res)
     }

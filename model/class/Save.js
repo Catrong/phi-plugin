@@ -384,6 +384,93 @@ export default class Save {
 
     /**
      * 
+     * @param {[{type: string,value: any}]} limit 
+     */
+    async getBestWithLimit(num, limit) {
+        let getInfo = (await import('../getInfo.js')).default
+        /**计算得到的rks，仅作为测试使用 */
+        let sum_rks = 0
+        /**满分且 rks 最高的成绩数组 */
+        let philist = this.findAccRecord(100)
+
+        /**处理条件 */
+        for (let i = 0; i < philist.length; ++i) {
+            if (!checkLimit(philist[i], limit)) {
+                philist.splice(i, 1)
+                i--
+            }
+        }
+
+
+        /**p3 */
+        let phi = philist.splice(0, Math.min(philist.length, 3))
+
+
+        // console.info(phi)
+        /**处理数据 */
+
+        for (let i = 0; i < 3; ++i) {
+            if (!phi[i]) {
+                phi[i] = false
+                continue
+            }
+            if (phi[i]?.rks) {
+                let tem = {}
+                Object.assign(tem, phi[i])
+                phi[i] = tem
+                sum_rks += Number(phi[i].rks) //计算rks
+                phi[i].illustration = getInfo.getill(phi[i].song)
+                phi[i].suggest = "无法推分"
+            }
+        }
+
+        /**所有成绩 */
+        let rkslist = this.getRecord()
+        /**真实 rks */
+        let userrks = this.saveInfo.summary.rankingScore
+        /**考虑屁股肉四舍五入原则的最小上升rks */
+        let minuprks = Math.floor(userrks * 100) / 100 + 0.005 - userrks
+        if (minuprks < 0) {
+            minuprks += 0.01
+        }
+
+        /**处理条件 */
+        for (let i = 0; i < rkslist.length; ++i) {
+            if (!checkLimit(rkslist[i], limit)) {
+                rkslist.splice(i, 1)
+                i--
+            }
+        }
+
+        /**bestN 列表 */
+        let b19_list = []
+        for (let i = 0; i < num && i < rkslist.length; ++i) {
+            /**计算rks */
+            if (i < 27) sum_rks += Number(rkslist[i].rks)
+            /**是 Best 几 */
+            rkslist[i].num = i + 1
+            /**推分建议 */
+            if (rkslist[i].rks < 100) {
+                rkslist[i].suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty, 2)
+                if (rkslist[i].suggest.includes('无') && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks)) && rkslist[i].rks < 100) {
+                    rkslist[i].suggest = "100.00%"
+                }
+            } else {
+                rkslist[i].suggest = "无法推分"
+            }
+            /**曲绘 */
+            rkslist[i].illustration = getInfo.getill(rkslist[i].song, 'common')
+            /**b19列表 */
+            b19_list.push(rkslist[i])
+        }
+
+        let com_rks = sum_rks / 30
+        return { phi, b19_list, com_rks }
+
+    }
+
+    /**
+     * 
      * @param {string} id 
      * @param {number} lv 
      * @param {number} count 保留位数
@@ -517,4 +604,23 @@ export default class Save {
 
         return stats
     }
+}
+
+
+function checkLimit(record, limit) {
+    for (let i in limit) {
+        let l = limit[i]
+        switch (l.type) {
+            case 'acc':
+                if (record.acc < l.value[0] || record.acc > l.value[1]) return false
+                break
+            case 'score':
+                if (record.score < l.value[0] || record.score > l.value[1]) return false
+                break
+            case 'rks':
+                if (record.rks < l.value[0] || record.rks > l.value[1]) return false
+                break
+        }
+    }
+    return true
 }
