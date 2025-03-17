@@ -514,30 +514,32 @@ export default new class getInfo {
         let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans)) {
             ans = path.join(ortherIllPath, ans)
-        } else if (this.ori_info[name]) {
-            if (fs.existsSync(path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png')))) {
-                ans = path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png'))
-            } else if (fs.existsSync(path.join(originalIllPath, "ill", this.SongGetId(name).replace(/.0$/, '.png')))) {
-                if (kind == 'common') {
-                    ans = path.join(originalIllPath, "ill", this.SongGetId(name).replace(/.0$/, '.png'))
-                } else if (kind == 'blur') {
-                    ans = path.join(originalIllPath, "illBlur", this.SongGetId(name).replace(/.0$/, '.png'))
-                } else if (kind == 'low') {
-                    ans = path.join(originalIllPath, "illLow", this.SongGetId(name).replace(/.0$/, '.png'))
+        } else if (this.ori_info[name] || this.sp_info[name]) {
+            if (this.ori_info[name]) {
+                if (fs.existsSync(path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png')))) {
+                    ans = path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png'))
+                } else if (fs.existsSync(path.join(originalIllPath, "ill", this.SongGetId(name).replace(/.0$/, '.png')))) {
+                    if (kind == 'common') {
+                        ans = path.join(originalIllPath, "ill", this.SongGetId(name).replace(/.0$/, '.png'))
+                    } else if (kind == 'blur') {
+                        ans = path.join(originalIllPath, "illBlur", this.SongGetId(name).replace(/.0$/, '.png'))
+                    } else if (kind == 'low') {
+                        ans = path.join(originalIllPath, "illLow", this.SongGetId(name).replace(/.0$/, '.png'))
+                    }
+                } else {
+                    if (kind == 'common') {
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    } else if (kind == 'blur') {
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    } else if (kind == 'low') {
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                    }
                 }
-            }
-            try {
-                fs.accessSync(ans)
-            } catch (e) {
-                ans = null
-            }
-            if (!ans) {
-                if (kind == 'common') {
-                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
-                } else if (kind == 'blur') {
-                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
-                } else if (kind == 'low') {
-                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
+            } else {
+                if (fs.existsSync(path.join(originalIllPath, "SP", name + '.png'))) {
+                    ans = path.join(originalIllPath, "SP", name + '.png')
+                } else {
+                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${name}.png`
                 }
             }
         }

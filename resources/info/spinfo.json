@@ -1,9 +1,59 @@
 {
-    "今年も「雪降り、メリクリ」目指して顽张ります！！": {
-        "song": "今年も「雪降り、メリクリ」目指して顽张ります！！",
+    "Retribution ~ Cycle of Redemption ~": {
+        "song": "Retribution ~ Cycle of Redemption ~",
+        "chapter": "SP",
+        "spinfo": "3.5.2~3.6.0 版本4月1日限定\nRetribution 选取界面重复点击镜像按钮直到背景变为粉色",
+        "bpm": "225",
+        "composer": "Ardolf vs. 天利",
+        "length": "2:53",
+        "illustrator": "死と花の大祭司(ʌᴉoƨმᴉϝ);;",
+        "chart": {
+            "?!": {
+                "rgba": "212,167,180,1",
+                "difficulty": "👽",
+                "combo": "2500",
+                "charter": "SPΔDE ~what awaits ahead is destruction and destruction~"
+            }
+        }
+    },
+    "The Chariot ~REVIIVAL~(2024 April Fools' Day)": {
+        "song": "The Chariot ~REVIIVAL~(2024 April Fools' Day)",
+        "chapter": "SP",
+        "spinfo": "3.5.2~3.6.0 版本4月1日限定\n打开（双击）正常为“重演”的开关会变成“鱼眼”模式\n该模式下 The Chariot ~REVIIVAL~ 曲绘变为该曲绘"
+    },
+    "Revisit(2024 April Fools' Day)": {
+        "song": "Revisit(2024 April Fools' Day)",
+        "chapter": "SP",
+        "spinfo": "3.5.2~3.6.0 版本4月1日限定\n打开（长按）正常为“重演”的开关会变成“鱼眼”模式\n该模式下 Retribution 曲绘变为该曲绘"
+    },
+    "Retribution(2024 April Fools' Day)": {
+        "song": "Retribution(2024 April Fools' Day)",
+        "chapter": "SP",
+        "spinfo": "3.5.2~3.6.0 版本4月1日限定\n打开（双击）正常为“重演”的开关会变成“鱼眼”模式\n该模式下 Retribution 曲绘变为该曲绘"
+    },
+    "Luminescence(2024 April Fools' Day)": {
+        "song": "Luminescence(2024 April Fools' Day)",
+        "chapter": "SP",
+        "spinfo": "3.5.2~3.6.0 版本4月1日限定\n打开（双击）正常为“重演”的开关会变成“鱼眼”模式\n该模式下 Luminescence 曲绘变为该曲绘"
+    },
+    "Distorted Fate(2024 April Fools' Day)": {
+        "song": "Distorted Fate(2024 April Fools' Day)",
+        "chapter": "SP",
+        "spinfo": "3.5.2~3.6.0 版本4月1日限定\n打开（双击）正常为“重演”的开关会变成“鱼眼”模式\n该模式下 Distorted Fate 曲绘变为该曲绘"
+    },
+    "DESTRUCTION 3,2,1(2024 April Fools' Day)": {
+        "song": "DESTRUCTION 3,2,1(2024 April Fools' Day)",
+        "chapter": "SP",
+        "spinfo": "3.5.2~3.6.0 版本4月1日限定\n打开（双击）正常为“重演”的开关会变成“鱼眼”模式\n该模式下 DESTRUCTION 3,2,1 曲绘变为该曲绘"
+    },
+    "Crave Wave(2024 April Fools' Day)": {
+        "song": "Crave Wave(2024 April Fools' Day)",
+        "chapter": "SP",
+        "spinfo": "3.5.2~3.6.0 版本4月1日限定\n打开（双击）正常为“重演”的开关会变成“鱼眼”模式\n该模式下 Crave Wave 曲绘变为该曲绘"
+    },
+    "今年も「雪降り、メリクリ」目指して頑張ります！！": {
+        "song": "今年も「雪降り、メリクリ」目指して頑張ります！！",
         "uisong": "今年も「雪降り、メリクリ」目指して頑張ります！！",
-        "illustration": "https://img.moegirl.org.cn/common/thumb/3/33/%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg/300px-%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg",
-        "illustration_big": "https://img.moegirl.org.cn/common/3/33/%E4%BB%8A%E5%B9%B4%E3%82%82%E3%80%8C%E9%9B%AA%E9%99%8D%E3%82%8A%E3%80%81%E3%83%A1%E3%83%AA%E3%82%AF%E3%83%AA%E3%80%8D%E7%9B%AE%E6%8C%87%E3%81%97%E3%81%A6%E9%A0%91%E5%BC%B5%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%81%EF%BC%81.jpg",
         "chapter": "SP",
         "bpm": "156~234",
         "composer": "AiSS vs. 华牧狸 w/ 夜轮 ft.結月ゆかり",
@@ -28,8 +78,6 @@
     },
     "Christmas": {
         "song": "Christmas",
-        "illustration": "https://static.wikia.nocookie.net/phigros/images/0/00/Christmas_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200317102705",
-        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/0/00/Christmas_jacket.png/revision/latest/scale-to-width-down/1000?cb=20200317102705",
         "chapter": "SP",
         "bpm": "125",
         "composer": "姜米條",
@@ -48,8 +96,6 @@
     },
     "Spasmodic(Haocore Mix)": {
         "song": "Spasmodic(Haocore Mix)",
-        "illustration": "Spasmodic(Haocore Mix).png",
-        "illustration_big": "Spasmodic(Haocore Mix).png",
         "chapter": "SP",
         "bpm": "200",
         "composer": "Daily天利",
@@ -68,8 +114,6 @@
     },
     "Burn(Haocore Mix)": {
         "song": "Burn(Haocore Mix)",
-        "illustration": "https://img.moegirl.org.cn/common/thumb/c/c2/Burn_Phigros.png/300px-Burn_Phigros.png",
-        "illustration_big": "https://img.moegirl.org.cn/common/c/c2/Burn_Phigros.png",
         "chapter": "SP",
         "bpm": "200",
         "composer": "Daily天利",
@@ -88,8 +132,6 @@
     },
     "Winter♂cube": {
         "song": "Winter♂cube",
-        "illustration": "https://img.moegirl.org.cn/common/thumb/7/7c/Winter_Cube_Phigros.png/300px-Winter_Cube_Phigros.png",
-        "illustration_big": "https://img.moegirl.org.cn/common/7/7c/Winter_Cube_Phigros.png",
         "chapter": "SP",
         "bpm": "208",
         "composer": "Ctymax feat. NceS",
@@ -106,16 +148,14 @@
             }
         }
     },
-    "Sigma(Haocore Mix)～105秒の伝説～": {
-        "song": "Sigma(Haocore Mix)～105秒の伝説～",
-        "illustration": "SigmaHaocoreMix105秒の伝説.png",
-        "illustration_big": "SigmaHaocoreMix105秒の伝説.png",
+    "Sigma (Haocore Mix) ~ 105秒の伝説 ~": {
+        "song": "Sigma (Haocore Mix) ~ 105秒の伝説 ~",
         "chapter": "SP",
         "bpm": "200",
         "composer": "Daily天利",
         "length": "1:45",
         "illustrator": "~天利利利利利利~",
-        "spinfo": "本曲目已于 v2.1.4 版本后移除\n愚人节在 SIGMA 选曲界面长按难度进入\n可通过本曲目解锁 Sigma(Haocore Mix)～Regrets of The Yellow Tulip～",
+        "spinfo": "本曲目已于 v2.1.4 版本后移除\n愚人节在 SIGMA 选曲界面长按难度进入\n可通过本曲目解锁 Sigma (Haocore Mix) ~ Regrets of The Yellow Tulip ~",
         "chart": {
             "嘿！": {
                 "rgba": "3,166,55,1",
@@ -126,10 +166,8 @@
             }
         }
     },
-    "Sigma(Haocore Mix)～Regrets of The Yellow Tulip～": {
-        "song": "Sigma(Haocore Mix)～Regrets of The Yellow Tulip～",
-        "illustration": "SigmaHaocoreMixRegretsofTheYellowTulip.png",
-        "illustration_big": "SigmaHaocoreMixRegretsofTheYellowTulip.png",
+    "Sigma (Haocore Mix) ~ Regrets of The Yellow Tulip ~": {
+        "song": "Sigma (Haocore Mix) ~ Regrets of The Yellow Tulip ~",
         "chapter": "SP",
         "bpm": "200",
         "composer": "Daily天利",
@@ -179,8 +217,6 @@
     },
     "Destination": {
         "song": "Destination",
-        "illustration": "https://static.wikia.nocookie.net/phigros/images/9/9b/Destination_jacket.png/revision/latest/scale-to-width-down/1000?cb=20210305094835",
-        "illustration_big": "https://static.wikia.nocookie.net/phigros/images/9/9b/Destination_jacket.png/revision/latest/scale-to-width-down/1000?cb=20210305094835",
         "chapter": "Chapter EX-姜米條 精选集",
         "bpm": "200",
         "composer": "姜米條 & RocketLant",

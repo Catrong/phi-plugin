@@ -33,7 +33,7 @@ class picmodle {
     async picmodle(e, info) {
         return await this.common(e, 'atlas', {
             ...info,
-            length: info.length.replace(':', "'") + "''",
+            length: info.length ? info.length.replace(':', "'") + "''" : "-",
         })
     }
 

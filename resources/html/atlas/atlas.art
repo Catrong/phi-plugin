@@ -90,6 +90,7 @@
             </div>
         </div>
         <div class="other-info">
+        {{if bpm}}
             <div class="other-box">
                 <div class="title">
                     <p>BPM</p>
@@ -98,6 +99,8 @@
                     <p>{{bpm}}</p>
                 </div>
             </div>
+        {{/if}}
+        {{if illustrator}}
             <div class="other-box">
                 <div class="title">
                     <p>Illustrator</p>
@@ -106,6 +109,8 @@
                     <p>{{illustrator}}</p>
                 </div>
             </div>
+        {{/if}}
+        {{if chapter}}
             <div class="other-box">
                 <div class="title">
                     <p>Chapter</p>
@@ -114,6 +119,7 @@
                     <p>{{chapter}}</p>
                 </div>
             </div>
+        {{/if}}
         </div>
         <div class="leave">
             <div class="leave-box">
