@@ -125,15 +125,15 @@ export class phisong extends plugin {
         const patterns = {
             'bpm': {
                 'regex': /bpm([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
-                'predicate': (item, bottom, top) => bottom <= item['bpm'] && item['bpm'] <= top
+                'predicate': (item, bottom, top) => (item?.['bpm'] ? bottom <= item['bpm'] && item['bpm'] <= top : false)
             },
             'difficulty': {
                 'regex': /(difficulty|dif|定数|难度|定级)([\s:：,，/|~是为]*)([0-9.]+(\s*-\s*[0-9.]+)?)/,
-                'predicate': (item, bottom, top) => Object.values(item['chart']).some(level => bottom <= level['difficulty'] && level['difficulty'] <= top)
+                'predicate': (item, bottom, top) => (item?.['chart'] ? Object.values(item['chart']).some(level => bottom <= level['difficulty'] && level['difficulty'] <= top) : false)
             },
             'combo': {
                 'regex': /(combo|cmb|物量|连击)([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
-                'predicate': (item, bottom, top) => Object.values(item['chart']).some(level => bottom <= level['combo'] && level['combo'] <= top)
+                'predicate': (item, bottom, top) => (item?.['chart'] ? Object.values(item['chart']).some(level => bottom <= level['combo'] && level['combo'] <= top) : false)
             }
         }
 
@@ -622,7 +622,7 @@ export class phisong extends plugin {
         send.send_with_At(e, ans)
     }
 
-    async table(e) { 
+    async table(e) {
 
         if (await getBanGroup.get(e.group_id, 'table')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -631,7 +631,7 @@ export class phisong extends plugin {
 
         let dif = Number(e.msg.match(/[0-9]+/)?.[0])
 
-        if(!dif) {
+        if (!dif) {
             send.send_with_At(e, `请输入定数嗷！\n/格式：${Config.getUserCfg('config', 'cmdhead')} table <定数>`, true)
             return false
         }
