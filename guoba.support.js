@@ -27,14 +27,16 @@ export function supportGuoba() {
             schemas: [
                 {
                     label: '渲染设置',
-                    component: 'Divider'
+                    component: 'SOFT_GROUP_BEGIN'
                 },
                 {
                     field: 'onLinePhiIllUrl',
                     label: '在线曲绘来源',
                     bottomHelpMessage: '仅在未下载曲绘时有效，不影响下载曲绘指令。在线曲绘将重复下载曲绘资源，建议使用 /下载曲绘 将曲绘缓存到本地',
-                    component: 'Select',
-                    componentProps: {
+                    component: "RadioGroup",
+                componentProps: {
+                  buttonStyle: "solid",
+                  optionType: "button",
                         options: [
                             {
                                 label: 'gitee',
@@ -116,6 +118,10 @@ export function supportGuoba() {
                     },
                 },
                 {
+                label: '',
+                component: 'Divider'
+                },
+                {
                     field: 'B19MaxNum',
                     label: 'B19最大限制',
                     bottomHelpMessage: '用户可以获取B19图片成绩的最大数量，建议不要太大',
@@ -177,7 +183,7 @@ export function supportGuoba() {
                 },
                 {
                     label: '系统设置',
-                    component: 'Divider'
+                    component: 'SOFT_GROUP_BEGIN'
                 },
                 {
                     field: 'autoPullPhiIll',
@@ -223,8 +229,10 @@ export function supportGuoba() {
                     field: 'otherinfo',
                     label: '曲库',
                     bottomHelpMessage: '使用曲库的模式，若启用自定义则重名的以自定义为准',
-                    component: 'Select',
+                    component: "RadioGroup",
                     componentProps: {
+                    buttonStyle: "solid",
+                    optionType: "button",
                         options: [
                             {
                                 label: '原版曲库',
@@ -243,7 +251,7 @@ export function supportGuoba() {
                 },
                 {
                     label: '猜曲绘设置',
-                    component: 'Divider'
+                    component: 'SOFT_GROUP_BEGIN'
                 },
                 {
                     field: 'GuessTipCd',
@@ -266,7 +274,7 @@ export function supportGuoba() {
                 },
                 {
                     label: '开字母设置',
-                    component: 'Divider'
+                    component: 'SOFT_GROUP_BEGIN'
                 },
                 {
                     field: 'LetterNum',
@@ -284,8 +292,10 @@ export function supportGuoba() {
                     field: 'LetterIllustration',
                     label: '发送曲绘',
                     bottomHelpMessage: '猜对后是否发送以及发送什么曲绘，水印版需要占用渲染资源，不发图片更快',
-                    component: 'Select',
-                    componentProps: {
+                    component: "RadioGroup",
+                componentProps: {
+                  buttonStyle: "solid",
+                  optionType: "button",
                         options: [
                             {
                                 label: '水印版',
@@ -356,7 +366,7 @@ export function supportGuoba() {
                 },
                 {
                     label: '提示猜歌设置',
-                    component: 'Divider'
+                    component: 'SOFT_GROUP_BEGIN'
                 },
                 {
                     field: 'GuessTipsTipCD',
@@ -411,7 +421,7 @@ export function supportGuoba() {
                 },
                 {
                     label: '其他设置',
-                    component: 'Divider'
+                    component: 'SOFT_GROUP_BEGIN'
                 },
                 {
                     field: 'VikaToken',
