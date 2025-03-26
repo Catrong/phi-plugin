@@ -10,13 +10,20 @@ export default class Save {
      * saveInfo: {
      *  createdAt: string,
      *  gameFile: {
+     *      __type: 'File',
+     *      bucket: string,
      *      createdAt: string,
      *      key: string,
+     *      metaData: object,
+     *      mime_type: 'application/octet-stream',
+     *      name: '.save',
      *      objectId: string,
+     *      provider: string,
      *      updatedAt: string,
      *      url: string
      *  },
      *  modifiedAt: {"__type": "Date","iso": Date},
+     *  name: 'save',
      *  objectId: string,
      *  summary: {
      *      updatedAt: string,
@@ -29,6 +36,15 @@ export default class Save {
      *      fullCombo: [number, number, number, number],
      *      phi: [number, number, number, number]
      *  },
+     *  ACL: { '*': Object },
+     *  authData: { taptap: Object },
+     *  avatar: string,
+     *  emailVerified: boolean,
+     *  mobilePhoneVerified: boolean,
+     *  nickname: string,
+     *  sessionToken: string,
+     *  shortId: string,
+     *  username: string,
      *  updatedAt: string,
      *  user: {__type: "Pointer",className: "_User",objectId: string},
      *  PlayerId: string
@@ -73,12 +89,24 @@ export default class Save {
             /**账户创建时间 2022-09-03T10:21:48.613Z */
             createdAt: data.saveInfo.createdAt,
             gameFile: {
+                /**文件类型 */
+                __type: data.saveInfo.gameFile.__type,
+                /**存档bucket */
+                bucket: data.saveInfo.gameFile.bucket,
                 /**存档创建时间 2023-10-05T07:41:24.503Z */
                 createdAt: data.saveInfo.gameFile.createdAt,
                 /**gamesaves/{32}/.save */
                 key: data.saveInfo.gameFile.key,
+                /**metaData */
+                metaData: data.saveInfo.gameFile.metaData,
+                /**mime_type */
+                mime_type: data.saveInfo.gameFile.mime_type,
+                /**.save */
+                name: data.saveInfo.gameFile.name,
                 /**存档id {24} */
                 objectId: data.saveInfo.gameFile.objectId,
+                /**provider */
+                provider: data.saveInfo.gameFile.provider,
                 /**存档更新时间 2023-10-05T07:41:24.503Z */
                 updatedAt: data.saveInfo.gameFile.updatedAt,
                 /**https://rak3ffdi.tds1.tapfiles.cn/gamesaves/{32}/.save */
@@ -112,6 +140,24 @@ export default class Save {
                 /**AP曲目数量 */
                 phi: data.saveInfo.summary.phi
             },
+            /**ACL */
+            ACL: data.saveInfo.ACL,
+            /**authData */
+            authData: data.saveInfo.authData,
+            /**头像 */
+            avatar: data.saveInfo.avatar,
+            /**邮箱验证 */
+            emailVerified: data.saveInfo.emailVerified,
+            /**手机验证 */
+            mobilePhoneVerified: data.saveInfo.mobilePhoneVerified,
+            /**昵称 */
+            nickname: data.saveInfo.nickname,
+            /**sessionToken */
+            sessionToken: data.saveInfo.sessionToken,
+            /**短id */
+            shortId: data.saveInfo.shortId,
+            /**用户名 */
+            username: data.saveInfo.username,
             /**存档上传时间 2023 Oct.06 11:46:33 */
             updatedAt: data.saveInfo.updatedAt,
             /**用户信息 */
@@ -172,8 +218,9 @@ export default class Save {
             /**背景 */
             background: data.gameuser.background,
         } : null
-        if (this.saveInfo.summary.rankingScore > MAX_DIFFICULTY || (!this.saveInfo.summary.rankingScore && this.saveInfo.summary.rankingScore != 0) || this.saveInfo.summary.challengeModeRank % 100 > 51) {
+        if (checkIg(this)) {
             getRksRank.delUserRks(this.session)
+            logger.error(`封禁tk ${this.session}`)
             throw new Error(`您的存档rks异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
         }
         this.gameRecord = {}
@@ -194,8 +241,15 @@ export default class Save {
                     acc: data.gameRecord[id][level].acc
                 }
                 if (ignore) continue
-                if (data.gameRecord[id][level].acc > 100) {
-                    logger.error(`acc > 100 ${this.session}`)
+                if (data.gameRecord[id][level].acc > 100 || data.gameRecord[id][level].acc < 0) {
+                    logger.error(`acc > 100 封禁tk ${this.session}`)
+                    getRksRank.delUserRks(this.session)
+                    throw new Error(`您的存档 acc 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
+                }
+                if (data.gameRecord[id][level].score > 1000000 || data.gameRecord[id][level].score < 0) {
+                    logger.error(`score > 1000000 封禁tk ${this.session}`)
+                    getRksRank.delUserRks(this.session)
+                    throw new Error(`您的存档 score 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
                 }
             }
         }
@@ -623,4 +677,14 @@ function checkLimit(record, limit) {
         }
     }
     return true
+}
+
+function checkIg(save) {
+    if (save.saveInfo.summary.rankingScore > MAX_DIFFICULTY) return true
+    if (!save.saveInfo.summary.rankingScore && save.saveInfo.summary.rankingScore != 0) return true
+    if (save.saveInfo.summary.challengeModeRank % 100 > 51) return true
+    if (save.saveInfo.summary.challengeModeRank < 0) return true
+    if (save.saveInfo.summary.challengeModeRank % 100 == 0 && save.saveInfo.summary.challengeModeRank != 0) return true
+    if (save.saveInfo.summary.challengeModeRank % 1 != 0) return true
+    return false
 }
