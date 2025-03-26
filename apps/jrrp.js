@@ -17,8 +17,8 @@ let sentence = await readFile.FileReader(path.join(infoPath, 'sentences.json'))
 export class phihelp extends plugin {
     constructor() {
         super({
-            name: 'phi-help',
-            dsc: 'phigros屁股肉帮助',
+            name: 'phi-play',
+            dsc: 'phigros趣味功能',
             event: 'message',
             priority: 1000,
             rule: [
