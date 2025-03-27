@@ -31,6 +31,11 @@
             <img src="{{_res_path}}html/otherimg/data.png" alt="data">
             <p>{{gameuser.data}}</p>
         </div>
+        {{if spInfo}}
+        <div class="spInfo">
+            <p>{{spInfo}}</p>
+        </div>
+        {{/if}}
     </div>
     <div class="recordInfo">
         <div class="whiteLine"></div>

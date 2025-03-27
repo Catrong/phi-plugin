@@ -145,6 +145,28 @@ body p {
     box-sizing: border-box;
 }
 
+.spInfo {
+    position: absolute;
+    /* width: 91px; */
+    height: 25%;
+    bottom: -31%;
+    right: 5%;
+    display: flex;
+    --alf: 0.5;
+    background: linear-gradient(to right, rgba(255, 0, 0, var(--alf)), rgba(255, 166, 0, var(--alf)), rgba(255, 255, 0, var(--alf))), white;
+    --rpoz: 7.5px;
+    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    align-items: center;
+    justify-content: center;
+    padding-right: 0.6rem;
+    padding-left: 0.6rem;
+    white-space: nowrap;
+}
+
+.spInfo p {
+    color: black;
+}
+
 .recordInfo {
     position: absolute;
     height: 100%;
@@ -259,7 +281,9 @@ body p {
     margin-top: 8%;
 }
 
-.Nosignal, .song, .over_flow {
+.Nosignal,
+.song,
+.over_flow {
     margin-bottom: 2%;
 }
 
@@ -279,7 +303,8 @@ body p {
     filter: drop-shadow(0 0 10px #fbff00aa);
 }
 
-.b_song, .over_flow {
+.b_song,
+.over_flow {
     filter: drop-shadow(0 0 10px #ffffffaa);
 }
 

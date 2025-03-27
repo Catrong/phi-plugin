@@ -303,6 +303,7 @@ export class phib19 extends plugin {
             gameuser,
             nnum,
             stats,
+            spInfo: "All Perfect only",
         }
 
         let res = [await altas.b19(e, data)]
