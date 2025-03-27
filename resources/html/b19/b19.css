@@ -158,13 +158,14 @@ body p {
     clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
     align-items: center;
     justify-content: center;
-    padding-right: 0.6rem;
+    padding-right: 0.7rem;
     padding-left: 0.6rem;
     white-space: nowrap;
 }
 
 .spInfo p {
     color: black;
+    text-shadow: 1px 1px white;
 }
 
 .recordInfo {
