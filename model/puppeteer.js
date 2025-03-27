@@ -54,6 +54,8 @@ export default class newPuppeteer {
 
         this.id = id
 
+        this.pet.browserInit()
+
     }
 
 
