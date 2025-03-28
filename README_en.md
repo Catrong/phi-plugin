@@ -68,17 +68,20 @@ Run in the Yunzai directory
 > Using Github
 
 ```
-git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/ #Install the plugin
-cd ./plugins/phi-plugin/ #Enter the plugin directory
-pnpm install -P #Install the required dependencies
+#Install the plugin
+git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/
+#Enter the plugin directory
+cd ./plugins/phi-plugin/ 
+#Install the required dependencies
+pnpm install -P
 ```
 
 > Using Gitee
 
 ```
-git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/ #Install the plugin
-cd ./plugins/phi-plugin/ #Enter the plugin directory
-pnpm install -P #Install the required dependencies
+git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
+cd ./plugins/phi-plugin/
+pnpm install -P
 ```
 
 ------
