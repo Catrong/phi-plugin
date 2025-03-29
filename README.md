@@ -1,68 +1,47 @@
 <div align="center">
-
-<a href="">
-  <picture>
-
-    <source srcset="https://github.com/user-attachments/assets/c18cd28c-220e-445d-9001-3f7a8f25ac51" type="image/avif" width="80%" />
-    <img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%" />
-
-</picture>
-
-[![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
-[![phi-plugin](https://img.shields.io/badge/Gitee仓库-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
-
-![version](https://img.shields.io/badge/插件版本-0.9.8-9cf?style=for-the-badge)
-
-![version](https://img.shields.io/badge/Phigros-3.11.1-9cf?style=for-the-badge)
-
-[![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Yunzai-Bot)
-[![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
-[![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=for-the-badge&logo=dependabot)](https://gitee.com/TimeRainStarSky/Yunzai)
-[![Guild](https://img.shields.io/badge/频道-Hutao114Pgr939-9cf?style=for-the-badge&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
-[![Guild](https://img.shields.io/badge/频道-RkBwFBaRqa-9cf?style=for-the-badge&logo=Discord)](https://discord.gg/invite/RkBwFBaRqa)
-[![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-ff69b4?style=for-the-badge&logo=bilibili)](https://space.bilibili.com/403342249)
-[![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=for-the-badge&color=yellow&label=Star)](../../stargazers)
+  <h1>
+    <picture>
+      <source srcset="https://github.com/user-attachments/assets/c18cd28c-220e-445d-9001-3f7a8f25ac51" type="image/avif" width="80%" />
+      <img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%" />
+    </picture>
+  </h1>
 
 ### 中文 | [English](./README_en.md)
-
+![version](https://img.shields.io/badge/插件版本-0.9.8-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Phigros-3.11.1-9cf?style=flat-square)
+[![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
+[![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
+[![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/TimeRainStarSky/Yunzai)  
+[![Guild](https://img.shields.io/badge/频道-Hutao114Pgr939-9cf?style=flat-square&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
+[![Guild](https://img.shields.io/badge/频道-RkBwFBaRqa-9cf?style=flat-square&logo=Discord)](https://discord.gg/invite/RkBwFBaRqa)
+[![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
+[![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 </div>
-<br>
 
-------
+### 介绍
 
-### 特别鸣谢
+`phi-plugin`为查询Phigros信息的插件，包括b19、score、以及更多Phigros相关功能，有相关的建议和问题可以在issues中提出，欢迎PR。
 
-<table style="border-radius: 20px">
-  <tbody style="border-radius: 20px">
+具体功能可在安装插件后 通过`/phihelp`查看详细指令
 
+---
+<!--
+### 贡献者
+
+感谢以下贡献者对本项目做出的贡献
+
+<table>
     <tr>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/Walkersifolia"><img src="https://avatars.githubusercontent.com/u/129571444?v=4?s=100" style="border-radius: 50%" width="50px;" alt="圈圈"/><br /><sub><b>@Walkersifolia</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=Walkersifolia" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/S-t-e-v-e-e"><img src="https://avatars.githubusercontent.com/u/117198625?v=4?s=100" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=S-t-e-v-e-e" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/7aGiven"><img src="https://avatars.githubusercontent.com/u/77519196?v=4?s=100" style="border-radius: 50%" width="50px;" alt="文酱"/><br /><sub><b>@7aGiven</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=7aGiven" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/MYS-KISO"><img src="https://avatars.githubusercontent.com/u/101465504?v=4?s=100" style="border-radius: 50%" width="50px;" alt="MoistCrystal"/><br /><sub><b>@MoistCrystal</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=MYS-KISO" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/yt6983138"><img src="https://avatars.githubusercontent.com/u/83499886?v=4?s=100" style="border-radius: 50%" width="50px;" alt="yt6983138"/><br /><sub><b>@static_void</b></sub></a><br /><a href="https://github.com/yt6983138" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/wms26"><img src="https://avatars.githubusercontent.com/u/50258919?v=4?s=100" style="border-radius: 50%" width="50px;" alt="wms26"/><br /><sub><b>@千柒</b></sub></a><br /><a href="https://github.com/wms26" title="Contributor">🌸</a></td>
+        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/Walkersifolia"><img src="https://avatars.githubusercontent.com/u/129571444?v=4?s=100" style="border-radius: 50%" width="50px;" alt="圈圈"/><br /><sub><b>@Walkersifolia</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=Walkersifolia" title="Contributor">🌸</a></td>
+        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Contributor">🌸</a></td>
+        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/S-t-e-v-e-e"><img src="https://avatars.githubusercontent.com/u/117198625?v=4?s=100" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=S-t-e-v-e-e" title="Contributor">🌸</a></td>
+        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/7aGiven"><img src="https://avatars.githubusercontent.com/u/77519196?v=4?s=100" style="border-radius: 50%" width="50px;" alt="文酱"/><br /><sub><b>@7aGiven</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=7aGiven" title="Contributor">🌸</a></td>
+        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/MYS-KISO"><img src="https://avatars.githubusercontent.com/u/101465504?v=4?s=100" style="border-radius: 50%" width="50px;" alt="MoistCrystal"/><br /><sub><b>@MoistCrystal</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=MYS-KISO" title="Contributor">🌸</a></td>
+        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/yt6983138"><img src="https://avatars.githubusercontent.com/u/83499886?v=4?s=100" style="border-radius: 50%" width="50px;" alt="yt6983138"/><br /><sub><b>@static_void</b></sub></a><br /><a href="https://github.com/yt6983138" title="Contributor">🌸</a></td>
+        <td align="center" valign="top" width="15%" nowrap="nowrap"><a href="https://github.com/wms26"><img src="https://avatars.githubusercontent.com/u/50258919?v=4?s=100" style="border-radius: 50%" width="50px;" alt="wms26"/><br /><sub><b>@千柒</b></sub></a><br /><a href="https://github.com/wms26" title="Contributor">🌸</a></td>
     </tr>
-
-  </tbody>
 </table>
-
-### 发电鸣谢
-
-<table style="border-radius: 20px">
-  <tbody style="border-radius: 20px">
-
-    <tr>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/qilinX88"><img src="https://avatars.githubusercontent.com/u/92022485?v=4?s=100" style="border-radius: 50%" width="50px;" alt="Loser_X"/><br /><sub><b>@Loser_X</b></sub></a><br /><a href="https://github.com/qilinX88" title="Contributor">🌸 20 🌸</a></td>
-        <td align="center" valign="top" width="10%"><a href="https://github.com/S-t-e-v-e-e"><img src="https://github.com/S-t-e-v-e-e" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub></a><br /><a href="https://github.com/S-t-e-v-e-e" title="Contributor">🌸 40 🌸</a></td>
-        <td align="center" valign="top" width="10%"><br /><sub><b>溯洌RIPPLE</b></sub><br />🌸 25 🌸</td>
-    </tr>
-
-  </tbody>
-</table>
-
-------
+-->
 
 ### 安装：
 
@@ -71,38 +50,43 @@
 > 使用Github
 
 ```
-#安装插件本体
-git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/ 
-#进入插件目录
-cd ./plugins/phi-plugin/ 
-#安装插件所需依赖
-pnpm install -P 
+git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/ #安装插件本体
+cd ./plugins/phi-plugin/ #进入插件目录
+pnpm install -P #安装插件所需依赖
 ```
 
 > 使用Gitee
 
 ```
-git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
-cd ./plugins/phi-plugin/
-pnpm install -P
+git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/ #安装插件本体
+cd ./plugins/phi-plugin/ #进入插件目录
+pnpm install -P #安装插件所需依赖
 ```
-
-> [! TIP]
-> 如果pnpm安装依赖过慢，运行：
->
-
-```
+>[!TIP]
+>如果pnpm安装依赖过慢，运行：
+>```
 >pnpm config set registry https://registry.npmmirror.com
 >```
 
-------
+---
+#### Todo
+* [ ] 优化界面设计
+
+* [ ] 加入收集品、头像等的图鉴
+
+* [ ] 点phi的歌
+
+* [ ] 优化扫码获取sessionToken
+
+* [ ] 指令修改部分设置
+
+* [ ] …
+---
 
 ### 功能
-
 以下#均可用/代替，命令头可自定义
 
 #### **以下为用户功能**
-
 | **功能名称** | **功能说明**
 | :- | :-
 | `#phi帮助` | 获取帮助
@@ -135,14 +119,13 @@ pnpm install -P
 | `#phi randclg [课题总值] [难度] ([曲目定数范围])` | 随机课题 eg: /rand 40 (IN 13-15)
 | `#phi (曲绘\|ill\|Ill) xxx` | 查询phigros中某一曲目的曲绘
 | `#phi (search\|查询\|检索) <条件 值>` | 检索曲库中的曲目，支持BPM 定数 物量，条件 bpm dif cmb，值可以为区间，以 - 间隔
-| `#phi (theme\|主题) [0-2]` | 切换绘图主题，仅对 b30, update, randclg, sign, task 生效
+| `#phi (theme\|主题) [0-2]` | 切换绘图主题，仅对 b30,update,randclg,sign,task 生效
 | `sign/签到` | 签到获取Notes
 | `task/我的任务` | 查看自己的任务
 | `retask/刷新任务` | 刷新任务，需要花费20Notes
 | `#phi (send\|送\|转) <目标> <数量>` | 送给目标Note，支持@或QQ号
 
 #### **以下为管理功能**
-
 | 功能名称 | 功能说明
 | :- | :-
 | `#phi backup (back)?` | 备份存档文件，+ back 发送该备份文件，自动保存在 /phi-plugin/backup/ 目录下
@@ -162,7 +145,6 @@ pnpm install -P
 <summary>功能参数说明</summary>
 
 #### `#phi ban` 功能参数说明
-
 | 参数 | 功能 | 影响指令
 | :- | :- | :-
 | 全部 | 全部功能 | 所有
@@ -181,56 +163,62 @@ pnpm install -P
 | dan | 段位认证相关 | /dan /danupdate
 </details>
 
-------
+---
 
-<details open>
-<summary>支持我的创作</summary>
+### 支持我的创作
 
 [<img src="https://github.com/user-attachments/assets/8c181f08-a2b6-4e67-8b61-bd2e4027a6a4" width="400" />](https://afdian.com/a/Feijiang_)  
 
-感谢您的支持，您的支持就是我创作的最大动力！鸣谢名单可能更新不及时，欢迎来QQ催我！
-</details>
+感谢您的支持，您的支持就是我创作的最大动力！
 
-------
+#### 赞助者
+感谢以下赞助者对本项目的支持，鸣谢名单可能更新不及时，欢迎来QQ催我！
 
-#### Todo
+<table>
+    <tr>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><a href="https://github.com/qilinX88"><img src="https://avatars.githubusercontent.com/u/92022485?v=4?s=100" style="border-radius: 50%" width="50px;" alt="Loser_X"/><br /><sub><b>@Loser_X</b></sub></a><br />🌸 ￥20 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><a href="https://github.com/S-t-e-v-e-e"><img src="https://avatars.githubusercontent.com/u/117198625?v=4?s=100" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub><br />🌸 ￥40 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/" style="border-radius: 50%" width="50px;" alt="溯洌RIPPLE"/><br /><sub><b>溯洌RIPPLE</b></sub><br/>🌸 ￥25 🌸</td>
+    </tr>
+</table>
 
-* [ ] 优化界面设计
-
-* [ ] 加入收集品、头像等的图鉴
-
-* [ ] 点phi的歌
-
-* [ ] 优化扫码获取sessionToken
-
-* [ ] 指令修改部分设置
-
-* [ ] …
-
-------
-
-### 友情链接
-
-|  |  |  |
-| :---: | :---: | :---: |
-| [**Yunzai-Bot 相关内容索引**](https://github.com/yhArcadia/Yunzai-Bot-plugins-index) | [**Miao-Yunzai**](https://github.com/yoimiya-kokomi/Miao-Yunzai/tree/master) | [**TRSS-Yunzai**](https://github.com/TimeRainStarSky/Yunzai) |
-
-------
-
-### 预览
+---
+### 部分功能预览
 
 |**Best19效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/63f5e474-c30a-4d66-8d10-402016bad61d" type="image/avif" width="80%" /><img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242" width="80%" /></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e) | **单曲成绩效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/8c723d88-2729-4f5e-baf7-644f5fdf9001" type="image/avif" width="60%" /><img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="60%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>**单曲成绩效果图（Legacy）**<br><picture><source srcset="https://github.com/user-attachments/assets/83296c38-2181-479f-ad26-dfb2e09bccf8" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="60%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>**单曲图鉴效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/e332c88d-ecd0-49e7-aa6b-310645f14a5a" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="60%"></picture> |
 |:-------------------:|:------------------------:|
 |**范围成绩效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/b1a4ff41-d26b-4ccc-942d-087797ff02b3" type="image/avif" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65"></picture><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567) <br><br>**个人信息效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/1361b1e9-510f-4140-a87d-a74b2ee70337" type="image/avif" /><img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)|**个人信息效果图（Legacy）**<br><picture><source srcset="https://github.com/user-attachments/assets/c876119b-d98f-4751-85ba-675e6f2ba55f" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%"></picture><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567)|
 
-------
+---
+### 贡献者
 
+感谢以下贡献者对本项目做出的贡献
+
+<a href="https://github.com/Catrong/phi-plugin/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Catrong/phi-plugin" />
+</a>
+
+![Alt](https://repobeats.axiom.co/api/embed/1c5c4f4bafef4a5d2c743f72703abad36a01762d.svg "Repobeats analytics image")
+
+### Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Catrong/phi-plugin&type=Date)](https://www.star-history.com/#Catrong/phi-plugin&Date)
+
+---
 ### 免责声明
 
 1. 功能仅限内部交流与小范围使用，请勿将`Yunzai-Bot`及`phi-Plugin`用于任何以盈利为目的的场景.
 2. 图片与其他素材均来自于网络，仅供交流学习使用，如有侵权请联系，会立即删除.
 3. 云存档由[7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary/tree/v3.1.0) 改写而来
 
-------
-
 ###### 写的不好，轻喷……
+### 友情链接
+
+<table>
+    <tr>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yhArcadia/Yunzai-Bot-plugins-index"><b>Yunzai-Bot 相关内容索引</b></a></td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yoimiya-kokomi/Yunzai-Bot"><b>Yunzai-Bot</b></a></td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yoimiya-kokomi/Miao-Yunzai"><b>Miao-Yunzai</b></a></td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/TimeRainStarSky/Yunzai"><b>TRSS-Yunzai</b></a></td>
+    </tr>
+</table>
