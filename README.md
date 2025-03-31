@@ -5,6 +5,7 @@
       <img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%" />
     </picture>
   </h1>
+</div>
 
 ### 中文 | [English](./README_en.md)
 
@@ -75,8 +76,7 @@ pnpm install -P
 > [! TIP]
 > 如果pnpm安装依赖过慢，运行：
 >
-
-```
+>```
 >pnpm config set registry https://registry.npmmirror.com
 >```
 
@@ -240,12 +240,10 @@ pnpm install -P
 ### 友情链接
 
 <table>
-
     <tr>
         <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yhArcadia/Yunzai-Bot-plugins-index"><b>Yunzai-Bot 相关内容索引</b></a></td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yoimiya-kokomi/Yunzai-Bot"><b>Yunzai-Bot</b></a></td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yoimiya-kokomi/Miao-Yunzai"><b>Miao-Yunzai</b></a></td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/TimeRainStarSky/Yunzai"><b>TRSS-Yunzai</b></a></td>
     </tr>
-
 </table>
