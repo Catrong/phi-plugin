@@ -1,0 +1,17 @@
+.snow-box {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.snow {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.snow img {
+    width: 100%;
+    z-index: -1;
+}

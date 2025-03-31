@@ -9,9 +9,9 @@ import getBanGroup from '../model/getBanGroup.js';
 const illlist = []
 const theme = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }]
 
-const sp_date = 'Jan 01 2024'
-const sp_date_num = [2024]
-const sp_date_tips = ["2！0！2！4！新！年！快！乐！"]
+const sp_date = 'Apr 01 2025'
+const sp_date_num = [41]
+const sp_date_tips = ["渲...渲染失败QAQ！啊...什么！这里不是B30吗？！不...不管了！愚人节快乐！"]
 
 for (let i in get.ori_info) {
     if (get.ori_info[i]['illustration_big']) {
@@ -109,7 +109,7 @@ export class phimoney extends plugin {
 
 
             if (is_sp_date) {
-                Remsg.push(`${sp_date_tips[randint(sp_date_tips.length - 1)]}恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}，祝您节日愉快！`)
+                Remsg.push(`${sp_date_tips[randint(sp_date_tips.length - 1)]}恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}`)
             } else {
                 Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.plugin_data.money}\n`)
 

@@ -80,7 +80,7 @@ try {
 try {
     if (fs.existsSync(README_path)) {
         let README = fs.readFileSync(README_path, 'utf8') || ''
-        let reg = /https:\/\/img.shields.io\/badge\/插件版本-(.*)-9cf\?style=for-the-badge/.exec(README)
+        let reg = /https:\/\/img.shields.io\/badge\/插件版本-(.*)-9cf\?style=flat-square/.exec(README)
         if (reg) {
             currentVersion = 'v' + reg[1]
         }
@@ -88,14 +88,8 @@ try {
 } catch (err) { }
 
 let Version = {
-    get ver() {
-        return currentVersion
-    },
-    get yunzai() {
-        return yunzai_ver
-    },
-    get logs() {
-        return changelogs
-    }
-}
+    ver: currentVersion,
+    yunzai: yunzai_ver,
+    logs: changelogs,
+};
 export default Version

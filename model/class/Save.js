@@ -685,6 +685,7 @@ function checkIg(save) {
     if (save.saveInfo.summary.challengeModeRank % 100 > 51) return true
     if (save.saveInfo.summary.challengeModeRank < 0) return true
     if (save.saveInfo.summary.challengeModeRank % 100 == 0 && save.saveInfo.summary.challengeModeRank != 0) return true
+    if (Math.floor(save.saveInfo.summary.challengeModeRank / 100) == 0 && save.saveInfo.summary.challengeModeRank != 0) return true
     if (save.saveInfo.summary.challengeModeRank % 1 != 0) return true
     return false
 }

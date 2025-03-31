@@ -116,6 +116,7 @@ body p {
     align-items: flex-start;
     writing-mode: horizontal-tb;
     justify-content: center;
+    z-index: 10;
 }
 
 .createdbox p {

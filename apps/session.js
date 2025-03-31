@@ -173,7 +173,7 @@ export class phisstk extends plugin {
             await this.build(e, session)
         } catch (error) {
             logger.error(error)
-            send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
+            send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确QAQ！\n错误信息：${error}`)
         }
 
         return true
@@ -186,7 +186,7 @@ export class phisstk extends plugin {
             User = new PhigrosUser(sessionToken)
         } catch (err) {
             logger.error(`[phi-plugin]绑定sessionToken错误`, err)
-            send.send_with_At(e, `绑定sessionToken错误QAQ!\n错误的sstk:${sessionToken}\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, false, { recallMsg: 10 })
+            send.send_with_At(e, `绑定sessionToken错误QAQ！\n错误的sstk:${sessionToken}\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, false, { recallMsg: 10 })
             return true
         }
 

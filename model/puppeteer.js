@@ -77,7 +77,6 @@ export default class newPuppeteer {
         let data = {
             ...params,
             waitUntil: ['networkidle0', 'load'],
-            _plugin: Display_Plugin_Name,
             saveId: (params.saveId || params.save_id || tpl) + `${this.id}`,
             tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.art`,
             pluResPath: resPath,
@@ -95,9 +94,15 @@ export default class newPuppeteer {
                 copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
             },
             Version: Version,
-            quality: Config.getUserCfg('config', 'randerQuality'),
+            _plugin: Display_Plugin_Name,
             Math,
             fCompute,
+        }
+
+        if (Date().toString().includes('Apr 01 2025')) {
+            data.Version.ver = '2O2S rEmiX'
+            data._plugin = "渲染失败QAQ！"
+            data.theme = "foolsDay"
         }
 
         if (process.argv.includes('web-debug')) {

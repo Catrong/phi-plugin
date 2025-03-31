@@ -32,6 +32,7 @@ body p {
     margin-top: 2rem;
     margin-bottom: 2rem;
     top: 0;
+    z-index: 2;
 }
 
 .playerInfo {
@@ -50,16 +51,27 @@ body p {
     background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
     --rpoz: 28px;
-    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    clip-path: polygon(
+        100% 0%,
+        calc(100% - var(--rpoz)) 100%,
+        0% 100%,
+        var(--rpoz) 0%
+    );
     z-index: 0;
     right: 0px;
+    backdrop-filter: blur(5px);
 }
 
 .avatar {
     height: 200%;
     z-index: 2;
     --rpoz: 31px;
-    clip-path: polygon(100% 25%, calc(100% - var(--rpoz)) 75%, 0 75%, var(--rpoz) 25%);
+    clip-path: polygon(
+        100% 25%,
+        calc(100% - var(--rpoz)) 75%,
+        0 75%,
+        var(--rpoz) 25%
+    );
 }
 
 .avatar img {
@@ -131,7 +143,12 @@ body p {
     display: flex;
     background-color: rgba(0, 0, 0, 0.5);
     --rpoz: 7.5px;
-    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    clip-path: polygon(
+        100% 0%,
+        calc(100% - var(--rpoz)) 100%,
+        0% 100%,
+        var(--rpoz) 0%
+    );
     align-items: center;
     justify-content: center;
     padding-right: 0.6rem;
@@ -153,9 +170,20 @@ body p {
     right: 5%;
     display: flex;
     --alf: 0.5;
-    background: linear-gradient(to right, rgba(255, 0, 0, var(--alf)), rgba(255, 166, 0, var(--alf)), rgba(255, 255, 0, var(--alf))), white;
+    background: linear-gradient(
+            to right,
+            rgba(255, 0, 0, var(--alf)),
+            rgba(255, 166, 0, var(--alf)),
+            rgba(255, 255, 0, var(--alf))
+        ),
+        white;
     --rpoz: 7.5px;
-    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    clip-path: polygon(
+        100% 0%,
+        calc(100% - var(--rpoz)) 100%,
+        0% 100%,
+        var(--rpoz) 0%
+    );
     align-items: center;
     justify-content: center;
     padding-right: 0.7rem;
@@ -174,6 +202,7 @@ body p {
     width: 22%;
     right: 12%;
     background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
     padding-left: 3%;
 }
 
@@ -188,7 +217,12 @@ body p {
 .recordInfo,
 .whiteLine {
     --rpoz: 41px;
-    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    clip-path: polygon(
+        100% 0%,
+        calc(100% - var(--rpoz)) 100%,
+        0% 100%,
+        var(--rpoz) 0%
+    );
 }
 
 :root {
@@ -255,7 +289,7 @@ body p {
 
 .b19 {
     display: flex;
-    z-index: 1;
+    z-index: 5;
     flex-wrap: wrap;
 }
 
@@ -300,11 +334,17 @@ body p {
     position: relative;
 }
 
-.phi_song {
+.phi_song .info-AT,
+.phi_song .info-IN,
+.phi_song .info-HD,
+.phi_song .info-EZ {
     filter: drop-shadow(0 0 10px #fbff00aa);
 }
 
-.b_song,
+.b_song .info-AT,
+.b_song .info-IN,
+.b_song .info-HD,
+.b_song .info-EZ,
 .over_flow {
     filter: drop-shadow(0 0 10px #ffffffaa);
 }
@@ -371,11 +411,11 @@ body p {
 }
 
 .rank-HD {
-    background-color: #00B0F0;
+    background-color: #00b0f0;
 }
 
 .rank-EZ {
-    background-color: #92D050;
+    background-color: #92d050;
 }
 
 .org,
@@ -403,7 +443,6 @@ body p {
     font-size: 13px;
 }
 
-
 .info-AT,
 .info-IN,
 .info-HD,
@@ -414,7 +453,7 @@ body p {
     width: 49%;
     height: 90%;
     filter: drop-shadow(2px 4px 10px #00000055);
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(5px);
     position: absolute;
     right: 4%;
     top: 5%;
@@ -600,7 +639,7 @@ body p {
     /* text-shadow: 0 0 1px #8eeeff88, 1px 0 2px #8eeeff88, -1px 0 5px #8eeeff88; */
     margin-left: 5%;
     font-size: x-small;
-    color: #00B0F0;
+    color: #00b0f0;
 }
 
 .Nosignal .line {
@@ -622,7 +661,13 @@ body p {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: repeating-linear-gradient(-45deg, #ffffff, #ffffff 5px, rgb(255 255 255 / 0%) 0, rgb(255 255 255 / 0%) 10px);
+    background: repeating-linear-gradient(
+        -45deg,
+        #ffffff,
+        #ffffff 5px,
+        rgb(255 255 255 / 0%) 0,
+        rgb(255 255 255 / 0%) 10px
+    );
     /* filter: drop-shadow(0px 0px 3px #ffffff); */
 }
 
@@ -651,7 +696,12 @@ body p {
     background-color: #ffffff;
     height: 15px;
     --rpoz: 5.5px;
-    clip-path: polygon(100% 0%, calc(100% - var(--rpoz)) 100%, 0% 100%, var(--rpoz) 0%);
+    clip-path: polygon(
+        100% 0%,
+        calc(100% - var(--rpoz)) 100%,
+        0% 100%,
+        var(--rpoz) 0%
+    );
     /* border-radius: 5px; */
     overflow: hidden;
 }
@@ -688,7 +738,7 @@ body p {
 
 .over_flow p {
     font-size: 25px;
-    font-family: 'Aldrich', 'PHI';
+    font-family: "Aldrich", "PHI";
 }
 
 .createdbox {
@@ -705,7 +755,7 @@ body p {
 .createdbox p {
     color: white;
     font-size: 70px;
-    font-family: 'Aldrich', 'PHI';
+    font-family: "Aldrich", "PHI";
 }
 
 .phi-plugin {
