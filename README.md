@@ -1,11 +1,9 @@
 <div align="center">
   <h1>
-
     <picture>
       <source srcset="https://github.com/user-attachments/assets/c18cd28c-220e-445d-9001-3f7a8f25ac51" type="image/avif" width="80%" />
       <img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%" />
     </picture>
-
   </h1>
 
 ### 中文 | [English](./README_en.md)
