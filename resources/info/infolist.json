@@ -919,16 +919,6 @@
         "length": "2:24",
         "chapter": "单曲精选集"
     },
-    "SilenceisGoldenSpeechisGolden.NIWASHI": {
-        "bpm": "177",
-        "length": "2:44",
-        "chapter": "单曲精选集"
-    },
-    "FracturedAngel.DJRaisei": {
-        "bpm": "301",
-        "length": "3:00",
-        "chapter": "单曲精选集"
-    },
     "JourneywithYou.Iris": {
         "bpm": "150",
         "length": "2:11",
@@ -1308,5 +1298,35 @@
         "bpm": "140",
         "length": "2:15",
         "chapter": "单曲精选集"
+    },
+    "SilenceisGoldenSpeechisGolden.NIWASHI": {
+        "bpm": "177",
+        "length": "2:44",
+        "chapter": "Chapter Ex-EGTS 精选集"
+    },
+    "FracturedAngel.DJRaisei": {
+        "bpm": "301",
+        "length": "3:00",
+        "chapter": "Chapter Ex-EGTS 精选集"
+    },
+    "Resolver.Gomadare": {
+        "bpm":"123",
+        "length": "2:41",
+        "chapter": "Chapter Ex-EGTS 精选集"
+    },
+    "LuminousEntitiesLostHeart.NormalMfeatUsagiDenki": {
+        "bpm": "200",
+        "length": "2:48",
+        "chapter": "Chapter Ex-EGTS 精选集"
+    },
+    "KIZUNAResolution.TAG": {
+        "bpm": "240",
+        "length": "2:15",
+        "chapter": "Chapter Ex-EGTS 精选集"
+    },
+    "AbsoluTedisoRdeR.AcuteDisarray": {
+        "bpm": "256",
+        "length": "3:10",
+        "chapter": "Chapter Ex-EGTS 精选集"
     }
 }

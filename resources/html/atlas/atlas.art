@@ -45,7 +45,9 @@
                         <div class="rank">
                             <p>\</p>
                             {{each chart}}
-                            <p>{{$index}}</p>
+                            <div class="pBox">
+                                <p name="pvis">{{$index}}</p>
+                            </div>
                             {{/each}}
                         </div>
                         <div class="note-box">

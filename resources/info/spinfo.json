@@ -1,4 +1,22 @@
 {
+    "Dlyrotz -SUPER ULTIMATE AMAZING AWESOME PRO MAX EXTRA REMIX-": {
+        "song": "Dlyrotz -SUPER ULTIMATE AMAZING AWESOME PRO MAX EXTRA REMIX-",
+        "chapter": "SP",
+        "bpm": "210",
+        "composer": "lIKEY",
+        "length": "2:29",
+        "illustrator": "Who could it be? So artistic...\nCouldn't possibly be the composer himself...?",
+        "spinfo": "3.12.0 版本4月1日限定\n打开“WOW虫眼”游玩 Dlyrotz 谱面并只打中间的文字押note（不含flick）\n其余段落放置，结算结束后进入SP谱面",
+        "chart": {
+            "听采样吧": {
+                "rgba": "57,65,106,1",
+                "level": "?",
+                "difficulty": "采样",
+                "combo": "2000",
+                "charter": "XwX"
+            }
+        }
+    },
     "Retribution ~ Cycle of Redemption ~": {
         "song": "Retribution ~ Cycle of Redemption ~",
         "chapter": "SP",

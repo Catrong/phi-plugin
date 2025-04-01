@@ -214,11 +214,18 @@ body {
     flex-direction: column;
     align-items: center;
     margin-left: 5px;
+    max-width: 5%;
 }
 
 .rank p {
     font-size: 35px;
+    text-align: center;
+}
+
+.rank .pBox {
     height: var(--rankHight);
+    display: flex;
+    align-items: center;
 }
 
 .rank-box {
@@ -299,6 +306,10 @@ body {
     flex-direction: column;
 }
 
+.other-box .title p {
+    color: turquoise;
+}
+
 .other-info :nth-child(2) {
     margin-right: 20px;
 }
@@ -312,6 +323,7 @@ body {
     font-size: 25px;
     margin: 0;
     text-shadow: 0 0 3px black;
+    text-align: right;
 }
 
 .other-box {
