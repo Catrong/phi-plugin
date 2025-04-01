@@ -93,16 +93,10 @@ export default class newPuppeteer {
                 scale: `style=transform:scale(${cfg.scale || 1})`,
                 copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
             },
-            Version: Version,
+            Version: {...Version},
             _plugin: Display_Plugin_Name,
             Math,
             fCompute,
-        }
-
-        if (Date().toString().includes('Apr 01 2025')) {
-            data.Version.ver = '2O2S rEmiX'
-            data._plugin = "渲染失败QAQ！"
-            data.theme = "foolsDay"
         }
 
         if (process.argv.includes('web-debug')) {
