@@ -1,7 +1,7 @@
 function themeSnow() {
     function addSnow() {
         var snow = document.createElement("div")
-        snow.innerHTML = `<img src="../../../otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
+        snow.innerHTML = `<img src="${_res_path}/html/otherimg/snow${Math.floor(Math.random() * 4) + 1}.png">`
         snow.className = "snow"
         snow.style.left = `${Math.random() * 100}%`
         snow.style.bottom = `${Math.random() * 100}%`

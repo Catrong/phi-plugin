@@ -35,6 +35,10 @@
         {{/if}}
     </div>
 
+    <script>
+        var _res_path = "{{_res_path}}";
+    </script>
+
     {{if theme == "snow"}}
     <script src="{{_res_path}}html/common/theme/snow/snow.js"></script>
     {{else if theme == "topText" || theme == "foolsDay"}}

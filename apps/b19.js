@@ -794,7 +794,7 @@ export class phib19 extends plugin {
 
         for (let song in getInfo.ori_info) {
             if (getInfo.ori_info[song].chapter == chap[msg] || msg == 'ALL') {
-                song_box[song] = { illustration: getInfo.getill(song), chart: {} }
+                song_box[song] = { illustration: getInfo.getill(song, 'low'), chart: {} }
                 let id = getInfo.idssong[song]
                 /**曲目成绩对象 */
                 let songRecord = save.getSongsRecord(id)

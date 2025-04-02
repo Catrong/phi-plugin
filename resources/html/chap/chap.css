@@ -1,7 +1,10 @@
 @import '../common/common.css';
 
 body {
-    width: 2048px;
+    /* width: 2048px; */
+    /* width: 2500px; */
+    min-width: 2048px;
+    width: fit-content;
     height: 1080px;
     position: relative;
     /* display: flex; */
@@ -16,34 +19,39 @@ body p {
     width: 100%;
     height: 100%;
     position: absolute;
-}
-
-.illustration img {
-    width: 100%;
-    height: 100%;
-}
-
-.bar {
-    position: absolute;
-    width: 80%;
-    height: 100%;
-    padding-left: 10%;
-    background-color: #000000cc;
-    backdrop-filter: blur(5px);
-    clip-path: polygon(20.156% 0px, 0% 100%, 100% 100%, 100% 0%);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 10%;
+    overflow: hidden;
+}
+
+.background img,
+.illustration img {
+    width: 100%;
+    height: auto;
+}
+
+.bar {
+    position: relative;
+    /* width: calc(100% - 400px); */
+    width: min-content;
+    height: 100%;
+    padding-left: 200px;
+    background-color: #000000cc;
+    backdrop-filter: blur(5px);
+    clip-path: polygon(370px 0px, 0% 100%, 100% 100%, 100% 0%);
+    display: flex;
+    align-items: center;
+    margin-left: 200px;
 }
 
 .player {
     height: 5%;
-    width: 75%;
+    width: calc(100% - 500px);
     display: flex;
     align-items: center;
     position: absolute;
-    left: 23%;
+    left: 430px;
     top: 3%;
     justify-content: space-between;
 }
@@ -55,11 +63,11 @@ body p {
 
 .count {
     height: 5%;
-    width: 75%;
+    width: 1400px;
     display: flex;
     align-items: center;
     position: absolute;
-    left: 21%;
+    left: 395px;
     top: 9%;
     flex-wrap: nowrap;
     flex-direction: row;
@@ -81,8 +89,8 @@ body p {
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
+    margin-left: 50px;
 }
 
 .song {
@@ -92,14 +100,6 @@ body p {
     width: auto;
     color: white;
     position: absolute;
-}
-
-.song_1 {
-    height: 17%;
-}
-
-.song_2 {
-    height: 6%;
 }
 
 .ill {
@@ -229,7 +229,7 @@ body p {
 
 .EZ-bar {
     bottom: 12%;
-    left: 6.5%;
+    left: 140px;
 }
 
 .EZ-bar .progress-bar {
@@ -238,7 +238,7 @@ body p {
 
 .HD-bar {
     bottom: 9%;
-    left: 6.1%;
+    left: 130px;
 }
 
 .HD-bar .progress-bar {
@@ -247,7 +247,7 @@ body p {
 
 .IN-bar {
     bottom: 6%;
-    left: 5.7%;
+    left: 120px;
 }
 
 .IN-bar .progress-bar {
@@ -256,7 +256,7 @@ body p {
 
 .AT-bar {
     bottom: 3%;
-    left: 5.3%;
+    left: 110px;
 }
 
 .AT-bar .progress-bar {
@@ -279,39 +279,49 @@ body p {
     justify-content: flex-start;
 }
 
-.song_1 .score-bar :nth-child(2) {
-    margin-left: -8px;
+.song_1 {
+    height: 17%;
+    --xpoz: -8px;
 }
 
-.song_1 .score-bar :nth-child(3) {
-    margin-left: -16px;
+.song_2 {
+    height: 9%;
+    --xpoz: -4.5px;
 }
 
-.song_1 .score-bar :nth-child(4) {
-    margin-left: -24px;
+.song_3 {
+    height: 6%;
+    --xpoz: -2.6px;
 }
 
-.song_2 .score-bar :nth-child(2) {
-    margin-left: -2.6px;
+.score-bar :nth-child(2) {
+    margin-left: calc(var(--xpoz));
 }
 
-.song_2 .score-bar :nth-child(3) {
-    margin-left: -5.2px;
+.score-bar :nth-child(3) {
+    margin-left: calc(var(--xpoz) * 2);
 }
 
-.song_2 .score-bar :nth-child(4) {
-    margin-left: -7.8px;
+.score-bar :nth-child(4) {
+    margin-left: calc(var(--xpoz) * 3);
+}
+
+.score-bar * {
+    border-radius: 50%;
 }
 
 .song_1 .score-bar * {
-    border-radius: 50%;
     height: 20px;
     width: 20px;
     margin-top: 30%;
 }
 
 .song_2 .score-bar * {
-    border-radius: 50%;
+    height: 14px;
+    width: 14px;
+}
+
+.song_3 .score-bar * {
     height: 8px;
     width: 8px;
 }
@@ -347,4 +357,4 @@ body p {
     font-size: 30px;
 }
 
-.createdbox {right: 4%;bottom: 0%;width: auto;position: absolute;}
+.createdbox {right: 4%;bottom: 4%;width: auto;position: absolute;}

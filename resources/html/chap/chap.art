@@ -21,12 +21,18 @@
             {{/if}}
             {{/each}}
         </div>
-        <div class="song-box">
-            {{set song_style = (num <= 30) ? 1 : 2}}
-            {{set song_num = (num <= 30) ? 5 : 15}}
-            {{set tem = 0}}
+        {{set type1 = 30}}
+        {{set type2 = 200}}
+        {{set song_style = (num <= type1) ? 1 : ((num <= type2) ? 2 : 3)}}
+        {{set song_num = (num <= type1) ? 5 : ((num <= type2) ? 10 : 15)}}
+        {{set left_margin = (num <= type1) ? 100 : ((num <= type2) ? 130 : 130)}}
+        {{set left_range = (num <= type1) ? -200 : ((num <= type2) ? -220 : -230)}}
+        {{set column_size = (num <= type1) ? (num <= 10 ? 700 : 240) : ((num <= type2) ? 130 : 85)}}
+        {{set top_range = ((num <= type1) ? 600 : ((num <= type2) ? 645 : 690))}}
+        {{set tem = 0}}
+        <div class="song-box" style="width: {{column_size * Math.ceil(num / song_num) + left_margin + 50}}px;"">
             {{each song_box song}}
-            <div class="song song_{{song_style}}" style="left: {{((num <= 30) ? 100 : 130) + (((num <= 30) ? -200 : -230) / (song_num - 1)) * (tem % song_num) + ((num <= 30) ? (num <= 10 ? 700 : 230) : 85) * ((tem - (tem % song_num)) / song_num)}}px;top: {{(((num <= 30) ? 600 : 690) / (song_num - 1)) * (tem % song_num)}}px;">
+            <div class="song song_{{song_style}}" style="left: {{left_margin + (left_range / (song_num - 1)) * (tem % song_num) + column_size * ((tem - (tem % song_num)) / song_num)}}px;top: {{(top_range / (song_num - 1)) * (tem % song_num)}}px;">
                 <div class="common_ill ill"> 
                     <img src="{{song.illustration}}" alt="{{illustration}}">
                 </div>
