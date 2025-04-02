@@ -35,12 +35,6 @@
         {{/if}}
     </div>
 
-    <!-- <div class="container" id="container"> -->
-    {{block 'main'}}{{/block}}
-    <!-- <div class="copyright">{{@sys.copyright}}</div> -->
-    <!-- </div> -->
-    <!-- 曲目名称自适应name-box的宽度 -->
-
     {{if theme == "snow"}}
     <script src="{{_res_path}}html/common/theme/snow/snow.js"></script>
     {{else if theme == "topText" || theme == "foolsDay"}}
@@ -48,6 +42,12 @@
     {{else if theme == "star"}}
     <script src="{{_res_path}}html/common/theme/star/star.js"></script>
     {{/if}}
+
+    <!-- <div class="container" id="container"> -->
+    {{block 'main'}}{{/block}}
+    <!-- <div class="copyright">{{@sys.copyright}}</div> -->
+    <!-- </div> -->
+    <!-- 曲目名称自适应name-box的宽度 -->
 
     <script>
         function isBiggerThanParent(songName, parentElement) {

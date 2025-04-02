@@ -1,13 +1,16 @@
 
-var context;
 var arr = new Array();
 var starCount = 4000;
 var rains = new Array();
 var rainCount = 50;
+var context;
+var stars;
+var parentElement;
 
-var stars = document.getElementById("stars");
-var parentElement = document.getElementsByTagName("body")[0];
+
 function init() {
+    stars = document.getElementById("stars");
+    parentElement = document.getElementsByTagName("body")[0];
     stars.width = parentElement.offsetWidth;
     stars.height = parentElement.offsetHeight - 200;
     stars.style.zIndex = 0
