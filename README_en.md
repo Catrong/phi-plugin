@@ -54,7 +54,7 @@
     <tr>
         <td align="center" valign="top" width="10%"><a href="https://github.com/qilinX88"><img src="https://avatars.githubusercontent.com/u/92022485?v=4?s=100" style="border-radius: 50%" width="50px;" alt="Loser_X"/><br /><sub><b>@Loser_X</b></sub></a><br /><a href="https://github.com/qilinX88" title="Contributor">🌸 20 🌸</a></td>
         <td align="center" valign="top" width="10%"><a href="https://github.com/S-t-e-v-e-e"><img src="https://github.com/S-t-e-v-e-e" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub></a><br /><a href="https://github.com/S-t-e-v-e-e" title="Contributor">🌸 40 🌸</a></td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/" style="border-radius: 50%" width="50px;" alt="溯洌RIPPLE"/><br /><sub><b>溯洌RIPPLE</b></sub><br/>🌸 5 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/" style="border-radius: 50%" width="50px;" alt="溯洌RIPPLE"/><br /><sub><b>溯洌RIPPLE</b></sub><br/>🌸 25 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/" style="border-radius: 50%" width="50px;" alt="溯洌RIPPLE"/><br /><sub><b>祈</b></sub><br/>🌸 5 🌸</td>
     </tr>
   </tbody>
