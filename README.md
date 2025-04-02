@@ -71,9 +71,9 @@ cd ./plugins/phi-plugin/
 pnpm install -P 
 ```
 
-> [! TIP]
+> [!TIP]
 > 如果pnpm安装依赖过慢，运行：
->
+> 
 >```
 >pnpm config set registry https://registry.npmmirror.com
 >```
