@@ -6,7 +6,7 @@
     </picture>
   
 ### 中文 | [English](./README_en.md)
-</h1>
+  </h1>
 
 [![Guild](https://img.shields.io/badge/频道-Hutao114Pgr939-9cf?style=flat-square&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
 [![Guild](https://img.shields.io/badge/频道-RkBwFBaRqa-9cf?style=flat-square&logo=Discord)](https://discord.gg/invite/RkBwFBaRqa)
