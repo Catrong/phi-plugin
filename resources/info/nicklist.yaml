@@ -335,16 +335,16 @@ MOBILYS.Dachs:
   - 光球
   - 夜灯
   - 动境中之动
-AfterDawn.S9ryne:
-  - AD
-  - 黎明之后
-  - 破晓之后
 Adastraperaspera.RabbitHouse:
   - 太阳
   - 循此苦旅 直抵群星
   - 广告
   - Ad
   - Aapa
+AfterDawn.S9ryne:
+  - AD
+  - 黎明之后
+  - 破晓之后
 INFiNiTEENERZYOverdoze.RekuMochizuki:
   - IEO
   - 无限能量
@@ -458,6 +458,7 @@ CROSSSOUL.HyuNfeatSyepias:
   - 魂穿
   - 穿魂
   - 穿越灵魂
+  - 十字路口
 MagentaPotion.EmoCo:
   - MP
   - 骂人药水
@@ -780,6 +781,10 @@ Apocalyptic.ZClaxxSumaiLight:
   - 启示录
   - 南瓜头
   - 世界末日
+  - 灾难
+  - 陨石
+  - 天灾
+  - 灾变
 RainySeason.AbyssIdols:
   - 梅雨
   - 雨季
@@ -1280,6 +1285,7 @@ NightTheater.わかどり:
   - 蕾娜
 CrushBETA.shadow_bling:
   - 过年回家
+  - 拜年
   - CB
   - beta
   - 粉碎文件
@@ -1435,3 +1441,7 @@ SwingSkipDrop.ミハイル:
   - 宇宙残骸少女
   - Cosmic Dusty Girl
   - CDG
+AbsoluTedisoRdeR.AcuteDisarray:
+  - ATRR
+  - 绝对混乱
+  - 绝对失序
