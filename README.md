@@ -4,22 +4,20 @@
       <source srcset="https://github.com/user-attachments/assets/c18cd28c-220e-445d-9001-3f7a8f25ac51" type="image/avif" width="80%" />
       <img src="https://github.com/Catrong/phi-plugin/assets/117198625/731e11cb-71d3-4575-8c0d-b9cedcd442d4" width="80%" />
     </picture>
-  </h1>
-</div>
-
+  
 ### 中文 | [English](./README_en.md)
+  </h1>
 
-![version](https://img.shields.io/badge/插件版本-0.9.8-9cf?style=flat-square)
-
-![version](https://img.shields.io/badge/Phigros-3.12.0-9cf?style=flat-square)
-
-[![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
-[![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
-[![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/TimeRainStarSky/Yunzai)  
 [![Guild](https://img.shields.io/badge/频道-Hutao114Pgr939-9cf?style=flat-square&logo=GroupMe)](https://pd.qq.com/s/e3z86q6bw)
 [![Guild](https://img.shields.io/badge/频道-RkBwFBaRqa-9cf?style=flat-square&logo=Discord)](https://discord.gg/invite/RkBwFBaRqa)
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
+
+![version](https://img.shields.io/badge/插件版本-0.9.8-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Phigros-3.12.0-9cf?style=flat-square)  
+[![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
+[![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
+[![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/TimeRainStarSky/Yunzai)
 </div>
 
 ### 介绍
@@ -73,9 +71,9 @@ cd ./plugins/phi-plugin/
 pnpm install -P 
 ```
 
-> [! TIP]
+> [!TIP]
 > 如果pnpm安装依赖过慢，运行：
->
+> 
 >```
 >pnpm config set registry https://registry.npmmirror.com
 >```
