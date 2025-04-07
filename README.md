@@ -239,9 +239,9 @@ pnpm install -P
 
 <table>
     <tr>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yhArcadia/Yunzai-Bot-plugins-index"><b>Yunzai-Bot 相关内容索引</b></a></td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yoimiya-kokomi/Yunzai-Bot"><b>Yunzai-Bot</b></a></td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/yoimiya-kokomi/Miao-Yunzai"><b>Miao-Yunzai</b></a></td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="/TimeRainStarSky/Yunzai"><b>TRSS-Yunzai</b></a></td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="https://github.com/yhArcadia/Yunzai-Bot-plugins-index"><b>Yunzai-Bot 相关内容索引</b></a></td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="https://github.com/yoimiya-kokomi/Yunzai-Bot"><b>Yunzai-Bot</b></a></td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="https://github.com/yoimiya-kokomi/Miao-Yunzai"><b>Miao-Yunzai</b></a></td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="https://github.com/TimeRainStarSky/Yunzai"><b>TRSS-Yunzai</b></a></td>
     </tr>
 </table>
