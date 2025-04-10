@@ -604,6 +604,7 @@ circle {
 
 .Nosignal .line {
     width: 20%;
+    height: 5px;
     margin: 0;
     border-bottom: 5px solid;
     border-color: white;

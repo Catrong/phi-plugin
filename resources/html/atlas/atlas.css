@@ -104,7 +104,7 @@ body {
 .charts-box p {
     font-size: 19px;
     z-index: 1;
-    text-shadow: 0 0 1px BLACK;
+    text-shadow: 0 0 2px black;
 }
 
 .charts-box .length {
@@ -417,6 +417,7 @@ body {
 
 .lrank p {
     font-size: 15px;
+    text-shadow: 0 0 1px BLACK;
 }
 
 .createdbox {

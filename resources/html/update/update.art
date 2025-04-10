@@ -72,7 +72,7 @@
             <div class="box_title" style="width: 755px;filter: drop-shadow(0px 2px 2px #fff382);">
                 <div class="box_title-right-down" style="background-color: #fff382;"></div>
                 <div class="box_title-left" style="background-color: #fff382;">
-                    <p style="color: white;text-shadow: 0px 0px 3px #000000;">Task_table</p>
+                    <p style="color: black;text-shadow: 0px 0px 3pxrgb(255, 255, 255);">Task_table</p>
                 </div>
                 <div class="box_title-right">
                     <p>{{task_time}}</p>
