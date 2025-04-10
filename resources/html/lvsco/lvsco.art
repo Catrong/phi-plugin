@@ -293,38 +293,21 @@
                 </div>
             </div>
             <div class="rating_stats">
+                {{set maxv = 0}}
+                {{each rating}}
+                {{if $index != "tot" && $value > maxv}}
+                <% maxv = $value %>
+                {{/if}}
+                {{/each}}
+                {{each rating}}
+                {{if $index != "tot"}}
                 <div class="rating_stats_group">
-                    <img src="{{_res_path}}html/otherimg/phi.png" alt="phi">
-                    <p>{{rating.phi}}</p>
+                    <img src="{{_res_path}}html/otherimg/{{$index}}.png" alt="{{$index}}">
+                    <p>{{$value}}</p>
+                    <div class="rating_stats_bar" style="height: {{$value / maxv * 100}}%;"></div>
                 </div>
-                <div class="rating_stats_group">
-                    <img src="{{_res_path}}html/otherimg/FC.png" alt="FC">
-                    <p>{{rating.FC}}</p>
-                </div>
-                <div class="rating_stats_group">
-                    <img src="{{_res_path}}html/otherimg/V.png" alt="V">
-                    <p>{{rating.V}}</p>
-                </div>
-                <div class="rating_stats_group">
-                    <img src="{{_res_path}}html/otherimg/S.png" alt="S">
-                    <p>{{rating.S}}</p>
-                </div>
-                <div class="rating_stats_group">
-                    <img src="{{_res_path}}html/otherimg/A.png" alt="A">
-                    <p>{{rating.A}}</p>
-                </div>
-                <div class="rating_stats_group">
-                    <img src="{{_res_path}}html/otherimg/B.png" alt="B">
-                    <p>{{rating.B}}</p>
-                </div>
-                <div class="rating_stats_group">
-                    <img src="{{_res_path}}html/otherimg/C.png" alt="C">
-                    <p>{{rating.C}}</p>
-                </div>
-                <div class="rating_stats_group">
-                    <img src="{{_res_path}}html/otherimg/F.png" alt="F">
-                    <p>{{rating.F}}</p>
-                </div>
+                {{/if}}
+                {{/each}}
             </div>
         </div>
     </div>

@@ -53,7 +53,7 @@ export class phisstk extends plugin {
             return false
         }
 
-        let sessionToken = e.msg.replace(/[#/](.*)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
+        let sessionToken = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
 
         sessionToken = sessionToken ? sessionToken[0] : null
 

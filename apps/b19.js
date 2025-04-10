@@ -304,7 +304,7 @@ export class phib19 extends plugin {
             gameuser,
             nnum,
             stats,
-            spInfo: "All Perfect only",
+            spInfo: "All Perfect Only Mode",
         }
 
         let res = [await altas.b19(e, data)]
@@ -421,7 +421,7 @@ export class phib19 extends plugin {
             return true
         }
 
-        let num = e.msg.replace(/[#/](.*)(best)(\s*)/g, '')
+        let num = e.msg.replace(/[#/](.*?)(best)(\s*)/g, '')
 
         if (Number(num) % 1 != 0) {
             await e.reply(`${num}不是个数字吧！`, true)
@@ -544,7 +544,7 @@ export class phib19 extends plugin {
         let picversion = Number(e.msg.match(/(score|单曲成绩)[1-2]?/g)[0].replace(/(score|单曲成绩)/g, '')) || 1
 
 
-        let song = e.msg.replace(/[#/](.*)(score|单曲成绩)[1-2]?(\s*)/g, '')
+        let song = e.msg.replace(/[#/](.*?)(score|单曲成绩)[1-2]?(\s*)/g, '')
 
         if (!song) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} score <曲名>`)

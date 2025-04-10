@@ -363,7 +363,7 @@ export class phimoney extends plugin {
             return false
         }
 
-        let msg = e.msg.replace(/[#/](.*)(send|送|转)(\s*)/g, "")
+        let msg = e.msg.replace(/[#/](.*?)(send|送|转)(\s*)/g, "")
         msg = msg.replace(/[\<\>]/g, "")
         let target = e.at
         let num

@@ -36,7 +36,7 @@ export default new class guessLetter {
     async start(e, gameList) {
         const { group_id } = e // 使用对象解构提取group_id
         let { msg } = e // 提取消息
-        msg = msg.replace(/[#/](.*)(ltr|开字母)(\s*)/, "")
+        msg = msg.replace(/[#/](.*?)(ltr|开字母)(\s*)/, "")
 
         /**TODO 处理其他游戏曲库 */
         let totNameList = []

@@ -289,7 +289,7 @@ export default new class compute {
     match_request(e_msg) {
         let range = [0, MAX_DIFFICULTY]
 
-        let msg = e_msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
+        let msg = e_msg.replace(/^[#/](.*?)(lvsco(re)?)(\s*)/, "")
 
         /**EZ HD IN AT */
         let isask = [true, true, true, true]

@@ -87,7 +87,7 @@ export class phisong extends plugin {
             return false
         }
 
-        let msg = e.msg.replace(/[#/](.*)(曲|song)(\s*)/, "")
+        let msg = e.msg.replace(/[#/](.*?)(曲|song)(\s*)/, "")
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} song <曲名>`)
             return true
@@ -120,7 +120,7 @@ export class phisong extends plugin {
             return false
         }
 
-        let msg = e.msg.replace(/[#/](.*)(查找|检索|search)(\s*)/g, "").toLowerCase()
+        let msg = e.msg.replace(/[#/](.*?)(查找|检索|search)(\s*)/g, "").toLowerCase()
 
         const patterns = {
             'bpm': {
@@ -223,7 +223,7 @@ export class phisong extends plugin {
             e.reply("只有管理员可以设置别名哦！")
             return true
         }
-        let msg = e.msg.replace(/[#/](.*)(设置别名|setnic(k?))(\s*)/g, "")
+        let msg = e.msg.replace(/[#/](.*?)(设置别名|setnic(k?))(\s*)/g, "")
         if (msg.includes("--->")) {
             msg = msg.replace(/(\s*)--->(\s*)/g, " ---> ")
             msg = msg.split(" ---> ")
@@ -257,7 +257,7 @@ export class phisong extends plugin {
             this.e.reply("只有管理员可以删除别名哦！")
             return true
         }
-        let msg = this.e.msg.replace(/[#/](.*)(删除别名|delnic(k?))(\s*)/g, '')
+        let msg = this.e.msg.replace(/[#/](.*?)(删除别名|delnic(k?))(\s*)/g, '')
         let ans = Config.getConfig('nickconfig', msg)
         ans = ans[msg]
         if (ans) {
@@ -338,7 +338,7 @@ export class phisong extends plugin {
             return false
         }
 
-        let msg = e.msg.replace(/^[#/](.*)(随机|rand)(\s*)/, "")
+        let msg = e.msg.replace(/^[#/](.*?)(随机|rand)(\s*)/, "")
         let isask = [1, 1, 1, 1]
 
         msg = msg.toUpperCase()

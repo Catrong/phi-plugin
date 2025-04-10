@@ -246,7 +246,7 @@ export class phiuser extends plugin {
         }
 
         /**匹配定数区间 */
-        let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
+        let msg = e.msg.replace(/^[#/](.*?)(lvsco(re)?)(\s*)/, "")
 
         let isask = [true, true, true, true]
         msg = msg.toUpperCase()
@@ -300,14 +300,14 @@ export class phiuser extends plugin {
         let totlowest = 17
         let totsongs = 0
         let totRating = {
-            F: 0,
-            C: 0,
-            B: 0,
-            A: 0,
-            S: 0,
-            V: 0,
-            FC: 0,
             phi: 0,
+            FC: 0,
+            V: 0,
+            S: 0,
+            A: 0,
+            B: 0,
+            C: 0,
+            F: 0,
         }
         let totRank = {
             AT: 0,
@@ -384,7 +384,7 @@ export class phiuser extends plugin {
         let illustration = await fCompute.getBackground(save.gameuser.background)
 
         if (!illustration) {
-            e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
+            e.reply(`ERROR: 未找到[${save.gameuser.background}]背景的有关信息！`)
             logger.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
@@ -408,8 +408,8 @@ export class phiuser extends plugin {
                 score: totreal_score,
             },
             rating: {
-                tot: Rate(totreal_score, tottot_score, totfc == totcharts),
                 ...totRating,
+                tot: Rate(totreal_score, tottot_score, totfc == totcharts),
             },
             range: {
                 bottom: range[0],
@@ -464,7 +464,7 @@ export class phiuser extends plugin {
 
         let range = [0, getInfo.MAX_DIFFICULTY]
 
-        let msg = e.msg.replace(/^[#/](.*)(lvsco(re)?)(\s*)/, "")
+        let msg = e.msg.replace(/^[#/](.*?)(lvsco(re)?)(\s*)/, "")
 
         /**EZ HD IN AT */
         let isask = [true, true, true, true]
