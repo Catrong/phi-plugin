@@ -545,7 +545,7 @@ export class phiuser extends plugin {
             theme: plugin_data?.plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
-            Date: save.saveInfo.updatedAt,
+            Date: save.saveInfo.summary.updatedAt,
             ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             dan: await get.getDan(e.user_id),

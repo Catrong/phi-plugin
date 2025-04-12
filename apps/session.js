@@ -338,7 +338,7 @@ export class phisstk extends plugin {
         let data = {
             PlayerId: fCompute.convertRichText(now.saveInfo.PlayerId),
             Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
-            Date: now.saveInfo.updatedAt,
+            Date: now.saveInfo.summary.updatedAt,
             ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
             ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
             background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
