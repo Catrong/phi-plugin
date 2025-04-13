@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import getInfo from './model/getInfo.js'
 if (!global.segment) {
     try {
         global.segment = (await import("icqq")).segment
@@ -29,6 +30,7 @@ for (let i in files) {
     let name = files[i].replace('.js', '')
 
     if (ret[i].status != 'fulfilled') {
+        console.error(ret[i])
         throw new Error(ret[i].reason)
     }
     apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
