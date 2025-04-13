@@ -59,7 +59,7 @@ export class phiRankList extends plugin {
         data.totDataNum = (await getRksRank.getAllRank()).length
 
         if (msg) {
-            rankNum = Math.max(Math.min(msg[0], data.totDataNum), 0) - 1
+            rankNum = Math.max(Math.min(msg[0], data.totDataNum), 1) - 1
         } else {
             let sessionToken = save.getSessionToken()
             rankNum = await getRksRank.getUserRank(sessionToken)
