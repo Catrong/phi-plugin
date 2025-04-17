@@ -22,7 +22,7 @@
 
 ### 介绍
 
-`phi-plugin` 为查询Phigros信息的插件，包括b19、score、以及更多Phigros相关功能，有相关的建议和问题可以在issues中提出，欢迎PR。
+`phi-plugin` 为查询Phigros信息的插件，包括b30、score、userinfo以及更多Phigros相关功能，有相关的建议和问题可以在issues中提出，欢迎PR。
 
 具体功能可在安装插件后 通过 `/phihelp` 查看详细指令
 
@@ -34,7 +34,6 @@
 感谢以下贡献者对本项目做出的贡献
 
 <table>
-
     <tr>
         <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/Walkersifolia"><img src="https://avatars.githubusercontent.com/u/129571444?v=4?s=100" style="border-radius: 50%" width="50px;" alt="圈圈"/><br /><sub><b>@Walkersifolia</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=Walkersifolia" title="Contributor">🌸</a></td>
         <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Contributor">🌸</a></td>
@@ -44,7 +43,6 @@
         <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/yt6983138"><img src="https://avatars.githubusercontent.com/u/83499886?v=4?s=100" style="border-radius: 50%" width="50px;" alt="yt6983138"/><br /><sub><b>@static_void</b></sub></a><br /><a href="https://github.com/yt6983138" title="Contributor">🌸</a></td>
         <td align="center" valign="top" width="15%" nowrap="nowrap"><a href="https://github.com/wms26"><img src="https://avatars.githubusercontent.com/u/50258919?v=4?s=100" style="border-radius: 50%" width="50px;" alt="wms26"/><br /><sub><b>@千柒</b></sub></a><br /><a href="https://github.com/wms26" title="Contributor">🌸</a></td>
     </tr>
-
 </table>
 -->
 
@@ -66,16 +64,19 @@ pnpm install -P
 > 使用Gitee
 
 ```
-git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/ 
-cd ./plugins/phi-plugin/ 
+#安装插件本体
+git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
+#进入插件目录
+cd ./plugins/phi-plugin/
+#安装插件所需依赖
 pnpm install -P 
 ```
 
 > [!TIP]
-> 如果pnpm安装依赖过慢，运行：
+> 如果安装依赖时速度过慢，运行：
 > 
 >```
->pnpm config set registry https://registry.npmmirror.com
+> pnpm config set registry https://registry.npmmirror.com
 >```
 
 ---
@@ -205,7 +206,7 @@ pnpm install -P
 
 ### 部分功能预览
 
-|**Best19效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/63f5e474-c30a-4d66-8d10-402016bad61d" type="image/avif" width="80%" /><img src="https://github.com/user-attachments/assets/d7fab54d-293d-4a74-84cd-3e521ad3e242" width="80%" /></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e) | **单曲成绩效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/8c723d88-2729-4f5e-baf7-644f5fdf9001" type="image/avif" width="60%" /><img src="https://github.com/user-attachments/assets/2201c185-1352-4b69-8649-c00d9756e1c5" width="60%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>**单曲成绩效果图（Legacy）**<br><picture><source srcset="https://github.com/user-attachments/assets/83296c38-2181-479f-ad26-dfb2e09bccf8" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="60%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>**单曲图鉴效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/e332c88d-ecd0-49e7-aa6b-310645f14a5a" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="60%"></picture> |
+|**Best30效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/22670da2-cd67-4da3-9589-e139f3db6d82" type="image/avif" width="80%" /><img src="https://github.com/user-attachments/assets/7faf1dba-2cd5-44d5-bc9d-d880fd2f2201" width="80%" /></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e) | **单曲成绩效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/8a5adadb-3cdf-4371-b1d3-cc869f89a545" type="image/avif" width="40%" /><img src="https://github.com/user-attachments/assets/4594ef39-dacf-4079-9612-5090626f572b" width="40%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>**单曲成绩效果图（Legacy）**<br><picture><source srcset="https://github.com/user-attachments/assets/83296c38-2181-479f-ad26-dfb2e09bccf8" type="image/avif" width="40%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/093e3d30-7f9e-48cb-9e12-bb9f0bb3b40c" width="40%"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)<br><br>**单曲图鉴效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/e332c88d-ecd0-49e7-aa6b-310645f14a5a" type="image/avif" width="40%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/c6eb9694-8f72-4d3f-85d9-5120375b047b" width="40%"></picture> |
 |:-------------------:|:------------------------:|
 |**范围成绩效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/b1a4ff41-d26b-4ccc-942d-087797ff02b3" type="image/avif" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/411dff8e-ec93-4ebe-80ff-510105fd3f65"></picture><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567) <br><br>**个人信息效果图**<br><picture><source srcset="https://github.com/user-attachments/assets/1361b1e9-510f-4140-a87d-a74b2ee70337" type="image/avif" /><img src="https://github.com/user-attachments/assets/ed20abfa-5bb1-4215-8b2b-8c5171126432"></picture><br>效果图来自[@Steve喵~](https://github.com/S-t-e-v-e-e)|**个人信息效果图（Legacy）**<br><picture><source srcset="https://github.com/user-attachments/assets/c876119b-d98f-4751-85ba-675e6f2ba55f" type="image/avif" width="60%" /><img src="https://github.com/Catrong/phi-plugin/assets/117198625/9e536f1a-4cbe-41da-b2da-94d1bcd70488" width="60%"></picture><br>效果图来自[@东城Eastown](https://space.bilibili.com/171389567)|
 
