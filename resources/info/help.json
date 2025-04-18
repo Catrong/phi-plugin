@@ -195,7 +195,7 @@
             {
                 "title": "/retask",
                 "eg": "/retask",
-                "desc": "花费 20Notes 重置自己的任务，每日 /sgin 可视为一次 /retask ，每日第一次 reatask 免费<br>eg: /retask"
+                "desc": "花费 20Notes 重置自己的任务，每日 /sgin 可视为一次 /retask ，每日第一次 retask 免费<br>eg: /retask"
             },
             {
                 "title": "/jrrp",
