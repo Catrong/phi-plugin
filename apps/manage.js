@@ -78,16 +78,16 @@ export class phiset extends plugin {
         if (!e.isMaster) {
             return false
         }
-        try {
-            let zip = await getBackup.backup()
-            send.send_with_At(e, `${zip.zipName.replace(".zip", '')} 成功备份到 ./backup 目录下`)
-            if (e.msg.replace(/^[#/].*backup/, '').includes('back')) {
-                fCompute.sendFile(e, await zip.zip.generateAsync({ type: 'nodebuffer' }), zip.zipName)
+        send.send_with_At(e, '开始备份，请稍等...')
+        setTimeout(() => {
+            try {
+                getBackup.backup(e, send)
+            } catch (err) {
+                logger.info(err)
+                send.send_with_At(e, err)
             }
-        } catch (err) {
-            logger.info(err)
-            send.send_with_At(e, err)
-        }
+        }, 100);
+        return true
     }
 
     restore(e) {
