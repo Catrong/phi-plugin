@@ -30,7 +30,7 @@ for (let i in files) {
     let name = files[i].replace('.js', '')
 
     if (ret[i].status != 'fulfilled') {
-        console.error(ret[i])
+        // console.error(ret[i])
         throw new Error(ret[i].reason)
     }
     apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]

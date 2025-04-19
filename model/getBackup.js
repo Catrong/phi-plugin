@@ -4,43 +4,74 @@ import path from "node:path";
 import getFile from "./getFile.js";
 import { backupPath, pluginDataPath, savePath, dataPath } from "./path.js";
 import saveHistory from "./class/saveHistory.js";
-import getSave from "./getSave.js";
 import { redisPath } from "./constNum.js";
+import ProgressBar from "./progress-bar.js";
+
+const MaxNum = 1e4
 
 export default new class getBackup {
 
     /**备份 */
-    async backup() {
+    async backup(e, send) {
         let zip = new JSZip()
         /**data目录下存档 */
-        fs.readdirSync(savePath).forEach((folderName) => {
-            let folderPath = path.join(savePath, folderName)
-            fs.readdirSync(folderPath).forEach((fileName) => { //遍历检测目录中的文件
-                let filePath = path.join(folderPath, fileName);
+        let bar
+        let list = fs.readdirSync(savePath)
+        if (list.length >= MaxNum) {
+            send.send_with_At(e, `存档数量过多，请手动备份 /data/saveData/ 目录！`)
+            console.error('[phi-plugin] 存档数量过多，请手动备份 /data/saveData/ 目录！')
+        } else {
+            send.send_with_At(e, '开始备份存档，请稍等...')
+            console.info('[phi-plugin][backup] 开始备份存档...')
+            bar = new ProgressBar('[phi-plugin] 存档备份中', 20)
+            list.forEach((folderName, index, array) => {
+                let folderPath = path.join(savePath, folderName)
+                fs.readdirSync(folderPath).forEach((fileName) => { //遍历检测目录中的文件
+                    let filePath = path.join(folderPath, fileName);
+                    let file = fs.statSync(filePath); //获取一个文件
+                    if (file.isDirectory()) {
+                        logger.error(filePath, '[phi-plugin] 备份错误：意料之外的文件夹');
+                    } else {
+                        zip.folder('saveData').folder(folderName).file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
+                    }
+                });
+                bar.render({ completed: index + 1, total: array.length });
+            });
+        }
+        /**data目录下plugin数据 */
+        list = fs.readdirSync(pluginDataPath)
+        if (list.length >= MaxNum) {
+            send.send_with_At(e, `插件数据数量过多，请手动备份 /data/pluginData/ 目录！`)
+            console.error('[phi-plugin] 插件数据数量过多，请手动备份 /data/pluginData/ 目录！')
+        } else {
+            send.send_with_At(e, '开始备份插件数据，请稍等...')
+            console.info('\n[phi-plugin][backup] 开始备份插件数据...')
+            bar = new ProgressBar('[phi-plugin] 插件数据备份中', 20)
+            list.forEach((fileName, index, array) => { //遍历检测目录中的文件
+                let filePath = path.join(pluginDataPath, fileName);
                 let file = fs.statSync(filePath); //获取一个文件
                 if (file.isDirectory()) {
                     logger.error(filePath, '[phi-plugin] 备份错误：意料之外的文件夹');
                 } else {
-                    zip.folder('saveData').folder(folderName).file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
+                    zip.folder('pluginData').file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
                 }
+                bar.render({ completed: index + 1, total: array.length });
             });
-        });
-        /**data目录下plugin数据 */
-        fs.readdirSync(pluginDataPath).forEach((fileName) => { //遍历检测目录中的文件
-            let filePath = path.join(pluginDataPath, fileName);
-            let file = fs.statSync(filePath); //获取一个文件
-            if (file.isDirectory()) {
-                logger.error(filePath, '[phi-plugin] 备份错误：意料之外的文件夹');
-            } else {
-                zip.folder('pluginData').file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
-            }
-        });
+        }
         /**提取redis中user_id数据 */
+        send.send_with_At(e, '开始备份user_token，请稍等...')
+        console.info('\n[phi-plugin][backup] 开始备份user_token数据...')
+        bar = new ProgressBar('[phi-plugin] user_token备份中', 20)
+        /**获取user_token */
         let user_token = {}
+        console.info('[phi-plugin] 获取user_token列表...')
         let keys = await redis.keys(`${redisPath}:userToken:*`)
+        let cnt = 0
         for (let key of keys) {
             let user_id = key.split(':')[2]
             user_token[user_id] = await redis.get(key)
+            cnt++;
+            bar.render({ completed: cnt, total: keys.length });
         }
         zip.file('user_token.json', JSON.stringify(user_token))
         /**压缩 */
@@ -49,16 +80,17 @@ export default new class getBackup {
             // 递归创建目录
             fs.mkdirSync(backupPath, { recursive: true });
         }
-        fs.writeFileSync(path.join(backupPath, zipName), await zip.generateAsync({
-            type: 'nodebuffer',
-            /**压缩算法 */
-            compression: "DEFLATE",
-            /**压缩等级 */
-            compressionOptions: {
-                level: 9
-            }
-        }));
-        logger.mark(path.join(backupPath, zipName), '[phi-plugin]备份完成')
+        send.send_with_At(e, '开始压缩备份数据，请稍等...')
+        console.info('\n[phi-plugin][backup] 开始压缩备份数据...')
+        zip.generateNodeStream({ streamFiles: true })
+            .pipe(fs.createWriteStream(path.join(backupPath, zipName)))
+            .on('finish', async function () {
+                console.info('[phi-plugin]备份完成' + path.join(backupPath, zipName))
+                send.send_with_At(e, `${zipName.replace(".zip", '')} 成功备份到 ./backup 目录下`)
+                if (e.msg.replace(/^[#/].*backup/, '').includes('back')) {
+                    fCompute.sendFile(e, await zip.generateAsync({ type: 'nodebuffer' }), zipName)
+                }
+            });
         return { zipName: zipName, zip: zip }
     }
 
