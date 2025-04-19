@@ -269,8 +269,12 @@ class getdata {
                 send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
             }
         } catch (err) {
+            let errorMsg = typeof err === 'object' ? (err.message || JSON.stringify(err)) : String(err);
+            errorMsg = errorMsg
+            // 尝试脱敏sessionToken
+            .replace(/[a-z0-9]{25}/g, '[数据删除]')
             if(e.bot?.adapter?.name !== 'QQBot') {
-                send.send_with_At(e, "更新失败！QAQ\n" + err)
+                send.send_with_At(e, "更新失败！QAQ\n" + errorMsg)
             } else {
                 send.send_with_At(e, "更新失败！QAQ\n请稍后重试")
             }
