@@ -14,7 +14,7 @@
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
 ![version](https://img.shields.io/badge/插件版本-0.9.8-9cf?style=flat-square)
-![version](https://img.shields.io/badge/Phigros-3.12.0-9cf?style=flat-square)  
+![version](https://img.shields.io/badge/Phigros-3.13.0-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/TimeRainStarSky/Yunzai)
@@ -129,7 +129,7 @@ pnpm install -P
 | `#phi new` | 查询更新的曲目
 | `#phi tips` | 随机tips
 | `#phi jrrp` | 今日人品
-| `#phi nick xxx` | 查询某一曲目的别名
+| `#phi alias xxx` | 查询某一曲目的别名
 | `#phi (rand\|随机) [定数] [难度]` | 根据条件随机曲目，条件支持难度、定数，难度可以多选，定数以-作为分隔
 | `#phi randclg [课题总值] [难度] ([曲目定数范围])` | 随机课题 eg: /rand 40 (IN 13-15)
 | `#phi (曲绘\|ill\|Ill) xxx` | 查询phigros中某一曲目的曲绘
