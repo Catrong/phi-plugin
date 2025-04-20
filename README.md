@@ -220,7 +220,7 @@ pnpm install -P
   <img src="https://contrib.rocks/image?repo=Catrong/phi-plugin" />
 </a>
 
-![Alt](https://repobeats.axiom.co/api/embed/1c5c4f4bafef4a5d2c743f72703abad36a01762d.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/3ba1307fae8ac160167cbb2556334fe324ce3065.svg "Repobeats analytics image")
 
 ### Star History
 
