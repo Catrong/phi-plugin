@@ -11,6 +11,7 @@ export default class saveHistory {
      * rks:[{date:Date,value:number}],
      * scoreHistory:{song:{dif:[[number,number,Date,boolean]]}},
      * dan:Array,
+     * challengeModeRank:[{date:Date,value:number}],
      * version:number
      * }
      * } data 
@@ -24,9 +25,12 @@ export default class saveHistory {
         this.scoreHistory = data?.scoreHistory || {};
         /**民间考核 */
         this.dan = data?.dan || [];
+        /**课题模式 */
+        this.challengeModeRank = data?.challengeModeRank || [];
         /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
         /**v1.1,更正scoreHistory */
-        /**v1.2,由于曲名错误，删除所有记录，曲名使用id记录 */
+        /**v2,由于曲名错误，删除所有记录，曲名使用id记录 */
+        /**v3,添加课题模式历史记录 */
         /**历史记录版本号 */
         this.version = data?.version
 
@@ -42,6 +46,10 @@ export default class saveHistory {
             }
             this.version = 2
         }
+        if (this.version < 3) {
+            this.challengeModeRank = []
+            this.version = 3
+        }
     }
 
     /**
@@ -51,6 +59,7 @@ export default class saveHistory {
     add(data) {
         this.data = merge(this.data, data.data)
         this.rks = merge(this.rks, data.rks)
+        this.challengeModeRank = merge(this.challengeModeRank, data.challengeModeRank)
         for (let song in data.scoreHistory) {
             if (!this.scoreHistory[song]) this.scoreHistory[song] = {}
             for (let dif in data.scoreHistory[song]) {
@@ -176,7 +185,24 @@ export default class saveHistory {
                 value: save.gameProgress.money
             })
         }
-
+        /**更新课题模式记录 */
+        for (let i = this.challengeModeRank.length - 1; i >= 0; i--) {
+            if (save.saveInfo.modifiedAt.iso > new Date(this.challengeModeRank[i].date)) {
+                if (!this.challengeModeRank[i + 1] || (this.challengeModeRank[i].value != save.saveInfo.summary.challengeModeRank || this.challengeModeRank[i + 1]?.value != save.saveInfo.summary.challengeModeRank)) {
+                    this.challengeModeRank.splice(i + 1, 0, {
+                        date: save.saveInfo.modifiedAt.iso,
+                        value: save.saveInfo.summary.challengeModeRank
+                    })
+                }
+                break
+            }
+        }
+        if (!this.challengeModeRank.length) {
+            this.challengeModeRank.push({
+                date: save.saveInfo.modifiedAt.iso,
+                value: save.saveInfo.summary.challengeModeRank
+            })
+        }
     }
 
     /**

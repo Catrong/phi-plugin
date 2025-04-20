@@ -16,7 +16,10 @@ export default new class getInfo {
         this.init()
         chokidar.watch(infoPath).on('change', () => {
             this.init()
-        })
+        });
+        if (!fs.existsSync('./plugins/phi-plugin/resources/original_ill/.git')) {
+            logger.warn(`[phi-plugin] 未下载曲绘文件，建议使用 /downill 命令进行下载`)
+        }
     }
 
     async init() {
