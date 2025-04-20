@@ -70,12 +70,12 @@
             {
                 "title": "/bN",
                 "eg": "/b<N>",
-                "desc": "B19 但是很长很长<br>eg: /b60"
+                "desc": "显示指定数量的Best和P3成绩图（很长的B30）<br>eg: /b60"
             },
             {
                 "title": "/lmtacc",
                 "eg": "/lmtacc <0-100>",
-                "desc": "计算限制最低 ACC 后的 RKS <br>eg: /lmtacc 98.5"
+                "desc": "计算筛去小于输入的acc值的成绩后的玩家RKS值 <br>eg: /lmtacc 98.5"
             },
             {
                 "title": "/bestN",
@@ -195,7 +195,7 @@
             {
                 "title": "/retask",
                 "eg": "/retask",
-                "desc": "花费 20Notes 重置自己的任务，每日 /sgin 可视为一次 /retask ，每日第一次 reatask 免费<br>eg: /retask"
+                "desc": "花费 20Notes 重置自己的任务，每日 /sign 可视为一次 /retask ，每日第一次 retask 免费<br>eg: /retask"
             },
             {
                 "title": "/jrrp",
@@ -258,7 +258,7 @@
             {
                 "title": "/下载曲绘<br>/down ill",
                 "eg": "/下载曲绘",
-                "desc": "下载曲绘到本地"
+                "desc": "下载曲绘到本地，首次安装与渲染错误请优先执行"
             },
             {
                 "title": "/更新<br>/gx",
