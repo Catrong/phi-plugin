@@ -269,12 +269,8 @@ class getdata {
                 send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
             }
         } catch (err) {
-            let errorMsg = typeof err === 'object' ? (err.message || JSON.stringify(err)) : String(err);
-            errorMsg = errorMsg
-            // 尝试脱敏sessionToken
-            .replace(/[a-z0-9]{25}/g, '[数据删除]')
             if(e.bot?.adapter?.name !== 'QQBot') {
-                send.send_with_At(e, "更新失败！QAQ\n" + errorMsg)
+                send.send_with_At(e, "更新失败！QAQ\n" + err)
             } else {
                 send.send_with_At(e, "更新失败！QAQ\n请稍后重试")
             }
@@ -302,9 +298,6 @@ class getdata {
         let pluginData = await getNotes.getNotesData(e.user_id)
         /**修正 */
         if (pluginData.update || pluginData.task_update) {
-            /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
-            /**v1.1,更正scoreHistory */
-            /**v1.2,由于曲名错误，删除所有记录，曲名使用id记录 */
             delete pluginData.update
             delete pluginData.task_update
         }
