@@ -129,9 +129,6 @@ export class phisstk extends plugin {
                 sessionToken = await getQRcode.getSessionToken(result);
             } catch (err) {
                 logger.error(err)
-                let errorMsg = err.message || err.toString();
-                // 脱敏可能的 sessionToken
-                errorMsg = errorMsg.replace(/[a-z0-9]{25}/g, '[数据删除]');
                 send.send_with_At(e, `获取sessionToken失败QAQ！请确认您的Phigros已登录TapTap账号！\n错误信息：${err}`)
                 return true
             }
@@ -147,18 +144,12 @@ export class phisstk extends plugin {
         }
 
         try {
-            await this.build(e, sessionToken);
+            await this.build(e, sessionToken)
         } catch (error) {
-            logger.error(error);
-            let errorMessage = error.message || error.toString();
-            // 脱敏可能的 sessionToken
-            errorMessage = errorMessage.replace(
-                /[a-z0-9]{25}/g, 
-                match => match === sessionToken ? '[数据删除]' : match
-            );
-            send.send_with_At(e, "绑定失败，请检查 sessionToken 是否正确！\n错误信息：${errorMessage}")
+            logger.error(error)
+            send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
         }
-    
+
         return true
     }
 
