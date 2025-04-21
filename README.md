@@ -224,7 +224,14 @@ pnpm install -P
 
 ### Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Catrong/phi-plugin&type=Date)](https://www.star-history.com/#Catrong/phi-plugin&Date)
+<a href="https://www.star-history.com/#Catrong/phi-plugin&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Catrong/phi-plugin&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Catrong/phi-plugin&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Catrong/phi-plugin&type=Date" />
+ </picture>
+</a>
+
 
 ---
 
