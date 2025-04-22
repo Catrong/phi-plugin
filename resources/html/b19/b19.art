@@ -190,7 +190,7 @@
             </div>
             <div class="rank-{{song.rank}}">
                 <div class="org">
-                    <p>{{song.rank}}&ensp;{{song.difficulty}}</p>
+                    <p>{{song.rank}}&ensp;{{song.difficulty.toFixed(1)}}</p>
                 </div>
                 <div class="rel">
                     <p>{{song.rks.toFixed(2)}}</p>

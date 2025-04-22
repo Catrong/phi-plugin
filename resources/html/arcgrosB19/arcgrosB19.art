@@ -48,10 +48,10 @@
                 <div class="num_broad"></div>
                 <num class="num_borad_bottom"></num>
             </div>
-            {{if phi}}
+            {{if song}}
             <div class="difficulty_box {{song.rank}}-box">
                 <div class="difficulty {{song.rank}}">
-                    <p>{{song.difficulty}}</p>
+                    <p>{{song.difficulty.toFixed(1)}}</p>
                 </div>
             </div>
             <div class="acc_box">
@@ -115,7 +115,7 @@
             </div>
             <div class="difficulty_box {{song.rank}}-box">
                 <div class="difficulty {{song.rank}}">
-                    <p>{{song.difficulty}}</p>
+                    <p>{{song.difficulty.toFixed(1)}}</p>
                 </div>
             </div>
             <div class="acc_box">
