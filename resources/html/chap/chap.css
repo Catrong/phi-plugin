@@ -33,7 +33,7 @@ body p {
 
 .bar {
     position: relative;
-    /* width: calc(100% - 400px); */
+    min-width: 1648px;
     width: min-content;
     height: 100%;
     padding-left: 200px;
