@@ -246,8 +246,10 @@ export default new class compute {
      * @param {Array} range 范围数组
      */
     match_range(msg, range) {
-        range[0] = 0
-        range[1] = MAX_DIFFICULTY
+        if (!range) {
+            range[0] = 0
+            range[1] = MAX_DIFFICULTY
+        }
         if (msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)) {
             /**0-16.9 */
             msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)[0]
@@ -284,10 +286,11 @@ export default new class compute {
     /**
      * 匹配消息中对成绩的筛选
      * @param {string} msg 
+     * @param {number} max_range 最大范围
      * @returns 
      */
-    match_request(e_msg) {
-        let range = [0, MAX_DIFFICULTY]
+    match_request(e_msg, max_range) {
+        let range = [0, max_range || MAX_DIFFICULTY]
 
         let msg = e_msg.replace(/^[#/](.*?)(lvsco(re)?)(\s*)/, "")
 
