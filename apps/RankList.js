@@ -24,10 +24,10 @@ export class phiRankList extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(排行榜|ranklist).*$`,
                     fnc: 'rankList'
                 },
-                {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(封神榜|godlist)$`,
-                    fnc: 'godList'
-                }
+                // {
+                //     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(封神榜|godlist)$`,
+                //     fnc: 'godList'
+                // }
             ]
 
         })
@@ -40,80 +40,64 @@ export class phiRankList extends plugin {
             return false
         }
 
-        let save = await send.getsave_result(e)
-        if (!save) {
-            return true
-        }
+
         let plugin_data = await getNotes.getPluginData(e.user_id)
         let data = {
             Title: "RankingScore排行榜",
             totDataNum: 0,
             BotNick: Bot.nickname,
             users: [],
-            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+            me: {},
             theme: plugin_data?.plugin_data?.theme || 'star',
         }
         let msg = e.msg.match(/\d+/)
-
-        let rankNum
+        /**请求的排名 */
+        let rankNum = 0
         data.totDataNum = (await getRksRank.getAllRank()).length
 
         if (msg) {
             rankNum = Math.max(Math.min(msg[0], data.totDataNum), 1) - 1
         } else {
+            let save = await send.getsave_result(e)
+            if (!save) {
+                return true
+            }
             let sessionToken = save.getSessionToken()
             rankNum = await getRksRank.getUserRank(sessionToken)
         }
 
-
-        let list = await getRksRank.getRankUser(0, 10)
-        for (let i = 0; i < 3; i++) {
-            data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[i])))
-            data.users[i].index = i
-        }
-
-        if (rankNum < 3) {
-            data.users[rankNum].me = true
-
-            for (let i = 3; i < 10; i++) {
-                data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
-                data.users[i].index = i
-            }
-        } else if (rankNum < 10) {
-            for (let i = 3; i < rankNum; i++) {
-                data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
-                data.users[i].index = i
-            }
-
-            data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[rankNum])))
-            data.users[rankNum].me = true
-            data.users[rankNum].index = rankNum
-
-            for (let i = rankNum + 1; i < 10; i++) {
-                data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
-                data.users[i].index = i
-            }
+        /**展示的用户数据 */
+        let list = []
+        let myTk = ''
+        if (rankNum < 2) {
+            list = await getRksRank.getRankUser(0, 5)
+            myTk = list[rankNum]
         } else {
-            for (let i = 3; i < 5; i++) {
-                data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
-                data.users[i].index = i
+            list = await getRksRank.getRankUser(rankNum - 2, rankNum + 3)
+            myTk = list[2]
+        }
+
+
+        for (let index = 0; index < Math.max(list.length, 5); index++) {
+            if (index >= list.length) {
+                data.users.push({ playerId: '无效用户', index: index + rankNum - 2 })
+                continue
             }
-
-            list = await getRksRank.getRankUser(rankNum - 3, rankNum + 4)
-            for (let i = 0; i < 3; ++i) {
-                data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
-                data.users[5 + i].index = rankNum - 3 + i
+            let item = list[index]
+            let sessionToken = item
+            let save = await getSave.getSaveBySessionToken(sessionToken)
+            if (!save) {
+                data.users.push({ playerId: '无效用户', index: index + rankNum - 2 })
+                getRksRank.delUserRks(sessionToken)
+            } else {
+                data.users.push({ ...await makeSmallLine(save), index: index + rankNum - 2, me: myTk === save.getSessionToken() })
             }
-
-            data.users.push(await makeLargeLine(await getSave.getSaveBySessionToken(list[3])))
-            data.users[8].me = true
-            data.users[8].index = rankNum
-
-            for (let i = 4; i < list.length; ++i) {
-                data.users.push(await makeSmallLine(await getSave.getSaveBySessionToken(list[i])))
-                data.users[5 + i].index = rankNum + i - 3
+            if (myTk === sessionToken) {
+                data.me = await makeLargeLine(save)
             }
         }
+
+
         send.send_with_At(e, await picmodle.common(e, 'rankingList', data))
     }
 
@@ -167,28 +151,56 @@ async function makeLargeLine(save) {
             playerId: "无效用户"
         }
     }
-    // console.info(save)
-    let user = {
-        backgroundurl: null,
+
+
+    let history = await getSave.getHistoryBySessionToken(save.getSessionToken())
+    let lineData = history.getRksAndDataLine()
+    lineData.rks_date.forEach((item, index) => {
+        item = fCompute.formatDateToNow(item)
+        lineData.rks_date[index] = item
+    });
+    let clgHistory = []
+    history.challengeModeRank.forEach((item) => {
+        clgHistory.push({
+            ChallengeMode: Math.floor(item.value / 100),
+            ChallengeModeRank: item.value % 100,
+            date: fCompute.formatDateToNow(item.date)
+        })
+    })
+    let b30Data = await save.getB19(33)
+    let b30list = {
+        P3: {
+            title: 'Perfect 3',
+            list: b30Data.phi
+        },
+        B3: {
+            title: 'Best 3',
+            list: b30Data.b19_list.slice(0, 3)
+        },
+        F3: {
+            title: 'Floor 3',
+            list: b30Data.b19_list.slice(27, 30)
+        },
+        L3: {
+            title: 'Overflow 3',
+            list: b30Data.b19_list.slice(30, 33)
+        }
+    }
+    return {
+        backgroundurl: getInfo.getBackground(save?.gameuser?.background),
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
         playerId: fCompute.convertRichText(save.saveInfo.PlayerId),
         rks: save.saveInfo.summary.rankingScore,
-        ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+        ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
         ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-        created: fCompute.formatDate(save.saveInfo.createdAt),
         updated: fCompute.formatDate(save.saveInfo.gameFile.updatedAt),
         selfIntro: fCompute.convertRichText(save?.gameuser?.selfIntro),
-        b19: []
+        rks_history: lineData.rks_history,
+        rks_range: lineData.rks_range,
+        rks_date: lineData.rks_date,
+        b30list: b30list,
+        clg_list: clgHistory,
     }
-    user.backgroundurl = await fCompute.getBackground(save?.gameuser?.background)
-    let b19 = await save.getB19(19)
-    if (b19?.phi?.score) {
-        user.b19.push({ difficulty: b19.phi.difficulty, acc: b19.phi.acc, Rating: b19.phi.Rating })
-    }
-    for (let i = 0; i < b19.b19_list.length; i++) {
-        user.b19.push({ difficulty: b19.b19_list[i].difficulty, acc: b19.b19_list[i].acc, Rating: b19.b19_list[i].Rating })
-    }
-    return user
 }
 
 /**
@@ -196,18 +208,17 @@ async function makeLargeLine(save) {
  * @param {Save} save 
  */
 async function makeSmallLine(save) {
-    // console.info(save)
     if (!save) {
         return {
             playerId: "无效用户"
         }
     }
     return {
+        backgroundurl: getInfo.getBackground(save?.gameuser?.background),
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
         playerId: fCompute.convertRichText(save.saveInfo.PlayerId),
         rks: save.saveInfo.summary.rankingScore,
-        ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+        ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
         ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-        updated: fCompute.formatDate(save.saveInfo.gameFile.updatedAt),
     }
 }

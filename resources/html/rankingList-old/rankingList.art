@@ -1,0 +1,89 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+    <link rel="stylesheet" href="{{_res_path}}html/rankingList/rankingList.css">
+{{/block}}
+
+{{block 'main'}}
+
+    
+    <div class="title">
+        <p>Phi-Plugin<br>{{Title}}</p>
+    </div>
+    <div class="box">
+        <div class="sLine">
+            <p>总统计量：{{totDataNum}}</p>
+            <p>数据来源：{{BotNick}}</p>
+        </div>
+        {{each users user}}
+        {{if user.backgroundurl}}
+        <div class="lLine{{user.me?' me':''}}">
+            <div class="profileIll">
+                <img src="{{user.backgroundurl}}" alt="{{user.backgroundurl}}">
+            </div>
+            <div class="avatar">
+                <img src="{{_res_path}}html/avatar/{{user.avatar}}.png" alt="{{user.avatar}}">
+            </div>
+            <div class="rankNum">
+                <p>#{{user.index + 1}}</p>
+            </div>
+            <div class="info_box">
+                <div class="playerId">
+                    <p name="pvis">{{#user.playerId}}</p>
+                </div>
+                <div class="rks">{{user.rks.toFixed(9)}}</div>
+                <div class="Challenge">
+                    <img src="{{_res_path}}html/otherimg/{{user.ChallengeMode}}.png" alt="{{user.ChallengeMode}}">
+                    <span>{{user.ChallengeModeRank}}</span>
+                </div>
+                <div class="saveInfo">
+                    <p>{{user.created}}</p>
+                    <p>~</p>
+                    <p>{{user.updated}}</p>
+                </div>
+                <div class="selfIntor">
+                    {{if user.selfIntro}}
+                    <p name="pvis">{{#user.selfIntro}}</p>
+                    {{else}}
+                    <p style="color: #005273;" name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
+                    {{/if}}
+                </div>
+                <div class="b19Box">
+                    {{each user.b19 song}}
+                    {{if song.acc}}
+                    <div class="aSong">
+                        <div class="difficulty">{{song.difficulty}}</div>
+                        <div class="acc">{{song.acc.toFixed(2)}}</div>
+                        <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                    </div>
+                    {{/if}}
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="sLine">
+            <div class="avatar">
+                <img src="{{_res_path}}html/avatar/{{user.avatar}}.png" alt="{{user.avatar}}">
+            </div>
+            <div class="info">
+                <p>#{{user.index + 1}} {{#user.playerId}}</p>
+                <div class="line"></div>
+                <div class="Challenge">
+                    <img src="{{_res_path}}html/otherimg/{{user.ChallengeMode}}.png" alt="{{user.ChallengeMode}}">
+                    <span>{{user.ChallengeModeRank}}</span>
+                </div>
+                <p>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;{{user.rks}}&ensp;&ensp;{{user.updated}}</p>
+            </div>
+        </div>
+        {{/if}}
+        {{/each}}
+    </div>
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>{{_plugin}}</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
+{{/block}}

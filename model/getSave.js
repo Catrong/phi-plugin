@@ -94,8 +94,24 @@ export default new class getSave {
      * @returns {Promise<saveHistory>}
      */
     async getHistory(user_id) {
-        let session = await this.get_user_token(user_id)
-        let result = session ? await readFile.FileReader(path.join(savePath, session, 'history.json')) : null
+        let Token = await this.get_user_token(user_id)
+        if (await this.isBanSessionToken(Token)) {
+            throw new Error(`${Token} 已被禁用`)
+        }
+        let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'history.json')) : null
+        return new saveHistory(result)
+    }
+
+    /**
+     * 获取 sessionToken 对应的历史记录
+     * @param {string} Token
+     * @returns {Promise<saveHistory>}
+     */
+    async getHistoryBySessionToken(Token) {
+        if (await this.isBanSessionToken(Token)) {
+            throw new Error(`${Token} 已被禁用`)
+        }
+        let result = Token ? await readFile.FileReader(path.join(savePath, Token, 'history.json')) : null
         return new saveHistory(result)
     }
 

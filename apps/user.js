@@ -103,7 +103,7 @@ export class phiuser extends plugin {
 
         let gameuser = {
             avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
@@ -428,7 +428,7 @@ export class phiuser extends plugin {
             progress_phi: Number((totphi / totcharts * 100).toFixed(2)),
             progress_fc: Number((totfc / totcharts * 100).toFixed(2)),
             avatar: get.idgetavatar(save.gameuser.avatar),
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
@@ -546,7 +546,7 @@ export class phiuser extends plugin {
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             dan: await get.getDan(e.user_id),
             request: request

@@ -103,11 +103,6 @@
                 "desc": "放榜<br>eg1: /ranklist<br>eg2: /ranklist 520"
             },
             {
-                "title": "/godlist<br>/封神榜",
-                "eg": "/ranklist",
-                "desc": "放榜"
-            },
-            {
                 "title": "/song",
                 "eg": "/song <曲目>",
                 "desc": "查询曲目图鉴<br>eg: /song 996"

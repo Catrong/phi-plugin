@@ -169,6 +169,10 @@ export default new class compute {
         return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
     }
 
+    formatDateToNow(date) {
+        return `-${((new Date() - new Date(date)) / (24 * 60 * 60 * 1000)).toFixed(0)}d`;
+    }
+
     /**
      * 转换unity富文本
      * @param {string} richText 

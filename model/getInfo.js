@@ -507,46 +507,48 @@ export default new class getInfo {
 
     /**
      * 获取曲绘，返回地址，原名
-     * @param {string} name 原名
+     * @param {string} song 原名
      * @param {'common'|'blur'|'low'} [kind='common'] 清晰度
      * @return {string} 网址或文件地址
     */
     getill(name, kind = 'common') {
-        const songsinfo = this.all_info()[name]
+        let song = this.idgetsong(name) || name
+        const songsinfo = this.all_info()[song]
         let ans = songsinfo?.illustration_big
         let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans)) {
             ans = path.join(ortherIllPath, ans)
-        } else if (this.ori_info[name] || this.sp_info[name]) {
-            if (this.ori_info[name]) {
-                if (fs.existsSync(path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png')))) {
-                    ans = path.join(originalIllPath, this.SongGetId(name).replace(/.0$/, '.png'))
-                } else if (fs.existsSync(path.join(originalIllPath, "ill", this.SongGetId(name).replace(/.0$/, '.png')))) {
+        } else if (this.ori_info[song] || this.sp_info[song]) {
+            if (this.ori_info[song]) {
+                if (fs.existsSync(path.join(originalIllPath, this.SongGetId(song).replace(/.0$/, '.png')))) {
+                    ans = path.join(originalIllPath, this.SongGetId(song).replace(/.0$/, '.png'))
+                } else if (fs.existsSync(path.join(originalIllPath, "ill", this.SongGetId(song).replace(/.0$/, '.png')))) {
                     if (kind == 'common') {
-                        ans = path.join(originalIllPath, "ill", this.SongGetId(name).replace(/.0$/, '.png'))
+                        ans = path.join(originalIllPath, "ill", this.SongGetId(song).replace(/.0$/, '.png'))
                     } else if (kind == 'blur') {
-                        ans = path.join(originalIllPath, "illBlur", this.SongGetId(name).replace(/.0$/, '.png'))
+                        ans = path.join(originalIllPath, "illBlur", this.SongGetId(song).replace(/.0$/, '.png'))
                     } else if (kind == 'low') {
-                        ans = path.join(originalIllPath, "illLow", this.SongGetId(name).replace(/.0$/, '.png'))
+                        ans = path.join(originalIllPath, "illLow", this.SongGetId(song).replace(/.0$/, '.png'))
                     }
                 } else {
                     if (kind == 'common') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${this.SongGetId(song).replace(/.0$/, '.png')}`
                     } else if (kind == 'blur') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illBlur/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illBlur/${this.SongGetId(song).replace(/.0$/, '.png')}`
                     } else if (kind == 'low') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illLow/${this.SongGetId(name).replace(/.0$/, '.png')}`
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illLow/${this.SongGetId(song).replace(/.0$/, '.png')}`
                     }
                 }
             } else {
-                if (fs.existsSync(path.join(originalIllPath, "SP", name + '.png'))) {
-                    ans = path.join(originalIllPath, "SP", name + '.png')
+                if (fs.existsSync(path.join(originalIllPath, "SP", song + '.png'))) {
+                    ans = path.join(originalIllPath, "SP", song + '.png')
                 } else {
-                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${name}.png`
+                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${song}.png`
                 }
             }
         }
         if (!ans) {
+            logger.error(song, '背景不存在')
             ans = path.join(imgPath, 'phigros.png')
         }
         return ans
@@ -601,6 +603,45 @@ export default new class getInfo {
      */
     SongGetId(song) {
         return this.idssong[song]
+    }
+
+    /**
+     * 获取角色介绍背景曲绘
+     * @param {string} save_background 
+     * @returns 
+     */
+    getBackground(save_background) {
+        try {
+            switch (save_background) {
+                case 'Another Me ': {
+                    save_background = 'Another Me (KALPA)'
+                    break
+                }
+                case 'Another Me': {
+                    save_background = 'Another Me (Rising Sun Traxx)'
+                    break
+                }
+                case 'Re_Nascence (Psystyle Ver.) ': {
+                    save_background = 'Re_Nascence (Psystyle Ver.)'
+                    break
+                }
+                case 'Energy Synergy Matrix': {
+                    save_background = 'ENERGY SYNERGY MATRIX'
+                    break
+                }
+                case 'Le temps perdu-': {
+                    save_background = 'Le temps perdu'
+                    break
+                }
+                default: {
+                    break
+                }
+            }
+            return this.getill(save_background)
+        } catch (err) {
+            logger.error(`获取背景曲绘错误`, err)
+            return false
+        }
     }
 
 }()

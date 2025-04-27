@@ -17,15 +17,28 @@ export default class saveHistory {
      * } data 
      */
     constructor(data) {
-        /**data货币变更记录 [{date:Date,value:number}] */
-        this.data = data?.data || [];
-        /**rks变更记录 [{date:Date,value:number}] */
-        this.rks = data?.rks || [];
-        /**历史成绩 {id:{ez:[]}} */
+        /**
+         * @type {{[song:string]:{[dif:string]:[number,number,Date,boolean][]}}}
+         * @description 歌曲成绩记录
+         * @property {string}  曲目id
+         * @property {string} dif 难度
+         * @property {Array<[number, number, Date, boolean]>} [acc, score, date, fc] acc为4位小数，score为整数，date为日期，fc为boolean
+         */
         this.scoreHistory = data?.scoreHistory || {};
-        /**民间考核 */
-        this.dan = data?.dan || [];
-        /**课题模式 */
+        /**
+         * @type {Array<{date:Date,value:number[5]}>}
+         * @description data货币变更记录 
+        */
+        this.data = data?.data || [];
+        /**
+         * @type {Array<{date:Date,value:number}>}
+         * @description rks变更记录
+         */
+        this.rks = data?.rks || [];
+        /**
+         * @type {Array<{date:Date,value:number}>}
+         * @description 课题模式成绩
+         */
         this.challengeModeRank = data?.challengeModeRank || [];
         /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
         /**v1.1,更正scoreHistory */
@@ -33,6 +46,8 @@ export default class saveHistory {
         /**v3,添加课题模式历史记录 */
         /**历史记录版本号 */
         this.version = data?.version
+        /**民间考核 */
+        this.dan = data?.dan || [];
 
         /**检查版本 */
         if (!this.version || this.version < 2) {
@@ -278,6 +293,9 @@ export default class saveHistory {
             let x2 = fCompute.range(rks_history_[i + 1].date, rks_date)
             let y2 = fCompute.range(rks_history_[i + 1].value, rks_range)
             rks_history.push([x1, y1, x2, y2])
+        }
+        if (!rks_history.length) {
+            rks_history.push([0, 50, 100, 50])
         }
 
         for (let i in data_history_) {

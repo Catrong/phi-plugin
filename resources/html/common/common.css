@@ -201,3 +201,19 @@ body p {
 .ill-clip {
     clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
 }
+
+.AT-BKG {
+    background-color: var(--AT);
+}
+
+.IN-BKG {
+    background-color: var(--IN);
+}
+
+.HD-BKG {
+    background-color: var(--HD);
+}
+
+.EZ-BKG {
+    background-color: var(--EZ);
+}

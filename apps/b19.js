@@ -183,7 +183,7 @@ export class phib19 extends plugin {
         let money = save.gameProgress.money
         let gameuser = {
             avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
@@ -199,7 +199,7 @@ export class phib19 extends plugin {
             PlayerId: gameuser.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             dan: await get.getDan(e.user_id),
             background: bksong || getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
@@ -280,7 +280,7 @@ export class phib19 extends plugin {
         let money = save.gameProgress.money
         let gameuser = {
             avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save_b19.com_rks,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
@@ -296,7 +296,7 @@ export class phib19 extends plugin {
             PlayerId: gameuser.PlayerId,
             Rks: save_b19.com_rks.toFixed(4),
             Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             dan: await get.getDan(e.user_id),
             background: bksong || getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
@@ -340,7 +340,7 @@ export class phib19 extends plugin {
         let money = save.gameProgress.money
         let gameuser = {
             avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
@@ -357,7 +357,7 @@ export class phib19 extends plugin {
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             dan: await get.getDan(e.user_id),
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
@@ -600,7 +600,7 @@ export class phib19 extends plugin {
             avatar: get.idgetavatar(save.saveInfo.summary.avatar),
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
             Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             scoreData: {},
             CLGMOD: dan?.Dan,
@@ -730,7 +730,7 @@ export class phib19 extends plugin {
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             dan: await get.getDan(e.user_id)
         }))

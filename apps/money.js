@@ -244,7 +244,7 @@ export class phimoney extends plugin {
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: `${task_time[3]} ${task_time[1]}.${task_time[2]} ${task_time[4]}`,
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             background: illlist[Number((Math.random() * (illlist.length - 1)).toFixed(0))],
             task: data.plugin_data.task,
