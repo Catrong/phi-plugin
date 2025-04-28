@@ -1,13 +1,13 @@
 import { MAX_DIFFICULTY } from './constNum.js'
 
-export default new class compute {
+export default class compute {
     /**
      * 计算等效rks
      * @param {number} acc 
      * @param {number} difficulty 
      * @returns 
      */
-    rks(acc, difficulty) {
+    static rks(acc, difficulty) {
         if (acc == 100) {
             /**满分原曲定数即为有效rks */
             return Number(difficulty)
@@ -27,7 +27,7 @@ export default new class compute {
      * @param {Number} [count=undefined] 保留位数
      * @returns 所需acc
      */
-    suggest(rks, difficulty, count = undefined) {
+    static suggest(rks, difficulty, count = undefined) {
         let ans = 45 * Math.sqrt(rks / difficulty) + 55
 
         if (ans >= 100)
@@ -47,7 +47,7 @@ export default new class compute {
      * @param {Buffer} file 
      * @param {string} filename 
      */
-    async sendFile(e, file, filename) {
+    static async sendFile(e, file, filename) {
         try {
             let res
             if (e.isGroup) {
@@ -79,7 +79,7 @@ export default new class compute {
      * @param {string} save_background 
      * @returns 
      */
-    async getBackground(save_background) {
+    static async getBackground(save_background) {
         try {
             let getInfo = (await import('./getInfo.js')).default
             switch (save_background) {
@@ -120,7 +120,7 @@ export default new class compute {
      * @param {number} cover 总位数
      * @returns 前导零数字
      */
-    ped(num, cover) {
+    static ped(num, cover) {
         return String("0".repeat(cover) + num).slice(-cover)
     }
 
@@ -129,7 +129,7 @@ export default new class compute {
      * @param {number} score 分数
      * @returns 标准化的分数 0'000'000
      */
-    std_score(score) {
+    static std_score(score) {
         let s1 = Math.floor(score / 1e6)
         let s2 = Math.floor(score / 1e3) % 1e3
         let s3 = score % 1e3
@@ -142,7 +142,7 @@ export default new class compute {
      * @param {number} max 最大值
      * @returns 随机数
      */
-    randBetween(min, max) {
+    static randBetween(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min)
     }
 
@@ -151,7 +151,7 @@ export default new class compute {
      * @param {Array} arr 原数组
      * @returns 随机打乱的数组
      */
-    randArray(arr) {
+    static randArray(arr) {
         let newArr = []
         while (arr.length > 0) {
             newArr.push(arr.splice(Math.floor(Math.random() * arr.length), 1)[0])
@@ -164,12 +164,12 @@ export default new class compute {
      * @param {Date|string} date 时间
      * @returns 2020/10/8 10:08:08
      */
-    formatDate(date) {
+    static formatDate(date) {
         date = new Date(date)
         return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
     }
 
-    formatDateToNow(date) {
+    static formatDateToNow(date) {
         return `-${((new Date() - new Date(date)) / (24 * 60 * 60 * 1000)).toFixed(0)}d`;
     }
 
@@ -179,7 +179,7 @@ export default new class compute {
      * @param {boolean} [onlyText=false] 是否只返回文本
      * @returns 
      */
-    convertRichText(richText, onlyText = false) {
+    static convertRichText(richText, onlyText = false) {
         if (!richText) {
             return richText
         }
@@ -221,7 +221,7 @@ export default new class compute {
     }
 
     /**是否是管理员 */
-    is_admin(e) {
+    static is_admin(e) {
         //console.info(e)
         if (e?.member?.is_admin) {
             return true;
@@ -249,7 +249,7 @@ export default new class compute {
      * @param {string} msg 消息字符串
      * @param {Array} range 范围数组
      */
-    match_range(msg, range) {
+    static match_range(msg, range) {
         if (!range) {
             range[0] = 0
             range[1] = MAX_DIFFICULTY
@@ -293,7 +293,7 @@ export default new class compute {
      * @param {number} max_range 最大范围
      * @returns 
      */
-    match_request(e_msg, max_range) {
+    static match_request(e_msg, max_range) {
         let range = [0, max_range || MAX_DIFFICULTY]
 
         let msg = e_msg.replace(/^[#/](.*?)(lvsco(re)?)(\s*)/, "")
@@ -335,7 +335,7 @@ export default new class compute {
      * @param {boolean} fc 是否fc
      * @returns 
      */
-    rate(real_score, tot_score, fc) {
+    static rate(real_score, tot_score, fc) {
 
         if (!real_score) {
             return 'F'
@@ -364,7 +364,7 @@ export default new class compute {
      * @param {Date|string} date 时间
      * @returns 2020/10/8 10:08:08
      */
-    date_to_string(date) {
+    static date_to_string(date) {
         if (!date) return undefined
         date = new Date(date)
 
@@ -382,7 +382,7 @@ export default new class compute {
      * @param {Array} range 区间数组 (0,..,1)
      * @returns 百分数，单位%
      */
-    range(value, range) {
+    static range(value, range) {
         if (range[0] == range[range.length - 1]) {
             return 50
         } else {
@@ -390,7 +390,110 @@ export default new class compute {
         }
     }
 
-    // score_note(score, note) {
+    /**
+     * 模糊搜索，返回相似度大于0.8的结果
+     * @param {string} str 搜索字符串
+     * @param {Object<string, string[]>} data 搜索数组
+     * @returns {Array<{ key:string, score:number, value:string }>} 相似度大于0.8的结果
+     */
+    static fuzzySearch(str, data) {
+        let result = []
+        for (let key in data) {
+            let score = this.jaroWinklerDistance(str, key)
+            if (score > 0.8) {
+                data[key].forEach((value) => {
+                    result.push({ key, score, value })
+                })
+            }
+        }
+        return result.sort((a, b) => b.score - a.score)
+    }
+
+    /**
+     * 采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)=>n为较长的那个字符出的长度
+     * @param {string} s1 
+     * @param {string} s2 
+     * @returns {number} 相似度 0-1
+     */
+    static jaroWinklerDistance(s1, s2) {
+        if (s1 == s2) {
+            return 1
+        }
+        //首先第一次去除空格和其他符号，并转换为小写
+        const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？↑↓←→]/g
+        s1 = s1.replace(pattern, '').toLowerCase()
+        s2 = s2.replace(pattern, '').toLowerCase()
+        let m = 0 //匹配的字符数量
+
+        //如果任任一字符串为空则距离为0
+        if (s1.length === 0 || s2.length === 0) {
+            return 0
+        }
+
+        //字符串完全匹配，距离为1
+        if (s1 === s2) {
+            return 1
+        }
+
+        let range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
+            s1Matches = new Array(s1.length),
+            s2Matches = new Array(s2.length)
+
+        //查找匹配的字符
+        for (let i = 0; i < s1.length; i++) {
+            let low = (i >= range) ? i - range : 0,
+                high = (i + range <= (s2.length - 1)) ? (i + range) : (s2.length - 1)
+
+            for (let j = low; j <= high; j++) {
+                if (s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j]) {
+                    ++m
+                    s1Matches[i] = s2Matches[j] = true
+                    break
+                }
+            }
+        }
+
+        //如果没有匹配的字符，那么捏Jaro距离为0
+        if (m === 0) {
+            return 0
+        }
+
+        //计算转置的数量
+        let k = 0, n_trans = 0
+        for (let i = 0; i < s1.length; i++) {
+            if (s1Matches[i] === true) {
+                let j
+                for (j = k; j < s2.length; j++) {
+                    if (s2Matches[j] === true) {
+                        k = j + 1
+                        break
+                    }
+                }
+
+                if (s1[i] !== s2[j]) {
+                    ++n_trans
+                }
+            }
+        }
+
+        //计算Jaro距离
+        let weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
+            l = 0,
+            p = 0.1
+
+        //如果Jaro距离大于0.7，计算Jaro-Winkler距离
+        if (weight > 0.7) {
+            while (s1[l] === s2[l] && l < 4) {
+                ++l
+            }
+
+            weight = weight + l * p * (1 - weight)
+        }
+
+        return weight
+    }
+
+    // static score_note(score, note) {
     //     for (let maxCombo = 1; maxCombo <= note; maxCombo++) {
     //         let comboScore = Math.round(maxCombo / note * 1e5)
     //         let maxHit = 
@@ -403,7 +506,7 @@ export default new class compute {
     //         }
     //     }
     // }
-}()
+}
 
 function dfs_score_note(score, note, maxCombo, perfect, ans) {
 

@@ -195,7 +195,7 @@ async function makeLargeLine(save) {
         rks: save.saveInfo.summary.rankingScore,
         ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
         ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-        updated: fCompute.formatDate(save.saveInfo.gameFile.updatedAt),
+        updated: fCompute.formatDate(save.saveInfo.modifiedAt.iso),
         selfIntro: fCompute.convertRichText(save?.gameuser?.selfIntro),
         rks_history: lineData.rks_history,
         rks_range: lineData.rks_range,

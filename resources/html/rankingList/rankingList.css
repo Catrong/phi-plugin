@@ -376,9 +376,46 @@ circle {
     right: 10.5%;
     top: 38%;
     height: 10%;
-    width: 45%;
+    width: 40%;
+    padding-left: 3%;
     overflow: hidden;
     mask-image: linear-gradient(to right, black 92%, transparent 100%);
+    background-color: #ffffff45;
+    --offset: 20px;
+    clip-path: polygon(
+        var(--offset) 0,
+        100% 0,
+        100% 100%,
+        0 100%
+    );
+}
+
+.clg_info {
+    position: absolute;
+    right: 33%;
+    top: 34%;
+}
+
+.clg_info p {
+    font-size: 25px;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+}
+
+.clg_line {
+    --width_: 5px;
+    width: calc(var(--width_) + var(--offset));
+    height: 100%;
+    background-color: white;
+    position: absolute;
+    left: 0;
+    top: 0;
+    clip-path: polygon(
+        var(--offset) 0,
+        100% 0,
+        calc(100% - var(--offset)) 100%,
+        0 100%
+    );
 }
 
 .clg_list {
@@ -392,7 +429,7 @@ circle {
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
 .a_clg_box p {
@@ -409,6 +446,7 @@ circle {
 .clg_box p {
     font-size: 45px;
     color: white;
+    text-shadow: 1px 1px 3px black;
 }
 
 .b30list {
@@ -518,8 +556,8 @@ circle {
 .createdbox {
     position: absolute;
     width: auto;
-    right: -1%;
-    bottom: 16%;
+    right: 4%;
+    bottom: 11%;
     transform: rotate(-82.1deg);
 }
 

@@ -1132,17 +1132,17 @@
     "Cuvism.Fl00tvsHalv": {
         "bpm": "194",
         "length": "2:40",
-        "chapter": "Chapter EX-TAKUMI³精选集"
+        "chapter": "Chapter EX-TAKUMI³ 精选集"
     },
     "iLArtifact.Link0": {
         "bpm": "184",
         "length": "2:43",
-        "chapter": "Chapter EX-TAKUMI³精选集"
+        "chapter": "Chapter EX-TAKUMI³ 精选集"
     },
     "atruthseekerCommunicationwithUtopiawillbelost.kuro": {
         "bpm": "206",
         "length": "2:02",
-        "chapter": "Chapter EX-TAKUMI³精选集"
+        "chapter": "Chapter EX-TAKUMI³ 精选集"
     },
     "今天不是明天.PIKASONICfeat兰音Reine": {
         "bpm": "125",
@@ -1157,12 +1157,12 @@
     "君往何处QuoVadis.M2U": {
         "bpm": "160",
         "length": "2:25",
-        "chapter": "Chapter EX-节奏大师精选集"
+        "chapter": "Chapter EX-节奏大师 精选集"
     },
     "暗夜苏醒REANIMATE.Warak": {
         "bpm": "174",
         "length": "2:36",
-        "chapter": "Chapter EX-节奏大师精选集"
+        "chapter": "Chapter EX-节奏大师 精选集"
     },
     "Grimheart.Puru": {
         "bpm": "170",
@@ -1182,17 +1182,17 @@
     "黄金之城GOLDTOWN.Memme": {
         "bpm": "160",
         "length": "2:03",
-        "chapter": "Chapter EX-节奏大师精选集"
+        "chapter": "Chapter EX-节奏大师 精选集"
     },
     "双重间谍DoubleAgent.WAVAV": {
         "bpm": "160",
         "length": "2:26",
-        "chapter": "Chapter EX-节奏大师精选集"
+        "chapter": "Chapter EX-节奏大师 精选集"
     },
     "幻影鬼魅PLEASE.R300K": {
         "bpm": "161",
         "length": "2:04",
-        "chapter": "Chapter EX-节奏大师精选集"
+        "chapter": "Chapter EX-节奏大师 精选集"
     },
     "心の記憶.A39沙包P": {
         "bpm": "150",
@@ -1328,5 +1328,20 @@
         "bpm": "256",
         "length": "3:10",
         "chapter": "Chapter EX-EGTS 精选集"
+    },
+    "AphroditesChildshortver.RUQOA": {
+        "bpm": "128",
+        "length": "2:47",
+        "chapter": "Chapter EX-Immaculée Sekai 精选集"
+    },
+    "DevIAtiOnshortver.polysha": {
+        "bpm": "140-155",
+        "length": "2:52",
+        "chapter": "Chapter EX-Immaculée Sekai 精选集"
+    },
+    "NOx.Juggernaut": {
+        "bpm": "190",
+        "length": "2:33",
+        "chapter": "Chapter EX-Immaculée Sekai 精选集"
     }
 }

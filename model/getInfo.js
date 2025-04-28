@@ -6,6 +6,7 @@ import SongsInfo from './class/SongsInfo.js'
 import fs from 'fs'
 import { Level, MAX_DIFFICULTY } from './constNum.js'
 import chokidar from 'chokidar'
+import fCompute from './fCompute.js'
 
 
 export default new class getInfo {
@@ -57,14 +58,20 @@ export default new class getInfo {
 
 
 
-        /**扩增曲目信息 */
+        /**
+         * @type {{[key:string]:{[key:string]:string[]}}}
+         * @description 扩增曲目信息
+         */
         this.DLC_Info = {}
         let files = fs.readdirSync(DlcInfoPath).filter(file => file.endsWith('.json'))
         files.forEach(async (file) => {
             this.DLC_Info[path.basename(file, '.json')] = await readFile.FileReader(path.join(DlcInfoPath, file))
         })
 
-        /**头像id */
+        /**
+         * @type {{[key:string]:string}}
+         * @description 头像id
+         */
         let csv_avatar = await readFile.FileReader(path.join(infoPath, 'avatar.csv'))
         this.avatarid = {}
         for (let i in csv_avatar) {
@@ -72,18 +79,31 @@ export default new class getInfo {
         }
 
         /**
-         * Tips []
+         * @type {string[]}
+         * @description Tips
          */
         this.tips = await readFile.FileReader(path.join(infoPath, 'tips.yaml'))
 
 
-        /**原版信息 */
+        /**
+         * @type {{[key:string]:SongsInfo}}
+         * @description 原版信息
+         */
         this.ori_info = {}
-        /**通过id获取曲名 */
+        /**
+         * @type {{[key:string]:string}}
+         * @description 通过id获取曲名
+         */
         this.songsid = {}
-        /**原曲名称获取id */
+        /**
+         * @type {{[key:string]:string}}
+         * @description 原曲名称获取id
+         */
         this.idssong = {}
-        /**含有曲绘的曲目列表，原曲名称 */
+        /**
+         * @type {string[]}
+         * @description 含有曲绘的曲目列表，原曲名称
+         */
         this.illlist = []
 
         /**自定义信息 */
@@ -96,7 +116,10 @@ export default new class getInfo {
             }
         }
 
-        /**SP信息 */
+        /**
+         * @type {{[key:string]:SongsInfo}}
+         * @description SP信息
+         */
         this.sp_info = await readFile.FileReader(path.join(infoPath, 'spinfo.json'))
         for (let i in this.sp_info) {
             if (this.sp_info[i]['illustration_big']) {
@@ -238,13 +261,33 @@ export default new class getInfo {
         for (let id in nicklistTemp) {
             let song = this.idgetsong(id + '.0') || id
             this.nicklist[song] = nicklistTemp[id]
-            for (let j in nicklistTemp[id]) {
-                if (this.songnick[nicklistTemp[id][j]]) {
-                    this.songnick[nicklistTemp[id][j]].push(song)
+            nicklistTemp[id].forEach((item) => {
+                if (this.songnick[item]) {
+                    this.songnick[item].push(song)
                 } else {
-                    this.songnick[nicklistTemp[id][j]] = [song]
+                    this.songnick[item] = [song]
                 }
-            }
+            })
+        }
+
+        /**
+         * @type {{[key:string]: string[]}}
+         * @description 章节列表，以章节名为key
+         */
+        this.chapList = await readFile.FileReader(path.join(infoPath, 'chaplist.yaml'))
+        /**
+         * @type {{[key:string]: string[]}}
+         * @description 章节别名，以别名为key
+         */
+        this.chapNick = {}
+        for (let i in this.chapList) {
+            this.chapList[i].forEach((item) => {
+                if (this.chapNick[item]) {
+                    this.chapNick[item].push(i)
+                } else {
+                    this.chapNick[item] = [i]
+                }
+            })
         }
 
         /**jrrp */
@@ -356,23 +399,6 @@ export default new class getInfo {
     */
     fuzzysongsnick(mic, Distance = 0.85) {
 
-        const fuzzyMatch = (str1, str2) => {
-            if (str1 == str2) {
-                return 1
-            }
-            //首先第一次去除空格和其他符号，并转换为小写
-            const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？↑↓←→]/g
-            const formattedStr1 = str1.replace(pattern, '').toLowerCase()
-            const formattedStr2 = str2.replace(pattern, '').toLowerCase()
-
-            //第二次再计算str1和str2之间的JaroWinkler距离
-            const distance = this.jaroWinklerDistance(formattedStr1, formattedStr2)
-
-            //如果距离大于等于某个阈值，则认为匹配
-            //可以根据实际情况调整这个阈值
-            return distance
-        }
-
         /**按照匹配程度排序 */
         let result = []
 
@@ -381,7 +407,7 @@ export default new class getInfo {
 
 
         for (let std in usernick) {
-            let dis = fuzzyMatch(mic, std)
+            let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
                 for (let i in usernick[std]) {
                     result.push({ song: usernick[std][i], dis: dis })
@@ -389,7 +415,7 @@ export default new class getInfo {
             }
         }
         for (let std in this.songnick) {
-            let dis = fuzzyMatch(mic, std)
+            let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
                 for (let i in this.songnick[std]) {
                     result.push({ song: this.songnick[std][i], dis: dis })
@@ -397,7 +423,7 @@ export default new class getInfo {
             }
         }
         for (let std in allinfo) {
-            let dis = fuzzyMatch(mic, std)
+            let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
                 result.push({ song: allinfo[std]['song'], dis: dis })
             }
@@ -417,78 +443,6 @@ export default new class getInfo {
         }
 
         return all
-    }
-
-    //采用Jaro-Winkler编辑距离算法来计算str间的相似度，复杂度为O(n)=>n为较长的那个字符出的长度
-    jaroWinklerDistance(s1, s2) {
-        let m = 0 //匹配的字符数量
-
-        //如果任任一字符串为空则距离为0
-        if (s1.length === 0 || s2.length === 0) {
-            return 0
-        }
-
-        //字符串完全匹配，距离为1
-        if (s1 === s2) {
-            return 1
-        }
-
-        let range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1, //搜索范围
-            s1Matches = new Array(s1.length),
-            s2Matches = new Array(s2.length)
-
-        //查找匹配的字符
-        for (let i = 0; i < s1.length; i++) {
-            let low = (i >= range) ? i - range : 0,
-                high = (i + range <= (s2.length - 1)) ? (i + range) : (s2.length - 1)
-
-            for (let j = low; j <= high; j++) {
-                if (s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j]) {
-                    ++m
-                    s1Matches[i] = s2Matches[j] = true
-                    break
-                }
-            }
-        }
-
-        //如果没有匹配的字符，那么捏Jaro距离为0
-        if (m === 0) {
-            return 0
-        }
-
-        //计算转置的数量
-        let k = 0, n_trans = 0
-        for (let i = 0; i < s1.length; i++) {
-            if (s1Matches[i] === true) {
-                let j
-                for (j = k; j < s2.length; j++) {
-                    if (s2Matches[j] === true) {
-                        k = j + 1
-                        break
-                    }
-                }
-
-                if (s1[i] !== s2[j]) {
-                    ++n_trans
-                }
-            }
-        }
-
-        //计算Jaro距离
-        let weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
-            l = 0,
-            p = 0.1
-
-        //如果Jaro距离大于0.7，计算Jaro-Winkler距离
-        if (weight > 0.7) {
-            while (s1[l] === s2[l] && l < 4) {
-                ++l
-            }
-
-            weight = weight + l * p * (1 - weight)
-        }
-
-        return weight
     }
 
     /**
