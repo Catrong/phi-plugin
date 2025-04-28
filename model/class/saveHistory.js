@@ -203,7 +203,8 @@ export default class saveHistory {
         /**更新课题模式记录 */
         for (let i = this.challengeModeRank.length - 1; i >= 0; i--) {
             if (save.saveInfo.modifiedAt.iso > new Date(this.challengeModeRank[i].date)) {
-                if (!this.challengeModeRank[i + 1] || (this.challengeModeRank[i].value != save.saveInfo.summary.challengeModeRank || this.challengeModeRank[i + 1]?.value != save.saveInfo.summary.challengeModeRank)) {
+                let clg = save.saveInfo.summary.challengeModeRank
+                if (clg != this.challengeModeRank[i].value && (this.challengeModeRank[i + 1]?.value != clg)) {
                     this.challengeModeRank.splice(i + 1, 0, {
                         date: save.saveInfo.modifiedAt.iso,
                         value: save.saveInfo.summary.challengeModeRank

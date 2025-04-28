@@ -90,7 +90,7 @@ export class phiRankList extends plugin {
                 data.users.push({ playerId: '无效用户', index: index + rankNum - 2 })
                 getRksRank.delUserRks(sessionToken)
             } else {
-                data.users.push({ ...await makeSmallLine(save), index: index + rankNum - 2, me: myTk === save.getSessionToken() })
+                data.users.push({ ...await makeSmallLine(save), index: Math.max(index + rankNum - 2, index), me: myTk === save.getSessionToken() })
             }
             if (myTk === sessionToken) {
                 data.me = await makeLargeLine(save)
@@ -160,12 +160,14 @@ async function makeLargeLine(save) {
         lineData.rks_date[index] = item
     });
     let clgHistory = []
-    history.challengeModeRank.forEach((item) => {
-        clgHistory.push({
-            ChallengeMode: Math.floor(item.value / 100),
-            ChallengeModeRank: item.value % 100,
-            date: fCompute.formatDateToNow(item.date)
-        })
+    history.challengeModeRank.forEach((item, index, array) => {
+        if (!index || item.value != array[index - 1].value) {
+            clgHistory.push({
+                ChallengeMode: Math.floor(item.value / 100),
+                ChallengeModeRank: item.value % 100,
+                date: fCompute.formatDateToNow(item.date)
+            })
+        }
     })
     let b30Data = await save.getB19(33)
     let b30list = {

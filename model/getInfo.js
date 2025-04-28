@@ -511,8 +511,7 @@ export default new class getInfo {
      * @param {'common'|'blur'|'low'} [kind='common'] 清晰度
      * @return {string} 网址或文件地址
     */
-    getill(name, kind = 'common') {
-        let song = this.idgetsong(name) || name
+    getill(song, kind = 'common') {
         const songsinfo = this.all_info()[song]
         let ans = songsinfo?.illustration_big
         let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
@@ -637,7 +636,7 @@ export default new class getInfo {
                     break
                 }
             }
-            return this.getill(save_background)
+            return this.getill(this.idgetsong(save_background) || save_background)
         } catch (err) {
             logger.error(`获取背景曲绘错误`, err)
             return false
