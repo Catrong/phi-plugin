@@ -738,10 +738,14 @@ export class phisong extends plugin {
         } else {
             rankKind = 'IN';
         }
-
+        /** @type {string} */
         let comment = msg.match(/\n([\s\S]*)/)?.[1];
         if (!comment) {
             send.send_with_At(e, `不可发送空白内容w(ﾟДﾟ)w！`)
+            return true
+        }
+        if (comment.length > 1000) {
+            send.send_with_At(e, `太长了吧！你想干嘛w(ﾟДﾟ)w！`)
             return true
         }
 
@@ -829,7 +833,7 @@ export class phisong extends plugin {
         this.setContext('doReCmt', false, 30,)
         setTimeout(() => {
             delete wait_to_del_comment[e.user_id];
-        },30000)
+        }, 30000)
 
         send.send_with_At(e, `[评论详情]\n[评论ID]${comment.thisId}\n[评论时间]${fCompute.date_to_string(comment.time)}\n[评论曲目]${comment.songId}\n[评论内容]${comment.comment}\n==========\n请问是否确认删除这条评论＞︿＜\n（回复确认即为确认）`)
     }
