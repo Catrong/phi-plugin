@@ -152,6 +152,58 @@
         </div>
     </div>
 </div>
+{{if comment}}
+<div class="comment-box">
+    <div class="comment_title">
+        <p>Comments</p>
+        <p>{{comment.command}}</p>
+    </div>
+    {{each comment.list user}}
+    <div class="a_comment">
+        <div class="avatar">
+            <img
+                src="{{_res_path}}html/avatar/{{user.avatar}}.png"
+                alt="{{user.avatar}}"
+            >
+        </div>
+        <div class="userInfo">
+            <div class="playerId">
+                <p>{{user.PlayerId}}</p>
+            </div>
+            <div class="rks">
+                <p>{{user.rks.toFixed(4)}}</p>
+            </div>
+            <div class="score {{user.rank}}-BKG">
+                <p>{{user.score}}</p>
+            </div>
+            <div class="acc {{user.rank}}-BKG">
+                <p>{{user.acc.toFixed(2)}}%</p>
+            </div>
+            {{if user.spInfo}}
+            <div class="spInfo colorful-background">
+                <p>{{user.spInfo}}</p>
+            </div>
+            {{/if}}
+            <div class="clg_box">
+                <div class="Challenge">
+                    <img
+                        src="{{_res_path}}html/otherimg/{{Math.floor(user.challenge / 100)}}.png"
+                        alt="{{user.challenge}}"
+                    >
+                    <p>{{user.challenge % 100}}</p>
+                </div>
+            </div>
+            <div class="time">
+                <p>{{user.time}}&ensp;CommentID:{{user.thisId}}</p>
+            </div>
+        </div>
+        <div class="comment">
+            <p name="pvis">{{#user.comment}}</p>
+        </div>
+    </div>
+    {{/each}}
+</div>
+{{/if}}
 <div class="createdbox">
     <div class="phi-plugin">
         <p>{{_plugin}}</p>

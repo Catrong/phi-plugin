@@ -15,11 +15,13 @@ export default new class getInfo {
 
     constructor() {
         this.init()
-        chokidar.watch(infoPath).on('change', () => {
-            this.init()
-        });
+        if (Config.getUserCfg('config', 'watchInfoPath')) {
+            chokidar.watch(infoPath).on('change', () => {
+                this.init()
+            });
+        }
         if (!fs.existsSync('./plugins/phi-plugin/resources/original_ill/.git')) {
-            logger.warn(`[phi-plugin] 未下载曲绘文件，建议使用 /phi downill 命令进行下载`)
+            logger.error(`[phi-plugin] 未下载曲绘文件，建议使用 /phi downill 命令进行下载`)
         }
     }
 
@@ -122,6 +124,7 @@ export default new class getInfo {
          */
         this.sp_info = await readFile.FileReader(path.join(infoPath, 'spinfo.json'))
         for (let i in this.sp_info) {
+            this.sp_info[i].sp_vis = true
             if (this.sp_info[i]['illustration_big']) {
                 this.illlist.push(this.sp_info[i].song)
             }
@@ -432,14 +435,14 @@ export default new class getInfo {
         result = result.sort((a, b) => b.dis - a.dis)
 
         let all = []
-        for (let i in result) {
+        for (let i of result) {
 
-            if (all.includes(result[i].song)) continue //去重
+            if (all.includes(i.song)) continue //去重
             /**如果有完全匹配的曲目则放弃剩下的 */
-            if (result[0].dis == 1 && result[i].dis < 1) break
+            if (result[0].dis == 1 && i.dis < 1) break
 
 
-            all.push(result[i].song)
+            all.push(i.song)
         }
 
         return all
@@ -501,7 +504,7 @@ export default new class getInfo {
             }
         }
         if (!ans) {
-            logger.error(song, '背景不存在')
+            logger.warn(song, '背景不存在')
             ans = path.join(imgPath, 'phigros.png')
         }
         return ans
@@ -552,7 +555,7 @@ export default new class getInfo {
     /**
      * 通过原曲曲目获取曲目id
      * @param {String} song 原曲曲名
-     * @returns 曲目id
+     * @returns {idString} 曲目id
      */
     SongGetId(song) {
         return this.idssong[song]

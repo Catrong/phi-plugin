@@ -3,50 +3,40 @@ import Chart from "./Chart.js"
 
 export default class SongsInfo {
     /**
-     * @param {{
-     * song:string,
-     * illustration:string,
-     * illustration_big:string,
-     * chapter:string,
-     * bpm:string,
-     * composer:string,
-     * length:string,
-     * illustrator:string,
-     * spinfo:string,
-     * chart: Chart,
-     * can_t_be_letter: boolean,
-     * can_t_be_guessill: boolean,
-     * }} data 原始数据
+     * @param { } data 原始数据
      */
     constructor(data) {
         if (!data) {
             return {}
         }
-        /**id */
+        /** @type {idString} id */
         this.id = data.id
-        /**曲目 */
-        this.song = data.song 
-        /**小型曲绘 */
-        this.illustration = data.illustration 
-        /**原版曲绘 */
-        this.illustration_big = getInfo.getill(data.song) 
-        /**是否不参与猜字母 */
-        this.can_t_be_letter = data.can_t_be_letter || false 
-        /**是否不参与猜曲绘 */
-        this.can_t_be_guessill = data.can_t_be_guessill || false 
-        /**章节 */
-        this.chapter = data.chapter 
-        /**bpm */
-        this.bpm = data.bpm 
-        /**作曲 */
-        this.composer = data.composer 
-        /**时长 */
-        this.length = data.length 
-        /**画师 */
-        this.illustrator = data.illustrator 
-        /**特殊信息 */
-        this.spinfo = data.spinfo 
-        /**谱面详情 */
+        /** @type {string} 曲目 */
+        this.song = data.song
+        /** @type {string} 小型曲绘 */
+        this.illustration = getInfo.getill(data.song)
+        /** @type {boolean} 是否不参与猜字母 */
+        this.can_t_be_letter = data.can_t_be_letter || false
+        /** @type {boolean} 是否不参与猜曲绘 */
+        this.can_t_be_guessill = data.can_t_be_guessill || false
+        /** @type {string} 章节 */
+        this.chapter = data.chapter
+        /** @type {string} bpm */
+        this.bpm = data.bpm
+        /** @type {string} 作曲 */
+        this.composer = data.composer
+        /** @type {string} 时长 */
+        this.length = data.length
+        /** @type {string} 画师 */
+        this.illustrator = data.illustrator
+        /** @type {string} 特殊信息 */
+        this.spinfo = data.spinfo
+        /**
+         * 谱面详情
+         * @type {{EZ: Chart,HD: Chart,IN: Chart,AT?: Chart,LEGACY?: Chart}} 
+         */
         this.chart = data.chart
+        /** @type {boolean} 是否是特殊谱面 */
+        this.sp_vis = data.sp_vis
     }
 }

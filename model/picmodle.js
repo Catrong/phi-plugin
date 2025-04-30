@@ -30,7 +30,7 @@ class picmodle {
     }
 
     /**曲目图鉴 */
-    async picmodle(e, info) {
+    async alias(e, info) {
         return await this.common(e, 'atlas', {
             ...info,
             length: info.length ? info.length.replace(':', "'") + "''" : "-",
@@ -145,7 +145,7 @@ class picmodle {
     /**
      * 
      * @param {*} e 
-     * @param {'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'} kind 
+     * @param {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'} kind 
      * @param {*} data
      * @returns 
      */

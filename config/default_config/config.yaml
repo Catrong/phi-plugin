@@ -1,4 +1,4 @@
-#  ************ 【系统设置】 *************
+#  ************ 【渲染设置】 *************
 #  渲染精细度，可选值50~200，建议100。设置高精度会提高图片的精细度，但因图片较大可能会影响渲染与发送速度
 renderScale: 100
 
@@ -29,13 +29,19 @@ HistoryScoreDate: 10
 #  /list 最大渲染成绩数量
 listScoreMaxNum: 180
 
+#  ************ 【系统设置】 *************
+
+#  是否监听信息文件变化，如遇监听文件超限请尝试关闭
+watchInfoPath: false
+
+#  是否开启曲目评论功能，该功能目前暂无敏感词校验
+allowComment: true
+
 #  在线曲绘地址
 onLinePhiIllUrl: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
 
 #  是否在更新插件时自动拉取最新曲绘
 autoPullPhiIll: false
-
-#  ************ 【发送设置】 *************
 
 #  是否开启频道模式（文字版仅限私聊，关闭文字版图片，文字版将折叠为一条消息，把@改为回复）
 isGuild: false
@@ -49,7 +55,6 @@ WordSuggImg: false
 #  登录TapTap绑定是否发送二维码
 TapTapLoginQRcode: true
 
-#  ************ 【接收设置】 *************
 #  命令头
 cmdhead: "phi"
 

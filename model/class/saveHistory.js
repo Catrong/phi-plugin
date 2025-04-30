@@ -1,6 +1,7 @@
 import { Level } from "../constNum.js"
 import Save from "./Save.js"
 import fCompute from "../fCompute.js";
+import LevelRecordInfo from "./LevelRecordInfo.js";
 
 export default class saveHistory {
 
@@ -228,7 +229,6 @@ export default class saveHistory {
      */
     async getSongsLastRecord(id) {
         let t = { ...this.scoreHistory[id] }
-        let LevelRecordInfo = (await import('./LevelRecordInfo.js')).default
         for (let level in t) {
             t[level] = t[level] ? openHistory(t[level].at(-1)) : null
             let date = t[level].date

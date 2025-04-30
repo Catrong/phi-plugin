@@ -42,45 +42,19 @@ class Config {
         return { ...defCfg, ...config }
     }
 
-    /** 默认配置和用户配置 
+    /** 
      * @param {'config'|'nickconfig'|'otherinfo'} name 文件名
-     * @param {'renderScale'
-     * |'randerQuality'
-     * |'WordB19Img'
-     * |'WordSuggImg'
-     * |'cmdhead'
-     * |'GuessTipCd'
-     * |'GuessTipRecall'
-     * |'isGuild'
-     * |'LetterWinner'
-     * |'LetterGuessCd'
-     * |'LetterRevealCd'
-     * |'LetterTipCd'
-     * |'otherinfo'
-     * |'LetterNum'
-     * |'timeout'
-     * |'waitingTimeout'
-     * |'ban'
-     * |'MicTipCd'
-     * |'VikaToken'
-     * |'HistoryScoreNum'
-     * |'HistoryScoreDate'
-     * |'LetterTimeLength'
-     * |'HistoryDayNum'
-     * |'renderNum'
-     * |'LetterIllustration'
-     * |'GuessTipsTipNum'
-     * |'GuessTipsTipCD'
-     * |'GuessTipsTimeout'
-     * |'GuessTipsAnsTime'
-     * |'TapTapLoginQRcode'
-     * |'listScoreMaxNum'
-     * |'onLinePhiIllUrl'
-     * |'autoPullPhiIll' } style key值
+     * @param {configName} style key值
+     * @description 默认配置和用户配置
     */
     getUserCfg(name, style) {
         let def = this.getdefSet(name)
         let config = this.getConfig(name)
+        if (name == 'otherinfo' && config) {
+            for (let i in config) {
+                config[i].sp_vis = true;
+            }
+        }
         if (style) {
             if (typeof config[style] != 'undefined') {
                 return config[style]

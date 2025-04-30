@@ -10,11 +10,13 @@ import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
 import { LevelNum } from '../model/constNum.js'
 import { segment } from 'oicq'
+import getComment from '../model/getComment.js'
+import getSave from '../model/getSave.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
 let wait_to_del_nick
-
+const wait_to_del_comment = {}
 
 export class phisong extends plugin {
     constructor() {
@@ -72,7 +74,14 @@ export class phisong extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(table|定数表)\\s*[0-9]+$`,
                     fnc: 'table'
                 },
-
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(comment|cmt|评论|评价).*$`,
+                    fnc: 'comment'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(recmt).*$`,
+                    fnc: 'recallComment'
+                }
             ]
         })
 
@@ -97,13 +106,33 @@ export class phisong extends plugin {
             let msgRes
             if (!songs[1]) {
                 songs = songs[0]
-                // get.getsongsinfo(e, songs)
-                msgRes = await get.GetSongsInfoAtlas(e, songs)
+                let infoData = getInfo.info(songs);
+                let data = {
+                    ...infoData,
+                };
+                if (await Config.getUserCfg('config', 'allowComment')) {
+                    let commentData = getComment.get(infoData.id);
+                    for (let item of commentData) {
+                        let save = await getSave.getSaveBySessionToken(item.sessionToken);
+                        item.PlayerId = save.saveInfo.PlayerId;
+                        item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
+                        item.comment = fCompute.convertRichText(item.comment);
+                        item.time = fCompute.date_to_string(item.time)
+                    }
+                    data = {
+                        ...infoData,
+                        comment: {
+                            command: `当前共有${commentData.length}条评论，发送/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <定级?>(换行)<内容>`,
+                            list: commentData
+                        }
+                    };
+                }
+                msgRes = await picmodle.common(e, 'atlas', data);
                 e.reply(msgRes)
             } else {
                 msgRes = []
                 for (let i in songs) {
-                    msgRes[i] = await get.GetSongsInfoAtlas(e, songs[i])
+                    msgRes[i] = await picmodle.common(e, 'atlas', getInfo.info(songs[i]))
                 }
                 e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
             }
@@ -639,6 +668,187 @@ export class phisong extends plugin {
 
         send.send_with_At(e, segment.image(getInfo.getTableImg(dif)))
 
+    }
+
+    async comment(e) {
+
+        if (await getBanGroup.get(e.group_id, 'comment') || !(await Config.getUserCfg('config', 'allowComment'))) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let save = await send.getsave_result(e);
+
+        if (!save) {
+            return true
+        }
+
+        let msg = e.msg.replace(/[#/](.*?)(comment|cmt|评论|评价)(\s*)/, "");
+        if (!msg) {
+            send.send_with_At(e, `请指定曲名哦！\n格式：\n/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <难度?>(换行)\n<内容>`)
+            return true
+        }
+
+        /**
+         * @type {allLevelKind}
+         */
+        let rankKind = msg.match(/ (EZ|HD|IN|AT|LEGACY)\n/i)?.[1] || ''
+        let rankNum = 0;
+        switch (rankKind.toUpperCase()) {
+            case 'EZ':
+                rankNum = 0;
+                break;
+            case 'HD':
+                rankNum = 1;
+                break;
+            case 'IN':
+                rankNum = 2;
+                break;
+            case 'AT':
+                rankNum = 3;
+                break;
+            case 'LGC':
+            case 'LEGACY':
+                rankNum = 4;
+                break;
+            default:
+                rankNum = -1;
+        }
+
+        let nickname = msg.replace(/ (EZ|HD|IN|AT|LEGACY)\n[\s\S]*/i, '')
+
+        let song = getInfo.fuzzysongsnick(nickname)?.[0]
+
+        if (!song) {
+            send.send_with_At(e, `未找到${nickname}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+            return true;
+        }
+        let songInfo = getInfo.info(song)
+        if (!songInfo.sp_vis) {
+            if (!rankKind) {
+                rankKind = 'IN';
+                rankNum = 2;
+            } else if (rankNum == -1) {
+                send.send_with_At(e, `${rankKind} 不是一个难度QAQ！`);
+                return true;
+            } else if (!songInfo.chart[rankKind]) {
+                send.send_with_At(e, `${song} 没有 ${rankKind} 这个难度QAQ！`);
+                return true;
+            }
+        } else {
+            rankKind = 'IN';
+        }
+
+        let comment = msg.match(/\n([\s\S]*)/)?.[1];
+        if (!comment) {
+            send.send_with_At(e, `不可发送空白内容w(ﾟДﾟ)w！`)
+            return true
+        }
+
+        let songId = songInfo.id;
+        let cmtobj = {
+            sessionToken: save.session,
+            userObjectId: save.saveInfo.objectId,
+            rks: save.saveInfo.summary.rankingScore,
+            rank: rankKind,
+            score: 0,
+            acc: 0,
+            fc: false,
+            challenge: save.saveInfo.summary.challengeModeRank,
+            time: new Date(),
+            comment: comment
+        };
+        if (!songInfo.sp_vis) {
+            let { phi, b19_list } = await save.getB19(27)
+            let spInfo = '';
+            let songRecord = save.getSongsRecord(songId)
+            for (let i = 0; i < phi.length; ++i) {
+                if (phi[i].id == songId && phi[i].rank == rankKind) {
+                    spInfo = `Perfect ${i + 1}`;
+                    break;
+                }
+            }
+            if (!spInfo && songRecord[rankNum].score == 1000000) {
+                spInfo = 'All Perfect';
+            }
+            for (let i = 0; i < b19_list.length; ++i) {
+                if (b19_list[i].id == songId && b19_list[i].rank == rankKind) {
+                    spInfo = spInfo ? spInfo + ` & Best ${i + 1}` : `Best ${i + 1}`;
+                    break;
+                }
+            }
+            cmtobj = {
+                ...cmtobj,
+                score: songRecord[rankNum].score,
+                acc: songRecord[rankNum].acc,
+                fc: songRecord[rankNum].fc,
+                spInfo,
+            }
+        };
+        if (getComment.add(songId, cmtobj)) {
+            send.send_with_At(e, `评论成功！φ(゜▽゜*)♪`);
+        } else {
+            send.send_with_At(e, `遇到未知错误QAQ！`);
+        }
+
+        return true;
+    }
+
+    async recallComment(e) {
+        if (await getBanGroup.get(e.group_id, 'recallComment')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+        let save;
+        if (!e.isMaster) {
+            save = await send.getsave_result(e);
+            if (!save) {
+                return true;
+            }
+        }
+
+        let commentId = e.msg.match(/[0-9]+/)?.[0];
+
+        if (!commentId) {
+            send.send_with_At(e, `请输入评论ID嗷！\n格式：/${Config.getUserCfg('config', 'cmdhead')} recmt <评论ID>`);
+            return true;
+        }
+
+        let comment = getComment.getByCommentId(commentId)
+        if (!comment) {
+            send.send_with_At(e, `没有找到ID为${commentId}的评论QAQ！`);
+            return true;
+        }
+
+        if (!e.isMaster && !(comment.sessionToken == save.session || comment.userObjectId == save.saveInfo.objectId)) {
+            send.send_with_At(e, `您没有权限操作这条评论捏(。﹏。)`);
+            return true;
+        }
+
+        wait_to_del_comment[e.user_id] = commentId;
+        this.setContext('doReCmt', false, 30,)
+        setTimeout(() => {
+            delete wait_to_del_comment[e.user_id];
+        },30000)
+
+        send.send_with_At(e, `[评论详情]\n[评论ID]${comment.thisId}\n[评论时间]${fCompute.date_to_string(comment.time)}\n[评论曲目]${comment.songId}\n[评论内容]${comment.comment}\n==========\n请问是否确认删除这条评论＞︿＜\n（回复确认即为确认）`)
+    }
+
+    async doReCmt() {
+        let e = this.e
+
+        let msg = e.msg.replace(' ', '')
+
+        if (msg == '确认') {
+            getComment.del(wait_to_del_comment[e.user_id]) ?
+                send.send_with_At(e, `删除成功！`) :
+                send.send_with_At(e, `删除失败QAQ！`);
+        } else {
+            send.send_with_At(e, `取消成功！`)
+        }
+        delete wait_to_del_comment[e.user_id];
+
+        this.finish('doReCmt', false)
     }
 
 }

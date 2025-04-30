@@ -1,11 +1,16 @@
 <head>
-    <link rel="stylesheet" href="./atlas.css">
-
+    <link rel="stylesheet" href="./atlas.css" />
 </head>
 
 <body>
-    <div class="background" style="background: url(../../original_ill/996.李化禹.png) no-repeat; background-size: cover;">
-        <img src="../../original_ill/ill/996.李化禹.png" alt="曲绘-模糊">
+    <div
+        class="background"
+        style="
+            background: url(../../original_ill/996.李化禹.png) no-repeat;
+            background-size: cover;
+        "
+    >
+        <img src="../../original_ill/ill/996.李化禹.png" alt="曲绘-模糊" />
     </div>
     <div class="big-box">
         <div class="box">
@@ -27,7 +32,10 @@
                             <p>SONG'S_INFO</p>
                         </div>
                         <div class="line">
-                            <p id="other-info">aaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+                            <p id="other-info">
+                                aaaaaaaaaaaaaaaaaaaaaaaaa
+                                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            </p>
                         </div>
                     </div>
                     <div class="chart">
@@ -63,7 +71,10 @@
                                 <p>Flick</p>
                             </div>
                             <div class="charter">
-                                <p name="pvis">Barbarianerman, Main theme within the somnium</p>
+                                <p name="pvis">
+                                    Barbarianerman, Main theme within the
+                                    somnium
+                                </p>
                             </div>
                             <div class="chart-info">
                                 <p>1000</p>
@@ -110,7 +121,7 @@
                 </div>
             </div>
             <div class="ill-box">
-                <img src="../../original_ill/ill/996.李化禹.png" alt="曲绘">
+                <img src="../../original_ill/ill/996.李化禹.png" alt="曲绘" />
             </div>
         </div>
         <div class="other-info">
@@ -173,7 +184,10 @@
                         <p name="pvis">{{$index}}</p>
                     </div>
                 </div>
-                <div class="leave-sp" style="background-color: rgb(0, 255, 149);">
+                <div
+                    class="leave-sp"
+                    style="background-color: rgb(0, 255, 149)"
+                >
                     <div class="ldif">
                         <p name="pvis">{{$value.difficulty}}</p>
                     </div>
@@ -181,6 +195,49 @@
                         <p name="pvis">{{$index}}</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="comment-box">
+        <div class="comment_title">
+            <p>Comments</p>
+            <p>{{comment_command}}</p>
+        </div>
+        <div class="a_comment">
+            <div class="avatar">
+                <img
+                    src="../avatar/ShineAfter_鸠+水青_Special_Avatar.png"
+                    alt="{{user.avatar}}"
+                />
+            </div>
+            <div class="userInfo">
+                <div class="playerId">
+                    <p>就是不会告诉你</p>
+                </div>
+                <div class="rks">
+                    <p>14.7028</p>
+                </div>
+                <div class="score IN-BKG">
+                    <p>1000000</p>
+                </div>
+                <div class="acc IN-BKG">
+                    <p>100.0000%</p>
+                </div>
+                <div class="spInfo colorful-background">
+                    <p>Best 10 & Perfect 1</p>
+                </div>
+                <div class="clg_box">
+                    <div class="Challenge">
+                        <img src="../otherimg/5.png" alt="Challenge" />
+                        <p>54</p>
+                    </div>
+                </div>
+                <div class="time">
+                    <p>2025/00/00 00:00:00</p>
+                </div>
+            </div>
+            <div class="comment">
+                <p name="pvis">1234<br>1234<br>1234<br>1234<br>1234</p>
             </div>
         </div>
     </div>
@@ -197,16 +254,14 @@
     <script>
         function adjustFontSize() {
             //获取p元素
-            var a = document.getElementsByName('pvis')
+            var a = document.getElementsByName("pvis");
             for (var i = 0; i < a.length; ++i) {
+                const songName = a[i];
 
-                const songName = a[i]
-
-                if (!songName) continue
-
+                if (!songName) continue;
 
                 /*调整曲目名称字体大小*/
-                var parentElement = songName.parentElement
+                var parentElement = songName.parentElement;
 
                 // var maxFontSize = 100 //设置最大字体大小
 
@@ -224,14 +279,19 @@
                 // }
 
                 // 如果字体宽度大于父元素宽度，则减小字体大小
-                while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
-                    var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                while (
+                    songName.scrollWidth > parentElement.offsetWidth ||
+                    songName.scrollHeight > parentElement.offsetHeight
+                ) {
+                    var style = window
+                        .getComputedStyle(songName, null)
+                        .getPropertyValue("font-size");
                     var fontSize = parseFloat(style);
-                    songName.style.fontSize = (fontSize - 1) + "px";
+                    songName.style.fontSize = fontSize - 1 + "px";
                 }
             }
         }
-        window.onload = adjustFontSize
-        window.onresize = adjustFontSize
+        window.onload = adjustFontSize;
+        window.onresize = adjustFontSize;
     </script>
 </body>

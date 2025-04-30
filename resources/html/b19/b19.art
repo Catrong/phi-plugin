@@ -32,7 +32,7 @@
             <p>{{gameuser.data}}</p>
         </div>
         {{if spInfo}}
-        <div class="spInfo">
+        <div class="spInfo colorful-background">
             <p>{{spInfo}}</p>
         </div>
         {{/if}}

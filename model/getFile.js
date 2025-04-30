@@ -8,14 +8,15 @@ import getRksRank from './getRksRank.js';
 
 
 
-class readFile {
+export default class readFile {
 
     /**
      * 读取文件
      * @param {string} filePath 完整路径
      * @param {'JSON'|'YAML'|'CSV'|'TXT'} [style=undefined] 强制设置文件格式
+     * @returns {Promise<any>|any}
      */
-    async FileReader(filePath, style = undefined) {
+    static FileReader(filePath, style = undefined) {
         try {
             if (!fs.existsSync(filePath)) { return false }
             // console.info(filePath)
@@ -30,7 +31,7 @@ class readFile {
                     return YAML.parse(fs.readFileSync(filePath, 'utf8'))
                 }
                 case 'CSV': {
-                    return (await csv().fromString(fs.readFileSync(filePath, 'utf8')))
+                    return (csv().fromString(fs.readFileSync(filePath, 'utf8')))
                 }
                 case 'TXT': {
                     return fs.readFileSync(filePath, 'utf8')
@@ -54,7 +55,7 @@ class readFile {
      * @param {any} data 目标数据
      * @param {'JSON'|'YAML'|'TXT'} [style=undefined] 强制指定保存格式
      */
-    async SetFile(filepath, data, style = undefined) {
+    static SetFile(filepath, data, style = undefined) {
         try {
             const fatherPath = path.dirname(filepath)
             const fileName = path.basename(filepath)
@@ -94,7 +95,7 @@ class readFile {
     }
 
 
-    async DelFile(path) {
+    static async DelFile(path) {
         try {
             if (!fs.existsSync(`${path}`)) { return false }
             fs.unlink(`${path}`, (err) => {
@@ -112,7 +113,7 @@ class readFile {
      * 删除指定路径下的所有空文件夹
      * @param {*} _path 
      */
-    async rmEmptyDir(_path, level = 0) {
+    static async rmEmptyDir(_path, level = 0) {
         if (!fs.existsSync(_path)) return false
         if (!fs.lstatSync(_path).isDirectory()) return false
         const files = fs.readdirSync(_path);
@@ -138,7 +139,7 @@ class readFile {
     }
 
     /**更改数据储存位置,user_id和sessionToken关系转移到redis中 */
-    async movJsonFile(_path) {
+    static async movJsonFile(_path) {
         let user_token = await this.FileReader(path.join(_path, 'user_token.json')) || {}
         if (!fs.existsSync(`${_path}`)) { return false }
         const files = fs.readdirSync(_path);
@@ -232,5 +233,3 @@ class readFile {
 
 
 }
-
-export default new readFile()

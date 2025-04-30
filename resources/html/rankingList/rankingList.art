@@ -21,7 +21,7 @@
                 />
                 {{/if}}
             </div>
-            <div class="avater_box">
+            <div class="avatar_box">
                 <div class="avatar">
                     <img
                         src="{{_res_path}}html/avatar/{{user.avatar}}.png"

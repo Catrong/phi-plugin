@@ -169,14 +169,6 @@ body p {
     bottom: -31%;
     right: 5%;
     display: flex;
-    --alf: 0.5;
-    background: linear-gradient(
-            to right,
-            rgba(255, 0, 0, var(--alf)),
-            rgba(255, 166, 0, var(--alf)),
-            rgba(255, 255, 0, var(--alf))
-        ),
-        white;
     --rpoz: 7.5px;
     clip-path: polygon(
         100% 0%,

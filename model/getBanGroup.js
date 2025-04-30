@@ -3,9 +3,12 @@ import { redisPath } from "./constNum.js"
 export default new class getBanGroup {
 
     /**
-     * 
+     * @import * from './type/type.js'
+     */
+
+    /**
      * @param {string} group 
-     * @param {string} fnc 
+     * @param {allFnc} fnc 
      * @returns 
      */
     async redis(group, fnc) {
@@ -15,7 +18,7 @@ export default new class getBanGroup {
     /**
      * 
      * @param {string} group 
-     * @param {string} fnc 
+     * @param {allFnc} fnc 
      * @returns 
      */
     async get(group, fnc) {
@@ -50,6 +53,8 @@ export default new class getBanGroup {
             case 'randmic':
             case 'randClg':
             case 'table':
+            case 'comment':
+            case 'recallComment':
                 return await this.redis(group, 'song')
             case 'rankList':
             case 'godList':

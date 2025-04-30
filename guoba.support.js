@@ -34,9 +34,9 @@ export function supportGuoba() {
                     label: '在线曲绘来源',
                     bottomHelpMessage: '仅在未下载曲绘时有效，不影响下载曲绘指令。在线曲绘将重复下载曲绘资源，建议使用 /下载曲绘 将曲绘缓存到本地',
                     component: "RadioGroup",
-                componentProps: {
-                  buttonStyle: "solid",
-                  optionType: "button",
+                    componentProps: {
+                        buttonStyle: "solid",
+                        optionType: "button",
                         options: [
                             {
                                 label: 'gitee',
@@ -118,8 +118,8 @@ export function supportGuoba() {
                     },
                 },
                 {
-                label: '',
-                component: 'Divider'
+                    label: '',
+                    component: 'Divider'
                 },
                 {
                     field: 'B19MaxNum',
@@ -186,6 +186,18 @@ export function supportGuoba() {
                     component: 'SOFT_GROUP_BEGIN'
                 },
                 {
+                    field: 'watchInfoPath',
+                    label: '监听信息文件',
+                    bottomHelpMessage: '是否监听信息文件变化，如果机器人有自动更新插件功能建议开启，如遇监听文件数量超限请尝试关闭',
+                    component: 'Switch',
+                },
+                {
+                    field: 'allowComment',
+                    label: '曲目评论',
+                    bottomHelpMessage: '是否开启曲目评论功能，该功能目前暂无敏感词校验',
+                    component: 'Switch',
+                },
+                {
                     field: 'autoPullPhiIll',
                     label: '自动更新曲绘',
                     bottomHelpMessage: '开启后手动更新插件时自动更新曲绘文件',
@@ -231,8 +243,8 @@ export function supportGuoba() {
                     bottomHelpMessage: '使用曲库的模式，若启用自定义则重名的以自定义为准',
                     component: "RadioGroup",
                     componentProps: {
-                    buttonStyle: "solid",
-                    optionType: "button",
+                        buttonStyle: "solid",
+                        optionType: "button",
                         options: [
                             {
                                 label: '原版曲库',
@@ -293,9 +305,9 @@ export function supportGuoba() {
                     label: '发送曲绘',
                     bottomHelpMessage: '猜对后是否发送以及发送什么曲绘，水印版需要占用渲染资源，不发图片更快',
                     component: "RadioGroup",
-                componentProps: {
-                  buttonStyle: "solid",
-                  optionType: "button",
+                    componentProps: {
+                        buttonStyle: "solid",
+                        optionType: "button",
                         options: [
                             {
                                 label: '水印版',

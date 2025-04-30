@@ -15,7 +15,7 @@ export default new class pic {
         data = data || getInfo.info(name)
         if (data) {
             data.illustration = getInfo.getill(name)
-            return await picmodle.picmodle(e, data)
+            return await picmodle.alias(e, data)
         } else {
             /**未找到曲目 */
             return `未找到${name}的相关曲目信息!QAQ`

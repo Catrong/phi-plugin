@@ -1,6 +1,7 @@
 import { MAX_DIFFICULTY } from '../constNum.js'
 import fCompute from '../fCompute.js'
 import getRksRank from '../getRksRank.js'
+import LevelRecordInfo from './LevelRecordInfo.js'
 
 export default class Save {
 
@@ -223,6 +224,9 @@ export default class Save {
             logger.error(`封禁tk ${this.session}`)
             throw new Error(`您的存档rks异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
         }
+        /**
+         * @type {{[id:idString]: LevelRecordInfo[]}}
+         */
         this.gameRecord = {}
         for (let id in data.gameRecord) {
             this.gameRecord[id] = []
@@ -233,37 +237,32 @@ export default class Save {
                     continue
                 }
                 // this.gameRecord[id][level] = new (import('./LevelRecordInfo')).default(data.gameRecord[id][level], id, level)
-                this.gameRecord[id][level] = {
-                    id: id,
-                    level: level,
-                    fc: data.gameRecord[id][level].fc,
-                    score: data.gameRecord[id][level].score,
-                    acc: data.gameRecord[id][level].acc
+
+                if (!ignore) {
+                    if (data.gameRecord[id][level].acc > 100 || data.gameRecord[id][level].acc < 0) {
+                        logger.error(`acc > 100 封禁tk ${this.session}`)
+                        getRksRank.delUserRks(this.session)
+                        throw new Error(`您的存档 acc 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
+                    }
+                    if (data.gameRecord[id][level].score > 1000000 || data.gameRecord[id][level].score < 0) {
+                        logger.error(`score > 1000000 封禁tk ${this.session}`)
+                        getRksRank.delUserRks(this.session)
+                        throw new Error(`您的存档 score 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
+                    }
                 }
-                if (ignore) continue
-                if (data.gameRecord[id][level].acc > 100 || data.gameRecord[id][level].acc < 0) {
-                    logger.error(`acc > 100 封禁tk ${this.session}`)
-                    getRksRank.delUserRks(this.session)
-                    throw new Error(`您的存档 acc 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
-                }
-                if (data.gameRecord[id][level].score > 1000000 || data.gameRecord[id][level].score < 0) {
-                    logger.error(`score > 1000000 封禁tk ${this.session}`)
-                    getRksRank.delUserRks(this.session)
-                    throw new Error(`您的存档 score 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
-                }
+                this.gameRecord[id][level] = new LevelRecordInfo(data.gameRecord[id][level], id, level)
             }
         }
     }
 
     async init() {
-        let LevelRecordInfo = (await import('./LevelRecordInfo.js')).default
         for (let id in this.gameRecord) {
             for (let i in this.gameRecord[id]) {
                 let level = Number(i)
                 if (!this.gameRecord[id][level]) {
                     continue
                 }
-                this.gameRecord[id][level] = new LevelRecordInfo(this.gameRecord[id][level], this.gameRecord[id][level].id, this.gameRecord[id][level].level)
+
             }
         }
 
@@ -277,6 +276,9 @@ export default class Save {
         if (this.sortedRecord) {
             return this.sortedRecord
         }
+        /**
+         * @type {LevelRecordInfo[]}
+         */
         let sortedRecord = []
         for (let song in this.gameRecord) {
             for (let level in this.gameRecord[song]) {
@@ -299,6 +301,9 @@ export default class Save {
      * @returns 按照rks排序的数组
      */
     findAccRecord(acc, same = false) {
+        /**
+         * @type {LevelRecordInfo[]}
+         */
         let record = []
         for (let song in this.gameRecord) {
             for (let level in this.gameRecord[song]) {
@@ -353,7 +358,7 @@ export default class Save {
     /**
      * 
      * @param {string} id 曲目id
-     * @returns {{LevelRecordInfo}}
+     * @returns {LevelRecordInfo[]}
      */
     getSongsRecord(id) {
         return { ...this.gameRecord[id] }
