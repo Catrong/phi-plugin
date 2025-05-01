@@ -75,7 +75,7 @@ export class phisong extends plugin {
                     fnc: 'table'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(comment|cmt|评论|评价)[\s\S]*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(comment|cmt|评论|评价)[\\s\\S]*$`,
                     fnc: 'comment'
                 },
                 {
