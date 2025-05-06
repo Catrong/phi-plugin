@@ -194,7 +194,7 @@
                 </div>
             </div>
             <div class="time">
-                <p>{{user.time}}&ensp;CommentID:{{user.thisId}}</p>
+                <p>{{user.time}}&ensp;ID:{{user.thisId}}</p>
             </div>
         </div>
         <div class="comment">

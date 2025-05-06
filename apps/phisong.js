@@ -75,7 +75,7 @@ export class phisong extends plugin {
                     fnc: 'table'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(comment|cmt|评论|评价).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(comment|cmt|评论|评价)[\\s\\S]*$`,
                     fnc: 'comment'
                 },
                 {
@@ -762,10 +762,11 @@ export class phisong extends plugin {
             time: new Date(),
             comment: comment
         };
-        if (!songInfo.sp_vis) {
+        let songRecord = save.getSongsRecord(songId);
+        if (!songInfo.sp_vis && songRecord?.[rankNum]) {
             let { phi, b19_list } = await save.getB19(27)
             let spInfo = '';
-            let songRecord = save.getSongsRecord(songId)
+            
             for (let i = 0; i < phi.length; ++i) {
                 if (phi[i].id == songId && phi[i].rank == rankKind) {
                     spInfo = `Perfect ${i + 1}`;
