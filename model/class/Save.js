@@ -509,7 +509,7 @@ export default class Save {
             /**是 Best 几 */
             rkslist[i].num = i + 1
             /**推分建议 */
-            if (rkslist[i].rks < 100) {
+            if (rkslist[i].acc < 100) {
                 rkslist[i].suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty, 2)
                 if (rkslist[i].suggest.includes('无') && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks)) && rkslist[i].rks < 100) {
                     rkslist[i].suggest = "100.00%"
