@@ -122,7 +122,7 @@ export class phisong extends plugin {
                     data = {
                         ...infoData,
                         comment: {
-                            command: `当前共有${commentData.length}条评论，发送/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <定级?>(换行)<内容>`,
+                            command: `当前共有${commentData.length}条评论，发送/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <定级?>(换行)<内容> 进行评论`,
                             list: commentData
                         }
                     };
@@ -130,11 +130,12 @@ export class phisong extends plugin {
                 msgRes = await picmodle.common(e, 'atlas', data);
                 e.reply(msgRes)
             } else {
-                msgRes = []
+                msgRes = `找到了${songs.length}首歌曲！`
                 for (let i in songs) {
-                    msgRes[i] = await picmodle.common(e, 'atlas', getInfo.info(songs[i]))
+                    msgRes += `\n${getInfo.SongGetId(songs[i]) || songs[i]}`
                 }
-                e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
+                msgRes += `\n请发送 /${Config.getUserCfg('config', 'cmdhead')} song <曲目id> 来查看详细信息！`
+                send.send_with_At(e, msgRes)
             }
         } else {
             e.reply(`未找到${msg}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
@@ -766,7 +767,7 @@ export class phisong extends plugin {
         if (!songInfo.sp_vis && songRecord?.[rankNum]) {
             let { phi, b19_list } = await save.getB19(27)
             let spInfo = '';
-            
+
             for (let i = 0; i < phi.length; ++i) {
                 if (phi[i].id == songId && phi[i].rank == rankKind) {
                     spInfo = `Perfect ${i + 1}`;

@@ -428,7 +428,12 @@ export default new class getInfo {
         for (let std in allinfo) {
             let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
-                result.push({ song: allinfo[std]['song'], dis: dis })
+                result.push({ song: allinfo[std].song, dis: dis })
+            }
+            if (!allinfo[std]?.id) continue
+            dis = fCompute.jaroWinklerDistance(mic, allinfo[std].id)
+            if (dis >= Distance) {
+                result.push({ song: allinfo[std].song, dis: dis })
             }
         }
 
