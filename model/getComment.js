@@ -43,10 +43,15 @@ export default new class getComment {
             getFile.SetFile(dataPath, this.data);
         }
         Object.keys(this.data).forEach((/**@type {idString} */ id) => {
-            this.data[id].forEach((comment) => {
+            this.data[id].forEach((comment, index, array) => {
+                if (!comment?.thisId) {
+                    array.splice(index, 1);
+                    return;
+                }
                 this.map[comment.thisId] = id
             })
         })
+        getFile.SetFile(dataPath, this.data);
 
         chokidar.watch(dataPath).on('change', () => {
             logger.info('[phi-plugin] 重载评论区')
@@ -115,7 +120,7 @@ export default new class getComment {
         if (!songId) return false;
         for (let i = 0; i <= this.data[songId].length; ++i) {
             if (this.data[songId][i].thisId == commentId) {
-                delete this.data[songId][i].thisId;
+                this.data[songId].splice(i, 1);
                 delete this.map[commentId];
                 return getFile.SetFile(dataPath, this.data)
             }
