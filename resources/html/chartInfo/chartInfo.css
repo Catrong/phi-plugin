@@ -247,3 +247,19 @@ body {
     width: 100%;
     height: 100%;
 }
+
+.createdbox {
+    position: absolute;
+    width: auto;
+    right: -5%;
+    bottom: 200px;
+    transform: rotate(-90deg);
+}
+
+.phi-plugin p {
+    font-size: 35px;
+}
+
+.ver p {
+    font-size: 20px;
+}

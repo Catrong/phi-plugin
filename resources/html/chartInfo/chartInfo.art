@@ -145,6 +145,14 @@
             </div>
         </div>
     </div>
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>{{_plugin}}</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
     <script>
         var chart = echarts.init(document.getElementById("words"));
         chart.setOption({
