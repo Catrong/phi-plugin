@@ -898,7 +898,7 @@ export class phisong extends plugin {
             illustration: info.illustration,
             song: info.song,
             length: info.length,
-            rank: info.rank,
+            rank: rank,
             difficulty: chart.difficulty,
             charter: chart.charter,
             tap: chart.tap,
