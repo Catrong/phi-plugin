@@ -251,7 +251,7 @@ body {
 .createdbox {
     position: absolute;
     width: auto;
-    right: -5%;
+    right: -3%;
     bottom: 200px;
     transform: rotate(-90deg);
 }
