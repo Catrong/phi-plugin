@@ -6,7 +6,7 @@ export default class Chart {
         this.id = data?.id
 
         /** @type {allLevelKind} */
-        this.rank = data?.rank
+        this.rank = data.rank || ''
 
         /** @type {string} */
         this.charter = data.charter
@@ -28,5 +28,11 @@ export default class Chart {
 
         /** @type {number} */
         this.combo = Number(data.combo)
+
+        /** @type {number} */
+        this.maxTime = Number(data.maxTime)
+
+        /** @type {[number,number,number,number,number][]} [tap,drag,hold,flick,tot] */
+        this.distribution = data.distribution
     }
 }

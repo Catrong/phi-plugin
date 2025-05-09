@@ -37,6 +37,9 @@ watchInfoPath: false
 #  是否开启曲目评论功能，该功能目前暂无敏感词校验
 allowComment: true
 
+#  是否开启谱面标签功能，该功能目前暂无敏感词校验
+allowChartTag: false
+
 #  在线曲绘地址
 onLinePhiIllUrl: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
 

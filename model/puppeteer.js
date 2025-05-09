@@ -86,14 +86,14 @@ export default class newPuppeteer {
             defaultLayout: layoutPath + 'default.art',
             elemLayout: layoutPath + 'elem.art',
             pageGotoParams: {
-                waitUntil: params.waitUntil || 'networkidle2',
+                waitUntil: params.waitUntil || ['networkidle2', 'load', 'domcontentloaded'],
                 timeout: Config.getUserCfg('config', 'timeout'),
             },
             sys: {
                 scale: `style=transform:scale(${cfg.scale || 1})`,
                 copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
             },
-            Version: {...Version},
+            Version: { ...Version },
             _plugin: Display_Plugin_Name,
             Math,
             fCompute,

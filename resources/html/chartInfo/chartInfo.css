@@ -1,0 +1,249 @@
+@import "../common/common.css";
+
+body {
+    width: 2048px;
+    min-height: 1080px;
+    display: flex;
+    justify-content: center;
+}
+
+:root {
+    --text-color-light: #ffffff;
+    --text-color-dark: #000000;
+    --content-title-color: #34c9ff;
+    --box-background-color: #66666699;
+    --box-border-color: #666666;
+}
+
+.info-box {
+    width: 80%;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.basic-box {
+    display: flex;
+    width: 100%;
+    height: min-content;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.ill-box {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.box-title {
+    background-color: var(--box-background-color);
+    display: flex;
+    margin: 0px 0px 10px 0px;
+}
+
+.box-title p {
+    color: var(--text-color-light);
+    font-size: 20px;
+    padding: 0px 20px;
+}
+
+.box-content {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 5px solid var(--box-border-color);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dot-box .dot {
+    height: 10px;
+    width: 10px;
+    background-color: var(--box-border-color);
+    position: absolute;
+}
+
+.dot-box .left {
+    left: 0;
+}
+
+.dot-box .right {
+    right: 0;
+}
+
+.dot-box .top {
+    top: 0;
+}
+
+.dot-box .bottom {
+    bottom: 0;
+}
+
+.dot-box img {
+    width: 100%;
+}
+
+.basic-info {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.box-content p {
+    color: var(--text-color-light);
+    font-size: 20px;
+}
+
+.info-content {
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    background-color: var(--box-background-color);
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    align-items: flex-start;
+}
+
+.content-item > * {
+    margin: 0px 0px 5px 0px;
+}
+
+.content-title p {
+    font-family: "Aldrich", "PHI";
+    font-size: 26px;
+    color: var(--content-title-color);
+    text-shadow: 1px 1px 5px var(--text-color-dark);
+}
+
+.content p {
+    font-size: 25px;
+    color: var(--text-color-light);
+    text-shadow: 1px 1px 1px var(--text-color-dark);
+    margin: 0px 0px 0px 2rem;
+}
+
+.chart-info {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.notes-bar {
+    position: absolute;
+    width: 90%;
+    left: 5%;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.bar-box {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-left: white solid 10px;
+    border-right: white solid 10px;
+    box-sizing: border-box;
+}
+
+.bar {
+    width: 1%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bar-item {
+    width: 100%;
+}
+
+.notes-box {
+    display: flex;
+    position: absolute;
+    left: 5%;
+    top: 20px;
+    flex-direction: column;
+}
+
+.notes-box .content {
+    width: 240px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.notes-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+}
+
+.notes-content p {
+    color: var(--text-color-light);
+}
+
+.notes-content p:nth-child(1) {
+    font-size: 30px;
+}
+
+.notes-content p:nth-child(2) {
+    font-size: 20px;
+    margin-top: -10px;
+}
+
+.tap-p p {
+    color: var(--tap);
+}
+
+.drag-p p {
+    color: var(--drag);
+}
+
+.hold-p p {
+    color: var(--hold);
+}
+
+.flick-p p {
+    color: var(--flick);
+}
+
+.words-box {
+    position: absolute;
+    display: flex;
+    width: 70%;
+    height: 60%;
+    right: 5%;
+    top: 20px;
+    flex-direction: column;
+}
+
+.box-tip {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.box-tip p {
+    color: var(--text-color-light);
+    font-size: 20px;
+    text-shadow: 1px 1px 1px var(--text-color-dark);
+}
+
+.words {
+    width: 100%;
+    height: 100%;
+}

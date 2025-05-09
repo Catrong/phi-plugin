@@ -13,7 +13,7 @@ export default class SongsInfo {
         this.id = data.id
         /** @type {string} 曲目 */
         this.song = data.song
-        /** @type {string} 小型曲绘 */
+        /** @type {string} 曲绘 */
         this.illustration = getInfo.getill(data.song)
         /** @type {boolean} 是否不参与猜字母 */
         this.can_t_be_letter = data.can_t_be_letter || false

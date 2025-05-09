@@ -121,7 +121,7 @@ export default class compute {
      * @returns 前导零数字
      */
     static ped(num, cover) {
-        return String("0".repeat(cover) + num).slice(-cover)
+        return num.toString().padStart(cover, '0')
     }
 
     /**

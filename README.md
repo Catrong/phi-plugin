@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/插件版本-0.9.8-9cf?style=flat-square)
+![version](https://img.shields.io/badge/插件版本-0.9.9.0-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.13.0-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
@@ -125,6 +125,8 @@ pnpm install -P
 | `#phi (ltr\|开字母)` | 根据字母猜曲名，#出/#open... 开指定的字母，#第n个/#nX.xxx 进行回答，#ans 获取答案
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名
+| `#phi chart <曲名> <难度>` | 查询phigros中某一谱面的详细信息
+| `#phi (addtag\|subtag\|retag) <曲名> <难度> <标签>` | 对某个标签赞成、反对或撤销表态，难度默认为IN
 | `#phi (comment\|cmt\|评论\|评价) <曲名> <难度?>(换行)<内容>` | 评论曲目，难度默认为IN
 | `#phi recmt <评论ID>` | 查看并确认是否删评，仅发送者和主人权限，需要二次确认
 | `#phi (table\|定数表) <定数>` | 查询phigros定数表（B站[@yuhao7370](space.bilibili.com/275661582)）
@@ -171,7 +173,7 @@ pnpm install -P
 | bind | 绑定功能 | /bind /unbind
 | b19 | 图片查分功能 | /pgr /update /info /list /pb30 /score /lvsco /chap /suggest
 | wb19 | 文字查分功能 | /data /best
-| song | 图鉴功能 | /song /ill /search /alias /rand /randclg /table /cmt /recmt
+| song | 图鉴功能 | /song /chart /ill /search /alias /rand /randclg /table /cmt /recmt /addtag /subtag /retag
 | ranklist | 排行榜功能，不会禁用用户排名 | /ranklist /godlist
 | fnc | 小功能 | /com /tips /lmtacc /new
 | tipgame | tip猜歌 | /tipgame

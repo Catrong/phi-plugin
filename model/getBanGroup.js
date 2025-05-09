@@ -48,6 +48,9 @@ export default new class getBanGroup {
                 return await this.redis(group, 'wb19')
             case 'song':
             case 'ill':
+            case 'chart':
+            case 'addtag':
+            case 'retag':
             case 'search':
             case 'alias':
             case 'randmic':

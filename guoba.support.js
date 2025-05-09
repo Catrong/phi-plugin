@@ -198,6 +198,12 @@ export function supportGuoba() {
                     component: 'Switch',
                 },
                 {
+                    field: 'allowChartTag',
+                    label: '谱面标签',
+                    bottomHelpMessage: '是否开启谱面标签功能，该功能目前暂无敏感词校验',
+                    component: 'Switch',
+                },
+                {
                     field: 'autoPullPhiIll',
                     label: '自动更新曲绘',
                     bottomHelpMessage: '开启后手动更新插件时自动更新曲绘文件',

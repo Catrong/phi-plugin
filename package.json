@@ -25,6 +25,8 @@
     "crypto-js": "^4.1.1",
     "csv": "^6.3.6",
     "csvtojson": "^2.0.10",
+    "echarts": "^5.6.0",
+    "echarts-wordcloud": "^2.1.0",
     "jszip": "^3.10.1",
     "node-csv": "^0.1.2",
     "pinyin-pro": "^3.15.4",

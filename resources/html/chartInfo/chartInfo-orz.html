@@ -1,0 +1,233 @@
+<head>
+    <link rel="stylesheet" href="./chartInfo.css" type="text/css" />
+    <script src="./echarts.js"></script>
+    <script src="./echarts-wordcloud.min.js"></script>
+</head>
+
+<body>
+    <div class="background">
+        <img
+            src="../../original_ill/illBlur/996.李化禹.png"
+            alt="曲绘-模糊"
+            id="bkg"
+        />
+    </div>
+    <div class="info-box">
+        <div class="basic-box">
+            <div class="ill-box">
+                <div class="box-title"><p>Illustration</p></div>
+                <div class="box-content dot-box">
+                    <div class="dot left top"></div>
+                    <div class="dot left bottom"></div>
+                    <div class="dot right top"></div>
+                    <div class="dot right bottom"></div>
+                    <img
+                        src="../../original_ill/ill/BetterGraphicAnimation.ルゼ.png"
+                        alt="{{illustration}}"
+                    />
+                </div>
+            </div>
+            <div class="basic-info">
+                <div class="box-title"><p>Basic Information</p></div>
+                <div class="box-content dot-box">
+                    <div class="dot left top"></div>
+                    <div class="dot left bottom"></div>
+                    <div class="dot right top"></div>
+                    <div class="dot right bottom"></div>
+                    <div class="info-content">
+                        <div class="content-item">
+                            <div class="content-title">
+                                <p>曲目</p>
+                            </div>
+                            <div class="content">
+                                <p>DESTRUCTION 3,2,1</p>
+                            </div>
+                        </div>
+                        <div class="content-item">
+                            <div class="content-title">
+                                <p>曲目时长</p>
+                            </div>
+                            <div class="content">
+                                <p>2'43''</p>
+                            </div>
+                        </div>
+                        <div class="content-item">
+                            <div class="content-title">
+                                <p>难度</p>
+                            </div>
+                            <div class="content">
+                                <p>Insane 00.0</p>
+                            </div>
+                        </div>
+                        <div class="content-item">
+                            <div class="content-title">
+                                <p>谱师</p>
+                            </div>
+                            <div class="content">
+                                <p>{Demolition,Devastation,Destruction}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-info">
+            <div class="box-title"><p>Chart Information</p></div>
+            <div class="box-content dot-box">
+                <div class="dot left top"></div>
+                <div class="dot left bottom"></div>
+                <div class="dot right top"></div>
+                <div class="dot right bottom"></div>
+                <div class="info-content">
+                    <div class="notes-box">
+                        <div class="content-title">
+                            <p>Notes</p>
+                        </div>
+                        <div class="content">
+                            <div class="notes-content tap-p">
+                                <p>1000</p>
+                                <p>Tap</p>
+                            </div>
+                            <div class="notes-content drag-p">
+                                <p>1000</p>
+                                <p>Drag</p>
+                            </div>
+                            <div class="notes-content hold-p">
+                                <p>1000</p>
+                                <p>Hold</p>
+                            </div>
+                            <div class="notes-content flick-p">
+                                <p>1000</p>
+                                <p>Flick</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="words-box">
+                        <div class="content-title">
+                            <p>Word Cloud</p>
+                        </div>
+                        <div class="box-tip">
+                            <p>{{tip}}</p>
+                        </div>
+                        <div class="words" id="words"></div>
+                    </div>
+                    <div class="notes-bar">
+                        <div class="content-title">
+                            <p>Notes Distribution</p>
+                        </div>
+                        <div class="bar-box" id="bar-box">
+                            <div class="bar" style="height: 80%">
+                                <div
+                                    class="bar-item TAP-BKG"
+                                    style="height: 20%"
+                                ></div>
+                                <div
+                                    class="bar-item DRAG-BKG"
+                                    style="height: 20%"
+                                ></div>
+                                <div
+                                    class="bar-item HOLD-BKG"
+                                    style="height: 20%"
+                                ></div>
+                                <div
+                                    class="bar-item FLICK-BKG"
+                                    style="height: 40%"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var chart = echarts.init(document.getElementById("words"));
+        chart.setOption({
+            series: [
+                {
+                    type: "wordCloud",
+                    shape: "square", //circle cardioid diamond triangle-forward triangle
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    right: 0,
+                    width: "100%",
+                    height: "100%",
+                    gridSize: 0, //值越大，word间的距离越大，单位像素
+                    sizeRange: [30, 100], //word的字体大小区间，单位像素
+                    rotationRange: [0, 0], //word的可旋转角度区间
+                    shrinkToFit: true, //是否收缩到容器内
+                    layoutAnimation: false, //是否开启动画
+                    textStyle: {
+                        fontFamily: "phi",
+                        // fontWeight: "bold",
+                        // Color can be a callback function or a color string
+                        color: function () {
+                            // Random color
+                            return (
+                                "rgb(" +
+                                [
+                                    Math.round(160 + Math.random() * 95),
+                                    Math.round(160 + Math.random() * 95),
+                                    Math.round(160 + Math.random() * 95),
+                                ].join(",") +
+                                ")"
+                            );
+                        },
+                        textShadow: "#fff",
+                    },
+                    data: [
+                        {
+                            name: "我喜欢你",
+                            value: 2,
+                        },
+                        {
+                            name: "你喜欢我",
+                            value: 2,
+                        },
+                        {
+                            name: "双指可解",
+                            value: 2,
+                        },
+                    ],
+                },
+            ],
+        });
+    </script>
+    <script>
+        function addBar() {
+            let barBox = document.getElementById("bar-box");
+            let abar = document.createElement("div");
+            abar.className = "bar";
+            abar.style.height = Math.floor(Math.random() * 100) + "%";
+            let remainingHeight = 100;
+            let aitem = document.createElement("div");
+            let height = Math.floor(Math.random() * remainingHeight);
+            aitem.className = "bar-item TAP-BKG";
+            aitem.style.height = height + "%";
+            abar.appendChild(aitem);
+            remainingHeight -= height;
+            aitem = document.createElement("div");
+            height = Math.floor(Math.random() * remainingHeight);
+            aitem.className = "bar-item DRAG-BKG";
+            aitem.style.height = height + "%";
+            abar.appendChild(aitem);
+            remainingHeight -= height;
+            aitem = document.createElement("div");
+            height = Math.floor(Math.random() * remainingHeight);
+            aitem.className = "bar-item HOLD-BKG";
+            aitem.style.height = height + "%";
+            abar.appendChild(aitem);
+            remainingHeight -= height;
+            aitem = document.createElement("div");
+            height = remainingHeight;
+            aitem.className = "bar-item FLICK-BKG";
+            aitem.style.height = height + "%";
+            abar.appendChild(aitem);
+            barBox.appendChild(abar);
+        }
+        for (let i = 0; i < 89; i++) {
+            addBar();
+        }
+    </script>
+</body>

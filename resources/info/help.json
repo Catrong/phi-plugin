@@ -108,6 +108,16 @@
                 "desc": "查询曲目图鉴<br>eg: /song 996"
             },
             {
+                "title": "/chart",
+                "eg": "/chart <曲名> <难度>",
+                "desc": "查询谱面详情"
+            },
+            {
+                "title": "/addtag<br>/subtag<br>/retag",
+                "eg": "/addtag <曲名> <难度> <标签>",
+                "desc": "为谱面添加标签，add为赞成，sub为反对，re为取消自己的表态<br>eg: /addtag df IN 双指可解"
+            },
+            {
                 "title": "/cmt",
                 "eg": "/cmt <曲名> <难度?>(换行)<内容>",
                 "desc": "评论曲目，难度默认为IN<br>eg: /cmt 996 HD<br>好玩"

@@ -32,6 +32,9 @@
  * | 'data'
  * | 'song'
  * | 'ill'
+ * | 'chart'
+ * | 'addtag'
+ * | 'retag'
  * | 'search'
  * | 'alias'
  * | 'randmic'
@@ -74,6 +77,7 @@
  * 系统设置
  * @typedef {'watchInfoPath'} watchInfoPath 监听信息文件
  * @typedef {'allowComment'} allowComment 曲目评论
+ * @typedef {'allowChartTag'} allowChartTag 曲目标签
  * @typedef {'autoPullPhiIll'} autoPullPhiIll 自动更新曲绘
  * @typedef {'isGuild'} isGuild 频道模式
  * @typedef {'TapTapLoginQRcode'} TapTapLoginQRcode 绑定二维码
@@ -112,6 +116,7 @@
  * |listScoreMaxNum
  * |watchInfoPath
  * |allowComment
+ * |allowChartTag
  * |autoPullPhiIll
  * |isGuild
  * |TapTapLoginQRcode

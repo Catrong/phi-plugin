@@ -9,7 +9,7 @@
 [![phi-plugin](https://img.shields.io/badge/GitHub仓库-phi--plugin-9cf?style=for-the-badge&logo=github)](https://github.com/Catrong/phi-plugin)
 [![phi-plugin](https://img.shields.io/badge/Gitee仓库-phi--plugin-9cf?style=for-the-badge&logo=gitee)](https://gitee.com/catrong/phi-plugin)
 
-![version](https://img.shields.io/badge/%E7%89%88%E6%9C%AC-0.9.8-9cf?style=for-the-badge)
+![version](https://img.shields.io/badge/%E7%89%88%E6%9C%AC-0.9.9.0-9cf?style=for-the-badge)
 
 ![version](https://img.shields.io/badge/Phigros-3.12.0-9cf?style=for-the-badge)
 
@@ -97,40 +97,44 @@ The following # can be replaced with /, and the command header can be customized
 | **Function Name** | **Function Description**
 | :- | :-
 | `#phi help` | Get help
-| `#phi (bind\|绑定)xxx` | Bind sessionToken
-| `#phi (unbind\|解绑)` | Delete sessionToken and archive records
+| `#phi bind xxx` | Bind sessionToken
+| `#phi unbind` | Delete sessionToken and archive records
 | `#phi clean` | Delete all records
-| `#phi (update\|更新存档)` | Update archive
-| `#phi (rks\|pgr\|b19)` | Query rks, will provide the resulting b21 result
-| `杠批比三零` | Same as above
+| `#phi update` | Update archive
+| `#phi (rks\|pgr\|b30)` | Query rks, will provide the resulting b21 result
+| `#phi p b30` | Same as above but arcaea
 | `#phi info(1\|2)?` | Query personal statistics
 | `#phi lmtacc [0-100]` | Calculate RKS after limiting the lowest ACC
-| `#phi (lvsco(re)\|scolv) <定数范围> <难度>` | Get interval scores
-| `#phi chap <章节名称\|help>` | Get chapter scores
-| `#phi list <定数范围> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | Get interval scores for each song
+| `#phi (lvsco(re)\|scolv) <difficulty range> <rank>` | Get interval scores
+| `#phi chap <chapter name\|help>` | Get chapter scores
+| `#phi list <difficulty range> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | Get interval scores for each song
 | `#phi best1(+)` | Query text version b19 (or more), up to b99
-| `#phi (score\|单曲成绩)xxx` | Get single song score and push score suggestions for this song
-| `#phi (suggest\|推分)` | Get the song that can make RKS +0.01 and the required ACC
-| `#phi (ranklist\|排行榜)` | Get RKS leaderboard
+| `#phi scor exxx` | Get single song score and push score suggestions for this song
+| `#phi suggest` | Get the song that can make RKS +0.01 and the required ACC
+| `#phi ranklist` | Get RKS leaderboard
 | `#phi data` | Get user data quantity
-| `#phi (guess\|猜曲绘)` | Guess the song, answer without special commands, reply directly, if it is not the song name, it will not speak, if it is an incorrect song name, it will reply. #ans end
-| `#phi (ltr\|开字母)` | Guess the song name based on the letters, #出/#open... open the specified letter, #第n个/#nX.xxx answer, #ans get the answer
-| `#phi (tipgame\|提示猜曲)` | Guess the song name based on the prompt, #tip get the next prompt, #ans get the answer, answer directly reply
-| `#phi (song\|曲) xxx` | Query a song in phigros, support setting aliases
-| `#phi (table\|定数表) <difficuty>` | phigros chart constant table (BiliBili @yuhao7370)
+| `#phi guess` | Guess the song, answer without special commands, reply directly, if it is not the song name, it will not speak, if it is an incorrect song name, it will reply. #ans end
+| `#phi ltr` | Guess the song name based on the letters, #出/#open... open the specified letter, #第n个/#nX.xxx answer, #ans get the answer
+| `#phi tipgame` | Guess the song name based on the prompt, #tip get the next prompt, #ans get the answer, answer directly reply
+| `#phi song xxx` | Query a song in phigros, support setting aliases
+| `#phi chart <song name> <difficulty>` | Query detailed information of a specific chart in Phigros
+| `#phi (addtag\|subtag\|retag) <song name> <difficulty> <tag>` | Approve, oppose, or revoke a tag for a song. The default difficulty is IN
+| `#phi (comment\|cmt\|review\|evaluate) <song name> <difficulty?> (newline) <content>` | Comment on a song. The default difficulty is IN
+| `#phi recmt <comment ID>` | View and confirm whether to delete a comment. Only the sender and the owner have permission, and a second confirmation is required
+| `#phi table <difficuty>` | phigros chart constant table (BiliBili @yuhao7370)
 | `#phi new` | Query updated songs
 | `#phi tips` | Random tips
 | `#phi jrrp` | Today's fortune
 | `#phi nick xxx` | Query the alias of a song
-| `#phi (rand\|随机) [定数] [难度]` | Random song based on conditions, conditions support difficulty, constant, difficulty can be multiple choices, constant is separated by -
-| `#phi randclg [课题总值] [难度] ([曲目定数范围])` | Random task eg: /rand 40 (IN 13-15)
-| `#phi (曲绘\|ill\|Ill) xxx` | Query the song illustration in phigros
-| `#phi (search\|查询\|检索) <条件 值>` | Search for songs in the song library, support BPM constant amount, conditions bpm dif cmb, values can be intervals, separated by -
-| `#phi (theme\|主题) [0-2]` | Switch drawing theme, only effective for b19 update
-| `sign/签到` | Sign in to get Notes
-| `task/我的任务` | View your tasks
-| `retask/刷新任务` | Refresh tasks, need to spend 20Notes
-| `#phi (send\|送\|转) <目标> <数量>` | Send Notes to the target, support @ or QQ number
+| `#phi rand [difficulty range] [rank]` | Random song based on conditions, conditions support difficulty, constant, difficulty can be multiple choices, constant is separated by -
+| `#phi randclg [clg socre range] [rank] ([song's difficulty range])` | Random task eg: /rand 40 (IN 13-15)
+| `#phi ill xxx` | Query the song illustration in phigros
+| `#phi search <case value>` | Search for songs in the song library, support BPM constant amount, conditions bpm dif cmb, values can be intervals, separated by -
+| `#phi theme [0-2]` | Switch drawing theme, only effective for b19 update
+| `sign` | Sign in to get Notes
+| `task` | View your tasks
+| `retask` | Refresh tasks, need to spend 20Notes
+| `#phi send <target> <num>` | Send Notes to the target, support @ or QQ number
 
 #### **The following are management functions**
 
@@ -158,7 +162,7 @@ The following # can be replaced with /, and the command header can be customized
 | bind | Bind function | /bind /unbind
 | b19 | Image score query function | /pgr /update /info /list /pb30 /score /lvsco /chap /suggest
 | wb19 | Text score query function | /data /best
-| song | Illustration function | /song /ill /search /alias /rand /randclg /table
+| song | Illustration function | /song /chart /ill /search /alias /rand /randclg /table /cmt /recmt /addtag /subtag /retag
 | ranklist | Leaderboard function, will not disable user ranking | /ranklist /godlist
 | fnc | Small functions | /com /tips /lmtacc /new
 | tipgame | Tip guessing game | /tipgame

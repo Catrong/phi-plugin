@@ -53,20 +53,20 @@ export default new class getComment {
         })
         getFile.SetFile(dataPath, this.data);
 
-        chokidar.watch(dataPath).on('change', () => {
-            logger.info('[phi-plugin] 重载评论区')
-            this.data = getFile.FileReader(dataPath);
-            this.map = {}
-            if (!this.data) {
-                this.data = {};
-                getFile.SetFile(dataPath);
-            }
-            Object.keys(this.data).forEach((/**@type {idString} */ id) => {
-                this.data[id].forEach((comment) => {
-                    this.map[comment.thisId] = id
-                })
-            })
-        });
+        // chokidar.watch(dataPath).on('change', () => {
+        //     logger.info('[phi-plugin] 重载评论区')
+        //     this.data = getFile.FileReader(dataPath);
+        //     this.map = {}
+        //     if (!this.data) {
+        //         this.data = {};
+        //         getFile.SetFile(dataPath);
+        //     }
+        //     Object.keys(this.data).forEach((/**@type {idString} */ id) => {
+        //         this.data[id].forEach((comment) => {
+        //             this.map[comment.thisId] = id
+        //         })
+        //     })
+        // });
     }
 
     /**
