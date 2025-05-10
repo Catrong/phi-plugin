@@ -68,7 +68,7 @@
         </div>
         <div class="rks_line">
             <div class="svg-box">
-                {{if me.rks_history[0]}}
+                {{if me.rks_history?.[0]}}
                 <div class="value_box">
                     <p>{{me.rks_range[1].toFixed(4)}}</p>
                     <p>{{me.rks_range[0].toFixed(4)}}</p>
