@@ -11,17 +11,21 @@ export default class LevelRecordInfo {
         this.fc = data.fc;
         this.score = data.score;
         this.acc = data.acc;
+        this.id = id;
 
         let info = getInfo.info(getInfo.idgetsong(id), true)
 
+        this.rank = getInfo.Level[rank] //AT IN HD EZ LEGACY
+        this.Rating = Rating(this.score, this.fc) //V S A 
         if (!info) {
+            this.song = id;
+            this.difficulty = 0;
+            this.rks = 0;
             return
         }
 
-        this.rank = getInfo.Level[rank] //AT IN HD EZ LEGACY 
         this.song = info.song //曲名
         this.illustration = getInfo.getill(this.song) //曲绘链接
-        this.Rating = Rating(this.score, this.fc) //V S A 
 
 
         if (info.chart && info.chart[this.rank]?.difficulty) {
@@ -41,7 +45,7 @@ function Rating(score, fc) {
         return 'phi'
     else if (fc)
         return 'FC'
-    else if (!score) 
+    else if (!score)
         return 'NEW'
     else if (score < 700000)
         return 'F'
