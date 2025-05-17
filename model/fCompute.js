@@ -420,7 +420,7 @@ export default class compute {
             return 1
         }
         //首先第一次去除空格和其他符号，并转换为小写
-        const pattern = /[\s~`!@#$%^&*()\-=_+\]{}|;:'",<.>/?！￥…（）—【】、；‘：“”，《。》？↑↓←→]/g
+        const pattern = /[\s~`!@#$%^&*()\-=_+\[\]「」『』{}|;:'",<.>/?！￥…（）—【】、；‘’：“”，《。》？↑↓←→]/g
         s1 = s1.replace(pattern, '').toLowerCase()
         s2 = s2.replace(pattern, '').toLowerCase()
         let m = 0 //匹配的字符数量
