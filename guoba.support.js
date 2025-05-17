@@ -118,6 +118,18 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'commentsAPage',
+                    label: '每页渲染评论',
+                    bottomHelpMessage: '/song 每页最大渲染评论数量',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 1,
+                        max: 20,
+                        placeholder: '请输入每页最大渲染评论数量',
+                    },
+                },
+                {
                     label: '',
                     component: 'Divider'
                 },

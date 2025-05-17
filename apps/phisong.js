@@ -107,6 +107,8 @@ export class phisong extends plugin {
         }
 
         let msg = e.msg.replace(/[#/](.*?)(曲|song)(\s*)/, "")
+        let page = msg.match(/-p\s+([0-9]+)/)?.[1];
+        msg = msg.replace(/-p\s+([0-9]+)/, "")
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} song <曲名>`)
             return true
@@ -124,16 +126,20 @@ export class phisong extends plugin {
                     let commentData = getComment.get(infoData.id);
                     for (let item of commentData) {
                         let save = await getSave.getSaveBySessionToken(item.sessionToken);
-                        item.PlayerId = save.saveInfo.PlayerId;
+                        item.PlayerId = save.saveInfo.PlayerId.length > 15 ? save.saveInfo.PlayerId.slice(0, 12) + '...' : save.saveInfo.PlayerId;
                         item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
                         item.comment = fCompute.convertRichText(item.comment);
                         item.time = fCompute.date_to_string(item.time)
                     }
+                    if (!page) page = 1
+                    let commentsAPage = Config.getUserCfg('config', 'commentsAPage') || 1
+                    let maxPage = Math.ceil(commentData.length / commentsAPage)
+                    page = Math.max(Math.min(page, maxPage), 1)
                     data = {
                         ...infoData,
                         comment: {
-                            command: `当前共有${commentData.length}条评论，发送/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <定级?>(换行)<内容> 进行评论`,
-                            list: commentData
+                            command: `当前共有${commentData.length}条评论，第${Math.min(page, maxPage)}页，共${maxPage}页，发送/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <定级?>(换行)<内容> 进行评论，查询时加上 -p <页码> 选择页数`,
+                            list: commentData.slice((commentsAPage * (page - 1)), commentsAPage * page - 1)
                         }
                     };
                 }
@@ -709,8 +715,9 @@ export class phisong extends plugin {
          * @type {allLevelKind}
          */
         let rankKind = msg.match(/ (EZ|HD|IN|AT|LEGACY)\n/i)?.[1] || ''
+        rankKind = rankKind.toUpperCase()
         let rankNum = 0;
-        switch (rankKind.toUpperCase()) {
+        switch (rankKind) {
             case 'EZ':
                 rankNum = 0;
                 break;

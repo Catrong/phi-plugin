@@ -14,6 +14,9 @@ waitingTimeout: 10000
 #  并行渲染数量
 renderNum: 1
 
+#  每页最大渲染评论数量
+commentsAPage: 10
+
 #  b19最大成绩数量
 B19MaxNum: 50
 
