@@ -244,6 +244,16 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'phigrousUpdateUrl',
+                    label: '更新信息API',
+                    bottomHelpMessage: 'Phigros更新信息API地址',
+                    component: 'Input',
+                    required: false,
+                    componentProps: {
+                        placeholder: '请输入API地址',
+                    },
+                },
+                {
                     field: 'otherinfo',
                     label: '曲库',
                     bottomHelpMessage: '使用曲库的模式，若启用自定义则重名的以自定义为准',

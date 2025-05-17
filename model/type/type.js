@@ -84,6 +84,7 @@
  * @typedef {'WordB19Img'} WordB19Img 文字版B19曲绘图片
  * @typedef {'WordSuggImg'} WordSuggImg Suggest曲绘图片
  * @typedef {'cmdhead'} cmdhead 命令头
+ * @typedef {'phigrousUpdateUrl'} phigrousUpdateUrl Phigrous更新日志API
  * @typedef {'otherinfo'} otherinfo 曲库
  * 猜曲绘设置
  * @typedef {'GuessTipCd'} GuessTipCd 提示间隔
@@ -123,6 +124,7 @@
  * |WordB19Img
  * |WordSuggImg
  * |cmdhead
+ * |phigrousUpdateUrl
  * |otherinfo
  * |GuessTipCd
  * |GuessTipRecall

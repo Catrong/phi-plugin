@@ -10,6 +10,7 @@ const yunzai_ver = `v${cfg.package.version}`
 let logs = {}
 let changelogs = []
 let currentVersion
+let phigros_ver = ''
 let versionCount = -1
 
 const getLine = function (line) {
@@ -84,11 +85,16 @@ try {
         if (reg) {
             currentVersion = 'v' + reg[1]
         }
+        let reg2 = /https:\/\/img.shields.io\/badge\/Phigros-(.*)-9cf\?style=flat-square/.exec(README)
+        if (reg2) {
+            phigros_ver = reg2[1]
+        }
     }
 } catch (err) { }
 
 let Version = {
     ver: currentVersion,
+    phigros: phigros_ver,
     yunzai: yunzai_ver,
     logs: changelogs,
 };

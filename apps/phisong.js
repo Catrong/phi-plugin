@@ -13,6 +13,7 @@ import { segment } from 'oicq'
 import getComment from '../model/getComment.js'
 import getSave from '../model/getSave.js'
 import getChartTag from '../model/getChartTag.js'
+import Version from '../components/Version.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
@@ -622,8 +623,11 @@ export class phisong extends plugin {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
+        let info = await (await fetch(Config.getUserCfg('config','phigrousUpdateUrl'))).json()
 
-        let ans = '新曲速递：\n'
+        let ans = ''
+        ans+=`最新版本：${info?.data?.list?.[0]?.version_label}\n信息文件版本：${Version.phigros}\n更新信息：\n${info?.data?.list?.[0]?.whatsnew?.text?.replace(/<\/?div>/g,'')?.replace(/<br\/>/g,'\n')}\n`
+        ans += '新曲速递：\n'
         for (let i in getInfo.updatedSong) {
             let info = getInfo.info(getInfo.updatedSong[i])
             ans += `${info.song}\n`
