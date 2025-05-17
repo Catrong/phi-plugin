@@ -920,7 +920,7 @@ export class phisong extends plugin {
             flick: chart.flick,
             combo: chart.combo,
             distribution: chart.distribution,
-            tip: allowChartTag ? `发送 /${Config.getUserCfg('config', 'cmdhead')} addtag <曲名> <rank> <tag> 来添加标签哦！` : `标签词云功能暂时被管理员禁用了哦！快去联系BOT主开启吧！`,
+            tip: allowChartTag ? `发送 /${Config.getUserCfg('config', 'cmdhead')} addtag <曲名> <难度> <tag> 来添加标签哦！` : `标签词云功能暂时被管理员禁用了哦！快去联系BOT主开启吧！`,
             chartLength: `${Math.floor(chart.maxTime / 60)}:${Math.floor(chart.maxTime % 60).toString().padStart(2, '0')}`,
             words: allowChartTag ? getChartTag.get(info.id, rank) : '',
         }
@@ -939,9 +939,9 @@ export class phisong extends plugin {
         let msg = e.msg.replace(/[#/](.*?)(addtag|subtag|retag)(\s*)/, "")
 
         /** @type {levelKind} */
-        let rank = msg.match(/\s*(EZ|HD|IN|AT)/i)?.[1] || 'IN'
+        let rank = msg.match(/\s+(EZ|HD|IN|AT)\s+/i)?.[1] || 'IN'
         rank = rank.toUpperCase()
-        msg = msg.replace(/\s*(EZ|HD|IN|AT)/i, '')
+        msg = msg.replace(/\s+(EZ|HD|IN|AT)/i, '')
 
         let tag = msg.match(/(?<=\s)[^\s]+$/)?.[0]
         if (!tag) {
