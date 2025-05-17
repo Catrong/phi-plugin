@@ -623,10 +623,12 @@ export class phisong extends plugin {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        let info = await (await fetch(Config.getUserCfg('config','phigrousUpdateUrl'))).json()
-
         let ans = ''
-        ans+=`最新版本：${info?.data?.list?.[0]?.version_label}\n信息文件版本：${Version.phigros}\n更新信息：\n${info?.data?.list?.[0]?.whatsnew?.text?.replace(/<\/?div>/g,'')?.replace(/<br\/>/g,'\n')}\n`
+        try {
+            let info = await (await fetch(Config.getUserCfg('config', 'phigrousUpdateUrl'))).json()
+            ans += `最新版本：${info?.data?.list?.[0]?.version_label}\n更新信息：\n${info?.data?.list?.[0]?.whatsnew?.text?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
+        } catch (e) { }
+        ans += `信息文件版本：${Version.phigros}\n`
         ans += '新曲速递：\n'
         for (let i in getInfo.updatedSong) {
             let info = getInfo.info(getInfo.updatedSong[i])
