@@ -1,0 +1,44 @@
+name: 功能建议
+description: 提出新功能建议或改进意见
+title: "[建议] "
+labels: ["enhancement", "待评估"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您为 Phi-Plugin 提出建议！请详细描述您的想法，这将帮助我们更好地理解和评估。
+
+  - type: textarea
+    attributes:
+      label: 功能描述
+      description: 请详细描述您期望的新功能
+      placeholder: 详细描述这个功能是什么，解决什么问题
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 使用场景
+      description: 描述这个功能在什么场景下使用
+      placeholder: 例如：在群里面猜曲绘（？
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 实现建议
+      description: 如果您有具体的实现思路，请描述
+      placeholder: 可以通过什么方式实现这个功能
+
+  - type: checkboxes
+    attributes:
+      label: 贡献意向
+      options:
+        - label: 我愿意参与此功能的开发并提交 PR
+        - label: 我可以协助测试此功能
+        - label: 我可以提供更多建议和反馈
+
+  - type: textarea
+    attributes:
+      label: 补充说明
+      description: 其他需要补充的信息

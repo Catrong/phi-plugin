@@ -1,0 +1,124 @@
+name: Bug 报告
+description: 创建一份 Bug 报告以帮助我们改进
+title: "[Bug] "
+labels: ["bug", "待处理"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您对项目的支持与关注！提交 Bug 报告前，请确保：
+        1. 已经使用最新版本的插件
+        2. 已经搜索过现有 issues，确认没有重复问题
+
+  - type: checkboxes
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已确认使用的是最新版本的 Phi-Plugin
+          required: true
+        - label: 我已搜索过[现有 issues](https://github.com/Catrong/phi-plugin/issues)，确认没有重复问题
+          required: true
+
+  - type: dropdown
+    attributes:
+      label: Yunzai 版本
+      options:
+        - Miao-Yunzai
+        - TRSS-Yunzai
+        - Yunzai-Bot
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Node.js 版本
+      description: 请运行 `node -v` 获取版本号
+      placeholder: 例如：v16.20.0
+
+  - type: dropdown
+    attributes:
+      label: 使用的协议端
+      options:
+        - ICQQ
+        - OneBotv11
+        - ComWeChat
+        - GSUIDCore
+        - QQBot
+        - QQ频道
+        - 微信
+        - KOOK
+        - Telegram
+        - Discord
+        - OPQBot
+        - Lagrange
+        - 其他
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: 操作系统
+      options:
+        - Windows
+        - Linux
+        - MacOS
+        - Android
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 问题描述
+      description: 请简要描述您遇到的问题
+      placeholder: |
+        1. xxx绑定不了
+        2. xxx渲染出错
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 复现步骤
+      description: 请详细描述如何复现这个问题
+      placeholder: |
+        1. 发送「...」指令
+        2. 出现问题
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 期望行为
+      description: 描述您期望看到的结果
+
+  - type: textarea
+    attributes:
+      label: 实际行为
+      description: 描述实际发生的情况
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 错误日志
+      description: 请提供相关的错误日志（如果有）
+      render: shell
+
+  - type: dropdown
+    attributes:
+      label: 问题频率
+      options:
+        - 必现（100%）
+        - 经常（约75%）
+        - 偶尔（约50%）
+        - 较少（约25%）
+        - 随机（无规律）
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 补充说明
+      description: 其他需要补充的信息
