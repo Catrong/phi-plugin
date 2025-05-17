@@ -245,20 +245,6 @@ class getdata {
     async buildingRecord(e, User) {
         let old = await this.getsave(e.user_id)
 
-        if (old) {
-            if (old.session) {
-                if (old.session == User.session) {
-                    // send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
-                } else {
-                    send.send_with_At(e, `检测到新的sessionToken，将自动更换绑定。如果需要删除统计记录请 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
-
-                    await getSave.add_user_token(e.user_id, User.session)
-                    old = await this.getsave(e.user_id)
-
-                }
-            }
-        }
-
         try {
             let save_info = await User.getSaveInfo()
             if (old && old.saveInfo.modifiedAt.iso.toISOString() == save_info.modifiedAt.iso) {
@@ -285,9 +271,21 @@ class getdata {
             logger.error(err)
             return false
         }
-
-
         let now = new Save(User)
+
+        if (old) {
+            if (old.session) {
+                if (old.session == User.session) {
+                    // send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
+                } else {
+                    send.send_with_At(e, `检测到新的sessionToken，将自动更换绑定。如果需要删除统计记录请 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
+
+                    await getSave.add_user_token(e.user_id, User.session)
+                    old = await this.getsave(e.user_id)
+
+                }
+            }
+        }
         // await now.init()
         /**更新 */
         let history = await getSave.getHistory(e.user_id)

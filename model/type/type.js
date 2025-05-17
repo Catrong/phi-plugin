@@ -141,3 +141,100 @@
  * |VikaToken
 * } configName 全部设置
 */
+
+
+/**
+ * @typedef {object} ori_record
+ * @property {number} score
+ * @property {number} acc
+ * @property {number} fc
+ */
+
+/**
+ * @typedef {object} gameFile
+ * @property {string} __type
+ * @property {string} bucket
+ * @property {string} createdAt
+ * @property {string} key
+ * @property {object} metaData
+ * @property {string} mime_type
+ * @property {string} name
+ * @property {string} objectId
+ * @property {string} provider
+ * @property {string} updatedAt
+ * @property {string} url
+ * 
+ * @typedef {object} modifiedAt
+ * @property {string} __type
+ * @property {string} iso
+ * 
+ * @typedef {object} summary
+ * @property {string} updatedAt
+ * @property {number} saveVersion
+ * @property {number} challengeModeRank
+ * @property {number} rankingScore
+ * @property {number} gameVersion
+ * @property {string} avatar
+ * @property {number[]} cleared
+ * @property {number[]} fullCombo
+ * @property {number[]} phi
+ * 
+ * @typedef {object} saveInfo
+ * @property {string} createdAt
+ * @property {gameFile} gameFile
+ * @property {modifiedAt} modifiedAt
+ * @property {string} name
+ * @property {string} objectId
+ * @property {summary} summary
+ * @property {{ '*': object }} ACL
+ * @property {{ 'taptap': object }} authData
+ * @property {string} avatar
+ * @property {boolean} emailVerified
+ * @property {boolean} mobilePhoneVerified
+ * @property {string} nickname
+ * @property {phigrosToken} sessionToken
+ * @property {string} shortId
+ * @property {string} username
+ * @property {string} updatedAt
+ * @property {{'__type': "Pointer", 'className': "_User", 'objectId': string}} user
+ * @property {string} PlayerId
+ * 
+ * @typedef {object} gameProgress
+ * @property {boolean} isFirstRun
+ * @property {boolean} legacyChapterFinished
+ * @property {boolean} alreadyShowCollectionTip
+ * @property {boolean} alreadyShowAutoUnlockINTip
+ * @property {string} completed
+ * @property {number} songUpdateInfo
+ * @property {number} challengeModeRank
+ * @property {number[]} money
+ * @property {number} unlockFlagOfSpasmodic
+ * @property {number} unlockFlagOfIgallta
+ * @property {number} unlockFlagOfRrharil
+ * @property {number} flagOfSongRecordKey
+ * @property {number} randomVersionUnlocked
+ * @property {boolean} chapter8UnlockBegin
+ * @property {boolean} chapter8UnlockSecondPhase
+ * @property {boolean} chapter8Passed
+ * @property {number} chapter8SongUnlocked
+ * 
+ * @typedef {object} gameuser
+ * @property {string} name
+ * @property {string} version
+ * @property {boolean} showPlayerId
+ * @property {string} selfIntro
+ * @property {string} avatar
+ * @property {string} background
+ * @property {string} CLGMOD
+ * 
+ * @typedef {{[id:idString]: ori_record[]}} gameRecord
+ * 
+ * @typedef {object} oriSave
+ * @property {phigrosToken} session
+ * @property {saveInfo} saveInfo
+ * @property {string} saveUrl
+ * @property {number} Recordver
+ * @property {gameProgress} gameProgress
+ * @property {gameuser} gameuser
+ * @property {gameRecord} gameRecord
+ */
