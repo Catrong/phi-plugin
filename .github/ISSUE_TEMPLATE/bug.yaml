@@ -42,16 +42,17 @@ body:
       options:
         - ICQQ
         - OneBotv11
-        - ComWeChat
-        - GSUIDCore
+        - NapCat-Adapter
+        - Lagrange
         - QQBot
         - QQ频道
+        - ComWeChat
+        - GSUIDCore
         - 微信
         - KOOK
         - Telegram
         - Discord
         - OPQBot
-        - Lagrange
         - 其他
     validations:
       required: true
