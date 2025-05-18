@@ -36,6 +36,12 @@ body:
       description: 请运行 `node -v` 获取版本号
       placeholder: 例如：v16.20.0
 
+  - type: input
+    attributes:
+      label: 出现问题的SessionToken
+      description: 上传SessionToken有助于开发者测试（不是必须，请注意数据保护）
+      placeholder: 123456abcdef
+
   - type: dropdown
     attributes:
       label: 使用的协议端
