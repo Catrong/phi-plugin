@@ -58,7 +58,7 @@ export class phiuser extends plugin {
                 send.send_with_At(e, `请先更新数据哦！\n/${Config.getUserCfg('config', 'cmdhead')} update`)
             }
         } else {
-            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>\n如果不知道自己的Token可以通过扫码绑定哦！\n如果不知道命令可以用/phihelp查看哦！`)
         }
         return true
     }
