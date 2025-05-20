@@ -43,8 +43,8 @@ export { apps }
 
 if (!errvis) {
     logger.mark(chalk.rgb(178, 233, 250)('--------------------------------------'))
-    logger.mark(chalk.rgb(0, 183, 240)(`|phi插件 ${Version.ver} 载入完成~`))
-    logger.mark(`|作者@Cartong`)
+    logger.mark(chalk.rgb(0, 183, 240)(`|phi插件${Version.ver}载入完成~`))
+    logger.mark(`|作者：@Cartong`)
     logger.mark(chalk.rgb(0, 183, 240)(`|仓库地址：`))
     logger.mark(`|https://github.com/Catrong/phi-plugin`)
     logger.mark((chalk.rgb(0, 183, 240)`|本项目云存档功能由 7aGiven/PhigrosLibrary 改写而来`))
