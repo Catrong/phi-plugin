@@ -22,7 +22,7 @@
 
 ### 介绍
 
-`phi-plugin` 为查询Phigros信息的插件，包括b30、score、userinfo以及更多Phigros相关功能，有相关的建议和问题可以在issues中提出，欢迎PR。
+`phi-plugin` 为查询Phigros信息的插件，包括b30、score、userinfo以及更多Phigros相关功能，有相关的建议和问题可以在[Issues](/Catrong/phi-plugin/issues)中提出，欢迎[PR](/Catrong/phi-plugin/pulls)。
 
 具体功能可在安装插件后 通过 `/phihelp` 查看详细指令
 
@@ -129,7 +129,7 @@ pnpm install -P
 | `#phi (addtag\|subtag\|retag) <曲名> <难度> <标签>` | 对某个标签赞成、反对或撤销表态，难度默认为IN
 | `#phi (comment\|cmt\|评论\|评价) <曲名> <难度?>(换行)<内容>` | 评论曲目，难度默认为IN
 | `#phi recmt <评论ID>` | 查看并确认是否删评，仅发送者和主人权限，需要二次确认
-| `#phi (table\|定数表) <定数>` | 查询phigros定数表（B站[@yuhao7370](space.bilibili.com/275661582)）
+| `#phi (table\|定数表) <定数>` | 查询phigros定数表（定数表 by Rhythematics）
 | `#phi new` | 查询更新的曲目
 | `#phi tips` | 随机tips
 | `#phi jrrp` | 今日人品
