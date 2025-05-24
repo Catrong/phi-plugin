@@ -181,11 +181,11 @@ async function makeLargeLine(save) {
         },
         F3: {
             title: 'Floor 3',
-            list: b30Data.b19_list.slice(27, 30)
+            list: b30Data.b19_list.slice(24, 27)
         },
         L3: {
             title: 'Overflow 3',
-            list: b30Data.b19_list.slice(30, 33)
+            list: b30Data.b19_list.slice(27, 30)
         }
     }
     return {
