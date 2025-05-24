@@ -700,7 +700,7 @@ export class phib19 extends plugin {
 
         let chap = fCompute.fuzzySearch(msg, getInfo.chapNick)[0]?.value
 
-        if (!chap) {
+        if (!chap && msg != 'ALL') {
             send.send_with_At(e, `未找到${msg}章节QAQ！可以使用 /${Config.getUserCfg('config', 'cmdhead')} chap help 来查询支持的名称嗷！`)
             return false
         }
