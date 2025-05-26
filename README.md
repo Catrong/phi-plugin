@@ -171,11 +171,11 @@ pnpm install -P
 | 全部 | 全部功能 | 所有
 | help | 帮助功能 | /help /tkhelp
 | bind | 绑定功能 | /bind /unbind
-| b19 | 图片查分功能 | /pgr /update /info /list /pb30 /score /lvsco /chap /suggest
+| b19 | 图片查分功能 | /pgr /update /info /list /pb30 /p30 /lmtacc /score /lvsco /chap /suggest
 | wb19 | 文字查分功能 | /data /best
 | song | 图鉴功能 | /song /chart /ill /search /alias /rand /randclg /table /cmt /recmt /addtag /subtag /retag
 | ranklist | 排行榜功能，不会禁用用户排名 | /ranklist /godlist
-| fnc | 小功能 | /com /tips /lmtacc /new
+| fnc | 小功能 | /com /tips /new
 | tipgame | tip猜歌 | /tipgame
 | guessgame | 猜歌 | /guess
 | ltrgame | 猜字母 | /letter /ltr

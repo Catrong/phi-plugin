@@ -142,11 +142,11 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | all | All features | All |
 | help | Help | /help /tkhelp |
 | bind | Binding | /bind /unbind |
-| b19 | Image queries | /pgr /update /info /list /pb30 /score /lvsco /chap /suggest |
+| b19 | Image queries | /pgr /update /info /list /pb30 /p30 /lmtacc /score /lvsco /chap /suggest |
 | wb19 | Text queries | /data /best |
 | song | Song info | /song /chart /ill /search /alias /rand /randclg /table /cmt /recmt /addtag /subtag /retag |
 | ranklist | Leaderboards | /ranklist /godlist |
-| fnc | Utilities | /com /tips /lmtacc /new |
+| fnc | Utilities | /com /tips /new |
 | tipgame | Hint game | /tipgame |
 | guessgame | Guess game | /guess |
 | ltrgame | Letter game | /letter /ltr |

@@ -330,24 +330,55 @@ export class phib19 extends plugin {
             return false
         }
 
-        let record = save.findAccRecord(acc)
 
-        let phi = save.findAccRecord(100, true)
+        let nnum = 33
 
-        let ans = 0
+        let plugin_data = await get.getpluginData(e.user_id)
 
-        if (phi) {
-            ans += phi[0].rks
+
+        if (!Config.getUserCfg('config', 'isGuild'))
+            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+
+        let save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [acc, 100] }])
+        let stats = await save.getStats()
+
+
+        let dan = await get.getDan(e.user_id)
+        let money = save.gameProgress.money
+        let gameuser = {
+            avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save_b19.com_rks,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: save.gameuser.selfIntro,
+            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
+            dan: dan,
         }
 
-        for (let i in record) {
-            if (i == 19) break
-            ans += record[i].rks
+        let data = {
+            phi: save_b19.phi,
+            b19_list: save_b19.b19_list,
+            PlayerId: gameuser.PlayerId,
+            Rks: save_b19.com_rks.toFixed(4),
+            Date: save.saveInfo.summary.updatedAt,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            dan: await get.getDan(e.user_id),
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+            theme: plugin_data?.plugin_data?.theme || 'star',
+            gameuser,
+            nnum,
+            stats,
+            spInfo: `ACC is limited to ${acc}%`,
         }
 
-        ans /= 20
-
-        send.send_with_At(e, `acc: ${acc}%\nRKS: ${ans}`)
+        let res = [await altas.b19(e, data)]
+        if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 0.1) {
+            res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+        }
+        send.send_with_At(e, res)
 
     }
 
