@@ -266,6 +266,22 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'openPhiPluginApi',
+                    label: '联合查分',
+                    bottomHelpMessage: '是否启用Phigros联合查分API',
+                    component: 'Switch',
+                },
+                {
+                    field: 'phiPluginApiUrl',
+                    label: 'API地址',
+                    bottomHelpMessage: 'Phigros联合查分API地址',
+                    component: 'Input',
+                    required: false,
+                    componentProps: {
+                        placeholder: '请输入API地址',
+                    },
+                },
+                {
                     field: 'otherinfo',
                     label: '曲库',
                     bottomHelpMessage: '使用曲库的模式，若启用自定义则重名的以自定义为准',

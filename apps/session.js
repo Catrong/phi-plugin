@@ -1,5 +1,4 @@
 import plugin from '../../../lib/plugins/plugin.js'
-import PhigrosUser from '../lib/PhigrosUser.js'
 import get from '../model/getdata.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
@@ -11,6 +10,12 @@ import common from '../../../lib/common/common.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
 import { redisPath } from "../model/constNum.js"
+import makeRequest from '../model/makeRequest.js'
+import makeRequestFnc from '../model/makeRequestFnc.js'
+import getUpdateSave from '../model/getUpdateSave.js'
+import getSaveFromApi from '../model/getSaveFromApi.js'
+import saveHistory from '../model/class/saveHistory.js'
+import getNotes from '../model/getNotes.js'
 
 
 export class phisstk extends plugin {
@@ -22,7 +27,7 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(绑定|bind)(.*([0-9a-zA-Z]{25}|qrcode).*)?$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(绑定|bind).*$`,
                     fnc: 'bind'
                 },
                 {
@@ -55,11 +60,41 @@ export class phisstk extends plugin {
 
         let sessionToken = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
 
-        sessionToken = sessionToken ? sessionToken[0] : null
+        let localPhigrosToken = await getSave.get_user_token(e.user_id)
+
+        sessionToken = sessionToken ? sessionToken[0] : localPhigrosToken
 
         if (!sessionToken) {
-            send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
-            return false
+            let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]{10}/g)?.[0]
+            if (!Config.getUserCfg('config', 'phiPluginApiUrl')) {
+                if (apiId) {
+                    send.send_with_At(e, `这里没有连接查分平台哦！请使用sessionToken进行绑定！`)
+                } else {
+                    send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                }
+                return false
+            }
+
+            try {
+                let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId })
+                if (result?.data?.internal_id) {
+                    send.send_with_At(e, `绑定成功！您的联合查分ID为：${result.data.internal_id}，请妥善保管嗷！`)
+                    let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
+                    let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                    await build(e, updateData, history)
+                }
+                return true
+            } catch (err) {
+                // console.log(err)
+                if (err?.message == "User not found") {
+                    send.send_with_At(e, `查分平台未找到您的相关信息QAQ！请先输入或扫码绑定sessionToken！`)
+                } else {
+                    send.send_with_At(e, `查分平台发生未知错误QAQ！请先输入或扫码绑定sessionToken！`)
+                    logger.error(`[phi-plugin] API错误`)
+                    logger.error(err)
+                }
+                return false
+            }
         }
 
         if (sessionToken == "qrcode") {
@@ -134,17 +169,37 @@ export class phisstk extends plugin {
             }
         }
 
-        send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
-
-
         if (!Config.getUserCfg('config', 'isGuild')) {
 
             e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
             // return true
         }
 
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+
+            try {
+                let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
+                if (result?.data?.internal_id) {
+                    send.send_with_At(e, `绑定成功！您的联合查分ID为：${result.data.internal_id}，请妥善保管嗷！`)
+                    let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
+                    let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                    await build(e, updateData, history)
+                }
+                return true
+            } catch (err) {
+                send.send_with_At(e, `从API获取存档失败，本次绑定将不上传至查分平台QAQ！`)
+                logger.error(`[phi-plugin] API错误`)
+                logger.error(err)
+            }
+        }
+
+        send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
+
+
         try {
-            await this.build(e, sessionToken)
+            let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken)
+            let history = await getSave.getHistory(e.user_id)
+            await build(e, updateData, history)
         } catch (error) {
             logger.error(error)
             send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
@@ -160,6 +215,19 @@ export class phisstk extends plugin {
             return false
         }
 
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            try {
+                let updateData = await getUpdateSave.getNewSaveFromApi(e)
+                let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                await build(e, updateData, history)
+                return true
+            } catch (err) {
+                send.send_with_At(e, `从API获取存档失败，本次更新将使用本地数据QAQ！`)
+                logger.error(`[phi-plugin] API错误`)
+                logger.error(err)
+            }
+        }
+
         let session = await getSave.get_user_token(e.user_id)
         if (!session) {
             e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
@@ -170,195 +238,15 @@ export class phisstk extends plugin {
             e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
         }
         try {
-            await this.build(e, session)
+            let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken)
+            let history = await getSave.getHistory(e.user_id)
+            await build(e, updateData, history)
         } catch (error) {
             logger.error(error)
             send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确QAQ！\n错误信息：${error}`)
         }
 
         return true
-    }
-
-    /**保存PhigrosUser */
-    async build(e, sessionToken) {
-        let User
-        try {
-            User = new PhigrosUser(sessionToken)
-        } catch (err) {
-            logger.error(`[phi-plugin]绑定sessionToken错误`, err)
-            send.send_with_At(e, `绑定sessionToken错误QAQ！\n错误的sstk:${sessionToken}\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, false, { recallMsg: 10 })
-            return true
-        }
-
-        /**记录存档rks,note变化 */
-        let added_rks_notes = await get.buildingRecord(e, User)
-        if (!added_rks_notes) {
-            return true
-        }
-
-        if (added_rks_notes[0]) added_rks_notes[0] = `${added_rks_notes[0] > 0 ? '+' : ''}${added_rks_notes[0] >= 1e-4 ? added_rks_notes[0].toFixed(4) : ''}`
-        if (added_rks_notes[1]) added_rks_notes[1] = `${added_rks_notes[1] > 0 ? '+' : ''}${added_rks_notes[1]}`
-
-
-        /**图片 */
-
-        /**标记数据中含有的时间 */
-        let time_vis = {}
-
-        /**总信息 */
-        let tot_update = []
-
-
-        let now = new Save(User)
-        let pluginData = await get.getpluginData(e.user_id)
-
-        // const RecordErr = now.checkRecord()
-
-        // if (RecordErr) {
-        //     send.send_with_At(e, '[测试功能，概率有误，暂时不清楚错误原因]\n请注意，你的存档可能存在一些问题：\n' + RecordErr)
-        // }
-
-        for (let song in pluginData.scoreHistory) {
-            let tem = pluginData.scoreHistory[song]
-            for (let level in tem) {
-                let history = tem[level]
-                for (let i in history) {
-                    let score_date = fCompute.date_to_string(scoreHistory.date(history[i]))
-                    let score_info = scoreHistory.extend(song, level, history[i], history[i - 1])
-                    if (time_vis[score_date] == undefined) {
-                        time_vis[score_date] = tot_update.length
-                        tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
-                    }
-                    ++tot_update[time_vis[score_date]].update_num
-                    tot_update[time_vis[score_date]].song.push(score_info)
-                }
-            }
-        }
-
-        let newnum = tot_update[time_vis[fCompute.date_to_string(now.saveInfo.modifiedAt.iso)]]?.update_num || 0
-
-        tot_update.sort((a, b) => new Date(b.date) - new Date(a.date))
-
-        /**实际显示的数量 */
-        let show = 0
-        /**每日显示上限 */
-        const DayNum = Math.max(Config.getUserCfg('config', 'HistoryDayNum'), 2)
-        /**显示日期上限 */
-        const DateNum = Config.getUserCfg('config', 'HistoryScoreDate')
-        /**总显示上限 */
-        const TotNum = Config.getUserCfg('config', 'HistoryScoreNum')
-
-
-
-        for (let date in tot_update) {
-
-            /**天数上限 */
-            if (date >= DateNum || TotNum < show + Math.min(DayNum, tot_update[date].update_num)) {
-                tot_update.splice(date, tot_update.length)
-                break
-            }
-
-            /**预处理每日显示上限 */
-            tot_update[date].song.sort((a, b) => { return b.rks_new - a.rks_new })
-
-            tot_update[date].song = tot_update[date].song.slice(0, Math.min(DayNum, TotNum - show))
-
-
-            /**总上限 */
-            show += tot_update[date].song.length
-
-        }
-
-        /**预分行 */
-        let box_line = []
-
-        box_line[box_line.length - 1]
-
-        /**循环中当前行的数量 */
-        let line_num = 0
-
-
-        line_num = 5
-        let flag = false
-
-        while (tot_update.length) {
-            if (line_num == 5) {
-                if (flag) {
-                    box_line.push([{ color: tot_update[0].color, song: tot_update[0].song.splice(0, 5) }])
-                } else {
-                    box_line.push([{ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5) }])
-                }
-                let tem = box_line[box_line.length - 1]
-                line_num = tem[tem.length - 1].song.length
-            } else {
-                let tem = box_line[box_line.length - 1]
-                if (flag) {
-                    tem.push({ color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
-                } else {
-                    tem.push({ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
-
-                }
-                line_num += tem[tem.length - 1].song.length
-            }
-            let tem = box_line[box_line.length - 1]
-            tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
-            flag = true
-            if (!tot_update[0].song.length) {
-                tem[tem.length - 1].update_num = tot_update[0].update_num
-                tot_update.shift()
-                flag = false
-            }
-        }
-
-        /**添加任务信息 */
-        let task_data = pluginData?.plugin_data?.task
-        let task_time = fCompute.date_to_string(pluginData?.plugin_data?.task_time)
-
-        /**添加曲绘 */
-        if (task_data) {
-            for (let i in task_data) {
-                if (task_data[i]) {
-                    task_data[i].illustration = get.getill(task_data[i].song)
-                    if (task_data[i].request.type == 'acc') {
-                        task_data[i].request.value = task_data[i].request.value.toFixed(2) + '%'
-                        if (task_data[i].request.value.length < 6) {
-                            task_data[i].request.value = '0' + task_data[i].request.value
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        let user_data = await getSave.getHistory(e.user_id)
-
-        let { rks_history, data_history, rks_range, data_range, rks_date, data_date } = user_data.getRksAndDataLine()
-
-        let data = {
-            PlayerId: fCompute.convertRichText(now.saveInfo.PlayerId),
-            Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
-            Date: now.saveInfo.summary.updatedAt,
-            ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
-            ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
-            background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
-            box_line: box_line,
-            update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
-            Notes: pluginData.plugin_data ? pluginData.plugin_data.money : 0,
-            show: show,
-            tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
-            task_data: task_data,
-            task_time: task_time,
-            dan: await get.getDan(e.user_id),
-            added_rks_notes: added_rks_notes,
-            theme: pluginData?.plugin_data?.theme || 'star',
-            rks_date: [fCompute.date_to_string(rks_date[0]), fCompute.date_to_string(rks_date[1])],
-            rks_history, rks_range,
-        }
-
-        send.send_with_At(e, [`PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`, await get.getupdate(e, data)])
-
-        return false
     }
 
 
@@ -392,7 +280,8 @@ export class phisstk extends plugin {
         if (msg == '确认') {
             let flag = true
             try {
-                get.delsave(e.user_id)
+                getSave.delSave(e.user_id)
+                getSaveFromApi.delSave(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
@@ -464,6 +353,7 @@ export class phisstk extends plugin {
         }
         this.finish('doClean', false)
     }
+
     async getSstk(e) {
         if (e.isGroup) {
             send.send_with_At(e, `请私聊使用嗷`)
@@ -508,4 +398,176 @@ function getRandomBgColor() {
 /**计算/update宽度 */
 function comWidth(num) {
     return num * 135 + 20 * num - 20
+}
+
+/**
+ * 保存PhigrosUser
+ * @param {object} e
+ * @param {{save:Save, added_rks_notes: [number, number]}} updateData
+ * @param {saveHistory} history
+ */
+async function build(e, updateData, history) {
+
+    let { added_rks_notes, save } = updateData
+
+    if (added_rks_notes[0]) added_rks_notes[0] = `${added_rks_notes[0] > 0 ? '+' : ''}${added_rks_notes[0] >= 1e-4 ? added_rks_notes[0].toFixed(4) : ''}`
+    if (added_rks_notes[1]) added_rks_notes[1] = `${added_rks_notes[1] > 0 ? '+' : ''}${added_rks_notes[1]}`
+
+
+    /**图片 */
+
+    /**标记数据中含有的时间 */
+    let time_vis = {}
+
+    /**总信息 */
+    let tot_update = []
+
+
+    let now = new Save(save)
+    let pluginData = getNotes.getNotesData(e.user_id)
+
+    // const RecordErr = now.checkRecord()
+
+    // if (RecordErr) {
+    //     send.send_with_At(e, '[测试功能，概率有误，暂时不清楚错误原因]\n请注意，你的存档可能存在一些问题：\n' + RecordErr)
+    // }
+    for (let song in history.scoreHistory) {
+        let tem = history.scoreHistory[song]
+        for (let level in tem) {
+            let history = tem[level]
+            for (let i in history) {
+                let score_date = fCompute.date_to_string(scoreHistory.date(history[i]))
+                let score_info = scoreHistory.extend(song, level, history[i], history[i - 1])
+                if (time_vis[score_date] == undefined) {
+                    time_vis[score_date] = tot_update.length
+                    tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
+                }
+                ++tot_update[time_vis[score_date]].update_num
+                tot_update[time_vis[score_date]].song.push(score_info)
+            }
+        }
+    }
+
+    let newnum = tot_update[time_vis[fCompute.date_to_string(now.saveInfo.modifiedAt.iso)]]?.update_num || 0
+
+    tot_update.sort((a, b) => new Date(b.date) - new Date(a.date))
+
+    /**实际显示的数量 */
+    let show = 0
+    /**每日显示上限 */
+    const DayNum = Math.max(Config.getUserCfg('config', 'HistoryDayNum'), 2)
+    /**显示日期上限 */
+    const DateNum = Config.getUserCfg('config', 'HistoryScoreDate')
+    /**总显示上限 */
+    const TotNum = Config.getUserCfg('config', 'HistoryScoreNum')
+
+
+
+    for (let date in tot_update) {
+
+        /**天数上限 */
+        if (date >= DateNum || TotNum < show + Math.min(DayNum, tot_update[date].update_num)) {
+            tot_update.splice(date, tot_update.length)
+            break
+        }
+
+        /**预处理每日显示上限 */
+        tot_update[date].song.sort((a, b) => { return b.rks_new - a.rks_new })
+
+        tot_update[date].song = tot_update[date].song.slice(0, Math.min(DayNum, TotNum - show))
+
+
+        /**总上限 */
+        show += tot_update[date].song.length
+
+    }
+
+    /**预分行 */
+    let box_line = []
+
+    box_line[box_line.length - 1]
+
+    /**循环中当前行的数量 */
+    let line_num = 0
+
+
+    line_num = 5
+    let flag = false
+
+    while (tot_update.length) {
+        if (line_num == 5) {
+            if (flag) {
+                box_line.push([{ color: tot_update[0].color, song: tot_update[0].song.splice(0, 5) }])
+            } else {
+                box_line.push([{ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5) }])
+            }
+            let tem = box_line[box_line.length - 1]
+            line_num = tem[tem.length - 1].song.length
+        } else {
+            let tem = box_line[box_line.length - 1]
+            if (flag) {
+                tem.push({ color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
+            } else {
+                tem.push({ date: tot_update[0].date, color: tot_update[0].color, song: tot_update[0].song.splice(0, 5 - line_num) })
+
+            }
+            line_num += tem[tem.length - 1].song.length
+        }
+        let tem = box_line[box_line.length - 1]
+        tem[tem.length - 1].width = comWidth(tem[tem.length - 1].song.length)
+        flag = true
+        if (!tot_update[0].song.length) {
+            tem[tem.length - 1].update_num = tot_update[0].update_num
+            tot_update.shift()
+            flag = false
+        }
+    }
+
+    /**添加任务信息 */
+    let task_data = pluginData?.plugin_data?.task
+    let task_time = fCompute.date_to_string(pluginData?.plugin_data?.task_time)
+
+    /**添加曲绘 */
+    if (task_data) {
+        for (let i in task_data) {
+            if (task_data[i]) {
+                task_data[i].illustration = get.getill(task_data[i].song)
+                if (task_data[i].request.type == 'acc') {
+                    task_data[i].request.value = task_data[i].request.value.toFixed(2) + '%'
+                    if (task_data[i].request.value.length < 6) {
+                        task_data[i].request.value = '0' + task_data[i].request.value
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    let { rks_history, rks_range, rks_date } = history.getRksLine()
+
+    let data = {
+        PlayerId: fCompute.convertRichText(now.saveInfo.PlayerId),
+        Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
+        Date: now.saveInfo.summary.updatedAt,
+        ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
+        ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
+        background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
+        box_line: box_line,
+        update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
+        Notes: pluginData?.plugin_data?.money || 0,
+        show: show,
+        tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
+        task_data: task_data,
+        task_time: task_time,
+        dan: await get.getDan(e.user_id),
+        added_rks_notes: added_rks_notes,
+        theme: pluginData?.plugin_data?.theme || 'star',
+        rks_date: [fCompute.date_to_string(rks_date[0]), fCompute.date_to_string(rks_date[1])],
+        rks_history, rks_range,
+    }
+
+    send.send_with_At(e, [`PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`, await get.getupdate(e, data)])
+
+    return false
 }

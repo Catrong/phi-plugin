@@ -1,7 +1,9 @@
 import chalk from 'chalk';
 import fs from 'node:fs'
 import getInfo from './model/getInfo.js'
+
 import Version from './components/Version.js'
+import Config from './components/Config.js';
 if (!global.segment) {
     try {
         global.segment = (await import("icqq")).segment
@@ -33,13 +35,27 @@ for (let i in files) {
     let name = files[i].replace('.js', '')
 
     if (ret[i].status != 'fulfilled') {
-        // console.error(ret[i])
+        console.error(files[i])
         throw new Error(ret[i].reason)
     }
     apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
 }
 
 export { apps }
+
+if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+    logger.mark(`检测到API地址，正在测试链接...`)
+    let url = `${Config.getUserCfg('config', 'phiPluginApiUrl')}/status`
+    let res = (await fetch(url))
+    // console.log(res)
+    if (res.status != 200) {
+        logger.mark(chalk.red('API地址测试失败！，已自动关闭API功能'))
+        Config.modify('config', 'openPhiPluginApi', false)
+    } else {
+        res = await res.json()
+        logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}` ))
+    }
+}
 
 if (!errvis) {
     logger.mark(chalk.rgb(178, 233, 250)('--------------------------------------'))

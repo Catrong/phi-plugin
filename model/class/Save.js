@@ -8,6 +8,7 @@ export default class Save {
     /**
      * @param {{
      * session:string,
+     * apiId?:string,
      * saveInfo: {
      *  createdAt: string,
      *  gameFile: {
@@ -86,6 +87,7 @@ export default class Save {
      */
     constructor(data, ignore = false) {
         this.session = data.session
+        this.apiId = data.apiId
         this.saveInfo = {
             /**账户创建时间 2022-09-03T10:21:48.613Z */
             createdAt: data.saveInfo.createdAt,

@@ -32,6 +32,9 @@ export const pluginDataPath = path.join(dataPath, 'pluginData')
 /**用户存档数据路径 */
 export const savePath = path.join(dataPath, 'saveData')
 
+/**API用户存档数据路径 */
+export const apiSavePath = path.join(dataPath, 'apiSaveData')
+
 /**其他插件数据路径 */
 export const otherDataPath = path.join(dataPath, 'otherData')
 

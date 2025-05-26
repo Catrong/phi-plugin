@@ -8,20 +8,20 @@ import { redisPath } from './constNum.js'
 import getRksRank from './getRksRank.js'
 // import { redis } from 'yunzai'
 
-export default new class getSave {
+export default class getSave {
 
     /**添加 user_id 号对应的 Token */
-    async add_user_token(user_id, session) {
+    static async add_user_token(user_id, session) {
         return await redis.set(`${redisPath}:userToken:${user_id}`, session)
     }
 
     /**获取 user_id 号对应的 Token */
-    async get_user_token(user_id) {
+    static async get_user_token(user_id) {
         return await redis.get(`${redisPath}:userToken:${user_id}`)
     }
 
     /**移除 user_id 对应的 Token */
-    async del_user_token(user_id) {
+    static async del_user_token(user_id) {
         return await redis.del(`${redisPath}:userToken:${user_id}`)
     }
 
@@ -30,7 +30,7 @@ export default new class getSave {
      * @param {String} user_id user_id
      * @returns {Promise<Save>}
      */
-    async getSave(user_id) {
+    static async getSave(user_id) {
         let Token = await this.get_user_token(user_id)
         if (await this.isBanSessionToken(Token)) {
             throw new Error(`${Token} 已被禁用`)
@@ -54,7 +54,7 @@ export default new class getSave {
      * @param {string} Token 
      * @returns 
      */
-    async getSaveBySessionToken(Token) {
+    static async getSaveBySessionToken(Token) {
         // console.info(Token)
         if (await this.isBanSessionToken(Token)) {
             throw new Error(`${Token} 已被禁用`)
@@ -78,7 +78,7 @@ export default new class getSave {
      * @param {String} user_id user_id
      * @param {Save} data 
      */
-    async putSave(user_id, data) {
+    static async putSave(user_id, data) {
         let session = data.session
         if (await this.isBanSessionToken(session)) {
             throw new Error(`${session} 已被禁用`)
@@ -93,7 +93,7 @@ export default new class getSave {
      * @param {string} user_id 
      * @returns {Promise<saveHistory>}
      */
-    async getHistory(user_id) {
+    static async getHistory(user_id) {
         let Token = await this.get_user_token(user_id)
         if (await this.isBanSessionToken(Token)) {
             throw new Error(`${Token} 已被禁用`)
@@ -107,7 +107,7 @@ export default new class getSave {
      * @param {string} Token
      * @returns {Promise<saveHistory>}
      */
-    async getHistoryBySessionToken(Token) {
+    static async getHistoryBySessionToken(Token) {
         if (await this.isBanSessionToken(Token)) {
             throw new Error(`${Token} 已被禁用`)
         }
@@ -120,7 +120,7 @@ export default new class getSave {
      * @param {String} user_id user_id
      * @param {Object} data 
      */
-    async putHistory(user_id, data) {
+    static async putHistory(user_id, data) {
         let session = await this.get_user_token(user_id)
         return await readFile.SetFile(path.join(savePath, session, 'history.json'), data)
     }
@@ -132,7 +132,7 @@ export default new class getSave {
      * @param {boolean} [all=false] 是否返回所有数据
      * @returns {object|Array} Dan数据
      */
-    async getDan(user_id, all = false) {
+    static async getDan(user_id, all = false) {
         let history = await this.getHistory(user_id)
 
         let dan = history?.dan
@@ -147,7 +147,7 @@ export default new class getSave {
      * 删除 user_id 对应的存档文件
      * @param {String} user_id user_id
      */
-    async delSave(user_id) {
+    static async delSave(user_id) {
         let session = await this.get_user_token(user_id)
         if (!session) return false
         let fPath = path.join(savePath, session)
@@ -163,7 +163,7 @@ export default new class getSave {
      * 删除 user_id 对应的存档文件
      * @param {String} user_id user_id
      */
-    async delSaveBySessionToken(Token) {
+    static async delSaveBySessionToken(Token) {
         let fPath = path.join(savePath, Token)
         await readFile.DelFile(path.join(fPath, 'save.json'))
         await readFile.DelFile(path.join(fPath, 'history.json'))
@@ -172,20 +172,20 @@ export default new class getSave {
         return true
     }
 
-    async banSessionToken(token) {
+    static async banSessionToken(token) {
         return await redis.set(`${redisPath}:banSessionToken:${token}`, 1)
     }
 
-    async allowSessionToken(token) {
+    static async allowSessionToken(token) {
         return await redis.del(`${redisPath}:banSessionToken:${token}`)
     }
 
-    async isBanSessionToken(token) {
+    static async isBanSessionToken(token) {
         return await redis.get(`${redisPath}:banSessionToken:${token}`)
     }
 
-    async getGod() {
+    static async getGod() {
         return await redis.keys(`${redisPath}:banSessionToken:*`)
     }
 
-}()
+}
