@@ -23,14 +23,17 @@ export class phihelp extends plugin {
                     fnc: 'setApiToken'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})tkls.*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})tkls$`,
                     fnc: 'tokenList'
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})auth.*$`,
                     fnc: 'auth'
                 },
-
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})clearApiData$`,
+                    fnc: 'clearApiData'
+                },
             ]
         })
 
@@ -123,6 +126,29 @@ export class phihelp extends plugin {
         }
 
         send.send_with_At(e, '验证成功')
+
+        return true
+    }
+
+    async clearApiData(e) {
+        // if (await getBanGroup.get(e.group_id, 'clearApiData')) {
+        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+        //     return false
+        // }
+
+        if (!Config.getUserCfg('config', 'phiPluginApiUrl')) {
+            send.send_with_At(e, '这里没有连接查分平台哦！')
+            return false
+        }
+
+        try {
+            await makeRequest.clear({ ...makeRequestFnc.makePlatform(e) })
+        } catch (err) {
+            send.send_with_At(e, '清除数据失败: ' + err.message)
+            return false
+        }
+
+        send.send_with_At(e, '数据已清除')
 
         return true
     }
