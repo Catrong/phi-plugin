@@ -80,7 +80,7 @@ export class phihelp extends plugin {
         }
         let tokenList = null
         try {
-            tokenList = await makeRequest.tokenList()
+            tokenList = await makeRequest.tokenList(makeRequestFnc.makePlatform(e))
         } catch (err) {
             send.send_with_At(e, '获取 Token 列表失败: ' + err.message)
             return false
