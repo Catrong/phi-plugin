@@ -281,7 +281,7 @@ export class phisstk extends plugin {
             let flag = true
             try {
                 getSave.delSave(e.user_id)
-                getSaveFromApi.delSave(e.user_id)
+                getSaveFromApi.delSave(e)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
