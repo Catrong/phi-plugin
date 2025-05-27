@@ -97,6 +97,8 @@ export class phihelp extends plugin {
             resMsg += `权限: ${item.authentication}\n`
         })
 
+        send.send_with_At(e, resMsg)
+
 
         return true
     }
