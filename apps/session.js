@@ -78,7 +78,11 @@ export class phisstk extends plugin {
             try {
                 let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId })
                 if (result?.data?.internal_id) {
-                    send.send_with_At(e, `绑定成功！您的联合查分ID为：${result.data.internal_id}，请妥善保管嗷！`)
+                    let resMsg = `绑定成功！您的联合查分ID为：${result.data.internal_id}，请妥善保管嗷！`
+                    if (!result.data.haveApiToken) {
+                        resMsg += `\n请注意，您尚未设置API Token！\n请使用命令：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken> 设置API Token`
+                    }
+                    send.send_with_At(e, resMsg)
                     let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
                     let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
                     await build(e, updateData, history)
@@ -180,7 +184,11 @@ export class phisstk extends plugin {
             try {
                 let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
                 if (result?.data?.internal_id) {
-                    send.send_with_At(e, `绑定成功！您的联合查分ID为：${result.data.internal_id}，请妥善保管嗷！`)
+                    let resMsg = `绑定成功！您的联合查分ID为：${result.data.internal_id}，请妥善保管嗷！`
+                    if (!result.data.haveApiToken) {
+                        resMsg += `\n请注意，您尚未设置API Token！\n请使用命令：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken> 设置API Token`
+                    }
+                    send.send_with_At(e, resMsg)
                     let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
                     let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
                     await build(e, updateData, history)
