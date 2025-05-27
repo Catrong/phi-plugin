@@ -284,6 +284,7 @@ export class phisstk extends plugin {
                 await getSaveFromApi.delSave(e)
             } catch (err) {
                 send.send_with_At(e, err)
+                logger.error(err)
                 flag = false
             }
             try {
@@ -303,6 +304,7 @@ export class phisstk extends plugin {
                 getSave.del_user_token(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
+                logger.error(err)
                 flag = false
             }
             if (flag) {
