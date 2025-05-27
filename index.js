@@ -46,14 +46,21 @@ export { apps }
 if (Config.getUserCfg('config', 'openPhiPluginApi')) {
     logger.mark(`检测到API地址，正在测试链接...`)
     let url = `${Config.getUserCfg('config', 'phiPluginApiUrl')}/status`
-    let res = (await fetch(url))
-    // console.log(res)
-    if (res.status != 200) {
+    try {
+        let res = (await fetch(url))
+        // console.log(res)
+        if (res.status != 200) {
+            logger.mark(chalk.red('API地址测试失败！，已自动关闭API功能'))
+            Config.modify('config', 'openPhiPluginApi', false)
+        } else {
+            res = await res.json()
+            logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
+        }
+    } catch (e) {
         logger.mark(chalk.red('API地址测试失败！，已自动关闭API功能'))
         Config.modify('config', 'openPhiPluginApi', false)
-    } else {
-        res = await res.json()
-        logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}` ))
+        errvis = true
+        return
     }
 }
 
