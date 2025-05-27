@@ -3,6 +3,7 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
+import getSave from '../model/getSave.js'
 
 
 export class phihelp extends plugin {
@@ -29,6 +30,10 @@ export class phihelp extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})clearApiData$`,
                     fnc: 'clearApiData'
                 },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})updateHistory$`,
+                    fnc: 'updateHistory'
+                },
             ]
         })
 
@@ -41,7 +46,7 @@ export class phihelp extends plugin {
         //     return false
         // }
 
-        if (!Config.getUserCfg('config', 'phiPluginApiUrl')) {
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
             return false
         }
@@ -69,7 +74,7 @@ export class phihelp extends plugin {
         //     return false
         // }
 
-        if (!Config.getUserCfg('config', 'phiPluginApiUrl')) {
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
             return false
         }
@@ -105,7 +110,7 @@ export class phihelp extends plugin {
         //     return false
         // }
 
-        if (!Config.getUserCfg('config', 'phiPluginApiUrl')) {
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
             return false
         }
@@ -133,7 +138,7 @@ export class phihelp extends plugin {
         //     return false
         // }
 
-        if (!Config.getUserCfg('config', 'phiPluginApiUrl')) {
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
             return false
         }
@@ -146,6 +151,37 @@ export class phihelp extends plugin {
         }
 
         send.send_with_At(e, '数据已清除')
+
+        return true
+    }
+
+    async updateHistory(e) {
+        // if (await getBanGroup.get(e.group_id, 'updateHistory')) {
+        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+        //     return false
+        // }
+
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '这里没有连接查分平台哦！')
+            return false
+        }
+
+        let phigorsToken = getSave.get_user_token(e.user_id)
+
+        if (!phigorsToken) {
+            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+            return false
+        }
+
+        let saveHistory = await getSave.getHistory(e.user_id);
+        try {
+            await makeRequest.setHistory({ ...makeRequestFnc.makePlatform(e), data: saveHistory })
+        } catch (err) {
+            send.send_with_At(e, '更新历史记录失败: ' + err.message)
+            return false
+        }
+
+        send.send_with_At(e, '历史记录已更新')
 
         return true
     }

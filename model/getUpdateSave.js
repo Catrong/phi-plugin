@@ -23,6 +23,9 @@ export default class getUpdateSave {
             let result = new Save(newSave)
             await result.init()
             await getSaveFromApi.putSave(e.user_id, result);
+            if (token) {
+                getSave.add_user_token(e.user_id, token)
+            }
             return { save: result, added_rks_notes: [0, 0] }
         } else {
             return { save: old, added_rks_notes: [0, 0] }
@@ -38,10 +41,7 @@ export default class getUpdateSave {
             if (old && old.saveInfo.modifiedAt.iso.toISOString() == save_info.modifiedAt.iso) {
                 return { save: old, added_rks_notes: [0, 0] }
             }
-            const err = await User.buildRecord()
-            if (err.length) {
-                send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
-            }
+            await User.buildRecord()
         } catch (err) {
             if (e.bot?.adapter?.name !== 'QQBot') {
                 send.send_with_At(e, "更新失败！QAQ\n" + err)

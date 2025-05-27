@@ -1,5 +1,6 @@
 import { MAX_DIFFICULTY } from '../constNum.js'
 import fCompute from '../fCompute.js'
+import getInfo from '../getInfo.js'
 import getRksRank from '../getRksRank.js'
 import LevelRecordInfo from './LevelRecordInfo.js'
 
@@ -258,16 +259,24 @@ export default class Save {
     }
 
     async init() {
-        for (let id in this.gameRecord) {
-            for (let i in this.gameRecord[id]) {
-                let level = Number(i)
-                if (!this.gameRecord[id][level]) {
-                    continue
-                }
+        // for (let id in this.gameRecord) {
+        //     for (let i in this.gameRecord[id]) {
+        //         let level = Number(i)
+        //         if (!this.gameRecord[id][level]) {
+        //             continue
+        //         }
+        //     }
+        // }
+    }
 
+    checkNoInfo() {
+        let err = []
+        Object.keys(this.gameRecord).forEach(id => {
+            if (!getInfo.idgetsong(id)) {
+                err.push(id)
             }
-        }
-
+        })
+        return err
     }
 
     /**

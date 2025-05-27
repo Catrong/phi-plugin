@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { Config } from '../components/index.js';
+import saveHistory from './class/saveHistory.js';
 
 /**
  * @import * from './type/type.js'
@@ -280,6 +281,15 @@ export default class makeRequest {
      */
     static async getHistoryRecord(params) {
         return (await makeFetch(burl('/get/history/record'), params)).data
+    }
+
+    /**
+     * 上传用户的历史记录
+     * @param {baseAu & {data: saveHistory}} params 
+     * @returns {Promise<{message: string}>}
+     */
+    static async setHistory(params) {
+        return (await makeFetch(burl('/set/history'), params)).data
     }
 
 }
