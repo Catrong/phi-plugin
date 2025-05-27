@@ -88,7 +88,7 @@ export class phihelp extends plugin {
 
         tokenList.platform_data.forEach((item, index) => {
             resMsg += `${index + 1}.\n`
-            resMsg += `平台: ${item.platform}\n`
+            resMsg += `平台: ${item.platform_name}\n`
             resMsg += `平台ID: ${item.platform_id}\n`
             resMsg += `创建时间: ${item.create_at}\n`
             resMsg += `更新时间: ${item.update_at}\n`
