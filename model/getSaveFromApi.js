@@ -126,7 +126,7 @@ export default class getSaveFromApi {
         let fPath = path.join(apiSavePath, apiId)
         await readFile.DelFile(path.join(fPath, 'save.json'))
         fs.rmSync(path.join(apiSavePath, apiId), { recursive: true, force: true });
-        this.del_user_apiId(user_id)
+        this.del_user_apiId(e.user_id)
         await makeRequest.unbind({ ...makeRequestFnc.makePlatform(e) })
         return true
     }
