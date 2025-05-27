@@ -15,7 +15,7 @@ export class phihelp extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})setApiToken.*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})setApiToken[\s\S]$`,
                     fnc: 'setApiToken'
                 },
                 {
@@ -52,18 +52,34 @@ export class phihelp extends plugin {
         }
 
         let apiToken = e.msg.replace(/^[#/].*?setApiToken\s*/, '')
-        if (/[\s\x00-\x1F\x7F'"\\]/.test(apiToken)) {
-            send.send_with_At(e, 'API Token 包含非法字符，请检查后重试！')
-            return false
-        }
-        try {
-            await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token_new: apiToken })
-        } catch (err) {
-            send.send_with_At(e, '设置 API Token 失败: ' + err.message)
-            return false
+        if (apiToken.includes('\n')) {
+            let lines = apiToken.split('\n');
+            if (lines.length == 2) {
+                try {
+                    await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token_old: lines[0], token_new: lines[1] })
+                } catch (err) {
+                    send.send_with_At(e, '设置 API Token 失败: ' + err.message)
+                    return false
+                }
+                send.send_with_At(e, 'API Token 已设置为: \n' + lines[1])
+            } else {
+                send.send_with_At(e, '请使用正确的格式设置 API Token！\n格式：\n/setApiToken（换行）<旧Token>（换行）<新Token>\n或\n/setApiToken <新Token>')
+                return false
+            }
+        } else {
+            if (/[\s\x00-\x1F\x7F'"\\]/.test(apiToken)) {
+                send.send_with_At(e, 'API Token 包含非法字符，请检查后重试！\n格式：\n/setApiToken（换行）<旧Token>（换行）<新Token>\n或\n/setApiToken <新Token>')
+                return false
+            }
+            try {
+                await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token_new: apiToken })
+            } catch (err) {
+                send.send_with_At(e, '设置 API Token 失败: ' + err.message)
+                return false
+            }
+            send.send_with_At(e, 'API Token 已设置为: \n' + apiToken)
         }
 
-        send.send_with_At(e, 'API Token 已设置为: \n' + apiToken)
 
         return true
     }
