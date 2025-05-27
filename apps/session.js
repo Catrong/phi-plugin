@@ -280,8 +280,8 @@ export class phisstk extends plugin {
         if (msg == '确认') {
             let flag = true
             try {
-                getSave.delSave(e.user_id)
-                getSaveFromApi.delSave(e)
+                await getSave.delSave(e.user_id)
+                await getSaveFromApi.delSave(e)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
