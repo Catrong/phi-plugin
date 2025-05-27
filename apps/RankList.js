@@ -67,7 +67,6 @@ export class phiRankList extends plugin {
                     data.users.push({ ...await makeSmallLine(item), index: item.index, me: item.me })
                 }
                 data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history))
-                console.info(data)
                 send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
                 return true
             } catch (err) {
