@@ -37,6 +37,7 @@ import { Config } from '../components/index.js';
  * @property {string} platform_id
  * @property {string} create_at
  * @property {string} update_at
+ * @property {number} authentication - 认证状态
  */
 
 /**
