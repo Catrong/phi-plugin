@@ -1,9 +1,6 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
-import getFile from '../model/getFile.js'
-import path from 'path'
-import { infoPath } from '../model/path.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 
