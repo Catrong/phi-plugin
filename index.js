@@ -1,5 +1,8 @@
 import chalk from 'chalk';
 import fs from 'node:fs'
+import https from 'node:https'
+
+// 这个加载是为了提前初始化信息
 import getInfo from './model/getInfo.js'
 
 import Version from './components/Version.js'
@@ -12,6 +15,10 @@ if (!global.segment) {
     }
 }
 
+
+// const agent = new https.Agent({
+//     rejectUnauthorized: Config.getUserCfg('config', 'rejectPhiPluginApi'), // 忽略证书错误
+// });
 
 //插件作者QQ号：1436375503
 //曲绘资源来源于网络
@@ -50,6 +57,7 @@ if (Config.getUserCfg('config', 'openPhiPluginApi')) {
         let res = (await fetch(url))
         // console.log(res)
         if (res.status != 200) {
+            logger.error(res)
             logger.mark(chalk.red('API地址测试失败！，已自动关闭API功能'))
             Config.modify('config', 'openPhiPluginApi', false)
         } else {
@@ -57,6 +65,7 @@ if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
         }
     } catch (e) {
+        logger.error(e)
         logger.mark(chalk.red('API地址测试失败！，已自动关闭API功能'))
         Config.modify('config', 'openPhiPluginApi', false)
     }

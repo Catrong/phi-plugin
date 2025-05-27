@@ -10,6 +10,9 @@ import Config from '../components/Config.js'
 import getNotes from '../model/getNotes.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
 import getBanGroup from '../model/getBanGroup.js';
+import makeRequest from '../model/makeRequest.js'
+import makeRequestFnc from '../model/makeRequestFnc.js'
+import saveHistory from '../model/class/saveHistory.js'
 
 export class phiRankList extends plugin {
 
@@ -41,17 +44,37 @@ export class phiRankList extends plugin {
         }
 
 
-        let plugin_data = await getNotes.getPluginData(e.user_id)
         let data = {
             Title: "RankingScore排行榜",
             totDataNum: 0,
             BotNick: Bot.nickname,
             users: [],
             me: {},
-            theme: plugin_data?.plugin_data?.theme || 'star',
         }
-        let msg = e.msg.match(/\d+/)
         /**请求的排名 */
+        let msg = e.msg.match(/\d+/)
+
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            try {
+                let api_ranklist = null
+                if (msg) {
+                    api_ranklist = await makeRequest.getRanklistRank({ request_rank: Number(msg[0]) })
+                } else {
+                    api_ranklist = await makeRequest.getRanklistUser(makeRequestFnc.makePlatform(e))
+                }
+                data.totDataNum = api_ranklist.totDataNum;
+                for (let item of api_ranklist.users) {
+                    data.users.push({ ...await makeSmallLine(item), index: item.index, me: item.me })
+                }
+                data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history))
+                console.info(data)
+                send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
+                return true
+            } catch (err) {
+                send.send_with_At(e, `从API获取排行榜失败QAQ，将展示本地数据！`)
+                logger.error(err)
+            }
+        }
         let rankNum = 0
         data.totDataNum = (await getRksRank.getAllRank()).length
 
@@ -90,12 +113,14 @@ export class phiRankList extends plugin {
                 data.users.push({ playerId: '无效用户', index: index + rankNum - 2 })
                 getRksRank.delUserRks(sessionToken)
             } else {
-                data.users.push({ ...await makeSmallLine(save), index: Math.max(index + rankNum - 2, index), me: myTk === save.getSessionToken() })
+                data.users.push({ ...await makeSmallLine(save), index: Math.max(index + rankNum - 1, index + 1), me: myTk === save.getSessionToken() })
             }
             if (myTk === sessionToken) {
-                data.me = await makeLargeLine(save)
+                let history = await getSave.getHistoryBySessionToken(save.getSessionToken())
+                data.me = await makeLargeLine(save, history)
             }
         }
+
 
 
         send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
@@ -145,7 +170,7 @@ export class phiRankList extends plugin {
  * 创建一个详细对象
  * @param {Save} save 
  */
-async function makeLargeLine(save) {
+async function makeLargeLine(save, history) {
     if (!save) {
         return {
             playerId: "无效用户"
@@ -153,7 +178,6 @@ async function makeLargeLine(save) {
     }
 
 
-    let history = await getSave.getHistoryBySessionToken(save.getSessionToken())
     let lineData = history.getRksAndDataLine()
     lineData.rks_date.forEach((item, index) => {
         item = fCompute.formatDateToNow(item)

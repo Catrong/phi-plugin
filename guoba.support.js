@@ -272,6 +272,12 @@ export function supportGuoba() {
                     component: 'Switch',
                 },
                 {
+                    field: 'rejectPhiPluginApi',
+                    label: 'API SSL验证',
+                    bottomHelpMessage: '是否启用Phigros联合查分API的SSL证书验证，开启后会验证API的SSL证书',
+                    component: 'Switch',
+                },
+                {
                     field: 'phiPluginApiUrl',
                     label: 'API地址',
                     bottomHelpMessage: 'Phigros联合查分API地址',

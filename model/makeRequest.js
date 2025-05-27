@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import https from 'node:https';
 import { Config } from '../components/index.js';
 import saveHistory from './class/saveHistory.js';
 
@@ -132,28 +133,18 @@ import saveHistory from './class/saveHistory.js';
 /**
  * 当前用户数据
  * @typedef {Object} MeData
- * @property {GameUserBasic} gameuser 当前用户信息（包含selfIntro）
- * @property {SaveInfo} saveInfo 当前用户存档信息
- * @property {integer[][]} rks_history RKS历史数据
- * @property {number[]} rks_range RKS范围数据
- * @property {string[]} rks_date RKS日期数组
- * @property {ChallengeListItem[]} clg_list 挑战模式列表
- * @property {gameRecord} game_record 游戏记录
+ * @property {oriSave} save 存档数据
+ * @property {saveHistory} history 用户历史记录
  */
 
 /**
  * 响应数据主体
- * @typedef {Object} ResponseData
+ * @typedef {Object} ranklistResponseData
  * @property {integer} totDataNum 数据总数
  * @property {UserItem[]} users 用户数组
  * @property {MeData} me 当前用户扩展数据
  */
 
-/**
- * API响应结构
- * @typedef {Object} getRanklistResponse
- * @property {ResponseData} data 核心响应数据
- */
 
 export default class makeRequest {
 
@@ -239,7 +230,7 @@ export default class makeRequest {
     /**
      * 根据用户获取排行榜相关信息
      * @param {baseAu} params 
-     * @returns {Promise<getRanklistResponse>}
+     * @returns {Promise<ranklistResponseData>}
      */
     static async getRanklistUser(params) {
         return (await makeFetch(burl('/get/ranklist/user'), params)).data
@@ -249,7 +240,7 @@ export default class makeRequest {
      * 根据名次获取排行榜相关信息
      * @param {object} params 
      * @param {number} params.request_rank 请求的排名
-     * @returns {Promise<getRanklistResponse>}
+     * @returns {Promise<ranklistResponseData>}
      */
     static async getRanklistRank(params) {
         return (await makeFetch(burl('/get/ranklist/rank'), params)).data
@@ -294,8 +285,12 @@ export default class makeRequest {
 
 }
 
+const agent = new https.Agent({
+    rejectUnauthorized: Config.getUserCfg('config', 'rejectPhiPluginApi'), // 忽略证书错误
+});
+
 async function makeFetch(url, params) {
-    let result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) })
+    let result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params), agent });
     if (!result) {
         throw new Error('请求失败')
     }
