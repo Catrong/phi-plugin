@@ -90,7 +90,6 @@
  * @typedef {'cmdhead'} cmdhead 命令头
  * @typedef {'phigrousUpdateUrl'} phigrousUpdateUrl Phigrous更新日志API
  * @typedef {'openPhiPluginApi'} openPhiPluginApi 是否启用Phigros联合查分API地址
- * @typedef {'rejectPhiPluginApi'} rejectPhiPluginApi 是否启用Phigros联合查分API的SSL证书验证
  * @typedef {'phiPluginApiUrl'} phiPluginApiUrl Phigros联合查分API地址
  * @typedef {'otherinfo'} otherinfo 曲库
  * 猜曲绘设置
@@ -134,7 +133,6 @@
  * |cmdhead
  * |phigrousUpdateUrl
  * |openPhiPluginApi
- * |rejectPhiPluginApi
  * |phiPluginApiUrl
  * |otherinfo
  * |GuessTipCd

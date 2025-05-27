@@ -285,12 +285,8 @@ export default class makeRequest {
 
 }
 
-const agent = new https.Agent({
-    rejectUnauthorized: Config.getUserCfg('config', 'rejectPhiPluginApi'), // 忽略证书错误
-});
-
 async function makeFetch(url, params) {
-    let result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params), agent });
+    let result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) });
     if (!result) {
         throw new Error('请求失败')
     }
