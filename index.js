@@ -59,8 +59,6 @@ if (Config.getUserCfg('config', 'openPhiPluginApi')) {
     } catch (e) {
         logger.mark(chalk.red('API地址测试失败！，已自动关闭API功能'))
         Config.modify('config', 'openPhiPluginApi', false)
-        errvis = true
-        return
     }
 }
 
