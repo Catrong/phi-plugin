@@ -7,8 +7,6 @@ import { infoPath } from '../model/path.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 
-const helpGroup = await getFile.FileReader(path.join(infoPath, 'help.json'))
-
 
 export class phihelp extends plugin {
     constructor() {
