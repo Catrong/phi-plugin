@@ -259,7 +259,7 @@ export class phisstk extends plugin {
         }
 
 
-        if (!getSave.get_user_token(e.user_id) && !getSaveFromApi.get_user_apiId(e.user_id)) {
+        if (!await getSave.get_user_token(e.user_id) && !await getSaveFromApi.get_user_apiId(e.user_id)) {
             send.send_with_At(e, '没有找到你的存档信息嗷！')
             return false
         }
