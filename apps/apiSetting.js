@@ -19,7 +19,7 @@ export class phihelp extends plugin {
                     fnc: 'setApiToken'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})tkls$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(tkls|lstk)$`,
                     fnc: 'tokenList'
                 },
                 {
@@ -52,6 +52,10 @@ export class phihelp extends plugin {
         }
 
         let apiToken = e.msg.replace(/^[#/].*?setApiToken\s*/, '')
+        if (!apiToken) {
+            send.send_with_At(e, `请输入apiToken！\n格式：\n设置初始密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <新Token> \n更改密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken（换行）<旧Token>（换行）<新Token>` + lines[1])
+
+        }
         if (apiToken.includes('\n')) {
             let lines = apiToken.split('\n');
             if (lines.length == 2) {
