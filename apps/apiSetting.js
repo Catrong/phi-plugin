@@ -16,7 +16,7 @@ export class phihelp extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})setApiToken[\s\S]$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})setApiToken[\s\S]*$`,
                     fnc: 'setApiToken'
                 },
                 {
