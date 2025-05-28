@@ -283,6 +283,15 @@ export default class makeRequest {
         return (await makeFetch(burl('/set/history'), params)).data
     }
 
+    /**
+     * 上传用户tk
+     * @param {{data: {[userId:string]:string}}} params 
+     * @returns {Promise<{message: string}>}
+     */
+    static async setHistory(params) {
+        return await makeFetch(burl('/set/usersToken'), params)
+    }
+
 }
 
 async function makeFetch(url, params) {

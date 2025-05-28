@@ -4,6 +4,7 @@ import send from '../model/send.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 import getSave from '../model/getSave.js'
+import ProgressBar from "../model/progress-bar.js";
 
 
 export class phihelp extends plugin {
@@ -33,6 +34,10 @@ export class phihelp extends plugin {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})updateHistory$`,
                     fnc: 'updateHistory'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})updateUserToken$`,
+                    fnc: 'updateUserToken'
                 },
             ]
         })
@@ -206,4 +211,26 @@ export class phihelp extends plugin {
         return true
     }
 
+    async updateUserToken(e) {
+        if (!e.isMaster) {
+            e.reply("无权限");
+            return false;
+        }
+
+        /**提取redis中user_id数据 */
+        send.send_with_At(e, '开始提取user_token，请稍等...')
+        console.info('\n[phi-plugin][backup] 开始提取user_token数据...')
+        bar = new ProgressBar('[phi-plugin] user_token提取中', 20)
+        /**获取user_token */
+        let user_token = {}
+        console.info('[phi-plugin] 获取user_token列表...')
+        let keys = await redis.keys(`${redisPath}:userToken:*`)
+        let cnt = 0
+        for (let key of keys) {
+            let user_id = key.split(':')[2]
+            user_token[user_id] = await redis.get(key)
+            cnt++;
+            bar.render({ completed: cnt, total: keys.length });
+        }
+    }
 }

@@ -309,7 +309,6 @@ export class phisstk extends plugin {
                     }
                     await get.putpluginData(e.user_id, pluginData)
                 }
-                getSave.del_user_token(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 logger.error(err)
@@ -344,19 +343,19 @@ export class phisstk extends plugin {
         if (msg == '确认') {
             let flag = true
             try {
-                get.delsave(e.user_id)
+                await get.delsave(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
             }
             try {
-                get.delpluginData(e.user_id)
+                await get.delpluginData(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
             }
             if (flag) {
-                send.send_with_At(e, '解绑成功')
+                send.send_with_At(e, '清除数据成功')
             }
         } else {
             send.send_with_At(e, `取消成功！`)
