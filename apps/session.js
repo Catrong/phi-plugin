@@ -66,7 +66,7 @@ export class phisstk extends plugin {
 
         if (!sessionToken) {
             let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]{10}/g)?.[0]
-            if (!Config.getUserCfg('config', 'phiPluginApiUrl')) {
+            if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
                 if (apiId) {
                     send.send_with_At(e, `这里没有连接查分平台哦！请使用sessionToken进行绑定！`)
                 } else {
