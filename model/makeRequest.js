@@ -30,7 +30,7 @@ import saveHistory from './class/saveHistory.js';
  * @property {string} message - Response message (e.g., "绑定成功")
  * @property {Object} data - Response data
  * @property {number} data.internal_id - 用户内部ID
- * @property {boolean} data.haveApiToken - 是否拥有API Token
+ * @property {boolean} data.have_api_token - 是否拥有API Token
  */
 
 /**
