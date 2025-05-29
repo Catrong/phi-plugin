@@ -68,7 +68,7 @@ export default new class getBackup {
         let keys = await redis.keys(`${redisPath}:userToken:*`)
         let cnt = 0
         for (let key of keys) {
-            let user_id = key.split(':')[2]
+            let user_id = key.replace(`${redisPath}:userToken:`, '')
             user_token[user_id] = await redis.get(key)
             cnt++;
             bar.render({ completed: cnt, total: keys.length });
