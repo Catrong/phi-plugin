@@ -27,7 +27,7 @@ export class phihelp extends plugin {
                     fnc: 'tokenList'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})tokenManage$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})tokenManage.*$`,
                     fnc: 'tokenManage'
                 },
                 {
