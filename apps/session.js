@@ -131,7 +131,7 @@ export class phisstk extends plugin {
             let flag = false;
             /**判断adapter是否为QQBot，如果是并且超时时间大于270秒则将超时时间改为270秒，以免被动消息回复超时**/
             let QRCodetimeout = request.data.expires_in
-            if (e.bot?.adapter?.name === 'QQBot' && request.data.expires_in > 270) QRCodetimeout = 270
+            if (fCompute.getAdapterName(e) === 'QQBot' && request.data.expires_in > 270) QRCodetimeout = 270
             /**利用redis的超时机制，设置一个生命与超时时间一致的键值作为倒计时器，不存储值仅提供倒计时 */
             await redis.set(timeOutKey, '1', { EX: QRCodetimeout })
 

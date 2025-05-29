@@ -1,7 +1,9 @@
+import fCompute from './fCompute.js'
+
 export default class makeRequestFnc {
     static makePlatform(e) {
         return {
-            platform: e.bot?.adapter?.name || e.bot?.adapter,
+            platform: fCompute.getAdapterName(e),
             platform_id: e.user_id,
         }
     }
