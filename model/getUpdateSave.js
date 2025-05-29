@@ -38,7 +38,7 @@ export default class getUpdateSave {
         let User = new PhigrosUser(token)
         try {
             let save_info = await User.getSaveInfo()
-            if (old && old.saveInfo.modifiedAt.iso.toISOString() == save_info.modifiedAt.iso) {
+            if (old && old.saveInfo.modifiedAt.iso.getTime() == new Date(save_info.modifiedAt.iso).getTime()) {
                 return { save: old, added_rks_notes: [0, 0] }
             }
             await User.buildRecord()

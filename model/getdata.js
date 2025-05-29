@@ -247,7 +247,7 @@ class getdata {
 
         try {
             let save_info = await User.getSaveInfo()
-            if (old && old.saveInfo.modifiedAt.iso.toISOString() == save_info.modifiedAt.iso) {
+            if (old && old.saveInfo.modifiedAt.iso.getTime() == new Date(save_info.modifiedAt.iso).getTime()) {
                 return [0, 0]
             }
             const err = await User.buildRecord()
