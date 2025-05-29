@@ -325,7 +325,7 @@ export class phihelp extends plugin {
         /**提取redis中user_id数据 */
         send.send_with_At(e, '开始提取user_token，请稍等...')
         console.info('\n[phi-plugin][backup] 开始提取user_token数据...')
-        bar = new ProgressBar('[phi-plugin] user_token提取中', 20)
+        let bar = new ProgressBar('[phi-plugin] user_token提取中', 20)
         /**获取user_token */
         let user_token = {}
         console.info('[phi-plugin] 获取user_token列表...')
