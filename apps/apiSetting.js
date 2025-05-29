@@ -194,7 +194,8 @@ export class phihelp extends plugin {
                 let vis = Date.now()
                 tokenManageData[e.user_id] = {
                     vis,
-                    data: tarPlatform
+                    data: tarPlatform,
+                    operation
                 }
                 setTimeout(() => {
                     if (tokenManageData[e.user_id]?.vis == vis) {
@@ -216,7 +217,7 @@ export class phihelp extends plugin {
         let msg = this.e.msg;
 
         if (msg.replace(/\s/g, '') == '确认') {
-            let tarPlatform = tokenManageData[e.user_id].data;
+            let { tarPlatform, operation } = tokenManageData[e.user_id].data;
             try {
                 await makeRequest.tokenManage({
                     ...makeRequestFnc.makePlatform(e), data: {
@@ -351,7 +352,7 @@ export class phihelp extends plugin {
                     user_token.push(tokenValues[idx]);
                 });
                 cnt += keys.length;
-                if(Math.floor(cnt / 1000)> vis) {
+                if (Math.floor(cnt / 1000) > vis) {
                     vis = Math.floor(cnt / 1000);
                     logger.info(`[phi-plugin] 已获取 ${vis}k 个 user_token`);
                 }
