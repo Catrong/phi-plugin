@@ -27,7 +27,7 @@ export class phihelp extends plugin {
                     fnc: 'tokenList'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})tokenManage.*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(token|tk)(Manage|mng|manage).*$`,
                     fnc: 'tokenManage'
                 },
                 {
@@ -211,6 +211,7 @@ export class phihelp extends plugin {
     }
 
     async tokenManageChose() {
+        let e = this.e;
         /** @type {string} */
         let msg = this.e.msg;
 
