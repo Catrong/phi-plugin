@@ -7,6 +7,8 @@ import getSave from '../model/getSave.js'
 import ProgressBar from "../model/progress-bar.js";
 
 
+const tokenManageData = {}
+
 export class phihelp extends plugin {
     constructor() {
         super({
@@ -114,7 +116,11 @@ export class phihelp extends plugin {
         let resMsg = `已绑定${tokenList.platform_data.length}个平台\n`
 
         tokenList.platform_data.forEach((item, index) => {
-            resMsg += `${index + 1}.\n`
+            if (e.bot?.adapter?.name == item.platform_name && e.user_id == item.platform_id) {
+                resMsg += `${index + 1}.（当前）\n`
+            } else {
+                resMsg += `${index + 1}.\n`
+            }
             resMsg += `平台: ${item.platform_name}\n`
             resMsg += `平台ID: ${item.platform_id}\n`
             resMsg += `创建时间: ${item.create_at}\n`
@@ -124,8 +130,107 @@ export class phihelp extends plugin {
 
         send.send_with_At(e, resMsg)
 
-
         return true
+    }
+
+    async tokenManage(e) {
+        // if (await getBanGroup.get(e.group_id, 'tokenManage')) {
+        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+        //     return false
+        // }
+
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '这里没有连接查分平台哦！')
+            return false
+        }
+
+        /** @type {string} */
+        let msg = e.msg.replace(/^[#/].*?tokenManage\s*/, '');
+        let operation = msg.match(/(delete|rmau)/i)?.[1];
+
+        if (!operation) {
+            send.send_with_At(e, `请指定操作类型！\n类型：\ndelete - 解绑对应编号平台\nrmau - 降权对应编号平台`);
+            return false;
+        }
+
+        let tokenList = null
+        try {
+            tokenList = await makeRequest.tokenList(makeRequestFnc.makePlatform(e))
+        } catch (err) {
+            send.send_with_At(e, '获取 Token 列表失败: ' + err.message)
+            return false
+        }
+
+        let force = msg.match('-f')?.[0] ? true : false;
+
+        let choseNum = msg.match(/[0-9]+/)?.[0];
+
+        if (choseNum) {
+            if (choseNum > tokenList.platform_data.length) {
+                send.send_with_At(e, `只找到了${tokenList.platform_data.length}个绑定平台呐QAQ！`);
+                return false;
+            }
+            let index = choseNum - 1;
+            let tarPlatform = tokenList.platform_data[index];
+            if (force) {
+                try {
+                    await makeRequest.tokenManage({
+                        ...makeRequestFnc.makePlatform(e), data: {
+                            platform: tarPlatform.platform_name,
+                            platform_id: tarPlatform.platform_id,
+                            operation
+                        }
+                    });
+                    send.send_with_At(e, `操作成功`);
+                } catch (err) {
+                    send.send_with_At(e, `操作失败！\n${err}`);
+                }
+            } else {
+                let vis = Date.now()
+                tokenManageData[e.user_id] = {
+                    vis,
+                    data: tarPlatform
+                }
+                setTimeout(() => {
+                    if (tokenManageData[e.user_id]?.vis == vis) {
+                        delete tokenManageData[e.user_id];
+                    }
+                }, 30000)
+                this.setContext('tokenManageChose', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
+
+            }
+        } else {
+            send.send_with_At(e, '请输入需要操作的平台编号呐QAQ！');
+        }
+        return true
+    }
+
+    async tokenManageChose() {
+        /** @type {string} */
+        let msg = this.e.msg;
+
+        if (msg.replace(/\s/g, '') == '确认') {
+            let tarPlatform = tokenManageData[e.user_id].data;
+            try {
+                await makeRequest.tokenManage({
+                    ...makeRequestFnc.makePlatform(e), data: {
+                        platform: tarPlatform.platform_name,
+                        platform_id: tarPlatform.platform_id,
+                        operation
+                    }
+                });
+                send.send_with_At(e, `操作成功`);
+            } catch (err) {
+                send.send_with_At(e, `操作失败！\n${err}`);
+            }
+        } else {
+            send.send_with_At(e, `已取消`);
+        }
+
+        delete tokenManageData[e.user_id];
+
+        this.finish('tokenManageChose', false)
+
     }
 
     async auth(e) {

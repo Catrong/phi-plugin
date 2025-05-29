@@ -272,7 +272,7 @@ export class phisstk extends plugin {
             return false
         }
 
-        this.setContext('doUnbind', false, 30)
+        this.setContext('doUnbind', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
 
         send.send_with_At(e, '解绑会导致历史数据全部清空呐QAQ！真的要这么做吗？（确认/取消）')
 

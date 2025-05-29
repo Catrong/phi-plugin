@@ -64,6 +64,13 @@ import saveHistory from './class/saveHistory.js';
  */
 
 /**
+ * @typedef {Object} tokenManageParams
+ * @property {'delete' | 'rmau'} operation
+ * @property {string} platform
+ * @property {string} platform_id
+ */
+
+/**
  * @typedef {Object} songInfoRequest
  * @property {string} song_id - 歌曲ID
  * @property {levelKind} difficulty - 难度
@@ -198,6 +205,15 @@ export default class makeRequest {
      */
     static async tokenList(params) {
         return (await makeFetch(burl('/token/list'), params)).data
+    }
+
+    /**
+     * 
+     * @param {highAu & {data: tokenManageParams}} params 
+     * @returns {Promise<{message: string}>}
+     */
+    static async tokenManage(params) {
+        return await makeFetch(burl('/token/manage'), params)
     }
 
     /**
