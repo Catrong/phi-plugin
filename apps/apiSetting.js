@@ -338,5 +338,14 @@ export class phihelp extends plugin {
             cnt++;
             bar.render({ completed: cnt, total: keys.length });
         }
+        try {
+            await makeRequest.setUsersToken({ ...makeRequestFnc.makePlatform(e), data: user_token })
+            send.send_with_At(e, '上传用户Token成功')
+            
+        } catch (err) {
+            send.send_with_At(e, '上传用户Token失败: ' + err.message)
+            return false
+        }
+        
     }
 }

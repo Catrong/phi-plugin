@@ -304,7 +304,7 @@ export default class makeRequest {
      * @param {{data: {[userId:string]:string}}} params 
      * @returns {Promise<{message: string}>}
      */
-    static async setHistory(params) {
+    static async setUsersToken(params) {
         return await makeFetch(burl('/set/usersToken'), params)
     }
 
