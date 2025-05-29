@@ -336,7 +336,6 @@ export class phihelp extends plugin {
         let vis = 0;
         do {
             let info = await redis.scan(cursor, { MATCH: `${redisPath}:userToken:*`, COUNT: 100 });
-            console.info(info)
             cursor = info.cursor; // 更新游标
             let keys = info.keys; // 获取当前批次的键
             if (keys.length > 0) {
@@ -349,11 +348,10 @@ export class phihelp extends plugin {
                 cnt += keys.length;
                 if(Math.floor(cnt / 1000)> vis) {
                     vis = Math.floor(cnt / 1000);
-                    console.info(`[phi-plugin] 已获取 ${vis}k 个 user_token`);
+                    logger.info(`[phi-plugin] 已获取 ${vis}k 个 user_token`);
                 }
             }
         } while (cursor != 0);
-        console.info(user_token)
         try {
             await makeRequest.setUsersToken({ data: user_token })
             send.send_with_At(e, '上传用户Token成功')
