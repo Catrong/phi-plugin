@@ -194,7 +194,7 @@ export class phihelp extends plugin {
                 let vis = Date.now()
                 tokenManageData[e.user_id] = {
                     vis,
-                    data: tarPlatform,
+                    tarPlatform,
                     operation
                 }
                 setTimeout(() => {
@@ -217,7 +217,7 @@ export class phihelp extends plugin {
         let msg = this.e.msg;
 
         if (msg.replace(/\s/g, '') == '确认') {
-            let { tarPlatform, operation } = tokenManageData[e.user_id].data;
+            let { tarPlatform, operation } = tokenManageData[e.user_id];
             try {
                 await makeRequest.tokenManage({
                     ...makeRequestFnc.makePlatform(e), data: {
