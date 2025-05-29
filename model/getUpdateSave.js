@@ -75,7 +75,7 @@ export default class getUpdateSave {
             }
         }
 
-        let added_rks_notes = await this.buildingRecord(old, now)
+        let added_rks_notes = await this.buildingRecord(old, now, e)
         return { save: now, added_rks_notes }
     }
 
@@ -83,7 +83,7 @@ export default class getUpdateSave {
      * 更新存档
      * @returns {Promise<[number,number]>} [rks变化值，note变化值]，失败返回 false
      */
-    static async buildingRecord(old, now) {
+    static async buildingRecord(old, now, e) {
 
 
         // await now.init()
@@ -93,17 +93,17 @@ export default class getUpdateSave {
         getSave.putHistory(e.user_id, history)
 
 
-        let pluginData = await getNotes.getNotesData(e.user_id)
+        let notesData = await getNotes.getNotesData(e.user_id)
         /**修正 */
-        if (pluginData.update || pluginData.task_update) {
-            delete pluginData.update
-            delete pluginData.task_update
+        if (notesData.update || notesData.task_update) {
+            delete notesData.update
+            delete notesData.task_update
         }
 
         /**note数量变化 */
         let add_money = 0
 
-        let task = pluginData?.plugin_data?.task
+        let task = notesData?.plugin_data?.task
         if (task) {
             for (let id in now.gameRecord) {
                 for (let i in task) {
@@ -114,16 +114,16 @@ export default class getUpdateSave {
                         switch (task[i].request.type) {
                             case 'acc': {
                                 if (now.gameRecord[id][level].acc >= task[i].request.value) {
-                                    pluginData.plugin_data.task[i].finished = true
-                                    pluginData.plugin_data.money += task[i].reward
+                                    notesData.plugin_data.task[i].finished = true
+                                    notesData.plugin_data.money += task[i].reward
                                     add_money += task[i].reward
                                 }
                                 break
                             }
                             case 'score': {
                                 if (now.gameRecord[id][level].score >= task[i].request.value) {
-                                    pluginData.plugin_data.task[i].finished = true
-                                    pluginData.plugin_data.money += task[i].reward
+                                    notesData.plugin_data.task[i].finished = true
+                                    notesData.plugin_data.money += task[i].reward
                                     add_money += task[i].reward
                                 }
                                 break
@@ -133,7 +133,7 @@ export default class getUpdateSave {
                 }
             }
         }
-        await this.putpluginData(e.user_id, pluginData)
+        await getSave.putSave(e.user_id, notesData)
 
         /**rks变化 */
         let add_rks = old ? now.saveInfo.summary.rankingScore - old.saveInfo.summary.rankingScore : 0
