@@ -80,7 +80,7 @@ export class phisstk extends plugin {
                 if (result?.data?.internal_id) {
                     let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
                     if (!result.data.have_api_token) {
-                        resMsg += `\n请注意，您尚未设置API Token！\n请使用命令：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken> 设置API Token`
+                        resMsg += `\n请注意，您尚未设置API Token！\n请使用命令设置API Token：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
                     }
                     send.send_with_At(e, resMsg)
                     let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
@@ -90,10 +90,10 @@ export class phisstk extends plugin {
                 return true
             } catch (err) {
                 // console.log(err)
-                if (err?.message == "User not found") {
-                    send.send_with_At(e, `查分平台未找到您的相关信息QAQ！请先输入或扫码绑定sessionToken！`)
+                if (err?.message == "用户 未找到") {
+                    send.send_with_At(e, `查分平台未找到您的相关信息QAQ！请先输入sessionToken或扫码绑定！`)
                 } else {
-                    send.send_with_At(e, `查分平台发生未知错误QAQ！请先输入或扫码绑定sessionToken！`)
+                    send.send_with_At(e, err.message)
                     logger.error(`[phi-plugin] API错误`)
                     logger.error(err)
                 }
@@ -186,7 +186,7 @@ export class phisstk extends plugin {
                 if (result?.data?.internal_id) {
                     let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
                     if (!result.data.have_api_token) {
-                        resMsg += `\n请注意，您尚未设置API Token！\n请使用命令：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken> 设置API Token`
+                        resMsg += `\n请注意，您尚未设置API Token！\n请使用命令设置API Token：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
                     }
                     send.send_with_At(e, resMsg)
                     let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
@@ -195,7 +195,7 @@ export class phisstk extends plugin {
                 }
                 return true
             } catch (err) {
-                send.send_with_At(e, `从API获取存档失败，本次绑定将不上传至查分平台QAQ！`)
+                send.send_with_At(e, `${err}\n从API获取存档失败，本次绑定将不上传至查分平台QAQ！`)
                 logger.error(`[phi-plugin] API错误`)
                 logger.error(err)
             }

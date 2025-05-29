@@ -58,7 +58,7 @@ class send {
                         user_save = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
                         return user_save.save
                     } catch (err) {
-                        send.send_with_At(e, `从API获取存档失败，本次更新将使用本地数据QAQ！`)
+                        send.send_with_At(e, `从API获取存档失败，本次更新将使用本地数据QAQ！错误消息：${err.message}`)
                         logger.error(err)
                     }
                 }
