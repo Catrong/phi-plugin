@@ -27,6 +27,10 @@ export class phihelp extends plugin {
                     fnc: 'tokenList'
                 },
                 {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})tokenManage$`,
+                    fnc: 'tokenManage'
+                },
+                {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})auth.*$`,
                     fnc: 'auth'
                 },
@@ -198,7 +202,7 @@ export class phihelp extends plugin {
                     }
                 }, 30000)
                 this.setContext('tokenManageChose', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
-
+                send.send_with_At(e, `请确认操作：\n平台: ${tarPlatform.platform_name}\n平台ID: ${tarPlatform.platform_id}\n操作: ${operation}\n（确认/取消）`);
             }
         } else {
             send.send_with_At(e, '请输入需要操作的平台编号呐QAQ！');
