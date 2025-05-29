@@ -39,8 +39,6 @@ class send {
 
         let user_save = null
 
-        let sessionToken = null
-
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
                 user_save = await getUpdateSave.getNewSaveFromApi(e)
@@ -49,7 +47,7 @@ class send {
                 if (err.message == 'Phigros token is required') {
                     try {
 
-                        sessionToken = await getSave.get_user_token(e.user_id)
+                        let sessionToken = await getSave.get_user_token(e.user_id)
                         if (!sessionToken) {
                             this.send_with_At(e, `请先绑定sessionToken哦！\n如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
                             return false
@@ -65,12 +63,13 @@ class send {
             }
         }
 
+        let sessionToken = await getSave.get_user_token(e.user_id)
         if (!sessionToken) {
             this.send_with_At(e, `请先绑定sessionToken哦！\n如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
 
-        user_save = await getUpdateSave.getNewSaveFromLocal(e)
+        user_save = (await getUpdateSave.getNewSaveFromLocal(e)).save
 
 
         if (!user_save || (ver && (!user_save.Recordver || user_save.Recordver < ver))) {

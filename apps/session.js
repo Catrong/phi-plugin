@@ -91,7 +91,7 @@ export class phisstk extends plugin {
             } catch (err) {
                 // console.log(err)
                 if (err?.message == "用户 未找到") {
-                    send.send_with_At(e, `查分平台未找到您的相关信息QAQ！请先输入sessionToken或扫码绑定！`)
+                    send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
                 } else {
                     send.send_with_At(e, err.message)
                     logger.error(`[phi-plugin] API错误`)
@@ -230,7 +230,7 @@ export class phisstk extends plugin {
                 await build(e, updateData, history)
                 return true
             } catch (err) {
-                send.send_with_At(e, `从API获取存档失败，本次更新将使用本地数据QAQ！`)
+                send.send_with_At(e, `${err}\n从API获取存档失败，本次更新将使用本地数据QAQ！`)
                 logger.error(`[phi-plugin] API错误`)
                 logger.error(err)
             }
@@ -246,7 +246,7 @@ export class phisstk extends plugin {
             e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
         }
         try {
-            let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken)
+            let updateData = await getUpdateSave.getNewSaveFromLocal(e, session)
             let history = await getSave.getHistory(e.user_id)
             await build(e, updateData, history)
         } catch (error) {
@@ -289,25 +289,22 @@ export class phisstk extends plugin {
             let flag = true
             try {
                 await getSave.delSave(e.user_id)
-                await getSaveFromApi.delSave(e)
+                if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+                    await getSaveFromApi.delSave(e)
+                }
             } catch (err) {
                 send.send_with_At(e, err)
                 logger.error(err)
                 flag = false
             }
             try {
-                let pluginData = await get.getpluginData(e.user_id, true)
+                let pluginData = await getNotes.getNotesData(e.user_id)
 
                 if (pluginData) {
-                    delete pluginData.rks
-                    delete pluginData.data
-                    delete pluginData.scoreHistory
-                    delete pluginData.dan
                     if (pluginData.plugin_data) {
                         pluginData.plugin_data.task = []
-                        pluginData.plugin_data.CLGMOD = []
                     }
-                    await get.putpluginData(e.user_id, pluginData)
+                    getNotes.putNotesData(e.user_id, pluginData)
                 }
             } catch (err) {
                 send.send_with_At(e, err)
@@ -343,13 +340,13 @@ export class phisstk extends plugin {
         if (msg == '确认') {
             let flag = true
             try {
-                await get.delsave(e.user_id)
+                await getSave.delSave(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
             }
             try {
-                await get.delpluginData(e.user_id)
+                getNotes.delNotesData(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false

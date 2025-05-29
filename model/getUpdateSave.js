@@ -1,6 +1,7 @@
 import { Config } from "../components/index.js";
 import PhigrosUser from "../lib/PhigrosUser.js";
 import Save from "./class/Save.js";
+import getNotes from "./getNotes.js";
 import getSave from "./getSave.js";
 import getSaveFromApi from "./getSaveFromApi.js";
 import makeRequest from "./makeRequest.js";
@@ -93,7 +94,7 @@ export default class getUpdateSave {
         getSave.putHistory(e.user_id, history)
 
 
-        let notesData = await getNotes.getNotesData(e.user_id)
+        let notesData = getNotes.getNotesData(e.user_id)
         /**修正 */
         if (notesData.update || notesData.task_update) {
             delete notesData.update

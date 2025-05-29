@@ -82,7 +82,7 @@ export class phimoney extends plugin {
             data.plugin_data.sign_in = now_time
 
 
-            await getNotes.putMoneyData(e.user_id, data)
+            await getNotes.putNotesData(e.user_id, data)
             /**判断时间段 */
             let time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
             let time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
@@ -197,7 +197,7 @@ export class phimoney extends plugin {
             return true
         }
 
-        getNotes.putMoneyData(e.user_id, data)
+        getNotes.putNotesData(e.user_id, data)
 
         now_time = new Date()
         /**判断时间段 */

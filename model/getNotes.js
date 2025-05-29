@@ -2,14 +2,15 @@ import readFile from './getFile.js'
 import path from 'path'
 import { pluginDataPath, savePath } from './path.js'
 import getSave from './getSave.js'
-export default new class getNotes {
+import fs from 'fs'
+export default class getNotes {
 
     /**
      * 获取QQ号对应的娱乐数据
      * @param {String} user_id 
      * @returns save
      */
-    async getPluginData(user_id) {
+    static async getPluginData(user_id) {
         let session = await getSave.get_user_token(user_id)
         if (session) {
             return {
@@ -26,11 +27,11 @@ export default new class getNotes {
      * @param {String} user_id user_id
      * @param {Object} data 
      */
-    async putPluginData(user_id, data) {
+    static async putPluginData(user_id, data) {
         let session = await getSave.get_user_token(user_id)
         if (data.rks) {
             /**分流 */
-            let history = { data: data.data, rks: data.rks, scoreHistory: data.scoreHistory, dan: data.plugin_data.CLGMOD,version: data.version }
+            let history = { data: data.data, rks: data.rks, scoreHistory: data.scoreHistory, dan: data.plugin_data.CLGMOD, version: data.version }
             delete data.data
             delete data.rks
             delete data.scoreHistory
@@ -45,11 +46,11 @@ export default new class getNotes {
     /**
      * 获取并初始化用户数据
      * @param {string} user_id 
-     * @returns {{plugin_data:{money:number,sign_in:string,task_time:string,task:Array<object>,theme:string}}}
+     * @returns {Promise<{plugin_data:{money:number,sign_in:string,task_time:string,task:Array<object>,theme:string}}>}
      */
-    async getNotesData(user_id) {
+    static async getNotesData(user_id) {
         let data = await readFile.FileReader(path.join(pluginDataPath, `${user_id}_.json`))
-        if (!data||!data.plugin_data) {
+        if (!data || !data.plugin_data) {
             data = {
                 plugin_data: {
                     money: 0,
@@ -63,8 +64,12 @@ export default new class getNotes {
         return data
     }
 
-    async putMoneyData(user_id, data) {
-        return await readFile.SetFile(path.join(pluginDataPath, `${user_id}_.json`), data)
+    static putNotesData(user_id, data) {
+        return readFile.SetFile(path.join(pluginDataPath, `${user_id}_.json`), data)
     }
 
-}()
+    static delNotesData(user_id) {
+        return fs.rmSync(path.join(pluginDataPath, `${user_id}_.json`), { recursive: true, force: true });
+    }
+
+}
