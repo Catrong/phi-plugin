@@ -120,8 +120,6 @@ export class phiRankList extends plugin {
             }
         }
 
-
-
         send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
     }
 
