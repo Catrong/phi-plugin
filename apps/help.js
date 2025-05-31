@@ -9,6 +9,7 @@ import { infoPath } from '../model/path.js'
 import getBanGroup from '../model/getBanGroup.js';
 
 const helpGroup = await getFile.FileReader(path.join(infoPath, 'help.json'))
+const apiHelp = await getFile.FileReader(path.join(infoPath, 'help', 'api.json'))
 
 
 export class phihelp extends plugin {
@@ -77,6 +78,15 @@ export class phihelp extends plugin {
             return false
         }
 
-        send.send_with_At(e, `查分平台相关帮助：\n查分ID：您的通用查分ID，可以在任意连接查分平台的BOT处使用指令进行绑定\nAPI token：您的API账户密码，设置后可以管理查分账户\n指令：（不同bot会有不同指令头）\n/bind <查分ID> - 绑定查分ID\n/setApiToken <新Token> - 设置API Token（仅未设置时有效）\n/setApiToken（换行）<旧Token>（换行）<新Token> - 更改API Token\n/lstk - 查看已绑定的查分平台列表\n/auth <apiToken> - 验证API Token\n/clearApiData - 注销查分账户\n/updateHistory - 上传当前Bot端保存的历史记录`);
+        let head = Config.getUserCfg('config', 'cmdhead')
+        head = head.match(RegExp(head))[0]
+        let pluginData = await get.getpluginData(e.user_id)
+        e.reply(await picmodle.help(e, {
+            helpGroup: apiHelp,
+            cmdHead: head || null,
+            isMaster: e.isMaster,
+            background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
+            theme: pluginData?.plugin_data?.theme || 'star'
+        }), true)
     }
 }

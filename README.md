@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/插件版本-0.9.9.1-9cf?style=flat-square)
+![version](https://img.shields.io/badge/插件版本-0.9.9.2-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.13.1-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
@@ -183,6 +183,20 @@ pnpm install -P
 | setting | 系统设置 | /theme
 | dan | 段位认证相关 | /dan /danupdate
 </details>
+
+## 以下为正在内部测试的API功能，仅开启对应设置项且填写正确的API后有效
+
+| 功能名称 | 功能说明
+| :- | :-
+| `#phi (bind\|绑定) <userId>` | 开启查分API可用，绑定API账号
+| `#phi setApiToken <token>` | 第一次设置API Token
+| `#phi setApiToken（换行）<旧Token>（换行）<新Token>` | 修改API Token
+| `#phi tokenList` | 获取当前绑定的平台列表
+| `#phi tokenManage (delete\|rmau) <平台序号> (-f)?` | 删除绑定的平台，-f 跳过确认
+| `#phi auth <api Token>` | 验证API Token 获取管理账户权限
+| `#phi clearApiData` | 清除API数据
+| `#phi updateHistory` | 将BOT端的历史成绩更新到API端
+| `#phi updateUserToken` | **主人命令** 上传当前BOT端的用户Token到API端
 
 ---
 
