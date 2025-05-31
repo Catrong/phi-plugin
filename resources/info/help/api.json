@@ -1,0 +1,88 @@
+[
+    {
+        "group": "查分API公测介绍",
+        "list": [
+            {
+                "title": "查分ID",
+                "eg": "",
+                "desc": "您的通用查分ID，可以在任意连接查分平台的BOT处使用指令进行绑定"
+            },
+            {
+                "title": "API token",
+                "eg": "",
+                "desc": "您的API账户密码，设置后可以管理查分账户"
+            },
+            {
+                "title": "权限管理",
+                "eg": "",
+                "desc": "0.仅通过ID绑定，仅可以查分，不可以换绑、查看或操作绑定平台<br>1.通过phigrosToken绑定，可以换绑，可以查看绑定平台<br>2.验证过API Token后，可以解绑、降低指定平台权限（仅0、1权限等级）、删除账号"
+            }
+        ]
+    },
+    {
+        "group": "绑定",
+        "list": [
+            {
+                "title": "/bind",
+                "eg": "/bind <userId>",
+                "desc": "绑定你的 sessionToken<br>eg1: /bind abcdefghijklmnopqrstuvwxy<br>eg2: /bind qrcode"
+            },
+            {
+                "title": "/unbind",
+                "eg": "/unbind",
+                "desc": "在 Bot 上删除储存的你的存档以及成绩记录并且解除云端对该账号的绑定"
+            }
+        ]
+    },
+    {
+        "group": "管理",
+        "list": [
+            {
+                "title": "/setApiToken",
+                "eg": "/setApiToken <token>",
+                "desc": "设置初始API Token"
+            },
+            {
+                "title": "/setApiToken",
+                "eg": "/setApiToken（换行）<旧Token>（换行）<新Token>",
+                "desc": "修改API Token"
+            },
+            {
+                "title": "/tokenList",
+                "eg": "/tokenList",
+                "desc": "获取当前绑定的平台列表"
+            },
+            {
+                "title": "/tokenManage",
+                "eg": "/tokenManage (delete|rmau) <平台序号> (-f)?",
+                "desc": "删除绑定的平台，-f 跳过确认<br>eg: /tokenManage delete 1 -f"
+            },
+            {
+                "title": "/auth",
+                "eg": "/auth <api Token>",
+                "desc": "验证API Token 获取管理账户权限"
+            },
+            {
+                "title": "/clearApiData",
+                "eg": "/clearApiData",
+                "desc": "清除API数据"
+            },
+            {
+                "title": "/updateHistory",
+                "eg": "/updateHistory",
+                "desc": "将BOT端的历史成绩更新到API端"
+            }
+        ]
+    },
+    {
+        "group": "管理员命令",
+        "auth": "master",
+        "list": [
+            {
+                "title": "/updateUserToken",
+                "eg": "/updateUserToken",
+                "desc": "上传当前BOT端的用户Token到API端"
+            }
+        ]
+    }
+]

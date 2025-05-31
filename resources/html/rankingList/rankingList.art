@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="num">
-                <p>#{{user.index + 1}}</p>
+                <p>#{{user.index}}</p>
             </div>
             <div class="playerId">
                 <p name="pvis">{{#user.playerId}}</p>

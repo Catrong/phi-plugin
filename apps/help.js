@@ -9,6 +9,7 @@ import { infoPath } from '../model/path.js'
 import getBanGroup from '../model/getBanGroup.js';
 
 const helpGroup = await getFile.FileReader(path.join(infoPath, 'help.json'))
+const apiHelp = await getFile.FileReader(path.join(infoPath, 'help', 'api.json'))
 
 
 export class phihelp extends plugin {
@@ -26,6 +27,10 @@ export class phihelp extends plugin {
                 {
                     reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)to?k(en)?(\\s*)(命令|帮助|菜单|help|说明|功能|指令|使用说明)$`,
                     fnc: 'tkhelp'
+                },
+                {
+                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)api(\\s*)(命令|帮助|菜单|help|说明|功能|指令|使用说明)$`,
+                    fnc: 'apihelp'
                 }
 
             ]
@@ -59,6 +64,29 @@ export class phihelp extends plugin {
             return false
         }
 
-        send.send_with_At(e, `sessionToken有关帮助：\n【推荐】：扫码登录TapTap获取token\n指令：/${Config.getUserCfg('config','cmdhead')} bind qrcode\n【基础方法】https://www.kdocs.cn/l/catqcMM9UR5Y\n绑定sessionToken指令：\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+        send.send_with_At(e, `sessionToken有关帮助：\n【推荐】：扫码登录TapTap获取token\n指令：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n【基础方法】https://www.kdocs.cn/l/catqcMM9UR5Y\n绑定sessionToken指令：\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+    }
+
+    async apihelp(e) {
+
+        // if (await getBanGroup.get(e.group_id, 'apihelp')) {
+        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+        //     return false
+        // }
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, `这里没有连接查分平台哦！`)
+            return false
+        }
+
+        let head = Config.getUserCfg('config', 'cmdhead')
+        head = head.match(RegExp(head))[0]
+        let pluginData = await get.getpluginData(e.user_id)
+        e.reply(await picmodle.help(e, {
+            helpGroup: apiHelp,
+            cmdHead: head || null,
+            isMaster: e.isMaster,
+            background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
+            theme: pluginData?.plugin_data?.theme || 'star'
+        }), true)
     }
 }

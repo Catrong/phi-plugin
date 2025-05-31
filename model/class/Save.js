@@ -1,91 +1,18 @@
 import { MAX_DIFFICULTY } from '../constNum.js'
 import fCompute from '../fCompute.js'
+import getInfo from '../getInfo.js'
 import getRksRank from '../getRksRank.js'
 import LevelRecordInfo from './LevelRecordInfo.js'
 
 export default class Save {
 
     /**
-     * @param {{
-     * session:string,
-     * saveInfo: {
-     *  createdAt: string,
-     *  gameFile: {
-     *      __type: 'File',
-     *      bucket: string,
-     *      createdAt: string,
-     *      key: string,
-     *      metaData: object,
-     *      mime_type: 'application/octet-stream',
-     *      name: '.save',
-     *      objectId: string,
-     *      provider: string,
-     *      updatedAt: string,
-     *      url: string
-     *  },
-     *  modifiedAt: {"__type": "Date","iso": Date},
-     *  name: 'save',
-     *  objectId: string,
-     *  summary: {
-     *      updatedAt: string,
-     *      saveVersion: number,
-     *      challengeModeRank: number,
-     *      rankingScore: number,
-     *      gameVersion: number,
-     *      avatar: string,
-     *      cleared: [number, number, number, number],
-     *      fullCombo: [number, number, number, number],
-     *      phi: [number, number, number, number]
-     *  },
-     *  ACL: { '*': Object },
-     *  authData: { taptap: Object },
-     *  avatar: string,
-     *  emailVerified: boolean,
-     *  mobilePhoneVerified: boolean,
-     *  nickname: string,
-     *  sessionToken: string,
-     *  shortId: string,
-     *  username: string,
-     *  updatedAt: string,
-     *  user: {__type: "Pointer",className: "_User",objectId: string},
-     *  PlayerId: string
-     * },
-     * saveUrl: string,
-     * Recordver: number,
-     * gameProgress: {
-     *  isFirstRun: boolean,
-     *  legacyChapterFinished: boolean,
-     *  alreadyShowCollectionTip: boolean,
-     *  alreadyShowAutoUnlockINTip: boolean,
-     *  completed: string,
-     *  songUpdateInfo: number,
-     *  challengeModeRank: number,
-     *  money: [number, number, number, number, number],
-     *  unlockFlagOfSpasmodic: number,
-     *  unlockFlagOfIgallta: number,
-     *  unlockFlagOfRrharil: number,
-     *  flagOfSongRecordKey: number,
-     *  randomVersionUnlocked: number,
-     *  chapter8UnlockBegin: boolean,
-     *  chapter8UnlockSecondPhase: boolean,
-     *  chapter8Passed: boolean,
-     *  chapter8SongUnlocked: number
-     * },
-     * gameuser: {
-     *  name: string,
-     *  version: string,
-     *  showPlayerId: boolean,
-     *  selfIntro: string,
-     *  avatar: string,
-     *  background: string,
-     *  CLGMOD: string,
-     * },
-     * gameRecord: {}
-     * }} data 
+     * @param {oriSave} data 
      * @param {boolean} ignore 跳过存档检查
      */
     constructor(data, ignore = false) {
         this.session = data.session
+        this.apiId = data.apiId
         this.saveInfo = {
             /**账户创建时间 2022-09-03T10:21:48.613Z */
             createdAt: data.saveInfo.createdAt,
@@ -256,16 +183,24 @@ export default class Save {
     }
 
     async init() {
-        for (let id in this.gameRecord) {
-            for (let i in this.gameRecord[id]) {
-                let level = Number(i)
-                if (!this.gameRecord[id][level]) {
-                    continue
-                }
+        // for (let id in this.gameRecord) {
+        //     for (let i in this.gameRecord[id]) {
+        //         let level = Number(i)
+        //         if (!this.gameRecord[id][level]) {
+        //             continue
+        //         }
+        //     }
+        // }
+    }
 
+    checkNoInfo() {
+        let err = []
+        Object.keys(this.gameRecord).forEach(id => {
+            if (!getInfo.idgetsong(id)) {
+                err.push(id)
             }
-        }
-
+        })
+        return err
     }
 
     /**

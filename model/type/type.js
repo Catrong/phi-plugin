@@ -1,6 +1,9 @@
 /**
  * @typedef {string & { readonly brand: unique symbol }} idString 曲目id
  * @typedef {string & { readonly brand: unique symbol }} songString 曲目名称
+ * @typedef {string & { readonly brand: unique symbol }} phigorsToken phigrosToken
+ * @typedef {string & { readonly brand: unique symbol }} apiToken apiToken
+ * @typedef {string & { readonly brand: unique symbol }} apiId apiId
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT'} levelKind 有效难度分级
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT' | 'LEGACY'} allLevelKind 全部难度分级
  * @typedef {'tap' | 'drag' | 'hold' | 'flick'} noteKind note分类
@@ -20,6 +23,7 @@
  * | 'unbind'
  * | 'b19'
  * | 'p30'
+ * | 'lmtAcc'
  * | 'arcgrosB19'
  * | 'update'
  * | 'info'
@@ -46,7 +50,6 @@
  * | 'rankList'
  * | 'godList'
  * | 'tips'
- * | 'lmtAcc'
  * | 'newSong'
  * | 'tipgame'
  * | 'guessgame'
@@ -86,6 +89,8 @@
  * @typedef {'WordSuggImg'} WordSuggImg Suggest曲绘图片
  * @typedef {'cmdhead'} cmdhead 命令头
  * @typedef {'phigrousUpdateUrl'} phigrousUpdateUrl Phigrous更新日志API
+ * @typedef {'openPhiPluginApi'} openPhiPluginApi 是否启用Phigros联合查分API地址
+ * @typedef {'phiPluginApiUrl'} phiPluginApiUrl Phigros联合查分API地址
  * @typedef {'otherinfo'} otherinfo 曲库
  * 猜曲绘设置
  * @typedef {'GuessTipCd'} GuessTipCd 提示间隔
@@ -127,6 +132,8 @@
  * |WordSuggImg
  * |cmdhead
  * |phigrousUpdateUrl
+ * |openPhiPluginApi
+ * |phiPluginApiUrl
  * |otherinfo
  * |GuessTipCd
  * |GuessTipRecall
@@ -239,4 +246,39 @@
  * @property {gameProgress} gameProgress
  * @property {gameuser} gameuser
  * @property {gameRecord} gameRecord
+ */
+
+/**
+ * 基础历史记录结构
+ * @typedef {Object} BaseHistoryObject
+ * @property {string} date - 日期 ISO格式
+ * @property {number[] | number | object} value - 值
+ */
+
+/**
+ * 单条成绩详细记录
+ * @typedef {Array} ScoreDetail
+ * 0 - acc
+ * 1 - score
+ * 2 - 记录日期
+ * 3 - fc
+ */
+
+/**
+ * 
+ * @typedef {Object} songRecordHistory
+ * @property {ScoreDetail[]} EZ
+ * @property {ScoreDetail[]} HD
+ * @property {ScoreDetail[]} IN
+ * @property {ScoreDetail[]} AT
+ */
+
+/**
+ * 玩家存档历史数据对象
+ * @typedef {Object} saveHistoryObject
+ * @property {Array<BaseHistoryObject>} [data] - 成绩记录数组（包含日期和五个数值的元组）
+ * @property {Array<BaseHistoryObject>} [rks] - RKS(评级分数)历史记录数组
+ * @property {Object.<string, songRecordHistory>} [scoreHistory] - 成绩历史数据（按歌曲ID和难度分类的详细记录）
+ * @property {Array<BaseHistoryObject>} [challengeModeRank] - 课题模式排名记录
+ * @property {number} [version] - 数据版本号
  */

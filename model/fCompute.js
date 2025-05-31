@@ -506,6 +506,10 @@ export default class compute {
     //         }
     //     }
     // }
+
+    static getAdapterName(e) {
+        return e.bot?.adapter?.name || e.bot?.adapter
+    }
 }
 
 function dfs_score_note(score, note, maxCombo, perfect, ans) {

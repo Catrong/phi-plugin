@@ -61,18 +61,31 @@ export default new class getBackup {
         /**提取redis中user_id数据 */
         send.send_with_At(e, '开始备份user_token，请稍等...')
         console.info('\n[phi-plugin][backup] 开始备份user_token数据...')
-        bar = new ProgressBar('[phi-plugin] user_token备份中', 20)
         /**获取user_token */
         let user_token = {}
         console.info('[phi-plugin] 获取user_token列表...')
-        let keys = await redis.keys(`${redisPath}:userToken:*`)
-        let cnt = 0
-        for (let key of keys) {
-            let user_id = key.split(':')[2]
-            user_token[user_id] = await redis.get(key)
-            cnt++;
-            bar.render({ completed: cnt, total: keys.length });
-        }
+        // 使用SCAN非阻塞遍历所有userToken键
+        let cursor = 0;
+        let cnt = 0;
+        let vis = 0;
+        do {
+            let info = await redis.scan(cursor, { MATCH: `${redisPath}:userToken:*`, COUNT: 100 });
+            cursor = info.cursor; // 更新游标
+            let keys = info.keys; // 获取当前批次的键
+            if (keys.length > 0) {
+                // 并发获取本批次所有user_token
+                let userIds = keys.map(key => key.replace(`${redisPath}:userToken:`, ''));
+                let tokenValues = await Promise.all(keys.map(key => redis.get(key)));
+                userIds.forEach((user_id, idx) => {
+                    user_token[user_id] = tokenValues[idx];
+                });
+                cnt += keys.length;
+                if(Math.floor(cnt / 1000)> vis) {
+                    vis = Math.floor(cnt / 1000);
+                    logger.info(`[phi-plugin] 已获取 ${vis}k 个 user_token`);
+                }
+            }
+        } while (cursor != 0);
         zip.file('user_token.json', JSON.stringify(user_token))
         /**压缩 */
         let zipName = `${(new Date()).toISOString().replace(/[\:\.]/g, '-')}.zip`

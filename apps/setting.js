@@ -15,7 +15,7 @@ export class phihelp extends plugin {
             name: 'phi-setting',
             dsc: 'phigros屁股肉设置',
             event: 'message',
-            priority: 1000,
+            priority: 1001,
             rule: [
                 {
                     reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)(设置|set).*$`,

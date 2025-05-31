@@ -75,6 +75,12 @@ export class phib19 extends plugin {
             return true
         }
 
+        let err = save.checkNoInfo()
+
+        if (err.length) {
+            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
+        }
+
 
         let nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
 
@@ -101,22 +107,10 @@ export class phib19 extends plugin {
         let plugin_data = await get.getpluginData(e.user_id)
 
 
-        if (!Config.getUserCfg('config', 'isGuild'))
+        if (!Config.getUserCfg('config', 'isGuild')) {
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
-
-        try {
-            await get.buildingRecord(e, new PhigrosUser(save.session))
-
-            save = await send.getsave_result(e)
-
-            if (!save) {
-                return true
-            }
-
-        } catch (err) {
-            send.send_with_At(e, err)
-            logger.error(err)
         }
+
 
         let save_b19 = await save.getB19(nnum)
         let stats = await save.getStats()
@@ -170,6 +164,12 @@ export class phib19 extends plugin {
         let save = await send.getsave_result(e)
         if (!save) {
             return true
+        }
+
+        let err = save.checkNoInfo()
+
+        if (err.length) {
+            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
         }
 
 
@@ -270,6 +270,13 @@ export class phib19 extends plugin {
             return true
         }
 
+        
+        let err = save.checkNoInfo()
+
+        if (err.length) {
+            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
+        }
+
 
         let nnum = e.msg.match(/(b|B)[0-9]*/g)
         nnum = nnum ? Number(nnum[0].replace(/(b|B)/g, '')) - 1 : 32
@@ -322,6 +329,13 @@ export class phib19 extends plugin {
         if (!save) {
             return false
         }
+        
+        let err = save.checkNoInfo()
+
+        if (err.length) {
+            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
+        }
+
 
         let acc = Number(e.msg.replace(/^.*lmtacc\s*/g, ''))
 
