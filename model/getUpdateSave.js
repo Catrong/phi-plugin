@@ -134,7 +134,7 @@ export default class getUpdateSave {
                 }
             }
         }
-        await getSave.putSave(e.user_id, notesData)
+        getNotes.putNotesData(e.user_id, notesData)
 
         /**rks变化 */
         let add_rks = old ? now.saveInfo.summary.rankingScore - old.saveInfo.summary.rankingScore : 0
