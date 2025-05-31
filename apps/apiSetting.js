@@ -3,6 +3,7 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
+import getFile from '../model/getFile.js'
 import getSave from '../model/getSave.js'
 import ProgressBar from "../model/progress-bar.js";
 import { redisPath } from '../model/constNum.js'
@@ -359,7 +360,17 @@ export class phihelp extends plugin {
             }
         } while (cursor != 0);
         try {
-            await makeRequest.setUsersToken({ data: user_token })
+            if (user_token.length > 1000) {
+                send.send_with_At(e, `数据量过大，开始分批上传...`);
+                for (let i = 0; i < user_token.length; i += 1000) {
+                    let batch = user_token.slice(i, i + 999);
+                    await makeRequest.setUsersToken({ data: batch });
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒
+                    logger.info(`[phi-plugin] 已上传 ${Math.floor(i / 1000) + 1} / ${Math.ceil(user_token.length / 1000)} 批次`);
+                }
+            } else {
+                await makeRequest.setUsersToken({ data: user_token });
+            }
             send.send_with_At(e, '上传用户Token成功')
 
         } catch (err) {
