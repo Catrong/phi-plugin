@@ -14,6 +14,8 @@ import { LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
+import makeRequest from '../model/makeRequest.js';
+import makeRequestFnc from '../model/makeRequestFnc.js';
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
@@ -104,7 +106,7 @@ export class phib19 extends plugin {
             }
         }
 
-        let plugin_data = await get.getpluginData(e.user_id)
+        let plugin_data = await getNotes.getNotesData(e.user_id)
 
 
         if (!Config.getUserCfg('config', 'isGuild')) {
@@ -195,7 +197,7 @@ export class phib19 extends plugin {
             }
         }
 
-        let plugin_data = await get.getpluginData(e.user_id)
+        let plugin_data = await getNotes.getNotesData(e.user_id)
 
 
         if (!Config.getUserCfg('config', 'isGuild'))
@@ -278,6 +280,13 @@ export class phib19 extends plugin {
         }
 
 
+        let err = save.checkNoInfo()
+
+        if (err.length) {
+            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
+        }
+
+
         let nnum = e.msg.match(/(b|B)[0-9]*/g)
         nnum = nnum ? Number(nnum[0].replace(/(b|B)/g, '')) - 1 : 32
         if (!nnum) { nnum = 32 }
@@ -298,6 +307,7 @@ export class phib19 extends plugin {
             backgroundUrl: await fCompute.getBackground(save.gameuser.background),
             PlayerId: save.saveInfo.PlayerId,
         }
+
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
         let data = {
@@ -330,6 +340,13 @@ export class phib19 extends plugin {
             return false
         }
         
+        let err = save.checkNoInfo()
+
+        if (err.length) {
+            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
+        }
+
+
         let err = save.checkNoInfo()
 
         if (err.length) {
@@ -547,7 +564,7 @@ export class phib19 extends plugin {
         song = song[0]
 
         let Record = save.gameRecord
-        let ans = Record[await getInfo.SongGetId(song)]
+        let ans = Record[getInfo.SongGetId(song)]
 
         if (!ans) {
             send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
@@ -557,13 +574,19 @@ export class phib19 extends plugin {
         const dan = await get.getDan(e.user_id)
 
         /**获取历史成绩 */
-        let pluginData = await get.getpluginData(e.user_id)
 
-        let HistoryData = pluginData?.scoreHistory
+        let HistoryData = null;
 
-        if (HistoryData) {
-            HistoryData = HistoryData[get.SongGetId(song)]
+        try {
+            HistoryData = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id: getInfo.SongGetId(song) })
+        } catch (err) {
+            logger.warn(`[phi-plugin] API ERR`, err)
+            HistoryData = await getSave.getHistory(e.user_id)
+            if (HistoryData) {
+                HistoryData = HistoryData[get.SongGetId(song)]
+            }
         }
+
 
         let history = []
 

@@ -17,6 +17,7 @@ import getSaveFromApi from '../model/getSaveFromApi.js'
 import saveHistory from '../model/class/saveHistory.js'
 import getNotes from '../model/getNotes.js'
 
+const apiMsg = `\n请注意，您尚未设置API Token！\n指令格式：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
 
 export class phisstk extends plugin {
     constructor() {
@@ -80,7 +81,7 @@ export class phisstk extends plugin {
                 if (result?.data?.internal_id) {
                     let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
                     if (!result.data.have_api_token) {
-                        resMsg += `\n请注意，您尚未设置API Token！\n请使用命令设置API Token：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
+                        resMsg += apiMsg
                     }
                     send.send_with_At(e, resMsg)
                     let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
@@ -186,7 +187,7 @@ export class phisstk extends plugin {
                 if (result?.data?.internal_id) {
                     let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
                     if (!result.data.have_api_token) {
-                        resMsg += `\n请注意，您尚未设置API Token！\n请使用命令设置API Token：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
+                        resMsg += apiMsg
                     }
                     send.send_with_At(e, resMsg)
                     let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
