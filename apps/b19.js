@@ -562,11 +562,17 @@ export class phib19 extends plugin {
         /**获取历史成绩 */
 
         let HistoryData = null;
-
-        try {
-            HistoryData = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id: getInfo.SongGetId(song) })
-        } catch (err) {
-            logger.warn(`[phi-plugin] API ERR`, err)
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            try {
+                HistoryData = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id: getInfo.SongGetId(song) })
+            } catch (err) {
+                logger.warn(`[phi-plugin] API ERR`, err)
+                HistoryData = await getSave.getHistory(e.user_id)
+                if (HistoryData) {
+                    HistoryData = HistoryData[get.SongGetId(song)]
+                }
+            }
+        } else {
             HistoryData = await getSave.getHistory(e.user_id)
             if (HistoryData) {
                 HistoryData = HistoryData[get.SongGetId(song)]
