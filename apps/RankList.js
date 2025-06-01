@@ -70,7 +70,7 @@ export class phiRankList extends plugin {
                 send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
                 return true
             } catch (err) {
-                send.send_with_At(e, `从API获取排行榜失败QAQ，将展示本地数据！`)
+                logger.warn(`[phi-plugin] API ERR`, err)
                 logger.error(err)
             }
         }
