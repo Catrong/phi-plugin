@@ -272,13 +272,6 @@ export class phib19 extends plugin {
             return true
         }
 
-        
-        let err = save.checkNoInfo()
-
-        if (err.length) {
-            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
-        }
-
 
         let err = save.checkNoInfo()
 
@@ -339,13 +332,6 @@ export class phib19 extends plugin {
         if (!save) {
             return false
         }
-        
-        let err = save.checkNoInfo()
-
-        if (err.length) {
-            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
-        }
-
 
         let err = save.checkNoInfo()
 
