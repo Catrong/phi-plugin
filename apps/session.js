@@ -233,8 +233,8 @@ export class phisstk extends plugin {
             } catch (err) {
                 if (err?.message != "用户 未找到") {
                     send.send_with_At(e, `${err}\n从API获取存档失败，本次更新将使用本地数据QAQ！`)
-                    logger.error(`[phi-plugin] API错误`)
-                    logger.error(err)
+                    logger.warn(`[phi-plugin] API错误`)
+                    logger.warn(err)
                 }
             }
         }
