@@ -33,9 +33,10 @@ class send {
      * 检查存档部分
      * @param {*} e 
      * @param {Number} ver 存档版本
+     * @param {boolean} [send=false] 是否发送提示
      * @returns {Promise<Save>}
      */
-    async getsave_result(e, ver) {
+    async getsave_result(e, ver, send = true) {
 
         let user_save = null
 
@@ -49,7 +50,9 @@ class send {
 
                         let sessionToken = await getSave.get_user_token(e.user_id)
                         if (!sessionToken) {
-                            this.send_with_At(e, `请先绑定sessionToken哦！\n如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                            if (send) {
+                                this.send_with_At(e, `请先绑定sessionToken哦！\n如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                            }
                             return false
                         }
 
@@ -64,7 +67,9 @@ class send {
 
         let sessionToken = await getSave.get_user_token(e.user_id)
         if (!sessionToken) {
-            this.send_with_At(e, `请先绑定sessionToken哦！\n如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+            if (send) {
+                this.send_with_At(e, `请先绑定sessionToken哦！\n如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+            }
             return false
         }
 
@@ -72,7 +77,9 @@ class send {
 
 
         if (!user_save || (ver && (!user_save.Recordver || user_save.Recordver < ver))) {
-            this.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
+            if (send) {
+                this.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
+            }
             return false
         }
 

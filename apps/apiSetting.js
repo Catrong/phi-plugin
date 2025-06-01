@@ -361,12 +361,12 @@ export class phihelp extends plugin {
         } while (cursor != 0);
         try {
             if (user_token.length > 1000) {
-                send.send_with_At(e, `数据量过大，开始分批上传...`);
+                send.send_with_At(e, `数据量过大，开始分批上传，预计${Math.ceil(user_token / 1000) * 5}秒...`);
                 for (let i = 0; i < user_token.length; i += 1000) {
-                    let batch = user_token.slice(i, i + 999);
+                    let batch = user_token.slice(i, i + 1000);
                     await makeRequest.setUsersToken({ data: batch });
-                    await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒
                     logger.info(`[phi-plugin] 已上传 ${Math.floor(i / 1000) + 1} / ${Math.ceil(user_token.length / 1000)} 批次`);
+                    await new Promise(resolve => setTimeout(resolve, 5000)); // 等待1秒
                 }
             } else {
                 await makeRequest.setUsersToken({ data: user_token });

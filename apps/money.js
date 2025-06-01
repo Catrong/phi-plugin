@@ -62,7 +62,7 @@ export class phimoney extends plugin {
             return false
         }
 
-        let data = await getNotes.getNotesData(e.user_id, true)
+        let data = await getNotes.getNotesData(e.user_id)
         let last_sign = new Date(data.plugin_data.sign_in)
         let now_time = new Date().toString()
         let request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
@@ -82,7 +82,7 @@ export class phimoney extends plugin {
             data.plugin_data.sign_in = now_time
 
 
-            await getNotes.putNotesData(e.user_id, data)
+            getNotes.putNotesData(e.user_id, data)
             /**判断时间段 */
             let time1 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '06:00:00'))
             let time2 = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '11:30:00'))
@@ -116,7 +116,7 @@ export class phimoney extends plugin {
                 Remsg.push(`祝您今日愉快呐！（￣︶￣）↗　`)
             }
 
-            let save = await get.getsave(e.user_id)
+            let save = await send.getsave_result(e, undefined, false)
             let last_task = new Date(data.plugin_data.task_time)
 
             if (save) {
@@ -158,7 +158,7 @@ export class phimoney extends plugin {
             return false
         }
 
-        let data = await getNotes.getNotesData(e.user_id, true)
+        let data = await getNotes.getNotesData(e.user_id)
         let last_task = new Date(data.plugin_data.task_time)
         let now_time = new Date().toString()
         let request_time = new Date(now_time.replace(/([0-9])+:([0-9])+:([0-9])+/g, '00:00:00')) //每天0点
@@ -391,7 +391,7 @@ export class phimoney extends plugin {
             return true
         }
 
-        let sender_data = await getNotes.getNotesData(e.user_id, true)
+        let sender_data = await getNotes.getNotesData(e.user_id)
 
         if (target == e.user_id) {
             await send.send_with_At(e, `转账成……欸？这个目标……在拿我寻开心嘛！`)
@@ -419,7 +419,7 @@ export class phimoney extends plugin {
         sender_data.plugin_data.money -= num
         await get.putpluginData(e.user_id, sender_data)
 
-        let target_data = await getNotes.getNotesData(target, true)
+        let target_data = await getNotes.getNotesData(target)
         target_data.plugin_data.money += Math.ceil(num * 0.8)
         await get.putpluginData(target, target_data)
         let target_card = await Bot.pickMember(e.group_id, target)
@@ -440,11 +440,11 @@ export class phimoney extends plugin {
             send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getUserCfg('config', 'cmdhead')} theme 0-2`)
             return false
         }
-        await getNotes.getNotesData(e.user_id)
-        const plugin_data = await get.getpluginData(e.user_id)
+
+        const plugin_data = await getNotes.getNotesData(e.user_id)
         plugin_data.plugin_data.theme = theme[aim].id
 
-        await get.putpluginData(e.user_id, plugin_data)
+        await getNotes.putPluginData(e.user_id, plugin_data)
 
         send.send_with_At(e, `设置成功！\n你当前的主题是：${theme[aim].src}`)
         return true
@@ -487,7 +487,7 @@ function randtask(save, task = []) {
 
     /**将曲目分级并处理 */
     for (let id in info) {
-        if(id == 'テリトリーバトル.ツユ') continue
+        if (id == 'テリトリーバトル.ツユ') continue
         for (let level in Level) {
             if (info[id]['chart'][Level[level]]) {
                 if (!gameRecord[id] || !gameRecord[id][level] || gameRecord[id][level].acc != 100) {
