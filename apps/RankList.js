@@ -71,7 +71,6 @@ export class phiRankList extends plugin {
                 return true
             } catch (err) {
                 logger.warn(`[phi-plugin] API ERR`, err)
-                logger.error(err)
             }
         }
         let rankNum = 0
