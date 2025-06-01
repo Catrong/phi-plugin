@@ -28,7 +28,6 @@ export class phihelp extends plugin {
 
     async set(e) {
         if (!e.isMaster) {
-            e.reply("无权限");
             return false;
         }
         let schemas = configInfo.schemas
