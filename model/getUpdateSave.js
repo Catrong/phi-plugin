@@ -27,7 +27,8 @@ export default class getUpdateSave {
             if (token) {
                 getSave.add_user_token(e.user_id, token)
             }
-            return { save: result, added_rks_notes: [0, 0] }
+            let added_rks_notes = await this.buildingRecord(old, newSave, e)
+            return { save: result, added_rks_notes }
         } else {
             return { save: old, added_rks_notes: [0, 0] }
         }
@@ -76,6 +77,13 @@ export default class getUpdateSave {
             }
         }
 
+
+        // await now.init()
+        /**更新 */
+        let history = await getSave.getHistory(e.user_id)
+        history.update(now)
+        getSave.putHistory(e.user_id, history)
+
         let added_rks_notes = await this.buildingRecord(old, now, e)
         return { save: now, added_rks_notes }
     }
@@ -85,13 +93,6 @@ export default class getUpdateSave {
      * @returns {Promise<[number,number]>} [rks变化值，note变化值]，失败返回 false
      */
     static async buildingRecord(old, now, e) {
-
-
-        // await now.init()
-        /**更新 */
-        let history = await getSave.getHistory(e.user_id)
-        history.update(now)
-        getSave.putHistory(e.user_id, history)
 
 
         let notesData = getNotes.getNotesData(e.user_id)

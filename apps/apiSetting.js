@@ -67,7 +67,7 @@ export class phihelp extends plugin {
         let apiToken = e.msg.replace(/^[#/].*?setApiToken\s*/, '')
         if (!apiToken) {
             send.send_with_At(e, `请输入apiToken！\n格式：\n设置初始密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <新Token> \n更改密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken（换行）<旧Token>（换行）<新Token>`)
-
+            return true
         }
         if (apiToken.includes('\n')) {
             let lines = apiToken.split('\n');
@@ -361,7 +361,7 @@ export class phihelp extends plugin {
         } while (cursor != 0);
         try {
             if (user_token.length > 1000) {
-                send.send_with_At(e, `数据量过大，开始分批上传，预计${Math.ceil(user_token / 1000) * 5}秒...`);
+                send.send_with_At(e, `数据量过大，开始分批上传，预计${Math.ceil(user_token.length / 1000) * 5}秒...`);
                 for (let i = 0; i < user_token.length; i += 1000) {
                     let batch = user_token.slice(i, i + 1000);
                     await makeRequest.setUsersToken({ data: batch });
