@@ -16,6 +16,7 @@ import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
 import makeRequest from '../model/makeRequest.js';
 import makeRequestFnc from '../model/makeRequestFnc.js';
+import getSaveFromApi from '../model/getSaveFromApi.js';
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
@@ -564,7 +565,7 @@ export class phib19 extends plugin {
         let HistoryData = null;
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
-                HistoryData = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id: getInfo.SongGetId(song) })
+                HistoryData = await getSaveFromApi.getSongHistory(e, getInfo.SongGetId(song))
             } catch (err) {
                 logger.warn(`[phi-plugin] API ERR`, err)
                 HistoryData = await getSave.getHistory(e.user_id)

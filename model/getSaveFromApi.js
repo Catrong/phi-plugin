@@ -107,6 +107,13 @@ export default class getSaveFromApi {
         return new saveHistory(result)
     }
 
+    /**
+     * 
+     * @param {*} e 
+     * @param {idString} [song_id] 
+     * @param {levelKind} [difficulty] 
+     * @returns 
+     */
     static async getSongHistory(e, song_id, difficulty) {
         let apiId = await this.get_user_apiId(e.user_id)
         if (!apiId) {
