@@ -212,7 +212,7 @@ Special thanks to these sponsors (list may not be fully updated):
 
 1. This plugin is intended for non-commercial use only.
 2. All images/assets are from the internet and will be removed upon request.
-3. Cloud save system adapted from [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary/tree/v3.1.0)
+3. Cloud save system adapted from [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary)
 
 ### Related Projects
 
