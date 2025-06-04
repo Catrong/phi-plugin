@@ -258,7 +258,7 @@ pnpm install -P
 
 1. 功能仅限内部交流与小范围使用，请勿将`Yunzai-Bot`及`phi-Plugin`用于任何以盈利为目的的场景.
 2. 图片与其他素材均来自于网络，仅供交流学习使用，如有侵权请联系，会立即删除.
-3. 云存档由[7aGiven/PhigrosLibrary](/7aGiven/PhigrosLibrary) 改写而来
+3. 云存档由 [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary) 改写而来
 
 ###### 写的不好，轻喷……
 
