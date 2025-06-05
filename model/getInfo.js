@@ -80,7 +80,7 @@ export default new class getInfo {
         let csv_avatar = await readFile.FileReader(path.join(infoPath, 'avatar.csv'))
         this.avatarid = {}
         for (let i in csv_avatar) {
-            this.avatarid[csv_avatar[i].id] = csv_avatar[i].name
+            this.avatarid[csv_avatar[i].id] = csv_avatar[i].id
         }
 
         /**
