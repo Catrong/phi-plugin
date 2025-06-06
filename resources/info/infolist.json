@@ -1343,5 +1343,22 @@
         "bpm": "190",
         "length": "2:33",
         "chapter": "Chapter EX-Immaculée Sekai 精选集"
+    },
+    "Aliceinaxxxxxxxx.Nagiha": {
+        "bpm": "144",
+        "length": "2:35",
+        "chapter": "单曲精选集"
+    },
+    "Radiance.Nhato": {
+        "bpm": "155",
+        "chapter": "Chapter EX-オンゲキ 精选集"
+    },
+    "DiamondDust.MasahiroGodspeedAoki": {
+        "bpm": "200",
+        "chapter": "Chapter EX-オンゲキ 精选集"
+    },
+    "StardustRAY.kanonevsBlackY": {
+        "bpm": "164",
+        "chapter": "Chapter EX-オンゲキ 精选集"
     }
 }

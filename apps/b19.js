@@ -613,8 +613,8 @@ export class phib19 extends plugin {
         }
 
 
-        data.illustration = get.getill(song)
-        let songsinfo = get.ori_info[song]
+        data.illustration = getInfo.getill(song)
+        let songsinfo = getInfo.info(song, true);
 
         switch (picversion) {
             case 2: {
