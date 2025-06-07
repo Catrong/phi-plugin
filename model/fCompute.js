@@ -107,7 +107,7 @@ export default class compute {
                     break
                 }
             }
-            return getInfo.getill(save_background)
+            return getInfo.getill(getInfo.idgetsong(save_background) || save_background)
         } catch (err) {
             logger.error(`获取背景曲绘错误`, err)
             return false

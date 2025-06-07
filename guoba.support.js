@@ -433,8 +433,8 @@ export function supportGuoba() {
                 },
                 {
                     field: 'LetterTimeLength',
-                    label: '猜字母最长时长',
-                    bottomHelpMessage: '单位：秒',
+                    label: '猜字母待机时长',
+                    bottomHelpMessage: '无人回答多长时间后结束，单位：秒',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {

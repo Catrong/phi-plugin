@@ -29,6 +29,11 @@ let lastGuessedTime = {} //存储群聊猜字母全局冷却时间
 let lastRevealedTime = {} //存储群聊翻字母全局冷却时间
 let lastTipTime = {} //存储群聊提示全局冷却时间
 let gameSelectList = {} //群聊游戏选择的游戏范围
+/**
+ * 存储群聊游戏计时器
+ * @type {Object.<string, {startTime: number, newTime: number}>}
+ */
+let timeCount = {}
 let isfuzzymatch = true
 
 export default new class guessLetter {
@@ -89,6 +94,8 @@ export default new class guessLetter {
         // 存储单局抽到的曲目下标
         let chose = []
 
+        let nowTime = Date.now()
+
         for (let i = 1; i <= Config.getUserCfg('config', 'LetterNum'); i++) {
             // 根据曲目权重随机返回一首曲目名称
             let randsong = getRandomSong(e, totNameList)
@@ -114,6 +121,10 @@ export default new class guessLetter {
             gamelist[group_id][i] = songs_info.song
             blurlist[group_id][i] = encrypt_song_name(songs_info.song)
             gameList[group_id] = { gameType: "guessLetter" }
+            timeCount[group_id] = {
+                startTime: nowTime,
+                newTime: Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+            }
 
         }
 
@@ -136,12 +147,13 @@ export default new class guessLetter {
         }
         await e.reply(output, true)
 
-        /**单局游戏不超过设定 */
-        for (let j = 0; j < Config.getUserCfg('config', 'LetterTimeLength'); ++j) {
+        /**如果过长时间没人回答则结束 */
+        while (timeCount[group_id]?.newTime && Date.now() < timeCount[group_id].newTime) {
             await timeout(1000)
-            if (!gamelist[group_id]) {
-                return false
-            }
+        }
+        
+        if (!gamelist[group_id] || nowTime != timeCount[group_id].startTime) {
+            return false
         }
 
         if (gamelist[group_id]) {
@@ -332,11 +344,11 @@ export default new class guessLetter {
                             if (get.info(standard_song).illustration) { //如果有曲绘文件
                                 switch (Config.getUserCfg('config', 'LetterIllustration')) {
                                     case "水印版": {
-                                        e.reply(await get.getillpicmodle(e, { illustration: get.getill(standard_song), illustrator: get.info()[standard_song]["illustrator"] }))
+                                        e.reply(await get.getillpicmodle(e, { illustration: get.getill(standard_song), illustrator: get.info(standard_song)["illustrator"] }))
                                         break;
                                     }
                                     case "原版": {
-                                        e.reply(getPic.getIll(song[0]))
+                                        e.reply(getPic.getIll(standard_song))
                                     }
                                     default:
                                         break;
@@ -738,6 +750,7 @@ function gameover(group_id, gameList) {
     delete gameList[group_id]
     delete blurlist[group_id]
     delete winnerlist[group_id]
+    delete timeCount[group_id]
 
     const output = ['开字母已结束，答案如下：']
 
