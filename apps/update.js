@@ -5,6 +5,7 @@ import { Restart } from '../../other/restart.js'
 import Config from "../components/Config.js";
 import common from "../../../lib/common/common.js";
 import getInfo from "../model/getInfo.js";
+import { originalIllPath } from "../model/path.js";
 import fs from 'node:fs';
 
 const require = createRequire(import.meta.url);
@@ -296,14 +297,14 @@ export class phiupdate extends plugin {
     async ill_runUpdate() {
 
         try {
-            var gitCfg = fs.readFileSync(`./plugins/phi-plugin/resources/original_ill/.git/config`, "utf8")
+            var gitCfg = fs.readFileSync(`${originalIllPath}/.git/config`, "utf8")
 
             // console.info(gitCfg)
 
-            gitCfg = gitCfg.replace('https://ghproxy.com/https://github.com/Catrong/phi-plugin-ill', 'https://gitee.com/Steveeee-e/phi-plugin-ill.git')
+            gitCfg = gitCfg.replace(/url\s*=\s*(.*)/, `url = ${Config.getUserCfg('config', 'downIllUrl')}`)
             // console.info(gitCfg)
 
-            fs.writeFileSync(`./plugins/phi-plugin/resources/original_ill/.git/config`, gitCfg, "utf8")
+            fs.writeFileSync(`${originalIllPath}/.git/config`, gitCfg, "utf8")
         } catch (err) {
             logger.error(err)
         }

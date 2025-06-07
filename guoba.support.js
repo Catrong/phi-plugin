@@ -48,7 +48,31 @@ export function supportGuoba() {
                             },
                             {
                                 label: 'github代理',
-                                value: "https://ghfast.top/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                                value: "https://github.moeyy.xyz/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                            }
+                        ]
+                    }
+                },
+                {
+                    field: 'downIllUrl',
+                    label: '下载曲绘源',
+                    bottomHelpMessage: '下载曲绘的源，实时生效',
+                    component: "RadioGroup",
+                    componentProps: {
+                        buttonStyle: "solid",
+                        optionType: "button",
+                        options: [
+                            {
+                                label: 'gitee（暂时弃用）',
+                                value: "https://gitee.com/Steveeee-e/phi-plugin-ill.git"
+                            },
+                            {
+                                label: 'github',
+                                value: "https://github.com/Catrong/phi-plugin-ill.git"
+                            },
+                            {
+                                label: 'github代理',
+                                value: "https://github.moeyy.xyz/https://github.com/Catrong/phi-plugin-ill.git"
                             }
                         ]
                     }

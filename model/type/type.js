@@ -67,6 +67,7 @@
 /**
  * 渲染设置
  * @typedef {'onLinePhiIllUrl'} onLinePhiIllUrl 在线曲绘来源
+ * @typedef {'downIllUrl'} downIllUrl 下载曲绘来源
  * @typedef {'renderScale'} renderScale 渲染精度
  * @typedef {'randerQuality'} randerQuality 渲染质量
  * @typedef {'timeout'} timeout 渲染超时时间
@@ -111,6 +112,7 @@
  * @typedef {'VikaToken'} VikaToken VikaToken
  * 
  * @typedef {onLinePhiIllUrl
+ * |downIllUrl
  * |renderScale
  * |randerQuality
  * |timeout
