@@ -168,6 +168,7 @@ export default new class guessLetter {
     /** 翻开字母 **/
     async reveal(e, gameList) {
         const { group_id: groupId, msg } = e
+        timeCount[groupId].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
         if (!gamelist[groupId]) {
             e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} ltr'开始新的一局吧！`, true)
@@ -279,6 +280,7 @@ export default new class guessLetter {
     /** 猜测 **/
     async guess(e, gameList) {
         const { group_id, msg, user_id, sender } = e //使用对象解构提取group_id,msg,user_id和sender
+        timeCount[groupId].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
         //必须已经开始了一局
         if (gamelist[group_id]) {
@@ -440,6 +442,7 @@ export default new class guessLetter {
     /** 提示 **/
     async getTip(e, gameList) {
         const { group_id } = e
+        timeCount[groupId].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
         if (!gamelist[group_id]) {
             e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
