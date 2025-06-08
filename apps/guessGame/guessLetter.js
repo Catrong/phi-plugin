@@ -151,7 +151,7 @@ export default new class guessLetter {
         while (timeCount[group_id]?.newTime && Date.now() < timeCount[group_id].newTime) {
             await timeout(1000)
         }
-        
+
         if (!gamelist[group_id] || nowTime != timeCount[group_id].startTime) {
             return false
         }
@@ -167,17 +167,17 @@ export default new class guessLetter {
 
     /** 翻开字母 **/
     async reveal(e, gameList) {
-        const { group_id: groupId, msg } = e
-        timeCount[groupId].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        const { group_id, msg } = e
+        timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
-        if (!gamelist[groupId]) {
+        if (!gamelist[group_id]) {
             e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} ltr'开始新的一局吧！`, true)
             return false
         }
 
         const time = Config.getUserCfg('config', 'LetterRevealCd')
         const currentTime = Date.now()
-        const timetik = currentTime - lastRevealedTime[groupId]
+        const timetik = currentTime - lastRevealedTime[group_id]
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
 
         if (timetik < 1000 * time) {
@@ -185,7 +185,7 @@ export default new class guessLetter {
             return true
         }
 
-        lastRevealedTime[groupId] = currentTime
+        lastRevealedTime[group_id] = currentTime
 
         const newMsg = msg.replace(/[#/](出|开|翻|揭|看|翻开|打开|揭开|open)(\s*)/g, '')
 
@@ -194,14 +194,14 @@ export default new class guessLetter {
             let output = []
             let included = false
 
-            if (alphalist[groupId].replace(/\[object Object\]/g, '').includes(letter.toUpperCase())) {
+            if (alphalist[group_id].replace(/\[object Object\]/g, '').includes(letter.toUpperCase())) {
                 e.reply(`字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！`, true)
                 return true
             }
 
-            for (let i in gamelist[groupId]) {
-                const songname = gamelist[groupId][i]
-                const blurname = blurlist[groupId][i]
+            for (let i in gamelist[group_id]) {
+                const songname = gamelist[group_id][i]
+                const blurname = blurlist[group_id][i]
                 let characters = ''
                 let letters = ''
 
@@ -216,7 +216,7 @@ export default new class guessLetter {
 
                 included = true
 
-                if (!blurlist[groupId][i]) {
+                if (!blurlist[group_id][i]) {
                     continue
                 }
 
@@ -228,33 +228,33 @@ export default new class guessLetter {
                     return char.toLowerCase() === letter ? char : blurname[index]
                 }).join('');
 
-                blurlist[groupId][i] = newBlurname
+                blurlist[group_id][i] = newBlurname
 
                 if (!newBlurname.includes('*')) {
-                    delete blurlist[groupId][i]
+                    delete blurlist[group_id][i]
                 }
             }
 
             if (included) {
-                alphalist[groupId] = alphalist[groupId] || ''
-                alphalist[groupId] += /^[A-Za-z]+$/g.test(letter) ? letter.toUpperCase() + ' ' : letter + ' '
+                alphalist[group_id] = alphalist[group_id] || ''
+                alphalist[group_id] += /^[A-Za-z]+$/g.test(letter) ? letter.toUpperCase() + ' ' : letter + ' '
                 output.push(`成功翻开字母[ ${letter} ]\n`)
             } else {
                 output.push(`这几首曲目中不包含字母[ ${letter} ]\n`)
             }
 
-            output.push(`当前所有翻开的字母[ ${alphalist[groupId].replace(/\[object Object\]/g, '')}]`)
+            output.push(`当前所有翻开的字母[ ${alphalist[group_id].replace(/\[object Object\]/g, '')}]`)
 
-            let isEmpty = Object.getOwnPropertyNames(blurlist[groupId]).length === 0
+            let isEmpty = Object.getOwnPropertyNames(blurlist[group_id]).length === 0
 
-            output = output.concat(Object.keys(gamelist[groupId]).map(m => {
-                if (!isEmpty && blurlist[groupId][m]) {
-                    return `\n【${m}】${blurlist[groupId][m]}`
+            output = output.concat(Object.keys(gamelist[group_id]).map(m => {
+                if (!isEmpty && blurlist[group_id][m]) {
+                    return `\n【${m}】${blurlist[group_id][m]}`
                 } else {
-                    let result = `\n【${m}】${gamelist[groupId][m]}`
+                    let result = `\n【${m}】${gamelist[group_id][m]}`
 
-                    if (winnerlist[groupId][m]) {
-                        result += ` @${winnerlist[groupId][m]}`
+                    if (winnerlist[group_id][m]) {
+                        result += ` @${winnerlist[group_id][m]}`
                     }
 
                     return result
@@ -263,11 +263,11 @@ export default new class guessLetter {
 
             if (isEmpty) {
                 output.unshift('\n所有字母已翻开，答案如下：\n')
-                delete alphalist[groupId]
-                delete blurlist[groupId]
-                delete gamelist[groupId]
-                delete gameList[groupId]
-                delete winnerlist[groupId]
+                delete alphalist[group_id]
+                delete blurlist[group_id]
+                delete gamelist[group_id]
+                delete gameList[group_id]
+                delete winnerlist[group_id]
             }
 
             e.reply(output, true)
@@ -280,7 +280,7 @@ export default new class guessLetter {
     /** 猜测 **/
     async guess(e, gameList) {
         const { group_id, msg, user_id, sender } = e //使用对象解构提取group_id,msg,user_id和sender
-        timeCount[groupId].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
         //必须已经开始了一局
         if (gamelist[group_id]) {
@@ -442,7 +442,7 @@ export default new class guessLetter {
     /** 提示 **/
     async getTip(e, gameList) {
         const { group_id } = e
-        timeCount[groupId].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
         if (!gamelist[group_id]) {
             e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
