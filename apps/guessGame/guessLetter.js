@@ -280,7 +280,7 @@ export default new class guessLetter {
     /** 猜测 **/
     async guess(e, gameList) {
         const { group_id, msg, user_id, sender } = e //使用对象解构提取group_id,msg,user_id和sender
-        timeCount[groupId].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
         //必须已经开始了一局
         if (gamelist[group_id]) {
