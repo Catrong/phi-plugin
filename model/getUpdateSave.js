@@ -1,6 +1,8 @@
 import { Config } from "../components/index.js";
 import PhigrosUser from "../lib/PhigrosUser.js";
 import Save from "./class/Save.js";
+import { Level } from "./constNum.js";
+import getInfo from "./getInfo.js";
 import getNotes from "./getNotes.js";
 import getSave from "./getSave.js";
 import getSaveFromApi from "./getSaveFromApi.js";
@@ -110,7 +112,7 @@ export default class getUpdateSave {
             for (let id in now.gameRecord) {
                 for (let i in task) {
                     if (!task[i]) continue
-                    if (!task[i].finished && getInfo.songsid[id] == task[i].song) {
+                    if (!task[i].finished && getInfo.idgetsong(id) == task[i].song) {
                         let level = Level.indexOf(task[i].request.rank)
                         if (!now.gameRecord[id][level]) continue
                         switch (task[i].request.type) {
