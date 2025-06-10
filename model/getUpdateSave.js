@@ -95,7 +95,7 @@ export default class getUpdateSave {
     static async buildingRecord(old, now, e) {
 
 
-        let notesData = getNotes.getNotesData(e.user_id)
+        let notesData = await getNotes.getNotesData(e.user_id)
         /**修正 */
         if (notesData.update || notesData.task_update) {
             delete notesData.update
