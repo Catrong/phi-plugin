@@ -48,8 +48,8 @@
                 "desc": "修改API Token"
             },
             {
-                "title": "/tokenList",
-                "eg": "/tokenList",
+                "title": "/tkls",
+                "eg": "/tkls",
                 "desc": "获取当前绑定的平台列表"
             },
             {
