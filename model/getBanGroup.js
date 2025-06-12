@@ -1,4 +1,9 @@
+import Config from "../components/Config.js";
 import { redisPath } from "./constNum.js"
+import getSave from "./getSave.js";
+import makeRequest from "./makeRequest.js";
+import makeRequestFnc from "./makeRequestFnc.js";
+import send from "./send.js";
 
 export default new class getBanGroup {
 
@@ -21,7 +26,30 @@ export default new class getBanGroup {
      * @param {allFnc} fnc 
      * @returns 
      */
-    async get(group, fnc) {
+    async get(e, fnc) {
+        const { group } = e;
+        let sessionToken = await getSave.get_user_token(e.user_id)
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            let result = false
+            try {
+                result = await makeRequest.getUserBan(makeRequestFnc.makePlatform(e))
+                if (result) {
+                    send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员。")
+                    if (sessionToken) {
+                        await getSave.banSessionToken(sessionToken)
+                    }
+                    return true;
+                }
+            } catch (e) {
+                logger.warn('[phi-plugin]API获取用户禁用状态失败', e)
+            }
+        }
+        if (sessionToken) {
+            if (await getSave.isBanSessionToken(sessionToken)) {
+                send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员。")
+                return true;
+            }
+        }
         if (!group) {
             return false
         }
@@ -84,6 +112,13 @@ export default new class getBanGroup {
             case 'dan':
             case 'danupdate':
                 return await this.redis(group, 'dan')
+            case 'auth':
+            case 'clearApiData':
+            case 'updateHistory':
+            case 'setApiToken':
+            case 'tokenList':
+            case 'tokenManage':
+                return await this.redis(group, 'apiSetting')
             default:
                 return false;
         }

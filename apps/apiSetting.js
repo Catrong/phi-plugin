@@ -54,10 +54,10 @@ export class phihelp extends plugin {
 
     async setApiToken(e) {
 
-        // if (await getBanGroup.get(e.group_id, 'setApiToken')) {
-        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-        //     return false
-        // }
+        if (await getBanGroup.get(e, 'setApiToken')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
 
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
@@ -102,10 +102,10 @@ export class phihelp extends plugin {
     }
 
     async tokenList(e) {
-        // if (await getBanGroup.get(e.group_id, 'tokenList')) {
-        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-        //     return false
-        // }
+        if (await getBanGroup.get(e, 'tokenList')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
 
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
@@ -140,10 +140,10 @@ export class phihelp extends plugin {
     }
 
     async tokenManage(e) {
-        // if (await getBanGroup.get(e.group_id, 'tokenManage')) {
-        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-        //     return false
-        // }
+        if (await getBanGroup.get(e, 'tokenManage')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
 
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
@@ -243,10 +243,10 @@ export class phihelp extends plugin {
 
     async auth(e) {
 
-        // if (await getBanGroup.get(e.group_id, 'setApiToken')) {
-        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-        //     return false
-        // }
+        if (await getBanGroup.get(e, 'auth')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
 
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
@@ -271,10 +271,10 @@ export class phihelp extends plugin {
     }
 
     async clearApiData(e) {
-        // if (await getBanGroup.get(e.group_id, 'clearApiData')) {
-        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-        //     return false
-        // }
+        if (await getBanGroup.get(e, 'clearApiData')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
 
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')
@@ -294,10 +294,10 @@ export class phihelp extends plugin {
     }
 
     async updateHistory(e) {
-        // if (await getBanGroup.get(e.group_id, 'updateHistory')) {
-        //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-        //     return false
-        // }
+        if (await getBanGroup.get(e, 'updateHistory')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
 
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '这里没有连接查分平台哦！')

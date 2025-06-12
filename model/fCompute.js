@@ -493,20 +493,6 @@ export default class compute {
         return weight
     }
 
-    // static score_note(score, note) {
-    //     for (let maxCombo = 1; maxCombo <= note; maxCombo++) {
-    //         let comboScore = Math.round(maxCombo / note * 1e5)
-    //         let maxHit = 
-    //         if (comboScore + Math.round(maxCombo / note * 0.65 * 9e5) > score) {
-    //             /**全good仍大 */
-    //             continue
-    //         }
-    //         if () {
-
-    //         }
-    //     }
-    // }
-
     static getAdapterName(e) {
         return e.bot?.adapter?.name || e.bot?.adapter
     }

@@ -101,7 +101,7 @@ export class phisong extends plugin {
     /**歌曲图鉴 */
     async song(e) {
 
-        if (await getBanGroup.get(e.group_id, 'song')) {
+        if (await getBanGroup.get(e, 'song')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -126,6 +126,10 @@ export class phisong extends plugin {
                     let commentData = getComment.get(infoData.id);
                     for (let item of commentData) {
                         let save = await getSave.getSaveBySessionToken(item.sessionToken);
+                        if (!save) {
+                            getComment.del(item.thisId);
+                            commentData.splice(commentData.indexOf(item), 1);
+                        }
                         item.PlayerId = save.saveInfo.PlayerId.length > 15 ? save.saveInfo.PlayerId.slice(0, 12) + '...' : save.saveInfo.PlayerId;
                         item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
                         item.comment = fCompute.convertRichText(item.comment);
@@ -161,7 +165,7 @@ export class phisong extends plugin {
 
     async search(e) {
 
-        if (await getBanGroup.get(e.group_id, 'search')) {
+        if (await getBanGroup.get(e, 'search')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -343,7 +347,7 @@ export class phisong extends plugin {
 
     async ill(e) {
 
-        if (await getBanGroup.get(e.group_id, 'ill')) {
+        if (await getBanGroup.get(e, 'ill')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -379,7 +383,7 @@ export class phisong extends plugin {
     /**随机定级范围内曲目 */
     async randmic(e) {
 
-        if (await getBanGroup.get(e.group_id, 'randmic')) {
+        if (await getBanGroup.get(e, 'randmic')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -479,7 +483,7 @@ export class phisong extends plugin {
     /**查询歌曲别名 */
     async alias(e) {
 
-        if (await getBanGroup.get(e.group_id, 'alias')) {
+        if (await getBanGroup.get(e, 'alias')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -507,7 +511,7 @@ export class phisong extends plugin {
     /**计算等效rks */
     async comrks(e) {
 
-        if (await getBanGroup.get(e.group_id, 'comrks')) {
+        if (await getBanGroup.get(e, 'comrks')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -528,7 +532,7 @@ export class phisong extends plugin {
     /**随机tips */
     async tips(e) {
 
-        if (await getBanGroup.get(e.group_id, 'tips')) {
+        if (await getBanGroup.get(e, 'tips')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -537,7 +541,7 @@ export class phisong extends plugin {
     }
 
     async randClg(e) {
-        if (await getBanGroup.get(e.group_id, 'randclg')) {
+        if (await getBanGroup.get(e, 'randclg')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -625,7 +629,7 @@ export class phisong extends plugin {
 
     async newSong(e) {
 
-        if (await getBanGroup.get(e.group_id, 'newSong')) {
+        if (await getBanGroup.get(e, 'newSong')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -675,7 +679,7 @@ export class phisong extends plugin {
 
     async table(e) {
 
-        if (await getBanGroup.get(e.group_id, 'table')) {
+        if (await getBanGroup.get(e, 'table')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -694,7 +698,7 @@ export class phisong extends plugin {
 
     async comment(e) {
 
-        if (await getBanGroup.get(e.group_id, 'comment') || !(await Config.getUserCfg('config', 'allowComment'))) {
+        if (await getBanGroup.get(e, 'comment') || !(await Config.getUserCfg('config', 'allowComment'))) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -702,6 +706,11 @@ export class phisong extends plugin {
         let save = await send.getsave_result(e);
 
         if (!save) {
+            return true
+        }
+
+        if (!save.session && !(await getSave.get_user_token(e.user_id))) {
+            send.send_with_At(e, `暂不支持通过API绑定的用户进行评论哦！`)
             return true
         }
 
@@ -823,7 +832,7 @@ export class phisong extends plugin {
     }
 
     async recallComment(e) {
-        if (await getBanGroup.get(e.group_id, 'recallComment') || !(await Config.getUserCfg('config', 'allowComment'))) {
+        if (await getBanGroup.get(e, 'recallComment') || !(await Config.getUserCfg('config', 'allowComment'))) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -880,7 +889,7 @@ export class phisong extends plugin {
     }
 
     async chart(e) {
-        if (await getBanGroup.get(e.group_id, 'chart')) {
+        if (await getBanGroup.get(e, 'chart')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -928,7 +937,7 @@ export class phisong extends plugin {
     }
 
     async addtag(e) {
-        if (await getBanGroup.get(e.group_id, 'addtag') || !(await Config.getUserCfg('config', 'allowChartTag'))) {
+        if (await getBanGroup.get(e, 'addtag') || !(await Config.getUserCfg('config', 'allowChartTag'))) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }

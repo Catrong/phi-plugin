@@ -38,7 +38,7 @@ export class phiRankList extends plugin {
 
     async rankList(e) {
 
-        if (await getBanGroup.get(e.group_id, 'rankList')) {
+        if (await getBanGroup.get(e, 'rankList')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -124,7 +124,7 @@ export class phiRankList extends plugin {
 
     async godList(e) {
 
-        if (await getBanGroup.get(e.group_id, 'godList')) {
+        if (await getBanGroup.get(e, 'godList')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }

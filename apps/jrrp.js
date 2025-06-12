@@ -34,7 +34,7 @@ export class phihelp extends plugin {
 
     async jrrp(e) {
 
-        if (await getBanGroup.get(e.group_id, 'jrrp')) {
+        if (await getBanGroup.get(e, 'jrrp')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }

@@ -61,7 +61,14 @@
  * | 'jrrp'
  * | 'theme'
  * | 'dan'
- * | 'danupdate'} allFnc 全部指令
+ * | 'danupdate'
+ * | 'setApiToken'
+ * | 'tokenList'
+ * | 'tokenManage'
+ * | 'auth'
+ * | 'clearApiData'
+ * | 'updateHistory'
+ * } allFnc 全部指令
  */
 
 /**

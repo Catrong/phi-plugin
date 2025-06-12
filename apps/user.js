@@ -44,7 +44,7 @@ export class phiuser extends plugin {
     /**查询data */
     async data(e) {
 
-        if (await getBanGroup.get(e.group_id, 'data')) {
+        if (await getBanGroup.get(e, 'data')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -65,7 +65,7 @@ export class phiuser extends plugin {
 
     async info(e) {
 
-        if (await getBanGroup.get(e.group_id, 'info')) {
+        if (await getBanGroup.get(e, 'info')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -233,7 +233,7 @@ export class phiuser extends plugin {
 
     async lvscore(e) {
 
-        if (await getBanGroup.get(e.group_id, 'lvscore')) {
+        if (await getBanGroup.get(e, 'lvscore')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -450,7 +450,7 @@ export class phiuser extends plugin {
 
     async list(e) {
 
-        if (await getBanGroup.get(e.group_id, 'list')) {
+        if (await getBanGroup.get(e, 'list')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }

@@ -39,7 +39,7 @@ export class phihelp extends plugin {
     }
     async help(e) {
 
-        if (await getBanGroup.get(e.group_id, 'help')) {
+        if (await getBanGroup.get(e, 'help')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -59,7 +59,7 @@ export class phihelp extends plugin {
 
     async tkhelp(e) {
 
-        if (await getBanGroup.get(e.group_id, 'tkhelp')) {
+        if (await getBanGroup.get(e, 'tkhelp')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -69,7 +69,7 @@ export class phihelp extends plugin {
 
     async apihelp(e) {
 
-        // if (await getBanGroup.get(e.group_id, 'apihelp')) {
+        // if (await getBanGroup.get(e, 'apihelp')) {
         //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
         //     return false
         // }

@@ -68,7 +68,7 @@ export class phib19 extends plugin {
 
     async b19(e) {
 
-        if (await getBanGroup.get(e.group_id, 'b19')) {
+        if (await getBanGroup.get(e, 'b19')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -159,7 +159,7 @@ export class phib19 extends plugin {
     /**P30 */
     async p30(e) {
 
-        if (await getBanGroup.get(e.group_id, 'p30')) {
+        if (await getBanGroup.get(e, 'p30')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -263,7 +263,7 @@ export class phib19 extends plugin {
     /**arc版查分图 */
     async arcgrosB19(e) {
 
-        if (await getBanGroup.get(e.group_id, 'arcgrosB19')) {
+        if (await getBanGroup.get(e, 'arcgrosB19')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -324,7 +324,7 @@ export class phib19 extends plugin {
 
     /**限制最低acc后的rks */
     async lmtAcc(e) {
-        if (await getBanGroup.get(e.group_id, 'lmtAcc')) {
+        if (await getBanGroup.get(e, 'lmtAcc')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -403,7 +403,7 @@ export class phib19 extends plugin {
     /**获取bestn文字版 */
     async bestn(e) {
 
-        if (await getBanGroup.get(e.group_id, 'bestn')) {
+        if (await getBanGroup.get(e, 'bestn')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
         }
 
@@ -522,7 +522,7 @@ export class phib19 extends plugin {
 
     async singlescore(e) {
 
-        if (await getBanGroup.get(e.group_id, 'singlescore')) {
+        if (await getBanGroup.get(e, 'singlescore')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -670,7 +670,7 @@ export class phib19 extends plugin {
     /**推分建议，建议的是RKS+0.01的所需值 */
     async suggest(e) {
 
-        if (await getBanGroup.get(e.group_id, 'suggest')) {
+        if (await getBanGroup.get(e, 'suggest')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -744,7 +744,7 @@ export class phib19 extends plugin {
     /**查询章节成绩 */
     async chap(e) {
 
-        if (await getBanGroup.get(e.group_id, 'chap')) {
+        if (await getBanGroup.get(e, 'chap')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }

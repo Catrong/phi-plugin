@@ -43,7 +43,7 @@ export class phiDan extends plugin {
             return false
         }
 
-        if (await getBanGroup.get(e.group_id, 'dan')) {
+        if (await getBanGroup.get(e, 'dan')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -91,7 +91,7 @@ export class phiDan extends plugin {
             return false
         }
 
-        if (await getBanGroup.get(e.group_id, 'danupdate')) {
+        if (await getBanGroup.get(e, 'danupdate')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }

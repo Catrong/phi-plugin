@@ -296,7 +296,7 @@ export default class makeRequest {
      * @returns {Promise<{message: string}>}
      */
     static async setHistory(params) {
-        return (await makeFetch(burl('/set/history'), params)).data
+        return await makeFetch(burl('/set/history'), params)
     }
 
     /**
@@ -306,6 +306,15 @@ export default class makeRequest {
      */
     static async setUsersToken(params) {
         return await makeFetch(burl('/set/usersToken'), params)
+    }
+
+    /**
+     * 查询用户是否被禁用
+     * @param {baseAu} params 
+     * @returns {Promise<boolean>}
+     */
+    static async getUserBan(params) {
+        return (await makeFetch(burl('/get/banUser'), params)).data
     }
 
 }
