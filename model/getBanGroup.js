@@ -34,7 +34,7 @@ export default new class getBanGroup {
             try {
                 result = await makeRequest.getUserBan(makeRequestFnc.makePlatform(e))
                 if (result) {
-                    send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员。")
+                    send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员(1)。")
                     if (sessionToken) {
                         await getSave.banSessionToken(sessionToken)
                     }
@@ -46,7 +46,7 @@ export default new class getBanGroup {
         }
         if (sessionToken) {
             if (await getSave.isBanSessionToken(sessionToken)) {
-                send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员。")
+                send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员(2)。")
                 return true;
             }
         }
