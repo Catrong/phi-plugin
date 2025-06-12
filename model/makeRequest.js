@@ -320,7 +320,13 @@ export default class makeRequest {
 }
 
 async function makeFetch(url, params) {
-    let result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) });
+    let result
+    try {
+        result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) });
+    } catch (e) {
+        console.error(`请求失败: ${url}`, e);
+        throw new Error('API离线');
+    }
     if (!result) {
         throw new Error('请求失败')
     }
