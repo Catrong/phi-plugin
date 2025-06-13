@@ -251,8 +251,8 @@ export default class saveHistory {
      * @property {number[]} data_date - 数据时间戳范围 [最早, 最晚]
      */
     getRksAndDataLine() {
-        rks = this.getRksLine()
-        data = this.getDataLine()
+        let rks = this.getRksLine()
+        let data = this.getDataLine()
         return { ...rks, ...data }
     }
 
