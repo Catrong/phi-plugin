@@ -73,7 +73,7 @@ class send {
             return false
         }
 
-        user_save = (await getUpdateSave.getNewSaveFromLocal(e)).save
+        user_save = (await getUpdateSave.getNewSaveFromLocal(e, sessionToken)).save
 
 
         if (!user_save || (ver && (!user_save.Recordver || user_save.Recordver < ver))) {

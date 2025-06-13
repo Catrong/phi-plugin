@@ -54,7 +54,7 @@ export class phisstk extends plugin {
 
     async bind(e) {
 
-        if (await getBanGroup.get(e.group_id, 'bind')) {
+        if (await getBanGroup.get(e, 'bind')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -219,7 +219,7 @@ export class phisstk extends plugin {
 
     async update(e) {
 
-        if (await getBanGroup.get(e.group_id, 'update')) {
+        if (await getBanGroup.get(e, 'update')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -264,7 +264,7 @@ export class phisstk extends plugin {
 
     async unbind(e) {
 
-        if (await getBanGroup.get(e.group_id, 'unbind')) {
+        if (await getBanGroup.get(e, 'unbind')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }

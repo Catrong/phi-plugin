@@ -56,7 +56,7 @@ export class phiGames extends plugin {
             case "tipgame":
             case "提示猜曲": {
 
-                if (await getBanGroup.get(e.group_id, 'tipgame')) {
+                if (await getBanGroup.get(e, 'tipgame')) {
                     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
                     return false
                 }
@@ -67,7 +67,7 @@ export class phiGames extends plugin {
             case "ltr":
             case "开字母": {
 
-                if (await getBanGroup.get(e.group_id, 'ltrgame')) {
+                if (await getBanGroup.get(e, 'ltrgame')) {
                     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
                     return false
                 }
@@ -77,7 +77,7 @@ export class phiGames extends plugin {
             case "guess":
             case "猜曲绘": {
 
-                if (await getBanGroup.get(e.group_id, 'guessgame')) {
+                if (await getBanGroup.get(e, 'guessgame')) {
                     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
                     return false
                 }

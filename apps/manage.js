@@ -11,7 +11,7 @@ import getRksRank from '../model/getRksRank.js';
 import getSave from '../model/getSave.js';
 import { redisPath } from '../model/constNum.js';
 
-let banSetting = ["help", "bind", "b19", "wb19", "song", "ranklist", "fnc", "tipgame", "guessgame", "ltrgame", "sign", "setting", "dan"]
+let banSetting = ["help", "bind", "b19", "wb19", "song", "ranklist", "fnc", "tipgame", "guessgame", "ltrgame", "sign", "setting", "dan","apiSetting"]
 
 export class phiset extends plugin {
     constructor() {

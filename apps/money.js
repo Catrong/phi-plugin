@@ -57,7 +57,7 @@ export class phimoney extends plugin {
     /**签到 */
     async sign(e) {
 
-        if (await getBanGroup.get(e.group_id, 'sign')) {
+        if (await getBanGroup.get(e, 'sign')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -146,7 +146,7 @@ export class phimoney extends plugin {
     /**刷新任务并发送图片 */
     async retask(e) {
 
-        if (await getBanGroup.get(e.group_id, 'retask')) {
+        if (await getBanGroup.get(e, 'retask')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -273,7 +273,7 @@ export class phimoney extends plugin {
 
     async tasks(e) {
 
-        if (await getBanGroup.get(e.group_id, 'tasks')) {
+        if (await getBanGroup.get(e, 'tasks')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -358,7 +358,7 @@ export class phimoney extends plugin {
     /**转账 */
     async send(e) {
 
-        if (await getBanGroup.get(e.group_id, 'send')) {
+        if (await getBanGroup.get(e, 'send')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -429,7 +429,7 @@ export class phimoney extends plugin {
     /**主题相关 */
     async theme(e) {
 
-        if (await getBanGroup.get(e.group_id, 'theme')) {
+        if (await getBanGroup.get(e, 'theme')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
