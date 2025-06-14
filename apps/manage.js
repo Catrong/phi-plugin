@@ -96,7 +96,7 @@ export class phiset extends plugin {
         }
         try {
             let msg = ''
-            for (let i in fs.readdirSync(backupPath).reverse()) {
+            for (let i in fs.readdirSync(backupPath)) {
                 msg += `[${i}]${fs.readdirSync(backupPath)[i]}\n`
             }
             send.send_with_At(e, '请选择需要恢复的备份文件：\n' + msg)
