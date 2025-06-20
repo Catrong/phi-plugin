@@ -50,16 +50,16 @@ export default new class getBanGroup {
                 return true;
             }
         }
-        if (!group) {
+        if (!group_id) {
             return false
         }
         switch (fnc) {
             case 'help':
             case 'tkhelp':
-                return await this.redis(group, 'help')
+                return await this.redis(group_id, 'help')
             case 'bind':
             case 'unbind':
-                return await this.redis(group, 'bind')
+                return await this.redis(group_id, 'bind')
             case 'b19':
             case 'p30':
             case 'lmtAcc':
@@ -71,10 +71,10 @@ export default new class getBanGroup {
             case 'lvscore':
             case 'chap':
             case 'suggest':
-                return await this.redis(group, 'b19')
+                return await this.redis(group_id, 'b19')
             case 'bestn':
             case 'data':
-                return await this.redis(group, 'wb19')
+                return await this.redis(group_id, 'wb19')
             case 'song':
             case 'ill':
             case 'chart':
@@ -87,38 +87,38 @@ export default new class getBanGroup {
             case 'table':
             case 'comment':
             case 'recallComment':
-                return await this.redis(group, 'song')
+                return await this.redis(group_id, 'song')
             case 'rankList':
             case 'godList':
-                return await this.redis(group, 'ranklist')
+                return await this.redis(group_id, 'ranklist')
             case 'comrks':
             case 'tips':
             case 'newSong':
-                return await this.redis(group, 'fnc')
+                return await this.redis(group_id, 'fnc')
             case 'tipgame':
-                return await this.redis(group, 'tipgame')
+                return await this.redis(group_id, 'tipgame')
             case 'guessgame':
-                return await this.redis(group, 'guessgame')
+                return await this.redis(group_id, 'guessgame')
             case 'ltrgame':
-                return await this.redis(group, 'ltrgame')
+                return await this.redis(group_id, 'ltrgame')
             case 'sign':
             case 'send':
             case 'tasks':
             case 'retask':
             case 'jrrp':
-                return await this.redis(group, 'sign')
+                return await this.redis(group_id, 'sign')
             case 'theme':
-                return await this.redis(group, 'setting')
+                return await this.redis(group_id, 'setting')
             case 'dan':
             case 'danupdate':
-                return await this.redis(group, 'dan')
+                return await this.redis(group_id, 'dan')
             case 'auth':
             case 'clearApiData':
             case 'updateHistory':
             case 'setApiToken':
             case 'tokenList':
             case 'tokenManage':
-                return await this.redis(group, 'apiSetting')
+                return await this.redis(group_id, 'apiSetting')
             default:
                 return false;
         }
