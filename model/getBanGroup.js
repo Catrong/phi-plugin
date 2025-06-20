@@ -27,7 +27,7 @@ export default new class getBanGroup {
      * @returns 
      */
     async get(e, fnc) {
-        const { group } = e;
+        const { group_id } = e;
         let sessionToken = await getSave.get_user_token(e.user_id)
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             let result = false
