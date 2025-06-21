@@ -25,11 +25,11 @@ export class phiupdate extends plugin {
             priority: 1009,
             rule: [
                 {
-                    reg: `^[/#](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)(强制|qz)?(更新|gx)$`,
+                    reg: `^[/#](pgr|PGR|屁股肉|phi|Phi)(\\s*)(强制|qz)?(更新|gx)$`,
                     fnc: "update",
                 },
                 {
-                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)(下载|更新|gx|down|up)\s*(曲绘|ill)$`,
+                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi)(\\s*)(下载|更新|gx|down|up)\s*(曲绘|ill)$`,
                     fnc: "ill_update",
                 },
             ],
