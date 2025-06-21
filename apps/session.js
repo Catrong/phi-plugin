@@ -112,7 +112,7 @@ export class phisstk extends plugin {
                 let recallTime = qrcodeTimeOut
                 if (qrcodeTimeOut >= 60) recallTime = 60
                 if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
-                    await send.send_with_At(e, [`请先将TapTap更新至最新版或使用TapTap扫描二维码进行登录！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n二维码剩余时间:${qrcodeTimeOut}`, segment.image(await getQRcode.getQRcode(qrcode))], false, { recallMsg: recallTime });
+                    await send.send_with_At(e, [`请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n二维码剩余时间:${qrcodeTimeOut}`, segment.image(await getQRcode.getQRcode(qrcode))], false, { recallMsg: recallTime });
                 } else {
                     await send.send_with_At(e, `请点击链接进行登录嗷！请勿使用他人的链接。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n链接剩余时间:${qrcodeTimeOut}\n${qrcode}`, false, { recallMsg: recallTime });
                 }
@@ -122,7 +122,7 @@ export class phisstk extends plugin {
             let request = await getQRcode.getRequest();
             let qrCodeMsg;
             if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
-                qrCodeMsg = await send.send_with_At(e, [`请扫描二维码进行登录！如只有一个设备请长按识别二维码登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
+                qrCodeMsg = await send.send_with_At(e, [`请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
             } else {
                 qrCodeMsg = await send.send_with_At(e, `请点击链接进行登录嗷！请勿使用他人的链接。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n${request.data.qrcode_url}`, false, { recallMsg: 60 });
             }
@@ -144,7 +144,7 @@ export class phisstk extends plugin {
                 }
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
-                        send.send_with_At(e, `登录二维码已扫描，请确认登录`, false, { recallMsg: 10 });
+                        send.send_with_At(e, `二维码已扫描，请确认登录`, false, { recallMsg: 10 });
                         if (e.group?.recallMsg) {
                             e.group.recallMsg(qrCodeMsg.message_id)
                         } else if (e.friend?.recallMsg) {
@@ -162,14 +162,14 @@ export class phisstk extends plugin {
             redis.del(timeOutKey)
 
             if (!result.success) {
-                send.send_with_At(e, `操作超时，请重试！`);
+                send.send_with_At(e, `操作超时，请重试QAQ！`);
                 return true
             }
             try {
                 sessionToken = await getQRcode.getSessionToken(result);
             } catch (err) {
                 logger.error(err)
-                send.send_with_At(e, `获取sessionToken失败QAQ！请确认您的Phigros已登录TapTap账号！\n错误信息：${err}`)
+                send.send_with_At(e, `获取sessionToken失败QAQ！请确认您的Phigros已登录TapTap账号并同步！\n错误信息：${err}`)
                 return true
             }
         }
