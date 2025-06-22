@@ -129,6 +129,7 @@ export class phisong extends plugin {
                         if (!save) {
                             getComment.del(item.thisId);
                             commentData.splice(commentData.indexOf(item), 1);
+                            continue;
                         }
                         item.PlayerId = save.saveInfo.PlayerId.length > 15 ? save.saveInfo.PlayerId.slice(0, 12) + '...' : save.saveInfo.PlayerId;
                         item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
@@ -897,9 +898,9 @@ export class phisong extends plugin {
         let msg = e.msg.replace(/[#/](.*?)(chart)(\s*)/, "")
 
         /** @type {levelKind} */
-        let rank = msg.match(/\s*(EZ|HD|IN|AT)/i)?.[1] || 'IN'
+        let rank = msg.match(/\s+(EZ|HD|IN|AT)/i)?.[1] || 'IN'
         rank = rank.toUpperCase()
-        msg = msg.replace(/\s*(EZ|HD|IN|AT)/i, '')
+        msg = msg.replace(/\s+(EZ|HD|IN|AT)/i, '')
 
         let song = getInfo.fuzzysongsnick(msg)?.[0]
         if (!song) {
