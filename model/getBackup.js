@@ -6,6 +6,7 @@ import { backupPath, pluginDataPath, savePath, dataPath } from "./path.js";
 import saveHistory from "./class/saveHistory.js";
 import { redisPath } from "./constNum.js";
 import ProgressBar from "./progress-bar.js";
+import fCompute from './fCompute.js'
 
 const MaxNum = 1e4
 
