@@ -104,8 +104,8 @@
             },
             {
                 "title": "/song",
-                "eg": "/song <曲目>",
-                "desc": "查询曲目图鉴<br>eg: /song 996"
+                "eg": "/song <曲目> -p <页码>",
+                "desc": "查询曲目图鉴<br>eg: /song 996<br>-p 选择评论页数<br>eg: /song 996 -p 2"
             },
             {
                 "title": "/chart",
