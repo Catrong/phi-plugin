@@ -724,7 +724,7 @@ export class phisong extends plugin {
         /**
          * @type {allLevelKind}
          */
-        let rankKind = msg.match(/ (EZ|HD|IN|AT|LEGACY)\n/i)?.[1] || ''
+        let rankKind = msg.match(/ (EZ|HD|IN|AT|LEGACY)\s*\n/i)?.[1] || ''
         rankKind = rankKind.toUpperCase()
         let rankNum = 0;
         switch (rankKind) {
@@ -748,7 +748,7 @@ export class phisong extends plugin {
                 rankNum = -1;
         }
 
-        let nickname = msg.replace(/ (EZ|HD|IN|AT|LEGACY)\n[\s\S]*/i, '')
+        let nickname = msg.replace(/ (EZ|HD|IN|AT|LEGACY)[\s\S]*?$/i, '')
 
         let song = getInfo.fuzzysongsnick(nickname)?.[0]
 
