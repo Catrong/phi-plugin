@@ -132,7 +132,7 @@ export class phiRankList extends plugin {
             return false
         }
 
-        let rks = Number(e.msg.replace(/^[#/]?.*?rankfind/, '').match(/\d+/)?.[0])
+        let rks = Number(e.msg.replace(/^[#/]?.*?rankfind/, '').match(/[\d+.]/)?.[0])
         if (!rks) {
             send.send_with_At(e, `请输入要查询的 rks！\n格式： /${Config.getUserCfg('config', 'cmdhead')} rankfind <rks>`)
             return false
