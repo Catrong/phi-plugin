@@ -27,6 +27,10 @@ export class phiRankList extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(排行榜|ranklist).*$`,
                     fnc: 'rankList'
                 },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(查询排名|rankfind).*$`,
+                    fnc: 'rankfind'
+                }
                 // {
                 //     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(封神榜|godlist)$`,
                 //     fnc: 'godList'
@@ -74,7 +78,7 @@ export class phiRankList extends plugin {
             }
         }
         let rankNum = 0
-        data.totDataNum = (await getRksRank.getAllRank()).length
+        data.totDataNum = await getRksRank.getAllRank()
 
         if (msg) {
             rankNum = Math.max(Math.min(msg[0], data.totDataNum), 1) - 1
@@ -120,6 +124,38 @@ export class phiRankList extends plugin {
         }
 
         send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
+    }
+
+    async rankfind(e) {
+        if (await getBanGroup.get(e, 'rankList')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let rks = Number(e.msg.replace(/^[#/]?.*?rankfind/, '').match(/\d+/)?.[0])
+        if (!rks) {
+            send.send_with_At(e, `请输入要查询的 rks！\n格式： /${Config.getUserCfg('config', 'cmdhead')} rankfind <rks>`)
+            return false
+        }
+
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) { 
+            try {
+                makeRequest.getRanklistRks({ request_rks: rks }).then((res) => {
+                    send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)
+                })
+                return true
+            } catch (err) {
+                logger.warn(`[phi-plugin] API ERR`, err)
+            }
+        }
+
+        let totDataNum = await getRksRank.getAllRank()
+
+        let rank = await getRksRank.getRankByRks(rks)
+
+        send.send_with_At(e, `当前服务器记录中一共有 ${rank}/${totDataNum} 位玩家的 rks 大于 ${rks}！`)
+
+        return true
     }
 
     async godList(e) {

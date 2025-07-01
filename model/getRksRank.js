@@ -42,7 +42,7 @@ export default new class getRksRank {
     }
 
     /**
-     * 获取排名
+     * 获取排名对应的用户
      * @param {number} min 0起
      * @param {number} max 不包含
      * @returns {Promise<Array>}
@@ -52,10 +52,20 @@ export default new class getRksRank {
     }
 
     /**
+     * 获取指定rks的排名
+     * @param {number} rks 
+     * @returns {Promise<number>}
+     */
+    async getRankByRks(rks) {
+        const rank = await redis.zCount(`${redisPath}:rksRankSet`, rks * -1, -1);
+        return rank; // 返回排名，-1表示未找到
+    }
+
+    /**
      * 获取所有排名
      * @returns {Promise<Array>}
      */
     async getAllRank() {
-        return await redis.zRange(`${redisPath}:rksRankSet`, 0, -1, "WITHSCORES")
+        return await redis.zCard(`${redisPath}:rksRankSet`)
     }
 }()

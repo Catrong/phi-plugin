@@ -263,6 +263,15 @@ export default class makeRequest {
     }
 
     /**
+     * 获取rks大于目标值的用户数量
+     * @param {{request_rks: number}} params
+     * @returns {Promise<{rksRank: number, totNum: number}>}
+     */
+    static async getRanklistRks(params) {
+        return (await makeFetch(burl('/get/ranklist/rksRank'), params)).data
+    }
+
+    /**
      * 获取用户data历史记录
      * @param {baseAu & {request: keyof saveHistoryObject}} params 
      * @returns {Promise<{data: Array<saveHistoryObject>}>}
