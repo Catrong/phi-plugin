@@ -167,14 +167,18 @@ export default class Save {
 
                 if (!ignore) {
                     if (data.gameRecord[id][level].acc > 100 || data.gameRecord[id][level].acc < 0) {
+                        // Starduster.Quree EZ难度 远古存档BUG特判
+                        if (id == "Starduster.Quree.0" && level == 0 && data.gameRecord[id][level].acc <= 102.57 && data.gameRecord[id][level].acc >= 0) {
+                            continue
+                        }
                         logger.error(`acc > 100 封禁tk ${this.session}`)
                         getRksRank.delUserRks(this.session)
-                        throw new Error(`您的存档 acc 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
+                        throw new Error(`您的存档 acc 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}\n${id} ${level} ${data.gameRecord[id][level].acc}`)
                     }
                     if (data.gameRecord[id][level].score > 1000000 || data.gameRecord[id][level].score < 0) {
                         logger.error(`score > 1000000 封禁tk ${this.session}`)
                         getRksRank.delUserRks(this.session)
-                        throw new Error(`您的存档 score 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
+                        throw new Error(`您的存档 score 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}\n${id} ${level} ${data.gameRecord[id][level].score}`)
                     }
                 }
                 this.gameRecord[id][level] = new LevelRecordInfo(data.gameRecord[id][level], id, level)
