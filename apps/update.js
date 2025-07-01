@@ -258,7 +258,7 @@ export class phiupdate extends plugin {
     }
 
     async ill_clone() {
-        let command = "git clone https://gitee.com/Steveeee-e/phi-plugin-ill.git ./plugins/phi-plugin/resources/original_ill/ --depth=1";
+        let command = `git clone ${Config.getUserCfg('config', 'downIllUrl')} ./plugins/phi-plugin/resources/original_ill/ --depth=1`;
 
         this.e.reply("开始下载曲绘文件");
 
