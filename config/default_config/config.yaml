@@ -47,7 +47,7 @@ allowChartTag: false
 onLinePhiIllUrl: "https://github.moeyy.xyz/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
 
 #  下载曲绘地址
-downIllUrl: "https://github.moeyy.xyz/https://gitee.com/Steveeee-e/phi-plugin-ill.git"
+downIllUrl: "https://ghfast.top/https://github.com/Catrong/phi-plugin-ill.git"
 
 #  是否在更新插件时自动拉取最新曲绘
 autoPullPhiIll: false
