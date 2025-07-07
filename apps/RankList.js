@@ -48,18 +48,18 @@ export class phiRankList extends plugin {
         }
 
 
-        let data = {
-            Title: "RankingScore排行榜",
-            totDataNum: 0,
-            BotNick: Bot.nickname,
-            users: [],
-            me: {},
-        }
-        /**请求的排名 */
-        let msg = e.msg.match(/\d+/)
 
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
+                let data = {
+                    Title: "RankingScore排行榜",
+                    totDataNum: 0,
+                    BotNick: Bot.nickname,
+                    users: [],
+                    me: {},
+                }
+                /**请求的排名 */
+                let msg = e.msg.match(/\d+/)
                 let api_ranklist = null
                 if (msg) {
                     api_ranklist = await makeRequest.getRanklistRank({ request_rank: Number(msg[0]) })
@@ -77,6 +77,15 @@ export class phiRankList extends plugin {
                 logger.warn(`[phi-plugin] API ERR`, err)
             }
         }
+        let data = {
+            Title: "RankingScore排行榜",
+            totDataNum: 0,
+            BotNick: Bot.nickname,
+            users: [],
+            me: {},
+        }
+        /**请求的排名 */
+        let msg = e.msg.match(/\d+/)
         let rankNum = 0
         data.totDataNum = await getRksRank.getAllRank()
 
@@ -138,7 +147,7 @@ export class phiRankList extends plugin {
             return false
         }
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) { 
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
                 makeRequest.getRanklistRks({ request_rks: rks }).then((res) => {
                     send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)
