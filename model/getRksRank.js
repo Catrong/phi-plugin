@@ -57,7 +57,7 @@ export default new class getRksRank {
      * @returns {Promise<number>}
      */
     async getRankByRks(rks) {
-        const rank = await redis.zCount(`${redisPath}:rksRankSet`, rks * -1, -1);
+        const rank = await redis.zCount(`${redisPath}:rksRankSet`, rks * -1, 100);
         return rank; // 返回排名，-1表示未找到
     }
 
