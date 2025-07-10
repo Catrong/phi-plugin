@@ -22,7 +22,7 @@
 
 ### 介绍
 
-`phi-plugin` 为查询Phigros信息的插件，包括b30、score、userinfo以及更多Phigros相关功能，有相关的建议和问题可以在[Issues](./issues)中提出，欢迎[PR](./pulls)。
+`phi-plugin` 为查询Phigros信息的插件，包括b30、score、userinfo以及更多Phigros相关功能，有相关的建议和问题可以在[Issues](../../issues)中提出，欢迎[PR](../../pulls)。
 
 具体功能可在安装插件后 通过 `/phihelp` 查看详细指令
 
