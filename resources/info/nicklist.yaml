@@ -159,7 +159,7 @@ Glaciaxion.SunsetRay:
   - 梦开始的地方
   - 骷髅堆
   - 冰封
-  - Glacier	
+  - Glacier
 尊師TheGuru.rider:
   - 孔子搓碟
   - 尊师
@@ -195,6 +195,7 @@ EnginexStartmelodymix.CrossingSound:
   - engine start
   - EXS
   - 引擎启动
+  - 能量启动
   - E×S
   - 糖魔王
   - 糖果
@@ -222,12 +223,14 @@ FULiAUTOSHOOTER.MYUKKE:
   - 脑裂
   - FAS
   - SHOOTER
+  - 自动福利射
 FULiAUTOBUSTER.MYUKKE:
   - 福利自动爆
   - 福利自动炸
   - 脑裂
   - FAB
   - BUSTER
+  - 自动福利爆
 NOONEYESMAN.MYUKKE:
   - 没有一个好男人
   - 没一个男的
@@ -964,6 +967,7 @@ SATELLITE.かめりあ:
   - 山茶花
   - 卫星
   - satelite
+  - 花花龙卷风
 ERABYECONNEC10N.かめりあ:
   - 咬人鸠
   - +++
@@ -1023,6 +1027,7 @@ Ajourneytothemoonlight.Yesod:
 EternalSnow.AbyssIdols:
   - 永恒的雪
   - ES
+  - 咏雪
 cryout.JuE:
   - 哭出来
   - 哭出去
