@@ -21,12 +21,12 @@ body:
 
   - type: dropdown
     attributes:
-      label: Yunzai 版本
+      label: Yunzai 分支
       options:
         - Miao-Yunzai
         - TRSS-Yunzai
         - Yunzai-Bot
-        - 其他
+        - 其他（如果愿意协助调试那更好了）
     validations:
       required: true
 
