@@ -15,6 +15,8 @@ if (!global.segment) {
     }
 }
 
+await getInfo.init();
+
 
 // const agent = new https.Agent({
 //     rejectUnauthorized: Config.getUserCfg('config', 'rejectPhiPluginApi'), // 忽略证书错误
