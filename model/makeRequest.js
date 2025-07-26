@@ -329,6 +329,9 @@ export default class makeRequest {
 }
 
 async function makeFetch(url, params) {
+    if (Config.getUserCfg('config', 'debug') > 3) {
+        logger.info(`[phi-plugin] 请求API: ${url}`, params);
+    }
     let result
     try {
         result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) });
@@ -355,6 +358,9 @@ async function makeFetch(url, params) {
         } else {
             throw new Error(json)
         }
+    }
+    if (Config.getUserCfg('config', 'debug') > 3) {
+        logger.info(`[phi-plugin] API响应: ${url}`, json);
     }
     return json
 }
