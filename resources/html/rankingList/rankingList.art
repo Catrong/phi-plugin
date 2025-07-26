@@ -143,7 +143,6 @@
                     {{/if}}
                 <% } %>
                 {{else}}
-                <div class="ill_box">
                     <div class="ill_box">
                         <p>NO INFO</p>
                     </div>
@@ -153,7 +152,6 @@
                     <div class="ill_box">
                         <p>NO INFO</p>
                     </div>
-                </div>
                 {{/if}}
 
             </div>
