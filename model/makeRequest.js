@@ -330,7 +330,7 @@ export default class makeRequest {
 
 async function makeFetch(url, params) {
     if (Config.getUserCfg('config', 'debug') > 3) {
-        logger.info(`[phi-plugin] 请求API: ${url}`, params);
+        logger.info(`[phi-plugin] 请求API: ${url}`, JSON.stringify(params));
     }
     let result
     try {
@@ -360,7 +360,7 @@ async function makeFetch(url, params) {
         }
     }
     if (Config.getUserCfg('config', 'debug') > 3) {
-        logger.info(`[phi-plugin] API响应: ${url}`, json);
+        logger.info(`[phi-plugin] API响应: ${url}`, JSON.stringify(json));
     }
     return json
 }
