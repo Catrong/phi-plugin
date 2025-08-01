@@ -17,7 +17,7 @@ export default new class getInfo {
     static initIng = false
 
     async init() {
-        
+
         if (Config.getUserCfg('config', 'watchInfoPath')) {
             chokidar.watch(infoPath).on('change', () => {
                 this.init()
@@ -430,7 +430,8 @@ export default new class getInfo {
     * @returns 原曲名称数组，按照匹配程度降序
     */
     fuzzysongsnick(mic, Distance = 0.85) {
-
+        /**为空返回空 */
+        if (!mic) return []
         /**按照匹配程度排序 */
         let result = []
 

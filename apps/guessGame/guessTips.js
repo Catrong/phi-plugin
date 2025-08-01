@@ -139,7 +139,7 @@ export default new class guessTips {
                 }
             }
             if (song[1]) {
-                send.send_with_At(e, `不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                send.send_with_At(e, `不是 ${msg} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
             } else {
                 send.send_with_At(e, `不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
             }
