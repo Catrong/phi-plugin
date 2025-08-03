@@ -153,7 +153,7 @@ export class phisong extends plugin {
                         }
                     }
                     commentData.sort((a, b) => {
-                        return b.time - a.time;
+                        return new Date(b.time) - new Date(a.time);
                     });
                     if (!page) page = 1
                     let commentsAPage = Config.getUserCfg('config', 'commentsAPage') || 1
