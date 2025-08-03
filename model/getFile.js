@@ -37,7 +37,7 @@ export default class readFile {
                     return fs.readFileSync(filePath, 'utf8')
                 }
                 default: {
-                    logger.error(`[phi-plugin][Read]不支持的文件格式`, style, filepath)
+                    logger.error(`[phi-plugin][Read]不支持的文件格式`, style, filePath)
                     return fs.readFileSync(filePath, 'utf8')
                 }
             }

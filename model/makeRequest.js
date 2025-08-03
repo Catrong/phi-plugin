@@ -152,6 +152,25 @@ import saveHistory from './class/saveHistory.js';
  * @property {MeData} me 当前用户扩展数据
  */
 
+/**
+ * @typedef {Object} commentObject 评论对象
+ * @property {?phigrosToken} sessionToken 仅在新建时添加
+ * @property {number} id 自增长ID
+ * @property {string} songId 曲目ID
+ * @property {allLevelKind} rank 等级
+ * @property {apiUserId} apiUserId 用户ID
+ * @property {number} rks
+ * @property {number} score
+ * @property {number} acc
+ * @property {boolean} fc
+ * @property {string} spInfo FC AP
+ * @property {number} challenge
+ * @property {string} time
+ * @property {string} comment 评论内容
+ * @property {?string} PlayerId 仅在查询时添加
+ * @property {?string} avatar 仅在查询时添加
+ */
+
 
 export default class makeRequest {
 
@@ -326,6 +345,50 @@ export default class makeRequest {
         return (await makeFetch(burl('/get/banUser'), params)).data
     }
 
+    /**
+     * 获取歌曲评论
+     * @param {{song_id: idString}} params 
+     * @returns {Promise<commentObject[]>}
+     */
+    static async getCommentsBySongId(params) {
+        return (await makeFetch(burl('/comment/get/bySongId'), params)).data
+    }
+
+    /**
+     * 获取歌曲评论
+     * @param {{user_id: apiId}} params 
+     * @returns {Promise<commentObject[]>}
+     */
+    static async getCommentsByUserId(params) {
+        return (await makeFetch(burl('/comment/get/byUserId'), params)).data
+    }
+
+    /**
+     * 添加单条评论
+     * @param {baseAu & {data: {comment: commentObject}}} params 
+     * @returns {Promise<{message: string}>}
+     */
+    static async addComment(params) {
+        return (await makeFetch(burl('/comment/add'), params))
+    }
+
+    /**
+     * 删除单条评论
+     * @param {baseAu & {comment_id: string}} params 
+     * @returns {Promise<{message: string}>}
+     */
+    static async delComment(params) {
+        return (await makeFetch(burl('/comment/del'), params))
+    }
+
+    /**
+     * 批量添加评论
+     * @param {{data: {comments: commentObject[]}}} params 
+     * @returns {Promise<{message: string}>}
+     */
+    static async updateComments(params) {
+        return (await makeFetch(burl('/comment/update'), params))
+    }
 }
 
 async function makeFetch(url, params) {
@@ -336,7 +399,7 @@ async function makeFetch(url, params) {
     try {
         result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) });
     } catch (e) {
-        console.error(`请求失败: ${url}`, e);
+        logger.error(`请求失败: ${url}`, e);
         throw new Error('API离线');
     }
     if (!result) {
@@ -349,7 +412,7 @@ async function makeFetch(url, params) {
         text = await result.text()
         json = JSON.parse(text)
     } catch (e) {
-        console.error(text)
+        logger.error(text)
         throw new Error('请求失败')
     }
     if (result.status != 200) {

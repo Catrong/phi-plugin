@@ -17,7 +17,7 @@ export default new class getComment {
      * @property {number} score
      * @property {number} acc
      * @property {boolean} fc
-     * @property {string} spInfo
+     * @property {?string} spInfo
      * @property {number} challenge
      * @property {Date} time
      * @property {string} comment
