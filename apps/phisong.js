@@ -152,6 +152,9 @@ export class phisong extends plugin {
                             item.time = fCompute.date_to_string(item.time);
                         }
                     }
+                    commentData.sort((a, b) => {
+                        return b.time - a.time;
+                    });
                     if (!page) page = 1
                     let commentsAPage = Config.getUserCfg('config', 'commentsAPage') || 1
                     let maxPage = Math.ceil(commentData.length / commentsAPage)
