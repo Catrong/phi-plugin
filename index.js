@@ -52,7 +52,7 @@ for (let i in files) {
 
 export { apps }
 
-if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+if (Config.getUserCfg('config', 'phiPluginApiUrl')) {
     logger.mark(`检测到API地址，正在测试链接...`)
     let url = `${Config.getUserCfg('config', 'phiPluginApiUrl')}/status`
     try {
@@ -65,6 +65,7 @@ if (Config.getUserCfg('config', 'openPhiPluginApi')) {
         } else {
             res = await res.json()
             logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
+            Config.modify('config', 'openPhiPluginApi', true)
         }
     } catch (e) {
         logger.error(e)
