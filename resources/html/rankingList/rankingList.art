@@ -129,7 +129,7 @@
                             src="{{song.illustration}}"
                             alt="{{song.illustration}}"
                         />
-                        <div class="b30_dif IN-BKG">
+                        <div class="b30_dif {{song.rank}}-BKG">
                             <p>{{song.rank}} {{song.difficulty.toFixed(1)}}</p>
                         </div>
                         <div class="Rating">
