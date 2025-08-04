@@ -46,6 +46,7 @@
  * | 'table'
  * | 'comment'
  * | 'recallComment'
+ * | 'myComment'
  * | 'comrks'
  * | 'rankList'
  * | 'godList'

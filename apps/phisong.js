@@ -87,6 +87,10 @@ export class phisong extends plugin {
                     fnc: 'recallComment'
                 },
                 {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(mycmt).*$`,
+                    fnc: 'myComment'
+                },
+                {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(chart).*$`,
                     fnc: 'chart'
                 },
@@ -798,7 +802,7 @@ export class phisong extends plugin {
 
         let songId = songInfo.id;
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi') && (save.session || save.apiId)) {
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
                 /**@type {commentObject} */
                 let cmtobj = {
@@ -841,10 +845,8 @@ export class phisong extends plugin {
                         spInfo,
                     }
                 };
-                makeRequest.addComment({
+                await makeRequest.addComment({
                     ...makeRequestFnc.makePlatform(e),
-                    token: save.session,
-                    api_user_id: save.apiId,
                     comment: cmtobj
                 });
                 send.send_with_At(e, `在线评论成功！φ(゜▽゜*)♪`);
@@ -930,6 +932,15 @@ export class phisong extends plugin {
 
         let comment = getComment.getByCommentId(commentId)
         if (!comment) {
+            if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+                try {
+                    await makeRequest.delComment({ ...makeRequestFnc.makePlatform(e), comment_id: commentId });
+                    send.send_with_At(e, `删除在线评论成功！φ(゜▽゜*)♪`);
+                    return true;
+                } catch (error) {
+                    logger.warn(`[phi-plugin] API删除评论失败`, error)
+                }
+            }
             send.send_with_At(e, `没有找到ID为${commentId}的评论QAQ！`);
             return true;
         }
@@ -939,30 +950,42 @@ export class phisong extends plugin {
             return true;
         }
 
-        wait_to_del_comment[e.user_id] = commentId;
-        this.setContext('doReCmt', false, 30,)
-        setTimeout(() => {
-            delete wait_to_del_comment[e.user_id];
-        }, 30000)
-
-        send.send_with_At(e, `[评论详情]\n[评论ID]${comment.thisId}\n[评论时间]${fCompute.date_to_string(comment.time)}\n[评论曲目]${comment.songId}\n[评论内容]${comment.comment}\n==========\n请问是否确认删除这条评论＞︿＜\n（回复确认即为确认）`)
+        getComment.del(commentId) ?
+            send.send_with_At(e, `删除成功！`) :
+            send.send_with_At(e, `删除失败QAQ！`);
     }
 
-    async doReCmt() {
-        let e = this.e
-
-        let msg = e.msg.replace(' ', '')
-
-        if (msg == '确认') {
-            getComment.del(wait_to_del_comment[e.user_id]) ?
-                send.send_with_At(e, `删除成功！`) :
-                send.send_with_At(e, `删除失败QAQ！`);
-        } else {
-            send.send_with_At(e, `取消成功！`)
+    async myComment(e) {
+        if (await getBanGroup.get(e, 'myComment')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
         }
-        delete wait_to_del_comment[e.user_id];
 
-        this.finish('doReCmt', false)
+        let save = await send.getsave_result(e);
+
+        if (!save) {
+            return true
+        }
+
+        if (Config.getUserCfg('config', 'openPhiPluginApi') && (save.session || save.apiId)) {
+            try {
+                const comments = await makeRequest.getCommentsByUserId(makeRequestFnc.makePlatform(e));
+
+                if (comments && comments.length > 0) {
+                    let msg = `您的评论列表：\nID | 曲目 | 难度 | 内容 | 时间\n`;
+                    for (let comment of comments) {
+                        msg += `${comment.id} | ${comment.songId} | ${comment.rank} | ${comment.comment} | ${fCompute.date_to_string(comment.time)}\n`
+                    }
+                    send.send_with_At(e, msg);
+                } else {
+                    send.send_with_At(e, `您还没有评论哦！`);
+                }
+                return true;
+            } catch (error) {
+                logger.warn(`[phi-plugin] 获取用户评论失败`, error)
+            }
+        }
+        return false;
     }
 
     async chart(e) {

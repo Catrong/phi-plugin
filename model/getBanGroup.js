@@ -87,6 +87,7 @@ export default new class getBanGroup {
             case 'table':
             case 'comment':
             case 'recallComment':
+            case 'myComment':
                 return await this.redis(group_id, 'song')
             case 'rankList':
             case 'godList':

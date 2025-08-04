@@ -356,7 +356,7 @@ export default class makeRequest {
 
     /**
      * 获取歌曲评论
-     * @param {{user_id: apiId}} params 
+     * @param {baseAu} params 
      * @returns {Promise<commentObject[]>}
      */
     static async getCommentsByUserId(params) {
