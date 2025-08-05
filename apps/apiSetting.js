@@ -70,7 +70,7 @@ export class phihelp extends plugin {
             return false
         }
 
-        let apiToken = e.msg.replace(/^[#/].*?setApiToken\s*/, '')
+        let apiToken = e.msg.replace(/^[#/].*?setApiToken\s*\n/, '')
         if (!apiToken) {
             send.send_with_At(e, `请输入apiToken！\n格式：\n设置初始密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <新Token> \n更改密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken（换行）<旧Token>（换行）<新Token>`)
             return true
