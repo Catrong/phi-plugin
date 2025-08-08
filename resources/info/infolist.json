@@ -1310,7 +1310,7 @@
         "chapter": "Chapter EX-EGTS 精选集"
     },
     "Resolver.Gomadare": {
-        "bpm":"123",
+        "bpm": "123",
         "length": "2:41",
         "chapter": "Chapter EX-EGTS 精选集"
     },
@@ -1360,5 +1360,30 @@
     "StardustRAY.kanonevsBlackY": {
         "bpm": "164",
         "chapter": "Chapter EX-オンゲキ 精选集"
+    },
+    "FrozenHeart.A39沙包P": {
+        "bpm": "185",
+        "length": "3:12",
+        "chapter": "单曲精选集"
+    },
+    "Helios.NOABotaNya": {
+        "bpm": "150",
+        "length": "2:14",
+        "chapter": "单曲精选集"
+    },
+    "FlutterEcho.Cansol": {
+        "bpm": "219",
+        "length": "2:11",
+        "chapter": "Chapter EX-KALPA 精选集"
+    },
+    "Rebirth.ああああ": {
+        "bpm": "196",
+        "length": "2:37",
+        "chapter": "Chapter EX-KALPA 精选集"
+    },
+    "AvataarReincarnationofKalpa.ScarletteakaCrYmson": {
+        "bpm": "180",
+        "length": "2:54",
+        "chapter": "Chapter EX-KALPA 精选集"
     }
 }
