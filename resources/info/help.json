@@ -104,8 +104,8 @@
             },
             {
                 "title": "/song",
-                "eg": "/song <曲目> -p <页码>",
-                "desc": "查询曲目图鉴<br>eg: /song 996<br>-p 选择评论页数<br>eg: /song 996 -p 2"
+                "eg": "/song <曲目> [-comment] [-p <页码>]",
+                "desc": "查询曲目图鉴，-comment 展示评论，-p 选择评论页数<br>eg: /song 996<br>eg: /song 996 -p 2"
             },
             {
                 "title": "/chart",
@@ -123,9 +123,14 @@
                 "desc": "评论曲目，难度默认为IN<br>eg: /cmt 996 HD<br>好玩"
             },
             {
+                "title": "/mycmt",
+                "eg": "/mycmt",
+                "desc": "查看自己的云端评论"
+            },
+            {
                 "title": "/recmt",
                 "eg": "/recmt <评论ID>",
-                "desc": "查看并确认是否删评，仅发送者和主人权限，需要二次确认"
+                "desc": "查看并确认是否删评，仅发送者和主人权限，云端仅可以删除自己的评论"
             },
             {
                 "title": "/table",

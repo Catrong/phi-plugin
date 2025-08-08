@@ -14,6 +14,8 @@ import getComment from '../model/getComment.js'
 import getSave from '../model/getSave.js'
 import getChartTag from '../model/getChartTag.js'
 import Version from '../components/Version.js'
+import makeRequest from '../model/makeRequest.js'
+import makeRequestFnc from '../model/makeRequestFnc.js'
 
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
@@ -85,6 +87,10 @@ export class phisong extends plugin {
                     fnc: 'recallComment'
                 },
                 {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(mycmt).*$`,
+                    fnc: 'myComment'
+                },
+                {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(chart).*$`,
                     fnc: 'chart'
                 },
@@ -107,8 +113,10 @@ export class phisong extends plugin {
         }
 
         let msg = e.msg.replace(/[#/](.*?)(曲|song)(\s*)/, "")
-        let page = msg.match(/-p\s+([0-9]+)/)?.[1];
-        msg = msg.replace(/-p\s+([0-9]+)/, "")
+        let addComment = msg.match(/\s+-comment/)?.[0] ? true : false;
+        if (addComment) msg = msg.replace(/\s+-comment/, "")
+        let page = msg.match(/\s+-p\s+([0-9]+)/)?.[1];
+        msg = msg.replace(/\s+-p\s+([0-9]+)/, "")
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} song <曲名>`)
             return true
@@ -122,20 +130,35 @@ export class phisong extends plugin {
                 let data = {
                     ...infoData,
                 };
-                if (await Config.getUserCfg('config', 'allowComment')) {
-                    let commentData = getComment.get(infoData.id);
-                    for (let item of commentData) {
-                        let save = await getSave.getSaveBySessionToken(item.sessionToken);
-                        if (!save) {
-                            getComment.del(item.thisId);
-                            commentData.splice(commentData.indexOf(item), 1);
-                            continue;
+                if (await Config.getUserCfg('config', 'allowComment') && (addComment || page)) {
+                    let commentData;
+                    if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+                        commentData = await makeRequest.getCommentsBySongId({ song_id: infoData.id });
+                        for (const item of commentData) {
+                            item.PlayerId = item.PlayerId > 15 ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;
+                            item.avatar = getInfo.idgetavatar(item.avatar);
+                            item.comment = fCompute.convertRichText(item.comment);
+                            item.time = fCompute.date_to_string(item.time);
+                            item.thisId = item.id;
                         }
-                        item.PlayerId = save.saveInfo.PlayerId.length > 15 ? save.saveInfo.PlayerId.slice(0, 12) + '...' : save.saveInfo.PlayerId;
-                        item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
-                        item.comment = fCompute.convertRichText(item.comment);
-                        item.time = fCompute.date_to_string(item.time)
+                    } else {
+                        commentData = getComment.get(infoData.id);
+                        for (let item of commentData) {
+                            let save = await getSave.getSaveBySessionToken(item.sessionToken);
+                            if (!save) {
+                                getComment.del(item.thisId);
+                                commentData.splice(commentData.indexOf(item), 1);
+                                continue;
+                            }
+                            item.PlayerId = save.saveInfo.PlayerId.length > 15 ? save.saveInfo.PlayerId.slice(0, 12) + '...' : save.saveInfo.PlayerId;
+                            item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
+                            item.comment = fCompute.convertRichText(item.comment);
+                            item.time = fCompute.date_to_string(item.time);
+                        }
                     }
+                    commentData.sort((a, b) => {
+                        return new Date(b.time) - new Date(a.time);
+                    });
                     if (!page) page = 1
                     let commentsAPage = Config.getUserCfg('config', 'commentsAPage') || 1
                     let maxPage = Math.ceil(commentData.length / commentsAPage)
@@ -710,11 +733,6 @@ export class phisong extends plugin {
             return true
         }
 
-        if (!save.session && !(await getSave.get_user_token(e.user_id))) {
-            send.send_with_At(e, `暂不支持通过API绑定的用户进行评论哦！`)
-            return true
-        }
-
         let msg = e.msg.replace(/[#/](.*?)(comment|cmt|评论|评价)(\s*)/, "");
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：\n/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <难度?>(换行)\n<内容>`)
@@ -748,7 +766,7 @@ export class phisong extends plugin {
                 rankNum = -1;
         }
 
-        let nickname = msg.replace(/ (EZ|HD|IN|AT|LEGACY)[\s\S]*?$/i, '')
+        let nickname = msg.replace(/( (EZ|HD|IN|AT|LEGACY))?\s*\n[\s\S]*?$/i, '')
 
         let song = getInfo.fuzzysongsnick(nickname)?.[0]
 
@@ -783,6 +801,66 @@ export class phisong extends plugin {
         }
 
         let songId = songInfo.id;
+
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            try {
+                /**@type {commentObject} */
+                let cmtobj = {
+                    songId: songInfo.id,
+                    rank: rankKind,
+                    apiUserId: save.apiId,
+                    rks: save.saveInfo.summary.rankingScore,
+                    score: 0,
+                    acc: 0,
+                    fc: 0,
+                    challenge: save.saveInfo.summary.challengeModeRank,
+                    time: new Date(),
+                    comment: comment
+                };
+                let songRecord = save.getSongsRecord(songId);
+                if (!songInfo.sp_vis && songRecord?.[rankNum]) {
+                    let { phi, b19_list } = await save.getB19(27)
+                    let spInfo = '';
+
+                    for (let i = 0; i < phi.length; ++i) {
+                        if (phi[i].id == songId && phi[i].rank == rankKind) {
+                            spInfo = `Perfect ${i + 1}`;
+                            break;
+                        }
+                    }
+                    if (!spInfo && songRecord[rankNum].score == 1000000) {
+                        spInfo = 'All Perfect';
+                    }
+                    for (let i = 0; i < b19_list.length; ++i) {
+                        if (b19_list[i].id == songId && b19_list[i].rank == rankKind) {
+                            spInfo = spInfo ? spInfo + ` & Best ${i + 1}` : `Best ${i + 1}`;
+                            break;
+                        }
+                    }
+                    cmtobj = {
+                        ...cmtobj,
+                        score: songRecord[rankNum].score,
+                        acc: songRecord[rankNum].acc,
+                        fc: songRecord[rankNum].fc,
+                        spInfo,
+                    }
+                };
+                await makeRequest.addComment({
+                    ...makeRequestFnc.makePlatform(e),
+                    comment: cmtobj
+                });
+                send.send_with_At(e, `在线评论成功！φ(゜▽゜*)♪`);
+                return true;
+            } catch (error) {
+                logger.warn(`[phi-plugin] API评论失败`, error)
+            }
+        }
+
+        if (!save.session && !(await getSave.get_user_token(e.user_id))) {
+            send.send_with_At(e, `暂不支持通过API绑定的用户进行评论哦！`)
+            return true
+        }
+
         let cmtobj = {
             sessionToken: save.session,
             userObjectId: save.saveInfo.objectId,
@@ -854,6 +932,15 @@ export class phisong extends plugin {
 
         let comment = getComment.getByCommentId(commentId)
         if (!comment) {
+            if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+                try {
+                    await makeRequest.delComment({ ...makeRequestFnc.makePlatform(e), comment_id: commentId });
+                    send.send_with_At(e, `删除在线评论成功！φ(゜▽゜*)♪`);
+                    return true;
+                } catch (error) {
+                    logger.warn(`[phi-plugin] API删除评论失败`, error)
+                }
+            }
             send.send_with_At(e, `没有找到ID为${commentId}的评论QAQ！`);
             return true;
         }
@@ -863,30 +950,42 @@ export class phisong extends plugin {
             return true;
         }
 
-        wait_to_del_comment[e.user_id] = commentId;
-        this.setContext('doReCmt', false, 30,)
-        setTimeout(() => {
-            delete wait_to_del_comment[e.user_id];
-        }, 30000)
-
-        send.send_with_At(e, `[评论详情]\n[评论ID]${comment.thisId}\n[评论时间]${fCompute.date_to_string(comment.time)}\n[评论曲目]${comment.songId}\n[评论内容]${comment.comment}\n==========\n请问是否确认删除这条评论＞︿＜\n（回复确认即为确认）`)
+        getComment.del(commentId) ?
+            send.send_with_At(e, `删除成功！`) :
+            send.send_with_At(e, `删除失败QAQ！`);
     }
 
-    async doReCmt() {
-        let e = this.e
-
-        let msg = e.msg.replace(' ', '')
-
-        if (msg == '确认') {
-            getComment.del(wait_to_del_comment[e.user_id]) ?
-                send.send_with_At(e, `删除成功！`) :
-                send.send_with_At(e, `删除失败QAQ！`);
-        } else {
-            send.send_with_At(e, `取消成功！`)
+    async myComment(e) {
+        if (await getBanGroup.get(e, 'myComment')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
         }
-        delete wait_to_del_comment[e.user_id];
 
-        this.finish('doReCmt', false)
+        let save = await send.getsave_result(e);
+
+        if (!save) {
+            return true
+        }
+
+        if (Config.getUserCfg('config', 'openPhiPluginApi') && (save.session || save.apiId)) {
+            try {
+                const comments = await makeRequest.getCommentsByUserId(makeRequestFnc.makePlatform(e));
+
+                if (comments && comments.length > 0) {
+                    let msg = `您的评论列表：\nID | 曲目 | 难度 | 内容 | 时间\n`;
+                    for (let comment of comments) {
+                        msg += `${comment.id} | ${comment.songId} | ${comment.rank} | ${comment.comment} | ${fCompute.date_to_string(comment.time)}\n`
+                    }
+                    send.send_with_At(e, msg);
+                } else {
+                    send.send_with_At(e, `您还没有评论哦！`);
+                }
+                return true;
+            } catch (error) {
+                logger.warn(`[phi-plugin] 获取用户评论失败`, error)
+            }
+        }
+        return false;
     }
 
     async chart(e) {

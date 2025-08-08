@@ -257,7 +257,7 @@ async function makeLargeLine(save, history) {
         backgroundurl: getInfo.getBackground(save?.gameuser?.background),
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
         playerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-        rks: save.saveInfo.summary.rankingScore,
+        rks: save.saveInfo.summary.rankingScore || 0,
         ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
         ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
         updated: fCompute.formatDate(save.saveInfo.modifiedAt.iso),

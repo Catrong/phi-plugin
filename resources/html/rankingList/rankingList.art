@@ -120,6 +120,7 @@
             {{each me.b30list e index}}
             <div class="b30Alist {{index}}">
                 <p>{{e.title}}</p>
+                {{if e.list.length}}
                 <% for (var i = 0; i < e.list.length; i++) { %>
                     {{set song = e.list[i]}}
                     {{if song}}
@@ -128,7 +129,7 @@
                             src="{{song.illustration}}"
                             alt="{{song.illustration}}"
                         />
-                        <div class="b30_dif IN-BKG">
+                        <div class="b30_dif {{song.rank}}-BKG">
                             <p>{{song.rank}} {{song.difficulty.toFixed(1)}}</p>
                         </div>
                         <div class="Rating">
@@ -141,6 +142,18 @@
                     </div>
                     {{/if}}
                 <% } %>
+                {{else}}
+                    <div class="ill_box">
+                        <p>NO INFO</p>
+                    </div>
+                    <div class="ill_box">
+                        <p>NO INFO</p>
+                    </div>
+                    <div class="ill_box">
+                        <p>NO INFO</p>
+                    </div>
+                {{/if}}
+
             </div>
             {{/each}}
         </div>

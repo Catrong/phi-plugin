@@ -231,7 +231,7 @@ export class phisstk extends plugin {
                 await build(e, updateData, history)
                 return true
             } catch (err) {
-                if (err?.message != "用户 未找到") {
+                if (err?.message != "未找到对应 用户") {
                     send.send_with_At(e, `${err}\n从API获取存档失败，本次更新将使用本地数据QAQ！`)
                     logger.warn(`[phi-plugin] API错误`)
                     logger.warn(err)

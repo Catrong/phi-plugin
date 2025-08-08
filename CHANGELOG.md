@@ -1,6 +1,13 @@
 # Changelog
 
+## 0.9.9.3
+
+* 新增 /mycmt 指令，查看自己的云端评论
+* 新增评论同步
+* /song -comment
+
 ## 0.9.9.2
+
 * 测试查分 API
 * 修复 /unbind
 * 修复 /lmtacc

@@ -16,8 +16,8 @@ export default new class getInfo {
 
     static initIng = false
 
-    constructor() {
-        this.init()
+    async init() {
+
         if (Config.getUserCfg('config', 'watchInfoPath')) {
             chokidar.watch(infoPath).on('change', () => {
                 this.init()
@@ -26,9 +26,6 @@ export default new class getInfo {
         if (!fs.existsSync('./plugins/phi-plugin/resources/original_ill/.git')) {
             logger.error(`[phi-plugin] 未下载曲绘文件，建议使用 /phi downill 命令进行下载`)
         }
-    }
-
-    async init() {
 
         if (this.initIng) return
 
@@ -433,7 +430,8 @@ export default new class getInfo {
     * @returns 原曲名称数组，按照匹配程度降序
     */
     fuzzysongsnick(mic, Distance = 0.85) {
-
+        /**为空返回空 */
+        if (!mic) return []
         /**按照匹配程度排序 */
         let result = []
 

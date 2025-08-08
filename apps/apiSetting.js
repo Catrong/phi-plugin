@@ -8,6 +8,7 @@ import getSave from '../model/getSave.js'
 import ProgressBar from "../model/progress-bar.js";
 import { redisPath } from '../model/constNum.js'
 import getBanGroup from '../model/getBanGroup.js'
+import getComment from '../model/getComment.js'
 
 
 const tokenManageData = {}
@@ -21,32 +22,36 @@ export class phihelp extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})setApiToken[\\s\\S]*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*setApiToken[\\s\\S]*$`,
                     fnc: 'setApiToken'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(tkls|lstk)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*(tkls|lstk)$`,
                     fnc: 'tokenList'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(token|tk)(Manage|mng|manage).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*(token|tk)(Manage|mng|manage).*$`,
                     fnc: 'tokenManage'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})auth.*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*auth.*$`,
                     fnc: 'auth'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})clearApiData$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*clearApiData$`,
                     fnc: 'clearApiData'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})updateHistory$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*updateHistory$`,
                     fnc: 'updateHistory'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})updateUserToken$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*updateUserToken$`,
                     fnc: 'updateUserToken'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*updateComment$`,
+                    fnc: 'updateComment'
                 },
             ]
         })
@@ -65,7 +70,7 @@ export class phihelp extends plugin {
             return false
         }
 
-        let apiToken = e.msg.replace(/^[#/].*?setApiToken\s*/, '')
+        let apiToken = e.msg.replace(/^[#/].*?setApiToken\s*\n?/, '')
         if (!apiToken) {
             send.send_with_At(e, `请输入apiToken！\n格式：\n设置初始密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <新Token> \n更改密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken（换行）<旧Token>（换行）<新Token>`)
             return true
@@ -379,5 +384,25 @@ export class phihelp extends plugin {
             return false
         }
 
+    }
+
+    async updateComment(e) {
+        if (!e.isMaster) {
+            e.reply("无权限");
+            return false;
+        }
+
+        send.send_with_At(e, '开始上传评论数据，请稍等...')
+        const data = getComment.data;
+
+        const updateData = []
+
+        for (let songId in data) {
+            for (let comment of data[songId]) {
+                updateData.push({ ...comment, songId });
+            }
+        }
+        logger.info(updateData);
+        logger.info(await makeRequest.updateComments({ data: { comments: updateData } }));
     }
 }

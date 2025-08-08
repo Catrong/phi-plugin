@@ -376,7 +376,7 @@ export default class Save {
 
         this.B19List = { phi, b19_list }
 
-        this.b19_rks = b19_list[Math.min(b19_list.length - 1, 26)].rks
+        this.b19_rks = b19_list[Math.min(b19_list.length - 1, 26)]?.rks || 0
         return { phi, b19_list, com_rks }
     }
 
@@ -476,7 +476,7 @@ export default class Save {
      * @returns 
      */
     getSuggest(id, lv, count, difficulty) {
-        if (!this.b19_rks) {
+        if (this.b19_rks === undefined) {
             let record = this.getRecord()
             this.b19_rks = record.length > 26 ? record[26].rks : 0
             this.b0_rks = this.findAccRecord(100, true)[0]?.rks

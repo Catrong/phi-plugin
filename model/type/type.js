@@ -46,6 +46,7 @@
  * | 'table'
  * | 'comment'
  * | 'recallComment'
+ * | 'myComment'
  * | 'comrks'
  * | 'rankList'
  * | 'godList'
@@ -99,6 +100,7 @@
  * @typedef {'phigrousUpdateUrl'} phigrousUpdateUrl Phigrous更新日志API
  * @typedef {'openPhiPluginApi'} openPhiPluginApi 是否启用Phigros联合查分API地址
  * @typedef {'phiPluginApiUrl'} phiPluginApiUrl Phigros联合查分API地址
+ * @typedef {'debug'} debug 输出测试日志
  * @typedef {'otherinfo'} otherinfo 曲库
  * 猜曲绘设置
  * @typedef {'GuessTipCd'} GuessTipCd 提示间隔
@@ -143,6 +145,7 @@
  * |phigrousUpdateUrl
  * |openPhiPluginApi
  * |phiPluginApiUrl
+ * |debug
  * |otherinfo
  * |GuessTipCd
  * |GuessTipRecall

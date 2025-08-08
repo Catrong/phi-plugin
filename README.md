@@ -13,8 +13,8 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/插件版本-0.9.9.2-9cf?style=flat-square)
-![version](https://img.shields.io/badge/Phigros-3.14.1-9cf?style=flat-square)  
+![version](https://img.shields.io/badge/插件版本-0.9.9.3-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Phigros-3.15.0-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../TimeRainStarSky/Yunzai)
@@ -129,6 +129,7 @@ pnpm install -P
 | `#phi (addtag\|subtag\|retag) <曲名> <难度> <标签>` | 对某个标签赞成、反对或撤销表态，难度默认为IN
 | `#phi (comment\|cmt\|评论\|评价) <曲名> <难度?>(换行)<内容>` | 评论曲目，难度默认为IN
 | `#phi recmt <评论ID>` | 查看并确认是否删评，仅发送者和主人权限，需要二次确认
+| `#phi mycmt` | 查看自己的云端评论
 | `#phi (table\|定数表) <定数>` | 查询phigros定数表（定数表 by Rhythematics）
 | `#phi new` | 查询更新的曲目
 | `#phi tips` | 随机tips
