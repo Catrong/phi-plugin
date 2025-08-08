@@ -63,7 +63,7 @@ export function supportGuoba() {
                         optionType: "button",
                         options: [
                             {
-                                label: 'gitee',
+                                label: 'gitee（暂时弃用）',
                                 value: "https://gitee.com/Steveeee-e/phi-plugin-ill.git"
                             },
                             {
