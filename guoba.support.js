@@ -48,7 +48,7 @@ export function supportGuoba() {
                             },
                             {
                                 label: 'github代理',
-                                value: "https://github.moeyy.xyz/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                                value: "https://ghfast.top/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
                             }
                         ]
                     }
@@ -72,7 +72,7 @@ export function supportGuoba() {
                             },
                             {
                                 label: 'github代理',
-                                value: "https://github.moeyy.xyz/https://github.com/Catrong/phi-plugin-ill.git"
+                                value: "https://ghfast.top/https://github.com/Catrong/phi-plugin-ill.git"
                             }
                         ]
                     }
