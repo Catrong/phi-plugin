@@ -59,6 +59,7 @@ Sigma (Haocore Mix) ~ Regrets of The Yellow Tulip ~:
   - tyt
   - 郁金香的思念
   - Yellow Tulip
+  - 消失的判定线
 Destination:
   - 目的地
   - 终点
@@ -219,6 +220,7 @@ Cipher20.TetrajectoryfeatCtymax:
   - Cipher
   - 密码
   - 密码病毒
+  - 乱码
 混乱Confusion.OnlyMyBlackScore:
   - 混乱
   - Confusion
@@ -293,6 +295,7 @@ ENERGYSYNERGYMATRIX.Tanchiky:
   - 三只猫
   - 三猫
   - 能量协同矩阵
+  - 动物园
 NYA.FLuoRiTe姜米條:
   - 喵
   - 黑巧夹心鱼
@@ -344,6 +347,7 @@ NickofTime.P4koo:
   - 时隙
   - 关键时刻
   - 千钧一发
+  - not
 ClockParadox.WyvernP:
   - 时钟悖论
   - 时间悖论
@@ -402,6 +406,8 @@ Adastraperaspera.RabbitHouse:
   - ada
   - Aapa
   - 大太阳
+  - 马桶塞
+  - 群星
 AfterDawn.S9ryne:
   - AD
   - 黎明之后
@@ -572,6 +578,7 @@ TheMountainEater.PaulBazooka:
   - TME
   - 噬山者
   - 穿山甲
+  - 吃山	
 Starduster.Quree:
   - 星辰
   - 星尘
@@ -644,6 +651,7 @@ parsey.siqlo:
   - 欧芹
   - 切菜
   - 切蔬菜
+  - 不吃欧芹
 Concvssion.Halv:
   - 脑震荡
   - tell me your secret
@@ -999,6 +1007,7 @@ ERABYECONNEC10N.かめりあ:
   - 条形码
   - 加加加
   - 鸠鸠暴怒敲键盘
+  - 万亿字节输出
 ComputeItWithSomeDevilishAlcoholicSteampunkEngines.かめりあ:
   - 酒精
   - 你游最长曲名
@@ -1024,6 +1033,7 @@ TriumphRegret.typeMARS:
   - T&R
   - tr
   - 胜利&遗憾
+  - 胜利与遗憾
 DiamondEyes.SYNTHETIC:
   - 钻石眼
 Ajourneytothemoonlight.Yesod:
@@ -1174,6 +1184,7 @@ XING.ginkiha:
   - 性
   - 星
   - CROSSING
+  - 性歌
 ReEndofaDream.umavsモリモリあつし:
   - ReDr
   - 梦境之终
@@ -1196,6 +1207,7 @@ QuantumHyperspace.D_AAN:
   - QH
   - 量子超空间
   - 量子空间
+  - 超量子空间
 FreakyUndulationsNobleKnightsofTune.JehezukielKURORAK:
   - Freaky Undulations
   - 高贵音韵之士
@@ -1205,6 +1217,7 @@ FreakyUndulationsNobleKnightsofTune.JehezukielKURORAK:
   - funkot
   - 曲调骑士
   - 万圣节
+  - fu
 Dash.小红Akane李祥辉:
   - 冲
   - 冲撞
@@ -1345,6 +1358,7 @@ Electron.ElousFZ:
   - 队长喝绿水
 盏茗.茶鸣拾贰律:
   - 古筝
+  - 茶
 inferior.姜米條:
   - 下等
   - 低劣
@@ -1584,9 +1598,11 @@ KirakiraNoelStory.RekuMochizuki:
   - kira
   - kns
   - 闪耀圣诞往事
+  - kkns
 蝎虎天体Lacertid.CreamvsDaily天利:
   - 蝎虎
   - 蝎虎天体
+  - 邪乎天体
 ニライカナイNiraicA_naiMix.roopfromSTR:
   - niraikanai
   - ニライカナイ
@@ -1608,6 +1624,8 @@ KirakiraNoelStory.RekuMochizuki:
 贝多芬祝福BeethovenBlessing.Nauts:
   - 贝多芬祝福
   - Beethoven
+  - 贝多芬
+  - 贝多芬病毒
 Shelter.MeatyRabbitNceS:
   - 避难所
   - 庇护所
@@ -1724,3 +1742,29 @@ Helios.NOABotaNya:
   - 赫利俄斯
   - 你好
   - 河狸系统
+Rebirth.ああああ:
+  - 重冒号生
+  - Rebirth
+  - 重生2
+  - birth
+  - 重：生
+  - 生还
+  - 复活
+  - 重生
+  - 再生
+FlutterEcho.Cansol:
+  - 颤动回声
+  - 回声
+  - 颤动回波
+  - FE
+AvataarReincarnationofKalpa.ScarletteakaCrYmson:
+  - 卡尔帕转世
+  - 转世化身
+  - 化生～劫之轮回～
+  - 重：生
+  - 阿凡达
+  - 卡帕转世
+  - 转世
+  - 头像
+  - 化身
+  - ARoK
