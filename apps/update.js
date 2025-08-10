@@ -424,7 +424,7 @@ export class phiupdate extends plugin {
      * @returns
      */
     async gitErr(err, stdout) {
-        let msg = "更新失败！";
+        let msg = "更新失败QAQ！";
         let errMsg = err.toString();
         stdout = stdout.toString();
 
@@ -444,7 +444,7 @@ export class phiupdate extends plugin {
             await this.reply(
                 msg +
                 `存在冲突：\n${errMsg}\n` +
-                "请解决冲突后再更新，或者执行#强制更新，放弃本地修改"
+                "请解决冲突后再更新，或者执行#phi强制更新，放弃本地修改"
             );
             return;
         }
@@ -454,7 +454,7 @@ export class phiupdate extends plugin {
                 msg + "存在冲突\n",
                 errMsg,
                 stdout,
-                "\n请解决冲突后再更新，或者执行#强制更新，放弃本地修改",
+                "\n请解决冲突后再更新，或者执行#phi强制更新，放弃本地修改",
             ]);
             return;
         }
