@@ -11,7 +11,7 @@ export default class SongsInfo {
         }
         /** @type {idString} id */
         this.id = data.id
-        /** @type {string} 曲目 */
+        /** @type {songString} 曲目 */
         this.song = data.song
         /** @type {string} 曲绘 */
         this.illustration = getInfo.getill(data.song)

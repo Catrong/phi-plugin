@@ -20,7 +20,8 @@ import makeRequestFnc from '../model/makeRequestFnc.js'
 const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
 let wait_to_del_list
 let wait_to_del_nick
-const wait_to_del_comment = {}
+/** @type {{[key:string]: {page: number, addComment: boolean, songs: songString[]}}} */
+const wait_to_chose_song = {}
 
 export class phisong extends plugin {
     constructor() {
@@ -123,68 +124,34 @@ export class phisong extends plugin {
         }
         let songs = get.fuzzysongsnick(msg)
         if (songs[0]) {
-            let msgRes
             if (!songs[1]) {
-                songs = songs[0]
-                let infoData = getInfo.info(songs);
-                let data = {
-                    ...infoData,
-                };
-                if (await Config.getUserCfg('config', 'allowComment') && (addComment || page)) {
-                    let commentData;
-                    if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-                        commentData = await makeRequest.getCommentsBySongId({ song_id: infoData.id });
-                        for (const item of commentData) {
-                            item.PlayerId = item.PlayerId > 15 ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;
-                            item.avatar = getInfo.idgetavatar(item.avatar);
-                            item.comment = fCompute.convertRichText(item.comment);
-                            item.time = fCompute.date_to_string(item.time);
-                            item.thisId = item.id;
-                        }
-                    } else {
-                        commentData = getComment.get(infoData.id);
-                        for (let item of commentData) {
-                            let save = await getSave.getSaveBySessionToken(item.sessionToken);
-                            if (!save) {
-                                getComment.del(item.thisId);
-                                commentData.splice(commentData.indexOf(item), 1);
-                                continue;
-                            }
-                            item.PlayerId = save.saveInfo.PlayerId.length > 15 ? save.saveInfo.PlayerId.slice(0, 12) + '...' : save.saveInfo.PlayerId;
-                            item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
-                            item.comment = fCompute.convertRichText(item.comment);
-                            item.time = fCompute.date_to_string(item.time);
-                        }
-                    }
-                    commentData.sort((a, b) => {
-                        return new Date(b.time) - new Date(a.time);
-                    });
-                    if (!page) page = 1
-                    let commentsAPage = Config.getUserCfg('config', 'commentsAPage') || 1
-                    let maxPage = Math.ceil(commentData.length / commentsAPage)
-                    page = Math.max(Math.min(page, maxPage), 1)
-                    data = {
-                        ...infoData,
-                        comment: {
-                            command: `当前共有${commentData.length}条评论，第${Math.min(page, maxPage)}页，共${maxPage}页，发送/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <定级?>(换行)<内容> 进行评论，-p <页码> 选择页数`,
-                            list: commentData.slice((commentsAPage * (page - 1)), commentsAPage * page - 1)
-                        }
-                    };
-                }
-                msgRes = await picmodle.common(e, 'atlas', data);
-                e.reply(msgRes)
+                e.reply(await songInfo(page, addComment, songs[0], e))
             } else {
-                msgRes = `找到了${songs.length}首歌曲！`
-                for (let i in songs) {
-                    msgRes += `\n${getInfo.SongGetId(songs[i]) || songs[i]}`
-                }
-                msgRes += `\n请发送 /${Config.getUserCfg('config', 'cmdhead')} song <曲目id> 来查看详细信息！`
-                send.send_with_At(e, msgRes)
+                send.send_with_At(e, fCompute.mutiNick(songs))
+                wait_to_chose_song[e.user_id] = { page, addComment, songs }
+                this.setContext('mutiNick', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'))
             }
         } else {
             e.reply(`未找到${msg}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
         }
         return true
+    }
+
+    async mutiNick() {
+        const { msg } = this.e;
+        const num = Number(msg.match(/([0-9]+)/)?.[0]);
+        const { page, addComment, songs } = wait_to_chose_song[this.e.user_id] || {};
+        if (!num) {
+            send.send_with_At(this.e, `请输入正确的序号哦！`);
+        } else if (!songs[num - 1]) {
+            send.send_with_At(this.e, `未找到${num}所对应的曲目哦！`);
+        } else {
+            const song = songs[num - 1];
+            this.e.reply(await songInfo(page, addComment, song, this.e));
+        }
+        delete wait_to_chose_song[this.e.user_id];
+        this.finish('mutiNick', false)
+        return true;
     }
 
     async search(e) {
@@ -1095,6 +1062,62 @@ export class phisong extends plugin {
         }
     }
 
+}
+
+/**
+ * 获取歌曲信息图片
+ * @param {number} page 
+ * @param {boolean} addComment 
+ * @param {songString} song 
+ * @returns 
+ */
+async function songInfo(page, addComment, song, e) {
+    let infoData = getInfo.info(song);
+    let data = {
+        ...infoData,
+    };
+    if (await Config.getUserCfg('config', 'allowComment') && (addComment || page)) {
+        let commentData;
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            commentData = await makeRequest.getCommentsBySongId({ song_id: infoData.id });
+            for (const item of commentData) {
+                item.PlayerId = item.PlayerId > 15 ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;
+                item.avatar = getInfo.idgetavatar(item.avatar);
+                item.comment = fCompute.convertRichText(item.comment);
+                item.time = fCompute.date_to_string(item.time);
+                item.thisId = item.id;
+            }
+        } else {
+            commentData = getComment.get(infoData.id);
+            for (let item of commentData) {
+                let save = await getSave.getSaveBySessionToken(item.sessionToken);
+                if (!save) {
+                    getComment.del(item.thisId);
+                    commentData.splice(commentData.indexOf(item), 1);
+                    continue;
+                }
+                item.PlayerId = save.saveInfo.PlayerId.length > 15 ? save.saveInfo.PlayerId.slice(0, 12) + '...' : save.saveInfo.PlayerId;
+                item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
+                item.comment = fCompute.convertRichText(item.comment);
+                item.time = fCompute.date_to_string(item.time);
+            }
+        }
+        commentData.sort((a, b) => {
+            return new Date(b.time) - new Date(a.time);
+        });
+        if (!page) page = 1
+        let commentsAPage = Config.getUserCfg('config', 'commentsAPage') || 1
+        let maxPage = Math.ceil(commentData.length / commentsAPage)
+        page = Math.max(Math.min(page, maxPage), 1)
+        data = {
+            ...infoData,
+            comment: {
+                command: `当前共有${commentData.length}条评论，第${Math.min(page, maxPage)}页，共${maxPage}页，发送/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <定级?>(换行)<内容> 进行评论，-p <页码> 选择页数`,
+                list: commentData.slice((commentsAPage * (page - 1)), commentsAPage * page - 1)
+            }
+        };
+    }
+    return await picmodle.common(e, 'atlas', data);
 }
 
 /**

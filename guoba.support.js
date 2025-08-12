@@ -306,6 +306,18 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'mutiNickWaitTimeOut',
+                    label: '多个曲目回复序号等待时长',
+                    bottomHelpMessage: '别名重复触发多个曲目选择时，等待回复序号的时长，单位：秒',
+                    component: 'InputNumber',
+                    required: true,
+                    componentProps: {
+                        min: 5,
+                        max: 999,
+                        placeholder: '请输入等待时长',
+                    },
+                },
+                {
                     field: 'otherinfo',
                     label: '曲库',
                     bottomHelpMessage: '使用曲库的模式，若启用自定义则重名的以自定义为准',

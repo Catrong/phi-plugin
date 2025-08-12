@@ -286,7 +286,7 @@ export default new class getInfo {
 
 
         let nicklistTemp = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml'))
-        /**默认别名,以曲名为key */
+        /** @type {{[key:songString]: string[]}} 默认别名，以曲名为key */
         this.nicklist = {}
         /**以别名为key */
         this.songnick = {}

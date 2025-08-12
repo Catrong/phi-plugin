@@ -1,5 +1,6 @@
+import Config from '../components/Config.js'
 import { MAX_DIFFICULTY } from './constNum.js'
-
+import getInfo from './getInfo.js'
 export default class compute {
     /**
      * 计算等效rks
@@ -495,6 +496,49 @@ export default class compute {
 
     static getAdapterName(e) {
         return e.bot?.adapter?.name || e.bot?.adapter
+    }
+
+    /**
+     * 多别名的返回消息
+     * @param {songString[]} songArr 
+     */
+    static mutiNick(songArr) {
+        /**筛选出重复的别名 */
+        const nickCnt = {};
+        songArr.forEach((song) => {
+            const info = getInfo.info(song);
+            getInfo.nicklist[info.song].forEach((nick) => {
+                if (!nickCnt[nick]) {
+                    nickCnt[nick] = 1;
+                } else {
+                    nickCnt[nick]++;
+                }
+            })
+        })
+        const nickList = []
+        for (let nick in nickCnt) {
+            if (nickCnt[nick] > 1) {
+                nickList.push(nick);
+            }
+        }
+        /**生成消息 */
+        let msg = '你要找的是不是：\n';
+        songArr.forEach((song, index) => {
+            let info = getInfo.info(song)
+            if (info) {
+                msg += `${index + 1}. ${info.song}\n-作者：${info.composer}\n`;
+                for (let nick of getInfo.nicklist[info.song]) {
+                    if (!nickList.includes(nick)) {
+                        msg += `-其他别名：${nick}\n`;
+                        break;
+                    }
+                }
+            } else {
+                msg += `${index + 1}. ${id}\n暂无信息\n`;
+            }
+        })
+        msg += `请在${Config.getUserCfg('config', 'mutiNickWaitTimeOut')}秒内回复序号`;
+        return msg
     }
 }
 

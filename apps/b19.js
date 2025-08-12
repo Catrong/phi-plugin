@@ -14,13 +14,14 @@ import { LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
-import makeRequest from '../model/makeRequest.js';
-import makeRequestFnc from '../model/makeRequestFnc.js';
 import getSaveFromApi from '../model/getSaveFromApi.js';
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
 const Level = ['EZ', 'HD', 'IN', 'AT', null] //存档的难度映射
+
+/** @type {{[key:string]: songString[]}} */
+const wait_to_chose_song = {}
 
 export class phib19 extends plugin {
     constructor() {
@@ -527,144 +528,42 @@ export class phib19 extends plugin {
             return false
         }
 
-        const save = await send.getsave_result(e)
-
-        if (!save) {
-            return true
-        }
-
-        let picversion = Number(e.msg.match(/(score|单曲成绩)[1-2]?/g)[0].replace(/(score|单曲成绩)/g, '')) || 1
-
-
         let song = e.msg.replace(/[#/](.*?)(score|单曲成绩)[1-2]?(\s*)/g, '')
 
         if (!song) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} score <曲名>`)
             return true
         }
-
-        if (!(get.fuzzysongsnick(song)[0])) {
+        const songs = getInfo.fuzzysongsnick(song)
+        if (!songs[0]) {
             send.send_with_At(e, `未找到 ${song} 的有关信息哦！`)
             return true
         }
-        song = get.fuzzysongsnick(song)
-        song = song[0]
-
-        let Record = save.gameRecord
-        let ans = Record[getInfo.SongGetId(song)]
-
-        if (!ans) {
-            send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
-            return true
-        }
-
-        const dan = await get.getDan(e.user_id)
-
-        /**获取历史成绩 */
-
-        let HistoryData = null;
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-            try {
-                HistoryData = await getSaveFromApi.getSongHistory(e, getInfo.SongGetId(song))
-            } catch (err) {
-                logger.warn(`[phi-plugin] API ERR`, err)
-                HistoryData = await getSave.getHistory(e.user_id)
-                if (HistoryData) {
-                    HistoryData = HistoryData[get.SongGetId(song)]
-                }
-            }
+        if (songs.length > 1) {
+            send.send_with_At(e, fCompute.mutiNick(songs))
+            wait_to_chose_song[e.user_id] = songs
+            this.setContext('mutiNick', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'))
         } else {
-            HistoryData = await getSave.getHistory(e.user_id)
-            if (HistoryData) {
-                HistoryData = HistoryData[get.SongGetId(song)]
-            }
-        }
-
-
-        let history = []
-
-        if (HistoryData) {
-            for (let i in HistoryData) {
-                for (let j in HistoryData[i]) {
-                    const tem = scoreHistory.extend(get.SongGetId(song), i, HistoryData[i][j])
-                    tem.date_new = fCompute.date_to_string(tem.date_new)
-                    history.push(tem)
-                }
-            }
-        }
-
-        history.sort((a, b) => new Date(b.date_new) - new Date(a.date_new))
-
-        history.splice(16)
-
-
-        let data = {
-            songName: song,
-            PlayerId: save.saveInfo.PlayerId,
-            avatar: get.idgetavatar(save.saveInfo.summary.avatar),
-            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
-            Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
-            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            scoreData: {},
-            CLGMOD: dan?.Dan,
-            EX: dan?.EX,
-            history: history,
-        }
-
-
-        data.illustration = getInfo.getill(song)
-        let songsinfo = getInfo.info(song, true);
-
-        switch (picversion) {
-            case 2: {
-                for (let i in ans) {
-                    if (ans[i]) {
-                        ans[i].acc = ans[i].acc.toFixed(2)
-                        ans[i].rks = ans[i].rks.toFixed(2)
-                        data[Level[i]] = {
-                            ...ans[i],
-                            suggest: save.getSuggest(getInfo.SongGetId(song), i, 4, songsinfo['chart'][Level[i]]['difficulty']),
-                        }
-                    } else {
-                        data[Level[i]] = {
-                            Rating: 'NEW'
-                        }
-                    }
-                    data[Level[i]].difficulty = Number(songsinfo['chart'][Level[i]]['difficulty']).toFixed(1)
-                }
-                send.send_with_At(e, await altas.score(e, data, 2))
-                break;
-            }
-            default: {
-                for (let i in Level) {
-                    if (!songsinfo.chart[Level[i]]) break
-                    data.scoreData[Level[i]] = {}
-                    data.scoreData[Level[i]].difficulty = songsinfo['chart'][Level[i]]['difficulty']
-                }
-                // console.info(ans)
-                for (let i in ans) {
-                    if (!songsinfo['chart'][Level[i]]) break
-                    if (ans[i]) {
-                        ans[i].acc = ans[i].acc.toFixed(4)
-                        ans[i].rks = ans[i].rks.toFixed(4)
-                        data.scoreData[Level[i]] = {
-                            ...ans[i],
-                            suggest: save.getSuggest(getInfo.SongGetId(song), i, 4, songsinfo['chart'][Level[i]]['difficulty']),
-                        }
-                    } else {
-                        data.scoreData[Level[i]] = {
-                            Rating: 'NEW',
-                        }
-                    }
-                }
-                data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
-                send.send_with_At(e, await altas.score(e, data, 1))
-                break;
-            }
+            await getScore(songs[0], e)
         }
         return true
+    }
 
+    mutiNick() {
+        const { msg } = this.e;
+        const num = Number(msg.match(/([0-9]+)/)?.[0]);
+        const songs = wait_to_chose_song[this.e.user_id];
+        if (!num) {
+            send.send_with_At(this.e, `请输入正确的序号哦！`);
+        } else if (!songs[num - 1]) {
+            send.send_with_At(this.e, `未找到${num}所对应的曲目哦！`);
+        } else {
+            const song = songs[num - 1];
+            getScore(song, this.e);
+        }
+        delete wait_to_chose_song[this.e.user_id];
+        this.finish('mutiNick', false)
+        return true;
     }
 
     /**推分建议，建议的是RKS+0.01的所需值 */
@@ -851,6 +750,108 @@ export class phib19 extends plugin {
         }))
 
     }
+}
+
+async function getScore(song, e) {
+
+
+    const save = await send.getsave_result(e)
+
+    if (!save) {
+        return true
+    }
+    
+    let Record = save.gameRecord
+    let ans = Record[getInfo.SongGetId(song)]
+
+    if (!ans) {
+        send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
+        return true
+    }
+
+    const dan = await get.getDan(e.user_id)
+
+    /**获取历史成绩 */
+
+    let HistoryData = null;
+    if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        try {
+            HistoryData = await getSaveFromApi.getSongHistory(e, getInfo.SongGetId(song))
+        } catch (err) {
+            logger.warn(`[phi-plugin] API ERR`, err)
+            HistoryData = await getSave.getHistory(e.user_id)
+            if (HistoryData) {
+                HistoryData = HistoryData[get.SongGetId(song)]
+            }
+        }
+    } else {
+        HistoryData = await getSave.getHistory(e.user_id)
+        if (HistoryData) {
+            HistoryData = HistoryData[get.SongGetId(song)]
+        }
+    }
+
+
+    let history = []
+
+    if (HistoryData) {
+        for (let i in HistoryData) {
+            for (let j in HistoryData[i]) {
+                const tem = scoreHistory.extend(get.SongGetId(song), i, HistoryData[i][j])
+                tem.date_new = fCompute.date_to_string(tem.date_new)
+                history.push(tem)
+            }
+        }
+    }
+
+    history.sort((a, b) => new Date(b.date_new) - new Date(a.date_new))
+
+    history.splice(16)
+
+
+    let data = {
+        songName: song,
+        PlayerId: save.saveInfo.PlayerId,
+        avatar: get.idgetavatar(save.saveInfo.summary.avatar),
+        Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
+        Date: save.saveInfo.summary.updatedAt,
+        ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+        ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+        scoreData: {},
+        CLGMOD: dan?.Dan,
+        EX: dan?.EX,
+        history: history,
+    }
+
+
+    data.illustration = getInfo.getill(song)
+    let songsinfo = getInfo.info(song, true);
+
+
+    for (let i in Level) {
+        if (!songsinfo.chart[Level[i]]) break
+        data.scoreData[Level[i]] = {}
+        data.scoreData[Level[i]].difficulty = songsinfo['chart'][Level[i]]['difficulty']
+    }
+    // console.info(ans)
+    for (let i in ans) {
+        if (!songsinfo['chart'][Level[i]]) break
+        if (ans[i]) {
+            ans[i].acc = ans[i].acc.toFixed(4)
+            ans[i].rks = ans[i].rks.toFixed(4)
+            data.scoreData[Level[i]] = {
+                ...ans[i],
+                suggest: save.getSuggest(getInfo.SongGetId(song), i, 4, songsinfo['chart'][Level[i]]['difficulty']),
+            }
+        } else {
+            data.scoreData[Level[i]] = {
+                Rating: 'NEW',
+            }
+        }
+    }
+    data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
+    send.send_with_At(e, await altas.score(e, data, 1))
+
 }
 
 function cmp() {

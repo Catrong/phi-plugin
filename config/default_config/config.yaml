@@ -79,6 +79,9 @@ phiPluginApiUrl: ""
 #  输出测试日志
 debug: 0
 
+#  多个曲目回复序号等待时长(s)
+mutiNickWaitTimeOut: 10
+
 #  ************ 【娱乐设置】 *************
 #  是否启用额外曲库 0:原本 1:原本+额外 2:仅额外
 otherinfo: 0
