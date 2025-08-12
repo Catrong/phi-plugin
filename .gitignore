@@ -42,3 +42,6 @@ plugin-ill/
 /apps/chart.js
 /apps/chart.js
 plugin-ill/
+
+# 忽略临时文件
+/temp/

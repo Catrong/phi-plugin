@@ -1,8 +1,9 @@
-import Config from '../components/Config.js'
 import common from '../../../lib/common/common.js'
 import puppeteer from './puppeteer.js'
-
-
+import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../components/index.js'
+import { _path, pluginResources, imgPath, tempPath } from './path.js'
+import fCompute from './fCompute.js'
+import fs from 'node:fs'
 class picmodle {
 
     constructor() {
@@ -14,17 +15,22 @@ class picmodle {
         this.rendering = []
         /**
          * puppeteer队列
-         * @param {[puppeteer]} puppeteer
+         * @type {puppeteer[]}
          */
         this.puppeteer = []
         this.tot = 0
     }
 
     async init() {
+        /** 清理临时文件 */
+        fs.rmSync(tempPath, { force: true, recursive: true })
+        /** 初始化puppeteer实例 */
         let num = Config.getUserCfg('config', 'renderNum')
         for (let i = 0; i < num; i++) {
-            this.puppeteer.push(new puppeteer(i))
-            this.puppeteer[i].init(i)
+            this.puppeteer.push(new puppeteer({
+                puppeteerTimeout: Config.getUserCfg('config', 'timeout')
+            }, i))
+            this.puppeteer[i].browserInit(i)
             this.queue.push(i)
         }
     }
@@ -170,8 +176,42 @@ class picmodle {
                 puppeteerNum = this.queue.shift()
                 this.torender.shift()
                 try {
+
+                    let [app, tpl] = path.split('/')
+                    let layoutPath = pluginResources.replace(/\\/g, '/') + `/html/common/layout/`
+                    let resPath = pluginResources.replace(/\\/g, '/') + `/`
+
+
+                    Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
+                    let data = {
+                        ...params,
+                        waitUntil: ['networkidle0', 'load'],
+                        saveId: (params.saveId || params.save_id || tpl) + `${this.id}`,
+                        tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.art`,
+                        pluResPath: resPath,
+                        _res_path: resPath,
+                        _imgPath: imgPath + '/',
+                        _layout_path: layoutPath,
+                        defaultLayout: layoutPath + 'default.art',
+                        elemLayout: layoutPath + 'elem.art',
+                        pageGotoParams: {
+                            waitUntil: ['networkidle2', 'load'],
+                            timeout: Config.getUserCfg('config', 'timeout'),
+                        },
+                        sys: {
+                            scale: `style=transform:scale(${cfg.scale || 1})`,
+                            copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
+                        },
+                        Version: { ...Version },
+                        _plugin: Display_Plugin_Name,
+                        Math,
+                        fCompute,
+                    }
+
+                    /**返回图片信息 */
                     this.rendering.push(id)
-                    ans = await this.puppeteer[puppeteerNum].render(path, params, cfg)
+                    ans = segment.image(await this.puppeteer[puppeteerNum].screenshot(`${Plugin_Name}/${app}/${tpl}`, data))
+
                 } catch (err) {
                     logger.error(`[Phi-Plugin][渲染失败]`, id)
                     logger.error(err)

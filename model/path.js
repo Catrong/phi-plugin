@@ -8,6 +8,8 @@ export const _path = process.cwd()
 export const pluginName = path.basename(path.join(import.meta.url, '../../'))
 /**插件根目录 */
 export const pluginRoot = path.join(_path, 'plugins', pluginName)
+/**插件临时文件目录 */
+export const tempPath = path.join(pluginRoot, 'temp')
 /**插件资源目录 */
 export const pluginResources = path.join(pluginRoot, 'resources')
 

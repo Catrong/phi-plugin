@@ -15,9 +15,9 @@
 
 ![version](https://img.shields.io/badge/插件版本-0.9.9.3-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.15.0-9cf?style=flat-square)  
-[![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
-[![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
-[![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/TimeRainStarSky/Yunzai)
+[![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Yunzai-Bot)
+[![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Miao-Yunzai)
+[![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../TimeRainStarSky/Yunzai)
 </div>
 
 ### 介绍
