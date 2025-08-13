@@ -186,7 +186,7 @@ class picmodle {
                     let data = {
                         ...params,
                         waitUntil: ['networkidle0', 'load'],
-                        saveId: (params.saveId || params.save_id || tpl) + `${this.id}`,
+                        saveId: (params.saveId || params.save_id || tpl),
                         tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.art`,
                         pluResPath: resPath,
                         _res_path: resPath,

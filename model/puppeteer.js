@@ -158,6 +158,8 @@ export default class Puppeteer extends Renderer {
         if (!(await this.browserInit())) return false
         const pageHeight = data.multiPageHeight || 4000
 
+        data.saveId += `_${this.browserId}`
+
         const savePath = this.dealTpl(name, data)
         if (!savePath) return false
 
