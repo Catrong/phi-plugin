@@ -682,6 +682,15 @@ export class phisong extends plugin {
             return false
         }
 
+        if (dif > getInfo.MAX_DIFFICULTY) {
+            send.send_with_At(e, `定数已经超过最高的定数${getInfo.MAX_DIFFICULTY}了QAQ！`)
+            return false
+        }
+
+        if (dif < 1) {
+            send.send_with_At(e, `定数不能小于 1 QAQ！`)
+            return false
+        }
 
         send.send_with_At(e, segment.image(getInfo.getTableImg(dif)))
 
