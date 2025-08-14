@@ -507,7 +507,7 @@ export default class compute {
         const nickCnt = {};
         songArr.forEach((song) => {
             const info = getInfo.info(song);
-            getInfo.nicklist[info.song].forEach((nick) => {
+            (getInfo.nicklist[info.song] || []).forEach((nick) => {
                 if (!nickCnt[nick]) {
                     nickCnt[nick] = 1;
                 } else {
