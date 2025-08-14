@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import https from 'node:https';
 import { Config } from '../components/index.js';
 import saveHistory from './class/saveHistory.js';
@@ -171,6 +171,12 @@ import saveHistory from './class/saveHistory.js';
  * @property {?string} avatar 仅在查询时添加
  */
 
+/**
+ * @typedef {Object} userSetting
+ * @property {boolean} allowDataCollection 是否允许数据收集
+ */
+
+const agent = new https.Agent({ rejectUnauthorized: false });
 
 export default class makeRequest {
 
@@ -389,6 +395,24 @@ export default class makeRequest {
     static async updateComments(params) {
         return (await makeFetch(burl('/comment/update'), params))
     }
+
+    /**
+     * 获取用户设置
+     * @param {highAu} params 
+     * @returns {Promise<userSetting>}
+     */
+    static async getUserSetting(params) {
+        return (await makeFetch(burl('/userSetting/get'), params)).data
+    }
+
+    /**
+     * 设置用户设置
+     * @param {highAu & {setting: userSetting}} params 
+     * @returns {Promise<userSetting>}
+     */
+    static async setUserSetting(params) {
+        return (await makeFetch(burl('/userSetting/set'), params)).data
+    }
 }
 
 async function makeFetch(url, params) {
@@ -397,7 +421,7 @@ async function makeFetch(url, params) {
     }
     let result
     try {
-        result = await fetch(new URL(url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) });
+        result = await axios.post(new URL(url), JSON.stringify(params), { headers: { 'Content-Type': 'application/json' }, httpsAgent: agent });
     } catch (e) {
         logger.error(`请求失败: ${url}`, e);
         throw new Error('API离线');
@@ -405,22 +429,9 @@ async function makeFetch(url, params) {
     if (!result) {
         throw new Error('请求失败')
     }
-    let json = null
-    let text = null
-    try {
-        // console.error(await result.text())
-        text = await result.text()
-        json = JSON.parse(text)
-    } catch (e) {
-        logger.error(text)
-        throw new Error('请求失败')
-    }
-    if (result.status != 200) {
-        if (json.error) {
-            throw new Error(json.error)
-        } else {
-            throw new Error(json)
-        }
+    let json = result.data
+    if (json.error) {
+        throw new Error(json.error)
     }
     if (Config.getUserCfg('config', 'debug') > 3) {
         logger.info(`[phi-plugin] API响应: ${url}`, JSON.stringify(json));

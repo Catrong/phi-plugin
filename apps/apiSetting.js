@@ -53,6 +53,10 @@ export class phihelp extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*updateComment$`,
                     fnc: 'updateComment'
                 },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*(NOAPI|noapi)$`,
+                    fnc: 'noapi'
+                },
             ]
         })
 
@@ -336,6 +340,11 @@ export class phihelp extends plugin {
             return false;
         }
 
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '这里没有连接查分平台哦！')
+            return false
+        }
+
         /**提取redis中user_id数据 */
         send.send_with_At(e, '开始提取user_token，请稍等...')
         console.info('\n[phi-plugin][backup] 开始提取user_token数据...')
@@ -392,6 +401,11 @@ export class phihelp extends plugin {
             return false;
         }
 
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '这里没有连接查分平台哦！')
+            return false
+        }
+
         send.send_with_At(e, '开始上传评论数据，请稍等...')
         const data = getComment.data;
 
@@ -404,5 +418,42 @@ export class phihelp extends plugin {
         }
         logger.info(updateData);
         logger.info(await makeRequest.updateComments({ data: { comments: updateData } }));
+    }
+
+    async noapi(e) {
+
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '这里没有连接查分平台哦！')
+            return false
+        }
+
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return true
+        }
+        let userSetting
+        try {
+            userSetting = await makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e) });
+        } catch (error) {
+            send.send_with_At(e, '获取用户设置失败: ' + error.message);
+            return true;
+        }
+        if (!userSetting.allowDataCollection) {
+            try {
+                await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), setting: { allowDataCollection: true } });
+            } catch (error) {
+                send.send_with_At(e, '设置失败: ' + error.message);
+                return true;
+            }
+            send.send_with_At(e, '启用API同步成功');
+        } else {
+            try {
+                await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), setting: { allowDataCollection: false } });
+            } catch (error) {
+                send.send_with_At(e, '设置失败: ' + error.message);
+                return true;
+            }
+            send.send_with_At(e, '禁用API同步成功');
+        }
     }
 }

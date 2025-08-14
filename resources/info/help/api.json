@@ -71,6 +71,11 @@
                 "title": "/updateHistory",
                 "eg": "/updateHistory",
                 "desc": "将BOT端的历史成绩更新到API端"
+            },
+            {
+                "title": "/noapi",
+                "eg": "/noapi",
+                "desc": "不参与数据统计，不影响正常使用API"
             }
         ]
     },
