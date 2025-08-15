@@ -527,11 +527,15 @@ export default class compute {
             let info = getInfo.info(song)
             if (info) {
                 msg += `${index + 1}. ${info.song}\n-作者：${info.composer}\n`;
-                for (let nick of getInfo.nicklist[info.song]) {
-                    if (!nickList.includes(nick)) {
-                        msg += `-其他别名：${nick}\n`;
-                        break;
+                if (getInfo.nicklist?.[info.song]) {
+                    for (let nick of getInfo.nicklist[info.song]) {
+                        if (!nickList.includes(nick)) {
+                            msg += `-其他别名：${nick}\n`;
+                            break;
+                        }
                     }
+                } else {
+                    msg += `-其他别名：${info.id.replace('.', ' . ')}\n`;
                 }
             } else {
                 msg += `${index + 1}. ${id}\n暂无信息\n`;
