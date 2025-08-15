@@ -4,7 +4,6 @@ import lodash from "lodash"
 import puppeteer from "puppeteer"
 import { ulid } from "ulid"
 import timers from "node:timers/promises"
-import fs from "node:fs/promises"
 // 暂时保留对原config的兼容
 import cfg from "../../../lib/config/config.js"
 import { redisPath } from './constNum.js'

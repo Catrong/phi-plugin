@@ -31,8 +31,10 @@
     "jszip": "^3.10.1",
     "node-csv": "^0.1.2",
     "pinyin-pro": "^3.15.4",
+    "puppeteer": "^24.16.2",
     "qrcode": "^1.5.4",
-    "single-line-log": "^1.1.2"
+    "single-line-log": "^1.1.2",
+    "ulid": "^3.0.1"
   },
   "keywords": [
     "云崽",
