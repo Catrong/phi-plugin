@@ -204,6 +204,7 @@ EnginexStartmelodymix.CrossingSound:
   - E×S
   - 糖魔王
   - 糖果
+  - 能量启用
 Wintercube.CtymaxfeatNceS:
   - 冬魔方
   - 冬立方
@@ -254,6 +255,7 @@ PixelRebelz.Normal1zer:
   - 像素
   - 背叛像素
   - 像素反叛者
+  - 像素叛徒
 Cereris.SunsetRayNceS:
   - 谷神星
   - 科目二
@@ -269,6 +271,7 @@ NonMelodicRagezMUGEdit.Normal1zer:
 SultanRage.MonstDeath:
   - 苏丹怒了
   - 苏丹之怒
+  - 苏丹狂怒
   - 苏丹怒
   - 苏丹
   - SR
@@ -295,6 +298,7 @@ ENERGYSYNERGYMATRIX.Tanchiky:
   - 三只猫
   - 三猫
   - 能量协同矩阵
+  - 能源协同矩阵
   - 动物园
 NYA.FLuoRiTe姜米條:
   - 喵
@@ -408,11 +412,13 @@ Adastraperaspera.RabbitHouse:
   - 大太阳
   - 马桶塞
   - 群星
+  - 啊啊怕
 AfterDawn.S9ryne:
   - AD
   - 黎明之后
   - 破晓之后
   - 汤姆惨叫曲
+  - 广告
 INFiNiTEENERZYOverdoze.RekuMochizuki:
   - IEO
   - 无限能量
@@ -503,6 +509,7 @@ Aleph0.LeaF:
   - 草先生的数学小课堂
   - LeaF的数学课堂
   - LeaF数学课堂
+  - 阿列夫零
 RubbishSorting.CtymaxvsNceS:
   - 你是什么垃圾
   - 垃圾分类
@@ -583,6 +590,7 @@ Starduster.Quree:
   - 星辰
   - 星尘
   - 星尘者
+  - STAR USER
 HardcoreKwaya.EnFr:
   - 非洲土嗨
   - 土嗨
@@ -733,6 +741,7 @@ YouaretheMiserable.tpazolite:
   - 参上
   - 走吧、出发
   - Iza
+  - izamairimasu
 OnAndOn.ETIAfeatJenga:
   - OAO
   - 勇往直前
@@ -926,6 +935,7 @@ Doppelganger.LeaF:
   - 双重身
   - 分神灵
   - 分身灵
+  - 分身
 Disorder.HyuNfeatYURI:
   - 悬溺
   - 疾病
@@ -935,6 +945,7 @@ Disorder.HyuNfeatYURI:
 FindMe.Kforest:
   - 寻我
   - 找我
+  - 寻找自我
 Pontdessouvenirs.VeetaCrushvsitsufeatitsu:
   - 记忆之桥
   - 记忆桥
@@ -1260,6 +1271,7 @@ BrokenSky.JungoMAX3feat刘佳宜Snow幻影刃shadow:
   - 破碎天空
   - 裂空
   - BRS
+  - 天塌了
 Dreamland.z1onkyrrin:
   - 梦陆
   - 梦境
@@ -1308,6 +1320,7 @@ PRAGMATISMRESURRECTION.Laur:
   - 实用主义
   - 牢二
   - 白发小姐姐
+  - bfs
 Antithese.Blacklolita:
   - 反命题
 云女孩.符白牙SiYFics:
@@ -1600,6 +1613,7 @@ KirakiraNoelStory.RekuMochizuki:
   - 蝎虎
   - 蝎虎天体
   - 邪乎天体
+  - xhtt
 ニライカナイNiraicA_naiMix.roopfromSTR:
   - niraikanai
   - ニライカナイ
@@ -1633,6 +1647,8 @@ Shelter.MeatyRabbitNceS:
   - 烟花
 Ark.kanoryo:
   - 诺亚方舟
+  - Ark
+  - ark15
 SwingSkipDrop.ミハイル:
   - 摇摆 跳跃 抛出
   - SSD
@@ -1641,6 +1657,7 @@ SwingSkipDrop.ミハイル:
   - Cosmic Dusty Girl
   - CDG
   - 残骸
+  - 宇宙残害少女
 AbsoluTedisoRdeR.AcuteDisarray:
   - ATRR
   - 挨踢啊啊
@@ -1748,11 +1765,20 @@ Rebirth.ああああ:
   - 生还
   - 复活
   - 再生
+  - Rb
+  - 起死回生
+  - 新重生
+  - 终生
+  - 再诞
+  - 黑化
+  - 黑复生
 FlutterEcho.Cansol:
   - 颤动回声
   - 回声
   - 颤动回波
   - FE
+  - 潜声传感器
+  - 飘荡回音
 AvataarReincarnationofKalpa.ScarletteakaCrYmson:
   - 卡尔帕转世
   - 转世化身
@@ -1765,3 +1791,5 @@ AvataarReincarnationofKalpa.ScarletteakaCrYmson:
   - 化身
   - ARoK
   - 蓝魔王
+  - 劫之轮回
+  - ava
