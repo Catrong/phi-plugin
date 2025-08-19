@@ -438,15 +438,6 @@ export default new class getInfo {
         const usernick = Config.getUserCfg('nickconfig')
         const allinfo = this.all_info()
 
-
-        for (let std in usernick) {
-            let dis = fCompute.jaroWinklerDistance(mic, std)
-            if (dis >= Distance) {
-                for (let i in usernick[std]) {
-                    result.push({ song: usernick[std][i], dis: dis })
-                }
-            }
-        }
         for (let std in this.songnick) {
             let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
@@ -455,6 +446,7 @@ export default new class getInfo {
                 }
             }
         }
+
         for (let std in allinfo) {
             let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
@@ -466,6 +458,18 @@ export default new class getInfo {
                 result.push({ song: allinfo[std].song, dis: dis })
             }
         }
+
+        
+
+        for (let std in usernick) {
+            let dis = fCompute.jaroWinklerDistance(mic, std)
+            if (dis >= Distance) {
+                for (let i in usernick[std]) {
+                    result.push({ song: usernick[std][i], dis: dis })
+                }
+            }
+        }
+        
 
         result = result.sort((a, b) => b.dis - a.dis)
 
