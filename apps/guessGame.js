@@ -108,15 +108,15 @@ export class phiGames extends plugin {
         }
         switch (gameList[e.group_id]?.gameType) {
             case "guessTips": {
-                getLogger.info(`[phi-games][guess][tips] ${e.msg}`)
+                logger.info(`[phi-games][guess][tips] ${e.msg}`)
                 return await guessTips.guess(e, gameList)
             }
             case "guessLetter": {
-                getLogger.info(`[phi-games][guess][letter] ${e.msg}`)
+                logger.info(`[phi-games][guess][letter] ${e.msg}`)
                 return await guessLetter.guess(e, gameList)
             }
             case "guessIll": {
-                getLogger.info(`[phi-games][guess][ill] ${e.msg}`)
+                logger.info(`[phi-games][guess][ill] ${e.msg}`)
                 return await guessIll.guess(e, gameList)
             }
             default: {
