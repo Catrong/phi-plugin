@@ -44,7 +44,7 @@ export class phiGames extends plugin {
 
     async start(e) {
         let msg = e.msg.match(new RegExp(games))[0]
-        if(!e.group_id) {
+        if (!e.group_id) {
             send.send_with_At(e, '请在群聊中使用这个功能嗷！')
             return false
         }
@@ -102,14 +102,21 @@ export class phiGames extends plugin {
     }
 
     async guess(e) {
+        /**过滤特殊消息 */
+        if (!e.msg) {
+            return false;
+        }
         switch (gameList[e.group_id]?.gameType) {
             case "guessTips": {
+                getLogger.info(`[phi-games][guess][tips] ${e.msg}`)
                 return await guessTips.guess(e, gameList)
             }
             case "guessLetter": {
+                getLogger.info(`[phi-games][guess][letter] ${e.msg}`)
                 return await guessLetter.guess(e, gameList)
             }
             case "guessIll": {
+                getLogger.info(`[phi-games][guess][ill] ${e.msg}`)
                 return await guessIll.guess(e, gameList)
             }
             default: {
