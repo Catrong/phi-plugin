@@ -480,7 +480,7 @@ export class phiuser extends plugin {
             msg = msg.replace(accStr, '');
         }
 
-        const difStr = msg.match(/-DIF\s*\d+(\.\d+)?(\s*-\s*\d+(\.\d+)?)?/)?.[0];
+        const difStr = msg.match(/(-DIF)?\s*\d+(\.\d+)?(\s*-\s*\d+(\.\d+)?)?/)?.[0];
         if (difStr) {
             fCompute.match_range(difStr, dif_range);
             msg = msg.replace(difStr, '');
