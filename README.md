@@ -115,7 +115,7 @@ pnpm install -P
 | `#phi lmtacc [0-100]` | 计算限制最低 ACC 后的 RKS
 | `#phi (lvsco(re)\|scolv) <定数范围> <难度>` | 获取区间成绩
 | `#phi chap <章节名称\|help>` | 获取章节成绩
-| `#phi list <定数范围> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩
+| `#phi list <-dif 定数范围> <-acc ACC范围> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩
 | `#phi best1(+)` | 查询文字版b30（或更多），最高b99
 | `#phi (score\|单曲成绩)xxx` | 获取单曲成绩及这首歌的推分建议
 | `#phi (suggest\|推分)` | 获取可以让RKS+0.01的曲目及其所需ACC

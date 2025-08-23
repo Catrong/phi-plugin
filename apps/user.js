@@ -7,6 +7,7 @@ import getInfo from '../model/getInfo.js'
 import getSave from '../model/getSave.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
+import LevelRecordInfo from '../model/class/LevelRecordInfo.js'
 
 
 let Level = ['EZ', 'HD', 'IN', 'AT']
@@ -462,14 +463,28 @@ export class phiuser extends plugin {
             return true
         }
 
-        let range = [0, getInfo.MAX_DIFFICULTY]
+        const dif_range = [0, getInfo.MAX_DIFFICULTY];
+        const acc_range = [0, 100];
 
+        /** @type {string} */
         let msg = e.msg.replace(/^[#/](.*?)(lvsco(re)?)(\s*)/, "")
 
         /**EZ HD IN AT */
         let isask = [true, true, true, true]
 
         msg = msg.toUpperCase()
+
+        const accStr = msg.match(/-ACC\s*\d+(\.\d+)?(\s*-\s*\d+(\.\d+)?)?/)?.[0];
+        if (accStr) {
+            fCompute.match_range(accStr, acc_range);
+            msg = msg.replace(accStr, '');
+        }
+
+        const difStr = msg.match(/-DIF\s*\d+(\.\d+)?(\s*-\s*\d+(\.\d+)?)?/)?.[0];
+        if (difStr) {
+            fCompute.match_range(difStr, dif_range);
+            msg = msg.replace(difStr, '');
+        }
 
         if (msg.includes('EZ') || msg.includes('HD') || msg.includes('IN') || msg.includes('AT')) {
             isask = [false, false, false, false]
@@ -492,8 +507,6 @@ export class phiuser extends plugin {
         if (msg.includes(` AP`)) { scoreAsk.PHI = true }
         msg = msg.replace(/(NEW|F|C|B|A|S|V|FC|PHI|AP)*/g, "")
 
-        match_range(e.msg, range)
-
 
         let Record = save.gameRecord
 
@@ -506,19 +519,34 @@ export class phiuser extends plugin {
                 continue
             }
             let info = get.info(song, true)
+
+            /** @type {LevelRecordInfo[]} */
             let record = Record[id]
+
             for (let lv in [0, 1, 2, 3]) {
                 if (!info.chart[Level[lv]]) continue
                 let difficulty = info.chart[Level[lv]].difficulty
-                if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
-                    if ((!record[lv] && !scoreAsk.NEW)) continue
-                    if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()]) continue
-                    if (!record[lv]) {
+                if (!(dif_range[0] <= difficulty && difficulty <= dif_range[1] && isask[lv]))
+                    continue;
+                if (!record[lv]) {
+                    if (!scoreAsk.NEW || acc_range[0] != 0)
+                        continue;
+                    else
                         record[lv] = {}
-                    }
-                    record[lv].suggest = save.getSuggest(id, lv, 4, difficulty)
-                    data.push({ ...record[lv], ...info, illustration: get.getill(get.idgetsong(id), 'low'), difficulty: difficulty, rank: Level[lv] })
+                } else {
+                    if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()])
+                        continue;
+                    if (!(acc_range[0] <= record[lv].acc && record[lv].acc <= acc_range[1]))
+                        continue;
                 }
+                record[lv].suggest = save.getSuggest(id, lv, 4, difficulty);
+                data.push({
+                    ...record[lv],
+                    ...info,
+                    illustration: get.getill(get.idgetsong(id), 'low'),
+                    difficulty: difficulty,
+                    rank: Level[lv]
+                });
             }
         }
 
@@ -533,9 +561,10 @@ export class phiuser extends plugin {
 
         let plugin_data = get.getpluginData(e.user_id)
 
+        //逻辑暂未实现
         let request = []
-        request.push(`${range[0]} - ${range[1]}`)
-
+        request.push(`定数 ${dif_range[0]}-${dif_range[1]}`);
+        request.push(`ACC ${acc_range[0]}-${acc_range[1]}`);
 
 
         send.send_with_At(e, await picmodle.list(e, {
@@ -596,47 +625,6 @@ function Rate(real_score, tot_score, fc) {
         return 'C'
     } else {
         return 'F'
-    }
-}
-
-
-/**
- * 捕获消息中的范围
- * @param {string} msg 消息字符串
- * @param {Array} range 范围数组
- */
-function match_range(msg, range) {
-    range[0] = 0
-    range[1] = getInfo.MAX_DIFFICULTY
-    if (msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)) {
-        /**0-16.9 */
-        msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)[0]
-        let result = msg.split(/\s*[-～~]\s*/g)
-        range[0] = Number(result[0])
-        range[1] = Number(result[1])
-        if (range[0] > range[1]) {
-            let tem = range[1]
-            range[1] = range[0]
-            range[0] = tem
-        }
-        if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
-    } else if (msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)) {
-        /**16.9- 15+ */
-        msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)[0]
-        let result = msg.replace(/\s*[-+]/g, '')
-        if (msg.includes('+')) {
-            range[0] = result
-        } else {
-            range[1] = result
-            if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
-        }
-    } else if (msg.match(/[0-9]+(.[0-9]+)?/g)) {
-        /**15 */
-        msg = msg.match(/[0-9]+(.[0-9]+)?/g)[0]
-        range[0] = range[1] = Number(msg)
-        if (!msg.includes('.')) {
-            range[1] += 0.9
-        }
     }
 }
 

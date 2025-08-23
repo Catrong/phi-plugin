@@ -64,8 +64,8 @@
             },
             {
                 "title": "/list",
-                "eg": "/list [定数] [难度] [评级]",
-                "desc": "列出所有匹配的成绩<br>eg: /list 15 F"
+                "eg": "/list [-dif 定数范围] [-acc ACC范围] [难度等级] [评级]",
+                "desc": "列出所有匹配的成绩<br>eg: /list -dif 11.1-12.2 -acc 98.5-100 IN FC"
             },
             {
                 "title": "/bN",
