@@ -211,7 +211,7 @@
             {{each userstats e}}
             <div class="one-stats-box" id="{{e.Rating}}">
                 <div class="rank">
-                    <p>{{e.tatle}}</p>
+                    <p>{{e.title}}</p>
                 </div>
                 <div class="stats-up">
                     <div class="Rating"> <img src="{{_res_path}}html/otherimg/{{e.Rating}}.png" alt="{{e.Rating}}">
