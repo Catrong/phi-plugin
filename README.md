@@ -72,6 +72,13 @@ cd ./plugins/phi-plugin/
 pnpm install -P 
 ```
 
+> [!WARNING]
+> 请使用主人权限执行该指令以下载曲绘，否则相关曲绘将无法正常展示！（可以是标准输入或者其他平台）
+> 
+>```
+> /phi downill
+>```
+
 > [!TIP]
 > 如果安装依赖时速度过慢，运行：
 > 

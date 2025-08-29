@@ -54,6 +54,13 @@ cd ./plugins/phi-plugin/
 pnpm install -P 
 ```
 
+> [!WARNING]
+> Please use the master's permission to execute this command to download the song illustrations. Otherwise, the relevant song illustrations will not be displayed properly! (It can be standard input or other platforms.)
+> 
+>```
+> /phi downill
+>```
+
 ---
 
 #### Todo
