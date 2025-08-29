@@ -76,6 +76,10 @@ export class phisong extends plugin {
                     fnc: 'newSong'
                 },
                 {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)live$`,
+                    fnc: 'live'
+                },
+                {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(table|定数表)\\s*[0-9]+$`,
                     fnc: 'table'
                 },
@@ -664,6 +668,21 @@ export class phisong extends plugin {
             send.send_with_At(e, '新曲速递内容过长，请试图查阅其他途径！', true)
             return false
         }
+
+        send.send_with_At(e, ans)
+    }
+
+    async live(e) {
+
+        if (await getBanGroup.get(e, 'newSong')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+        let ans = '直播速递：\n'
+        try {
+            let info = await makeRequest.liveInfo();
+            ans += info;
+        } catch (e) { ans += '发生错误，请稍后再试。' }
 
         send.send_with_At(e, ans)
     }

@@ -310,9 +310,6 @@ export default class Save {
      */
     async getB19(num) {
 
-        if (this.B19List) {
-            return this.B19List
-        }
         let getInfo = (await import('../getInfo.js')).default
         /**计算得到的rks，仅作为测试使用 */
         let sum_rks = 0

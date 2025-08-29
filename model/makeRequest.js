@@ -413,6 +413,14 @@ export default class makeRequest {
     static async setUserSetting(params) {
         return (await makeFetch(burl('/userSetting/set'), params)).data
     }
+
+    /**
+     * 设置用户设置
+     * @returns {Promise<string>}
+     */
+    static async liveInfo() {
+        return (await makeFetch(burl('/live'))).data
+    }
 }
 
 async function makeFetch(url, params) {
