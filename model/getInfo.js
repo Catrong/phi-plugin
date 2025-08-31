@@ -207,7 +207,7 @@ export default new class getInfo {
             this.songsid[CsvInfo[i].id + '.0'] = CsvInfo[i].song
             this.idssong[CsvInfo[i].song] = CsvInfo[i].id + '.0'
 
-            this.ori_info[CsvInfo[i].song] = Jsoninfo[CsvInfo[i].id]
+            this.ori_info[CsvInfo[i].song] = { ...Jsoninfo[CsvInfo[i].id] }
             if (!this.ori_info[CsvInfo[i].song]) {
                 this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, chapter: '', bpm: '', length: '', chart: {} }
                 logger.mark(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
@@ -274,6 +274,10 @@ export default new class getInfo {
                     /**最高定数 */
                     this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))
                 }
+            }
+            if (Jsoninfo[CsvInfo[i].id]?.chart) {
+                console.info(Jsoninfo[CsvInfo[i].id].chart)
+                this.ori_info[CsvInfo[i].song].chart = { ...this.ori_info[CsvInfo[i].song].chart, ...Jsoninfo[CsvInfo[i].id].chart }
             }
             this.illlist.push(CsvInfo[i].song)
             this.songlist.push(CsvInfo[i].song)
@@ -459,7 +463,7 @@ export default new class getInfo {
             }
         }
 
-        
+
 
         for (let std in usernick) {
             let dis = fCompute.jaroWinklerDistance(mic, std)
@@ -469,7 +473,7 @@ export default new class getInfo {
                 }
             }
         }
-        
+
 
         result = result.sort((a, b) => b.dis - a.dis)
 
@@ -483,6 +487,7 @@ export default new class getInfo {
 
             all.push(i.song)
         }
+        console.log(result);
 
         return all
     }

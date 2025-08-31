@@ -18,7 +18,7 @@ import getSaveFromApi from '../model/getSaveFromApi.js';
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
-const Level = ['EZ', 'HD', 'IN', 'AT', null] //存档的难度映射
+const Level = ['EZ', 'HD', 'IN', 'AT'] //存档的难度映射
 
 /** @type {{[key:string]: songString[]}} */
 const wait_to_chose_song = {}
