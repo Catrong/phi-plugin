@@ -14,9 +14,15 @@
                 {{each e d}}
                 {{if (d.col !==0 && d.row !==0)}}
                 {{if d.col == 4}}
-                    <th {{d.col ? `colspan=${d.col}` : ''}} {{d.row ? `rowspan=${d.row}` : ''}} {{d.color ? `style=color:${d.color}` : ''}}>{{d.cnt}}</th>
+                    <th
+                     {{d.col ? `colspan=${d.col}` : ''}} 
+                     {{d.row ? `rowspan=${d.row}` : ''}} 
+                     style="background-color: {{d.bkg}}; color: {{d.color}}">{{d.cnt}}</th>
                 {{else}}
-                    <td {{d.col ? `colspan=${d.col}` : ''}} {{d.row ? `rowspan=${d.row}` : ''}} {{d.color ? `style=color:${d.color}` : ''}}>{{d.cnt}}</td>
+                    <td
+                     {{d.col ? `colspan=${d.col}` : ''}}
+                     {{d.row ? `rowspan=${d.row}` : ''}}
+                     style="background-color: {{d.bkg}}; color: {{d.color}}">{{d.cnt}}</td>
                 {{/if}}
                 {{/if}}
                 {{/each}}

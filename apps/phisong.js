@@ -646,7 +646,9 @@ export class phisong extends plugin {
         for (let i in getInfo.updatedSong) {
             let info = getInfo.info(getInfo.updatedSong[i])
             for (let j in info.chart) {
-                ans.push([{ cnt: info.song }, { cnt: j }, { cnt: info.chart[j].difficulty }, { cnt: info.chart[j].combo }])
+                if(Level.indexOf(j)===-1) continue;
+                const bkg = levelColor(j)
+                ans.push([{ cnt: info.song }, { cnt: j, bkg }, { cnt: info.chart[j].difficulty, bkg }, { cnt: info.chart[j].combo, bkg }])
             }
         }
 
@@ -655,21 +657,25 @@ export class phisong extends plugin {
         for (let song in getInfo.updatedChart) {
             let tem = getInfo.updatedChart[song]
             for (let level in tem) {
+                if(Level.indexOf(level)===-1) continue;
                 if (tem[level].isNew) {
                     delete tem[level].isNew
                     for (let obj in tem[level]) {
-                        ans.push([{ cnt: song }, { cnt: level }, { cnt: obj.replace('difficulty', '定数') }, { cnt: tem[level][obj] }])
+                        const bkg = levelColor(level)
+                        ans.push([{ cnt: song }, { cnt: level, bkg }, { cnt: obj.replace('difficulty', '定数'), bkg }, { cnt: tem[level][obj], bkg }])
                     }
                 } else {
                     for (let obj in tem[level]) {
                         const incr = tem[level][obj][0] < tem[level][obj][1]
+                        const bkg = levelColor(level)
                         ans.push([
                             { cnt: song },
-                            { cnt: level },
-                            { cnt: obj.replace('difficulty', '定数') },
+                            { cnt: level, bkg },
+                            { cnt: obj.replace('difficulty', '定数'), bkg },
                             {
                                 cnt: `${tem[level][obj][0]} (${incr ? '+' : '-'}) ${tem[level][obj][1]}`,
-                                color: incr ? 'red' : 'green'
+                                color: incr ? 'red' : 'green',
+                                bkg
                             }
                         ])
                     }
@@ -1245,4 +1251,21 @@ function chartMatchReq(ask, chart) {
     }
     // console.info(ask, chart)
     return false
+}
+
+function levelColor(level) {
+    switch (level) {
+        case 'EZ': {
+            return '#57a80033'
+        }
+        case 'HD': {
+            return '#007fad33'
+        }
+        case 'IN': {
+            return '#ff000033'
+        }
+        case 'AT': {
+            return '#45454533'
+        }
+    }
 }
