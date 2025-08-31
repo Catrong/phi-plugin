@@ -1,0 +1,28 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/newSong/newSong.css">
+
+{{/block}}
+
+{{block 'main'}}
+
+    
+        <table border="1">
+            <tbody>
+            {{each ans e}}
+                <tr>
+                {{each e d}}
+                {{if (d.col !==0 && d.row !==0)}}
+                {{if d.col == 4}}
+                    <th {{d.col ? `colspan=${d.col}` : ''}} {{d.row ? `rowspan=${d.row}` : ''}} {{d.color ? `style=color:${d.color}` : ''}}>{{d.cnt}}</th>
+                {{else}}
+                    <td {{d.col ? `colspan=${d.col}` : ''}} {{d.row ? `rowspan=${d.row}` : ''}} {{d.color ? `style=color:${d.color}` : ''}}>{{d.cnt}}</td>
+                {{/if}}
+                {{/if}}
+                {{/each}}
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+
+{{/block}}

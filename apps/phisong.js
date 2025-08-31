@@ -23,6 +23,8 @@ let wait_to_del_nick
 /** @type {{[key:string]: {page: number, addComment: boolean, songs: songString[]}}} */
 const wait_to_chose_song = {}
 
+let newSongImg = null
+
 export class phisong extends plugin {
     constructor() {
         super({
@@ -628,48 +630,72 @@ export class phisong extends plugin {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        let ans = ''
+        if (newSongImg) {
+            send.send_with_At(e, newSongImg);
+            return true;
+        }
+        const ans = []
+        let msg = ''
         try {
             let info = await (await fetch(Config.getUserCfg('config', 'phigrousUpdateUrl'))).json()
-            ans += `最新版本：${info?.data?.list?.[0]?.version_label}\n更新信息：\n${info?.data?.list?.[0]?.whatsnew?.text?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
+            msg += `最新版本：${info?.data?.list?.[0]?.version_label}\n更新信息：\n${info?.data?.list?.[0]?.whatsnew?.text?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
         } catch (e) { }
-        ans += `信息文件版本：${Version.phigros}\n`
-        ans += '新曲速递：\n'
+        msg += `信息文件版本：${Version.phigros}\n`
+        ans.push([{ cnt: '新曲速递', col: 4 }]);
+        ans.push([{ cnt: '曲名' }, { cnt: '难度' }, { cnt: '定数' }, { cnt: '物量' }])
         for (let i in getInfo.updatedSong) {
             let info = getInfo.info(getInfo.updatedSong[i])
-            ans += `${info.song}\n`
             for (let j in info.chart) {
-                ans += `  ${j} ${info.chart[j].difficulty} ${info.chart[j].combo}\n`
+                ans.push([{ cnt: info.song }, { cnt: j }, { cnt: info.chart[j].difficulty }, { cnt: info.chart[j].combo }])
             }
         }
 
-        ans += '\n定数&谱面修改：\n'
+        ans.push([{ cnt: '定数&谱面修改', col: 4 }])
+        ans.push([{ cnt: '曲名' }, { cnt: '难度' }, { cnt: '条目' }, { cnt: '情况' }])
         for (let song in getInfo.updatedChart) {
             let tem = getInfo.updatedChart[song]
-            ans += song + '\n'
             for (let level in tem) {
-                ans += `  ${level}:\n`
                 if (tem[level].isNew) {
                     delete tem[level].isNew
                     for (let obj in tem[level]) {
-                        ans += `    ${obj}: ${tem[level][obj][0]}\n`
+                        ans.push([{ cnt: song }, { cnt: level }, { cnt: obj.replace('difficulty', '定数') }, { cnt: tem[level][obj] }])
                     }
                 } else {
                     for (let obj in tem[level]) {
-                        ans += `    ${obj}: ${tem[level][obj][0]} -> ${tem[level][obj][1]}\n`
+                        const incr = tem[level][obj][0] < tem[level][obj][1]
+                        ans.push([
+                            { cnt: song },
+                            { cnt: level },
+                            { cnt: obj.replace('difficulty', '定数') },
+                            {
+                                cnt: `${tem[level][obj][0]} (${incr ? '+' : '-'}) ${tem[level][obj][1]}`,
+                                color: incr ? 'red' : 'green'
+                            }
+                        ])
                     }
                 }
             }
         }
 
-        // getFile.SetFile('updatedSong.txt', ans, 'TXT')
+        for (let i = 0; i < ans.length; ++i) {
+            for (let j = 0; j <= 0 && j < ans[i].length; ++j) {
 
-        if (ans.length > 500) {
-            send.send_with_At(e, '新曲速递内容过长，请试图查阅其他途径！', true)
-            return false
+                if (ans[i][j].cnt == ans[i + 1]?.[j]?.cnt && ans[i][j].row !== 0) {
+                    let k = i;
+                    while (ans[i][j].cnt == ans[k]?.[j]?.cnt) {
+                        ans[k][j].row = 0;
+                        ++k;
+                    }
+                    ans[i][j].row = k - i;
+                }
+            }
         }
 
-        send.send_with_At(e, ans)
+        newSongImg = await picmodle.common(e, 'newSong', {
+            ans,
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur')
+        });
+        send.send_with_At(e, newSongImg);
     }
 
     async live(e) {

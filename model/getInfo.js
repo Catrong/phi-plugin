@@ -227,7 +227,14 @@ export default new class getInfo {
                         if (!OldDifList[id][level] || OldDifList[id][level] != Csvdif[i][level] || JSON.stringify(oldNotes[id][level].t) != JSON.stringify(notesInfo[id][level].t)) {
                             let tem = {}
                             if (!OldDifList[CsvInfo[i].id][level]) {
-                                Object.assign(tem, { ...notesInfo[id][level].t, difficulty: Csvdif[i][level], isNew: true })
+                                Object.assign(tem, {
+                                    tap: notesInfo[id][level].t[0],
+                                    drag: notesInfo[id][level].t[1],
+                                    hold: notesInfo[id][level].t[2],
+                                    flick: notesInfo[id][level].t[3],
+                                    difficulty: Csvdif[i][level],
+                                    isNew: true
+                                })
                             } else {
                                 if (OldDifList[id][level] != Csvdif[i][level]) {
                                     Object.assign(tem, { difficulty: [OldDifList[id][level], Csvdif[i][level]] })
@@ -254,7 +261,6 @@ export default new class getInfo {
                                 this.updatedChart[CsvInfo[i].song] = {}
                             }
                             this.updatedChart[CsvInfo[i].song][level] = tem
-                            // console.log(this.updatedChart)
                         }
                     }
 
@@ -276,7 +282,6 @@ export default new class getInfo {
                 }
             }
             if (Jsoninfo[CsvInfo[i].id]?.chart) {
-                console.info(Jsoninfo[CsvInfo[i].id].chart)
                 this.ori_info[CsvInfo[i].song].chart = { ...this.ori_info[CsvInfo[i].song].chart, ...Jsoninfo[CsvInfo[i].id].chart }
             }
             this.illlist.push(CsvInfo[i].song)

@@ -1,0 +1,48 @@
+@import "../common/common.css";
+
+body {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+}
+
+body p {
+    color: white;
+    margin: 0;
+}
+
+/* 现代化表格样式 */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 20px;
+    font-size: 0.95rem;
+    background-color: #ffffffa5;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* 表格主体样式 */
+tr {
+    position: relative;
+    border: none;
+}
+
+th {
+    padding: 5px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    border: #44444444 1px solid;
+    border-top: #444 2px solid;
+}
+
+/* 表格单元格样式 */
+td {
+    padding: 3px;
+    color: #000000;
+    border: #44444444 1px solid;
+}
