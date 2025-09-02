@@ -492,7 +492,6 @@ export default new class getInfo {
 
             all.push(i.song)
         }
-        console.log(result);
 
         return all
     }
