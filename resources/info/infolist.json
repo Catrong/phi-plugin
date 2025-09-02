@@ -1387,10 +1387,10 @@
         "chapter": "Chapter EX-KALPA 精选集"
     },
     "RetributionCycleofRedemption.ArdolfvsDaily天利": {
-        "chapter": "单曲精选集",
-        "spinfo": "SP版本为3.5.2~3.6.0 版本4月1日限定\nRetribution 选取界面重复点击镜像按钮直到背景变为粉色\n3.15.1版本改谱后变为常驻",
         "bpm": "225",
         "length": "2:53",
+        "chapter": "单曲精选集",
+        "spinfo": "SP版本为3.5.2~3.6.0 版本4月1日限定\nRetribution 选取界面重复点击镜像按钮直到背景变为粉色\n3.15.1版本改谱后变为常驻",
         "chart": {
             "SP": {
                 "rgba": "212,167,180,1",
@@ -1399,5 +1399,10 @@
                 "charter": "SPΔDE ~what awaits ahead is destruction and destruction~"
             }
         }
+    },
+    "雪降り雪が降っている.AiSSw夜輪ft結月ゆかり": {
+        "bpm": "234",
+        "length": "2:29",
+        "chapter": "单曲精选集"
     }
 }
