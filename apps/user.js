@@ -8,6 +8,7 @@ import getSave from '../model/getSave.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
 import LevelRecordInfo from '../model/class/LevelRecordInfo.js'
+import getSaveFromApi from '../model/getSaveFromApi.js'
 
 
 let Level = ['EZ', 'HD', 'IN', 'AT']
@@ -115,7 +116,13 @@ export class phiuser extends plugin {
             EX: dan?.EX,
         }
 
-        let user_data = await getSave.getHistory(e.user_id)
+        let user_data;
+
+        try {
+            user_data = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory']);
+        } catch (error) {
+            user_data = await getSave.getHistory(e.user_id);
+        }
 
         let { rks_history, data_history, rks_range, data_range, rks_date, data_date } = user_data.getRksAndDataLine()
 
