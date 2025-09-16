@@ -47,10 +47,10 @@ export class phib19 extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)lmtacc.*$`,
                     fnc: 'lmtAcc'
                 },
-                // {
-                //     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
-                //     fnc: 'bestn'
-                // },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
+                    fnc: 'bestn'
+                },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(score|单曲成绩)[1-2]?.*$`,
                     fnc: 'singlescore'
@@ -426,95 +426,43 @@ export class phib19 extends plugin {
         if (!num)
             num = 19 //未指定默认b19
 
-        let bastlist = save.getB19(num)
+        const { b19_list, phi } = await save.getB19(num)
 
-        let rkslist = bastlist.b19_list
-        let phi = bastlist.phi
 
-        if (Config.getUserCfg('config', 'isGuild')) {
-            /**频道模式 */
-
-            let Remsg = []
-            let tmsg = ''
-            tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
-            if (phi.song) {
-                tmsg += `\n#φ:${phi.song}<${phi.rank}>${phi.difficulty}`
+        let Remsg = []
+        let tmsg = ''
+        tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
+        phi.forEach((item, index) => {
+            if (item.song) {
+                tmsg += `\n#φ:${item.song}<${item.rank}>${item.difficulty}`
             } else {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
             }
-            /**防止消息过长发送失败每条消息10行 */
-            let tot = 1
-            for (let i = 0; i < num && i < rkslist.length; ++i) {
-                if (tot <= 10) {
-                    tmsg += `\n#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
-                } else {
-                    Remsg.push(tmsg)
-                    tmsg = `#B${i + 1}:${rkslist[i].song}<${rkslist[i].rank}>${rkslist[i].difficulty} ${rkslist[i].score} ${rkslist[i].Rating} ${rkslist[i].acc.toFixed(4)}%[${rkslist[i].rks.toFixed(4)}]->:${fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`
-                    tot = 0
-                }
-                ++tot
-            }
-
-            Remsg.push(tmsg)
-
-            if (e.isGroup) {
-                /**群聊只发送10条 */
-                send.send_with_At(e, Remsg[0])
-                send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-                send.pick_send(e, await common.makeForwardMsg(e, Remsg))
+        })
+        /**防止消息过长发送失败每条消息10行 */
+        let tot = 1
+        for (let i = 0; i < num && i < b19_list.length; ++i) {
+            if (tot <= 10) {
+                tmsg += `\n#B${i + 1}:${b19_list[i].song}<${b19_list[i].rank}>${b19_list[i].difficulty} ${b19_list[i].score} ${b19_list[i].Rating} ${b19_list[i].acc.toFixed(4)}%[${b19_list[i].rks.toFixed(4)}]->:${fCompute.suggest(Number((i < 18) ? b19_list[i].rks : b19_list[18].rks) + minuprks * 20, b19_list[i].difficulty, 4)}`
             } else {
-                e.reply(await common.makeForwardMsg(e, Remsg))
+                Remsg.push(tmsg)
+                tmsg = `#B${i + 1}:${b19_list[i].song}<${b19_list[i].rank}>${b19_list[i].difficulty} ${b19_list[i].score} ${b19_list[i].Rating} ${b19_list[i].acc.toFixed(4)}%[${b19_list[i].rks.toFixed(4)}]->:${fCompute.suggest(Number((i < 18) ? b19_list[i].rks : b19_list[18].rks) + minuprks * 20, b19_list[i].difficulty, 4)}`
+                tot = 0
             }
-
-        } else {
-
-            let Remsg = []
-            Remsg.push(`PlayerId: ${save.saveInfo.PlayerId}\nRks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)}\nChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100}\nDate: ${save.saveInfo.updatedAt}`)
-
-
-            if (Config.getUserCfg('config', 'WordB19Img')) {
-
-                if (phi.song) {
-                    Remsg.push([`#φ:\n`,
-                        segment.image(get.getill(phi.song, false)),
-                        `\n${phi.song}\n` +
-                        `${phi.rank} ${phi.difficulty}\n` +
-                        `${phi.score} ${phi.Rating}\n` +
-                        `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
-                        `推分: ${phi.suggest}`])
-                } else {
-                    Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
-                }
-                for (let i = 0; i < num && i < rkslist.length; ++i) {
-                    Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n`,
-                    segment.image(get.getill(rkslist[i].song, false)),
-                    `\n` +
-                    `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
-                    `${rkslist[i].score} ${rkslist[i].Rating}\n` +
-                    `${Number(rkslist[i].acc).toFixed(4)}% ${Number(rkslist[i].rks).toFixed(4)}\n` +
-                    `推分: ${fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`])
-                }
-            } else {
-                /**无图模式 */
-                if (phi.song) {
-                    Remsg.push([`#φ: ${phi.song}\n` +
-                        `${phi.rank} ${phi.difficulty}\n` +
-                        `${phi.score} ${phi.Rating}\n` +
-                        `${phi.acc.toFixed(2)}% ${phi.rks.toFixed(2)}\n` +
-                        `推分: ${phi.suggest}`])
-                } else {
-                    Remsg.push("你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！")
-                }
-                for (let i = 0; i < num && i < rkslist.length; ++i) {
-                    Remsg.push([`#Best ${i + 1}: ${rkslist[i].song}\n` +
-                        `${rkslist[i].rank} ${rkslist[i].difficulty}\n` +
-                        `${rkslist[i].score} ${rkslist[i].Rating}\n` +
-                        `${Number(rkslist[i].acc).toFixed(4)}% ${Number(rkslist[i].rks).toFixed(4)}\n` +
-                        `推分: ${fCompute.suggest(Number((i < 18) ? rkslist[i].rks : rkslist[18].rks) + minuprks * 20, rkslist[i].difficulty, 4)}`])
-                }
-            }
-            await e.reply(await common.makeForwardMsg(e, Remsg))
+            ++tot
         }
+
+        Remsg.push(tmsg)
+
+        if (e.isGroup) {
+            /**群聊只发送10条 */
+            send.send_with_At(e, Remsg[0])
+            send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
+            send.pick_send(e, await common.makeForwardMsg(e, Remsg))
+        } else {
+            e.reply(await common.makeForwardMsg(e, Remsg))
+        }
+
 
 
 
@@ -760,7 +708,7 @@ async function getScore(song, e) {
     if (!save) {
         return true
     }
-    
+
     let Record = save.gameRecord
     let ans = Record[getInfo.SongGetId(song)]
 
