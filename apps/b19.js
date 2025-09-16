@@ -443,10 +443,10 @@ export class phib19 extends plugin {
         let tot = 1
         for (let i = 0; i < num && i < b19_list.length; ++i) {
             if (tot <= 10) {
-                tmsg += `\n#B${i + 1}:${b19_list[i].song}<${b19_list[i].rank}>${b19_list[i].difficulty} ${b19_list[i].score} ${b19_list[i].Rating} ${b19_list[i].acc.toFixed(4)}%[${b19_list[i].rks.toFixed(4)}]->:${fCompute.suggest(Number((i < 18) ? b19_list[i].rks : b19_list[18].rks) + minuprks * 20, b19_list[i].difficulty, 4)}`
+                tmsg += `\n#B${i + 1}:${b19_list[i].song}<${b19_list[i].rank}>${b19_list[i].difficulty} ${b19_list[i].score} ${b19_list[i].Rating} ${b19_list[i].acc.toFixed(4)}%[${b19_list[i].rks.toFixed(4)}]->:${b19_list[i].suggest}`
             } else {
                 Remsg.push(tmsg)
-                tmsg = `#B${i + 1}:${b19_list[i].song}<${b19_list[i].rank}>${b19_list[i].difficulty} ${b19_list[i].score} ${b19_list[i].Rating} ${b19_list[i].acc.toFixed(4)}%[${b19_list[i].rks.toFixed(4)}]->:${fCompute.suggest(Number((i < 18) ? b19_list[i].rks : b19_list[18].rks) + minuprks * 20, b19_list[i].difficulty, 4)}`
+                tmsg = `#B${i + 1}:${b19_list[i].song}<${b19_list[i].rank}>${b19_list[i].difficulty} ${b19_list[i].score} ${b19_list[i].Rating} ${b19_list[i].acc.toFixed(4)}%[${b19_list[i].rks.toFixed(4)}]->:${b19_list[i].suggest}`
                 tot = 0
             }
             ++tot
