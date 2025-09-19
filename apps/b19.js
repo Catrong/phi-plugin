@@ -654,6 +654,8 @@ export class phib19 extends plugin {
                 let info = getInfo.info(song, true)
                 for (let level in info.chart) {
                     let i = LevelNum[level]
+                    /**SP */
+                    if(i===undefined) continue
                     /**跳过旧谱 */
                     if (!level) continue
                     let Record = songRecord[i]

@@ -1404,5 +1404,25 @@
         "bpm": "234",
         "length": "2:29",
         "chapter": "单曲精选集"
+    },
+    "アンビバレンス.すりぃ相沢": {
+        "bpm": "187",
+        "length": "2:41",
+        "chapter": "Chapter EX-maimai 精选集"
+    },
+    "Komplexe.雄之助featSennzai": {
+        "bpm": "165",
+        "length": "2:22",
+        "chapter": "Chapter EX-maimai 精选集"
+    },
+    "slips.rintarosoma": {
+        "bpm": "199",
+        "length": "2:24",
+        "chapter": "Chapter EX-maimai 精选集"
+    },
+    "QZKagoRequiem.tpazolite": {
+        "bpm": "257",
+        "length": "2:18",
+        "chapter": "Chapter EX-maimai 精选集"
     }
 }
