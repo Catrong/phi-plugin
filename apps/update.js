@@ -101,10 +101,15 @@ export class phiupdate extends plugin {
     async runUpdate(isForce) {
         let command = "git -C ./plugins/phi-plugin/ pull --no-rebase";
         if (isForce) {
-            command = `git -C ./plugins/phi-plugin/ checkout . && ${command}`;
-            this.e.reply("正在执行强制更新操作，请稍等");
+            let repoPath = "./plugins/phi-plugin/";
+            command = [
+                `git -C ${repoPath} fetch --all --prune`,
+                `git -C ${repoPath} reset --hard origin/main`,
+                `git -C ${repoPath} clean -fd`
+            ].join(" && ");
+            this.e.reply("开始执行强制更新操作，请稍等");
         } else {
-            this.e.reply("正在执行更新操作，请稍等");
+            this.e.reply("开始执行更新操作，请稍等");
         }
         /** 获取上次提交的commitId，用于获取日志时判断新增的更新日志 */
         this.oldCommitId = await this.getcommitId("phi-plugin");
@@ -310,9 +315,13 @@ export class phiupdate extends plugin {
         }
 
 
-        let command = "git -C ./plugins/phi-plugin/resources/original_ill/ pull --no-rebase";
-        command = `git -C ./plugins/phi-plugin/resources/original_ill/ checkout . && ${command}`;
-        this.e.reply("正在更新曲绘文件，请勿重复执行");
+        let repoPath = "./plugins/phi-plugin/resources/original_ill/";
+        let command = [
+            `git -C ${repoPath} fetch --all --prune`,
+            `git -C ${repoPath} reset --hard origin/main`,
+            `git -C ${repoPath} clean -fd`
+        ].join(" && ");
+        this.e.reply("开始更新曲绘文件，请稍等");
 
         /** 获取上次提交的commitId，用于获取日志时判断新增的更新日志 */
         this.oldCommitId = await this.ill_getcommitId();
