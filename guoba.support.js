@@ -30,54 +30,6 @@ export function supportGuoba() {
                     component: 'SOFT_GROUP_BEGIN'
                 },
                 {
-                    field: 'onLinePhiIllUrl',
-                    label: '在线曲绘来源',
-                    bottomHelpMessage: '仅在未下载曲绘时有效，不影响下载曲绘指令。在线曲绘将重复下载曲绘资源，建议使用 /下载曲绘 将曲绘缓存到本地',
-                    component: "RadioGroup",
-                    componentProps: {
-                        buttonStyle: "solid",
-                        optionType: "button",
-                        options: [
-                            {
-                                label: 'gitee',
-                                value: "https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main"
-                            },
-                            {
-                                label: 'github',
-                                value: "https://github.com/Catrong/phi-plugin-ill/blob/main"
-                            },
-                            {
-                                label: 'github代理',
-                                value: "https://ghfast.top/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
-                            }
-                        ]
-                    }
-                },
-                {
-                    field: 'downIllUrl',
-                    label: '下载曲绘源',
-                    bottomHelpMessage: '下载曲绘的源，实时生效',
-                    component: "RadioGroup",
-                    componentProps: {
-                        buttonStyle: "solid",
-                        optionType: "button",
-                        options: [
-                            {
-                                label: 'gitee（暂时弃用）',
-                                value: "https://gitee.com/Steveeee-e/phi-plugin-ill.git"
-                            },
-                            {
-                                label: 'github',
-                                value: "https://github.com/Catrong/phi-plugin-ill.git"
-                            },
-                            {
-                                label: 'github代理',
-                                value: "https://ghfast.top/https://github.com/Catrong/phi-plugin-ill.git"
-                            }
-                        ]
-                    }
-                },
-                {
                     field: 'renderScale',
                     label: '渲染精度',
                     bottomHelpMessage: '对所有的图片生效，设置渲染精度',
@@ -218,8 +170,68 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'WordB19Img',
+                    label: '文字版B19曲绘图片',
+                    bottomHelpMessage: '关闭可大幅度提升发送速度',
+                    component: 'Switch',
+                },
+                {
+                    field: 'WordSuggImg',
+                    label: 'Suggest曲绘图片',
+                    bottomHelpMessage: '关闭可大幅度提升发送速度',
+                    component: 'Switch',
+                },
+                {
                     label: '系统设置',
                     component: 'SOFT_GROUP_BEGIN'
+                },
+                {
+                    field: 'onLinePhiIllUrl',
+                    label: '在线曲绘来源',
+                    bottomHelpMessage: '仅在未下载曲绘时有效，不影响下载曲绘指令。在线曲绘将重复下载曲绘资源，建议使用 /下载曲绘 将曲绘缓存到本地',
+                    component: "RadioGroup",
+                    componentProps: {
+                        buttonStyle: "solid",
+                        optionType: "button",
+                        options: [
+                            {
+                                label: 'gitee',
+                                value: "https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main"
+                            },
+                            {
+                                label: 'github',
+                                value: "https://github.com/Catrong/phi-plugin-ill/blob/main"
+                            },
+                            {
+                                label: 'github代理',
+                                value: "https://ghfast.top/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                            }
+                        ]
+                    }
+                },
+                {
+                    field: 'downIllUrl',
+                    label: '下载曲绘源',
+                    bottomHelpMessage: '下载曲绘的源，实时生效',
+                    component: "RadioGroup",
+                    componentProps: {
+                        buttonStyle: "solid",
+                        optionType: "button",
+                        options: [
+                            {
+                                label: 'gitee（暂时弃用）',
+                                value: "https://gitee.com/Steveeee-e/phi-plugin-ill.git"
+                            },
+                            {
+                                label: 'github',
+                                value: "https://github.com/Catrong/phi-plugin-ill.git"
+                            },
+                            {
+                                label: 'github代理',
+                                value: "https://ghfast.top/https://github.com/Catrong/phi-plugin-ill.git"
+                            }
+                        ]
+                    }
                 },
                 {
                     field: 'watchInfoPath',
@@ -255,18 +267,6 @@ export function supportGuoba() {
                     field: 'TapTapLoginQRcode',
                     label: '绑定二维码',
                     bottomHelpMessage: '登录TapTap绑定是否发送二维码，开启仅发送二维码，关闭直接发送链接',
-                    component: 'Switch',
-                },
-                {
-                    field: 'WordB19Img',
-                    label: '文字版B19曲绘图片',
-                    bottomHelpMessage: '关闭可大幅度提升发送速度',
-                    component: 'Switch',
-                },
-                {
-                    field: 'WordSuggImg',
-                    label: 'Suggest曲绘图片',
-                    bottomHelpMessage: '关闭可大幅度提升发送速度',
                     component: 'Switch',
                 },
                 {
