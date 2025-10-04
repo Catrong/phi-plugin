@@ -82,6 +82,10 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    label: '',
+                    component: 'Divider'
+                },
+                {
                     field: 'renderNum',
                     label: '并行渲染数量',
                     bottomHelpMessage: '并行数量越多，占用的资源越多，建议谨慎修改，修改后重启生效',
@@ -95,19 +99,15 @@ export function supportGuoba() {
                 },
                 {
                     field: 'commentsAPage',
-                    label: '每页渲染评论',
-                    bottomHelpMessage: '/song 每页最大渲染评论数量',
+                    label: '每页评论条数',
+                    bottomHelpMessage: '/song 每页评论最大渲染条数',
                     component: 'InputNumber',
                     required: true,
                     componentProps: {
                         min: 1,
                         max: 20,
-                        placeholder: '请输入每页最大渲染评论数量',
+                        placeholder: '请输入每页评论最大渲染条数',
                     },
-                },
-                {
-                    label: '',
-                    component: 'Divider'
                 },
                 {
                     field: 'B19MaxNum',
@@ -168,6 +168,10 @@ export function supportGuoba() {
                         max: 10000,
                         placeholder: '请输入最大限制',
                     },
+                },
+                {
+                    label: '',
+                    component: 'Divider'
                 },
                 {
                     field: 'WordB19Img',
