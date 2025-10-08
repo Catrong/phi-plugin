@@ -28,6 +28,7 @@ Anomaly:
 Spasmodic(Haocore Mix):
   - 痉挛SP
   - 小痉挛
+  - Spasmodicsp
 Burn(Haocore Mix):
   - BurnSP
   - 烤全鸭SP
@@ -35,6 +36,8 @@ Burn(Haocore Mix):
   - 烤全压SP
   - 考全压SP
   - 烤鸭SP
+  - 卖核弹的小女孩SP
+  - 卖火柴的小女孩SP
 Sigma (Haocore Mix) ~ 105秒の伝説 ~:
   - sigma表SP
   - sigmaSP1
@@ -164,6 +167,7 @@ Glaciaxion.SunsetRay:
   - Sonshi
   - 樽尸
 Spasmodic.姜米條颶風元力上人:
+  - Spasmodic
   - 癫痫
   - 小姐姐
   - 久住
@@ -848,6 +852,7 @@ PoisonANDORAffection.LeaF:
   - 毒药和爱
   - Pandora
   - ÷
+  - 除号
   - 草潘
   - 潘
 CervelleConnexion.SCTL:
@@ -1720,6 +1725,7 @@ DiamondDust.MasahiroGodspeedAoki:
   - 钻尘
   - 钻石星尘
   - 尘钻
+  - 高濑梨绪	
 FrozenHeart.A39沙包P:
   - 冰心
   - 冰之心
@@ -1811,6 +1817,9 @@ RetributionCycleofRedemption.ArdolfvsDaily天利:
 アンビバレンス.すりぃ相沢:
   - 矛盾
   - 矛盾相生
+  - Ambivalence
+  - 矛盾心理
+  - 茄子卡狗
 Komplexe.雄之助featSennzai:
   - 复杂
 slips.rintarosoma:
@@ -1820,15 +1829,19 @@ slips.rintarosoma:
   - 嗦
   - 一百块
   - 孤心独映
+  - 唯我论
+  - ∅
   - solips
 QZKagoRequiem.tpazolite:
   - 凯尔希大战嵯峨
   - 茄子
+  - 茄子卡狗
   - 镇魂曲
   - 垃圾桶安魂曲
   - 牛奶大战
   - 牛奶2
   - QZK
+  - qz
   - QZKago
   - 两只猫打架
   - 喜羊羊与灰太狼
