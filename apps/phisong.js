@@ -23,8 +23,6 @@ let wait_to_del_nick
 /** @type {{[key:string]: {page: number, addComment: boolean, songs: songString[]}}} */
 const wait_to_chose_song = {}
 
-let newSongImg = null
-
 export class phisong extends plugin {
     constructor() {
         super({
@@ -630,10 +628,6 @@ export class phisong extends plugin {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        if (newSongImg) {
-            send.send_with_At(e, newSongImg);
-            return true;
-        }
         const ans = []
         let msg = ''
         try {
@@ -697,7 +691,7 @@ export class phisong extends plugin {
             }
         }
 
-        newSongImg = await picmodle.common(e, 'newSong', {
+        const newSongImg = await picmodle.common(e, 'newSong', {
             ans,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur')
         });
