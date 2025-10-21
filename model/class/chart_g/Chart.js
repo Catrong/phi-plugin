@@ -1,4 +1,4 @@
-import JudgeLine from "./judgeLine.js"
+import JudgeLine from "./JudgeLine.js"
 
 export default class Chart {
     constructor(data) {
