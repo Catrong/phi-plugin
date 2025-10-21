@@ -79,7 +79,7 @@ phiPluginApiUrl: ""
 #  输出测试日志
 debug: 0
 
-#  输出测试日志
+#  谱面文件路径
 chartPath: ''
 
 #  多个曲目回复序号等待时长(s)

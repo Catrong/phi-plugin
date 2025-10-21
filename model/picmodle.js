@@ -199,7 +199,7 @@ class picmodle {
                             timeout: Config.getUserCfg('config', 'timeout'),
                         },
                         sys: {
-                            scale: `style=transform:scale(${cfg.scale || 1})`,
+                            scale: `style="transform:scale(${cfg.scale || 1})"`,
                             copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
                         },
                         Version: { ...Version },

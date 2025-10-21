@@ -3,8 +3,13 @@
     <link rel="stylesheet" href="{{_res_path}}html/chartImg/chartImg.css">
 {{/block}}
 {{block 'main'}}
+    <div class="background">
+        <img src="{{illustration}}" alt="曲绘-模糊">
+    </div>
     <div class="backBlock">
-        <div class="totalBox" id="box"></div>
+        <div class="totalBox" id="box">
+            <div class="chart-bkg" id="bkg-box"></div>
+        </div>
     </div>
     <script>
 
@@ -250,11 +255,14 @@
         });
 
         const aRolTime = maxT / 16;
-
+        const rolBkg = document.createElement("div");
+        const bkgBox = document.getElementById("bkg-box");
+        rolBkg.classList.add("rol-bkg");
         rol.style.height = `${aRolTime * sY}px`;
         for(let i = 0; i < 16; ++i) {
             const tem = rol.cloneNode(true)
             tem.style.transform = `translateY(${(i * aRolTime - 4) * sY}px)`;
+            bkgBox.append(rolBkg.cloneNode());
             box.append(tem);
         }
 

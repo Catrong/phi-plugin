@@ -8,8 +8,6 @@ body {
     padding: 0;
     width: 8000px;
     height: fit-content;
-    background-color: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(5px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,6 +26,28 @@ body {
     margin-right: 200px;
     margin-left: 50px;
     position: relative;
+}
+
+.chart-bkg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    display: flex;
+}
+
+.rol-bkg {
+    width: 250px;
+    margin-right: 200px;
+    margin-left: 50px;
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.502);
+    backdrop-filter: blur(5px);
+    box-sizing: border-box;
+    pointer-events: none;
 }
 
 .note {

@@ -72,8 +72,12 @@ export class phihelp extends plugin {
 
         // const data = work(JSON.parse(fs.readFileSync('../../../../../tools/wen_jiang/Chart_AT/DistortedFate.Sakuzyo.0.json')));
         const data = work(chartJson);
-        const img = await picmodle.common(e, 'chartImg', { chartData: JSON.stringify(data) });
-        
+        const img = await picmodle.common(e, 'chartImg', {
+            chartData: JSON.stringify(data),
+
+            illustration: info.illustration,
+        });
+
         send.send_with_At(e, img)
 
         return true
