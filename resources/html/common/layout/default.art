@@ -18,7 +18,7 @@
     <title>phi-plugin</title>
 </head>
 
-<body class="elem-{{element || elem || `hydro`}} {{displayMode || mode || `default`}}-mode  {{bodyClass}}" {{sys.scale}}>
+<body class="elem-{{element || elem || `hydro`}} {{displayMode || mode || `default`}}-mode  {{bodyClass}}" {{@sys.scale}}>
 
 
     <div class="background">

@@ -105,6 +105,10 @@
         const box = document.getElementById("box");
         let maxT = 0;
         const spTimeSet = new Set();
+        const rolCnt = 32;
+        /** @type {number[][]} */
+        const extendTime = []
+
         const jsonData = JSON.parse(`{{# chartData }}`);
         // Optional BPM for seconds labeling (default 120). You can assign window.chartBPM externally.
         const BPM = jsonData.mainBpm || 120;
@@ -159,6 +163,7 @@
                 ++j1;
             }
             if (sum <= 1 || minY == maxY) continue;
+            extendTime.push([realTime(json[i]), realTime(json[j - 1]) + (json[j - 1].holdTime || 0)]);
             const extendedBorderBox = document.createElement("div");
             extendedBorderBox.classList.add("extended-border-box");
             extendedBorderBox.style.left = ((maxX + minX) / 2) * 100 + "%";
@@ -187,7 +192,7 @@
             rol.appendChild(extendedBox);
         }
 
-        maxT = Math.ceil(maxT / (32 * 16)) * 32 * 16;
+        maxT = Math.ceil(maxT / (32 * 32 / rolCnt)) * (32 * 32 / rolCnt);
 
 
         // Precompute combo accumulation by time
@@ -254,15 +259,23 @@
             rol.appendChild(right);
         });
 
-        const aRolTime = maxT / 16;
-        const rolBkg = document.createElement("div");
+        const aRolTime = maxT / rolCnt;
         const bkgBox = document.getElementById("bkg-box");
+        const rolBkg = document.createElement("div");
         rolBkg.classList.add("rol-bkg");
         rol.style.height = `${aRolTime * sY}px`;
-        for(let i = 0; i < 16; ++i) {
+        for(let i = 0, j = 0; i < rolCnt; ++i) {
             const tem = rol.cloneNode(true)
+            const bkgTem = rolBkg.cloneNode(true);
             tem.style.transform = `translateY(${(i * aRolTime - 4) * sY}px)`;
-            bkgBox.append(rolBkg.cloneNode());
+            while(j < extendTime.length && extendTime[j][1] < i * aRolTime) {
+                j++;
+            }
+            if (!(extendTime[j] && (extendTime[j][0] <= (i + 1) * aRolTime))) {
+                tem.style.marginRight = `50px`;
+                bkgTem.style.marginRight = `50px`;
+            }
+            bkgBox.appendChild(bkgTem);
             box.append(tem);
         }
 

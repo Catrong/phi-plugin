@@ -78,7 +78,7 @@ export class phihelp extends plugin {
             illustration: info.illustration,
         });
 
-        send.send_with_At(e, img)
+        send.send_with_At(e, [`${info.song} - ${rank}\n谱师：${info.chart[rank].charter}`,img])
 
         return true
 
@@ -206,10 +206,8 @@ function work(json) {
         }
 
         if (j - 1 > i && maxY != minY) {
-            console.info(maxY, minY)
             for (let k = i; k < j; ++k) {
                 notesList[k].r2row = true;
-                console.info(notesList[k].realY)
             }
         }
     }

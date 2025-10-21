@@ -3,10 +3,14 @@ body {
     background-color: black;
 }
 
+.background img {
+    width: 100%;
+    height: auto;
+}
+
 .backBlock {
     margin: 0;
     padding: 0;
-    width: 8000px;
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -15,7 +19,7 @@ body {
 }
 
 .totalBox {
-    width: 8000px;
+    /* width: 16000px; */
     position: relative;
     display: flex;
     /* border: 5px solid; */
