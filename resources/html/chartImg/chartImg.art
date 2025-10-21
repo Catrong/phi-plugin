@@ -1,0 +1,263 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+    <link rel="stylesheet" href="{{_res_path}}html/chartImg/chartImg.css">
+{{/block}}
+{{block 'main'}}
+    <div class="backBlock">
+        <div class="totalBox" id="box"></div>
+    </div>
+    <script>
+
+        function realTime(e) {
+            return (e.time * e.bpm) / BPM;
+        }
+
+        function creatImg(path) {
+            const t = document.createElement("img");
+            t.src = path;
+            return t;
+        }
+
+        function hold(e) {
+            const holdBody = document.createElement("div");
+            holdBody.classList.add("hold-body");
+            const hdbd = creatImg(`{{_res_path}}html/chartImg/img/Hold${e.HL ? "HL" : ""}.png`);
+            hdbd.style.height = `${(e.holdTime * e.bpm / BPM) * sY}px`;
+            const holdHead = document.createElement("div");
+            holdHead.classList.add("hold-head");
+            const hdhd = creatImg(`{{_res_path}}html/chartImg/img/Hold_Head${e.HL ? "HL" : ""}.png`);
+            const holdEnd = document.createElement("div");
+            holdEnd.classList.add("hold-end");
+            holdEnd.appendChild(creatImg(`{{_res_path}}html/chartImg/img/Hold_End.png`));
+
+            if (e.HL) {
+                hdbd.style.width = `43px`;
+                hdhd.style.width = `43px`;
+                holdHead.style.bottom = `-3.58px`;
+            }
+
+            holdBody.appendChild(hdbd);
+            holdHead.appendChild(hdhd);
+            holdBody.appendChild(holdHead);
+            holdBody.appendChild(holdEnd);
+            return holdBody;
+        }
+
+        function note(e, index) {
+            const note = document.createElement("div");
+            note.classList.add("note");
+            const img = document.createElement("img");
+            /**
+             * 1: tap,
+             * 2: drag,
+             * 3: hold,
+             * 4: flick
+             **/
+            if (e.type == 3) {
+                note.appendChild(hold(e));
+            } else {
+                switch (e.type) {
+                    case 1: {
+                        img.src = `{{_res_path}}html/chartImg/img/Tap${e.HL ? "HL" : ""}.png`;
+                        note.classList.add("tap");
+                        break;
+                    }
+                    case 2: {
+                        img.src = `{{_res_path}}html/chartImg/img/Drag${e.HL ? "HL" : ""}.png`;
+                        note.classList.add("drag");
+                        break;
+                    }
+                    case 4: {
+                        img.src = `{{_res_path}}html/chartImg/img/Flick${e.HL ? "HL" : ""}.png`;
+                        note.classList.add("flick");
+                        break;
+                    }
+                }
+                if (e.HL) {
+                    img.classList.add("HL");
+                }
+                note.appendChild(img);
+            }
+            // For notes not exactly on beat lines, add fraction label (e.g., 1/8, 1/16)
+            // Beat step = 8 units; one measure = 32 units (4 beats) in current grid logic
+            if (json[index - 1]?.time) {
+                if (
+                    realTime(e) - realTime(json[index - 1]) < 8 &&
+                    realTime(json[index - 1]) - realTime(e) > 0
+                ) {
+                    spTimeSet.add(realTime(json[index - 1]));
+                    spTimeSet.add(realTime(e));
+                }
+            }
+            return note;
+        }
+    </script>
+
+    <script>
+        const sY = 5;
+        const rol = document.createElement("div");
+        rol.classList.add("rol");
+        const box = document.getElementById("box");
+        let maxT = 0;
+        const spTimeSet = new Set();
+        const jsonData = JSON.parse(`{{# chartData }}`);
+        // Optional BPM for seconds labeling (default 120). You can assign window.chartBPM externally.
+        const BPM = jsonData.mainBpm || 120;
+
+        const json = jsonData.list;
+
+
+
+
+
+        json.forEach((e, index) => {
+            // if (box.childNodes.length > 900) return;
+            const div = note(e, index);
+
+            const tip = document.createElement("div");
+            tip.classList.add("notestip");
+
+            if (e.sXc > 1) {
+                tip.innerText = `× ${e.sXc}`;
+                div.appendChild(tip);
+            }
+            div.style.left = e.realX * 100 + "%";
+            div.style.bottom = `${realTime(e) * sY}px`;
+            maxT = Math.max(maxT + e.holdTime / e.bpm * BPM || 0, realTime(e));
+            rol.appendChild(div);
+        });
+
+        for (let i = 0, j = 1; i < json.length; i = j, ++j) {
+            if (!json[i].r2row) {
+                continue;
+            }
+            let maxT = 0,
+                minY = 1e6,
+                maxY = -1e6,
+                minX = 1e6,
+                maxX = -1e6;
+            let j1 = i;
+            let sum = 0;
+            while (j1 < json.length && realTime(json[j1]) - realTime(json[j - 1]) < 128) {
+                if (!json[j1].r2row) {
+                    ++j1;
+                    continue;
+                }
+                console.log(json[j1] , realTime(json[j1]) , realTime(json[j - 1]));
+                maxT = Math.max(maxT, realTime(json[j1]) + (json[j1].holdTime || 0));
+                minX = Math.min(minX, json[j1].realX);
+                maxX = Math.max(maxX, json[j1].realX);
+                minY = Math.min(minY, json[j1].realY);
+                maxY = Math.max(maxY, json[j1].realY);
+                j = j1 + 1;
+                ++sum;
+                ++j1;
+            }
+            if (sum <= 1 || minY == maxY) continue;
+            const extendedBorderBox = document.createElement("div");
+            extendedBorderBox.classList.add("extended-border-box");
+            extendedBorderBox.style.left = ((maxX + minX) / 2) * 100 + "%";
+            extendedBorderBox.style.bottom = `${(realTime(json[i]) - 5) * sY}px`;
+            extendedBorderBox.style.height = `${(maxT - realTime(json[i]) + 10) * sY}px`;
+            extendedBorderBox.style.width = `${(maxX - minX) * 100 + 15}%`;
+            rol.appendChild(extendedBorderBox);
+
+            const extendedBox = document.createElement("div");
+            extendedBox.classList.add("extended-box");
+            for (let k = i; k < j; ++k) {
+                const e = json[k];
+                if (!e.r2row) continue;
+                const div = note(e);
+                div.style.left = `${((e.realY - minY) / (maxY - minY)) * 70 + 15}%`;
+                div.style.bottom = `${(realTime(e) - realTime(json[i]) + 5) * sY}px`;
+                const tip = document.createElement("div");
+                tip.classList.add("notestip");
+
+                // tip.innerText = `${e.realY} ${minY} ${k-i}`;
+                div.appendChild(tip);
+                extendedBox.appendChild(div);
+            }
+            extendedBox.style.bottom = `${(realTime(json[i]) - 5) * sY}px`;
+            extendedBox.style.height = `${(maxT - realTime(json[i]) + 10) * sY}px`;
+            rol.appendChild(extendedBox);
+        }
+
+        maxT = Math.ceil(maxT / (32 * 16)) * 32 * 16;
+
+
+        // Precompute combo accumulation by time
+        const timesSorted = [...json].map(e => ({ ...e, time: realTime(e) })).sort((a, b) => a.time - b.time);
+        const comboAtTime = new Map();
+        let acc = 0;
+        let cursor = 0;
+        for (let i = 0; i <= maxT; i++) {
+            while (
+                cursor < timesSorted.length &&
+                timesSorted[cursor].time <= i
+            ) {
+                acc += timesSorted[cursor].sXc || 1;
+                cursor++;
+            }
+            comboAtTime.set(i, acc);
+        }
+
+        for (let i = 0; i <= maxT; i += 8) {
+            const beat = document.createElement("div");
+            beat.classList.add("beats");
+            if (!(i % 16)) beat.classList.add("beats-2");
+            if (!(i % 32)) beat.classList.add("beats-4");
+            beat.style.bottom = `${i * sY}px`;
+            rol.appendChild(beat);
+
+            if (!(i % 32)) {
+                // Left label: seconds and measure/beat index
+                const seconds = (i / 8) * (60 / BPM);
+                const measure = Math.floor(i / 32) + 1;
+                const beatIn = Math.floor((i % 32) / 8) + 1;
+                const left = document.createElement("div");
+                left.className = "beat-label left";
+                left.style.bottom = `${i * sY}px`;
+                left.innerHTML = `${seconds.toFixed(
+                    2
+                )}<br>${measure}`;
+                rol.appendChild(left);
+                // Right label: Combo up to this line
+                const right = document.createElement("div");
+                right.className = "beat-label right";
+                right.style.bottom = `${i * sY}px`;
+                const combo = comboAtTime.get(i) || 0;
+                right.textContent = `${combo}`;
+                rol.appendChild(right);
+            }
+        }
+
+        [...spTimeSet].forEach((t, index, arr) => {
+            // Right label: Combo up to this line
+            const right = document.createElement("div");
+            right.className = "note-fraction right";
+            right.style.bottom = `${t * sY}px`;
+
+            const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+            const offsetBeat = Math.min(
+                t - (arr[index - 1] || -1e9),
+                (arr[index + 1] || 1e9) - t
+            );
+            const denomBeat = 32 / gcd(32, offsetBeat); // fraction of a beat
+            const denomWhole = denomBeat; // relative to whole note (4 beats per bar)
+
+            right.textContent = `${(offsetBeat / 32) * denomBeat}/${denomBeat}`;
+            rol.appendChild(right);
+        });
+
+        const aRolTime = maxT / 16;
+
+        rol.style.height = `${aRolTime * sY}px`;
+        for(let i = 0; i < 16; ++i) {
+            const tem = rol.cloneNode(true)
+            tem.style.transform = `translateY(${(i * aRolTime - 4) * sY}px)`;
+            box.append(tem);
+        }
+
+        box.style.height = `${(aRolTime) * sY}px`;
+    </script>
+{{/block}}

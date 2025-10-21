@@ -103,6 +103,7 @@
  * @typedef {'debug'} debug 输出测试日志
  * @typedef {'otherinfo'} otherinfo 曲库
  * @typedef {'mutiNickWaitTimeOut'} mutiNickWaitTimeOut 多个曲目回复序号等待时长
+ * @typedef {'chartPath'} chartPath 谱面路径
  * 猜曲绘设置
  * @typedef {'GuessTipCd'} GuessTipCd 提示间隔
  * @typedef {'GuessTipRecall'} GuessTipRecall 猜曲绘撤回
@@ -149,6 +150,7 @@
  * |debug
  * |otherinfo
  * |mutiNickWaitTimeOut
+ * |chartPath
  * |GuessTipCd
  * |GuessTipRecall
  * |LetterNum

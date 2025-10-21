@@ -1,0 +1,181 @@
+body {
+    overflow: auto;
+    background-color: black;
+}
+
+.backBlock {
+    margin: 0;
+    padding: 0;
+    width: 8000px;
+    height: fit-content;
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+.totalBox {
+    width: 8000px;
+    position: relative;
+    display: flex;
+    /* border: 5px solid; */
+}
+
+.rol {
+    width: 250px;
+    margin-right: 200px;
+    margin-left: 50px;
+    position: relative;
+}
+
+.note {
+    width: 0;
+    height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 10;
+}
+
+.note img {
+    width: 40px;
+}
+
+.tap {
+    z-index: 15;
+}
+
+.flick {
+    z-index: 14;
+}
+
+.drag {
+    z-index: 13;
+}
+
+.hold-body {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 39px;
+    /* transform: translateY(-2px); */
+}
+
+.hold-end,
+.hold-head {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hold-head {
+    bottom: -2px;
+}
+
+.hold-end {
+    top: -2px;
+}
+
+.hold-body img,
+.hold-head img,
+.hold-end img {
+    width: 100%;
+}
+
+.hold-body img {
+    height: 100%;
+}
+
+.notestip {
+    position: absolute;
+    white-space: nowrap;
+    z-index: 20;
+    font-size: 10px;
+    text-shadow: white 0 0 2px;
+}
+
+.beats {
+    width: 100%;
+    height: 5px;
+    transform: translateY(50%);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.beats-2 {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.beats-4 {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.extended-border-box {
+    border: 3px solid snow;
+    border-radius: 10px;
+    transform: translateX(-50%);
+    z-index: 20;
+    position: absolute;
+}
+
+.extended-box {
+    right: -200px;
+    width: 150px;
+    background-color: rgb(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    position: absolute;
+}
+/* Beautified labels for beats and notes */
+.beat-label {
+    position: absolute;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    font-size: 10px;
+    line-height: 1;
+    color: #e6f0ff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    padding: 3px 6px;
+    border-radius: 6px;
+    /* background: linear-gradient(
+        135deg,
+        rgba(20, 30, 48, 0.75),
+        rgba(36, 59, 85, 0.75)
+    ); */
+    pointer-events: none;
+    transform: translateY(50%);
+    white-space: nowrap;
+}
+.beat-label.left {
+    left: -40px;
+    border-left: 3px solid rgba(100, 181, 246, 0.8);
+    text-align: center;
+}
+.beat-label.right {
+    right: -30px;
+    border-right: 3px solid rgba(255, 213, 79, 0.85);
+}
+
+.note-fraction {
+    position: absolute;
+    right: -100px;
+    font-size: 5px;
+    color: #fff;
+    /* background: rgba(33, 150, 243, 0.85); */
+    padding: 1px 4px;
+    border-radius: 4px;
+    /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); */
+    pointer-events: none;
+    transform: translateY(50%);
+}
+.beats {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+}

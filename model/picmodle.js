@@ -151,7 +151,7 @@ class picmodle {
     /**
      * 
      * @param {*} e 
-     * @param {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'} kind 
+     * @param {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'} kind 
      * @param {*} data
      * @returns 
      */

@@ -30,7 +30,7 @@
         {{set column_size = (num <= type1) ? (num <= 10 ? 700 : 240) : ((num <= type2) ? 130 : 85)}}
         {{set top_range = ((num <= type1) ? 600 : ((num <= type2) ? 645 : 690))}}
         {{set tem = 0}}
-        <div class="song-box" style="width: {{column_size * Math.ceil(num / song_num) + left_margin + 50}}px;"">
+        <div class="song-box" style="width: {{column_size * Math.ceil(num / song_num) + left_margin + 50}}px;">
             {{each song_box song}}
             <div class="song song_{{song_style}}" style="left: {{left_margin + (left_range / (song_num - 1)) * (tem % song_num) + column_size * ((tem - (tem % song_num)) / song_num)}}px;top: {{(top_range / (song_num - 1)) * (tem % song_num)}}px;">
                 <div class="common_ill ill"> 
