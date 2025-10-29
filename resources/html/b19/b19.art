@@ -124,7 +124,7 @@
                         <div class="acc">
                             <p>{{song.acc.toFixed(2)}}%</p>
                         </div>
-                        <div class="suggest">
+                        <div class="suggest suggest-kind-{{song.suggestType}}">
                             <p>>> {{song.suggest}}</p>
                         </div>
                     </div>
@@ -214,7 +214,7 @@
                         <div class="acc">
                             <p>{{song.acc.toFixed(2)}}%</p>
                         </div>
-                        <div class="suggest">
+                        <div class="suggest suggest-kind-{{song.suggestType}}">
                             <p>>> {{song.suggest}}</p>
                         </div>
                     </div>

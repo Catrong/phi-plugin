@@ -7,6 +7,7 @@ import Config from '../components/Config.js'
 import getInfo from "../model/getInfo.js";
 import send from "../model/send.js";
 import picmodle from '../model/picmodle.js'
+import getChartTag from '../model/getChartTag.js'
 import getBanGroup from '../model/getBanGroup.js'
 
 export class phihelp extends plugin {
@@ -60,6 +61,28 @@ export class phihelp extends plugin {
             return true
         }
 
+        let chart = info.chart[rank]
+
+        let allowChartTag = await Config.getUserCfg('config', 'allowChartTag')
+
+        let chartInfo = {
+            illustration: info.illustration,
+            song: info.song,
+            length: info.length,
+            rank: rank,
+            difficulty: chart.difficulty,
+            charter: chart.charter,
+            tap: chart.tap,
+            drag: chart.drag,
+            hold: chart.hold,
+            flick: chart.flick,
+            combo: chart.combo,
+            distribution: chart.distribution,
+            tip: allowChartTag ? `发送 /${Config.getUserCfg('config', 'cmdhead')} addtag <曲名> <难度> <tag> 来添加标签哦！` : `标签词云功能暂时被管理员禁用了哦！快去联系BOT主开启吧！`,
+            chartLength: `${Math.floor(chart.maxTime / 60)}:${Math.floor(chart.maxTime % 60).toString().padStart(2, '0')}`,
+            words: allowChartTag ? getChartTag.get(info.id, rank) : '',
+        }
+
         const pathStr = `${chartPath}/Chart_${rank}/${info.id}.json`
 
         if (!fs.existsSync(pathStr)) {
@@ -73,9 +96,8 @@ export class phihelp extends plugin {
         // const data = work(JSON.parse(fs.readFileSync('../../../../../tools/wen_jiang/Chart_AT/DistortedFate.Sakuzyo.0.json')));
         const data = work(chartJson);
         const img = await picmodle.common(e, 'chartImg', {
+            ...chartInfo,
             chartData: JSON.stringify(data),
-
-            illustration: info.illustration,
         });
 
         send.send_with_At(e, [`${info.song} - ${rank}\n谱师：${info.chart[rank].charter}`,img])

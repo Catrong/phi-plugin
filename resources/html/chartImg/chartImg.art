@@ -1,6 +1,8 @@
 {{extend defaultLayout}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/chartImg/chartImg.css">
+    <script src="{{_res_path}}html/chartInfo/echarts.js"></script>
+    <script src="{{_res_path}}html/chartInfo/echarts-wordcloud.min.js"></script>
 {{/block}}
 {{block 'main'}}
     <div class="background">
@@ -9,6 +11,93 @@
     <div class="backBlock">
         <div class="totalBox" id="box">
             <div class="chart-bkg" id="bkg-box"></div>
+        </div>
+    </div>
+    <div class="chart-info">
+        <div class="box-content dot-box">
+            <div class="dot left top"></div>
+            <div class="dot left bottom"></div>
+            <div class="dot right top"></div>
+            <div class="dot right bottom"></div>
+            <div class="info-content">
+                <div class="info-box">
+                    <div class="content-title">
+                        <p>Basic Information</p>
+                    </div>
+                    <div class="content">
+                        <p>曲目 {{song}}</p>
+                        <p>时长 {{length}}</p>
+                        <p>难度 {{rank}} {{difficulty}}</p>
+                        <p>谱师 {{charter}}</p>
+                    </div>
+                </div>
+                <div class="notes-box">
+                    <div class="content-title">
+                        <p>Notes</p>
+                    </div>
+                    <div class="content">
+                        <div class="notes-content tap-p">
+                            <p>{{tap}}</p>
+                            <p>Tap</p>
+                        </div>
+                        <div class="notes-content drag-p"> 
+                            <p>{{drag}}</p>
+                            <p>Drag</p>
+                        </div>
+                        <div class="notes-content hold-p">
+                            <p>{{hold}}</p>
+                            <p>Hold</p>
+                        </div>
+                        <div class="notes-content flick-p">
+                            <p>{{flick}}</p>
+                            <p>Flick</p>
+                        </div>
+                        <div class="notes-content">
+                            <p>{{combo}}</p>
+                            <p>Combo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="words-box">
+                    <div class="content-title">
+                        <p>Word Cloud</p>
+                    </div>
+                    <div class="box-tip">
+                        <p>{{tip}}</p>
+                    </div>
+                    <div class="words" id="words"></div>
+                </div>
+                <div class="notes-bar">
+                    <div class="content-title">
+                        <p>Notes Distribution</p>
+                    </div>
+                    <div class="box-tip">
+                        <p>谱面时长：{{chartLength}}</p>
+                    </div>
+                    <div class="bar-box" id="bar-box">
+                        {{each distribution e}}
+                        <div class="bar" style="height: {{e[4]}}%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: {{e[0]}}%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: {{e[1]}}%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: {{e[2]}}%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: {{e[3]}}%"
+                            ></div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -83,29 +172,22 @@
                 }
                 note.appendChild(img);
             }
-            // For notes not exactly on beat lines, add fraction label (e.g., 1/8, 1/16)
-            // Beat step = 8 units; one measure = 32 units (4 beats) in current grid logic
-            if (json[index - 1]?.time) {
-                if (
-                    realTime(e) - realTime(json[index - 1]) < 8 &&
-                    realTime(json[index - 1]) - realTime(e) > 0
-                ) {
-                    spTimeSet.add(realTime(json[index - 1]));
-                    spTimeSet.add(realTime(e));
-                }
+            if(e.type == 1 || e.type ==3) {
+                tapTimeSet.add(realTime(e));
             }
             return note;
         }
     </script>
 
     <script>
-        const sY = 5;
+        const sY = 2;
         const rol = document.createElement("div");
         rol.classList.add("rol");
         const box = document.getElementById("box");
         let maxT = 0;
+        const tapTimeSet = new Set();
         const spTimeSet = new Set();
-        const rolCnt = 32;
+        const rolCnt = 16;
         /** @type {number[][]} */
         const extendTime = []
 
@@ -136,6 +218,20 @@
             rol.appendChild(div);
         });
 
+        [...tapTimeSet].forEach((t, index, arr) => {
+            // For notes not exactly on beat lines, add fraction label (e.g., 1/8, 1/16)
+            // Beat step = 8 units; one measure = 32 units (4 beats) in current grid logic
+            if (arr[index - 1]) {
+                if (
+                    t - arr[index - 1] <= 8 &&
+                    t - arr[index - 1] > 0
+                ) {
+                    spTimeSet.add(arr[index - 1]);
+                    spTimeSet.add(t);
+                }
+            }
+        });
+
         for (let i = 0, j = 1; i < json.length; i = j, ++j) {
             if (!json[i].r2row) {
                 continue;
@@ -147,7 +243,7 @@
                 maxX = -1e6;
             let j1 = i;
             let sum = 0;
-            while (j1 < json.length && realTime(json[j1]) - realTime(json[j - 1]) < 128) {
+            while (j1 < json.length && realTime(json[j1]) - realTime(json[j - 1]) < 64) {
                 if (!json[j1].r2row) {
                     ++j1;
                     continue;
@@ -191,8 +287,8 @@
             extendedBox.style.height = `${(maxT - realTime(json[i]) + 10) * sY}px`;
             rol.appendChild(extendedBox);
         }
-
-        maxT = Math.ceil(maxT / (32 * 32 / rolCnt)) * (32 * 32 / rolCnt);
+        const danwei = 64 * rolCnt;
+        maxT = Math.ceil(maxT / danwei) * danwei;
 
 
         // Precompute combo accumulation by time
@@ -211,25 +307,23 @@
             comboAtTime.set(i, acc);
         }
 
-        for (let i = 0; i <= maxT; i += 8) {
+        for (let i = 0; i <= maxT; i += 16) {
             const beat = document.createElement("div");
             beat.classList.add("beats");
-            if (!(i % 16)) beat.classList.add("beats-2");
-            if (!(i % 32)) beat.classList.add("beats-4");
+            if (!(i % 32)) beat.classList.add("beats-2");
+            if (!(i % 64)) beat.classList.add("beats-4");
             beat.style.bottom = `${i * sY}px`;
             rol.appendChild(beat);
 
-            if (!(i % 32)) {
+            if (!(i % 64)) {
                 // Left label: seconds and measure/beat index
-                const seconds = (i / 8) * (60 / BPM);
-                const measure = Math.floor(i / 32) + 1;
-                const beatIn = Math.floor((i % 32) / 8) + 1;
+                const seconds = (i / 16) * (60 / BPM);
+                const measure = Math.floor(i / 64) + 1;
+                const beatIn = Math.floor((i % 64) / 16) + 1;
                 const left = document.createElement("div");
                 left.className = "beat-label left";
                 left.style.bottom = `${i * sY}px`;
-                left.innerHTML = `${seconds.toFixed(
-                    2
-                )}<br>${measure}`;
+                left.innerHTML = `<span>${measure}</span>`;
                 rol.appendChild(left);
                 // Right label: Combo up to this line
                 const right = document.createElement("div");
@@ -240,6 +334,7 @@
                 rol.appendChild(right);
             }
         }
+
 
         [...spTimeSet].forEach((t, index, arr) => {
             // Right label: Combo up to this line
@@ -252,10 +347,10 @@
                 t - (arr[index - 1] || -1e9),
                 (arr[index + 1] || 1e9) - t
             );
-            const denomBeat = 32 / gcd(32, offsetBeat); // fraction of a beat
+            const denomBeat = 64 / gcd(64, offsetBeat); // fraction of a beat
             const denomWhole = denomBeat; // relative to whole note (4 beats per bar)
 
-            right.textContent = `${(offsetBeat / 32) * denomBeat}/${denomBeat}`;
+            right.textContent = `${(offsetBeat / 64) * denomBeat}/${denomBeat}`;
             rol.appendChild(right);
         });
 
@@ -280,5 +375,51 @@
         }
 
         box.style.height = `${(aRolTime) * sY}px`;
+    </script>
+    <script>
+        var chart = echarts.init(document.getElementById("words"));
+        chart.setOption({
+            series: [
+                {
+                    type: "wordCloud",
+                    shape: "square", //circle cardioid diamond triangle-forward triangle
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    right: 0,
+                    width: "100%",
+                    height: "100%",
+                    gridSize: 0, //值越大，word间的距离越大，单位像素
+                    sizeRange: [30, 500], //word的字体大小区间，单位像素
+                    rotationRange: [0, 0], //word的可旋转角度区间
+                    shrinkToFit: true, //是否收缩到容器内
+                    layoutAnimation: false, //是否开启动画
+                    textStyle: {
+                        fontFamily: "phi",
+                        // fontWeight: "bold",
+                        // Color can be a callback function or a color string
+                        color: function () {
+                            // Random color
+                            return (
+                                "rgb(" +
+                                [
+                                    Math.round(160 + Math.random() * 95),
+                                    Math.round(160 + Math.random() * 95),
+                                    Math.round(160 + Math.random() * 95),
+                                ].join(",") +
+                                ")"
+                            );
+                        },
+                        textShadow: "#fff",
+                    },
+                    data: [
+                        {{each words e}}{
+                            name: '{{e.name}}',
+                            value: {{e.value}}
+                        },{{/each}}
+                    ]
+                },
+            ],
+        });
     </script>
 {{/block}}

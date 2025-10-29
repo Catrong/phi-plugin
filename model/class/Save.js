@@ -337,7 +337,10 @@ export default class Save {
             }
         }
 
-        /**所有成绩 */
+        /**
+         * 所有成绩
+         * @type {(LevelRecordInfo & {suggestType?: number, suggest?: string})[]}
+         */
         let rkslist = this.getRecord()
         /**真实 rks */
         let userrks = this.saveInfo.summary.rankingScore
@@ -356,9 +359,25 @@ export default class Save {
             rkslist[i].num = i + 1
             /**推分建议 */
             if (rkslist[i].rks < 100) {
-                rkslist[i].suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty, 2)
-                if (rkslist[i].suggest.includes('无') && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks)) && rkslist[i].rks < 100) {
-                    rkslist[i].suggest = "100.00%"
+                let suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty)
+                if (typeof suggest != 'number' && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks)) && rkslist[i].rks < 100) {
+                    suggest = 100;
+                }
+                if (typeof suggest == 'number') {
+                    rkslist[i].suggest = suggest.toFixed(2) + '%'
+                    if (suggest < 98.5) {
+                        rkslist[i].suggestType = 0
+                    } else if (suggest < 99) {
+                        rkslist[i].suggestType = 1
+                    } else if (suggest < 99.5) {
+                        rkslist[i].suggestType = 2
+                    } else if (suggest < 99.7) {
+                        rkslist[i].suggestType = 3
+                    } else if (suggest < 99.85) {
+                        rkslist[i].suggestType = 4
+                    } else {
+                        rkslist[i].suggestType = 5
+                    }
                 }
             } else {
                 rkslist[i].suggest = "无法推分"

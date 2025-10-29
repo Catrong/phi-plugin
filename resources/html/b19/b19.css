@@ -537,7 +537,31 @@ body p {
 
 .suggest p {
     font-size: xx-small;
-    color: rgb(192, 221, 173);
+    text-shadow: 0 0 5px #000000aa;
+}
+
+.suggest-kind-0 p {
+    color: #ff8282;
+}
+
+.suggest-kind-1 p {
+    color: #ffb95d;
+}
+
+.suggest-kind-2 p {
+    color: #66ff8f;
+}
+
+.suggest-kind-3 p {
+    color: #6bf7ff;
+}
+
+.suggest-kind-4 p {
+    color: #f1ff2e;
+}
+
+.suggest-kind-5 p {
+    color: #f1ff2e;
 }
 
 .chengji .line {
