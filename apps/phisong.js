@@ -95,10 +95,10 @@ export class phisong extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(mycmt).*$`,
                     fnc: 'myComment'
                 },
-                {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(chart).*$`,
-                    fnc: 'chart'
-                },
+                // {
+                //     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(chart).*$`,
+                //     fnc: 'chart'
+                // },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(addtag|subtag|retag).*$`,
                     fnc: 'addtag'

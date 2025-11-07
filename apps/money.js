@@ -151,10 +151,9 @@ export class phimoney extends plugin {
             return false
         }
 
-        let save = await get.getsave(e.user_id)
+        let save = await send.getsave_result(e.user_id)
 
         if (!save) {
-            send.send_with_At(e, `该功能需要绑定后才能使用哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
             return false
         }
 

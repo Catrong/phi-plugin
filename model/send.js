@@ -45,9 +45,9 @@ class send {
                 user_save = await getUpdateSave.getNewSaveFromApi(e)
                 return user_save.save
             } catch (err) {
-                if (err.message == 'Phigros token is required') {
+                /**如果是没有绑定过就执行绑定 */
+                if (err.message == '缺少 phigrosToken 参数') {
                     try {
-
                         let sessionToken = await getSave.get_user_token(e.user_id)
                         if (!sessionToken) {
                             if (send) {
@@ -65,7 +65,6 @@ class send {
             }
         }
 
-        let sessionToken = await getSave.get_user_token(e.user_id)
         if (!sessionToken) {
             if (send) {
                 this.send_with_At(e, `请先绑定sessionToken哦！\n如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)

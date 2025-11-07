@@ -558,6 +558,20 @@ export default new class getInfo {
         return ans
     }
 
+    /**
+     * 
+     * @param {idString} songId 
+     * @param {levelKind} dif 
+     */
+    getChartImg(songId, dif) {
+        songId = songId.replace(/.0$/, '');
+        if (fs.existsSync(path.join(originalIllPath, "chartimg", dif, `${songId}.png`))) {
+            return path.join(originalIllPath, "chartimg", dif, `${songId}.png`)
+        } else {
+            return `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/chartimg/${dif}/${songId}.png`
+        }
+    }
+
     getTableImg(dif) {
         if (fs.existsSync(path.join(originalIllPath, "table", `${dif}.png`))) {
             return path.join(originalIllPath, "table", `${dif}.png`)

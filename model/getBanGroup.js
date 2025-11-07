@@ -41,7 +41,7 @@ export default new class getBanGroup {
                     return true;
                 }
             } catch (e) {
-                logger.warn('[phi-plugin]API获取用户禁用状态失败', e)
+                if (e.error != '未找到对应 用户') { logger.warn('[phi-plugin]API获取用户禁用状态失败', e) }
             }
         }
         if (sessionToken) {
