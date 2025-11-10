@@ -33,15 +33,6 @@ export class phihelp extends plugin {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        let chartPath = Config.getUserCfg('config', 'chartPath')
-        if (!chartPath) {
-            e.reply('请先在配置文件中设置谱面路径哦QAQ')
-            return true
-        }
-        if (!fs.existsSync(chartPath)) {
-            e.reply('配置文件中设置的谱面路径不存在哦QAQ，请检查后重新设置')
-            return true
-        }
 
         let msg = e.msg.replace(/[#/](.*?)(chart)(\s*)/, "")
 
