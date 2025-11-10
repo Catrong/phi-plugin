@@ -378,6 +378,8 @@ export default class Save {
                     } else {
                         rkslist[i].suggestType = 5
                     }
+                } else {
+                    rkslist[i].suggest = "无法推分"
                 }
             } else {
                 rkslist[i].suggest = "无法推分"
