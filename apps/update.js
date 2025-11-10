@@ -181,13 +181,15 @@ export class phiupdate extends plugin {
         let line = log.length;
 
         if (line <= 0) return false;
+        log.shift(`phi-plugin更新日志，共${line}条`);
 
         if (!Config.getUserCfg('config', 'isGuild')) {
             log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
+            await this.reply(await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line}条`))
+        } else {
+            await this.reply(log.join("\n"))
         }
 
-
-        await this.reply(await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line}条`))
         return ifrestart;
     }
 
