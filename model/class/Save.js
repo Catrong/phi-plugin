@@ -358,9 +358,9 @@ export default class Save {
             /**是 Best 几 */
             rkslist[i].num = i + 1
             /**推分建议 */
-            if (rkslist[i].rks < 100) {
+            if (rkslist[i].acc < 100) {
                 let suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty)
-                if (typeof suggest != 'number' && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks)) && rkslist[i].rks < 100) {
+                if (typeof suggest != 'number' && (!phi?.[0] || (rkslist[i].rks > phi[phi.length - 1].rks))) {
                     suggest = 100;
                 }
                 if (typeof suggest == 'number') {
