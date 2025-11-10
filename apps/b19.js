@@ -133,7 +133,7 @@ export class phib19 extends plugin {
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             dan: dan,
         }
-        console.info(save_b19.b19_list)
+        // console.info(save_b19.b19_list)
         let data = {
             phi: save_b19.phi,
             b19_list: save_b19.b19_list,

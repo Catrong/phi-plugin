@@ -63,8 +63,7 @@ class send {
                     }
                 }
             }
-        }
-        else {
+        } else {
             sessionToken = await getSave.get_user_token(e.user_id)
         }
 
