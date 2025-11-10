@@ -489,7 +489,7 @@ body p {
     width: 20%;
     height: auto;
     position: absolute;
-    top: 30%;
+    top: 15%;
 }
 
 .Rating img {
@@ -501,7 +501,7 @@ body p {
 .chengji {
     width: 80%;
     height: 100%;
-    margin-left: 20%;
+    margin-left: 17%;
 }
 
 .score {
@@ -516,11 +516,13 @@ body p {
 .acc-box {
     width: 100%;
     height: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 .acc {
-    width: auto;
-    height: 100%;
+    width: 50%;
     display: inline-block;
 }
 
@@ -529,43 +531,87 @@ body p {
 }
 
 .suggest {
-    width: auto;
-    height: 30%;
-    display: inline-block;
-    vertical-align: top;
+    width: 50%;
+    height: 60%;
+    /* padding-left: 3px; */
+    /* padding-right: 3px; */
+    border-radius: 30px;
+    /* clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0); */
+    overflow: unset;
+    display: flex;
+    --bkg-color: #ffffff;
+    --bkg-color2: #ffffffcc;
+    background: radial-gradient(
+            20px 20px at 11px 50%,
+            var(--bkg-color) 35%,
+            transparent 126%
+        ),
+        radial-gradient(
+            40px 40px at 11px 50%,
+            #ffffff99 60%,
+            transparent 80%
+        ),
+        radial-gradient(
+            50px 50px at 11px 50%,
+            var(--bkg-color2) 77%,
+            transparent 100%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.85) 0%,
+            rgba(255, 255, 255, 0.9) 100%
+        );
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.suggest-tip {
+    width: 5px;
+    height: 5px;
+    transform: rotate(-45deg);
+    border: 2px solid var(--bkg-color);
+    filter: drop-shadow(0 0 1px black);
+    margin: 3px;
 }
 
 .suggest p {
-    font-size: xx-small;
-    text-shadow: 0 0 5px #000000aa;
+    font-size: 12px;
+    color: #000000;
+    text-shadow: 0 0 1px #ffffffaa;
 }
 
-.suggest-kind-0 p {
-    color: #ff8282;
+.suggest-kind-0 {
+    --bkg-color: #ff8282;
+    --bkg-color2: #ff8282cc;
 }
 
-.suggest-kind-1 p {
-    color: #ffb95d;
+.suggest-kind-1 {
+    --bkg-color: #ffb95d;
+    --bkg-color2: #ffb95dcc;
 }
 
-.suggest-kind-2 p {
-    color: #66ff8f;
+.suggest-kind-2 {
+    --bkg-color: #66ff8f;
+    --bkg-color2: #66ff8fcc;
 }
 
-.suggest-kind-3 p {
-    color: #6bf7ff;
+.suggest-kind-3 {
+    --bkg-color: #6bf7ff;
+    --bkg-color2: #6bf7ffcc;
 }
 
-.suggest-kind-4 p {
-    color: #f1ff2e;
+.suggest-kind-4 {
+    --bkg-color: #f1ff2e;
+    --bkg-color2: #f1ff2ecc;
 }
 
-.suggest-kind-5 p {
-    color: #f1ff2e;
+.suggest-kind-5 {
+    --bkg-color: #f1ff2e;
+    --bkg-color2: #f1ff2ecc;
 }
 
 .chengji .line {
-    width: 90%;
+    width: 100%;
     margin: 0;
     border-bottom: 2px solid;
     border-color: white;

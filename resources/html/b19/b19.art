@@ -125,7 +125,8 @@
                             <p>{{song.acc.toFixed(2)}}%</p>
                         </div>
                         <div class="suggest suggest-kind-{{song.suggestType}}">
-                            <p>>> {{song.suggest}}</p>
+                            <div class="suggest-tip"></div>
+                            <p>{{song.suggest}}</p>
                         </div>
                     </div>
                 </div>
@@ -215,7 +216,8 @@
                             <p>{{song.acc.toFixed(2)}}%</p>
                         </div>
                         <div class="suggest suggest-kind-{{song.suggestType}}">
-                            <p>>> {{song.suggest}}</p>
+                            <div class="suggest-tip"></div>
+                            <p>{{song.suggest}}</p>
                         </div>
                     </div>
                 </div>
