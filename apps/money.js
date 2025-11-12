@@ -151,7 +151,7 @@ export class phimoney extends plugin {
             return false
         }
 
-        let save = await send.getsave_result(e.user_id)
+        let save = await send.getsave_result(e)
 
         if (!save) {
             return false
