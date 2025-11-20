@@ -91,7 +91,7 @@ export class phisstk extends plugin {
                 return true
             } catch (err) {
                 // console.log(err)
-                if (err?.message == "用户 未找到") {
+                if (err?.message == "未找到对应 用户") {
                     send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
                 } else {
                     send.send_with_At(e, err.message)
