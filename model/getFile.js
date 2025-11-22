@@ -1,4 +1,3 @@
-import common from '../../../lib/common/common.js'
 import fs from 'node:fs'
 import YAML from 'yaml'
 import { dataPath, pluginDataPath, savePath } from "./path.js";
@@ -185,7 +184,7 @@ export default class readFile {
             async function check() {
                 while (already < tot) {
                     logger.mark('[phi-plugin][数据整合，请勿中断进程]', `${already}/${tot}`)
-                    await common.sleep(1000);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
                 logger.mark('[phi-plugin][数据整合]', `${already}/${tot}`)
             }
