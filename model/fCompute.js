@@ -215,9 +215,9 @@ export default class compute {
             }
             break
         }
-        if (onlyText) {
-            richText = richText.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-        }
+        // if (onlyText) {
+        //     richText = richText.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        // }
         return richText
     }
 
