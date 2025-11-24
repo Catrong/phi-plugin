@@ -539,28 +539,8 @@ body p {
     /* clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0); */
     overflow: unset;
     display: flex;
-    --bkg-color: #ffffff;
-    --bkg-color2: #ffffffcc;
-    background: radial-gradient(
-            20px 20px at 11px 50%,
-            var(--bkg-color) 35%,
-            transparent 126%
-        ),
-        radial-gradient(
-            40px 40px at 11px 50%,
-            #ffffff99 60%,
-            transparent 80%
-        ),
-        radial-gradient(
-            50px 50px at 11px 50%,
-            var(--bkg-color2) 77%,
-            transparent 100%
-        ),
-        linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.85) 0%,
-            rgba(255, 255, 255, 0.9) 100%
-        );
+    --bkg-color: rgba(0, 0, 0, 0.5);
+    background: var(--bkg-color);
     align-items: center;
     justify-content: space-evenly;
 }
@@ -568,46 +548,41 @@ body p {
 .suggest-tip {
     width: 5px;
     height: 5px;
-    transform: rotate(-45deg);
-    border: 2px solid var(--bkg-color);
-    filter: drop-shadow(0 0 1px black);
+    border-radius: 50%;
+    border: 2px solid #ffffff;);
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.6666));
     margin: 3px;
 }
 
 .suggest p {
     font-size: 12px;
-    color: #000000;
-    text-shadow: 0 0 1px #ffffffaa;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 2px #000000aa;
 }
 
 .suggest-kind-0 {
-    --bkg-color: #ff8282;
-    --bkg-color2: #ff8282cc;
+    --bkg-color: #ff8282ac;
 }
 
 .suggest-kind-1 {
-    --bkg-color: #ffb95d;
-    --bkg-color2: #ffb95dcc;
+    --bkg-color: #ffb95dac;
 }
 
 .suggest-kind-2 {
-    --bkg-color: #66ff8f;
-    --bkg-color2: #66ff8fcc;
+    --bkg-color: #66ff8fac;
 }
 
 .suggest-kind-3 {
-    --bkg-color: #6bf7ff;
-    --bkg-color2: #6bf7ffcc;
+    --bkg-color: #6bf7ffac;
 }
 
 .suggest-kind-4 {
-    --bkg-color: #f1ff2e;
-    --bkg-color2: #f1ff2ecc;
+    --bkg-color: #f1ff2eac;
 }
 
 .suggest-kind-5 {
-    --bkg-color: #f1ff2e;
-    --bkg-color2: #f1ff2ecc;
+    --bkg-color: #f1ff2eac;
 }
 
 .chengji .line {
