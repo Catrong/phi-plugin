@@ -66,7 +66,7 @@ export class phisstk extends plugin {
         sessionToken = sessionToken ? sessionToken[0] : localPhigrosToken
 
         if (!sessionToken) {
-            let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]{10}/g)?.[0]
+            let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]+/g)?.[0]
             if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
                 if (apiId) {
                     send.send_with_At(e, `这里没有连接查分平台哦！请使用sessionToken进行绑定！`)
@@ -92,7 +92,7 @@ export class phisstk extends plugin {
             } catch (err) {
                 // console.log(err)
                 if (err?.message == "未找到对应 用户") {
-                    send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                    send.send_with_At(e, `没有找到${apiId}对应的用户哦，请尝试输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
                 } else {
                     send.send_with_At(e, err.message)
                     logger.error(`[phi-plugin] API错误`)
