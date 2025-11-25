@@ -205,20 +205,6 @@ export class phib19 extends plugin {
         if (!Config.getUserCfg('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
-        try {
-            await get.buildingRecord(e, new PhigrosUser(save.session))
-
-            save = await send.getsave_result(e)
-
-            if (!save) {
-                return true
-            }
-
-        } catch (err) {
-            send.send_with_At(e, err)
-            logger.error(err)
-        }
-
         let save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
         let stats = await save.getStats()
 
