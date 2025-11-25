@@ -314,7 +314,7 @@ export class phihelp extends plugin {
             return false
         }
 
-        let phigorsToken = getSave.get_user_token(e.user_id)
+        let phigorsToken = await getSave.get_user_token(e.user_id)
 
         if (!phigorsToken) {
             send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
@@ -323,7 +323,7 @@ export class phihelp extends plugin {
 
         let saveHistory = await getSave.getHistory(e.user_id);
         try {
-            await makeRequest.setHistory({ ...makeRequestFnc.makePlatform(e), data: saveHistory })
+            await makeRequest.setHistory({ token: phigorsToken, data: saveHistory })
         } catch (err) {
             send.send_with_At(e, '更新历史记录失败: ' + err.message)
             return false

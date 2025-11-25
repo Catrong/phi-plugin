@@ -84,7 +84,7 @@ export class phisstk extends plugin {
                         resMsg += apiMsg
                     }
                     send.send_with_At(e, resMsg)
-                    let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
+                    let updateData = await getUpdateSave.getNewSaveFromApi(e)
                     let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
                     await build(e, updateData, history)
                 }
@@ -190,7 +190,12 @@ export class phisstk extends plugin {
                         resMsg += apiMsg
                     }
                     send.send_with_At(e, resMsg)
-                    let updateData = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
+                    await getSave.add_user_token(e.user_id, sessionToken);
+                    let oldHistory = await getSave.getHistory(e.user_id);
+                    if (oldHistory) {
+                        await makeRequest.setHistory({ token: sessionToken, data: oldHistory });
+                    }
+                    let updateData = await getUpdateSave.getNewSaveFromApi(e)
                     let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
                     await build(e, updateData, history)
                 }
