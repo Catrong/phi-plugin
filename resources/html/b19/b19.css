@@ -542,6 +542,7 @@ body p {
     --bkg-color: rgba(0, 0, 0, 0.5);
     background: var(--bkg-color);
     align-items: center;
+    filter: drop-shadow(0 0 2px rgba(128, 128, 128, 0.667));
     justify-content: space-evenly;
 }
 
