@@ -81,7 +81,7 @@ export default new class getBackup {
                     user_token[user_id] = tokenValues[idx];
                 });
                 cnt += keys.length;
-                if(Math.floor(cnt / 1000)> vis) {
+                if (Math.floor(cnt / 1000) > vis) {
                     vis = Math.floor(cnt / 1000);
                     logger.info(`[phi-plugin] 已获取 ${vis}k 个 user_token`);
                 }
@@ -114,10 +114,10 @@ export default new class getBackup {
      */
     async restore(zipPath) {
         let zip = await JSZip.loadAsync(fs.readFileSync(zipPath))
-        try {
-            /**存档相关 */
-            zip.folder('saveData').forEach((session) => {
-                /**阻止遍历文件夹 */
+        /**存档相关 */
+        zip.folder('saveData')?.forEach((session) => {
+            try {
+                /**阻止遍历文件user_token.json */
                 if (!session.includes('.json')) {
                     /**history */
                     getFile.FileReader(path.join(savePath, session, 'history.json')).then((old) => {
@@ -141,25 +141,30 @@ export default new class getBackup {
                         })
                     })
                 }
-
-            });
-        } catch (e) { }
-        try {
-            /**插件数据相关 */
-            zip.folder('pluginData').forEach((fileName, file) => {
+            } catch (e) {
+                logger.error(`恢复存档 ${session} 错误：` + e);
+            }
+        });
+        /**插件数据相关 */
+        zip.folder('pluginData')?.forEach((fileName, file) => {
+            try {
                 file.async('string').then((data) => {
                     getFile.SetFile(path.join(pluginDataPath, fileName), JSON.parse(data))
                 })
-            })
-        } catch (e) { }
-        try {
-            /**user_id->tk */
-            zip.file('user_token.json').async('string').then((data) => {
+            } catch (e) {
+                logger.error(`恢复插件数据 ${fileName} 错误：` + e);
+            }
+        })
+        /**user_id->tk */
+        zip.file('user_token.json')?.async('string').then((data) => {
+            try {
                 let now = JSON.parse(data)
                 for (let user_id in now) {
                     redis.set(`${redisPath}:userToken:${user_id}`, now[user_id])
                 }
-            })
-        } catch (e) { }
+            } catch (e) {
+                logger.error(`恢复 user_token 对照 [${user_id}]:${now[user_id]} 错误：` + e);
+            }
+        })
     }
 }()
