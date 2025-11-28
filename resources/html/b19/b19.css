@@ -542,6 +542,7 @@ body p {
     --bkg-color: rgba(0, 0, 0, 0.5);
     background: var(--bkg-color);
     align-items: center;
+    filter: drop-shadow(0 0 2px rgba(128, 128, 128, 0.667));
     justify-content: space-evenly;
 }
 
@@ -550,7 +551,7 @@ body p {
     height: 5px;
     border-radius: 50%;
     border: 2px solid #ffffff;);
-    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.6666));
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.6666));
     margin: 3px;
 }
 
@@ -558,31 +559,31 @@ body p {
     font-size: 12px;
     font-weight: bold;
     color: #ffffff;
-    text-shadow: 0 0 2px #000000aa;
+    text-shadow: 0 0 2px #000000ac
 }
 
 .suggest-kind-0 {
-    --bkg-color: #ff8282ac;
+    --bkg-color: hsla(0, 80%, 60%, 0.675);
 }
 
 .suggest-kind-1 {
-    --bkg-color: #ffb95dac;
+    --bkg-color: hsla(34, 80%, 60%, 0.675);
 }
 
 .suggest-kind-2 {
-    --bkg-color: #66ff8fac;
+    --bkg-color: hsla(136, 80%, 60%, 0.675);
 }
 
 .suggest-kind-3 {
-    --bkg-color: #6bf7ffac;
+    --bkg-color: hsla(183, 80%, 60%, 0.675);
 }
 
 .suggest-kind-4 {
-    --bkg-color: #f1ff2eac;
+    --bkg-color: hsla(276, 80%, 60%, 0.675);
 }
 
 .suggest-kind-5 {
-    --bkg-color: #f1ff2eac;
+    --bkg-color: hsla(276, 80%, 60%, 0.675);
 }
 
 .chengji .line {
