@@ -63,9 +63,9 @@ class send {
                     }
                 }
             }
-        } else {
-            sessionToken = await getSave.get_user_token(e.user_id)
         }
+        
+        sessionToken = await getSave.get_user_token(e.user_id)
 
         if (!sessionToken) {
             if (send) {
