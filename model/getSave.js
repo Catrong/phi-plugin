@@ -85,7 +85,7 @@ export default class getSave {
         }
         this.add_user_token(user_id, session)
         await getRksRank.addUserRks(session, data.saveInfo.summary.rankingScore)
-        return await readFile.SetFile(path.join(savePath, session, 'save.json'), data)
+        return readFile.SetFile(path.join(savePath, session, 'save.json'), data)
     }
 
     /**
