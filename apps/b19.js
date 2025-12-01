@@ -2,15 +2,13 @@ import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js';
 import get from '../model/getdata.js'
-import { segment } from "oicq";
 import send from '../model/send.js';
-import PhigrosUser from '../lib/PhigrosUser.js';
 import altas from '../model/picmodle.js'
 import scoreHistory from '../model/class/scoreHistory.js';
 import fCompute from '../model/fCompute.js';
 import getInfo from '../model/getInfo.js';
 import getSave from '../model/getSave.js';
-import { LevelNum } from '../model/constNum.js';
+import { APII18NCN, LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
