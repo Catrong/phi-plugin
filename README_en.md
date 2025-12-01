@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/Plugin_Version-0.9.9.3-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Plugin_Version-0.9.9.4-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.18.0-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
@@ -93,9 +93,9 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi lmtacc [0-100]` | Calculate Rks with minimum ACC limit |
 | `#phi (lvsco(re)\|scolv) <rating range> <difficulty>` | Get scores in range |
 | `#phi chap <chapter name\|help>` | Get chapter scores |
-| `#phi list <－dif difficultyRange> <-acc accRange> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | List scores per song in range |
+| `#phi list <-dif difficultyRange> <-acc accRange> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | List scores per song in range |
 | `#phi best1(+)` | Text-based b30 (up to b99) |
-| `#phi (score\|score)xxx` | Get single score & improvement tips |
+| `#phi score xxx  [-dif (EZ\|HD\|IN\|AT)] [-or (acc\|score\|fc\|time)] [-unrank]` | Get single score & improvement tips (parameters for score ranking, API required) |
 | `#phi (suggest\|suggest)` | Get songs that can increase Rks by +0.01 |
 | `#phi (ranklist\|ranking)` | Rks leaderboard |
 | `#phi data` | Check user data count |

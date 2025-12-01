@@ -25,6 +25,185 @@ body {
     /* border: 5px solid; */
 }
 
+.rol {
+    width: 250px;
+    margin-right: 200px;
+    margin-left: 50px;
+    position: relative;
+}
+
+.chart-bkg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    display: flex;
+}
+
+.rol-bkg {
+    width: 250px;
+    margin-right: 200px;
+    margin-left: 50px;
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.502);
+    backdrop-filter: blur(5px);
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.note {
+    width: 0;
+    height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 10;
+}
+
+.note img {
+    width: 40px;
+}
+
+.tap {
+    z-index: 15;
+}
+
+.flick {
+    z-index: 14;
+}
+
+.drag {
+    z-index: 13;
+}
+
+.hold-body {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 39px;
+    /* transform: translateY(-2px); */
+}
+
+.hold-end,
+.hold-head {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hold-head {
+    bottom: -2px;
+}
+
+.hold-end {
+    top: -2px;
+}
+
+.hold-body img,
+.hold-head img,
+.hold-end img {
+    width: 100%;
+}
+
+.hold-body img {
+    height: 100%;
+}
+
+.notestip {
+    position: absolute;
+    white-space: nowrap;
+    z-index: 20;
+    font-size: 10px;
+    text-shadow: white 0 0 2px;
+}
+
+.beats {
+    width: 100%;
+    height: 5px;
+    transform: translateY(50%);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.beats-2 {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.beats-4 {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.extended-border-box {
+    border: 3px solid snow;
+    border-radius: 10px;
+    transform: translateX(-50%);
+    z-index: 20;
+    position: absolute;
+}
+
+.extended-box {
+    right: -200px;
+    width: 150px;
+    background-color: rgb(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    position: absolute;
+}
+/* Beautified labels for beats and notes */
+.beat-label {
+    position: absolute;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    font-size: 10px;
+    line-height: 1;
+    color: #e6f0ff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    padding: 3px 6px;
+    border-radius: 6px;
+    /* background: linear-gradient(
+        135deg,
+        rgba(20, 30, 48, 0.75),
+        rgba(36, 59, 85, 0.75)
+    ); */
+    pointer-events: none;
+    transform: translateY(50%);
+    white-space: nowrap;
+}
+.beat-label.left {
+    left: -30px;
+    border-left: 3px solid rgba(100, 181, 246, 0.8);
+    text-align: center;
+}
+.beat-label.right {
+    right: -50px;
+    border-right: 3px solid rgba(255, 213, 79, 0.85);
+}
+
+.note-fraction {
+    position: absolute;
+    right: -20px;
+    font-size: 8px;
+    color: #fff;
+    /* background: rgba(33, 150, 243, 0.85); */
+    padding: 1px 4px;
+    border-radius: 4px;
+    /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); */
+    pointer-events: none;
+    transform: translateY(50%);
+}
+.beats {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 :root {
     --text-color-light: #ffffff;
     --text-color-dark: #000000;
@@ -34,11 +213,10 @@ body {
 }
 
 .info-box {
-    width: 15%;
-    margin-left: 1%;
+    width: 20%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-evenly;
 }
 
@@ -66,7 +244,7 @@ body {
 
 .box-title p {
     color: var(--text-color-light);
-    font-size: 40px;
+    font-size: 20px;
     padding: 0px 20px;
 }
 
@@ -137,21 +315,20 @@ body {
 
 .content-title p {
     font-family: "Aldrich", "PHI";
-    font-size: 50px;
+    font-size: 26px;
     color: var(--content-title-color);
     text-shadow: 1px 1px 5px var(--text-color-dark);
 }
 
 .content p {
-    font-size: 40px;
+    font-size: 25px;
     color: var(--text-color-light);
     text-shadow: 1px 1px 1px var(--text-color-dark);
     margin: 0px 0px 0px 2rem;
 }
 
 .chart-info {
-    width: 98%;
-    margin: auto;
+    width: 100%;
     height: 500px;
     display: flex;
     flex-direction: column;
@@ -160,18 +337,16 @@ body {
 
 .notes-bar {
     position: absolute;
-    width: 24%;
-    height: 90%;
-    left: 74%;
-    top: 20px;
+    width: 90%;
+    left: 5%;
+    bottom: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .bar-box {
     width: 100%;
-    height: 80%;
+    height: 100px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -194,7 +369,7 @@ body {
 .notes-box {
     display: flex;
     position: absolute;
-    left: 17%;
+    left: 25%;
     top: 20px;
     flex-direction: column;
 }
@@ -218,11 +393,11 @@ body {
 }
 
 .notes-content p:nth-child(1) {
-    font-size: 40px;
+    font-size: 30px;
 }
 
 .notes-content p:nth-child(2) {
-    font-size: 30px;
+    font-size: 20px;
     margin-top: -10px;
 }
 
@@ -245,9 +420,9 @@ body {
 .words-box {
     position: absolute;
     display: flex;
-    width: 50%;
-    height: 90%;
-    left: 23%;
+    width: 70%;
+    height: 60%;
+    right: 5%;
     top: 20px;
     flex-direction: column;
 }
@@ -260,7 +435,7 @@ body {
 
 .box-tip p {
     color: var(--text-color-light);
-    font-size: 40px;
+    font-size: 20px;
     text-shadow: 1px 1px 1px var(--text-color-dark);
 }
 

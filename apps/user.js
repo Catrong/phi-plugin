@@ -104,7 +104,7 @@ export class phiuser extends plugin {
         let dan = await get.getDan(e.user_id)
 
         let gameuser = {
-            avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
+            avatar: getInfo.idgetavatar(save.gameuser.avatar),
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
@@ -435,7 +435,7 @@ export class phiuser extends plugin {
             date: fCompute.date_to_string(save.saveInfo.modifiedAt.iso),
             progress_phi: Number((totphi / totcharts * 100).toFixed(2)),
             progress_fc: Number((totfc / totcharts * 100).toFixed(2)),
-            avatar: get.idgetavatar(save.gameuser.avatar),
+            avatar: getInfo.idgetavatar(save.gameuser.avatar),
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,

@@ -112,7 +112,7 @@
         </div>
         <div class="stats-box">
             {{each scoreData rank}}
-            <div class="one-stats-box {{$index}}" id="{{rank.Rating || 'NEW'}}">
+            <div class="one-stats-box {{rank}}" id="{{rank.Rating || 'NEW'}}">
                 <div class="rank">
                     <p>{{$index}}</p>
                 </div>
@@ -187,7 +187,7 @@
             <p>{{ranklist.userRank}} / {{ranklist.totDataNum}}&ensp;&ensp;Selected >> {{ranklist.selected}}</p>
         </div>
         {{each ranklist.users user}}
-        <div class="rankUser{{user.isUser ? ' rankUserMe' : ''}}">
+        <div class="rankUser">
             <div class="ranking">
                 <p>#{{user.index}}</p>
                 <p>{{user.record.updated_at}}</p>
@@ -200,7 +200,7 @@
                     <p name="pvis">{{user.gameuser.PlayerId}}</p>
                 </div>
                 <div class="rankUserRks">
-                    <p>{{user.gameuser.rankingScore.toFixed(4)}}</p>
+                    <p>{{user.gameuser.rankingScore}}</p>
                 </div>
                 <div class="rankUserClg">
                     <div class="Challenge">

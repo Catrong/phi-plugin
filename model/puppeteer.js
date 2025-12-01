@@ -41,7 +41,7 @@ export default class Puppeteer extends Renderer {
         this.puppeteerTimeout = config.puppeteerTimeout || cfg?.bot?.puppeteer_timeout || 0
         this.pageGotoParams = config.pageGotoParams || {
             timeout: 120000,
-            waitUntil: "networkidle2",
+            waitUntil: ["networkidle2", "load"],
         }
         this.browserId = browserId
     }

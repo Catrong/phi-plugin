@@ -49,8 +49,8 @@
             },
             {
                 "title": "/score",
-                "eg": "/score <曲目>",
-                "desc": "获取单曲成绩<br>eg: /score df"
+                "eg": "/score <曲目> [-dif 难度] [-or acc|score|fc|time] [-unrank]",
+                "desc": "获取单曲成绩<br>eg: /score df<br>API用户默认展示最高难度排名成绩，使用 -unrank 参数可关闭该功能，-dif 参数可指定排名难度，-or 参数可指定排序方式；eg: /score df -dif IN -or acc"
             },
             {
                 "title": "/lvsco<br>/scolv",

@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/插件版本-0.9.9.3-9cf?style=flat-square)
+![version](https://img.shields.io/badge/插件版本-0.9.9.4-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.18.0-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Miao-Yunzai)
@@ -124,7 +124,7 @@ pnpm install -P
 | `#phi chap <章节名称\|help>` | 获取章节成绩
 | `#phi list <-dif 定数范围> <-acc ACC范围> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩
 | `#phi best1(+)` | 查询文字版b30（或更多），最高b99
-| `#phi (score\|单曲成绩)xxx` | 获取单曲成绩及这首歌的推分建议
+| `#phi (score\|单曲成绩)xxx  [-dif 难度] [-or acc\|score\|fc\|time] [-unrank]` | 获取单曲成绩及这首歌的推分建议，参数为对分数排行的参数，目前仅开启API后有效
 | `#phi (suggest\|推分)` | 获取可以让RKS+0.01的曲目及其所需ACC
 | `#phi (ranklist\|排行榜)` | 获取 RKS 排行榜
 | `#phi data` | 获取用户data数量
