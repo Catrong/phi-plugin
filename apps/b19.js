@@ -241,9 +241,7 @@ export class phib19 extends plugin {
         }
 
         let res = [await altas.b19(e, data)]
-        if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 0.1) {
-            res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        }
+        res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         send.send_with_At(e, res)
     }
 
@@ -380,9 +378,7 @@ export class phib19 extends plugin {
         }
 
         let res = [await altas.b19(e, data)]
-        if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 0.1) {
-            res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        }
+        res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         send.send_with_At(e, res)
 
     }

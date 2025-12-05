@@ -74,16 +74,23 @@ export class phihelp extends plugin {
             return false
         }
 
+        const sessionToken = await getSave.get_user_token(e.user_id);
+
+        if (!sessionToken) {
+            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+            return false
+        }
+
         let apiToken = e.msg.replace(/^[#/].*?setApiToken\s*\n?/, '')
         if (!apiToken) {
-            send.send_with_At(e, `请输入apiToken！\n格式：\n设置初始密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <新Token> \n更改密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken（换行）<旧Token>（换行）<新Token>`)
+            send.send_with_At(e, `请输入apiToken！\n格式：\n设置密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <新Token> `)
             return true
         }
         if (apiToken.includes('\n')) {
             let lines = apiToken.split('\n');
             if (lines.length == 2) {
                 try {
-                    await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token_old: lines[0], token_new: lines[1] })
+                    await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, api_token: lines[0], token_new: lines[1] })
                 } catch (err) {
                     send.send_with_At(e, '设置 API Token 失败: ' + err.message)
                     return false
@@ -99,7 +106,7 @@ export class phihelp extends plugin {
                 return false
             }
             try {
-                await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token_new: apiToken })
+                await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, token_new: apiToken })
             } catch (err) {
                 send.send_with_At(e, '设置 API Token 失败: ' + err.message)
                 return false

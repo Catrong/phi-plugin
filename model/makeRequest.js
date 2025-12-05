@@ -9,8 +9,8 @@ import saveHistory from './class/saveHistory.js';
 
 /**
  * @typedef {object} baseAu 基础鉴权
- * @property {string} platform 平台名称
- * @property {string} platform_id 用户平台内id
+ * @property {string?} platform 平台名称
+ * @property {string?} platform_id 用户平台内id
  * @property {string?} token PhigrosToken
  * @property {string?} api_user_id 用户api内id
  * @property {string?} api_token 用户api token
@@ -18,10 +18,10 @@ import saveHistory from './class/saveHistory.js';
 
 /**
  * @typedef {object} highAu 高级鉴权
- * @property {string} platform 平台名称
- * @property {string} platform_id 用户平台内id
- * @property {string?} token PhigrosToken
- * @property {string?} api_user_id 用户api内id
+ * @property {string?} platform 平台名称
+ * @property {string?} platform_id 用户平台内id
+ * @property {string} token PhigrosToken
+ * @property {string} api_user_id 用户api内id
  * @property {string} api_token 用户api token
  */
 
@@ -167,7 +167,7 @@ import saveHistory from './class/saveHistory.js';
  * @property {number} record.score 分数
  * @property {number} record.acc 准确率
  * @property {boolean} record.fc 是否FC
- * @property {string} record.updated_at 成绩更新时间
+ * @property {number} record.updated_at 成绩更新时间
  */
 /** 
  * scoreList响应数据主体
@@ -236,12 +236,7 @@ export default class makeRequest {
 
     /**
      * 设置或更新用户的 API Token
-     * @param {object} params 
-     * @param {string?} params.user_id 用户内部ID
-     * @param {string?} params.token_old 原有API Token（如已有Token时必填）
-     * @param {string} params.token_new 新的API Token
-     * @param {string} params.platform 平台名称
-     * @param {string} params.platform_id 用户平台内id
+     * @param {highAu & {token_new: string}} params 
      * @returns {Promise<{message: string}>}
      */
     static async setApiToken(params) {
