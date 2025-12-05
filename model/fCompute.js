@@ -255,9 +255,9 @@ export default class compute {
             range[0] = 0
             range[1] = MAX_DIFFICULTY
         }
-        if (msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)) {
+        if (msg.match(/[0-9]+(\.[0-9]+)?\s*[-～~]\s*[0-9]+(\.[0-9]+)?/g)) {
             /**0-16.9 */
-            msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-～~]\s*[0-9]+(.[0-9]+)?/g)[0]
+            msg = msg.match(/[0-9]+(\.[0-9]+)?\s*[-～~]\s*[0-9]+(\.[0-9]+)?/g)[0]
             let result = msg.split(/\s*[-～~]\s*/g)
             range[0] = Number(result[0])
             range[1] = Number(result[1])
@@ -267,9 +267,9 @@ export default class compute {
                 range[0] = tem
             }
             if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
-        } else if (msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)) {
+        } else if (msg.match(/[0-9]+(\.[0-9]+)?\s*[-+]/g)) {
             /**16.9- 15+ */
-            msg = msg.match(/[0-9]+(.[0-9]+)?\s*[-+]/g)[0]
+            msg = msg.match(/[0-9]+(\.[0-9]+)?\s*[-+]/g)[0]
             let result = msg.replace(/\s*[-+]/g, '')
             if (msg.includes('+')) {
                 range[0] = result
@@ -277,9 +277,9 @@ export default class compute {
                 range[1] = result
                 if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
             }
-        } else if (msg.match(/[0-9]+(.[0-9]+)?/g)) {
+        } else if (msg.match(/[0-9]+(\.[0-9]+)?/g)) {
             /**15 */
-            msg = msg.match(/[0-9]+(.[0-9]+)?/g)[0]
+            msg = msg.match(/[0-9]+(\.[0-9]+)?/g)[0]
             range[0] = range[1] = Number(msg)
             if (!msg.includes('.')) {
                 range[1] += 0.9
