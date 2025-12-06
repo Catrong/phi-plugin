@@ -474,7 +474,7 @@ export class phiuser extends plugin {
         const acc_range = [0, 100];
 
         /** @type {string} */
-        let msg = e.msg.replace(/^[#/](.*?)(list)?(\s*)/, "")
+        let msg = e.msg.replace(/^[#/](.*?)list(\s*)/, "")
 
         /**EZ HD IN AT */
         let isask = [true, true, true, true]
@@ -641,4 +641,5 @@ function randint(min, max) {
     let randomOffset = Math.floor(Math.random() * range)
     return (randomOffset + min) % range + min
 }
+
 
