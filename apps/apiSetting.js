@@ -128,9 +128,15 @@ export class phihelp extends plugin {
             send.send_with_At(e, '这里没有连接查分平台哦！')
             return false
         }
+
+        const sessionToken = await getSave.get_user_token(e.user_id);
+        if (!sessionToken) {
+            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+            return;
+        }
         let tokenList = null
         try {
-            tokenList = await makeRequest.tokenList(makeRequestFnc.makePlatform(e))
+            tokenList = await makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
         } catch (err) {
             send.send_with_At(e, '获取 Token 列表失败: ' + err.message)
             return false
@@ -172,13 +178,19 @@ export class phihelp extends plugin {
         let operation = msg.match(/(delete|rmau)/i)?.[1];
 
         if (!operation) {
-            send.send_with_At(e, `请指定操作类型！\n类型：\ndelete - 解绑对应编号平台\nrmau - 降权对应编号平台`);
+            send.send_with_At(e, `请指定操作类型！\n类型：\ndelete - 解绑对应编号平台`);
             return false;
+        }
+
+        const sessionToken = await getSave.get_user_token(e.user_id);
+        if (!sessionToken) {
+            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+            return;
         }
 
         let tokenList = null
         try {
-            tokenList = await makeRequest.tokenList(makeRequestFnc.makePlatform(e))
+            tokenList = await makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken });
         } catch (err) {
             send.send_with_At(e, '获取 Token 列表失败: ' + err.message)
             return false
@@ -198,7 +210,7 @@ export class phihelp extends plugin {
             if (force) {
                 try {
                     await makeRequest.tokenManage({
-                        ...makeRequestFnc.makePlatform(e), data: {
+                        ...makeRequestFnc.makePlatform(e), token: sessionToken, data: {
                             platform: tarPlatform.platform_name,
                             platform_id: tarPlatform.platform_id,
                             operation
@@ -236,9 +248,16 @@ export class phihelp extends plugin {
 
         if (msg.replace(/\s/g, '') == '确认') {
             let { tarPlatform, operation } = tokenManageData[e.user_id];
+
+            const sessionToken = await getSave.get_user_token(e.user_id);
+            if (!sessionToken) {
+                send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+                return;
+            }
+
             try {
                 await makeRequest.tokenManage({
-                    ...makeRequestFnc.makePlatform(e), data: {
+                    ...makeRequestFnc.makePlatform(e), token: sessionToken, data: {
                         platform: tarPlatform.platform_name,
                         platform_id: tarPlatform.platform_id,
                         operation
@@ -275,8 +294,15 @@ export class phihelp extends plugin {
             send.send_with_At(e, 'API Token 包含非法字符，请检查后重试！')
             return false
         }
+
+        const sessionToken = await getSave.get_user_token(e.user_id);
+        if (!sessionToken) {
+            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+            return;
+        }
+
         try {
-            await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token_new: apiToken, token_old: apiToken })
+            await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, token_new: apiToken })
         } catch (err) {
             send.send_with_At(e, 'API Token 验证失败: ' + err.message)
             return false
@@ -298,45 +324,20 @@ export class phihelp extends plugin {
             return false
         }
 
+        const sessionToken = await getSave.get_user_token(e.user_id);
+        if (!sessionToken) {
+            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+            return;
+        }
+
         try {
-            await makeRequest.clear({ ...makeRequestFnc.makePlatform(e) })
+            await makeRequest.clear({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
         } catch (err) {
             send.send_with_At(e, '清除数据失败: ' + err.message)
             return false
         }
 
         send.send_with_At(e, '数据已清除')
-
-        return true
-    }
-
-    async updateHistory(e) {
-        if (await getBanGroup.get(e, 'updateHistory')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-            return false
-        }
-
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
-            return false
-        }
-
-        let phigorsToken = await getSave.get_user_token(e.user_id)
-
-        if (!phigorsToken) {
-            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
-            return false
-        }
-
-        let saveHistory = await getSave.getHistory(e.user_id);
-        try {
-            await makeRequest.setHistory({ token: phigorsToken, data: saveHistory })
-        } catch (err) {
-            send.send_with_At(e, '更新历史记录失败: ' + err.message)
-            return false
-        }
-
-        send.send_with_At(e, '历史记录已更新')
 
         return true
     }
@@ -452,7 +453,7 @@ export class phihelp extends plugin {
                 send.send_with_At(e, '设置失败: ' + error.message);
                 return true;
             }
-            send.send_with_At(e, '启用API同步成功');
+            send.send_with_At(e, '感谢您参与数据统计！');
         } else {
             try {
                 await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), setting: { allowDataCollection: false } });
@@ -460,7 +461,7 @@ export class phihelp extends plugin {
                 send.send_with_At(e, '设置失败: ' + error.message);
                 return true;
             }
-            send.send_with_At(e, '禁用API同步成功');
+            send.send_with_At(e, '退出数据统计计划成功！');
         }
     }
 }
