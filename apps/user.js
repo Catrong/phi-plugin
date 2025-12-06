@@ -474,20 +474,20 @@ export class phiuser extends plugin {
         const acc_range = [0, 100];
 
         /** @type {string} */
-        let msg = e.msg.replace(/^[#/](.*?)(lvsco(re)?)(\s*)/, "")
+        let msg = e.msg.replace(/^[#/](.*?)(list)?)(\s*)/, "")
 
         /**EZ HD IN AT */
         let isask = [true, true, true, true]
 
         msg = msg.toUpperCase()
 
-        const accStr = msg.match(/-ACC\s*\d+(\.\d+)?(\s*[-～~]\s*\d+(\.\d+)?|\s*[+-])?/)?.[0];
+        const accStr = msg.match(/-ACC\s*\d+(\.\d+)?(\s*[-～~]\s*\d+(\.\d+)?|\s*[+-])?/i)?.[0];
         if (accStr) {
             fCompute.match_range(accStr, acc_range);
             msg = msg.replace(accStr, '');
         }
 
-        const difStr = msg.match(/(-DIF)?\s*\d+(\.\d+)?(\s*[-～~]\s*\d+(\.\d+)?|\s*[+-])?/)?.[0];
+        const difStr = msg.match(/(-DIF)?\s*\d+(\.\d+)?(\s*[-～~]\s*\d+(\.\d+)?|\s*[+-])?/i)?.[0];
         if (difStr) {
             fCompute.match_range(difStr, dif_range);
             msg = msg.replace(difStr, '');
