@@ -23,7 +23,12 @@ class picmodle {
 
     async init() {
         /** 清理临时文件 */
-        fs.rmSync(tempPath, { force: true, recursive: true })
+        try {
+            fs.rmSync(tempPath, { force: true, recursive: true })
+        } catch (err) {
+            logger.error(`[Phi-Plugin][清理临时文件失败]`)
+            logger.error(err)
+        }
         /** 初始化puppeteer实例 */
         let num = Config.getUserCfg('config', 'renderNum')
         for (let i = 0; i < num; i++) {
