@@ -544,8 +544,15 @@ export default class compute {
         msg += `请在${Config.getUserCfg('config', 'mutiNickWaitTimeOut')}秒内回复序号`;
         return msg
     }
-}
 
-function dfs_score_note(score, note, maxCombo, perfect, ans) {
-
+    /**
+     * 判断是不是1GOOD
+     * @param {number} score 
+     * @param {number} maxc 总物量
+     * @returns 
+     */
+    static comJsut1Good(score, maxc) {
+        const tar = 900000 * (1 - (0.35 / maxc)) + 100000;
+        return Math.abs(score - tar) <= 2;
+    }
 }

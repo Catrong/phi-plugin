@@ -400,9 +400,9 @@ export default class Save {
 
     /**
      * 
-     * @param {[{type: string,value: any}]} limit 
+     * @param {recordLimit[]} limit 
      */
-    async getBestWithLimit(num, limit) {
+    async getBestWithLimit(num, limit, withPhi = true) {
         let getInfo = (await import('../getInfo.js')).default
         /**计算得到的rks，仅作为测试使用 */
         let sum_rks = 0
@@ -417,26 +417,25 @@ export default class Save {
             }
         }
 
+        let phi = null;
 
         /**p3 */
-        let phi = philist.splice(0, Math.min(philist.length, 3))
+        if (withPhi) {
+            phi = philist.splice(0, Math.min(philist.length, 3))
 
-
-        // console.info(phi)
-        /**处理数据 */
-
-        for (let i = 0; i < 3; ++i) {
-            if (!phi[i]) {
-                phi[i] = false
-                continue
-            }
-            if (phi[i]?.rks) {
-                let tem = {}
-                Object.assign(tem, phi[i])
-                phi[i] = tem
-                sum_rks += Number(phi[i].rks) //计算rks
-                phi[i].illustration = getInfo.getill(phi[i].song)
-                phi[i].suggest = "无法推分"
+            for (let i = 0; i < 3; ++i) {
+                if (!phi[i]) {
+                    phi[i] = false
+                    continue
+                }
+                if (phi[i]?.rks) {
+                    let tem = {}
+                    Object.assign(tem, phi[i])
+                    phi[i] = tem
+                    sum_rks += Number(phi[i].rks) //计算rks
+                    phi[i].illustration = getInfo.getill(phi[i].song)
+                    phi[i].suggest = "无法推分"
+                }
             }
         }
 
@@ -462,7 +461,7 @@ export default class Save {
         let b19_list = []
         for (let i = 0; i < num && i < rkslist.length; ++i) {
             /**计算rks */
-            if (i < 27) sum_rks += Number(rkslist[i].rks)
+            if (i < (withPhi ? 27 : 30)) sum_rks += Number(rkslist[i].rks)
             /**是 Best 几 */
             rkslist[i].num = i + 1
             /**推分建议 */
@@ -622,7 +621,18 @@ export default class Save {
     }
 }
 
+/**
+ * @typedef recordLimit
+ * @property {'acc'|'score'|'rks'|'custom'} type 类型
+ * @property {number[]|((record: LevelRecordInfo)=>boolean)} value 数值范围或自定义函数
+ */
 
+/**
+ * 
+ * @param {LevelRecordInfo} record 
+ * @param {recordLimit[]} limit 
+ * @returns 
+ */
 function checkLimit(record, limit) {
     for (let i in limit) {
         let l = limit[i]
@@ -635,6 +645,9 @@ function checkLimit(record, limit) {
                 break
             case 'rks':
                 if (record.rks < l.value[0] || record.rks > l.value[1]) return false
+                break
+            case 'custom':
+                if (!l.value(record)) return false
                 break
         }
     }

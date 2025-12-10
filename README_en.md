@@ -88,6 +88,8 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi clean` | Delete all records |
 | `#phi (update\|update)` | Update save data |
 | `#phi (rks\|pgr\|b30)` | Query Rks (provides b30 results) |
+| `#phi x30` | Query 1Good b30 |
+| `#phi fc30` | Query Full Combo b30 |
 | `杠批比三零` | Same as above,but looks like Arcaea Online |
 | `#phi info(1\|2)?` | View personal stats |
 | `#phi lmtacc [0-100]` | Calculate Rks with minimum ACC limit |

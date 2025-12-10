@@ -1,6 +1,6 @@
 import fCompute from '../fCompute.js';
 import getInfo from '../getInfo.js';
-
+import { LevelNum } from '../constNum.js';
 export default class LevelRecordInfo {
     /**
      * @param {{fc:boolean, score:number, acc: number}} data 原始数据
@@ -11,10 +11,12 @@ export default class LevelRecordInfo {
         this.fc = data.fc;
         this.score = data.score;
         this.acc = data.acc;
+        /** @type {idString} */
         this.id = id;
 
         let info = getInfo.info(getInfo.idgetsong(id), true)
 
+        /** @type {keyof typeof LevelNum} */
         this.rank = getInfo.Level[rank] //AT IN HD EZ LEGACY
         this.Rating = Rating(this.score, this.fc) //V S A 
         if (!info) {
@@ -23,7 +25,7 @@ export default class LevelRecordInfo {
             this.rks = 0;
             return
         }
-
+        /** @type {songString} */
         this.song = info.song //曲名
         this.illustration = getInfo.getill(this.song) //曲绘链接
 

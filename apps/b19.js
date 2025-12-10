@@ -32,11 +32,11 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(b[0-9]+|rks|pgr|PGR|B[0-9]+|RKS).*$`,
+                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(b[0-9]+|rks|pgr).*$`, 'i'),
                     fnc: 'b19'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|P)[0-9]+.*$`,
+                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|x|fc)[0-9]+.*$`, 'i'),
                     fnc: 'p30'
                 },
                 {
@@ -86,9 +86,9 @@ export class phib19 extends plugin {
         }
 
 
-        let nnum = e.msg.match(/(b|rks|pgr|PGR|B|RKS)[0-9]*/g)[0]
+        let nnum = e.msg.match(/^.*?(b|rks|pgr)[0-9]*/i)[0]
 
-        nnum = Number(nnum.replace(/(b|rks|pgr|PGR|B|RKS)/g, ''))
+        nnum = Number(nnum.replace(/^.*?(b|rks|pgr)/i, ''))
         if (!nnum) {
             nnum = 33
         }
@@ -96,7 +96,7 @@ export class phib19 extends plugin {
         nnum = Math.max(nnum, 33)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
-        let bksong = e.msg.replace(/^.*(b|rks|pgr|PGR|B|RKS)[0-9]*\s*/g, '')
+        let bksong = e.msg.replace(/^.*?(b|rks|pgr)[0-9]*\s*/g, '')
 
         if (bksong) {
             let tem = getInfo.fuzzysongsnick(bksong)[0]
@@ -177,9 +177,9 @@ export class phib19 extends plugin {
         }
 
 
-        let nnum = e.msg.match(/(p|P)[0-9]*/g)[0]
+        let nnum = e.msg.match(/^.*?(p|x|fc)[0-9]+/i)[0]
 
-        nnum = Number(nnum.replace(/(p|P)/g, ''))
+        nnum = Number(nnum.replace(/^.*?(p|x|fc)/i, ''))
         if (!nnum) {
             nnum = 33
         }
@@ -187,7 +187,7 @@ export class phib19 extends plugin {
         nnum = Math.max(nnum, 33)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
-        let bksong = e.msg.replace(/^.*(p|P)[0-9]*\s*/g, '')
+        let bksong = e.msg.replace(/^.*?(p|x|fc)[0-9]+\s*/i, '')
 
         if (bksong) {
             let tem = getInfo.fuzzysongsnick(bksong)[0]
@@ -205,7 +205,33 @@ export class phib19 extends plugin {
         if (!Config.getUserCfg('config', 'isGuild'))
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
-        let save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
+        let save_b19;
+        let spInfo = '';
+
+        const type = e.msg.match(/^.*?(p|x|fc)([0-9]+)/i)[1].toLowerCase();
+        switch (type) {
+            case 'p': {
+                save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
+                spInfo = "All Perfect Only Mode";
+                break;
+            }
+            case 'fc': {
+                save_b19 = await save.getBestWithLimit(nnum, [{ type: 'custom', value: (record) => record.fc === true }], false)
+                spInfo = "Full Combo Only Mode";
+                break;
+            }
+            case 'x': {
+                save_b19 = await save.getBestWithLimit(nnum, [{
+                    type: 'custom',
+                    value: (record) => {
+                        return fCompute.comJsut1Good(record.score, getInfo.ori_info[record.song].chart[record.rank].combo)
+                    }
+                }], false)
+                spInfo = "Just 1 Good Only Mode";
+                break;
+            }
+        }
+
         let stats = await save.getStats()
 
 
@@ -237,7 +263,7 @@ export class phib19 extends plugin {
             gameuser,
             nnum,
             stats,
-            spInfo: "All Perfect Only Mode",
+            spInfo,
         }
 
         let res = [await altas.b19(e, data)]

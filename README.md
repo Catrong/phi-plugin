@@ -117,6 +117,8 @@ pnpm install -P
 | `#phi clean` | 删除所有记录
 | `#phi (update\|更新存档)` | 更新存档
 | `#phi (rks\|pgr\|b30)` | 查询rks，会提供得出的b30结果
+| `#phi x30` | 查询1Good b30
+| `#phi fc30` | 查询Full Combo b30
 | `杠批比三零` | 同上
 | `#phi info(1\|2)?` | 查询个人统计信息
 | `#phi lmtacc [0-100]` | 计算限制最低 ACC 后的 RKS

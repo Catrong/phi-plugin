@@ -84,6 +84,7 @@
     </div>
 </div>
 <div class="b19">
+    {{if phi}}
 
     {{each phi song}}
 
@@ -155,8 +156,10 @@
 
     {{/each}}
 
-    {{each b19_list song}}
+    {{/if}}
 
+
+    {{each b19_list song}}
     
     {{if $index == 27}}
     <div class="over_flow">
