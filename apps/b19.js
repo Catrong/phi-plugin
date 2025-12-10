@@ -32,15 +32,15 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(b[0-9]+|rks|pgr).*$`, 'i'),
+                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(b\\s*[0-9]+|rks|pgr).*$`, 'i'),
                     fnc: 'b19'
                 },
                 {
-                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|x|fc)[0-9]+.*$`, 'i'),
+                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|x|fc)\\s*[0-9]+.*$`, 'i'),
                     fnc: 'p30'
                 },
                 {
-                    reg: `^[#/杠刚钢纲](${Config.getUserCfg('config', 'cmdhead')})(\\s*)[a(arc)啊阿批屁劈](\\s*)((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
+                    reg: `^[#/杠刚钢纲](${Config.getUserCfg('config', 'cmdhead')})(\\s*)[a(arc)啊阿批屁劈]\\s*((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
                     fnc: 'arcgrosB19'
                 },
                 {
@@ -212,22 +212,22 @@ export class phib19 extends plugin {
         switch (type) {
             case 'p': {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
-                spInfo = "All Perfect Only Mode";
+                spInfo = "All Perfect Mode";
                 break;
             }
             case 'fc': {
-                save_b19 = await save.getBestWithLimit(nnum, [{ type: 'custom', value: (record) => record.fc === true }], false)
-                spInfo = "Full Combo Only Mode";
+                save_b19 = await save.getBestWithLimit(nnum, [{ type: 'custom', value: (record) => ((record.fc === true) && (record.score != 1e6)) }], false)
+                spInfo = "Full Combo Mode";
                 break;
             }
             case 'x': {
                 save_b19 = await save.getBestWithLimit(nnum, [{
                     type: 'custom',
                     value: (record) => {
-                        return fCompute.comJsut1Good(record.score, getInfo.ori_info[record.song].chart[record.rank].combo)
+                        return fCompute.comJust1Good(record.score, getInfo.ori_info[record.song].chart[record.rank].combo)
                     }
                 }], false)
-                spInfo = "Just 1 Good Only Mode";
+                spInfo = "1 Good Mode";
                 break;
             }
         }

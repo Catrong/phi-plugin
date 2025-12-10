@@ -551,7 +551,7 @@ export default class compute {
      * @param {number} maxc 总物量
      * @returns 
      */
-    static comJsut1Good(score, maxc) {
+    static comJust1Good(score, maxc) {
         const tar = 900000 * (1 - (0.35 / maxc)) + 100000;
         return Math.abs(score - tar) <= 2;
     }
