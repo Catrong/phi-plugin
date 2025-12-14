@@ -203,16 +203,16 @@ export default class readFile {
             already = 0
             tot = Object.keys(user_token).length
             for (let id in user_token) {
-                logger.mark('[phi-plugin][数据转移，请勿中断进程]', `${already}/${tot}`)
-                await getSave.add_user_token(id, user_token[id])
-                let save = await getSave.getSave(id)
-                if (!save) continue
-                if (save.getRks() == NaN) {
-                    logger.mark('[phi-plugin][数据转移，请勿中断进程]', `奇怪的rks ${save?.saveInfo?.summary?.rankingScore}`)
-                    continue
-                }
-                // console.info(id, save.getRks())
                 try {
+                    logger.mark('[phi-plugin][数据转移，请勿中断进程]', `${already}/${tot}`)
+                    await getSave.add_user_token(id, user_token[id])
+                    let save = await getSave.getSave(id)
+                    if (!save) continue
+                    if (save.getRks() == NaN) {
+                        logger.mark('[phi-plugin][数据转移，请勿中断进程]', `奇怪的rks ${save?.saveInfo?.summary?.rankingScore}`)
+                        continue
+                    }
+                    // console.info(id, save.getRks())
                     await getRksRank.addUserRks(user_token[id], save.getRks())
                 } catch (err) {
                     logger.error('[phi-plugin][数据转移，请勿中断进程]', err, `跳过该用户${id} ${user_token[id]}`)

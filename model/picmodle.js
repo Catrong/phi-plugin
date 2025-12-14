@@ -23,7 +23,12 @@ class picmodle {
 
     async init() {
         /** 清理临时文件 */
-        fs.rmSync(tempPath, { force: true, recursive: true })
+        try {
+            fs.rmSync(tempPath, { force: true, recursive: true })
+        } catch (err) {
+            logger.error(`[Phi-Plugin][清理临时文件失败]`)
+            logger.error(err)
+        }
         /** 初始化puppeteer实例 */
         let num = Config.getUserCfg('config', 'renderNum')
         for (let i = 0; i < num; i++) {
@@ -185,7 +190,6 @@ class picmodle {
                     Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
                     let data = {
                         ...params,
-                        waitUntil: ['networkidle0', 'load'],
                         saveId: (params.saveId || params.save_id || tpl),
                         tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.art`,
                         pluResPath: resPath,
@@ -195,7 +199,6 @@ class picmodle {
                         defaultLayout: layoutPath + 'default.art',
                         elemLayout: layoutPath + 'elem.art',
                         pageGotoParams: {
-                            waitUntil: ['networkidle2', 'load'],
                             timeout: Config.getUserCfg('config', 'timeout'),
                         },
                         sys: {

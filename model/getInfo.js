@@ -88,7 +88,7 @@ export default new class getInfo {
 
 
         /**
-         * @type {{[key:string]:SongsInfo}}
+         * @type {{[key:songString]:SongsInfo}}
          * @description 原版信息
          */
         this.ori_info = {}

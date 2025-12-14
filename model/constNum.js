@@ -16,6 +16,10 @@ const redisPath = "phiPlugin"
 /**最大难度 */
 const MAX_DIFFICULTY = 17.6
 
+const APII18NCN = {
+    userNotFound: `未找到对应 用户`
+}
+
 export {
-    Level, LevelNum, redisPath, MAX_DIFFICULTY
+    Level, LevelNum, redisPath, MAX_DIFFICULTY, APII18NCN
 }

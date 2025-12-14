@@ -16,6 +16,7 @@ import getUpdateSave from '../model/getUpdateSave.js'
 import getSaveFromApi from '../model/getSaveFromApi.js'
 import saveHistory from '../model/class/saveHistory.js'
 import getNotes from '../model/getNotes.js'
+import {APII18NCN} from '../model/constNum.js'
 
 const apiMsg = `\n请注意，您尚未设置API Token！\n指令格式：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
 
@@ -91,8 +92,8 @@ export class phisstk extends plugin {
                 return true
             } catch (err) {
                 // console.log(err)
-                if (err?.message == "未找到对应 用户") {
-                    send.send_with_At(e, `没有找到${apiId}对应的用户哦，请尝试输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                if (err?.message == APII18NCN.userNotFound) {
+                    send.send_with_At(e, `没有找到${apiId || ''}对应的用户哦，请尝试输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
                 } else {
                     send.send_with_At(e, err.message)
                     logger.error(`[phi-plugin] API错误`)
@@ -236,7 +237,7 @@ export class phisstk extends plugin {
                 await build(e, updateData, history)
                 return true
             } catch (err) {
-                if (err?.message != "未找到对应 用户") {
+                if (err?.message != APII18NCN.userNotFound) {
                     send.send_with_At(e, `${err}\n从API获取存档失败，本次更新将使用本地数据QAQ！`)
                     logger.warn(`[phi-plugin] API错误`)
                     logger.warn(err)

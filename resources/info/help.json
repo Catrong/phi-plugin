@@ -49,8 +49,8 @@
             },
             {
                 "title": "/score",
-                "eg": "/score <曲目>",
-                "desc": "获取单曲成绩<br>eg: /score df"
+                "eg": "/score <曲目> [-dif 难度] [-or acc|score|fc|time] [-unrank]",
+                "desc": "获取单曲成绩<br>eg: /score df<br>API用户默认展示最高难度排名成绩，使用 -unrank 参数可关闭该功能，-dif 参数可指定排名难度，-or 参数可指定排序方式；eg: /score df -dif IN -or acc"
             },
             {
                 "title": "/lvsco<br>/scolv",
@@ -68,9 +68,9 @@
                 "desc": "列出所有匹配的成绩<br>eg: /list -dif 11.1-12.2 -acc 98.5-100 IN FC"
             },
             {
-                "title": "/bN",
-                "eg": "/b<N>",
-                "desc": "显示指定数量的Best和P3成绩图（很长的B30）<br>eg: /b60"
+                "title": "/bN /pN<br>/xN /fcN",
+                "eg": "/b<N> /p<N> /x<N> /fc<N>",
+                "desc": "显示指定数量的成绩图，可以选择仅phi（p30），仅1good（x30），仅fc（fc30）<br>eg: /b60 /p30 /x30 /fc30"
             },
             {
                 "title": "/lmtacc",

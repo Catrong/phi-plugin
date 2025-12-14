@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/Plugin_Version-0.9.9.3-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Plugin_Version-0.9.9.4-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.18.0-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
@@ -88,14 +88,16 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi clean` | Delete all records |
 | `#phi (update\|update)` | Update save data |
 | `#phi (rks\|pgr\|b30)` | Query Rks (provides b30 results) |
+| `#phi x30` | Query 1Good b30 |
+| `#phi fc30` | Query Full Combo b30 |
 | `杠批比三零` | Same as above,but looks like Arcaea Online |
 | `#phi info(1\|2)?` | View personal stats |
 | `#phi lmtacc [0-100]` | Calculate Rks with minimum ACC limit |
 | `#phi (lvsco(re)\|scolv) <rating range> <difficulty>` | Get scores in range |
 | `#phi chap <chapter name\|help>` | Get chapter scores |
-| `#phi list <－dif difficultyRange> <-acc accRange> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | List scores per song in range |
+| `#phi list <-dif difficultyRange> <-acc accRange> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | List scores per song in range |
 | `#phi best1(+)` | Text-based b30 (up to b99) |
-| `#phi (score\|score)xxx` | Get single score & improvement tips |
+| `#phi score xxx  [-dif (EZ\|HD\|IN\|AT)] [-or (acc\|score\|fc\|time)] [-unrank]` | Get single score & improvement tips (parameters for score ranking, API required) |
 | `#phi (suggest\|suggest)` | Get songs that can increase Rks by +0.01 |
 | `#phi (ranklist\|ranking)` | Rks leaderboard |
 | `#phi data` | Check user data count |
@@ -179,10 +181,11 @@ Special thanks to these sponsors (list may not be fully updated):
     <tr>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><a href="https://github.com/qilinX88"><img src="https://avatars.githubusercontent.com/u/92022485?v=4?s=100" style="border-radius: 50%" width="50px;" alt="Loser_X"/><br /><sub><b>@Loser_X</b></sub></a><br />🌸 20 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><a href="https://github.com/S-t-e-v-e-e"><img src="https://avatars.githubusercontent.com/u/117198625?v=4?s=100" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub><br />🌸 40 🌸</td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/a743be34fb4e11ef81be52540025c377/avatar/a284c446cefded67dbbf0c14b9eda2a0_w1080_h1080_s115.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="溯洌RIPPLE"/><br /><sub><b>溯洌RIPPLE</b></sub><br/>🌸 30 🌸</td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/" style="border-radius: 50%" width="50px;" alt="祈"/><br /><sub><b>祈</b></sub><br/>🌸 5 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/a743be34fb4e11ef81be52540025c377/avatar/a284c446cefded67dbbf0c14b9eda2a0_w1080_h1080_s115.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="溯洌RIPPLE"/><br /><sub><b>溯洌RIPPLE</b></sub><br/>🌸 35 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/default/avatar/avatar-purple.png?imageView2/1/" style="border-radius: 50%" width="50px;" alt="祈"/><br /><sub><b>祈</b></sub><br/>🌸 15 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/7f56847012a911f0853552540025c377/avatar/752eaae4cf8018a82719ea8f42569eae_w2000_h2000_s2699.png?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="茗亿"/><br /><sub><b>茗亿</b></sub><br/>🌸 30 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/fbcb2b98204611eea8f152540025c377/avatar/d4e7f58683064153bfbedb99ad95c6d8_w855_h875_s117.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="..."/><br /><sub><b>...</b></sub><br/>🌸 50 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/4041ac584eb111f0b57952540025c377/avatar/04de899ed964c6cfe315d27ea56a1fea_w1080_h1080_s69.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="夏夏肃炎"/><br /><sub><b>夏夏肃炎</b></sub><br/>🌸 5 🌸</td>
     </tr>
 </table>
 

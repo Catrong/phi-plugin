@@ -104,7 +104,7 @@ export class phiuser extends plugin {
         let dan = await get.getDan(e.user_id)
 
         let gameuser = {
-            avatar: get.idgetavatar(save.gameuser.avatar) || 'Introduction',
+            avatar: getInfo.idgetavatar(save.gameuser.avatar),
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
@@ -435,7 +435,7 @@ export class phiuser extends plugin {
             date: fCompute.date_to_string(save.saveInfo.modifiedAt.iso),
             progress_phi: Number((totphi / totcharts * 100).toFixed(2)),
             progress_fc: Number((totfc / totcharts * 100).toFixed(2)),
-            avatar: get.idgetavatar(save.gameuser.avatar),
+            avatar: getInfo.idgetavatar(save.gameuser.avatar),
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
@@ -474,20 +474,20 @@ export class phiuser extends plugin {
         const acc_range = [0, 100];
 
         /** @type {string} */
-        let msg = e.msg.replace(/^[#/](.*?)(lvsco(re)?)(\s*)/, "")
+        let msg = e.msg.replace(/^[#/](.*?)list(\s*)/, "")
 
         /**EZ HD IN AT */
         let isask = [true, true, true, true]
 
         msg = msg.toUpperCase()
 
-        const accStr = msg.match(/-ACC\s*\d+(\.\d+)?(\s*-\s*\d+(\.\d+)?)?/)?.[0];
+        const accStr = msg.match(/-ACC\s*\d+(\.\d+)?(\s*[-～~]\s*\d+(\.\d+)?|\s*[+-])?/i)?.[0];
         if (accStr) {
             fCompute.match_range(accStr, acc_range);
             msg = msg.replace(accStr, '');
         }
 
-        const difStr = msg.match(/(-DIF)?\s*\d+(\.\d+)?(\s*-\s*\d+(\.\d+)?)?/)?.[0];
+        const difStr = msg.match(/(-DIF)?\s*\d+(\.\d+)?(\s*[-～~]\s*\d+(\.\d+)?|\s*[+-])?/i)?.[0];
         if (difStr) {
             fCompute.match_range(difStr, dif_range);
             msg = msg.replace(difStr, '');
@@ -641,3 +641,5 @@ function randint(min, max) {
     let randomOffset = Math.floor(Math.random() * range)
     return (randomOffset + min) % range + min
 }
+
+

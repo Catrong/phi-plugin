@@ -1,5 +1,5 @@
 import Config from "../components/Config.js";
-import { redisPath } from "./constNum.js"
+import { APII18NCN, redisPath } from "./constNum.js"
 import getSave from "./getSave.js";
 import makeRequest from "./makeRequest.js";
 import makeRequestFnc from "./makeRequestFnc.js";
@@ -41,7 +41,7 @@ export default new class getBanGroup {
                     return true;
                 }
             } catch (e) {
-                if (e.error != '未找到对应 用户') { logger.warn('[phi-plugin]API获取用户禁用状态失败', e) }
+                if (e.error != APII18NCN.userNotFound) { logger.warn('[phi-plugin]API获取用户禁用状态失败', e) }
             }
         }
         if (sessionToken) {

@@ -9,8 +9,8 @@ import saveHistory from './class/saveHistory.js';
 
 /**
  * @typedef {object} baseAu 基础鉴权
- * @property {string} platform 平台名称
- * @property {string} platform_id 用户平台内id
+ * @property {string?} platform 平台名称
+ * @property {string?} platform_id 用户平台内id
  * @property {string?} token PhigrosToken
  * @property {string?} api_user_id 用户api内id
  * @property {string?} api_token 用户api token
@@ -18,10 +18,10 @@ import saveHistory from './class/saveHistory.js';
 
 /**
  * @typedef {object} highAu 高级鉴权
- * @property {string} platform 平台名称
- * @property {string} platform_id 用户平台内id
- * @property {string?} token PhigrosToken
- * @property {string?} api_user_id 用户api内id
+ * @property {string?} platform 平台名称
+ * @property {string?} platform_id 用户平台内id
+ * @property {string} token PhigrosToken
+ * @property {string} api_user_id 用户api内id
  * @property {string} api_token 用户api token
  */
 
@@ -145,11 +145,36 @@ import saveHistory from './class/saveHistory.js';
  */
 
 /**
- * 响应数据主体
+ * ranklist响应数据主体
  * @typedef {Object} ranklistResponseData
  * @property {integer} totDataNum 数据总数
  * @property {UserItem[]} users 用户数组
  * @property {MeData} me 当前用户扩展数据
+ */
+
+/**
+ * scoreList用户对象
+ * @typedef {Object} ScoreListUserItem
+ * @property {integer} index 用户排名
+ * @property {Object} gameuser 用户基础信息
+ * @property {string} gameuser.background 背景图
+ * @property {number} gameuser.rankingScore rks
+ * @property {number} gameuser.challengeModeRank 课题分
+ * @property {string} gameuser.avatar 头像
+ * @property {string} gameuser.modifiedAt 账户活跃时间
+ * @property {string} gameuser.PlayerId 玩家ID
+ * @property {Object} record 用户成绩记录
+ * @property {number} record.score 分数
+ * @property {number} record.acc 准确率
+ * @property {boolean} record.fc 是否FC
+ * @property {number} record.updated_at 成绩更新时间
+ */
+/** 
+ * scoreList响应数据主体
+ * @typedef {Object} ScoreListResponseData
+ * @property {integer} totDataNum 数据总数
+ * @property {integer} userRank 用户排名
+ * @property {ScoreListUserItem[]} users 用户数组
  */
 
 /**
@@ -211,12 +236,7 @@ export default class makeRequest {
 
     /**
      * 设置或更新用户的 API Token
-     * @param {object} params 
-     * @param {string?} params.user_id 用户内部ID
-     * @param {string?} params.token_old 原有API Token（如已有Token时必填）
-     * @param {string} params.token_new 新的API Token
-     * @param {string} params.platform 平台名称
-     * @param {string} params.platform_id 用户平台内id
+     * @param {highAu & {token_new: string}} params 
      * @returns {Promise<{message: string}>}
      */
     static async setApiToken(params) {
@@ -294,6 +314,15 @@ export default class makeRequest {
      */
     static async getRanklistRks(params) {
         return (await makeFetch(burl('/get/ranklist/rksRank'), params)).data
+    }
+
+    /**
+     * 获取用户歌曲分数排行列表
+     * @param {baseAu & {songId: idString, rank: levelKind, orderBy: 'acc'|'score'|'fc'|'update_at'}} params id+.0
+     * @returns {Promise<ScoreListResponseData>}
+     */
+    static async getScoreRanklistByUser(params) {
+        return (await makeFetch(burl('/get/scoreList/user'), params)).data
     }
 
     /**

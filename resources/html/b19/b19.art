@@ -84,6 +84,7 @@
     </div>
 </div>
 <div class="b19">
+    {{if phi}}
 
     {{each phi song}}
 
@@ -155,10 +156,12 @@
 
     {{/each}}
 
-    {{each b19_list song}}
+    {{/if}}
 
+
+    {{each b19_list song}}
     
-    {{if $index == 27}}
+    {{if $index == (phi ? 27 : 30)}}
     <div class="over_flow">
         <div class="flow_line_box_l">
             <div class="flow_line"></div>
@@ -181,7 +184,7 @@
     {{/if}}
 
 
-    <div class="song {{$index<27?'b_song':''}}">
+    <div class="song {{$index < (phi ? 27 : 30) ? 'b_song':''}}">
         <div class="ill-box">
             <div class="num">
                 <p name="pvis">#{{song.num}}</p>
