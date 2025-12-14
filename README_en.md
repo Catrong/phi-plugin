@@ -70,6 +70,9 @@ pnpm install -P
 * [ ] Song selection via phi
 * [ ] Optimize sessionToken QR scanning
 * [ ] Modify settings via commands
+* [ ] Query Song History Constants
+* [ ] Score Map Tags
+* [ ] Adapt to TapTap International Version
 * [ ] ...
 
 ---
