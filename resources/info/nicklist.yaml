@@ -482,6 +482,7 @@ KhronostasisKatharsis.Halv:
 SnowDesert.WyvernP:
   - 雪沙漠
   - 雪漠
+  - sd
 Burn.NceS:
   - 烤全鸭
   - 考全押
@@ -491,6 +492,7 @@ Burn.NceS:
   - 烧全鸭
   - bfd
   - 燃烧
+  - 🚫🚬
   - 卖火柴的小女孩
   - 卖核弹的小女孩
 Aleph0.LeaF:
@@ -537,6 +539,7 @@ CROSSSOUL.HyuNfeatSyepias:
   - 魂穿
   - 穿魂
   - 穿越灵魂
+  - 十字架
   - 十字路口
   - †
   - 无极的纵连遗产
@@ -672,6 +675,7 @@ Concvssion.Halv:
   - Jinb
   - 叙利亚圣诞节
   - 铃儿响叮当
+  - jb
   - Jinguru Beru
 TimetoNightSkyfeatLeeYuJin.HyuNKLYDIX:
   - 萨克斯
@@ -819,6 +823,7 @@ DropIt.Asuka:
   - 打碟
   - 丢下它
   - 放下
+  - di
 インフェルノシティ.Ponchifeatはぁち:
   - 地狱城市
   - 地狱之城
@@ -927,6 +932,7 @@ FinalStep.Lime:
   - 最后一步
   - Final Step
   - 终步
+  - fs
 華灯爱.闫东炜:
   - 华灯爱
 Doppelganger.LeaF:
@@ -1253,6 +1259,7 @@ NextTime.SaMZIng:
   - 再会
   - 下次一定
   - 下一次
+  - nt
 AnotherRound.JustinDai:
   - 街头青年
   - ar
@@ -1870,12 +1877,14 @@ QZKagoRequiem.tpazolite:
   - Ain Soph Aur
   - 无限光
   - 无限之光
+  - 贤者时间
   - ASA
   - 角边角
 SolaggyfeatUzumaki.ShrimpCatsはぁち後藤涼輔:
   - SL
   - so laggy
   - 太卡了
+  - 小情侣
 BANGINGSTRIKE.DewPleiades:
   - 斑鸠
   - bast
@@ -1909,15 +1918,18 @@ Archidoxen.Se_IRA:
   - 元义
   - acdx
 Hydra.JamesLandinoXAkiraComplex:
-  - 放送中
   - 海德拉
   - 九头蛇
+  - 长蛇座
+  - 海爪
+  - 放送中
 TheWholeRest.KIVΛ:
   - twr
   - 整个休息
   - 整休
   - 整修
   - 全休止符
+  - 全部安宁
 Cristalisia.onoken:
   - 水晶圣歌
   - 核艺味
