@@ -1,7 +1,7 @@
 /**
  * @typedef {string & { readonly brand: unique symbol }} idString 曲目id
  * @typedef {string & { readonly brand: unique symbol }} songString 曲目名称
- * @typedef {string & { readonly brand: unique symbol }} phigorsToken phigrosToken
+ * @typedef {string & { readonly brand: unique symbol }} phigrosToken phigrosToken
  * @typedef {string & { readonly brand: unique symbol }} apiToken apiToken
  * @typedef {string & { readonly brand: unique symbol }} apiId apiId
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT'} levelKind 有效难度分级
@@ -88,6 +88,7 @@
  * @typedef {'HistoryScoreNum'} HistoryScoreNum 历史成绩展示数量
  * @typedef {'listScoreMaxNum'} listScoreMaxNum /list 最大数量
  * 系统设置
+ * @typedef {'defaultGlobal'} defaultGlobal 默认使用国际服
  * @typedef {'watchInfoPath'} watchInfoPath 监听信息文件
  * @typedef {'allowComment'} allowComment 曲目评论
  * @typedef {'allowChartTag'} allowChartTag 曲目标签
@@ -135,6 +136,7 @@
  * |HistoryScoreDate
  * |HistoryScoreNum
  * |listScoreMaxNum
+ * |defaultGlobal
  * |watchInfoPath
  * |allowComment
  * |allowChartTag
@@ -256,6 +258,7 @@
  * 
  * @typedef {object} oriSave
  * @property {phigrosToken} session
+ * @property {boolean} global
  * @property {saveInfo} saveInfo
  * @property {string} saveUrl
  * @property {number} Recordver

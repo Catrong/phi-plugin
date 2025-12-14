@@ -82,10 +82,6 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    label: '',
-                    component: 'Divider'
-                },
-                {
                     field: 'renderNum',
                     label: '并行渲染数量',
                     bottomHelpMessage: '并行数量越多，占用的资源越多，建议谨慎修改，修改后重启生效',
@@ -96,6 +92,10 @@ export function supportGuoba() {
                         max: 10,
                         placeholder: '请输入并行渲染数量',
                     },
+                },
+                {
+                    label: '',
+                    component: 'Divider'
                 },
                 {
                     field: 'commentsAPage',
@@ -188,6 +188,12 @@ export function supportGuoba() {
                 {
                     label: '系统设置',
                     component: 'SOFT_GROUP_BEGIN'
+                },
+                {
+                    field: 'defaultGlobal',
+                    label: '默认使用国际服',
+                    bottomHelpMessage: '开启后默认使用国际服查询，关闭后默认使用国服查询',
+                    component: 'Switch',
                 },
                 {
                     field: 'onLinePhiIllUrl',

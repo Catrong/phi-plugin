@@ -34,6 +34,9 @@ listScoreMaxNum: 180
 
 #  ************ 【系统设置】 *************
 
+#  默认使用国际服
+defaultGlobal: false
+
 #  是否监听信息文件变化，如遇监听文件超限请尝试关闭
 watchInfoPath: false
 
@@ -131,3 +134,4 @@ GuessTipsAnsTime: 30
 #  ************ 【其他设置】 *************
 #  认证 Token
 VikaToken: ""
+

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.9.?
+
+* 修复临时文件清理
+* /x30 /fc30
+* /sessionToken 忽略大小写
+* /cnbind /gbbind 绑定国服/国际服
+
 ## 0.9.9.4
 
 * /score 排行榜（仅开启API后有效）
