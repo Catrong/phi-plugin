@@ -29,7 +29,7 @@ export class phisstk extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(绑定|bind).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(cn|gb)?(绑定|bind).*$`,
                     fnc: 'bind'
                 },
                 {
@@ -45,7 +45,7 @@ export class phisstk extends plugin {
                     fnc: 'clean'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(sessionToken)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(?i:sessionToken)$`,
                     fnc: 'getSstk'
                 }
             ]
@@ -60,7 +60,10 @@ export class phisstk extends plugin {
             return false
         }
 
-        let sessionToken = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
+        let sessionToken = e.msg.replace(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
+        const useWhich = e.msg.match(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/)[2]
+
+        let global = useWhich ? useWhich === 'gb' : Config.getUserCfg('config', 'defaultGlobal');
 
         let localPhigrosToken = await getSave.get_user_token(e.user_id)
 
@@ -212,7 +215,7 @@ export class phisstk extends plugin {
 
 
         try {
-            let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken)
+            let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken, global)
             let history = await getSave.getHistory(e.user_id)
             await build(e, updateData, history)
         } catch (error) {
@@ -381,7 +384,7 @@ export class phisstk extends plugin {
             return true
         }
 
-        send.send_with_At(e, `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)}\nsessionToken: ${save.session}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}`)
+        send.send_with_At(e, `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)}\nsessionToken: ${await getSave.get_user_token(e.user_id)}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}`)
 
     }
 
