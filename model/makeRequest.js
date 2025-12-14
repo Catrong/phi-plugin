@@ -207,7 +207,7 @@ export default class makeRequest {
 
     /**
      * 绑定平台账号与用户Token
-     * @param {baseAu} params 
+     * @param {baseAu & {isGlobal?: boolean}} params 
      * @returns {Promise<BindSuccessResponse>}
      */
     static async bind(params) {

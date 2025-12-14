@@ -32,11 +32,11 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(b\\s*[0-9]+|rks|pgr).*$`, 'i'),
+                    reg:`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)((b|B)\\s*[0-9]+|rks|pgr|RKS|PGR).*$`,
                     fnc: 'b19'
                 },
                 {
-                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|x|fc)\\s*[0-9]+.*$`, 'i'),
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|x|fc|P|X|FC)\\s*[0-9]+.*$`,
                     fnc: 'p30'
                 },
                 {
@@ -860,7 +860,7 @@ async function getScore(song, e, args = {}) {
                 item.gameuser.challengeMode = Math.floor(item.gameuser.challengeModeRank / 100);
                 item.gameuser.challengeModeRank = item.gameuser.challengeModeRank % 100;
                 item.gameuser.avatar = getInfo.idgetavatar(item.gameuser.avatar);
-                item.record.Rating = fCompute.rate(item.record.score, 1e6);
+                item.record.Rating = fCompute.rate(item.record.score, 1e6, item.record.fc);
                 item.record.updated_at = fCompute.date_to_string(item.record.updated_at);
                 if (item.index == scoreRanklist.userRank) {
                     item.isUser = true;

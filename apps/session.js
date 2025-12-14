@@ -16,7 +16,7 @@ import getUpdateSave from '../model/getUpdateSave.js'
 import getSaveFromApi from '../model/getSaveFromApi.js'
 import saveHistory from '../model/class/saveHistory.js'
 import getNotes from '../model/getNotes.js'
-import {APII18NCN} from '../model/constNum.js'
+import { APII18NCN } from '../model/constNum.js'
 
 const apiMsg = `\n请注意，您尚未设置API Token！\n指令格式：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
 
@@ -63,7 +63,7 @@ export class phisstk extends plugin {
         let sessionToken = e.msg.replace(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
         const useWhich = e.msg.match(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/)[2]
 
-        let global = useWhich ? useWhich === 'gb' : Config.getUserCfg('config', 'defaultGlobal');
+        let isGlobal = useWhich ? useWhich === 'gb' : Config.getUserCfg('config', 'defaultGlobal');
 
         let localPhigrosToken = await getSave.get_user_token(e.user_id)
 
@@ -187,7 +187,7 @@ export class phisstk extends plugin {
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
 
             try {
-                let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
+                let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken, isGlobal })
                 if (result?.data?.internal_id) {
                     let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
                     if (!result.data.have_api_token) {
@@ -215,7 +215,7 @@ export class phisstk extends plugin {
 
 
         try {
-            let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken, global)
+            let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken, isGlobal)
             let history = await getSave.getHistory(e.user_id)
             await build(e, updateData, history)
         } catch (error) {

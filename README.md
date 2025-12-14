@@ -118,7 +118,7 @@ pnpm install -P
 | **功能名称** | **功能说明**
 | :- | :-
 | `#phi帮助` | 获取帮助
-| `#phi (bind\|绑定)xxx` | 绑定sessionToken
+| `#phi (cn\|gb)?(bind\|绑定)xxx` | 绑定sessionToken，支持国服/国际服，默认为国服
 | `#phi (unbind\|解绑)` | 删除sessionToken和存档记录
 | `#phi clean` | 删除所有记录
 | `#phi (update\|更新存档)` | 更新存档

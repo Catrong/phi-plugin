@@ -12,6 +12,8 @@ export default class Save {
      */
     constructor(data, ignore = false) {
         this.session = data.session
+        /**是否是国际版 */
+        this.global = data.global
         this.apiId = data.apiId
         this.saveInfo = {
             /**账户创建时间 2022-09-03T10:21:48.613Z */

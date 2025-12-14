@@ -75,9 +75,9 @@ export default new class getInfo {
          * @description 头像id
          */
         let csv_avatar = await readFile.FileReader(path.join(infoPath, 'avatar.csv'))
-        this.avatarid = {}
+        this.avatarid = []
         for (let i in csv_avatar) {
-            this.avatarid[csv_avatar[i].id] = csv_avatar[i].id
+            this.avatarid.push(csv_avatar[i].id)
         }
 
         /**
@@ -598,8 +598,8 @@ export default new class getInfo {
      * @returns file name
      */
     idgetavatar(id) {
-        if (this.avatarid[id]) {
-            return this.avatarid[id]
+        if (this.avatarid.includes(id)) {
+            return id
         } else {
             return 'Introduction'
         }

@@ -86,7 +86,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | **Command** | **Description** |
 | :- | :- |
 | `#phi help` | Show help |
-| `#phi (bind\|bind)xxx` | Bind sessionToken |
+| `#phi (cn\|gb)?(bind\|bind)xxx` | Bind sessionToken (supports CN/Global, default is CN) |
 | `#phi (unbind\|unbind)` | Remove sessionToken & records |
 | `#phi clean` | Delete all records |
 | `#phi (update\|update)` | Update save data |

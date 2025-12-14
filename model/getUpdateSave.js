@@ -36,10 +36,17 @@ export default class getUpdateSave {
         }
     }
 
-    static async getNewSaveFromLocal(e, token) {
+    /**
+     * 
+     * @param {*} e e
+     * @param {phigrosToken} token 
+     * @param {boolean} [global] 是否是国际服
+     * @returns 
+     */
+    static async getNewSaveFromLocal(e, token, global = undefined) {
         let old = await getSave.getSave(e.user_id)
         token = token || old.session
-        let User = new PhigrosUser(token)
+        let User = new PhigrosUser(token, global || old?.global);
         try {
             let save_info = await User.getSaveInfo()
             if (old && old.saveInfo.modifiedAt.iso.getTime() == new Date(save_info.modifiedAt.iso).getTime()) {
