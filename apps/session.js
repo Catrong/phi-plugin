@@ -63,6 +63,7 @@ export class phisstk extends plugin {
         let sessionToken = e.msg.replace(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
         const useWhich = e.msg.match(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/)[2]
 
+        /** @type {boolean} */
         let isGlobal = useWhich ? useWhich === 'gb' : Config.getUserCfg('config', 'defaultGlobal');
 
         let localPhigrosToken = await getSave.get_user_token(e.user_id)
@@ -123,7 +124,7 @@ export class phisstk extends plugin {
                 return
             }
 
-            let request = await getQRcode.getRequest();
+            let request = await getQRcode.getRequest(isGlobal);
             let qrCodeMsg;
             if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
                 qrCodeMsg = await send.send_with_At(e, [`请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
@@ -141,7 +142,7 @@ export class phisstk extends plugin {
             await redis.set(timeOutKey, '1', { EX: QRCodetimeout })
 
             while (new Date() - t1 < QRCodetimeout * 1000) {
-                result = await getQRcode.checkQRCodeResult(request);
+                result = await getQRcode.checkQRCodeResult(request, isGlobal);
                 if (!flag) {
                     /**存储二维码链接，生命为3秒，以便在代码意外被终止再次触发时不会阻塞正常绑定 */
                     await redis.set(key, request.data.qrcode_url, { EX: 3 })
@@ -170,7 +171,7 @@ export class phisstk extends plugin {
                 return true
             }
             try {
-                sessionToken = await getQRcode.getSessionToken(result);
+                sessionToken = await getQRcode.getSessionToken(result, isGlobal);
             } catch (err) {
                 logger.error(err)
                 send.send_with_At(e, `获取sessionToken失败QAQ！请确认您的Phigros已登录TapTap账号并同步！\n错误信息：${err}`)
