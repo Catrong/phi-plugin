@@ -45,7 +45,7 @@ export class phisstk extends plugin {
                     fnc: 'clean'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(?i:sessionToken)$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)session[tT]oken$`,
                     fnc: 'getSstk'
                 }
             ]
