@@ -38,6 +38,18 @@ export default class getUpdateSave {
 
     /**
      * 
+     * @param {apiId} uid 
+     * @returns {Promise<Save>}
+     */
+    static async getUIDSaveFromApi(uid) {
+        let newSave = await makeRequest.getCloudSaves({ api_user_id: uid });
+        let result = new Save(newSave)
+        await result.init()
+        return result
+    }
+
+    /**
+     * 
      * @param {*} e e
      * @param {phigrosToken} token 
      * @param {boolean} [global] 是否是国际服

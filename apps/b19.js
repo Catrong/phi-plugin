@@ -15,6 +15,7 @@ import getBanGroup from '../model/getBanGroup.js';
 import getSaveFromApi from '../model/getSaveFromApi.js';
 import makeRequest from '../model/makeRequest.js';
 import makeRequestFnc from '../model/makeRequestFnc.js';
+import getUpdateSave from '../model/getUpdateSave.js';
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
@@ -32,7 +33,7 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg:`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)((b|B)\\s*[0-9]+|rks|pgr|RKS|PGR).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)((b|B)\\s*[0-9]+|rks|pgr|RKS|PGR).*$`,
                     fnc: 'b19'
                 },
                 {
@@ -73,10 +74,27 @@ export class phib19 extends plugin {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
+        let save;
+        let msg = e.msg
 
-        let save = await send.getsave_result(e)
-        if (!save) {
-            return true
+        let askOtherId = msg.match(/-id\s+([0-9]+)/i)
+        msg = msg.replace(askOtherId?.[0] || '', '')
+
+        if (askOtherId && Config.getUserCfg('config', 'openPhiPluginApi')) {
+            askOtherId = askOtherId[1]
+
+            try {
+                save = await getUpdateSave.getUIDSaveFromApi(askOtherId);
+            } catch (err) {
+                send.send_with_At(e, `获取用户 ${askOtherId} 的存档失败！请确认该用户公开了存档且ID正确喵！\n错误信息：${err}`);
+                return true;
+            }
+        } else {
+            save = await send.getsave_result(e)
+            if (!save) {
+                return true
+            }
+
         }
 
         let err = save.checkNoInfo()
@@ -96,7 +114,7 @@ export class phib19 extends plugin {
         nnum = Math.max(nnum, 33)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
-        let bksong = e.msg.replace(/^.*?(b|rks|pgr)[0-9]*\s*/g, '')
+        let bksong = msg.replace(/^.*?(b|rks|pgr)[0-9]*\s*/g, '')
 
         if (bksong) {
             let tem = getInfo.fuzzysongsnick(bksong)[0]
