@@ -41,5 +41,8 @@
     "原神",
     "Yunzai-Bot",
     "Genshin"
-  ]
+  ],
+  "devDependencies": {
+    "html-entities": "^2.6.0"
+  }
 }
