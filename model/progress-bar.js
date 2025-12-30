@@ -1,15 +1,29 @@
 import { stdout as slog } from 'single-line-log';
 
 export default class ProgressBar {
+    /**
+     * 
+     * @param {string} [dsc] 
+     * @param {number} [bar_length] 
+     */
     constructor(dsc, bar_length) {
-        /**进度条的描述信息 */
+        /**
+         * 进度条的描述信息
+         * @type {string}
+         */
         this.dsc = dsc || '进度';
-        /**进度条的长度(单位：字符)，默认设为 25 */
+        /**
+         * 进度条的长度(单位：字符)，默认设为 25
+         * @type {number}
+         */
         this.length = bar_length || 25;
     }
 
-    // 刷新进度条图案、文字的方法
-    render = function (opts) {
+    /**
+     * 刷新进度条图案、文字的方法
+     * @param {{completed: number, total: number}} opts 
+     */
+    render (opts) {
         var cell_num = Math.floor((opts.completed / opts.total) * this.length);             // 计算需要多少个 █ 符号来拼凑图案
 
         // 拼接黑色条

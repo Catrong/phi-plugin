@@ -43,6 +43,8 @@
     "Genshin"
   ],
   "devDependencies": {
+    "@types/lodash": "^4.17.21",
+    "@types/single-line-log": "^1.1.2",
     "html-entities": "^2.6.0"
   }
 }

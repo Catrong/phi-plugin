@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/插件版本-0.9.9.4-9cf?style=flat-square)
+![version](https://img.shields.io/badge/插件版本-1.0.0-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.18.1-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Miao-Yunzai)
@@ -141,7 +141,8 @@ pnpm install -P
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名
 | `#phi chart <曲名> <难度>` | 查询phigros中某一谱面的详细信息
-| `#phi (addtag\|subtag\|retag) <曲名> <难度> <标签>` | 对某个标签赞成、反对或撤销表态，难度默认为IN
+| `#phi tag <曲名> <难度> <标签>` | 查看谱面标签，标签可选项见回复说明，难度默认为IN
+| `#phi settag <曲名> <难度> <标签>` | 给谱面打标签，推荐先使用/tag查询标签列表，难度默认为IN
 | `#phi (comment\|cmt\|评论\|评价) <曲名> <难度?>(换行)<内容>` | 评论曲目，难度默认为IN
 | `#phi recmt <评论ID>` | 查看并确认是否删评，仅发送者和主人权限，需要二次确认
 | `#phi mycmt` | 查看自己的云端评论
@@ -200,19 +201,26 @@ pnpm install -P
 | dan | 段位认证相关 | /dan /danupdate
 </details>
 
-## 以下为正在内部测试的API功能，仅开启对应设置项且填写正确的API后有效
+## API功能正式开启测试
+
+可在设置项手动设置打开与关闭，开启后，将自动同步用户在Phi-Plugin系列应用（网页、云崽，暂不含koishi）使用记录与历史成绩到API端，且部分功能需要开启API后才能使用
 
 | 功能名称 | 功能说明
 | :- | :-
 | `#phi (bind\|绑定) <userId>` | 开启查分API可用，绑定API账号
-| `#phi setApiToken <token>` | 第一次设置API Token
-| `#phi setApiToken（换行）<旧Token>（换行）<新Token>` | 修改API Token
+| `#phi setApiToken <token>` | 设置API Token
 | `#phi tokenList` | 获取当前绑定的平台列表
-| `#phi tokenManage (delete\|rmau) <平台序号> (-f)?` | 删除绑定的平台，-f 跳过确认
-| `#phi auth <api Token>` | 验证API Token 获取管理账户权限
+| `#phi tokenManage (delete) <平台序号> (-f)?` | 删除绑定的平台，-f 跳过确认
+| `#phi auth <api Token>` | 通过API Token 获取 sessionToken
 | `#phi clearApiData` | 清除API数据
 | `#phi updateHistory` | 将BOT端的历史成绩更新到API端
 | `#phi updateUserToken` | **主人命令** 上传当前BOT端的用户Token到API端
+
+#### 关于权限的详细说明：
+
+仅通过查分ID即可绑定与获取存档，首次使用`sessionToken`绑定时会将`API Token`设置为`sessionToken`，且用户绑定时若提供`sessionToken`，bot端本地会保存。
+
+
 
 ---
 

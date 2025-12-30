@@ -1,18 +1,21 @@
-import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
-import get from '../model/getdata.js'
 import picmodle from '../model/picmodle.js'
 import getFile from '../model/getFile.js'
 import path from 'path'
 import { infoPath } from '../model/path.js'
 import getBanGroup from '../model/getBanGroup.js';
+import phiPluginBase from '../components/baseClass.js';
+import getNotes from '../model/getNotes.js'
+import getInfo from '../model/getInfo.js'
+
+/**@import {botEvent} from '../components/baseClass.js' */
 
 const helpGroup = await getFile.FileReader(path.join(infoPath, 'help.json'))
 const apiHelp = await getFile.FileReader(path.join(infoPath, 'help', 'api.json'))
 
 
-export class phihelp extends plugin {
+export class phihelp extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-help',
@@ -37,6 +40,12 @@ export class phihelp extends plugin {
         })
 
     }
+
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async help(e) {
 
         if (await getBanGroup.get(e, 'help')) {
@@ -46,17 +55,22 @@ export class phihelp extends plugin {
 
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
-        let pluginData = await get.getpluginData(e.user_id)
+        let pluginData = await getNotes.getNotesData(e.user_id)
         e.reply(await picmodle.help(e, {
             helpGroup: helpGroup,
             cmdHead: head || null,
             isMaster: e.isMaster,
-            background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
-            theme: pluginData?.plugin_data?.theme || 'star'
+            background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
+            theme: pluginData?.theme || 'star'
         }), true)
         return true
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async tkhelp(e) {
 
         if (await getBanGroup.get(e, 'tkhelp')) {
@@ -67,6 +81,11 @@ export class phihelp extends plugin {
         send.send_with_At(e, `sessionToken有关帮助：\n【推荐】：扫码登录TapTap获取token\n指令：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n【基础方法】https://www.kdocs.cn/l/catqcMM9UR5Y\n绑定sessionToken指令：\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async apihelp(e) {
 
         // if (await getBanGroup.get(e, 'apihelp')) {
@@ -80,13 +99,13 @@ export class phihelp extends plugin {
 
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
-        let pluginData = await get.getpluginData(e.user_id)
+        let pluginData = await getNotes.getNotesData(e.user_id)
         e.reply(await picmodle.help(e, {
             helpGroup: apiHelp,
             cmdHead: head || null,
             isMaster: e.isMaster,
-            background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
-            theme: pluginData?.plugin_data?.theme || 'star'
+            background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
+            theme: pluginData?.theme || 'star'
         }), true)
     }
 }

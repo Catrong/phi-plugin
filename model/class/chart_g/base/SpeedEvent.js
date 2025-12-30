@@ -1,14 +1,18 @@
 export default class SpeedEvent {
+    /**
+     * 
+     * @param {any} data 
+     */
     constructor(data) {
         /**
          * 事件开始时刻
-         * @type {T}
+         * @type {chartTick}
          */
         this.startTime = data.startTime
 
         /**
          * 事件结束时刻
-         * @type {T}
+         * @type {chartTick}
          */
         this.endTime = data.endTime
 

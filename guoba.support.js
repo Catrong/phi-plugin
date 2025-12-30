@@ -255,12 +255,12 @@ export function supportGuoba() {
                     bottomHelpMessage: '是否开启曲目评论功能，该功能目前暂无敏感词校验',
                     component: 'Switch',
                 },
-                {
-                    field: 'allowChartTag',
-                    label: '谱面标签',
-                    bottomHelpMessage: '是否开启谱面标签功能，该功能目前暂无敏感词校验',
-                    component: 'Switch',
-                },
+                // {
+                //     field: 'allowChartTag',
+                //     label: '谱面标签',
+                //     bottomHelpMessage: '是否开启谱面标签功能，该功能目前暂无敏感词校验',
+                //     component: 'Switch',
+                // },
                 {
                     field: 'autoPullPhiIll',
                     label: '自动更新曲绘',
@@ -306,14 +306,10 @@ export function supportGuoba() {
                     component: 'Switch',
                 },
                 {
-                    field: 'phiPluginApiUrl',
-                    label: 'API地址',
-                    bottomHelpMessage: 'Phigros联合查分API地址',
-                    component: 'Input',
-                    required: false,
-                    componentProps: {
-                        placeholder: '请输入API地址',
-                    },
+                    field: 'autoOpenApi',
+                    label: '自动开启API',
+                    bottomHelpMessage: '检测API状态成功后，是否自动开启API',
+                    component: 'Switch',
                 },
                 {
                     field: 'mutiNickWaitTimeOut',
@@ -539,7 +535,7 @@ export function supportGuoba() {
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {
                 const defset = Config.getdefSet('config')
-
+                /**@type {Record<configName, any> | {}} */
                 let config = {}
                 for (var i in defset) {
                     config[i] = Config.getUserCfg('config', i)

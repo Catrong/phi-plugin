@@ -1,6 +1,4 @@
-import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
-import get from '../model/getdata.js'
 import send from '../model/send.js'
 import picmodle from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
@@ -9,12 +7,15 @@ import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
 import LevelRecordInfo from '../model/class/LevelRecordInfo.js'
 import getSaveFromApi from '../model/getSaveFromApi.js'
+import phiPluginBase from '../components/baseClass.js'
+import logger from '../components/Logger.js'
+import { Level } from '../model/constNum.js'
+import getNotes from '../model/getNotes.js'
 
+/**@import {botEvent} from '../components/baseClass.js' */
 
-let Level = ['EZ', 'HD', 'IN', 'AT']
-let illlist = get.illlist
-
-export class phiuser extends plugin {
+const illList = getInfo.illlist
+export class phiuser extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-user',
@@ -43,7 +44,10 @@ export class phiuser extends plugin {
 
     }
 
-    /**查询data */
+    /**
+     * 查询data
+     * @param {botEvent} e
+     */
     async data(e) {
 
         if (await getBanGroup.get(e, 'data')) {
@@ -51,7 +55,7 @@ export class phiuser extends plugin {
             return false
         }
 
-        let User = await get.getsave(e.user_id)
+        let User = await getSave.getSave(e.user_id);
         if (User) {
             if (User.gameProgress) {
                 let data = User.gameProgress.money
@@ -65,6 +69,10 @@ export class phiuser extends plugin {
         return true
     }
 
+    /**
+     * 
+     * @param {botEvent} e
+     */
     async info(e) {
 
         if (await getBanGroup.get(e, 'info')) {
@@ -74,15 +82,15 @@ export class phiuser extends plugin {
         /**背景 */
         let bksong = e.msg.replace(/^.*(info)[1-2]?\s*/g, '')
         if (bksong) {
-            let tem = get.fuzzysongsnick(bksong)[0]
+            let tem = getInfo.fuzzysongsnick(bksong)[0]
             if (tem) {
-                bksong = get.getill(tem)
+                bksong = getInfo.getill(tem)
             } else {
-                bksong = undefined
+                bksong = ''
             }
         }
         if (!bksong) {
-            bksong = get.getill(illlist[randint(0, illlist.length - 1)], 'blur')
+            bksong = getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)], 'blur')
         }
 
         let save = await send.getsave_result(e, 1.0)
@@ -101,7 +109,7 @@ export class phiuser extends plugin {
             logger.error(`未找到${save.gameuser.background}对应的曲绘！`)
         }
 
-        let dan = await get.getDan(e.user_id)
+        // let dan = await getInfo.getDan(e.user_id)
 
         let gameuser = {
             avatar: getInfo.idgetavatar(save.gameuser.avatar),
@@ -112,15 +120,20 @@ export class phiuser extends plugin {
             selfIntro: fCompute.convertRichText(save.gameuser.selfIntro),
             backgroundurl: userbackground,
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-            CLGMOD: dan?.Dan,
-            EX: dan?.EX,
+            // CLGMOD: dan?.Dan,
+            // EX: dan?.EX,
         }
 
         let user_data;
 
-        try {
-            user_data = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory']);
-        } catch (error) {
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            try {
+                user_data = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory']);
+            } catch (error) {
+                logger.info('通过phi-plugin API获取历史记录失败，改为本地存储获取')
+                user_data = await getSave.getHistory(e.user_id);
+            }
+        } else {
             user_data = await getSave.getHistory(e.user_id);
         }
 
@@ -225,8 +238,8 @@ export class phiuser extends plugin {
             data_history: data_history,
             rks_range: rks_range,
             data_range: data_range,
-            data_date: [fCompute.date_to_string(data_date[0]), fCompute.date_to_string(data_date[1])],
-            rks_date: [fCompute.date_to_string(rks_date[0]), fCompute.date_to_string(rks_date[1])],
+            data_date: [fCompute.formatDate(data_date[0]), fCompute.formatDate(data_date[1])],
+            rks_date: [fCompute.formatDate(rks_date[0]), fCompute.formatDate(rks_date[1])],
             acc_rks_data: acc_rks_data_,
             acc_rks_range: acc_rks_range,
             acc_rks_AccRange: acc_rks_AccRange_position,
@@ -236,9 +249,13 @@ export class phiuser extends plugin {
         // console.info(acc_rks_AccRange_position)
 
         let kind = Number(e.msg.replace(/\/.*info/g, ''))
-        send.send_with_At(e, await get.getuser_info(e, data, kind))
+        send.send_with_At(e, await picmodle.user_info(e, data, kind))
     }
 
+    /**
+     * 
+     * @param {botEvent} e
+     */
     async lvscore(e) {
 
         if (await getBanGroup.get(e, 'lvscore')) {
@@ -274,7 +291,7 @@ export class phiuser extends plugin {
         // match_range(msg, range)
 
         if (msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)) {
-            msg = msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)[0]
+            msg = msg.match(/[0-9]+(.[0-9]+)?(\s*[-～~]\s*[0-9]+(.[0-9]+)?)?/g)?.[0] || ''
             if (msg.match(/[-～~]/g)) {
 
                 range = msg.split(/\s*[-～~]\s*/g)
@@ -316,6 +333,7 @@ export class phiuser extends plugin {
             B: 0,
             C: 0,
             F: 0,
+            NEW: 0,
         }
         let totRank = {
             AT: 0,
@@ -334,11 +352,13 @@ export class phiuser extends plugin {
         let Record = save.gameRecord
 
 
-        for (let song in get.ori_info) {
-            let info = get.ori_info[song]
+        for (let id of fCompute.objectKeys(getInfo.ori_info)) {
+            let info = getInfo.ori_info[id]
             let vis = false
-            for (let i in info.chart) {
-                let difficulty = info['chart'][i].difficulty
+            if (!info.chart) continue
+            for (let i of Level) {
+                if (!info.chart[i]) continue
+                let difficulty = info.chart[i].difficulty
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[Level.indexOf(i)]) {
                     ++totcharts
                     ++totRank[i]
@@ -351,19 +371,21 @@ export class phiuser extends plugin {
         }
 
 
-        for (let id in Record) {
-            let info = get.info(get.idgetsong(id), true)
+        for (let id of fCompute.objectKeys(Record)) {
+            let info = getInfo.info(id, true)
             let record = Record[id]
             let vis = false
+            if (!info?.chart) continue
             for (let lv in [0, 1, 2, 3]) {
-                if (!info.chart[Level[lv]]) continue
-                let difficulty = info.chart[Level[lv]].difficulty
+                const levelName = Level[lv];
+                if (!info.chart[levelName]) continue
+                let difficulty = info.chart[levelName].difficulty
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
 
                     if (!record[lv]) continue
 
                     ++unlockcharts
-                    ++unlockRank[Level[lv]]
+                    ++unlockRank[levelName]
 
                     if (!vis) {
                         ++unlocksongs
@@ -432,7 +454,7 @@ export class phiuser extends plugin {
             tot_fc: totfc,
             tot_phi: totphi,
             tot_acc: (totacc / totcharts),
-            date: fCompute.date_to_string(save.saveInfo.modifiedAt.iso),
+            date: fCompute.formatDate(save.saveInfo.modifiedAt.iso),
             progress_phi: Number((totphi / totcharts * 100).toFixed(2)),
             progress_fc: Number((totfc / totcharts * 100).toFixed(2)),
             avatar: getInfo.idgetavatar(save.gameuser.avatar),
@@ -440,7 +462,7 @@ export class phiuser extends plugin {
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-            background: get.getill(illlist[randint(0, illlist.length - 1)], 'blur'),
+            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)], 'blur'),
         }
 
         // let remsg = ''
@@ -453,9 +475,13 @@ export class phiuser extends plugin {
         // remsg += `φ:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`
 
 
-        send.send_with_At(e, await get.getlvsco(e, data))
+        send.send_with_At(e, await picmodle.lvsco(e, data))
     }
 
+    /**
+     * 
+     * @param {botEvent} e
+     */
     async list(e) {
 
         if (await getBanGroup.get(e, 'list')) {
@@ -474,7 +500,7 @@ export class phiuser extends plugin {
         const acc_range = [0, 100];
 
         /** @type {string} */
-        let msg = e.msg.replace(/^[#/](.*?)list(\s*)/, "")
+        let msg = e.msg.replace(/^[#/](.*?)list/, "")
 
         /**EZ HD IN AT */
         let isask = [true, true, true, true]
@@ -500,57 +526,60 @@ export class phiuser extends plugin {
             if (msg.includes('IN')) { isask[2] = true }
             if (msg.includes('AT')) { isask[3] = true }
         }
-        msg = msg.replace(/(list|AT|IN|HD|EZ)*/g, "")
+        msg = msg.replace(/(list|AT|IN|HD|EZ)*/g, "");
 
-        let scoreAsk = { NEW: true, F: true, C: true, B: true, A: true, S: true, V: true, FC: true, PHI: true }
-
-        if (msg.includes(' NEW') || msg.includes(' F') || msg.includes(' C') || msg.includes(' B') || msg.includes(' A') || msg.includes(' S') || msg.includes(' V') || msg.includes(' FC') || msg.includes(' PHI')) {
-            scoreAsk = { NEW: false, F: false, C: false, B: false, A: false, S: false, V: false, FC: false, PHI: false }
-            let rating = ['NEW', 'F', 'C', 'B', 'A', 'S', 'V', 'FC', 'PHI']
-            for (let i in rating) {
-                if (msg.includes(` ${rating[i]}`)) { scoreAsk[rating[i]] = true }
+        let scoreAsk = { NEW: true, F: true, C: true, B: true, A: true, S: true, V: true, FC: true, PHI: true };
+        const selectedTags = msg.match(/\b(?:NEW|F|C|B|A|S|V|FC|PHI|AP)\b/g);
+        if (selectedTags) {
+            scoreAsk = { NEW: false, F: false, C: false, B: false, A: false, S: false, V: false, FC: false, PHI: false };
+            for (const tag of selectedTags) {
+                const key = tag === 'AP' ? 'PHI' : tag;
+                // @ts-ignore
+                scoreAsk[key] = true;
             }
         }
-        if (msg.includes(` AP`)) { scoreAsk.PHI = true }
-        msg = msg.replace(/(NEW|F|C|B|A|S|V|FC|PHI|AP)*/g, "")
+        msg = msg.replace(/\b(?:NEW|F|C|B|A|S|V|FC|PHI|AP)\b/g, "");
 
 
         let Record = save.gameRecord
 
         let data = []
 
-        for (let id in Record) {
-            let song = get.idgetsong(id)
+        for (let id of fCompute.objectKeys(Record)) {
+            let song = getInfo.idgetsong(id)
             if (!song) {
                 logger.warn('[phi-plugin]', id, '曲目无信息')
                 continue
             }
-            let info = get.info(song, true)
+            let info = getInfo.info(id, true)
 
-            /** @type {LevelRecordInfo[]} */
             let record = Record[id]
 
-            for (let lv in [0, 1, 2, 3]) {
-                if (!info.chart[Level[lv]]) continue
-                let difficulty = info.chart[Level[lv]].difficulty
+            for (let lv of [0, 1, 2, 3]) {
+                const levelName = Level[lv];
+                if (!info?.chart[levelName]) continue
+                let difficulty = info.chart[levelName].difficulty
                 if (!(dif_range[0] <= difficulty && difficulty <= dif_range[1] && isask[lv]))
                     continue;
                 if (!record[lv]) {
                     if (!scoreAsk.NEW || acc_range[0] != 0)
                         continue;
                     else
+                        // @ts-ignore
                         record[lv] = {}
                 } else {
+                    // @ts-ignore
                     if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()])
                         continue;
                     if (!(acc_range[0] <= record[lv].acc && record[lv].acc <= acc_range[1]))
                         continue;
                 }
+                // @ts-ignore
                 record[lv].suggest = save.getSuggest(id, lv, 4, difficulty);
                 data.push({
                     ...record[lv],
                     ...info,
-                    illustration: get.getill(get.idgetsong(id), 'low'),
+                    illustration: getInfo.getill(id, 'low'),
                     difficulty: difficulty,
                     rank: Level[lv]
                 });
@@ -566,7 +595,7 @@ export class phiuser extends plugin {
             return (b.difficulty || 0) - (a.difficulty || 0)
         })
 
-        let plugin_data = get.getpluginData(e.user_id)
+        let plugin_data = await getNotes.getNotesData(e.user_id)
 
         //逻辑暂未实现
         let request = []
@@ -577,32 +606,19 @@ export class phiuser extends plugin {
         send.send_with_At(e, await picmodle.list(e, {
             head_title: "成绩筛选",
             song: data,
-            background: get.getill(illlist[randint(0, illlist.length - 1)]),
-            theme: plugin_data?.plugin_data?.theme || 'star',
+            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)]),
+            theme: plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.summary.updatedAt,
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            dan: await get.getDan(e.user_id),
+            // dan: await get.getDan(e.user_id),
             request: request
         }))
 
     }
 
-}
-
-/**进度条 */
-function progress_bar(value, length) {
-    let result = '['
-    for (let i = 1; i <= Number((value * length).toFixed(0)); ++i) {
-        result += '|'
-    }
-    for (let i = 1; i <= (length - Number((value * length).toFixed(0))); ++i) {
-        result += ' '
-    }
-    result += `] ${(value * 100).toFixed(2)}%`
-    return result
 }
 
 /**
@@ -633,13 +649,6 @@ function Rate(real_score, tot_score, fc) {
     } else {
         return 'F'
     }
-}
-
-//定义生成指定区间整数随机数的函数
-function randint(min, max) {
-    let range = max - min + 1
-    let randomOffset = Math.floor(Math.random() * range)
-    return (randomOffset + min) % range + min
 }
 
 

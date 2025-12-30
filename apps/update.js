@@ -1,4 +1,3 @@
-import plugin from "../../../lib/plugins/plugin.js";
 import { createRequire } from "module";
 import lodash from "lodash";
 import { Restart } from '../../other/restart.js'
@@ -7,6 +6,8 @@ import common from "../../../lib/common/common.js";
 import getInfo from "../model/getInfo.js";
 import { originalIllPath } from "../model/path.js";
 import fs from 'node:fs';
+import phiPluginBase from "../components/baseClass.js";
+import logger from "../components/Logger.js";
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
@@ -17,7 +18,7 @@ let uping = false;
 /**
  * 处理插件更新
  */
-export class phiupdate extends plugin {
+export class phiupdate extends phiPluginBase {
     constructor() {
         super({
             name: "phi-plugin更新",
@@ -154,7 +155,9 @@ export class phiupdate extends plugin {
         try {
             logAll = await execSync(cm, { encoding: "utf-8" });
         } catch (error) {
+            // @ts-ignore
             logger.error(error.toString());
+            // @ts-ignore
             this.reply(error.toString());
         }
 
@@ -167,6 +170,7 @@ export class phiupdate extends plugin {
 
         let log = [];
         for (let str of logAll) {
+            // @ts-ignore
             str = str.split("||");
             if (str[0] == this.oldCommitId) break;
             if (str[1].includes("Merge branch")) continue;
@@ -220,6 +224,7 @@ export class phiupdate extends plugin {
             time = await execSync(cm, { encoding: "utf-8" });
             time = lodash.trim(time);
         } catch (error) {
+            // @ts-ignore
             logger.error(error.toString());
             time = "获取时间失败";
         }
@@ -254,7 +259,7 @@ export class phiupdate extends plugin {
             await this.ill_clone()
         } else {
             /** 执行更新 */
-            await this.ill_runUpdate(isForce);
+            await this.ill_runUpdate();
         }
 
 
@@ -357,7 +362,6 @@ export class phiupdate extends plugin {
 
     /**
      * 获取phi-plugin-ill的更新日志
-     * @param {string} plugin 插件名称
      * @returns
      */
     async ill_getLog() {
@@ -367,7 +371,9 @@ export class phiupdate extends plugin {
         try {
             logAll = await execSync(cm, { encoding: "utf-8" });
         } catch (error) {
+            // @ts-ignore
             logger.error(error.toString());
+            // @ts-ignore
             this.reply(error.toString());
         }
 
@@ -377,6 +383,7 @@ export class phiupdate extends plugin {
 
         let log = [];
         for (let str of logAll) {
+            // @ts-ignore
             str = str.split("||");
             if (str[0] == this.oldCommitId) break;
             if (str[1].includes("Merge branch")) continue;
@@ -397,7 +404,6 @@ export class phiupdate extends plugin {
 
     /**
      * 获取上次提交的commitId
-     * @param {string} plugin 插件名称
      * @returns
      */
     async ill_getcommitId() {
@@ -411,7 +417,6 @@ export class phiupdate extends plugin {
 
     /**
      * 获取本次更新插件的最后一次提交时间
-     * @param {string} plugin 插件名称
      * @returns
      */
     async ill_getTime() {
@@ -422,6 +427,7 @@ export class phiupdate extends plugin {
             time = await execSync(cm, { encoding: "utf-8" });
             time = lodash.trim(time);
         } catch (error) {
+            // @ts-ignore
             logger.error(error.toString());
             time = "获取时间失败";
         }
@@ -440,12 +446,14 @@ export class phiupdate extends plugin {
         stdout = stdout.toString();
 
         if (errMsg.includes("Timed out")) {
+            // @ts-ignore
             let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
             await this.reply(msg + `\n连接超时：${remote}`);
             return;
         }
 
         if (/Failed to connect|unable to access/g.test(errMsg)) {
+            // @ts-ignore
             let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
             await this.reply(msg + `\n连接失败：${remote}`);
             return;
@@ -461,6 +469,7 @@ export class phiupdate extends plugin {
         }
 
         if (stdout.includes("CONFLICT")) {
+            // @ts-ignore
             await this.reply([
                 msg + "存在冲突\n",
                 errMsg,
@@ -470,6 +479,7 @@ export class phiupdate extends plugin {
             return;
         }
 
+        // @ts-ignore
         await this.reply([errMsg, stdout]);
     }
 

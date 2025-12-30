@@ -74,10 +74,10 @@ cmdhead: "phi"
 phigrousUpdateUrl: "https://phiupdateinfo.pmya.xyz/"
 
 #  是否启用Phigros联合查分API
-openPhiPluginApi: false
+openPhiPluginApi: true
 
-#  Phigros联合查分API地址
-phiPluginApiUrl: ""
+#  检测API状态成功后，是否自动开启API
+autoOpenApi: true
 
 #  输出测试日志
 debug: 0

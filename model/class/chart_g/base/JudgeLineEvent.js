@@ -1,20 +1,28 @@
 export class JudgeLineEvent {
+    /**
+     * 
+     * @param {any} data 
+     */
     constructor(data) {
         /**
          * 事件开始时刻
-         * @type {T}
+         * @type {chartTick}
          */
         this.startTime = data.startTime;
 
         /**
          * 事件结束时刻
-         * @type {T}
+         * @type {chartTick}
          */
         this.endTime = data.endTime;
     }
 }
 
 export class judgeLineMoveEvent extends JudgeLineEvent {
+    /**
+     * 
+     * @param {any} data 
+     */
     constructor(data) {
         super(data);
 
@@ -45,6 +53,10 @@ export class judgeLineMoveEvent extends JudgeLineEvent {
 }
 
 export class judgeLineRotateEvent extends JudgeLineEvent {
+    /**
+     * 
+     * @param {any} data 
+     */
     constructor(data) {
         super(data);
 
@@ -65,6 +77,10 @@ export class judgeLineRotateEvent extends JudgeLineEvent {
 }
 
 export class judgeLineDisappearEvent extends JudgeLineEvent {
+    /**
+     * 
+     * @param {any} data 
+     */
     constructor(data) {
         super(data);
 

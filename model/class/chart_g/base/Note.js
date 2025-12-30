@@ -1,4 +1,8 @@
 export default class Note {
+    /**
+     * 
+     * @param {any} data 
+     */
     constructor(data) {
         /** 1: tap,
          *  2: drag,
@@ -9,19 +13,19 @@ export default class Note {
 
         /**
          * 1 / 32 拍
-         * @type {T}
+         * @type {chartTick}
          */
         this.time = data.time;
 
         /** 
          * X坐标
-         * @type {X}
+         * @type {chartX}
          */
         this.positionX = data.positionX;
 
         /**
          * 长条时间 1 / 32 拍
-         * @type {T}
+         * @type {chartTick}
          */
         this.holdTime = data.holdTime;
 

@@ -15,7 +15,7 @@
             {
                 "title": "权限管理",
                 "eg": "",
-                "desc": "0.仅通过ID绑定，仅可以查分，不可以换绑、查看或操作绑定平台<br>1.通过phigrosToken绑定，可以换绑，可以查看绑定平台<br>2.验证过API Token后，可以解绑、降低指定平台权限（仅0、1权限等级）、删除账号"
+                "desc": "通过id绑定后仅能获取与查询，评论等功能需要绑定sessionToken或验证API token"
             }
         ]
     },
@@ -25,12 +25,12 @@
             {
                 "title": "/bind",
                 "eg": "/bind <userId>",
-                "desc": "绑定你的 sessionToken<br>eg1: /bind abcdefghijklmnopqrstuvwxy<br>eg2: /bind qrcode"
+                "desc": "绑定你的 userId<br>eg1: /bind 123456"
             },
             {
                 "title": "/unbind",
                 "eg": "/unbind",
-                "desc": "在 Bot 上删除储存的你的存档以及成绩记录并且解除云端对该账号的绑定"
+                "desc": "在 Bot 上删除储存的你的存档以及成绩记录并且解除云端账号对该平台的绑定"
             }
         ]
     },
@@ -39,13 +39,8 @@
         "list": [
             {
                 "title": "/setApiToken",
-                "eg": "/setApiToken <token>",
-                "desc": "设置初始API Token"
-            },
-            {
-                "title": "/setApiToken",
-                "eg": "/setApiToken（换行）<旧Token>（换行）<新Token>",
-                "desc": "修改API Token"
+                "eg": "/setApiToken <api Token>",
+                "desc": "设置初始API Token（API密码），用于管理账户<br>eg: /setApiToken xxxxxxxx"
             },
             {
                 "title": "/tkls",
@@ -81,7 +76,12 @@
             {
                 "title": "/updateUserToken",
                 "eg": "/updateUserToken",
-                "desc": "上传当前BOT端的用户Token到API端"
+                "desc": "上传当前BOT端的用户 sessionToken 到API端"
+            },
+            {
+                "title": "/updateComment",
+                "eg": "/updateComment",
+                "desc": "上传当前BOT端的用户评论到API端"
             }
         ]
     }

@@ -4,15 +4,96 @@ import path from 'path'
 import Config from '../components/Config.js'
 import SongsInfo from './class/SongsInfo.js'
 import fs from 'fs'
-import { Level, MAX_DIFFICULTY } from './constNum.js'
+import { allLevel, Level, MAX_DIFFICULTY } from './constNum.js'
 import chokidar from 'chokidar'
 import fCompute from './fCompute.js'
+import logger from '../components/Logger.js'
+import Chart from './class/Chart.js'
 
-/**
- * @import * from '../model/type/type.js'
- */
 
 export default new class getInfo {
+
+
+
+    /**
+     * @typedef {Object} updatedChartObject
+     * @property {number|number[]|undefined} tap
+     * @property {number|number[]|undefined} drag
+     * @property {number|number[]|undefined} hold
+     * @property {number|number[]|undefined} flick
+     * @property {number|number[]|undefined} difficulty
+     * @property {number|number[]|undefined} combo
+     * @property {boolean|undefined} isNew
+     */
+
+    constructor() {
+
+
+
+        /**
+         * 难度映射
+         * @type {allLevelKind[]}
+         */
+        this.allLevel = allLevel
+
+        /**
+         * 难度映射
+         * @type {levelKind[]}
+         */
+        this.Level = Level
+
+        /**
+         * @type {string[]}
+         * @description Tips
+         */
+        this.tips = []
+
+
+        /**
+         * @type {{[key:idString]:Partial<SongsInfo>}}
+         * @description 原版信息
+         */
+        this.ori_info = {}
+        /**
+         * @type {{[key:idString]:songString}}
+         * @description 通过id获取曲名
+         */
+        this.songsid = {}
+        /**
+         * @type {{[key:songString]:idString}}
+         * @description 原曲名称获取id
+         */
+        this.idssong = {}
+        /**
+         * @type {idString[]}
+         * @description 含有曲绘的曲目列表，id名称
+         */
+        this.illlist = []
+
+        /**
+         * @type {{[key:string]: string[]}}
+         * @description 章节别名，以别名为key，内容为章节名
+         */
+        this.chapNick = {}
+
+        /**
+         * 按dif分的info
+         * @type {Record<number, Chart[]>}
+         */
+        this.info_by_difficulty = {}
+
+
+        /**
+         * @type {idString[]}
+         */
+        this.updatedSong = []
+
+
+        /**
+         * @type {Record<idString, Partial<Record<levelKind, updatedChartObject>>>}
+         */
+        this.updatedChart = {}
+    }
 
     static initIng = false
 
@@ -33,49 +114,27 @@ export default new class getInfo {
 
         this.initIng = true
 
-        /**之前改过一次名称，修正别名 */
-        let nick = await readFile.FileReader(path.join(configPath, 'nickconfig.yaml'), "TXT")
-        if (nick) {
-            const waitToReplace = {
-                "Winter↑cube↓": "Winter ↑cube↓",
-                "Cipher: /2&//<|0": "Cipher : /2&//<|0",
-                "NYA!!!(Phigros ver.)": "NYA!!! (Phigros ver.)",
-                "JunXion Between Life And Death(VIP Mix)": "JunXion Between Life And Death(VIP Mix)",
-                "Dash from SOUL NOTES": "Dash",
-                "Drop It from SOUL NOTES": "Drop It",
-                "Diamond Eyes from SOUL NOTES": "Diamond Eyes",
-            }
-            let flag = false
-            for (let i in waitToReplace) {
-                if (nick.includes(i)) {
-                    flag = true
-                    nick = nick.replace(i, waitToReplace[i])
-                }
-            }
-            if (flag) {
-                readFile.SetFile(path.join(configPath, 'nickconfig.yaml'), nick, "TXT")
-                logger.mark('[phi-plugin]自动修正别名')
-            }
-        }
-
-
-
         /**
-         * @type {{[key:string]:{[key:string]:string[]}}}
+         * @type {Record<string, string[]>}
          * @description 扩增曲目信息
-         */
+         **/
         this.DLC_Info = {}
         let files = fs.readdirSync(DlcInfoPath).filter(file => file.endsWith('.json'))
-        files.forEach(async (file) => {
+        for (const file of files) {
             this.DLC_Info[path.basename(file, '.json')] = await readFile.FileReader(path.join(DlcInfoPath, file))
-        })
+        }
 
         /**
-         * @type {{[key:string]:string}}
+         * @type {{id: string, name:string}[]}
          * @description 头像id
          */
         let csv_avatar = await readFile.FileReader(path.join(infoPath, 'avatar.csv'))
+
+        /**
+         * @type {string[]}
+         */
         this.avatarid = []
+
         for (let i in csv_avatar) {
             this.avatarid.push(csv_avatar[i].id)
         }
@@ -86,30 +145,8 @@ export default new class getInfo {
          */
         this.tips = await readFile.FileReader(path.join(infoPath, 'tips.yaml'))
 
-
-        /**
-         * @type {{[key:songString]:SongsInfo}}
-         * @description 原版信息
-         */
-        this.ori_info = {}
-        /**
-         * @type {{[key:string]:string}}
-         * @description 通过id获取曲名
-         */
-        this.songsid = {}
-        /**
-         * @type {{[key:string]:string}}
-         * @description 原曲名称获取id
-         */
-        this.idssong = {}
-        /**
-         * @type {string[]}
-         * @description 含有曲绘的曲目列表，原曲名称
-         */
-        this.illlist = []
-
         /**自定义信息 */
-        let user_song = Config.getUserCfg('otherinfo')
+        let user_song = Config.getUserCfg('config', 'otherinfo')
         if (Config.getUserCfg('config', 'otherinfo')) {
             for (let i in user_song) {
                 if (user_song[i]['illustration_big']) {
@@ -125,43 +162,48 @@ export default new class getInfo {
         this.sp_info = await readFile.FileReader(path.join(infoPath, 'spinfo.json'))
         for (let i in this.sp_info) {
             this.sp_info[i].sp_vis = true
-            if (this.sp_info[i]['illustration_big']) {
-                this.illlist.push(this.sp_info[i].song)
+            if (this.sp_info[i]?.illustration) {
+                this.illlist.push(this.sp_info[i].id)
             }
         }
-
-
-        /**难度映射 */
-        this.Level = Level
 
         /**最高定数 */
         this.MAX_DIFFICULTY = 0
 
-        /**所有曲目曲名列表 */
+        /**
+         * 所有曲目曲名列表
+         * @type {songString[]}
+         */
         this.songlist = []
+
+        /**
+         * 曲目id列表
+         * @type {idString[]}
+         */
+        this.idList = []
 
         /**
          * @typedef {Object} notesInfoObject
          * @property {number} m MaxTime
-         * @property {[number,number,number,number][]} d note分布 [tap,drag,hold,flick,tot]
+         * @property {[tap: number, drag: number, hold: number, flick: number, tot: number][]} d note分布 [tap,drag,hold,flick,tot]
          * @property {[number,number,number,number]} t note统计 [tap,drag,hold,flick]
          */
         /**
          * note统计
-         * @type {{[x:idString]:{[x:string]:notesInfoObject}}}
+         * @type {{[x:idStringWithout0]:Record<levelKind, notesInfoObject>}}
          */
         let notesInfo = await readFile.FileReader(path.join(infoPath, 'notesInfo.json'))
 
         /**
          * @typedef {Object} csvInfoObject
-         * @property {idString} id 曲目id
+         * @property {idStringWithout0} id 曲目id
          * @property {songString} song 曲目名称
          * @property {string} composer 作曲
          * @property {string} illustrator 插画师
          * @property {string} EZ EZ难度谱师
          * @property {string} HD HD难度谱师
          * @property {string} IN IN难度谱师
-         * @property {string|null} AT AT难度谱师
+         * @property {string|undefined} AT AT难度谱师
          */
         /**
          * 信息文件
@@ -174,118 +216,139 @@ export default new class getInfo {
         let oldDif = await readFile.FileReader(path.join(oldInfoPath, 'difficulty.csv'))
         /**
          * note统计
-         * @type {{[x:idString]:{[x:string]:notesInfoObject}}}
+         * @type {{[x:idStringWithout0]:Record<levelKind, notesInfoObject>}}
          */
         let oldNotes = await readFile.FileReader(path.join(oldInfoPath, 'notesInfo.json'))
-        let OldDifList = []
+        /**
+         * @type {Record<idStringWithout0, Record<levelKind, number>>}
+         */
+        let OldDifList = {}
         for (let i in oldDif) {
             OldDifList[oldDif[i].id] = oldDif[i]
         }
-        this.updatedSong = []
-        this.updatedChart = {}
+
+
         // console.info(CsvInfo, Csvdif, Jsoninfo)
-        for (let i in CsvInfo) {
+        for (let i = 0; i < CsvInfo.length; i++) {
+
+            const id = /**@type {idString} */(CsvInfo[i].id + '.0')
+            const idWithout0 = CsvInfo[i].id
 
             /**比较新曲部分 */
-            if (!OldDifList[CsvInfo[i].id]) {
-                this.updatedSong.push(CsvInfo[i].song)
+            if (!OldDifList[idWithout0]) {
+                this.updatedSong.push(id)
             }
 
-            switch (CsvInfo[i].id) {
+            switch (idWithout0) {
                 case 'AnotherMe.DAAN': {
-                    CsvInfo[i].song = 'Another Me (KALPA)';
+                    CsvInfo[i].song = /** @type {songString} */('Another Me (KALPA)');
                     break;
                 }
                 case 'AnotherMe.NeutralMoon': {
-                    CsvInfo[i].song = 'Another Me (Rising Sun Traxx)';
+                    CsvInfo[i].song = /** @type {songString} */('Another Me (Rising Sun Traxx)');
                     break;
                 }
                 default: {
                     break;
                 }
             }
-            this.songsid[CsvInfo[i].id + '.0'] = CsvInfo[i].song
-            this.idssong[CsvInfo[i].song] = CsvInfo[i].id + '.0'
 
-            this.ori_info[CsvInfo[i].song] = { ...Jsoninfo[CsvInfo[i].id] }
-            if (!this.ori_info[CsvInfo[i].song]) {
-                this.ori_info[CsvInfo[i].song] = { song: CsvInfo[i].song, chapter: '', bpm: '', length: '', chart: {} }
-                logger.mark(`[phi-plugin]曲目详情未更新：${CsvInfo[i].song}`)
+
+            this.songsid[id] = CsvInfo[i].song
+            this.idssong[CsvInfo[i].song] = id
+
+            this.ori_info[id] = { ...Jsoninfo[CsvInfo[i].id] }
+            if (!this.ori_info[id]) {
+                this.ori_info[id] = { id: id, song: CsvInfo[i].song, chapter: '', bpm: '', length: '', chart: {} }
+                logger.mark(`[phi-plugin]曲目详情未更新：${id}`)
             }
-            this.ori_info[CsvInfo[i].song].song = CsvInfo[i].song
-            this.ori_info[CsvInfo[i].song].id = CsvInfo[i].id + '.0'
-            this.ori_info[CsvInfo[i].song].composer = CsvInfo[i].composer
-            this.ori_info[CsvInfo[i].song].illustrator = CsvInfo[i].illustrator
-            this.ori_info[CsvInfo[i].song].chart = {}
-            for (let j in this.Level) {
-                let level = this.Level[j]
-                let id = CsvInfo[i].id
+            this.ori_info[id].id = id
+            this.ori_info[id].song = CsvInfo[i].song
+            this.ori_info[id].composer = CsvInfo[i].composer
+            this.ori_info[id].illustrator = CsvInfo[i].illustrator
+            this.ori_info[id].chart = {}
+            for (let level of this.Level) {
+
                 if (CsvInfo[i][level]) {
 
                     /**比较新曲部分 */
-                    if (OldDifList[id]) {
-                        if (!OldDifList[id][level] || OldDifList[id][level] != Csvdif[i][level] || JSON.stringify(oldNotes[id][level].t) != JSON.stringify(notesInfo[id][level].t)) {
-                            let tem = {}
+                    if (OldDifList[idWithout0]) {
+                        if (!OldDifList[idWithout0][level] || OldDifList[idWithout0][level] != Csvdif[i][level] || JSON.stringify(oldNotes[idWithout0][level].t) != JSON.stringify(notesInfo[idWithout0][level].t)) {
+                            /**
+                             * @type {updatedChartObject}
+                             */
+                            let tem = {
+                                tap: undefined,
+                                drag: undefined,
+                                hold: undefined,
+                                flick: undefined,
+                                difficulty: undefined,
+                                combo: undefined,
+                                isNew: undefined
+                            }
                             if (!OldDifList[CsvInfo[i].id][level]) {
                                 Object.assign(tem, {
-                                    tap: notesInfo[id][level].t[0],
-                                    drag: notesInfo[id][level].t[1],
-                                    hold: notesInfo[id][level].t[2],
-                                    flick: notesInfo[id][level].t[3],
+                                    tap: notesInfo[idWithout0][level].t[0],
+                                    drag: notesInfo[idWithout0][level].t[1],
+                                    hold: notesInfo[idWithout0][level].t[2],
+                                    flick: notesInfo[idWithout0][level].t[3],
                                     difficulty: Csvdif[i][level],
+                                    combo: notesInfo[idWithout0][level].t[0] + notesInfo[idWithout0][level].t[1] + notesInfo[idWithout0][level].t[2] + notesInfo[idWithout0][level].t[3],
                                     isNew: true
                                 })
                             } else {
-                                if (OldDifList[id][level] != Csvdif[i][level]) {
-                                    Object.assign(tem, { difficulty: [OldDifList[id][level], Csvdif[i][level]] })
+                                if (OldDifList[idWithout0][level] != Csvdif[i][level]) {
+                                    Object.assign(tem, { difficulty: [OldDifList[idWithout0][level], Csvdif[i][level]] })
                                 }
-                                if (oldNotes[id][level].t[0] != notesInfo[id][level].t[0]) {
-                                    Object.assign(tem, { tap: [oldNotes[id][level].t[0], notesInfo[id][level].t[0]] })
+                                if (oldNotes[idWithout0][level].t[0] != notesInfo[idWithout0][level].t[0]) {
+                                    Object.assign(tem, { tap: [oldNotes[idWithout0][level].t[0], notesInfo[idWithout0][level].t[0]] })
                                 }
-                                if (oldNotes[id][level].t[1] != notesInfo[id][level].t[1]) {
-                                    Object.assign(tem, { drag: [oldNotes[id][level].t[1], notesInfo[id][level].t[1]] })
+                                if (oldNotes[idWithout0][level].t[1] != notesInfo[idWithout0][level].t[1]) {
+                                    Object.assign(tem, { drag: [oldNotes[idWithout0][level].t[1], notesInfo[idWithout0][level].t[1]] })
                                 }
-                                if (oldNotes[id][level].t[2] != notesInfo[id][level].t[2]) {
-                                    Object.assign(tem, { hold: [oldNotes[id][level].t[2], notesInfo[id][level].t[2]] })
+                                if (oldNotes[idWithout0][level].t[2] != notesInfo[idWithout0][level].t[2]) {
+                                    Object.assign(tem, { hold: [oldNotes[idWithout0][level].t[2], notesInfo[idWithout0][level].t[2]] })
                                 }
-                                if (oldNotes[id][level].t[3] != notesInfo[id][level].t[3]) {
-                                    Object.assign(tem, { flick: [oldNotes[id][level].t[3], notesInfo[id][level].t[3]] })
+                                if (oldNotes[idWithout0][level].t[3] != notesInfo[idWithout0][level].t[3]) {
+                                    Object.assign(tem, { flick: [oldNotes[idWithout0][level].t[3], notesInfo[idWithout0][level].t[3]] })
                                 }
-                                let oldCombo = oldNotes[id][level].t[0] + oldNotes[id][level].t[1] + oldNotes[id][level].t[2] + oldNotes[id][level].t[3]
-                                let newCombo = notesInfo[id][level].t[0] + notesInfo[id][level].t[1] + notesInfo[id][level].t[2] + notesInfo[id][level].t[3]
+                                let oldCombo = oldNotes[idWithout0][level].t[0] + oldNotes[idWithout0][level].t[1] + oldNotes[idWithout0][level].t[2] + oldNotes[idWithout0][level].t[3]
+                                let newCombo = notesInfo[idWithout0][level].t[0] + notesInfo[idWithout0][level].t[1] + notesInfo[idWithout0][level].t[2] + notesInfo[idWithout0][level].t[3]
                                 if (oldCombo != newCombo) {
                                     Object.assign(tem, { combo: [oldCombo, newCombo] })
                                 }
                             }
-                            if (!this.updatedChart[CsvInfo[i].song]) {
-                                this.updatedChart[CsvInfo[i].song] = {}
+                            if (!this.updatedChart[id]) {
+                                this.updatedChart[id] = {}
                             }
-                            this.updatedChart[CsvInfo[i].song][level] = tem
+                            this.updatedChart[id][level] = tem
                         }
                     }
 
-                    if (!this.ori_info[CsvInfo[i].song].chart[level]) {
-                        this.ori_info[CsvInfo[i].song].chart[level] = {}
+                    this.ori_info[id].chart[level] = {
+                        id: id,
+                        rank: level,
+                        charter: CsvInfo[i][level] || '',
+                        difficulty: Number(Csvdif[i][level]),
+                        tap: notesInfo[idWithout0][level].t[0],
+                        drag: notesInfo[idWithout0][level].t[1],
+                        hold: notesInfo[idWithout0][level].t[2],
+                        flick: notesInfo[idWithout0][level].t[3],
+                        combo: notesInfo[idWithout0][level].t[0] + notesInfo[idWithout0][level].t[1] + notesInfo[idWithout0][level].t[2] + notesInfo[idWithout0][level].t[3],
+                        maxTime: notesInfo[idWithout0][level].m,
+                        distribution: notesInfo[idWithout0][level].d
                     }
-                    this.ori_info[CsvInfo[i].song].chart[level].charter = CsvInfo[i][level]
-                    this.ori_info[CsvInfo[i].song].chart[level].difficulty = Number(Csvdif[i][level])
-                    this.ori_info[CsvInfo[i].song].chart[level].tap = notesInfo[id][level].t[0]
-                    this.ori_info[CsvInfo[i].song].chart[level].drag = notesInfo[id][level].t[1]
-                    this.ori_info[CsvInfo[i].song].chart[level].hold = notesInfo[id][level].t[2]
-                    this.ori_info[CsvInfo[i].song].chart[level].flick = notesInfo[id][level].t[3]
-                    this.ori_info[CsvInfo[i].song].chart[level].combo = notesInfo[id][level].t[0] + notesInfo[id][level].t[1] + notesInfo[id][level].t[2] + notesInfo[id][level].t[3]
-                    this.ori_info[CsvInfo[i].song].chart[level].maxTime = notesInfo[id][level].m
-                    this.ori_info[CsvInfo[i].song].chart[level].distribution = notesInfo[id][level].d
 
                     /**最高定数 */
                     this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))
                 }
             }
-            if (Jsoninfo[CsvInfo[i].id]?.chart) {
-                this.ori_info[CsvInfo[i].song].chart = { ...this.ori_info[CsvInfo[i].song].chart, ...Jsoninfo[CsvInfo[i].id].chart }
+            if (Jsoninfo[id]?.chart) {
+                this.ori_info[id].chart = { ...this.ori_info[id].chart, ...Jsoninfo[id].chart }
             }
-            this.illlist.push(CsvInfo[i].song)
-            this.songlist.push(CsvInfo[i].song)
+            this.illlist.push(id)
+            this.songlist.push(this.ori_info[id].song)
+            this.idList.push(id)
         }
 
 
@@ -293,62 +356,69 @@ export default new class getInfo {
             console.error('[phi-plugin] MAX_DIFFICULTY 常量未更新，请回报作者！', MAX_DIFFICULTY, this.MAX_DIFFICULTY)
         }
 
-
+        /**
+         * 曲目别名列表 (id不带.0)
+         * @type {Record<idStringWithout0, string[]>}
+         */
         let nicklistTemp = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml'))
-        /** @type {{[key:songString]: string[]}} 默认别名，以曲名为key */
+        /** 
+         * 默认别名，以id为key
+         * @type {Record<idString, string[]>} 
+         **/
         this.nicklist = {}
-        /**以别名为key */
+        /**
+         * 以别名为key
+         * @type {Record<string, idString[]>}
+         */
         this.songnick = {}
-        for (let id in nicklistTemp) {
-            let song = this.idgetsong(id + '.0') || id
-            this.nicklist[song] = nicklistTemp[id]
-            nicklistTemp[id].forEach((item) => {
-                if (this.songnick[item]) {
-                    this.songnick[item].push(song)
+
+        const nicklistTempIds = fCompute.objectKeys(nicklistTemp);
+
+        for (let idWithout0 of nicklistTempIds) {
+            const id = idWithout0ToidWith0(idWithout0);
+            this.nicklist[id] = nicklistTemp[idWithout0]
+
+            for (let item of nicklistTemp[idWithout0]) {
+                if (!this.songnick[item]) {
+                    this.songnick[item] = [id]
                 } else {
-                    this.songnick[item] = [song]
+                    this.songnick[item].push(id)
                 }
-            })
+            }
         }
 
         /**
          * @type {{[key:string]: string[]}}
-         * @description 章节列表，以章节名为key
+         * @description 章节列表，以章节名为key，内容为别名
          */
         this.chapList = await readFile.FileReader(path.join(infoPath, 'chaplist.yaml'))
-        /**
-         * @type {{[key:string]: string[]}}
-         * @description 章节别名，以别名为key
-         */
-        this.chapNick = {}
+
         for (let i in this.chapList) {
-            this.chapList[i].forEach((item) => {
+            for (let item of this.chapList[i]) {
                 if (this.chapNick[item]) {
                     this.chapNick[item].push(i)
                 } else {
                     this.chapNick[item] = [i]
                 }
-            })
+            }
         }
 
-        /**jrrp */
+        /**
+         * jrrp
+         * @type {Record<'good'|'bad'|'common', string[]>}
+         */
         this.word = await readFile.FileReader(path.join(infoPath, 'jrrp.json'))
 
-        /**按dif分的info */
-        this.info_by_difficulty = {}
-        for (let song in this.ori_info) {
-            for (let level in this.ori_info[song].chart) {
-                let info = this.ori_info[song]
+        for (let songId of this.idList) {
+            for (let level of this.allLevel) {
+                let info = this.ori_info[songId]
+                if (!info?.chart?.[level]?.difficulty) continue;
                 if (this.info_by_difficulty[info.chart[level].difficulty]) {
                     this.info_by_difficulty[info.chart[level].difficulty].push({
-                        id: info.id,
-                        rank: level,
                         ...info.chart[level],
                     })
                 } else {
                     this.info_by_difficulty[info.chart[level].difficulty] = [{
-                        id: info.id,
-                        rank: level,
                         ...info.chart[level],
                     }]
                 }
@@ -361,11 +431,11 @@ export default new class getInfo {
 
     /**
      * 
-     * @param {string} [song=undefined] 原曲曲名
+     * @param {idString} id 原曲曲名
      * @param {boolean} [original=false] 仅使用原版
-     * @returns {SongsInfo}
+     * @returns {SongsInfo | undefined} 曲目信息对象
      */
-    info(song, original = false) {
+    info(id, original = false) {
         let result
         switch (original ? 0 : Config.getUserCfg('config', 'otherinfo')) {
             case 0: {
@@ -381,13 +451,13 @@ export default new class getInfo {
                 break;
             }
         }
-        return result[song] ? new SongsInfo(result[song]) : null
+        return result[id] ? new SongsInfo(result[id]) : undefined
     }
 
     /**
      * 
      * @param {boolean} [original=false] 仅使用原版
-     * @returns 
+     * @returns {Record<idString, SongsInfo>} 所有曲目信息对象
      */
     all_info(original = false) {
         switch (original ? 0 : Config.getUserCfg('config', 'otherinfo')) {
@@ -400,71 +470,50 @@ export default new class getInfo {
             case 2: {
                 return Config.getUserCfg('otherinfo')
             }
-        }
-    }
-
-
-    /**
-     * 匹配歌曲名称，根据参数返回原曲名称
-     * @param {string} mic 别名
-     * @returns 原曲名称
-     */
-    songsnick(mic) {
-        let nickconfig = Config.getUserCfg('nickconfig', mic)
-        let all = []
-
-        if (this.info(mic)) all.push(mic)
-
-        if (this.songnick[mic]) {
-            for (let i in this.songnick[mic]) {
-                all.push(this.songnick[mic][i])
+            default: {
+                return { ...this.ori_info, ...this.sp_info }
             }
         }
-        if (nickconfig) {
-            for (let i in nickconfig) {
-                all.push(nickconfig[i])
-            }
-        }
-        if (all.length) {
-            all = Array.from(new Set(all)) //去重
-            return all
-        }
-        return false
     }
 
     /**
     * 根据参数模糊匹配返回原曲名称
     * @param {string} mic 别名
     * @param {number} [Distance=0.85] 阈值 猜词0.95
-    * @returns 原曲名称数组，按照匹配程度降序
+    * @param {boolean} [original=false] 仅使用原版
+    * @returns {idString[]} 原曲id数组，按照匹配程度降序
     */
-    fuzzysongsnick(mic, Distance = 0.85) {
+    fuzzysongsnick(mic, Distance = 0.85, original = false) {
         /**为空返回空 */
         if (!mic) return []
-        /**按照匹配程度排序 */
+        /**
+         * 按照匹配程度排序
+         * @type {{id: idString, dis: number}[]}
+         */
         let result = []
 
         const usernick = Config.getUserCfg('nickconfig')
-        const allinfo = this.all_info()
+        const allinfo = this.all_info(original)
 
         for (let std in this.songnick) {
             let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
                 for (let i in this.songnick[std]) {
-                    result.push({ song: this.songnick[std][i], dis: dis })
+                    result.push({ id: this.songnick[std][i], dis: dis })
                 }
             }
         }
 
-        for (let std in allinfo) {
+        const ids = fCompute.objectKeys(allinfo);
+        for (let std of ids) {
             let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
-                result.push({ song: allinfo[std].song, dis: dis })
+                result.push({ id: allinfo[std].id, dis: dis })
             }
             if (!allinfo[std]?.id) continue
-            dis = fCompute.jaroWinklerDistance(mic, allinfo[std].id)
+            dis = fCompute.jaroWinklerDistance(mic, allinfo[std].song)
             if (dis >= Distance) {
-                result.push({ song: allinfo[std].song, dis: dis })
+                result.push({ id: allinfo[std].id, dis: dis })
             }
         }
 
@@ -474,7 +523,7 @@ export default new class getInfo {
             let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
                 for (let i in usernick[std]) {
-                    result.push({ song: usernick[std][i], dis: dis })
+                    result.push({ id: usernick[std][i], dis: dis })
                 }
             }
         }
@@ -482,15 +531,18 @@ export default new class getInfo {
 
         result = result.sort((a, b) => b.dis - a.dis)
 
+        /**
+         * @type {idString[]}
+         */
         let all = []
         for (let i of result) {
 
-            if (all.includes(i.song)) continue //去重
+            if (all.includes(i.id)) continue //去重
             /**如果有完全匹配的曲目则放弃剩下的 */
             if (result[0].dis == 1 && i.dis < 1) break
 
 
-            all.push(i.song)
+            all.push(i.id)
         }
 
         return all
@@ -511,48 +563,48 @@ export default new class getInfo {
 
 
     /**
-     * 获取曲绘，返回地址，原名
-     * @param {string} song 原名
+     * 获取曲绘，返回地址，曲目id
+     * @param {idString} id 曲目id，带.0
      * @param {'common'|'blur'|'low'} [kind='common'] 清晰度
      * @return {string} 网址或文件地址
     */
-    getill(song, kind = 'common') {
-        const songsinfo = this.all_info()[song]
-        let ans = songsinfo?.illustration_big
+    getill(id, kind = 'common') {
+        const songsinfo = this.all_info()[id]
+        let ans = songsinfo?.illustration
         let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
         if (ans && !reg.test(ans)) {
             ans = path.join(ortherIllPath, ans)
-        } else if (this.ori_info[song] || this.sp_info[song]) {
-            if (this.ori_info[song]) {
-                if (fs.existsSync(path.join(originalIllPath, this.SongGetId(song).replace(/.0$/, '.png')))) {
-                    ans = path.join(originalIllPath, this.SongGetId(song).replace(/.0$/, '.png'))
-                } else if (fs.existsSync(path.join(originalIllPath, "ill", this.SongGetId(song).replace(/.0$/, '.png')))) {
+        } else if (this.ori_info?.[id] || this.sp_info?.[id]) {
+            if (this.ori_info?.[id]) {
+                if (fs.existsSync(path.join(originalIllPath, id.replace(/.0$/, '.png')))) {
+                    ans = path.join(originalIllPath, id.replace(/.0$/, '.png'))
+                } else if (fs.existsSync(path.join(originalIllPath, "ill", id.replace(/.0$/, '.png')))) {
                     if (kind == 'common') {
-                        ans = path.join(originalIllPath, "ill", this.SongGetId(song).replace(/.0$/, '.png'))
+                        ans = path.join(originalIllPath, "ill", id.replace(/.0$/, '.png'))
                     } else if (kind == 'blur') {
-                        ans = path.join(originalIllPath, "illBlur", this.SongGetId(song).replace(/.0$/, '.png'))
+                        ans = path.join(originalIllPath, "illBlur", id.replace(/.0$/, '.png'))
                     } else if (kind == 'low') {
-                        ans = path.join(originalIllPath, "illLow", this.SongGetId(song).replace(/.0$/, '.png'))
+                        ans = path.join(originalIllPath, "illLow", id.replace(/.0$/, '.png'))
                     }
                 } else {
                     if (kind == 'common') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${this.SongGetId(song).replace(/.0$/, '.png')}`
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${id.replace(/.0$/, '.png')}`
                     } else if (kind == 'blur') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illBlur/${this.SongGetId(song).replace(/.0$/, '.png')}`
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illBlur/${id.replace(/.0$/, '.png')}`
                     } else if (kind == 'low') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illLow/${this.SongGetId(song).replace(/.0$/, '.png')}`
+                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illLow/${id.replace(/.0$/, '.png')}`
                     }
                 }
             } else {
-                if (fs.existsSync(path.join(originalIllPath, "SP", song + '.png'))) {
-                    ans = path.join(originalIllPath, "SP", song + '.png')
+                if (fs.existsSync(path.join(originalIllPath, "SP", id + '.png'))) {
+                    ans = path.join(originalIllPath, "SP", id + '.png')
                 } else {
-                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${song}.png`
+                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${id}.png`
                 }
             }
         }
         if (!ans) {
-            logger.warn(song, '背景不存在')
+            logger.warn(id, '背景不存在')
             ans = path.join(imgPath, 'phigros.png')
         }
         return ans
@@ -564,14 +616,18 @@ export default new class getInfo {
      * @param {levelKind} dif 
      */
     getChartImg(songId, dif) {
-        songId = songId.replace(/.0$/, '');
-        if (fs.existsSync(path.join(originalIllPath, "chartimg", dif, `${songId}.png`))) {
-            return path.join(originalIllPath, "chartimg", dif, `${songId}.png`)
+        const id = songId.replace(/.0$/, '');
+        if (fs.existsSync(path.join(originalIllPath, "chartimg", dif, `${id}.png`))) {
+            return path.join(originalIllPath, "chartimg", dif, `${id}.png`)
         } else {
-            return `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/chartimg/${dif}/${songId}.png`
+            return `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/chartimg/${dif}/${id}.png`
         }
     }
 
+    /**
+     * 返回定数表图片 url
+     * @param {number} dif 难度
+     */
     getTableImg(dif) {
         if (fs.existsSync(path.join(originalIllPath, "table", `${dif}.png`))) {
             return path.join(originalIllPath, "table", `${dif}.png`)
@@ -598,7 +654,7 @@ export default new class getInfo {
      * @returns file name
      */
     idgetavatar(id) {
-        if (this.avatarid.includes(id)) {
+        if (this.avatarid?.includes(id)) {
             return id
         } else {
             return 'Introduction'
@@ -607,20 +663,20 @@ export default new class getInfo {
 
     /**
      * 根据曲目id获取原名
-     * @param {String} id 曲目id
-     * @returns 原名
+     * @param {idString} id 曲目id
+     * @returns {songString | undefined} 原名
      */
     idgetsong(id) {
-        return this.songsid[id]
+        return this.songsid?.[id]
     }
 
     /**
      * 通过原曲曲目获取曲目id
-     * @param {String} song 原曲曲名
-     * @returns {idString} 曲目id
+     * @param {songString} song 原曲曲名
+     * @returns {idString | undefined} 曲目id
      */
     SongGetId(song) {
-        return this.idssong[song]
+        return this.idssong?.[song]
     }
 
     /**
@@ -655,11 +711,21 @@ export default new class getInfo {
                     break
                 }
             }
-            return this.getill(this.idgetsong(save_background) || save_background)
+            // @ts-ignore
+            return this.getill(this.SongGetId(save_background) || save_background)
         } catch (err) {
             logger.error(`获取背景曲绘错误`, err)
-            return false
+            return 'Introduction';
         }
     }
 
 }()
+
+/**
+ * 
+ * @param {idStringWithout0} idWithout0 
+ * @returns {idString}
+ */
+function idWithout0ToidWith0(idWithout0) {
+    return /** @type {idString} */(idWithout0 + '.0')
+}

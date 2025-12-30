@@ -7,29 +7,44 @@ import saveHistory from './class/saveHistory.js'
 import { redisPath } from './constNum.js'
 import makeRequest from './makeRequest.js'
 import makeRequestFnc from './makeRequestFnc.js'
+import PhigrosUser from '../lib/PhigrosUser.js'
 // import { redis } from 'yunzai'
 
+/**@import {botEvent} from '../components/baseClass.js' */
 export default class getSaveFromApi {
 
-    /**添加 user_id 号对应的 apiId */
+    /**
+     * 添加 user_id 号对应的 apiId
+     * @param {string} user_id user_id
+     * @param {apiUserId} apiId apiId
+     */
     static async add_user_apiId(user_id, apiId) {
+        //@ts-ignore
         return await redis.set(`${redisPath}:userApiId:${user_id}`, apiId)
     }
 
-    /**获取 user_id 号对应的 apiId */
+    /**
+     * 获取 user_id 号对应的 apiId
+     * @param {string} user_id user_id
+     */
     static async get_user_apiId(user_id) {
+        //@ts-ignore
         return await redis.get(`${redisPath}:userApiId:${user_id}`)
     }
 
-    /**移除 user_id 对应的 apiId */
+    /**
+     * 移除 user_id 对应的 apiId 
+     * @param {string} user_id user_id
+     */
     static async del_user_apiId(user_id) {
+        //@ts-ignore
         return await redis.del(`${redisPath}:userApiId:${user_id}`)
     }
 
     /**
      * 获取 user_id 对应的存档文件
      * @param {String} user_id user_id
-     * @returns {Promise<Save>}
+     * @returns {Promise<Save | undefined>}
      */
     static async getSave(user_id) {
         let apiId = await this.get_user_apiId(user_id)
@@ -39,17 +54,17 @@ export default class getSaveFromApi {
             if (tem.saveInfo) {
                 await tem.init()
             } else {
-                return null
+                return undefined
             }
             return tem
         } else {
-            return null
+            return undefined
         }
     }
 
     /**
      * 获取 apiId 对应的存档文件
-     * @param {apiId} apiId 
+     * @param {apiUserId} apiId 
      * @returns 
      */
     static async getSaveByApiId(apiId) {
@@ -80,11 +95,11 @@ export default class getSaveFromApi {
 
     /**
      * 保存 user_id 对应的存档文件
-     * @param {String} user_id user_id
-     * @param {Save} data 
+     * @param {string} user_id user_id
+     * @param {Partial<oriSave | Save>} data 
      */
     static async putSave(user_id, data) {
-        let apiId = data.apiId
+        let apiId = data?.apiId
         if (!apiId) {
             throw new Error('apiId is undefined')
         }
@@ -108,18 +123,36 @@ export default class getSaveFromApi {
     }
 
     /**
-     * 
-     * @param {*} e 
-     * @param {idString} [song_id] 
-     * @param {levelKind} [difficulty] 
-     * @returns 
+     * @overload
+     * @param {botEvent} e
+     * @param {idString} song_id
+     * @param {levelKind} difficulty
+     * @returns {Promise<ScoreDetail[]>}
+     */
+    /**
+     * @overload
+     * @param {botEvent} e
+     * @param {idString} song_id
+     * @returns {Promise<songRecordHistory>}
+     */
+    /**
+     * @overload
+     * @param {botEvent} e
+     * @returns {Promise<scoreHistoryObject>}
+     */
+    /**
+     * 获取用户成绩历史记录
+     * @param {botEvent} e
+     * @param {idString} [song_id]
+     * @param {levelKind} [difficulty]
+     * @returns {Promise< ScoreDetail[] | songRecordHistory | scoreHistoryObject >}
      */
     static async getSongHistory(e, song_id, difficulty) {
         let apiId = await this.get_user_apiId(e.user_id)
         if (!apiId) {
             throw new Error('apiId is undefined')
         }
-        let result = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id, difficulty })
+        let result = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e) })
         return result
     }
 

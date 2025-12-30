@@ -1,6 +1,10 @@
 import JudgeLine from "./JudgeLine.js"
 
 export default class Chart {
+    /**
+     * 
+     * @param {any} data 
+     */
     constructor(data) {
         this.formatVersion = data.formatVersion
 
@@ -14,6 +18,6 @@ export default class Chart {
          * 判定线列表
          * @type {JudgeLine[]}
          */
-        this.judgeLineList = data.judgeLineList.map((e) => new JudgeLine(e));
+        this.judgeLineList = data.judgeLineList.map(/** @param {any} e */(e) => new JudgeLine(e));
     }
 }

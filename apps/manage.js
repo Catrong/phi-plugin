@@ -10,10 +10,14 @@ import fCompute from '../model/fCompute.js';
 import getRksRank from '../model/getRksRank.js';
 import getSave from '../model/getSave.js';
 import { redisPath } from '../model/constNum.js';
+import phiPluginBase from '../components/baseClass.js';
+import logger from '../components/Logger.js';
 
-let banSetting = ["help", "bind", "b19", "wb19", "song", "ranklist", "fnc", "tipgame", "guessgame", "ltrgame", "sign", "setting", "dan","apiSetting"]
+/**@import {botEvent} from '../components/baseClass.js' */
 
-export class phiset extends plugin {
+let banSetting = ["help", "bind", "b19", "wb19", "song", "ranklist", "fnc", "tipgame", "guessgame", "ltrgame", "sign", "setting", "dan", "apiSetting"]
+
+export class phiset extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-manage',
@@ -62,6 +66,11 @@ export class phiset extends plugin {
 
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async restartpu(e) {
         if (!this.e.isMaster) {
             return false
@@ -74,6 +83,11 @@ export class phiset extends plugin {
         }
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async backup(e) {
         if (!e.isMaster) {
             return false
@@ -81,7 +95,7 @@ export class phiset extends plugin {
         send.send_with_At(e, '开始备份，请稍等...')
         setTimeout(() => {
             try {
-                getBackup.backup(e, send)
+                getBackup.backup(e)
             } catch (err) {
                 logger.info(err)
                 send.send_with_At(e, err)
@@ -90,6 +104,11 @@ export class phiset extends plugin {
         return true
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     restore(e) {
         if (!e.isMaster) {
             return false
@@ -118,7 +137,7 @@ export class phiset extends plugin {
             let fileName = fs.readdirSync(backupPath)[Number(e.msg.replace(/\s*/g, ''))]
             let filePath = path.join(backupPath, fileName)
             await getBackup.restore(filePath)
-            send.send_with_At(e, `[${e.msg}] ${fs.readdirSync(backupPath).reverse()[e.msg.replace(/\s*/g, '')]} 恢复成功`)
+            send.send_with_At(e, `[${e.msg}] ${fs.readdirSync(backupPath).reverse()[Number(e.msg.replace(/\s*/g, ''))]} 恢复成功`)
         } catch (err) {
             logger.info(err)
             send.send_with_At(e, [`第[${e.msg}]项不存在QAQ！`, err])
@@ -126,38 +145,72 @@ export class phiset extends plugin {
         this.finish('doRestore', false)
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async get(e) {
         if (!e.isMaster) {
             return false
         }
-        let msg = Number(e.msg.match(/[0-9]*$/)[0])
-        console.info(msg)
+        let msg = Number(e.msg.match(/[0-9]*$/)?.[0])
+        if (!msg || msg < 1) {
+            send.send_with_At(e, '请输入正确的序号哦！')
+            return false
+        }
         let token = await getRksRank.getRankUser(msg - 1, msg)
         console.info(token)
         send.send_with_At(e, token)
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async del(e) {
         if (!e.isMaster) {
             return false
         }
-        let msg = e.msg.match(/[0-9a-zA-Z]{25}$/)[0]
-        await getSave.delSaveBySessionToken(msg)
-        await getSave.banSessionToken(msg)
+        let msg = e.msg.match(/[0-9a-zA-Z]{25}$/)?.[0]
+        if (!msg) {
+            send.send_with_At(e, '请输入正确的sessionToken哦！')
+            return false
+        }
+        /**@type {phigrosToken} */
+        const sessionToken = /** @type {any} */ (msg);
+        await getSave.delSaveBySessionToken(sessionToken)
+        await getSave.banSessionToken(sessionToken)
         send.send_with_At(e, '成功')
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async allow(e) {
         if (!e.isMaster) {
             return false
         }
-        let msg = e.msg.match(/[0-9a-zA-Z]{25}$/)[0]
-        // console.info(msg)
-        await getSave.allowSessionToken(msg)
-        console.info(await getSave.isBanSessionToken(msg))
+        let msg = e.msg.match(/[0-9a-zA-Z]{25}$/)?.[0]
+        if (!msg) {
+            send.send_with_At(e, '请输入正确的sessionToken哦！')
+            return false
+        }
+        /**@type {phigrosToken} */
+        const sessionToken = /** @type {any} */ (msg);
+        await getSave.allowSessionToken(sessionToken)
+        console.info(await getSave.isBanSessionToken(sessionToken))
         send.send_with_At(e, '成功')
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async ban(e) {
         if (!fCompute.is_admin(e) && !e.isMaster) {
             return false
@@ -171,6 +224,7 @@ export class phiset extends plugin {
         switch (msg) {
             case 'all': {
                 for (let i in banSetting) {
+                    // @ts-ignore
                     await redis.set(`${redisPath}:banGroup:${e.group_id}:${banSetting[i]}`, 1);
                 }
                 break
@@ -178,6 +232,7 @@ export class phiset extends plugin {
             default: {
                 for (let i in banSetting) {
                     if (banSetting[i] == msg) {
+                        // @ts-ignore
                         await redis.set(`${redisPath}:banGroup:${e.group_id}:${banSetting[i]}`, 1);
                         break
                     }
@@ -186,8 +241,17 @@ export class phiset extends plugin {
             }
         }
         // console.info(await redis.keys(`${redisPath}:banGroup:*`))
-        send.send_with_At(e, `当前: ${e.group_id}\n已禁用:\n${(await redis.keys(`${redisPath}:banGroup:${e.group_id}:*`)).join('\n').replace(new RegExp(`${redisPath}:banGroup:${e.group_id}:`, 'g'), '')}`)
+        send.send_with_At(e, `当前: ${e.group_id}\n已禁用:\n${(
+            // @ts-ignore
+            await redis.keys(`${redisPath}:banGroup:${e.group_id}:*`)
+        ).join('\n').replace(new RegExp(`${redisPath}:banGroup:${e.group_id}:`, 'g'), '')}`)
     }
+
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async unban(e) {
         if (!e.isAdmin && !e.isMaster) {
             return false
@@ -200,6 +264,7 @@ export class phiset extends plugin {
         switch (msg) {
             case 'all': {
                 for (let i in banSetting) {
+                    // @ts-ignore
                     await redis.del(`${redisPath}:banGroup:${e.group_id}:${banSetting[i]}`);
                 }
                 break
@@ -207,6 +272,7 @@ export class phiset extends plugin {
             default: {
                 for (let i in banSetting) {
                     if (banSetting[i] == msg) {
+                        // @ts-ignore
                         await redis.del(`${redisPath}:banGroup:${e.group_id}:${banSetting[i]}`);
                         break
                     }
@@ -215,6 +281,9 @@ export class phiset extends plugin {
             }
         }
         // console.info(await redis.keys(`${redisPath}:banGroup:*`))
-        send.send_with_At(e, `当前: ${e.group_id}\n已禁用:\n${(await redis.keys(`${redisPath}:banGroup:${e.group_id}:*`)).join('\n').replace(new RegExp(`${redisPath}:banGroup:${e.group_id}:`, 'g'), '')}`)
+        send.send_with_At(e, `当前: ${e.group_id}\n已禁用:\n${(
+            // @ts-ignore
+            await redis.keys(`${redisPath}:banGroup:${e.group_id}:*`)
+        ).join('\n').replace(new RegExp(`${redisPath}:banGroup:${e.group_id}:`, 'g'), '')}`)
     }
 }

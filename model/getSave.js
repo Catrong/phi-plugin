@@ -6,29 +6,45 @@ import fs from 'fs'
 import saveHistory from './class/saveHistory.js'
 import { redisPath } from './constNum.js'
 import getRksRank from './getRksRank.js'
+import PhigrosUser from '../lib/PhigrosUser.js'
 // import { redis } from 'yunzai'
 
 export default class getSave {
 
-    /**添加 user_id 号对应的 Token */
+    /**
+     * 添加 user_id 号对应的 Token
+     * @param {String} user_id user_id
+     * @param {phigrosToken} session Token
+     */
     static async add_user_token(user_id, session) {
+        // @ts-ignore
         return await redis.set(`${redisPath}:userToken:${user_id}`, session)
     }
 
-    /**获取 user_id 号对应的 Token */
+    /**
+     * 获取 user_id 号对应的 Token
+     * @param {String} user_id user_id
+     * @returns {Promise<phigrosToken>} Token
+     */
     static async get_user_token(user_id) {
+        // @ts-ignore
         return await redis.get(`${redisPath}:userToken:${user_id}`)
     }
 
-    /**移除 user_id 对应的 Token */
+    /**
+     * 移除 user_id 对应的 Token
+     * @param {String} user_id user_id
+     * @returns {Promise<number>} 删除数量
+     */
     static async del_user_token(user_id) {
+        // @ts-ignore
         return await redis.del(`${redisPath}:userToken:${user_id}`)
     }
 
     /**
      * 获取 user_id 对应的存档文件
      * @param {String} user_id user_id
-     * @returns {Promise<Save>}
+     * @returns {Promise<Save|undefined>} 存档对象或undefined
      */
     static async getSave(user_id) {
         let Token = await this.get_user_token(user_id)
@@ -41,17 +57,17 @@ export default class getSave {
             if (tem.saveInfo) {
                 await tem.init()
             } else {
-                return null
+                return undefined
             }
             return tem
         } else {
-            return null
+            return undefined
         }
     }
 
     /**
      * 获取 sessionToken 对应的存档文件
-     * @param {string} Token 
+     * @param {phigrosToken} Token 
      * @returns 
      */
     static async getSaveBySessionToken(Token) {
@@ -76,7 +92,7 @@ export default class getSave {
     /**
      * 保存 user_id 对应的存档文件
      * @param {String} user_id user_id
-     * @param {Save} data 
+     * @param {Save | PhigrosUser} data 
      */
     static async putSave(user_id, data) {
         let session = data.session
@@ -104,7 +120,7 @@ export default class getSave {
 
     /**
      * 获取 sessionToken 对应的历史记录
-     * @param {string} Token
+     * @param {phigrosToken} Token
      * @returns {Promise<saveHistory>}
      */
     static async getHistoryBySessionToken(Token) {
@@ -126,22 +142,22 @@ export default class getSave {
     }
 
 
-    /**
-     * 获取玩家 Dan 数据
-     * @param {string} user_id QQ号
-     * @param {boolean} [all=false] 是否返回所有数据
-     * @returns {object|Array} Dan数据
-     */
-    static async getDan(user_id, all = false) {
-        let history = await this.getHistory(user_id)
+    // /**
+    //  * 获取玩家 Dan 数据
+    //  * @param {string} user_id QQ号
+    //  * @param {boolean} [all=false] 是否返回所有数据
+    //  * @returns {Promise<object|any[]|undefined>} Dan数据
+    //  */
+    // static async getDan(user_id, all = false) {
+    //     let history = await this.getHistory(user_id)
 
-        let dan = history?.dan
+    //     let dan = history?.dan
 
-        if (dan && Object.prototype.toString.call(dan) != '[object Array]') {
-            dan = [dan]
-        }
-        return dan ? (all ? dan : dan[0]) : undefined
-    }
+    //     if (dan && Object.prototype.toString.call(dan) != '[object Array]') {
+    //         dan = [dan]
+    //     }
+    //     return dan ? (all ? dan : dan[0]) : undefined
+    // }
 
     /**
      * 删除 user_id 对应的存档文件
@@ -161,7 +177,7 @@ export default class getSave {
 
     /**
      * 删除 user_id 对应的存档文件
-     * @param {String} user_id user_id
+     * @param {phigrosToken} Token Token
      */
     static async delSaveBySessionToken(Token) {
         let fPath = path.join(savePath, Token)
@@ -172,19 +188,42 @@ export default class getSave {
         return true
     }
 
+    /**
+     * 禁用 token 使用
+     * @param {phigrosToken} token 
+     * @returns 
+     */
     static async banSessionToken(token) {
+        // @ts-ignore
         return await redis.set(`${redisPath}:banSessionToken:${token}`, 1)
     }
 
+    /**
+     * 允许 token 使用
+     * @param {phigrosToken} token 
+     * @returns 
+     */
     static async allowSessionToken(token) {
+        // @ts-ignore
         return await redis.del(`${redisPath}:banSessionToken:${token}`)
     }
 
+    /**
+     * 判断 token 是否被禁用
+     * @param {phigrosToken} token 
+     * @returns 
+     */
     static async isBanSessionToken(token) {
+        // @ts-ignore
         return await redis.get(`${redisPath}:banSessionToken:${token}`)
     }
 
+    /**
+     * 获取所有被禁用的 Token
+     * @returns 
+     */
     static async getGod() {
+        // @ts-ignore
         return await redis.keys(`${redisPath}:banSessionToken:*`)
     }
 

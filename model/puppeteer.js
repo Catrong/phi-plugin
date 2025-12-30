@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Renderer from "../../../lib/renderer/Renderer.js"
 import os from "node:os"
 import lodash from "lodash"
@@ -8,11 +9,17 @@ import timers from "node:timers/promises"
 import cfg from "../../../lib/config/config.js"
 import { redisPath } from './constNum.js'
 import { tempPath } from "./path.js"
+import logger from "../components/Logger.js"
 const _path = process.cwd()
 // mac地址
 let mac = ""
 
 export default class Puppeteer extends Renderer {
+    /**
+     * 
+     * @param {any} config 
+     * @param {string} browserId 
+     */
     constructor(config, browserId) {
         super({
             id: "puppeteer",
@@ -21,6 +28,10 @@ export default class Puppeteer extends Renderer {
         })
         this.browser = false
         this.lock = false
+
+        /**
+         * @type {any[]}
+         */
         this.shoting = []
         /** 截图数达到时重启浏览器 避免生成速度越来越慢 */
         this.restartNum = 100

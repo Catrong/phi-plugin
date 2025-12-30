@@ -4,14 +4,37 @@ import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../comp
 import { _path, pluginResources, imgPath, tempPath } from './path.js'
 import fCompute from './fCompute.js'
 import fs from 'node:fs'
-class picmodle {
+import logger from '../components/Logger.js'
+import segment from '../components/segment.js'
+
+
+/**
+ * @typedef {Object} guessIllData
+ * @property {string} illustration 曲绘路径
+ * @property {number} width 展示的宽度
+ * @property {number} height 展示的高度
+ * @property {number} x 展示的X位置
+ * @property {number} y 展示的Y位置
+ * @property {number} blur 模糊度
+ * @property {number} style (0|1)是否全局视野
+ */
+export default await new class picmodle {
 
     constructor() {
-        /**待使用puppeteer */
+        /**
+         * 待使用puppeteer
+         * @type {number[]}
+         */
         this.queue = []
-        /**即将渲染id */
+        /**
+         * 即将渲染id
+         * @type {number[]}
+         */
         this.torender = []
-        /**渲染中 */
+        /**
+         * 渲染中id
+         * @type {number[]}
+         */
         this.rendering = []
         /**
          * puppeteer队列
@@ -34,13 +57,18 @@ class picmodle {
         for (let i = 0; i < num; i++) {
             this.puppeteer.push(new puppeteer({
                 puppeteerTimeout: Config.getUserCfg('config', 'timeout')
-            }, i))
-            this.puppeteer[i].browserInit(i)
+            }, `${i}`))
+            this.puppeteer[i].browserInit()
             this.queue.push(i)
         }
+        return this;
     }
 
-    /**曲目图鉴 */
+    /**
+     * 曲目图鉴
+     * @param {any} e
+     * @param {any} info
+     */
     async alias(e, info) {
         return await this.common(e, 'atlas', {
             ...info,
@@ -49,25 +77,51 @@ class picmodle {
     }
 
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async b19(e, data) {
         return await this.common(e, 'b19', data)
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async arcgros_b19(e, data) {
         return await this.common(e, 'arcgrosB19', data)
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async update(e, data) {
         return await this.common(e, 'update', data)
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async tasks(e, data) {
         return await this.common(e, 'tasks', data)
     }
 
     /**
      * 个人信息
-     * @param {1|2} picversion 版本
+     * @param {any} e 
+     * @param {any} data 
+     * @param {1|2|number} picversion 版本
      */
     async user_info(e, data, picversion) {
         switch (picversion) {
@@ -98,16 +152,30 @@ class picmodle {
         }
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async lvsco(e, data) {
         return await this.common(e, 'lvsco', data)
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async list(e, data) {
         return await this.common(e, 'list', data)
     }
 
     /**
      * 单曲成绩
+     * @param {any} e 
+     * @param {any} data
      * @param {1|2} picversion 版本
      */
     async score(e, data, picversion) {
@@ -133,30 +201,65 @@ class picmodle {
         }
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async ill(e, data) {
         return await this.common(e, 'ill', data)
     }
 
+
+    /**
+     * 
+     * @param {any} e 
+     * @param {guessIllData} data 
+     * @returns 
+     */
     async guess(e, data) {
         return await this.common(e, 'guess', data)
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async rand(e, data) {
         return await this.common(e, 'rand', data)
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async help(e, data) {
         return await this.common(e, 'help', data)
     }
 
+    /**
+     * 
+     * @param {any} e 
+     * @param {any} data 
+     * @returns 
+     */
     async chap(e, data) {
         return await this.common(e, 'chap', data)
     }
 
+    /** 
+     * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'setting'} picKind
+     */
+
     /**
      * 
      * @param {*} e 
-     * @param {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'} kind 
+     * @param {picKind} kind 
      * @param {*} data
      * @returns 
      */
@@ -169,6 +272,13 @@ class picmodle {
         })
     }
 
+    /**
+     * 
+     * @param {string} path 
+     * @param {any} params 
+     * @param {any} cfg 
+     * @returns 
+     */
     async render(path, params, cfg) {
         // return await puppeteer.render(path, params, cfg)
 
@@ -178,7 +288,7 @@ class picmodle {
         let puppeteerNum
         for (let i = 0; i < Config.getUserCfg('config', 'waitingTimeout') / 100; i++) {
             if (this.torender[0] == id && this.queue.length != 0) {
-                puppeteerNum = this.queue.shift()
+                puppeteerNum = this.queue.shift() || 0
                 this.torender.shift()
                 try {
 
@@ -251,7 +361,4 @@ class picmodle {
         }
     }
 
-}
-let result = new picmodle()
-result.init()
-export default result
+}().init()

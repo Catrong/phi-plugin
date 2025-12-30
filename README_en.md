@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/Plugin_Version-0.9.9.4-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Plugin_Version-1.0.0-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.18.1-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
@@ -109,7 +109,8 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi (tipgame\|hint)` | Guess song via hints (use #tip/#ans) |
 | `#phi (song\|song) xxx` | Query song info (supports aliases) |
 | `#phi chart <song> <difficulty>` | View chart details |
-| `#phi (addtag\|subtag\|retag) <song> <difficulty> <tag>` | Vote on tags (default IN) |
+| `#phi tag <song name> <difficulty> <tag>` | View chart tags, available tags shown in response, default difficulty is IN |
+| `#phi settag <song name> <difficulty> <tag>` | Tag a chart, recommended to use /tag to query tag list first, default difficulty is IN |
 | `#phi (comment\|cmt) <song> <difficulty?>(newline)<text>` | Comment on songs |
 | `#phi mycmt` | View own cloud comments |
 | `#phi recmt <ID>` | Delete comment (owner/admin) |
@@ -167,6 +168,25 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | setting | Settings | /theme |
 | dan | Dan authentication | /dan /danupdate |
 </details>
+
+## API Feature Testing Now Open
+
+API features can be manually enabled/disabled in settings. When enabled, it automatically syncs user usage records and historical scores from Phi-Plugin applications (web, Yunzai, excluding Koishi for now) to the API server. Some features require API to be enabled.
+
+| **Command** | **Description**
+| :- | :-
+| `#phi bind <userId>` | Enable score query API, bind API account
+| `#phi setApiToken <token>` | Set API Token
+| `#phi tokenList` | Get list of currently bound platforms
+| `#phi tokenManage (delete) <platform number> (-f)?` | Delete bound platform, -f to skip confirmation
+| `#phi auth <api Token>` | Get sessionToken via API Token
+| `#phi clearApiData` | Clear API data
+| `#phi updateHistory` | Update historical scores from BOT to API server
+| `#phi updateUserToken` | **Owner command** Upload current BOT user tokens to API server
+
+#### Detailed Permission Explanation:
+
+Binding and retrieving saves only requires a score query ID. When binding with `sessionToken` for the first time, the `API Token` will be set to the `sessionToken`, and if users provide a `sessionToken` during binding, the bot will save it locally.
 
 ---
 

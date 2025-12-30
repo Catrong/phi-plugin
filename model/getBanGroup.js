@@ -1,32 +1,32 @@
 import Config from "../components/Config.js";
+import logger from "../components/Logger.js";
 import { APII18NCN, redisPath } from "./constNum.js"
 import getSave from "./getSave.js";
 import makeRequest from "./makeRequest.js";
 import makeRequestFnc from "./makeRequestFnc.js";
 import send from "./send.js";
 
-export default new class getBanGroup {
+/**@import {botEvent} from "../components/baseClass.js" */
 
-    /**
-     * @import * from './type/type.js'
-     */
+export default class getBanGroup {
 
     /**
      * @param {string} group 
-     * @param {allFnc} fnc 
+     * @param {string} fnc 
      * @returns 
      */
-    async redis(group, fnc) {
+    static async redis(group, fnc) {
+        // @ts-ignore
         return await redis.get(`${redisPath}:banGroup:${group}:${fnc}`) ? true : false
     }
 
     /**
      * 
-     * @param {string} group 
+     * @param {botEvent} e 
      * @param {allFnc} fnc 
      * @returns 
      */
-    async get(e, fnc) {
+    static async get(e, fnc) {
         const { group_id } = e;
         let sessionToken = await getSave.get_user_token(e.user_id)
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
@@ -40,8 +40,8 @@ export default new class getBanGroup {
                     }
                     return true;
                 }
-            } catch (e) {
-                if (e.error != APII18NCN.userNotFound) { logger.warn('[phi-plugin]API获取用户禁用状态失败', e) }
+            } catch (/** @type {any} */ e) {
+                if (e.message != APII18NCN.userNotFound) { logger.warn('[phi-plugin]API获取用户禁用状态失败', e) }
             }
         }
         if (sessionToken) {
@@ -78,6 +78,7 @@ export default new class getBanGroup {
             case 'song':
             case 'ill':
             case 'chart':
+            case 'tag':
             case 'addtag':
             case 'retag':
             case 'search':
@@ -124,4 +125,4 @@ export default new class getBanGroup {
                 return false;
         }
     }
-}()
+}

@@ -1,31 +1,32 @@
 import getFile from "./getFile.js";
 import path from 'path'
 import { otherDataPath } from "./path.js";
-import chokidar from 'chokidar'
+import fCompute from "./fCompute.js";
 
 const dataPath = path.join(otherDataPath, 'commentData.json')
 
 
-export default new class getComment {
 
-    /**
-     * @typedef {Object} commentObject 评论对象
-     * @property {string} sessionToken
-     * @property {string} userObjectId 用户ObjectId
-     * @property {number} rks
-     * @property {allLevelKind} rank
-     * @property {number} score
-     * @property {number} acc
-     * @property {boolean} fc
-     * @property {?string} spInfo
-     * @property {number} challenge
-     * @property {Date} time
-     * @property {string} comment
-     * @property {?string} thisId 在add时添加
-     * @property {?string} songId 仅在getByCommentId时添加
-     * @property {?string} PlayerId 仅在查询时添加
-     * @property {?string} avatar 仅在查询时添加
-     */
+/**
+ * @typedef {Object} commentObject 评论对象
+ * @property {phigrosToken} sessionToken
+ * @property {string} userObjectId 用户ObjectId
+ * @property {number} rks
+ * @property {allLevelKind} rank
+ * @property {number} score
+ * @property {number} acc
+ * @property {boolean} fc
+ * @property {?string} spInfo
+ * @property {number} challenge
+ * @property {Date} time
+ * @property {string} comment
+ * @property {string} [thisId] 在add时添加
+ * @property {string} [songId] 仅在getByCommentId时添加
+ * @property {string} [PlayerId] 仅在查询时添加
+ * @property {string} [avatar] 仅在查询时添加
+ */
+
+export default new class getComment {
 
     constructor() {
         /**
@@ -42,7 +43,7 @@ export default new class getComment {
             this.data = {};
             getFile.SetFile(dataPath, this.data);
         }
-        Object.keys(this.data).forEach((/**@type {idString} */ id) => {
+        fCompute.objectKeys(this.data).forEach((id) => {
             this.data[id].forEach((comment, index, array) => {
                 if (!comment?.thisId) {
                     array.splice(index, 1);

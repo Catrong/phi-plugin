@@ -12,18 +12,21 @@ import getSave from './getSave.js';
 import getNotes from './getNotes.js'
 import getInfo from './getInfo.js';
 import pic from './getPic.js';
-import { Level } from "./constNum.js";
+import { allLevel } from "./constNum.js";
 import getPic from "./getPic.js";
 import fs from 'node:fs';
 // import { redis } from 'yunzai'
 
 
+/**
+ * @deprecated
+ */
 class getdata {
 
 
     constructor() {
 
-        this.Level = getInfo.Level //难度映射
+        this.Level = getInfo.allLevel //难度映射
 
         /**头像id */
         this.avatarid = getInfo.avatarid
@@ -144,43 +147,43 @@ class getdata {
         return await getSave.delSave(id)
     }
 
-    /**
-     * 删除QQ号对应的娱乐数据
-     * @param {String} id user_id
-     */
-    async delpluginData(id) {
-        return this.delData(`${id}_.json`, pluginDataPath)
-    }
+    // /**
+    //  * 删除QQ号对应的娱乐数据
+    //  * @param {String} id user_id
+    //  */
+    // async delpluginData(id) {
+    //     return this.delData(`${id}_.json`, pluginDataPath)
+    // }
 
 
 
-    /**
-     * 获取QQ号对应的娱乐数据
-     * @param {String} user_id 
-     * @returns save
-     */
-    async getpluginData(id) {
-        return await getNotes.getPluginData(id)
-    }
+    // /**
+    //  * 获取QQ号对应的娱乐数据
+    //  * @param {String} user_id 
+    //  * @returns save
+    //  */
+    // async getpluginData(id) {
+    //     return await getNotes.getPluginData(id)
+    // }
 
-    /**
-     * 保存QQ号对应的娱乐数据
-     * @param {String} id user_id
-     * @param {Object} data 
-     */
-    async putpluginData(id, data) {
-        return await getNotes.putPluginData(id, data)
-    }
+    // /**
+    //  * 保存QQ号对应的娱乐数据
+    //  * @param {String} id user_id
+    //  * @param {Object} data 
+    //  */
+    // async putpluginData(id, data) {
+    //     return await getNotes.putPluginData(id, data)
+    // }
 
-    /**
-     * 获取并初始化 id 插件相关数据
-     * @param {String} id 
-     * @param {boolean} [islock=false] 是否锁定
-     * @returns 整个data对象
-     */
-    async getNotesData(id, islock = false) {
-        return await getNotes.getNotesData(id, islock)
-    }
+    // /**
+    //  * 获取并初始化 id 插件相关数据
+    //  * @param {String} id 
+    //  * @param {boolean} [islock=false] 是否锁定
+    //  * @returns 整个data对象
+    //  */
+    // async getNotesData(id, islock = false) {
+    //     return await getNotes.getNotesData(id, islock)
+    // }
 
     /**获取本地图片
      * @param {string} img 文件名
@@ -197,15 +200,6 @@ class getdata {
      */
     async getDan(id) {
         return await getSave.getDan(id)
-    }
-
-    /**
-     * 匹配歌曲名称，根据参数返回原曲名称
-     * @param {string} mic 别名
-     * @returns 原曲名称
-     */
-    songsnick(mic) {
-        return getInfo.songsnick(mic)
     }
 
     /**设置别名 原名, 别名 */
@@ -309,7 +303,7 @@ class getdata {
                 for (let i in task) {
                     if (!task[i]) continue
                     if (!task[i].finished && getInfo.songsid[id] == task[i].song) {
-                        let level = Level.indexOf(task[i].request.rank)
+                        let level = allLevel.indexOf(task[i].request.rank)
                         if (!now.gameRecord[id][level]) continue
                         switch (task[i].request.type) {
                             case 'acc': {

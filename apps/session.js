@@ -1,5 +1,3 @@
-import plugin from '../../../lib/plugins/plugin.js'
-import get from '../model/getdata.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 import Save from '../model/class/Save.js'
@@ -9,7 +7,7 @@ import getQRcode from '../lib/getQRcode.js'
 import common from '../../../lib/common/common.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
-import { redisPath } from "../model/constNum.js"
+import { allLevel, redisPath } from "../model/constNum.js"
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 import getUpdateSave from '../model/getUpdateSave.js'
@@ -17,10 +15,17 @@ import getSaveFromApi from '../model/getSaveFromApi.js'
 import saveHistory from '../model/class/saveHistory.js'
 import getNotes from '../model/getNotes.js'
 import { APII18NCN } from '../model/constNum.js'
+import phiPluginBase from '../components/baseClass.js'
+import logger from '../components/Logger.js'
+import segment from '../components/segment.js'
+import getInfo from '../model/getInfo.js'
+import picmodle from '../model/picmodle.js'
+
+/**@import {botEvent} from '../components/baseClass.js' */
 
 const apiMsg = `\n请注意，您尚未设置API Token！\n指令格式：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
 
-export class phisstk extends plugin {
+export class phisstk extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-sessionToken',
@@ -53,6 +58,11 @@ export class phisstk extends plugin {
 
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async bind(e) {
 
         if (await getBanGroup.get(e, 'bind')) {
@@ -60,64 +70,69 @@ export class phisstk extends plugin {
             return false
         }
 
-        let sessionToken = e.msg.replace(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)
-        const useWhich = e.msg.match(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/)[2]
+        let sessionToken =/**@type {phigrosToken} */ (e.msg.replace(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/, "").match(/[0-9a-zA-Z]{25}|qrcode/g)?.[0])
+        const useWhich = e.msg.match(/[#/](.*?)(cn|gb)?(绑定|bind)(\s*)/)?.[2]
 
         /** @type {boolean} */
         let isGlobal = useWhich ? useWhich === 'gb' : Config.getUserCfg('config', 'defaultGlobal');
 
         let localPhigrosToken = await getSave.get_user_token(e.user_id)
 
-        sessionToken = sessionToken ? sessionToken[0] : localPhigrosToken
-
         if (!sessionToken) {
             let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]+/g)?.[0]
-            if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-                if (apiId) {
+            if (apiId) {
+                if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
                     send.send_with_At(e, `这里没有连接查分平台哦！请使用sessionToken进行绑定！`)
-                } else {
-                    send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                    return false
                 }
+                try {
+                    let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId })
+                    if (result?.data?.internal_id) {
+                        let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
+                        if (!result.data.have_api_token) {
+                            resMsg += apiMsg
+                        }
+                        send.send_with_At(e, resMsg)
+                        await getSave.del_user_token(e.user_id); //删除本地token，避免冲突
+                        let updateData = await getUpdateSave.getNewSaveFromApi(e)
+                        let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                        await build(e, updateData, history)
+                    }
+                    return true
+                } catch (/**@type {any} */ err) {
+                    // console.log(err)
+                    if (err?.message == APII18NCN.userNotFound) {
+                        send.send_with_At(e, `没有找到${apiId || ''}对应的用户哦，请尝试输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                    } else {
+                        send.send_with_At(e, err.message)
+                        logger.error(`[phi-plugin] API错误`)
+                        logger.error(err)
+                    }
+                    return false
+                }
+            } else if (!localPhigrosToken) {
+                send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
                 return false
             }
 
-            try {
-                let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId })
-                if (result?.data?.internal_id) {
-                    let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
-                    if (!result.data.have_api_token) {
-                        resMsg += apiMsg
-                    }
-                    send.send_with_At(e, resMsg)
-                    let updateData = await getUpdateSave.getNewSaveFromApi(e)
-                    let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
-                    await build(e, updateData, history)
-                }
-                return true
-            } catch (err) {
-                // console.log(err)
-                if (err?.message == APII18NCN.userNotFound) {
-                    send.send_with_At(e, `没有找到${apiId || ''}对应的用户哦，请尝试输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
-                } else {
-                    send.send_with_At(e, err.message)
-                    logger.error(`[phi-plugin] API错误`)
-                    logger.error(err)
-                }
-                return false
-            }
         }
 
         if (sessionToken == "qrcode") {
             /**用户若已经触发且未绑定，则发送原来的二维码 */
             let key = `${redisPath}:qrcode:${e.user_id}`
             let timeOutKey = `${redisPath}:qrcodeTimeOut:${e.user_id}`
+            // @ts-ignore
             let qrcode = await redis.get(key)
             if (qrcode) {
+                // @ts-ignore
                 let qrcodeTimeOut = await redis.ttl(timeOutKey)
                 let recallTime = qrcodeTimeOut
                 if (qrcodeTimeOut >= 60) recallTime = 60
                 if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
-                    await send.send_with_At(e, [`请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n二维码剩余时间:${qrcodeTimeOut}`, segment.image(await getQRcode.getQRcode(qrcode))], false, { recallMsg: recallTime });
+                    await send.send_with_At(e, [
+                        segment.image(await getQRcode.getQRcode(qrcode)),
+                        `请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n二维码剩余时间:${qrcodeTimeOut}`
+                    ], false, { recallMsg: recallTime });
                 } else {
                     await send.send_with_At(e, `请点击链接进行登录嗷！请勿使用他人的链接。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n链接剩余时间:${qrcodeTimeOut}\n${qrcode}`, false, { recallMsg: recallTime });
                 }
@@ -127,11 +142,15 @@ export class phisstk extends plugin {
             let request = await getQRcode.getRequest(isGlobal);
             let qrCodeMsg;
             if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
-                qrCodeMsg = await send.send_with_At(e, [`请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。`, segment.image(await getQRcode.getQRcode(request.data.qrcode_url))], false, { recallMsg: 60 });
+                qrCodeMsg = await send.send_with_At(e, [
+                    segment.image(await getQRcode.getQRcode(request.data.qrcode_url)),
+                    `请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。`
+                ], false, { recallMsg: 60 });
             } else {
                 qrCodeMsg = await send.send_with_At(e, `请点击链接进行登录嗷！请勿使用他人的链接。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n${request.data.qrcode_url}`, false, { recallMsg: 60 });
             }
-            let t1 = new Date();
+            let t1 = new Date().getTime();
+            /**@type {any} */
             let result;
             /**是否发送过已扫描提示 */
             let flag = false;
@@ -139,12 +158,14 @@ export class phisstk extends plugin {
             let QRCodetimeout = request.data.expires_in
             if (fCompute.getAdapterName(e) === 'QQBot' && request.data.expires_in > 270) QRCodetimeout = 270
             /**利用redis的超时机制，设置一个生命与超时时间一致的键值作为倒计时器，不存储值仅提供倒计时 */
+            // @ts-ignore
             await redis.set(timeOutKey, '1', { EX: QRCodetimeout })
 
-            while (new Date() - t1 < QRCodetimeout * 1000) {
+            while (new Date().getTime() - t1 < QRCodetimeout * 1000) {
                 result = await getQRcode.checkQRCodeResult(request, isGlobal);
                 if (!flag) {
                     /**存储二维码链接，生命为3秒，以便在代码意外被终止再次触发时不会阻塞正常绑定 */
+                    // @ts-ignore
                     await redis.set(key, request.data.qrcode_url, { EX: 3 })
                 }
                 if (!result.success) {
@@ -163,7 +184,9 @@ export class phisstk extends plugin {
                 await common.sleep(2000)
             }
 
+            // @ts-ignore
             redis.del(key) //绑定完成、超时后删除键值
+            // @ts-ignore
             redis.del(timeOutKey)
 
             if (!result.success) {
@@ -178,6 +201,8 @@ export class phisstk extends plugin {
                 return true
             }
         }
+
+        sessionToken = sessionToken || localPhigrosToken
 
         if (!Config.getUserCfg('config', 'isGuild')) {
 
@@ -212,11 +237,12 @@ export class phisstk extends plugin {
             }
         }
 
-        send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
 
 
         try {
             let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken, isGlobal)
+            if (!updateData) return true;
+            send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
             let history = await getSave.getHistory(e.user_id)
             await build(e, updateData, history)
         } catch (error) {
@@ -227,6 +253,11 @@ export class phisstk extends plugin {
         return true
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async update(e) {
 
         if (await getBanGroup.get(e, 'update')) {
@@ -240,7 +271,7 @@ export class phisstk extends plugin {
                 let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
                 await build(e, updateData, history)
                 return true
-            } catch (err) {
+            } catch (/**@type {any} */ err) {
                 if (err?.message != APII18NCN.userNotFound) {
                     send.send_with_At(e, `${err}\n从API获取存档失败，本次更新将使用本地数据QAQ！`)
                     logger.warn(`[phi-plugin] API错误`)
@@ -260,6 +291,7 @@ export class phisstk extends plugin {
         }
         try {
             let updateData = await getUpdateSave.getNewSaveFromLocal(e, session)
+            if (!updateData) return true;
             let history = await getSave.getHistory(e.user_id)
             await build(e, updateData, history)
         } catch (error) {
@@ -271,7 +303,9 @@ export class phisstk extends plugin {
     }
 
 
-
+    /**
+     * @param {botEvent} e
+     */
     async unbind(e) {
 
         if (await getBanGroup.get(e, 'unbind')) {
@@ -314,8 +348,8 @@ export class phisstk extends plugin {
                 let pluginData = await getNotes.getNotesData(e.user_id)
 
                 if (pluginData) {
-                    if (pluginData.plugin_data) {
-                        pluginData.plugin_data.task = []
+                    if (pluginData) {
+                        pluginData.task = []
                     }
                     getNotes.putNotesData(e.user_id, pluginData)
                 }
@@ -335,7 +369,11 @@ export class phisstk extends plugin {
         this.finish('doUnbind', false)
     }
 
-
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async clean(e) {
         this.setContext('doClean', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
 
@@ -373,6 +411,11 @@ export class phisstk extends plugin {
         this.finish('doClean', false)
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async getSstk(e) {
         if (e.isGroup) {
             send.send_with_At(e, `请私聊使用嗷`)
@@ -392,7 +435,11 @@ export class phisstk extends plugin {
 }
 
 
-// 定义一个函数，接受一个整数参数，返回它的十六进制形式
+/**
+ * 定义一个函数，接受一个整数参数，返回它的十六进制形式
+ * @param {number} num 
+ * @returns 
+ */
 function toHex(num) {
     // 如果数字小于 16，就在前面补一个 0
     if (num < 16) {
@@ -414,49 +461,65 @@ function getRandomBgColor() {
     return hexColor;
 }
 
-/**计算/update宽度 */
+/**
+ * 计算/update宽度
+ * @param {number} num
+ */
 function comWidth(num) {
     return num * 135 + 20 * num - 20
 }
 
 /**
  * 保存PhigrosUser
- * @param {object} e
- * @param {{save:Save, added_rks_notes: [number, number]}} updateData
+ * @param {botEvent} e
+ * @param {{save:Save, added_rks_notes: number[]}} updateData
  * @param {saveHistory} history
  */
 async function build(e, updateData, history) {
 
     let { added_rks_notes, save } = updateData
 
-    if (added_rks_notes[0]) added_rks_notes[0] = `${added_rks_notes[0] > 0 ? '+' : ''}${added_rks_notes[0] >= 1e-4 ? added_rks_notes[0].toFixed(4) : ''}`
-    if (added_rks_notes[1]) added_rks_notes[1] = `${added_rks_notes[1] > 0 ? '+' : ''}${added_rks_notes[1]}`
+    const displayAddedRksNotes = ['', ''];
+
+    if (added_rks_notes[0]) displayAddedRksNotes[0] = `${added_rks_notes[0] > 0 ? '+' : ''}${added_rks_notes[0] >= 1e-4 ? added_rks_notes[0].toFixed(4) : ''}`
+    if (added_rks_notes[1]) displayAddedRksNotes[1] = `${added_rks_notes[1] > 0 ? '+' : ''}${added_rks_notes[1]}`
 
 
     /**图片 */
 
-    /**标记数据中含有的时间 */
+    /**
+     * 标记数据中含有的时间
+     * @type {{[date:string]:number}}
+     */
     let time_vis = {}
 
-    /**总信息 */
+    /**
+     * 总信息
+     * @type {{date:string,
+        * color:string,
+        * update_num:number,
+        * song:import('../model/class/scoreHistory.js').extendedScoreHistoryDetail[]
+     * }[]}
+     */
     let tot_update = []
 
 
-    let now = new Save(save)
-    let pluginData = getNotes.getNotesData(e.user_id)
+    let now = save
+    let pluginData = await getNotes.getNotesData(e.user_id)
 
     // const RecordErr = now.checkRecord()
 
     // if (RecordErr) {
     //     send.send_with_At(e, '[测试功能，概率有误，暂时不清楚错误原因]\n请注意，你的存档可能存在一些问题：\n' + RecordErr)
     // }
-    for (let song in history.scoreHistory) {
-        let tem = history.scoreHistory[song]
-        for (let level in tem) {
-            let history = tem[level]
-            for (let i in history) {
-                let score_date = fCompute.date_to_string(scoreHistory.date(history[i]))
-                let score_info = scoreHistory.extend(song, level, history[i], history[i - 1])
+    for (let id of fCompute.objectKeys(history.scoreHistory)) {
+        const tem = history.scoreHistory[id]
+        for (let level of allLevel) {
+            const history = tem[level]
+            if (!history) continue
+            for (let i = 0; i < history.length; i++) {
+                let score_date = fCompute.formatDate(scoreHistory.date(history[i]))
+                let score_info = scoreHistory.extend(id, level, history[i], i ? history[i - 1] : undefined)
                 if (time_vis[score_date] == undefined) {
                     time_vis[score_date] = tot_update.length
                     tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
@@ -467,9 +530,9 @@ async function build(e, updateData, history) {
         }
     }
 
-    let newnum = tot_update[time_vis[fCompute.date_to_string(now.saveInfo.modifiedAt.iso)]]?.update_num || 0
+    let newnum = tot_update[time_vis[fCompute.formatDate(now.saveInfo.modifiedAt.iso)]]?.update_num || 0
 
-    tot_update.sort((a, b) => new Date(b.date) - new Date(a.date))
+    tot_update.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
     /**实际显示的数量 */
     let show = 0
@@ -482,7 +545,7 @@ async function build(e, updateData, history) {
 
 
 
-    for (let date in tot_update) {
+    for (let date = 0; date < tot_update.length; date++) {
 
         /**天数上限 */
         if (date >= DateNum || TotNum < show + Math.min(DayNum, tot_update[date].update_num)) {
@@ -491,7 +554,7 @@ async function build(e, updateData, history) {
         }
 
         /**预处理每日显示上限 */
-        tot_update[date].song.sort((a, b) => { return b.rks_new - a.rks_new })
+        tot_update[date].song.sort((a, b) => { return (b.rks_new || 0) - (a.rks_new || 0) })
 
         tot_update[date].song = tot_update[date].song.slice(0, Math.min(DayNum, TotNum - show))
 
@@ -501,10 +564,11 @@ async function build(e, updateData, history) {
 
     }
 
-    /**预分行 */
+    /**
+     * 预分行
+     * @type {any[]}
+     */
     let box_line = []
-
-    box_line[box_line.length - 1]
 
     /**循环中当前行的数量 */
     let line_num = 0
@@ -543,19 +607,21 @@ async function build(e, updateData, history) {
     }
 
     /**添加任务信息 */
-    let task_data = pluginData?.plugin_data?.task
-    let task_time = fCompute.date_to_string(pluginData?.plugin_data?.task_time)
+    let task_data = pluginData?.task
+    let task_time = fCompute.formatDate(pluginData?.task_time)
 
     /**添加曲绘 */
     if (task_data) {
         for (let i in task_data) {
             if (task_data[i]) {
-                task_data[i].illustration = get.getill(task_data[i].song)
+                // @ts-ignore
+                task_data[i].illustration = getInfo.getill(task_data[i].song)
                 if (task_data[i].request.type == 'acc') {
+                    // @ts-ignore
                     task_data[i].request.value = task_data[i].request.value.toFixed(2) + '%'
-                    if (task_data[i].request.value.length < 6) {
-                        task_data[i].request.value = '0' + task_data[i].request.value
-                    }
+                } else {
+                    // @ts-ignore
+                    task_data[i].request.value = task_data[i].request.value.toString().padStart(6, '0')
                 }
             }
         }
@@ -571,22 +637,22 @@ async function build(e, updateData, history) {
         Date: now.saveInfo.summary.updatedAt,
         ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
         ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
-        background: get.getill(get.illlist[Math.floor((Math.random() * (get.illlist.length - 1)))]),
+        background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
         box_line: box_line,
         update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
-        Notes: pluginData?.plugin_data?.money || 0,
+        Notes: pluginData?.money || 0,
         show: show,
-        tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
+        tips: getInfo.tips[Math.floor((Math.random() * (getInfo.tips.length - 1)) + 1)],
         task_data: task_data,
         task_time: task_time,
-        dan: await get.getDan(e.user_id),
-        added_rks_notes: added_rks_notes,
-        theme: pluginData?.plugin_data?.theme || 'star',
-        rks_date: [fCompute.date_to_string(rks_date[0]), fCompute.date_to_string(rks_date[1])],
+        // dan: await get.getDan(e.user_id),
+        added_rks_notes: displayAddedRksNotes,
+        theme: pluginData?.theme || 'star',
+        rks_date: [fCompute.formatDate(rks_date[0]), fCompute.formatDate(rks_date[1])],
         rks_history, rks_range,
     }
 
-    send.send_with_At(e, [`PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`, await get.getupdate(e, data)])
+    send.send_with_At(e, [`PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`, await picmodle.update(e, data)])
 
     return false
 }

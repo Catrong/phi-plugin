@@ -1,26 +1,53 @@
 import common from '../../../../lib/common/common.js'
 import Config from '../../components/Config.js'
-import get from '../../model/getdata.js'
+import logger from '../../components/Logger.js'
+import getInfo from '../../model/getInfo.js'
 import send from '../../model/send.js'
+import picmodle from "../../model/picmodle.js";
+import SongsInfo from '../../model/class/SongsInfo.js'
+import fCompute from '../../model/fCompute.js'
+import getPic from '../../model/getPic.js'
 
-let songsname = get.illlist
+let songIdList = getInfo.illlist || [] //所有有曲绘的曲目列表
+
+/**
+ * @type {Record<string, Record<idString, number>>}
+ */
 let songweights = {} //存储每首歌曲被抽取的权重
 
 //曲目初始洗牌
-shuffleArray(songsname)
+songIdList = fCompute.randArray(songIdList)
 
-let gamelist = {}
+/**
+ * 答案列表
+ * @type {Record<string, idString>}
+ */
+let ansList = {}
+/**
+ * @type {Record<string, any>}
+ */
 const eList = {}
 
-export default new class guessIll{
-    /**猜曲绘 */
+
+/**
+ * @typedef {import('../guessGame.js').GameList} GameList
+ * @typedef {import('../../model/picmodle.js').guessIllData} guessIllData
+ * @typedef {['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']} remainInfoType
+ */
+
+export default new class guessIll {
+    /**
+     * 猜曲绘
+     * @param {any} e
+     * @param {GameList} gameList
+     */
     async start(e, gameList) {
         const { group_id } = e
-        if (gamelist[group_id]) {
+        if (ansList[group_id]) {
             e.reply("请不要重复发起哦！", true)
             return true
         }
-        if (songsname.length == 0) {
+        if (songIdList.length == 0) {
             e.reply('当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
             return true
         }
@@ -29,38 +56,38 @@ export default new class guessIll{
             songweights[group_id] = {}
 
             //将每一首曲目的权重初始化为1
-            songsname.forEach(song => {
+            songIdList.forEach(song => {
                 songweights[group_id][song] = 1
             })
         }
 
-        let song = getRandomSong(e)
-        let songs_info = get.info(song)
+        let songId = getRandomSong(e)
+        let songs_info = getInfo.info(songId)
 
         let cnnt = 0
-        while (songs_info.can_t_be_guessill) {
+        while (!songs_info || songs_info.can_t_be_guessill) {
             ++cnnt
             if (cnnt >= 50) {
                 logger.error(`[phi guess]抽取曲目失败，请检查曲库设置`)
                 e.reply(`[phi guess]抽取曲目失败，请检查曲库设置`)
                 return
             }
-            song = getRandomSong(e)
-            songs_info = get.info(song)
+            songId = getRandomSong(e)
+            songs_info = getInfo.info(songId)
         }
 
-        gamelist[group_id] = songs_info.song
+        ansList[group_id] = songs_info.id
         gameList[group_id] = { gameType: "guessIll" }
         eList[group_id] = e
 
-        let w_ = randint(100, 140)
-        let h_ = randint(100, 140)
-        let x_ = randint(0, 2048 - w_)
-        let y_ = randint(0, 1080 - h_)
-        let blur_ = randint(9, 14)
+        let w_ = fCompute.randBetween(100, 140)
+        let h_ = fCompute.randBetween(100, 140)
+        let x_ = fCompute.randBetween(0, 2048 - w_)
+        let y_ = fCompute.randBetween(0, 1080 - h_)
+        let blur_ = fCompute.randBetween(9, 14)
 
         let data = {
-            illustration: get.getill(songs_info.song),
+            illustration: getInfo.getill(songs_info.id),
             width: w_,
             height: h_,
             x: x_,
@@ -68,8 +95,14 @@ export default new class guessIll{
             blur: blur_,
             style: 0,
         }
-
+        /**
+         * 已知信息
+         * @type {Record<string, string>}
+         */
         const known_info = {}
+        /**
+         * @type {Partial<remainInfoType>}
+         */
         const remain_info = ['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']
         /**
          * 随机给出提示
@@ -81,11 +114,11 @@ export default new class guessIll{
         let fnc = [0, 1, 2, 3]
         logger.info(data)
 
-        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getUserCfg('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 /${Config.getUserCfg('config','cmdhead')} ans 结束游戏`)
+        e.reply(`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getUserCfg('config', 'GuessTipCd')}秒后将会给出进一步提示。发送 /${Config.getUserCfg('config', 'cmdhead')} ans 结束游戏`)
         if (Config.getUserCfg('config', 'GuessTipRecall'))
-            await e.reply(await get.getguess(e, data), false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') })
+            await e.reply(await picmodle.guess(e, data), false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') })
         else
-            await e.reply(await get.getguess(e, data))
+            await e.reply(await picmodle.guess(e, data))
 
         /**单局时间不超过4分半 */
         const time = Config.getUserCfg('config', 'GuessTipCd')
@@ -94,8 +127,8 @@ export default new class guessIll{
 
             for (let j = 0; j < time; ++j) {
                 await common.sleep(1000)
-                if (gamelist[group_id]) {
-                    if (gamelist[group_id] != songs_info.song) {
+                if (ansList[group_id]) {
+                    if (ansList[group_id] != songs_info.id) {
                         await gameover(e, data)
                         return true
                     }
@@ -106,7 +139,7 @@ export default new class guessIll{
             }
             let remsg = [] //回复内容
             let tipmsg = '' //这次干了什么
-            const index = randint(0, fnc.length - 1)
+            const index = fCompute.randBetween(0, fnc.length - 1)
 
             switch (fnc[index]) {
                 case 0: {
@@ -138,12 +171,12 @@ export default new class guessIll{
             if (known_info.illustrator) tipmsg += `\n该曲目曲绘的作者为 ${known_info.illustrator}`
             if (known_info.chart) tipmsg += known_info.chart
             remsg = [tipmsg]
-            remsg.push(await get.getguess(e, data))
+            remsg.push(await picmodle.guess(e, data))
 
             e = eList[group_id]
 
-            if (gamelist[group_id]) {
-                if (gamelist[group_id] != songs_info.song) {
+            if (ansList[group_id]) {
+                if (ansList[group_id] != songs_info.id) {
                     await gameover(e, data)
                     return true
                 }
@@ -161,8 +194,8 @@ export default new class guessIll{
 
         for (let j = 0; j < time; ++j) {
             await common.sleep(1000)
-            if (gamelist[group_id]) {
-                if (gamelist[group_id] != songs_info.song) {
+            if (ansList[group_id]) {
+                if (ansList[group_id] != songs_info.id) {
                     await gameover(e, data)
                     return true
                 }
@@ -174,34 +207,38 @@ export default new class guessIll{
 
         e = eList[group_id]
 
-        const t = gamelist[group_id]
+        const t = ansList[group_id]
         delete eList[group_id]
-        delete gamelist[group_id]
+        delete ansList[group_id]
         delete gameList[group_id]
         await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
 
-        await e.reply(await get.GetSongsInfoAtlas(e, t))
+        await e.reply(await getPic.GetSongsInfoAtlas(e, t))
         await gameover(e, data)
 
         return true
     }
 
-    /**玩家猜测 */
+    /**
+     * 玩家猜测
+     * @param {any} e
+     * @param {GameList} gameList
+     */
     async guess(e, gameList) {
         const { group_id, msg, user_id } = e
-        if (gamelist[group_id]) {
+        if (ansList[group_id]) {
             eList[group_id] = e
             if (typeof msg === 'string') {
                 const ans = msg.replace(/[#/](我)?猜(\s*)/g, '')
-                const song = get.fuzzysongsnick(ans, 0.95)
+                const song = getInfo.fuzzysongsnick(ans, 0.95)
                 if (song[0]) {
                     for (let i in song) {
-                        if (gamelist[group_id] == song[i]) {
-                            const t = gamelist[group_id]
-                            delete gamelist[group_id]
+                        if (ansList[group_id] == song[i]) {
+                            const t = ansList[group_id]
+                            delete ansList[group_id]
                             delete gameList[group_id]
                             send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
-                            await e.reply(await get.GetSongsInfoAtlas(e, t))
+                            await e.reply(await getPic.GetSongsInfoAtlas(e, t))
                             return true
                         }
                     }
@@ -217,35 +254,44 @@ export default new class guessIll{
         return false
     }
 
+    /**
+     * 获取答案
+     * @param {any} e 
+     * @param {GameList} gameList 
+     * @returns 
+     */
     async ans(e, gameList) {
         const { group_id } = e
-        if (gamelist[group_id]) {
-            const t = gamelist[group_id]
-            delete gamelist[group_id]
+        if (ansList[group_id]) {
+            const t = ansList[group_id]
+            delete ansList[group_id]
             delete gameList[group_id]
             await e.reply('好吧，下面开始公布答案。', true)
-            await e.reply(await get.GetSongsInfoAtlas(e, t))
+            await e.reply(await getPic.GetSongsInfoAtlas(e, t))
             return true
         }
         return false
     }
 
-    /** 洗牌 **/
+    /**
+     * 洗牌
+     * @param {any} e
+     */
     async mix(e) {
         const { group_id } = e
 
-        if (gamelist[group_id]) {
+        if (ansList[group_id]) {
             await e.reply(`当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
             return false
         }
 
         // 曲目初始洗牌
-        shuffleArray(songsname)
+        songIdList = fCompute.randArray(songIdList)
 
         songweights[group_id] = songweights[group_id] || {}
 
         // 将权重归1
-        songsname.forEach(song => {
+        songIdList.forEach(song => {
             songweights[group_id][song] = 1
         })
 
@@ -256,16 +302,22 @@ export default new class guessIll{
 
 
 
-/**游戏结束，发送相应位置 */
+/**
+ * 游戏结束，发送相应位置
+ * @param {any} e 
+ * @param {any} data
+ */
 async function gameover(e, data) {
     data.ans = data.illustration
     data.style = 1
-    await e.reply(await get.getguess(e, data))
+    await e.reply(await picmodle.guess(e, data))
 }
 
 /**
  * RandBetween
  * @param {number} top 随机值上界
+ * @param {number} [bottom=0] 随机值下界
+ * @returns {number} 随机整数
  */
 function randbt(top, bottom = 0) {
     return Number((Math.random() * (top - bottom)).toFixed(0)) + bottom
@@ -274,8 +326,8 @@ function randbt(top, bottom = 0) {
 /**
  * 区域扩增
  * @param {number} size 增大的像素值
- * @param {object} data 
- * @param {Array} fnc 
+ * @param {guessIllData} data 
+ * @param {number[]} fnc 
  */
 function area_increase(size, data, fnc) {
     if (data.height < 1080) {
@@ -308,6 +360,8 @@ function area_increase(size, data, fnc) {
 /**
  * 降低模糊度
  * @param {number} size 降低值
+ * @param {guessIllData} data 
+ * @param {number[]} fnc
  */
 function blur_down(size, data, fnc) {
     if (data.blur) {
@@ -322,46 +376,52 @@ function blur_down(size, data, fnc) {
 
 /**
  * 获得一个歌曲信息的提示
- * @param {object} known_info 
- * @param {Array} remain_info 
- * @param {object} songs_info 
- * @param {Array} fnc
+ * @param {Record<string, string>} known_info 
+ * @param {Partial<remainInfoType>} remain_info 
+ * @param {SongsInfo} songs_info 
+ * @param {number[]} fnc
  */
 function gave_a_tip(known_info, remain_info, songs_info, fnc) {
     if (remain_info.length) {
         const t = randbt(remain_info.length - 1)
         const aim = remain_info[t]
+        if (!aim) {
+            logger.error('Error: aim is undefined')
+            return true
+        }
         remain_info.splice(t, 1)
-        known_info[aim] = songs_info[aim]
 
         if (!remain_info.length) fnc.splice(fnc.indexOf(2), 1)
 
         if (aim === 'chart') {
-            let charts = []
-            for (let i in songs_info[aim]) {
-                charts.push(i)
-            }
-            let t1 = charts[randint(0, charts.length - 1)]
+            /**
+             * @type {levelKind[]}
+             */
+            let charts = /**@type {levelKind[]} */(Object.keys(songs_info.chart))
+
+            let t1 = charts[fCompute.randBetween(0, charts.length - 1)]
 
             known_info[aim] = `\n该曲目的 ${t1} 谱面的`
 
-            switch (randint(0, 2)) {
+            switch (fCompute.randBetween(0, 2)) {
                 case 0: {
                     /**定数 */
-                    known_info[aim] += `定数为 ${songs_info[aim][t1]['difficulty']}`
+                    known_info[aim] += `定数为 ${songs_info[aim][t1]?.['difficulty']}`
                     break
                 }
                 case 1: {
                     /**物量 */
-                    known_info[aim] += `物量为 ${songs_info[aim][t1]['combo']}`
+                    known_info[aim] += `物量为 ${songs_info[aim][t1]?.['combo']}`
                     break
                 }
                 case 2: {
                     /**谱师 */
-                    known_info[aim] += `谱师为 ${songs_info[aim][t1]['charter']}`
+                    known_info[aim] += `谱师为 ${songs_info[aim][t1]?.['charter']}`
                     break
                 }
             }
+        } else {
+            known_info[aim] = songs_info[aim]
         }
     } else {
         logger.error('Error: remaining info is empty')
@@ -370,35 +430,11 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
     return false
 }
 
-
-//将数组顺序打乱
-function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = randint(0, i)
-        const temp = arr[i]
-        arr[i] = arr[j]
-        arr[j] = temp //交换位置
-    }
-    return arr
-}
-
-//定义生成指定区间带有指定小数位数随机数的函数
-function randfloat(min, max, precision = 0) {
-    let range = max - min
-    let randomOffset = Math.random() * range
-    let randomNumber = randomOffset + min + range * 10 ** -precision
-
-    return precision === 0 ? Math.floor(randomNumber) : randomNumber.toFixed(precision)
-}
-
-//定义生成指定区间整数随机数的函数
-function randint(min, max) {
-    const range = max - min + 1
-    const randomOffset = Math.floor(Math.random() * range)
-    return (randomOffset + min) % range + min
-}
-
-//定义随机抽取曲目的函数
+/**
+ * 定义随机抽取曲目的函数
+ * @param {any} e 
+ * @returns 
+ */
 function getRandomSong(e) {
     //对象解构提取groupid
     const { group_id } = e
@@ -406,18 +442,20 @@ function getRandomSong(e) {
     //计算曲目的总权重
     const totalWeight = Object.values(songweights[group_id]).reduce((total, weight) => total + weight, 0)
 
-    //生成一个0到总权重之间带有16位小数的随机数
-    const randomWeight = randfloat(0, totalWeight, 16)
+    //生成一个0到总权重之间带有6位小数的随机数
+    const randomWeight = fCompute.randFloatBetween(0, totalWeight, 6)
 
     let accumulatedWeight = 0
-    for (const [song, weight] of Object.entries(songweights[group_id])) {
+    const ids = /** @type {idString[]} */(Object.keys(songweights[group_id]))
+    for (const id of ids) {
+        const weight = songweights[group_id][id]
         accumulatedWeight += weight
         if (accumulatedWeight >= randomWeight) {
-            songweights[group_id][song] *= 0.4 //权重每次衰减60%
-            return song
+            songweights[group_id][id] *= 0.4 //权重每次衰减60%
+            return id
         }
     }
 
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
-    return songsname[randint(0, songsname.length - 1)]
+    return songIdList[fCompute.randBetween(0, songIdList.length - 1)]
 }

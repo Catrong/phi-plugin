@@ -60,7 +60,7 @@
                 </div>
                 <div class="words-box">
                     <div class="content-title">
-                        <p>Word Cloud</p>
+                        <p>Chart Tag</p>
                     </div>
                     <div class="box-tip">
                         <p>{{tip}}</p>
@@ -101,49 +101,69 @@
         </div>
     </div>
     <script>
-        var chart = echarts.init(document.getElementById("words"));
+        var chart = echarts.init(document.getElementById("words"), {renderer: 'svg'});
+        // 准备雷达图数据
+        var indicators = [];
+        var values = [];
+        {{each words e}}
+        indicators.push({name: '{{e.name}}({{e.value}})', max: {{wordsMaxValue}}});
+        values.push({{e.value}});
+        {{/each}}
+        
         chart.setOption({
+            animation: false,
+            radar: {
+                indicator: indicators,
+                shape: 'polygon',
+                splitNumber: 5,
+                name: {
+                    textStyle: {
+                        color: '#fff',
+                        fontFamily: 'phi',
+                        fontSize: 30
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: [
+                            'rgba(255, 255, 255, 0.05)',
+                            'rgba(255, 255, 255, 0.1)'
+                        ]
+                    }
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.5)'
+                    }
+                }
+            },
             series: [
                 {
-                    type: "wordCloud",
-                    shape: "square", //circle cardioid diamond triangle-forward triangle
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    right: 0,
-                    width: "100%",
-                    height: "100%",
-                    gridSize: 0, //值越大，word间的距离越大，单位像素
-                    sizeRange: [30, 500], //word的字体大小区间，单位像素
-                    rotationRange: [0, 0], //word的可旋转角度区间
-                    shrinkToFit: true, //是否收缩到容器内
-                    layoutAnimation: false, //是否开启动画
-                    textStyle: {
-                        fontFamily: "phi",
-                        // fontWeight: "bold",
-                        // Color can be a callback function or a color string
-                        color: function () {
-                            // Random color
-                            return (
-                                "rgb(" +
-                                [
-                                    Math.round(160 + Math.random() * 95),
-                                    Math.round(160 + Math.random() * 95),
-                                    Math.round(160 + Math.random() * 95),
-                                ].join(",") +
-                                ")"
-                            );
-                        },
-                        textShadow: "#fff",
-                    },
+                    type: 'radar',
                     data: [
-                        {{each words e}}{
-                            name: '{{e.name}}',
-                            value: {{e.value}}
-                        },{{/each}}
+                        {
+                            value: values,
+                            name: 'Data',
+                            lineStyle: {
+                                color: 'rgba(100, 200, 255, 0.8)',
+                                width: 2
+                            },
+                            areaStyle: {
+                                color: 'rgba(100, 200, 255, 0.3)'
+                            },
+                            itemStyle: {
+                                color: 'rgba(100, 200, 255, 1)'
+                            }
+                        }
                     ]
-                },
-            ],
+                }
+            ]
         });
     </script>
 {{/block}}

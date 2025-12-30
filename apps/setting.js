@@ -1,15 +1,16 @@
-import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import picmodle from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import getNotes from '../model/getNotes.js'
+import phiPluginBase from '../components/baseClass.js'
 
+/**@import {botEvent} from '../components/baseClass.js' */
 
 /**直接从guoba.support.js导入设置 */
 let configInfo = (await import('../guoba.support.js')).supportGuoba().configInfo
 
 
-export class phihelp extends plugin {
+export class phihelp extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-setting',
@@ -26,6 +27,11 @@ export class phihelp extends plugin {
 
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async set(e) {
         if (!e.isMaster) {
             return false;
@@ -37,23 +43,26 @@ export class phihelp extends plugin {
         for (let i in schemas) {
             let schema = schemas[i]
             if (!schema.field) continue
+
+            const field = /**@type {configName} */(schema.field)
             if (msg.match(schema.label)) {
                 let value = msg.replace(schema.label, '')
                 switch (schema.component) {
                     case 'Select':
-                        let options = schema.componentProps.options
-                        for (let j in options) {
+                        let options = schema.componentProps?.options
+                        if (!options) break;
+                        for (let j = 0; j < options.length; j++) {
                             if (options[j].label == value) {
-                                Config.modify('config', schema.field, options[j].value)
+                                Config.modify('config', field, options[j].value)
                                 break;
                             }
                         }
                         break;
                     case 'Input':
-                        Config.modify('config', schema.field, value)
+                        Config.modify('config', field, value)
                         break;
                     case 'InputNumber':
-                        Config.modify('config', schema.field, Math.max(Math.min(Number(value), schema.componentProps.max), schema.componentProps.min))
+                        Config.modify('config', field, Math.max(Math.min(Number(value), schema.componentProps?.max || Infinity), schema.componentProps?.min || -Infinity))
                         break;
                     case 'Switch':
                         switch (value) {
@@ -62,14 +71,14 @@ export class phihelp extends plugin {
                             case 'on':
                             case '开启':
                             case '开':
-                                Config.modify('config', schema.field, true)
+                                Config.modify('config', field, true)
                                 break;
                             case 'false':
                             case 'OFF':
                             case 'off':
                             case '关闭':
                             case '关':
-                                Config.modify('config', schema.field, false)
+                                Config.modify('config', field, false)
                                 break;
                             default:
                                 break;
@@ -95,9 +104,12 @@ export class phihelp extends plugin {
                     })
                     break;
                 case 'Select':
+                    if (!schema.field) break;
+                    // @ts-ignore
                     let value = config[schema.field]
-                    let options = schema.componentProps.options
-                    for (let j in options) {
+                    let options = schema.componentProps?.options
+                    if (!options) break;
+                    for (let j = 0; j < options.length; j++) {
                         if (options[j].value == value) {
                             value = options[j].label
                             break;
@@ -112,11 +124,14 @@ export class phihelp extends plugin {
                     break;
                 case 'Input':
                 case 'InputNumber':
+                    if (!schema.field) break;
                     data.push({
                         label: schema.label,
                         bottomHelpMessage: schema.bottomHelpMessage,
                         type: 'space',
+                        // @ts-ignore
                         value: config[schema.field],
+                        // @ts-ignore
                         drc: schema.componentProps.addonAfter || ''
                     })
                     break;
@@ -125,6 +140,7 @@ export class phihelp extends plugin {
                         label: schema.label,
                         bottomHelpMessage: schema.bottomHelpMessage,
                         type: 'switch',
+                        // @ts-ignore
                         value: config[schema.field],
                     })
                     break;
@@ -133,11 +149,11 @@ export class phihelp extends plugin {
             }
         }
         // console.info(data)
-        let plugin_data = await getNotes.getPluginData(e.user_id)
+        let plugin_data = await getNotes.getNotesData(e.user_id)
         e.reply(await picmodle.common(e, 'setting', {
             data,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
-            theme: plugin_data?.plugin_data?.theme || 'star'
+            theme: plugin_data?.theme || 'star'
         }))
     }
 }
