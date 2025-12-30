@@ -61,7 +61,7 @@ export class phihelp extends phiPluginBase {
    * @param {botEvent} e 
    * @returns 
    */
-  async tags(e) {
+  async tag(e) {
     if (await getBanGroup.get(e, 'tag')) {
       send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
       return false
