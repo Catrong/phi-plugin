@@ -102,16 +102,17 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi best1(+)` | Text-based b30 (up to b99) |
 | `#phi score xxx  [-dif (EZ\|HD\|IN\|AT)] [-or (acc\|score\|fc\|time)] [-unrank]` | Get single score & improvement tips (parameters for score ranking, API required) |
 | `#phi (suggest\|suggest)` | Get songs that can increase Rks by +0.01 |
-| `#phi (ranklist\|ranking)` | Rks leaderboard |
+| `#phi (ranklist\|ranking) [rank]` | Rks leaderboard |
+| `#phi rankfind <rks>` | Find how many users have higher RKS than the queried RKS |
 | `#phi data` | Check user data count |
 | `#phi (guess\|guess)` | Guess song from illustration (reply directly) |
 | `#phi (ltr\|letter)` | Guess song via letters (use #open/#ans) |
 | `#phi (tipgame\|hint)` | Guess song via hints (use #tip/#ans) |
 | `#phi (song\|song) xxx` | Query song info (supports aliases) |
-| `#phi chart <song> <difficulty>` | View chart details |
-| `#phi tag <song name> <difficulty> <tag>` | View chart tags, available tags shown in response, default difficulty is IN |
-| `#phi settag <song name> <difficulty> <tag>` | Tag a chart, recommended to use /tag to query tag list first, default difficulty is IN |
-| `#phi (comment\|cmt) <song> <difficulty?>(newline)<text>` | Comment on songs |
+| `#phi chart <song> [difficulty=IN]` | View chart details |
+| `#phi tag <song name> [difficulty=IN] <tag>` | View chart tags, available tags shown in response, default difficulty is IN |
+| `#phi settag <song name> [difficulty=IN] <tag>` | Tag a chart, recommended to use /tag to query tag list first, default difficulty is IN |
+| `#phi (comment\|cmt) <song> [difficulty=IN](newline)<text>` | Comment on songs |
 | `#phi mycmt` | View own cloud comments |
 | `#phi recmt <ID>` | Delete comment (owner/admin) |
 | `#phi (table\|ratings) <rating>` | Phigros rating table (by Rhythematics) |

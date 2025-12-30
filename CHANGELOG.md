@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.*
+
+* /ranklist 改为先图后文
+* 修复getSongHistory
+
 ## 1.0.0
 
 * 修复临时文件清理

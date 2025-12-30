@@ -79,7 +79,7 @@ export class phiRankList extends phiPluginBase {
                     data.users.push({ ...await makeSmallLine(item), index: item.index, me: item.me })
                 }
                 data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history))
-                send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
+                send.send_with_At(e, [await picmodle.common(e, 'rankingList', data), `总数据量：${data.totDataNum}\n`])
                 return true
             } catch (err) {
                 logger.warn(`[phi-plugin] API ERR`, err)

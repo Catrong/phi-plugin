@@ -134,16 +134,17 @@ pnpm install -P
 | `#phi best1(+)` | 查询文字版b30（或更多），最高b99
 | `#phi (score\|单曲成绩)xxx  [-dif 难度] [-or acc\|score\|fc\|time] [-unrank]` | 获取单曲成绩及这首歌的推分建议，参数为对分数排行的参数，目前仅开启API后有效
 | `#phi (suggest\|推分)` | 获取可以让RKS+0.01的曲目及其所需ACC
-| `#phi (ranklist\|排行榜)` | 获取 RKS 排行榜
+| `#phi (ranklist\|排行榜) [名次]` | 获取 RKS 排行榜
+| `#phi rankfind <rks>` | 获取有多少人大于查询 RKS
 | `#phi data` | 获取用户data数量
 | `#phi (guess\|猜曲绘)` | 猜曲绘，回答无特殊命令，直接回复，如果不是曲名就不会说话，如果是不正确的曲名会回复。#ans 结束
 | `#phi (ltr\|开字母)` | 根据字母猜曲名，#出/#open... 开指定的字母，#第n个/#nX.xxx 进行回答，#ans 获取答案
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名
-| `#phi chart <曲名> <难度>` | 查询phigros中某一谱面的详细信息
-| `#phi tag <曲名> <难度> <标签>` | 查看谱面标签，标签可选项见回复说明，难度默认为IN
-| `#phi settag <曲名> <难度> <标签>` | 给谱面打标签，推荐先使用/tag查询标签列表，难度默认为IN
-| `#phi (comment\|cmt\|评论\|评价) <曲名> <难度?>(换行)<内容>` | 评论曲目，难度默认为IN
+| `#phi chart <曲名> [难度=IN]` | 查询phigros中某一谱面的详细信息
+| `#phi tag <曲名> [难度=IN] <标签>` | 查看谱面标签，标签可选项见回复说明，难度默认为IN
+| `#phi settag <曲名> [难度=IN] <标签>` | 给谱面打标签，推荐先使用/tag查询标签列表，难度默认为IN
+| `#phi (comment\|cmt\|评论\|评价) <曲名> [难度=IN](换行)<内容>` | 评论曲目，难度默认为IN
 | `#phi recmt <评论ID>` | 查看并确认是否删评，仅发送者和主人权限，需要二次确认
 | `#phi mycmt` | 查看自己的云端评论
 | `#phi (table\|定数表) <定数>` | 查询phigros定数表（定数表 by Rhythematics）

@@ -152,7 +152,14 @@ export default class getSaveFromApi {
         if (!apiId) {
             throw new Error('apiId is undefined')
         }
-        let result = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e) })
+        let result;
+        if (song_id && difficulty) {
+            result = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id, difficulty })
+        } else if (song_id) {
+            result = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id })
+        } else {
+            result = await makeRequest.getHistoryRecord(makeRequestFnc.makePlatform(e))
+        }
         return result
     }
 
