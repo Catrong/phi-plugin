@@ -29,5 +29,5 @@ export const APII18NCN = {
     userNotFound: `未找到对应 用户`
 }
 
-// export const APIBASEURL = "https://phib19.top:8080"
-export const APIBASEURL = "http://localhost:8081"
+export const APIBASEURL = "https://phib19.top:8080"
+// export const APIBASEURL = "http://localhost:8081"
