@@ -11,6 +11,8 @@ import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
 import { Level } from '../model/constNum.js'
 import getNotes from '../model/getNotes.js'
+import getUpdateSave from '../model/getUpdateSave.js'
+import analyzeSaveHistory from '../model/analyzeSaveHistory.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -38,6 +40,10 @@ export class phiuser extends phiPluginBase {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)list(.*)$`,
                     fnc: 'list'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(年度总结|2025history)(.*)$`,
+                    fnc: 'analyze2025SaveHistory'
                 }
             ]
         })
@@ -617,6 +623,39 @@ export class phiuser extends phiPluginBase {
             request: request
         }))
 
+    }
+
+    /**
+     * 
+     * @param {botEvent} e 
+     */
+    async analyze2025SaveHistory(e) {
+
+
+        if (await getBanGroup.get(e, 'analyze2025SaveHistory')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+
+        let save = await send.getsave_result(e)
+
+        if (!save) {
+            return true
+        }
+
+        const history = await getUpdateSave.getHistoryFromApi(e, ['challengeModeRank', 'data', 'rks', 'scoreHistory']);
+
+        if (!history) {
+            return true;
+        }
+
+        const stats = analyzeSaveHistory(history);
+
+        send.send_with_At(e, await picmodle.analyzeSaveHistory(e, {
+            stats,
+            background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
+        }));
     }
 
 }

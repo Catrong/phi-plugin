@@ -65,6 +65,7 @@
  * | 'auth'
  * | 'clearApiData'
  * | 'updateHistory'
+ * | 'analyze2025SaveHistory'
  * } allFnc 全部指令
  */
 

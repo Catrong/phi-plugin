@@ -36,22 +36,17 @@ export default class Chart {
 
         if (data.tap) {
 
-            /** @type {number | undefined} */
             this.tap = Number(data.tap)
 
-            /** @type {number | undefined} */
             this.drag = Number(data.drag)
 
-            /** @type {number | undefined} */
             this.hold = Number(data.hold)
 
-            /** @type {number | undefined} */
             this.flick = Number(data.flick)
 
-            /** @type {number | undefined} */
             this.combo = Number(data.combo)
 
-            /** @type {number | undefined} */
+            /** s */
             this.maxTime = Number(data.maxTime)
 
             /** @type {[number,number,number,number,number][]} [tap,drag,hold,flick,tot] */

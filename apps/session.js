@@ -240,6 +240,7 @@ export class phisstk extends phiPluginBase {
 
 
         try {
+            await getSaveFromApi.del_user_apiId(e.user_id); //删除apiId，避免冲突
             let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken, isGlobal)
             if (!updateData) return true;
             send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })

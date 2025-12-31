@@ -7,6 +7,7 @@ import fs from 'node:fs'
 import logger from '../components/Logger.js'
 import segment from '../components/segment.js'
 
+/**@import {botEvent} from '../components/baseClass.js' */
 
 /**
  * @typedef {Object} guessIllData
@@ -252,8 +253,18 @@ export default await new class picmodle {
         return await this.common(e, 'chap', data)
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @param {{stats: import('./analyzeSaveHistory.js').AnalyzeSaveHistoryResult} & {background: string}} data 
+     * @returns 
+     */
+    async analyzeSaveHistory(e, data) {
+        return await this.common(e, 'analyzeSaveHistory', data)
+    }
+
     /** 
-     * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'setting'} picKind
+     * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'lvsco'|'list'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'setting'|'analyzeSaveHistory'} picKind
      */
 
     /**

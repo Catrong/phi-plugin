@@ -61,17 +61,19 @@ if (Config.getUserCfg('config', 'autoOpenApi')) {
     let url = `${APIBASEURL}/status`
     try {
         const agent = new https.Agent({ rejectUnauthorized: false })
-        let res = (await axios.get(url, { httpsAgent: agent }))
-        // console.log(res)
-        if (res.status != 200) {
-            logger.error(res)
-            logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
-            Config.modify('config', 'openPhiPluginApi', false)
-        } else {
-            res = res.data
-            logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
-            Config.modify('config', 'openPhiPluginApi', true)
-        }
+        axios.get(url, { httpsAgent: agent }).then((res) => {
+
+            // console.log(res)
+            if (res.status != 200) {
+                logger.error(res)
+                logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
+                Config.modify('config', 'openPhiPluginApi', false)
+            } else {
+                res = res.data
+                logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
+                Config.modify('config', 'openPhiPluginApi', true)
+            }
+        })
     } catch (e) {
         // @ts-ignore
         logger.error(e.cause)

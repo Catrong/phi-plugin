@@ -171,4 +171,41 @@ export default class getUpdateSave {
         let add_rks = old ? now.saveInfo.summary.rankingScore - old.saveInfo.summary.rankingScore : 0
         return [add_rks, add_money]
     }
+
+    /**
+     * 
+     * @param {botEvent} e 
+     * @param {(keyof saveHistoryObject)[]} field 
+     */
+    static async getHistoryFromApi(e, field) {
+        const sessionToken = await getSave.get_user_token(e.user_id);
+        if (!sessionToken) {
+            if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+                send.send_with_At(e, "请先绑定sessionToken哦！")
+                return null;
+            }
+            try {
+                return await getSaveFromApi.getHistory(e, field)
+            } catch (err) {
+                logger.warn('[phi-plugin]获取历史记录失败', err)
+                send.send_with_At(e, "从API获取历史记录失败，请稍后重试或绑定sessionToken后重试哦");
+                return null;
+            }
+        }
+        let oldHistory = await getSave.getHistory(e.user_id);
+        if (oldHistory) {
+            try {
+                await makeRequest.setHistory({ ...makeRequestFnc.makePlatform(e), token: sessionToken, data: oldHistory });
+            } catch (err) {
+                logger.warn('[phi-plugin]上传历史记录失败', err)
+            }
+        }
+        try {
+            return await getSaveFromApi.getHistory(e, field)
+        } catch (err) {
+            logger.warn('[phi-plugin]获取历史记录失败', err)
+            send.send_with_At(e, "从API获取历史记录失败，将使用本地存档的历史记录哦");
+            return oldHistory;
+        }
+    }
 }
