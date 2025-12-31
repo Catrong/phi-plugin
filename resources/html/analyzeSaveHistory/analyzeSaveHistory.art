@@ -11,7 +11,7 @@
   <header class="header">
     <div class="title">
       <div class="title-main">存档历史分析</div>
-      <div class="title-sub">展示 analyzeSaveHistory(history) 的统计结果</div>
+      <div class="title-sub">统计范围为绑定至今</div>
     </div>
 
     <div class="meta">
@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-      <div class="card-s">按天累计字节变化（KiB/MiB/GiB 自动换算）</div>
+      <div class="card-s">按天累计增量</div>
     </div>
   </section>
 
