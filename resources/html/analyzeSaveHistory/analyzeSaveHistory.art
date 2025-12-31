@@ -205,7 +205,7 @@
           </div>
         {{/if}}
       </div>
-      <div class="card-s">按“同曲目+难度首次达到 AP”的事件计数（acc≈1 或 acc≈100）</div>
+      <div class="card-s">按“曲目+难度首次达到 AP”的事件计数</div>
     </div>
   </section>
 
