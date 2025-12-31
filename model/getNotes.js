@@ -32,7 +32,7 @@ export default class getNotes {
      */
     static async getNotesData(user_id) {
         let data = await readFile.FileReader(path.join(pluginDataPath, `${user_id}_.json`))
-        if (!data || !data.plugin_data) {
+        if (!data) {
             data = {
                 money: 0,
                 sign_in: "Wed Apr 03 2024 23:03:52 GMT+0800 (中国标准时间)",
