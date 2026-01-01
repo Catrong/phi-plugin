@@ -132,10 +132,15 @@ export default class phiPluginBase extends plugin {
       }
     }
 
+    if (!msg) {
+      send.send_with_At(e, `请在命令后添加曲目名称或别名哦~`, true);
+      return;
+    }
+
     let ids = getInfo.fuzzysongsnick(msg, undefined, true)
-    if (!ids) {
+    if (!ids.length) {
       send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
-      return true
+      return;
     }
 
     if (ids.length > 1) {
@@ -150,7 +155,7 @@ export default class phiPluginBase extends plugin {
         if ('rank' in optObj) {
           const { rank } = optObj
           if (!info.chart[/** @type {levelKind} */(rank)]) {
-            send.send_with_At(e, `${id} 没有 ${rank} 这个难度QAQ！`)
+            send.send_with_At(e, `${info.song} 没有 ${rank} 这个难度QAQ！`)
             return;
           }
         }
@@ -168,7 +173,7 @@ export default class phiPluginBase extends plugin {
       if ('rank' in optObj) {
         const { rank } = optObj
         if (!info.chart[/** @type {levelKind} */(rank)]) {
-          send.send_with_At(e, `${id} 没有 ${rank} 这个难度QAQ！`)
+          send.send_with_At(e, `${info.song} 没有 ${rank} 这个难度QAQ！`)
           return;
         }
       }

@@ -9,6 +9,7 @@ import logger from '../components/Logger.js';
 import makeRequestFnc from '../model/makeRequestFnc.js';
 import fCompute from '../model/fCompute.js';
 import getSave from '../model/getSave.js';
+import { APII18NCN } from '../model/constNum.js'
 
 
 /**@import {botEvent} from '../components/baseClass.js' */
@@ -119,6 +120,7 @@ export class phihelp extends phiPluginBase {
 
     if (!selectedTags.length) {
       send.send_with_At(e, `请在命令后添加要投票的标签哦！可选标签有：\n${chartsTagList.map((tag, index) => `-${index + 1}. ${tag}`).join('\n')}\n可以使用序号，每个标签之间请用空格分隔哦~`, true);
+      return true;
     }
 
     this.getMicInfoFromMsg(e, new RegExp(`([#/](.*?)(settag)(\\s*)|${chartsTagList.join('|')})`, 'g'), ['rank'], { selectedTags, sessionToken }, async (e, id, optObj) => {
@@ -209,10 +211,17 @@ async function getChartTags(e, id, options) {
   let wordsMaxValue = 0
 
   const apiChartTag = await makeRequest.getChartsTagbySongRank({ song_id: info.id, rank })
-  const usersVote = await makeRequest.getChartsUsersVote({ ...makeRequestFnc.makePlatform(e), data: [{ song_id: info.id, rank: [rank] }] })
-  console.info(usersVote);
+  let usersVote;
+  try {
+    usersVote = await makeRequest.getChartsUsersVote({ ...makeRequestFnc.makePlatform(e), data: [{ song_id: info.id, rank: [rank] }] })
+
+  } catch (/**@type {any}*/ err) {
+    if (err.message != APII18NCN.userNotFound) {
+      logger.error(`获取用户投票信息失败，ERROR:\n${err.message}`);
+    }
+  }
   for (const tag of fCompute.objectKeys(apiChartTag)) {
-    words.push({ name: tag, value: apiChartTag[tag], vis: usersVote?.[0]?.tags?.includes(tag) ?? 0 })
+    words.push({ name: tag, value: apiChartTag[tag], vis: usersVote?.[0]?.tags?.includes(tag) ?? false })
     wordsMaxValue = Math.max(wordsMaxValue, apiChartTag[tag])
   }
 
@@ -249,6 +258,7 @@ async function setChartTags(e, id, options) {
     await makeRequest.setChartsTag({ ...makeRequestFnc.makePlatform(e), token: sessionToken, song_id: id, rank, content: selectedTags });
   } catch (/**@type {any}*/ err) {
     send.send_with_At(e, `投票失败QAQ！ERROR:\n${err.message}`);
+    logger.error(`投票失败，token：${sessionToken}\nERROR:\n${err.message} `);
   }
 
   getChartTags(e, id, { rank });
