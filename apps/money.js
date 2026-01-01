@@ -196,7 +196,9 @@ export class phimoney extends phiPluginBase {
         if (data.task) {
             for (let i in data.task) {
                 // @ts-ignore
-                data.task[i].illustration = get.getill(data.task[i].song)
+                data.task[i].illustration = getInfo.getill(data.task[i].song)
+                // @ts-ignore
+                data.task[i].song = getInfo.idgetsong(data.task[i].song) || data.task[i].song
             }
         }
 
@@ -255,7 +257,7 @@ export class phimoney extends phiPluginBase {
         if (data.task) {
             for (let i in data.task) {
                 // @ts-ignore
-                data.task[i].illustration = get.getill(data.task[i].song)
+                data.task[i].illustration = getInfo.getill(data.task[i].song)
                 // @ts-ignore
                 data.task[i].song = getInfo.idgetsong(data.task[i].song) || data.task[i].song
             }
