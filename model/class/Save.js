@@ -597,7 +597,7 @@ export default class Save {
         const ids = fCompute.objectKeys(Record)
         for (let id of ids) {
             let info = getInfo.ori_info[id]
-            if (!info.chart) continue
+            if (!info?.chart) continue
             if (info.chart['AT'] && Number(info.chart['AT'].difficulty)) {
                 ++tot[3]
             }

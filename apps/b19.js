@@ -741,7 +741,7 @@ export class phib19 extends phiPluginBase {
         const ids = fCompute.objectKeys(getInfo.ori_info)
 
         for (const id of ids) {
-            if (getInfo.ori_info[id].chapter == chap || msg == 'ALL') {
+            if (getInfo.ori_info[id]?.chapter == chap || msg == 'ALL') {
                 song_box[id] = { illustration: getInfo.getill(id, 'low'), chart: {} }
                 /**曲目成绩对象 */
                 let songRecord = save.getSongsRecord(id)

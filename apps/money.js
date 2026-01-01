@@ -436,7 +436,7 @@ function randtask(save, task = []) {
     /**将曲目分级并处理 */
     for (let id of fCompute.objectKeys(info)) {
         if (id == 'テリトリーバトル.ツユ') continue
-        if (!info[id].chart) continue
+        if (!info[id]?.chart) continue
         for (let level of Level) {
             if (info[id].chart[level]) {
                 if (!gameRecord[id] || !gameRecord[id][LevelNum[level]] || gameRecord[id][LevelNum[level]]?.acc != 100) {

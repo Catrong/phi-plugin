@@ -361,7 +361,7 @@ export class phiuser extends phiPluginBase {
         for (let id of fCompute.objectKeys(getInfo.ori_info)) {
             let info = getInfo.ori_info[id]
             let vis = false
-            if (!info.chart) continue
+            if (!info?.chart) continue
             for (let i of Level) {
                 if (!info.chart[i]) continue
                 let difficulty = info.chart[i].difficulty

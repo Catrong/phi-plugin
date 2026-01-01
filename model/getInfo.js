@@ -50,7 +50,7 @@ export default new class getInfo {
 
 
         /**
-         * @type {{[key:idString]:Partial<SongsInfo>}}
+         * @type {{[key:idString]:Partial<SongsInfo> | undefined}}
          * @description 原版信息
          */
         this.ori_info = {}

@@ -422,7 +422,7 @@ export class phisong extends phiPluginBase {
 
         let songsname = []
         for (let id of fCompute.objectKeys(getInfo.ori_info)) {
-            if (!getInfo.ori_info[id].chart) continue;
+            if (!getInfo.ori_info[id]?.chart) continue;
             for (let level of Level) {
                 if (isask[LevelNum[level]] && getInfo.ori_info[id].chart[level]) {
                     let difficulty = getInfo.ori_info[id].chart[level].difficulty
