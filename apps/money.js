@@ -1,7 +1,6 @@
 import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
-import get from '../model/getdata.js'
 import send from '../model/send.js'
 import getNotes from '../model/getNotes.js'
 import getBanGroup from '../model/getBanGroup.js';
@@ -212,7 +211,7 @@ export class phimoney extends phiPluginBase {
             task_ans: Remsg[0],
             task_ans1: Remsg[1],
             Notes: data.money,
-            tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
+            tips: getInfo.tips[Math.floor((Math.random() * (getInfo.tips.length - 1)) + 1)],
             change_notes: `${change_note ? change_note : ''}`,
             theme: data?.theme || 'star',
         }
@@ -221,7 +220,7 @@ export class phimoney extends phiPluginBase {
         if (spDateIndex !== -1) {
             picdata.tips = spData[spDateIndex].sp_date_tips[randint(spData[spDateIndex].sp_date_tips.length - 1)]
         }
-        send.send_with_At(e, await get.gettasks(e, picdata))
+        send.send_with_At(e, await picmodle.tasks(e, picdata))
 
         return true
 
@@ -273,8 +272,8 @@ export class phimoney extends phiPluginBase {
             task_ans: Remsg[0],
             task_ans1: Remsg[1],
             Notes: data.money,
-            tips: get.tips[Math.floor((Math.random() * (get.tips.length - 1)) + 1)],
-            dan: await get.getDan(e.user_id),
+            tips: getInfo.tips[Math.floor((Math.random() * (getInfo.tips.length - 1)) + 1)],
+            // dan: await get.getDan(e.user_id),
             theme: data?.theme || 'star',
         }
 
