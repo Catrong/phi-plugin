@@ -69,6 +69,9 @@ export class phiGames extends phiPluginBase {
             send.send_with_At(e, `当前存在其他未结束的游戏嗷！如果想要开启新游戏请 /${Config.getUserCfg('config', 'cmdhead')} ans 结束进行的游戏嗷！`)
             return false
         }
+        if (!msg) {
+            return false
+        }
         switch (msg) {
             case "tipgame":
             case "提示猜曲": {
@@ -79,17 +82,6 @@ export class phiGames extends phiPluginBase {
                 }
 
                 return await guessTips.start(e, gameList)
-            }
-            case "letter":
-            case "ltr":
-            case "开字母": {
-
-                if (await getBanGroup.get(e, 'ltrgame')) {
-                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-                    return false
-                }
-
-                return await guessLetter.start(e, gameList)
             }
             case "guess":
             case "猜曲绘": {
@@ -102,6 +94,15 @@ export class phiGames extends phiPluginBase {
                 return await guessIll.start(e, gameList)
             }
             default: {
+                if (msg.startsWith("ltr") || msg.startsWith("letter") || msg.startsWith("开字母")) {
+
+                    if (await getBanGroup.get(e, 'ltrgame')) {
+                        send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                        return false
+                    }
+
+                    return await guessLetter.start(e, gameList)
+                }
                 return false
             }
         }
