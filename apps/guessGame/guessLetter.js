@@ -209,7 +209,7 @@ export default new class guessLetter {
         // 延时1s
         await timeout(1 * 1000)
 
-        let output = '开字母进行中：'
+        let output = '开字母进行中：\n'
         output += getPuzzle(currentGame);
         await e.reply(output, true)
 
@@ -778,6 +778,7 @@ function allGuessed(currentGame) {
 function getPuzzle(currentGame) {
     /**@type {string[]} */
     const output = [];
+    output.push(`曲库范围：${currentGame.gameSelectList.join('、')}`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
             output.push(`【${index}】${currentGame.blurlist[index]}`)
