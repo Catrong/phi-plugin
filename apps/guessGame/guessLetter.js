@@ -124,7 +124,7 @@ export default new class guessLetter {
         }
 
         let { msg } = e // 提取消息
-        msg = msg.replace(/[#/](.*?)(ltr|开字母)(\s*)/, "")
+        msg = msg.replace(/[#/](.*?)(ltr|letter|开字母)(\s*)/, "")
 
         /**
          * 其他游戏的曲目
@@ -138,16 +138,16 @@ export default new class guessLetter {
 
         const currentGame = letterGameData[group_id];
 
-        if (!msg) {
+        for (let i in getInfo.DLC_Info) {
+            if (msg.includes(i)) {
+                letterGameData[group_id].gameSelectList.push(i)
+                allSelectSongId = allSelectSongId.concat(/**@type {idString[]} */(getInfo.DLC_Info[i]))
+            }
+        }
+
+        if (letterGameData[group_id].gameSelectList.length == 0) {
             letterGameData[group_id].gameSelectList = ['pgr']
             allSelectSongId = [...songIdList]
-        } else {
-            for (let i in getInfo.DLC_Info) {
-                if (msg.includes(i)) {
-                    letterGameData[group_id].gameSelectList.push(i)
-                    allSelectSongId = allSelectSongId.concat(/**@type {idString[]} */(getInfo.DLC_Info[i]))
-                }
-            }
         }
 
         if (allSelectSongId.length < Config.getUserCfg('config', 'LetterNum')) {

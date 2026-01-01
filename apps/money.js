@@ -257,6 +257,8 @@ export class phimoney extends phiPluginBase {
             for (let i in data.task) {
                 // @ts-ignore
                 data.task[i].illustration = get.getill(data.task[i].song)
+                // @ts-ignore
+                data.task[i].song = getInfo.idgetsong(data.task[i].song) || data.task[i].song
             }
         }
 

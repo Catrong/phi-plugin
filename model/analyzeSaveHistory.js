@@ -195,10 +195,10 @@ export function analyzeSaveHistory(history) {
   // 3) 哪张谱打的最多（按曲目 id 的 score 记录条数）
   const songCount = new Map();
   for (const e of scoreEvents) {
-    songCount.set(e.id, (songCount.get(e.id) || 0) + 1);
+    songCount.set(`${safeText(getInfo.idgetsong(e.id) || e.id)} - ${e.level}`, (songCount.get(e.id) || 0) + 1);
   }
   // @ts-ignore
-  const mostPlayedSongsTop3 = topNNumberMap(songCount, 3).map((x) => ({ id: safeText(getInfo.idgetsong(x.key) || x.key), count: safeText(x.value) }));
+  const mostPlayedSongsTop3 = topNNumberMap(songCount, 3).map((x) => ({ id: x.key, count: safeText(x.value) }));
 
   // 4/5) 哪天 rks 上升/下降最多（按天累计 delta，delta 归于“变化后”的那条记录日期）
   /** @type {Map<string, number>} */

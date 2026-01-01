@@ -7,7 +7,7 @@ import getBanGroup from '../model/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
 
-let games = "(提示猜曲|tipgame|ltr|letter|开字母|guess|猜曲绘)"
+let games = "(提示猜曲|tipgame|(ltr|letter|开字母).*|guess|猜曲绘)"
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
