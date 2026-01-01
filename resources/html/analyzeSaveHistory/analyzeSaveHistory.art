@@ -65,7 +65,7 @@
 
   <section class="grid grid-2">
     <div class="card">
-      <div class="card-h">打得最多的谱</div>
+      <div class="card-h">打得最多的曲目</div>
       <div class="ranklist">
         {{each s?.mostPlayedSongsTop3 it idx}}
           <div class="rankitem">
