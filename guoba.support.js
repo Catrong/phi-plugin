@@ -521,16 +521,16 @@ export function supportGuoba() {
                     label: '其他设置',
                     component: 'SOFT_GROUP_BEGIN'
                 },
-                {
-                    field: 'VikaToken',
-                    label: 'token',
-                    bottomHelpMessage: 'token 填写后请重启',
-                    component: 'Input',
-                    required: false,
-                    componentProps: {
-                        placeholder: '请输入token',
-                    },
-                },
+                // {
+                //     field: 'VikaToken',
+                //     label: 'token',
+                //     bottomHelpMessage: 'token 填写后请重启',
+                //     component: 'Input',
+                //     required: false,
+                //     componentProps: {
+                //         placeholder: '请输入token',
+                //     },
+                // },
             ],
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {
@@ -549,18 +549,18 @@ export function supportGuoba() {
                     data.WordSuggImg = false
                 }
                 var vis = false
-                if (data.VikaToken && data.VikaToken.length != 23) {
-                    data.VikaToken = ''
-                    vis = true
-                }
+                // if (data.VikaToken && data.VikaToken.length != 23) {
+                //     data.VikaToken = ''
+                //     vis = true
+                // }
                 for (let [keyPath, value] of Object.entries(data)) {
                     Config.modify('config', keyPath, value)
                 }
-                if (vis) {
-                    return Result.ok({}, 'VikaToken非法')
-                } else {
-                    return Result.ok({}, '保存成功~')
-                }
+                // if (vis) {
+                //     return Result.ok({}, 'VikaToken非法')
+                // } else {
+                return Result.ok({}, '保存成功~')
+                // }
             },
         },
     }
