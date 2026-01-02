@@ -170,9 +170,10 @@ export default new class guessIll {
             if (known_info.length) tipmsg += `\n该曲目的时长为 ${known_info.length}`
             if (known_info.illustrator) tipmsg += `\n该曲目曲绘的作者为 ${known_info.illustrator}`
             if (known_info.chart) tipmsg += known_info.chart
-            remsg = [tipmsg]
+            remsg = []
             remsg.push(await picmodle.guess(e, data))
-
+            remsg.push(tipmsg)
+            
             e = eList[group_id]
 
             if (ansList[group_id]) {
@@ -230,10 +231,10 @@ export default new class guessIll {
             eList[group_id] = e
             if (typeof msg === 'string') {
                 const ans = msg.replace(/[#/](我)?猜(\s*)/g, '')
-                const song = getInfo.fuzzysongsnick(ans, 0.95)
-                if (song[0]) {
-                    for (let i in song) {
-                        if (ansList[group_id] == song[i]) {
+                const ids = getInfo.fuzzysongsnick(ans, 0.95)
+                if (ids[0]) {
+                    for (let i in ids) {
+                        if (ansList[group_id] == ids[i]) {
                             const t = ansList[group_id]
                             delete ansList[group_id]
                             delete gameList[group_id]
@@ -242,10 +243,10 @@ export default new class guessIll {
                             return true
                         }
                     }
-                    if (song[1]) {
+                    if (ids[1]) {
                         send.send_with_At(e, `不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
                     } else {
-                        send.send_with_At(e, `不是 ${song[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                        send.send_with_At(e, `不是 ${getInfo.info(ids[0])?.song ?? ids[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
                     }
                     return false
                 }
