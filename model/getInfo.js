@@ -156,12 +156,14 @@ export default new class getInfo {
         }
 
         /**
-         * @type {{[key:string]:SongsInfo}}
+         * @type {Record<idString, SongsInfo>}
          * @description SP信息
          */
-        this.sp_info = await readFile.FileReader(path.join(infoPath, 'spinfo.json'))
-        for (let i in this.sp_info) {
+        this.sp_info = (await readFile.FileReader(path.join(infoPath, 'spinfo.json')))
+
+        for (let i of fCompute.objectKeys(this.sp_info)) {
             this.sp_info[i].sp_vis = true
+            this.sp_info[i].id = i
             if (this.sp_info[i]?.illustration) {
                 this.illlist.push(this.sp_info[i].id)
             }
@@ -602,6 +604,8 @@ export default new class getInfo {
                     ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${id}.png`
                 }
             }
+        } else {
+            ans = path.join(ortherIllPath, ans)
         }
         if (!ans) {
             logger.warn(id, '背景不存在')
