@@ -1214,8 +1214,7 @@ async function songInfo(page, addComment, id, e) {
     };
     if (!infoData) {
         logger.error(`[phi-plugin] songInfo: 未找到id为${id}的歌曲信息`);
-        send.send_with_At(e, `发生未知错误QAQ！请回报管理员！`);
-        return null;
+        return `发生未知错误QAQ！请回报管理员！`;
     }
     if (await Config.getUserCfg('config', 'allowComment') && (addComment || page)) {
         let commentData;

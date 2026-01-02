@@ -159,13 +159,21 @@ export default new class getInfo {
          * @type {Record<idString, SongsInfo>}
          * @description SP信息
          */
-        this.sp_info = (await readFile.FileReader(path.join(infoPath, 'spinfo.json')))
+        const sp_json = (await readFile.FileReader(path.join(infoPath, 'spinfo.json')))
 
-        for (let i of fCompute.objectKeys(this.sp_info)) {
-            this.sp_info[i].sp_vis = true
-            this.sp_info[i].id = i
-            if (this.sp_info[i]?.illustration) {
-                this.illlist.push(this.sp_info[i].id)
+        /**
+         * @type {Record<idString, SongsInfo>}
+         * @description SP信息
+         */
+        this.sp_info = {}
+
+        for (let i of fCompute.objectKeys(sp_json)) {
+            const id = /** @type {idString} */(i + '.0');
+            this.sp_info[id] = { ...sp_json[i] }
+            this.sp_info[id].sp_vis = true
+            this.sp_info[id].id = id
+            if (this.sp_info[id]?.illustration) {
+                this.illlist.push(this.sp_info[id].id)
             }
         }
 
@@ -598,10 +606,10 @@ export default new class getInfo {
                     }
                 }
             } else {
-                if (fs.existsSync(path.join(originalIllPath, "SP", id + '.png'))) {
-                    ans = path.join(originalIllPath, "SP", id + '.png')
+                if (fs.existsSync(path.join(originalIllPath, "SP", songsinfo.song + '.png'))) {
+                    ans = path.join(originalIllPath, "SP", songsinfo.song + '.png')
                 } else {
-                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${id}.png`
+                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${songsinfo.song}.png`
                 }
             }
         } else {
