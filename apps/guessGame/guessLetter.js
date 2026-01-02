@@ -315,18 +315,19 @@ export default new class guessLetter {
                 output.push(`这几首曲目中不包含字母[ ${letter} ]`)
             }
 
-            output.push(`当前所有翻开的字母[ ${currentGame.alphalist.join(' ')}]`)
+            const opened = '当前所有翻开的字符[' + currentGame.alphalist.join(' ') + ']'
 
-            let isEmpty = allGuessed(currentGame)
+            output.push(opened)
 
-
-
-            if (isEmpty) {
+            const isEmpty = allGuessed(currentGame);
+            if (!isEmpty) {
+                output.push('开字母进行中：');
+                output.push(getPuzzle(currentGame));
+            } else {
                 output.unshift('所有字母已翻开，答案如下：');
                 output.push(gameover(group_id, gameList));
             }
-
-            e.reply(output.join('\n'));
+            e.reply(output.join('\n'), true)
 
             return true
         }
@@ -572,7 +573,7 @@ export default new class guessLetter {
 
         output.push(`已经帮你随机翻开一个字符[ ${randsymbol} ]了捏 ♪（＾∀＾●）ﾉ\n`)
 
-        const opened = '当前所有翻开的字符[ ' + currentGame.alphalist.join('') + ']'
+        const opened = '当前所有翻开的字符[' + currentGame.alphalist.join(' ') + ']'
 
         output.push(opened)
 
