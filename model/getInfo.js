@@ -612,7 +612,7 @@ export default new class getInfo {
                     ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${songsinfo.song}.png`
                 }
             }
-        } else {
+        } else if (ans) {
             ans = path.join(ortherIllPath, ans)
         }
         if (!ans) {
