@@ -76,7 +76,7 @@ export default new class guessTips {
         })
 
         if (!hasIllIdList.length) {
-            logger.error('[phi-plugin] 猜曲绘无有效曲目')
+            logger.error('[phi-plugin] 提示猜歌无有效曲目')
             e.reply('当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
             return false
         }
@@ -115,7 +115,7 @@ export default new class guessTips {
         tipsGameData[group_id] = new GuessTipsGameData(songId, tips, width, height, x, y,)
         const currentGame = tipsGameData[group_id]
         const startTime = currentGame.startTime
-        e.reply(`下面开始进行猜曲绘哦！可以直接发送曲名进行回答哦！每过${Config.getUserCfg('config', 'GuessTipsTipCD')}秒后可以请求下一条提示，共有${Config.getUserCfg('config', 'GuessTipsTipNum') + 1}条提示嗷！所有提示发送完毕${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒后会自动结束游戏嗷！发送 /${Config.getUserCfg('config', 'cmdhead')} ans 也可以提前结束游戏呐！`)
+        e.reply(`下面开始进行提示猜歌哦！可以直接发送曲名进行回答哦！每过${Config.getUserCfg('config', 'GuessTipsTipCD')}秒后可以请求下一条提示，共有${Config.getUserCfg('config', 'GuessTipsTipNum') + 1}条提示嗷！所有提示发送完毕${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒后会自动结束游戏嗷！发送 /${Config.getUserCfg('config', 'cmdhead')} ans 也可以提前结束游戏呐！`)
         /**@type {string[]} */
         let resMsg = []
         for (let i = 0; i < currentGame.tipNum; i++) {
