@@ -47,10 +47,10 @@ allowComment: true
 allowChartTag: false
 
 #  在线曲绘地址
-onLinePhiIllUrl: "https://github.moeyy.xyz/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+onLinePhiIllUrl: "https://gh-proxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
 
 #  下载曲绘地址
-downIllUrl: "https://ghfast.top/https://github.com/Catrong/phi-plugin-ill.git"
+downIllUrl: "https://gh-proxy.com/https://github.com/Catrong/phi-plugin-ill.git"
 
 #  是否在更新插件时自动拉取最新曲绘
 autoPullPhiIll: false
