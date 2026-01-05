@@ -873,7 +873,7 @@ async function getScore(songId, e, args = {}) {
 
 
     let data = {
-        songName: songId,
+        songName: info.song,
         PlayerId: save.saveInfo.PlayerId,
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar),
         Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
