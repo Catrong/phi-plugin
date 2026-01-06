@@ -242,11 +242,11 @@ export function supportGuoba() {
                             },
                             {
                                 label: 'github代理(sakuramoe)',
-                                value: "https://ghproxy.sakuramoe.dev/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                                value: "https://ghproxy.sakuramoe.dev/https://github.com/Catrong/phi-plugin-ill.git"
                             },
                             {
                                 label: 'github代理(gh-proxy)',
-                                value: "https://gh-proxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                                value: "https://gh-proxy.com/https://github.com/Catrong/phi-plugin-ill.git"
                             }
                         ]
                     }
