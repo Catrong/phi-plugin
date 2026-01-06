@@ -109,6 +109,7 @@ export default class phiPluginBase extends plugin {
   }
 
   /**
+   * 提取消息中的曲目与其他信息
    * @template {keyof getMicInfoFromMsgOptionsMap} T
    * @template {object} T2
    * @param {botEvent} e 事件对象

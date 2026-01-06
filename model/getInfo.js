@@ -382,10 +382,9 @@ export default new class getInfo {
          */
         this.songnick = {}
 
-        const nicklistTempIds = fCompute.objectKeys(nicklistTemp);
 
-        for (let idWithout0 of nicklistTempIds) {
-            const id = idWithout0ToidWith0(idWithout0);
+        for (let idWithout0 of fCompute.objectKeys(nicklistTemp)) {
+            const id = idWithout0ToIdWith0(idWithout0);
             this.nicklist[id] = nicklistTemp[idWithout0]
 
             for (let item of nicklistTemp[idWithout0]) {
@@ -532,9 +531,10 @@ export default new class getInfo {
         for (let std in usernick) {
             let dis = fCompute.jaroWinklerDistance(mic, std)
             if (dis >= Distance) {
-                for (let i in usernick[std]) {
+                usernick[std].forEach((id, i) => {
+                    if (this.info(id) == undefined) return; //过滤无效id
                     result.push({ id: usernick[std][i], dis: dis })
-                }
+                })
             }
         }
 
@@ -738,6 +738,6 @@ export default new class getInfo {
  * @param {idStringWithout0} idWithout0 
  * @returns {idString}
  */
-function idWithout0ToidWith0(idWithout0) {
+function idWithout0ToIdWith0(idWithout0) {
     return /** @type {idString} */(idWithout0 + '.0')
 }
