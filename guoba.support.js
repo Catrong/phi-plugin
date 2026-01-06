@@ -214,11 +214,11 @@ export function supportGuoba() {
                             },
                             {
                                 label: 'github代理(gh-proxy)',
-                                value: "https://gh-proxy.com/https://github.com/Catrong/phi-plugin-ill/blob/main"
+                                value: "https://gh-proxy.org/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/refs/heads/main"
                             },
                             {
                                 label: 'github代理(gitproxy.click)',
-                                value: "https://gitproxy.click/https://github.com/Catrong/phi-plugin-ill/blob/main"
+                                value: "https://gitproxy.click/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/refs/heads/main"
                             }
                         ]
                     }
@@ -241,12 +241,12 @@ export function supportGuoba() {
                                 value: "https://github.com/Catrong/phi-plugin-ill.git"
                             },
                             {
-                                label: 'github代理(sakuramoe)',
-                                value: "https://ghproxy.sakuramoe.dev/https://github.com/Catrong/phi-plugin-ill.git"
-                            },
-                            {
                                 label: 'github代理(gh-proxy)',
                                 value: "https://gh-proxy.com/https://github.com/Catrong/phi-plugin-ill.git"
+                            },
+                            {
+                                label: 'github代理(gitproxy.click)',
+                                value: "https://gitproxy.click/https://github.com/Catrong/phi-plugin-ill.git"
                             }
                         ]
                     }

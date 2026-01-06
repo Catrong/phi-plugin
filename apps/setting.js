@@ -84,6 +84,17 @@ export class phihelp extends phiPluginBase {
                                 break;
                         }
                         break;
+                    case 'RadioGroup': {
+                        let options = schema.componentProps?.options
+                        if (!options) break;
+                        for (let j = 0; j < options.length; j++) {
+                            if (options[j].label == value) {
+                                Config.modify('config', field, options[j].value)
+                                break;
+                            }
+                        }
+                        break;
+                    }
                     default:
                         break;
                 }
@@ -142,6 +153,16 @@ export class phihelp extends phiPluginBase {
                         type: 'switch',
                         // @ts-ignore
                         value: config[schema.field],
+                    })
+                    break;
+                case 'RadioGroup':
+                    if (!schema.field) break;
+                    data.push({
+                        label: schema.label,
+                        bottomHelpMessage: schema.bottomHelpMessage,
+                        type: 'space',
+                        // @ts-ignore
+                        value: schema.componentProps?.options.find(o => o.value == config[schema.field])?.label || '未知',
                     })
                     break;
                 default:
