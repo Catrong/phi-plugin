@@ -192,6 +192,15 @@ import { APIBASEURL } from './constNum.js';
  */
 
 /**
+ * @typedef {object} liteScoreDetail
+ * @property {number} score 分数
+ * @property {number} acc 准确率
+ * @property {number} fc 是否FC
+ * @property {number} rksWhenInsert 插入时RKS
+ * @property {number} updated_at 更新时间戳
+ */
+
+/**
  * @typedef {Object} APIUpdateCommentObject 评论对象
  * @property {string} songId 曲目ID
  * @property {allLevelKind} rank 等级
@@ -376,6 +385,33 @@ export default class makeRequest {
      */
     static async getScoreRanklistByUser(params) {
         return (await makeFetch(burl('/get/scoreList/user'), params)).data
+    }
+
+    /**
+     * 获取谱面平均ACC
+     * @param {{songId: idString, rank: levelKind, minRks?: number, maxRks?: number}} params id+.0
+     * @returns {Promise<{accAvg: number, count: number}>}
+     */
+    static async getSongAccAvg(params) {
+        return (await makeFetch(burl('/get/scoreList/songAccAvg'), params)).data
+    }
+
+    /**
+     * 获取谱面所有成绩
+     * @param {{songId: idString, rank: levelKind, minRks?: number, maxRks?: number, requestField?: (keyof liteScoreDetail)[], numPrecision: number}} params id+.0
+     * @returns {Promise<(string[] | number[])[]>}
+     */
+    static async getSongAccList(params) {
+        return (await makeFetch(burl('/get/scoreList/songAccList'), params)).data
+    }
+
+    /**
+     * 获取所有谱面平均ACC
+     * @param {{songIds?: idString[], minRks?: number, maxRks?: number}} params id+.0
+     * @returns {Promise<Record<idString, Record<levelKind, {accAvg: number | null, count: number}>>>}
+     */
+    static async getAllSongAccAvg(params) {
+        return (await makeFetch(burl('/get/scoreList/allAccAvg'), params)).data
     }
 
     /**

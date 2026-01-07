@@ -1,9 +1,11 @@
+import Config from '../../components/Config.js'
 import logger from '../../components/Logger.js'
 import PhigrosUser from '../../lib/PhigrosUser.js'
 import { Level, MAX_DIFFICULTY } from '../constNum.js'
 import fCompute from '../fCompute.js'
 import getInfo from '../getInfo.js'
 import getRksRank from '../getRksRank.js'
+import makeRequest from '../makeRequest.js'
 import LevelRecordInfo from './LevelRecordInfo.js'
 
 export default class Save {
@@ -368,7 +370,7 @@ export default class Save {
 
         /**
          * 所有成绩
-         * @type {(LevelRecordInfo & {suggestType?: number, suggest?: string, num?: number|string})[]}
+         * @type {(LevelRecordInfo & {suggestType?: number, suggest?: string, num?: number|string, accAvg?: number})[]}
          */
         let rkslist = this.getRecord()
         /**真实 rks */
@@ -378,6 +380,8 @@ export default class Save {
         if (minuprks < 0) {
             minuprks += 0.01
         }
+
+        const b19Ids = []
 
         /**bestN 列表 */
         let b19_list = []
@@ -417,9 +421,22 @@ export default class Save {
             rkslist[i].illustration = getInfo.getill(rkslist[i].id, 'common')
             /**b19列表 */
             b19_list.push(rkslist[i])
+            b19Ids.push(rkslist[i].id)
         }
 
         let com_rks = sum_rks / 30
+
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            const res = await makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: Math.floor(com_rks / 0.01) * 0.01, maxRks: Math.ceil(com_rks / 0.01) * 0.01 })
+            for (let i = 0; i < b19_list.length; ++i) {
+                const x = b19_list[i];
+                if (x.rank == 'LEGACY') continue;
+                const accAvg = res[x.id][x.rank]?.accAvg
+                if (accAvg != null && !isNaN(accAvg)) {
+                    b19_list[i].accAvg = accAvg
+                }
+            }
+        }
 
         this.B19List = { phi, b19_list }
 

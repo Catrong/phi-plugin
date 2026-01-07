@@ -8,14 +8,14 @@
 
 <div class="title">
     <div class="playerInfo">
-        <div class="blackBlock"></div>
-        <div class="avatar">
+        <div class="blackBlock clip-box"></div>
+        <div class="avatar clip-box">
             <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
         </div>
         <div class="playerId">
             <p name="pvis">{{#gameuser.PlayerId}}</p>
         </div>
-        <div class="rks">
+        <div class="rks clip-box">
             <p>{{gameuser.rks.toFixed(4)}}</p>
         </div>
         <div class="clgBox">
@@ -27,18 +27,18 @@
         <div class="date">
             <p>{{Date}}</p>
         </div>
-        <div class="dataBox">
+        <div class="dataBox clip-box">
             <img src="{{_res_path}}html/otherimg/data.png" alt="data">
             <p>{{gameuser.data}}</p>
         </div>
         {{if spInfo}}
-        <div class="spInfo colorful-background">
+        <div class="spInfo colorful-background clip-box">
             <p>{{spInfo}}</p>
         </div>
         {{/if}}
     </div>
-    <div class="recordInfo">
-        <div class="whiteLine"></div>
+    <div class="recordInfo clip-box">
+        <div class="whiteLine clip-box"></div>
         <div class="sheet">
             <div class="row">
                 <div class="poz">
@@ -93,13 +93,13 @@
 
     <div class="song phi_song">
         <div class="ill-box">
-            <div class="num">
+            <div class="num clip-box">
                 <p name="pvis">P{{$index+1}}</p>
             </div>
-            <div class="ill">
+            <div class="ill clip-box">
                 <img src="{{song.illustration}}" alt="ill">
             </div>
-            <div class="rank-{{song.rank}}">
+            <div class="rank-{{song.rank}} clip-box">
                 <div class="org">
                     <p>{{song.rank}}&ensp;{{song.difficulty.toFixed(1)}}</p>
                 </div>
@@ -133,6 +133,19 @@
                 </div>
             </div>
         </div>
+        {{if song.accAvg}}
+        <div class="accAvg {{song.acc < song.accAvg ? 'accLower' : 'accHigher'}} clip-box">
+            <div class="accAvgLine clip-box"></div>
+            <svg viewBox="0 0 1024 1024">
+            <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+            ></path>
+            </svg>
+            <p>Avg: {{song.accAvg.toFixed(4)}}%</p>
+        </div>
+        {{/if}}
     </div>
 
     {{else}}
@@ -186,13 +199,13 @@
 
     <div class="song {{$index < (phi ? 27 : 30) ? 'b_song':''}}">
         <div class="ill-box">
-            <div class="num">
+            <div class="num clip-box">
                 <p name="pvis">#{{song.num}}</p>
             </div>
-            <div class="ill">
+            <div class="ill clip-box">
                 <img src="{{song.illustration}}" alt="ill">
             </div>
-            <div class="rank-{{song.rank}}">
+            <div class="rank-{{song.rank}} clip-box">
                 <div class="org">
                     <p>{{song.rank}}&ensp;{{song.difficulty.toFixed(1)}}</p>
                 </div>
@@ -226,6 +239,20 @@
                 </div>
             </div>
         </div>
+            
+        {{if song.accAvg}}
+        <div class="accAvg {{song.acc < song.accAvg ? 'accLower' : 'accHigher'}} clip-box">
+            <div class="accAvgLine clip-box"></div>
+            <svg viewBox="0 0 1024 1024">
+            <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+            ></path>
+            </svg>
+            <p>Avg: {{song.accAvg.toFixed(4)}}%</p>
+        </div>
+        {{/if}}
     </div>
 
     {{/each}}

@@ -163,7 +163,7 @@ export class phib19 extends phiPluginBase {
             b19_list: save_b19.b19_list,
             PlayerId: gameuser.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
-            Date: save.saveInfo.summary.updatedAt,
+            Date: fCompute.formatDate(save.saveInfo.summary.updatedAt),
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             // dan: await get.getDan(e.user_id),
