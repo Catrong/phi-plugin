@@ -561,12 +561,12 @@ body p {
 
 .accHigher {
   --bkgColor: #9b84007a;
-  --lineColor: #fffb00;
+  --lineColor: hsl(60, 100%, 70%);
 }
 
 .accLower {
   --bkgColor: #f000004d;
-  --lineColor: #ff0000;
+  --lineColor: hsl(350, 100%, 70%);
 }
 
 .accAvg {
