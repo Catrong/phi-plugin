@@ -370,7 +370,7 @@ export default class Save {
 
         /**
          * 所有成绩
-         * @type {(LevelRecordInfo & {suggestType?: number, suggest?: string, num?: number|string, accAvg?: number})[]}
+         * @type {(LevelRecordInfo & {suggestType?: number, suggest?: string, num?: number|string, accAvg?: number, accKind?: string})[]}
          */
         let rkslist = this.getRecord()
         /**真实 rks */
@@ -427,13 +427,40 @@ export default class Save {
         let com_rks = sum_rks / 30
 
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-            const res = await makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: Math.floor(com_rks / 0.01) * 0.01, maxRks: Math.ceil(com_rks / 0.01) * 0.01 })
+            const res = await makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05, maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05 })
+            let allhiger = true
             for (let i = 0; i < b19_list.length; ++i) {
+                if (i >= 27 && allhiger) {
+                    break;
+                }
                 const x = b19_list[i];
                 if (x.rank == 'LEGACY') continue;
                 const accAvg = res[x.id][x.rank]?.accAvg
                 if (accAvg != null && !isNaN(accAvg)) {
                     b19_list[i].accAvg = accAvg
+                    if (x.acc < accAvg) {
+                        allhiger = false
+                        b19_list[i].accKind = 'Lower'
+                    } else {
+                        b19_list[i].accKind = 'Higher'
+                    }
+                }
+            }
+            if (allhiger) {
+                const res = await makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: (Math.floor((com_rks - 0.05) / 0.05) + 2) * 0.05, maxRks: (Math.ceil((com_rks + 0.05) / 0.05) + 2) * 0.05 })
+                for (let i = 0; i < b19_list.length; ++i) {
+                    const x = b19_list[i];
+                    if (x.rank == 'LEGACY') continue;
+                    const accAvg = res[x.id][x.rank]?.accAvg
+                    if (accAvg != null && !isNaN(accAvg)) {
+                        b19_list[i].accAvg = accAvg
+                        if (x.acc < accAvg) {
+                            allhiger = false
+                            b19_list[i].accKind = 'Hyper'
+                        } else {
+                            b19_list[i].accKind = 'Finished'
+                        }
+                    }
                 }
             }
         }

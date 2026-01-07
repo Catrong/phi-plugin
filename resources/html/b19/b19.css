@@ -561,12 +561,22 @@ body p {
 
 .accHigher {
   --bkgColor: #9b84007a;
-  --lineColor: #fffb00;
+  --lineColor: hsl(60, 100%, 70%);
 }
 
 .accLower {
   --bkgColor: #f000004d;
-  --lineColor: #ff0000;
+  --lineColor: hsl(350, 100%, 70%);
+}
+
+.accHyper {
+  --bkgColor: #00b0f04d;
+  --lineColor: #00b0f0;
+}
+
+.accFinished {
+  --bkgColor: #00f0444d;
+  --lineColor: #00f044;
 }
 
 .accAvg {
@@ -599,6 +609,10 @@ body p {
 
 .accLower svg {
     transform: rotate(180deg);
+}
+
+.accHyper svg {
+    transform: rotate(90deg);
 }
 
 .accAvg path {
