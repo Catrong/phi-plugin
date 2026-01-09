@@ -28,7 +28,7 @@
  * | 'chap'
  * | 'suggest'
  * | 'analyze2025SaveHistory'
- * | 'b30history'
+ * | 'hisb30'
  * | 'bestn'
  * | 'data'
  * | 'song'

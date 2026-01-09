@@ -48,7 +48,7 @@ export class phiuser extends phiPluginBase {
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(hisb30)(.*)$`,
-                    fnc: 'b30history'
+                    fnc: 'hisb30'
                 }
             ]
         })
@@ -668,8 +668,8 @@ export class phiuser extends phiPluginBase {
      * @param {botEvent} e 
      * @returns 
      */
-    async b30history(e) {
-        if (await getBanGroup.get(e, 'b30history')) {
+    async hisb30(e) {
+        if (await getBanGroup.get(e, 'hisb30')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
@@ -850,7 +850,7 @@ export class phiuser extends phiPluginBase {
         }
 
         /**
-         * @typedef {object} B30HistorySongs
+         * @typedef {object} hisb30Songs
          * @property {string} ill 曲绘
          * @property {string} rank 难度
          * @property {number} [newPhi] 新φ30排名
@@ -863,7 +863,7 @@ export class phiuser extends phiPluginBase {
          * @type {object[]}
          * @property {string} date 时间
          * @property {string} color 颜色
-         * @property {B30HistorySongs[]} songs 变化内容
+         * @property {hisb30Songs[]} songs 变化内容
          */
         const rows = [];
 
@@ -871,7 +871,7 @@ export class phiuser extends phiPluginBase {
             if (changeB30Result[time]) {
                 const date = fCompute.formatDate(Number(time));
 
-                /** @type {B30HistorySongs[]} */
+                /** @type {hisb30Songs[]} */
                 const songs = [];
                 changeB30Result[time].forEach(item => {
                     songs.push({

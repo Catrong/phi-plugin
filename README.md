@@ -131,7 +131,7 @@ pnpm install -P
 | `#phi (lvsco(re)\|scolv) <定数范围> <难度>` | 获取区间成绩
 | `#phi chap <章节名称\|help>` | 获取章节成绩
 | `#phi list <-dif 定数范围> <-acc ACC范围> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩
-| `#phi b30history` | 根据历史记录计算B30变化情况
+| `#phi hisb30` | 根据历史记录计算B30变化情况
 | `#phi best1(+)` | 查询文字版b30（或更多），最高b99
 | `#phi (score\|单曲成绩)xxx  [-dif 难度] [-or acc\|score\|fc\|time] [-unrank]` | 获取单曲成绩及这首歌的推分建议，参数为对分数排行的参数，目前仅开启API后有效
 | `#phi (suggest\|推分)` | 获取可以让RKS+0.01的曲目及其所需ACC

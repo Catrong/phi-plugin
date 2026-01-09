@@ -68,9 +68,9 @@
                 "desc": "列出所有匹配的成绩<br>eg: /list -dif 11.1-12.2 -acc 98.5-100 IN FC"
             },
             {
-                "title": "/b30history",
-                "eg": "/b30history",
-                "desc": "根据历史记录计算B30变化情况<br>eg: /b30history"
+                "title": "/hisb30",
+                "eg": "/hisb30",
+                "desc": "根据历史记录计算B30变化情况<br>eg: /hisb30"
             },
             {
                 "title": "/bN /pN<br>/xN /fcN",
