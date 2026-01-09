@@ -1,7 +1,7 @@
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 import Save from '../model/class/Save.js'
-import scoreHistory from '../model/class/scoreHistory.js'
+import ScoreHistory from '../model/class/scoreHistory.js'
 import getSave from '../model/getSave.js'
 import getQRcode from '../lib/getQRcode.js'
 import common from '../../../lib/common/common.js'
@@ -519,8 +519,8 @@ async function build(e, updateData, history) {
             const history = tem[level]
             if (!history) continue
             for (let i = 0; i < history.length; i++) {
-                let score_date = fCompute.formatDate(scoreHistory.date(history[i]))
-                let score_info = scoreHistory.extend(id, level, history[i], i ? history[i - 1] : undefined)
+                let score_date = fCompute.formatDate(ScoreHistory.date(history[i]))
+                let score_info = ScoreHistory.extend(id, level, history[i], i ? history[i - 1] : undefined)
                 if (time_vis[score_date] == undefined) {
                     time_vis[score_date] = tot_update.length
                     tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })

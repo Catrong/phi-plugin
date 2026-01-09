@@ -17,7 +17,7 @@ import getInfo from "../getInfo.js"
  * @property {Date} date_new 新成绩的日期
  * @property {Date} [date_old] 旧成绩的日期
  */
-export default class scoreHistory {
+export default class ScoreHistory {
 
     /**
      * 生成成绩记录数组

@@ -1,253 +1,266 @@
 @import "./theme/snow/snow.css";
 
 @font-face {
-    font-family: "吞弥恰俊";
-    src: url("./font/吞弥恰俊.ttf") format("truetype");
+  font-family: "吞弥恰俊";
+  src: url("./font/吞弥恰俊.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "PHI";
-    src: url("./font/phi.ttf") format("truetype");
+  font-family: "PHI";
+  src: url("./font/phi.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "HIMALAYA";
-    src: url("./font/HIMALAYA.TTF") format("truetype");
+  font-family: "HIMALAYA";
+  src: url("./font/HIMALAYA.TTF") format("truetype");
 }
 
 @font-face {
-    font-family: "NOTO";
-    src: url("./font/NotoSans-Regular.ttf") format("truetype");
+  font-family: "NOTO";
+  src: url("./font/NotoSans-Regular.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "NotoSansSymbols2";
-    src: url("./font/NotoSansSymbols2.ttf") format("truetype");
+  font-family: "NotoSansSymbols2";
+  src: url("./font/NotoSansSymbols2.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "NotoSansArabic";
-    src: url("./font/NotoSansArabic.ttf") format("truetype");
+  font-family: "NotoSansArabic";
+  src: url("./font/NotoSansArabic.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "NotoSansJP";
-    src: url("./font/NotoSansJP.ttf") format("truetype");
+  font-family: "NotoSansJP";
+  src: url("./font/NotoSansJP.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "Aldrich";
-    src: url("./font/Aldrich-Regular.ttf") format("truetype");
+  font-family: "Aldrich";
+  src: url("./font/Aldrich-Regular.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "NotoSansKannada";
-    src: url("./font/NotoSansKannada.ttf") format("truetype");
+  font-family: "NotoSansKannada";
+  src: url("./font/NotoSansKannada.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "NotoSansCanadianAboriginal";
-    src: url("./font/NotoSansCanadianAboriginal.ttf") format("truetype");
+  font-family: "NotoSansCanadianAboriginal";
+  src: url("./font/NotoSansCanadianAboriginal.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "NotoColorEmoji-Regular";
-    src: url("./font/NotoColorEmoji-Regular.ttf") format("truetype");
+  font-family: "NotoColorEmoji-Regular";
+  src: url("./font/NotoColorEmoji-Regular.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "NotoSansMath-Regular";
-    src: url("./font/NotoSansMath-Regular.ttf") format("truetype");
+  font-family: "NotoSansMath-Regular";
+  src: url("./font/NotoSansMath-Regular.ttf") format("truetype");
 }
 
 :root {
-    --AT: #6e6e6e;
-    --IN: #ff0000;
-    --HD: #00b0f0;
-    --EZ: #92d050;
-    --tap: skyblue;
-    --drag: gold;
-    --hold: #29b0e6;
-    --flick: pink;
+  --AT: #6e6e6e;
+  --IN: #ff0000;
+  --HD: #00b0f0;
+  --EZ: #92d050;
+  --tap: skyblue;
+  --drag: gold;
+  --hold: #29b0e6;
+  --flick: pink;
+  --clipSlope: 0.3;
 }
 
 body {
-    font-family: "PHI", "NotoSansArabic", "NotoSansSymbols2", "NOTO",
-        "NotoSansJP", "NotoSansKannada", "NotoSansCanadianAboriginal",
-        "NotoColorEmoji-Regular", "HIMALAYA", "吞弥恰俊",
-        "NotoSansMath-Regular";
-    margin: 0;
-    background: url("../otherimg/phigros.png") center no-repeat;
-    background-size: cover;
-    background-position: center;
-    transform-origin: top left;
-    position: absolute;
+  font-family:
+    "PHI", "NotoSansArabic", "NotoSansSymbols2", "NOTO", "NotoSansJP", "NotoSansKannada",
+    "NotoSansCanadianAboriginal", "NotoColorEmoji-Regular", "HIMALAYA", "吞弥恰俊",
+    "NotoSansMath-Regular";
+  margin: 0;
+  background: url("../otherimg/phigros.png") center no-repeat;
+  background-size: cover;
+  background-position: center;
+  transform-origin: top left;
+  position: absolute;
 }
 
 body p {
-    margin: 0;
+  margin: 0;
 }
 
 .background {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    overflow: hidden;
-    z-index: 0;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: -1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  overflow: hidden;
+  z-index: 0;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: -1;
 }
 
 .background img {
-    height: 100%;
-    min-width: 100%;
-    min-height: 100%;
-    position: absolute;
-    overflow: hidden;
-    transform: scale(1.2);
-    filter: blur(20px) brightness(75%);
-    z-index: -1;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  position: absolute;
+  overflow: hidden;
+  transform: scale(1.2);
+  filter: blur(20px) brightness(50%);
+  z-index: -1;
 }
 
 .createdbox {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    writing-mode: horizontal-tb;
-    justify-content: center;
-    z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  writing-mode: horizontal-tb;
+  justify-content: center;
+  z-index: 10;
 }
 
 .createdbox p {
-    color: white;
-    font-size: 70px;
-    font-family: "Aldrich", "PHI";
+  color: white;
+  font-size: 70px;
+  font-family: "Aldrich", "PHI";
 }
 
 .phi-plugin {
-    display: flex;
-    z-index: 1;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  z-index: 1;
+  justify-content: center;
+  align-items: center;
 }
 
 .ver {
-    display: flex;
-    z-index: 1;
+  display: flex;
+  z-index: 1;
 }
 
 .phi-plugin p {
-    font-size: 80px;
-    text-shadow: 0 0 20px #00baff;
+  font-size: 80px;
+  text-shadow: 0 0 20px #00baff;
 }
 
 .ver p {
-    font-size: 40px;
-    text-shadow: 0 0 20px #fff700;
+  font-size: 40px;
+  text-shadow: 0 0 20px #fff700;
 }
 
 .tips {
-    position: absolute;
-    bottom: 0px;
-    left: 5px;
-    writing-mode: horizontal-tb;
+  position: absolute;
+  bottom: 0px;
+  left: 5px;
+  writing-mode: horizontal-tb;
 }
 
 .tips p {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .colorful p {
-    /* width: 100%; */
-    background-image: -webkit-gradient(
-        linear,
-        left top,
-        right top,
-        color-stop(0, #f22),
-        color-stop(1, #2ff),
-        color-stop(0.8, #2f2),
-        color-stop(0.6, #2f2),
-        color-stop(0.4, #ff2),
-        color-stop(0.2, #f92),
-        color-stop(0, #f22)
-    );
-    color: transparent;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    -ms-background-clip: text;
+  /* width: 100%; */
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0, #f22),
+    color-stop(1, #2ff),
+    color-stop(0.8, #2f2),
+    color-stop(0.6, #2f2),
+    color-stop(0.4, #ff2),
+    color-stop(0.2, #f92),
+    color-stop(0, #f22)
+  );
+  color: transparent;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -ms-background-clip: text;
 }
 
 .colorful-background {
-    --alf: 0.5;
-    background: linear-gradient(
-            to right,
-            rgba(255, 0, 0, var(--alf)),
-            rgba(255, 166, 0, var(--alf)),
-            rgba(255, 255, 0, var(--alf))
-        ),
-        white;
+  --alf: 0.5;
+  background:
+    linear-gradient(
+      to right,
+      rgba(255, 0, 0, var(--alf)),
+      rgba(255, 166, 0, var(--alf)),
+      rgba(255, 255, 0, var(--alf))
+    ),
+    white;
 }
 
 .common_ill {
-    clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
-    overflow: hidden;
+  clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+  overflow: hidden;
 }
 
 .Challenge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    position: absolute;
-    color: white;
-    /* text-shadow: 0 0 20px #ffffff; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  color: white;
+  /* text-shadow: 0 0 20px #ffffff; */
 }
 
 .Challenge img {
-    width: 100%;
-    height: auto;
-    margin-right: 0;
-    margin-left: 0;
-    border-radius: 0px;
-    margin-bottom: -65%;
+  width: 100%;
+  height: auto;
+  margin-right: 0;
+  margin-left: 0;
+  border-radius: 0px;
+  margin-bottom: -65%;
 }
 
 .ill-clip {
-    clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
+  clip-path: polygon(100% 0, 81.844% 100%, 0 100%, 18.156% 0);
 }
 
 .AT-BKG {
-    background-color: var(--AT);
+  background-color: var(--AT);
 }
 
 .IN-BKG {
-    background-color: var(--IN);
+  background-color: var(--IN);
 }
 
 .HD-BKG {
-    background-color: var(--HD);
+  background-color: var(--HD);
 }
 
 .EZ-BKG {
-    background-color: var(--EZ);
+  background-color: var(--EZ);
 }
 
 .TAP-BKG {
-    background-color: var(--tap);
+  background-color: var(--tap);
 }
 
 .DRAG-BKG {
-    background-color: var(--drag);
+  background-color: var(--drag);
 }
 
 .HOLD-BKG {
-    background-color: var(--hold);
+  background-color: var(--hold);
 }
 
 .FLICK-BKG {
-    background-color: var(--flick);
+  background-color: var(--flick);
+}
+
+.clip-box {
+  height: var(--height);
+  clip-path: polygon(
+    100% 0,
+    calc(100% - calc(var(--height) * var(--clipSlope))) 100%,
+    0 100%,
+    calc(var(--height) * var(--clipSlope)) 0
+  );
+  overflow: hidden;
 }

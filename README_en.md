@@ -99,6 +99,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi (lvsco(re)\|scolv) <rating range> <difficulty>` | Get scores in range |
 | `#phi chap <chapter name\|help>` | Get chapter scores |
 | `#phi list <-dif difficultyRange> <-acc accRange> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | List scores per song in range |
+| `#phi b30history` | Calculate B30 changes based on history |
 | `#phi best1(+)` | Text-based b30 (up to b99) |
 | `#phi score xxx  [-dif (EZ\|HD\|IN\|AT)] [-or (acc\|score\|fc\|time)] [-unrank]` | Get single score & improvement tips (parameters for score ranking, API required) |
 | `#phi (suggest\|suggest)` | Get songs that can increase Rks by +0.01 |
@@ -210,6 +211,7 @@ Special thanks to these sponsors (list may not be fully updated):
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/7f56847012a911f0853552540025c377/avatar/752eaae4cf8018a82719ea8f42569eae_w2000_h2000_s2699.png?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="茗亿"/><br /><sub><b>茗亿</b></sub><br/>🌸 30 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/fbcb2b98204611eea8f152540025c377/avatar/d4e7f58683064153bfbedb99ad95c6d8_w855_h875_s117.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="..."/><br /><sub><b>...</b></sub><br/>🌸 50 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/4041ac584eb111f0b57952540025c377/avatar/04de899ed964c6cfe315d27ea56a1fea_w1080_h1080_s69.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="夏夏肃炎"/><br /><sub><b>夏夏肃炎</b></sub><br/>🌸 5 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/7737c9cca1f211ed896a5254001e7c00/avatar/7a320f384ead8f4fca4630efa31c0c3b_w705_h705_s346.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="Bluerosion"/><br /><sub><b>Bluerosion</b></sub><br/>🌸 52.0 🌸</td>
     </tr>
 </table>
 

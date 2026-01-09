@@ -415,9 +415,21 @@ export default class makeRequest {
     }
 
     /**
-     * 获取用户data历史记录
-     * @param {baseAu & {request: (keyof saveHistoryObject)[]}} params 
+     * @overload
+     * @param {baseAu} params 
      * @returns {Promise<saveHistoryObject>}
+     */
+    /**
+     * @template {keyof saveHistoryObject} K
+     * @overload
+     * @param {baseAu & {request: K[]}} params 
+     * @returns {Promise<Pick<saveHistoryObject, K>>}
+     */
+    /**
+     * 获取用户data历史记录
+     * @template {keyof saveHistoryObject} K
+     * @param {baseAu & {request?: K[]}} params 
+     * @returns {Promise<Partial<saveHistoryObject>>}
      */
     static async getHistory(params) {
         return (await makeFetch(burl('/get/history/history'), params)).data

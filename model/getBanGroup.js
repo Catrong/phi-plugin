@@ -72,6 +72,7 @@ export default class getBanGroup {
             case 'chap':
             case 'suggest':
             case 'analyze2025SaveHistory':
+            case 'b30history':
                 return await this.redis(group_id, 'b19')
             case 'bestn':
             case 'data':

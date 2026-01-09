@@ -13,6 +13,7 @@ import { Level } from '../model/constNum.js'
 import getNotes from '../model/getNotes.js'
 import getUpdateSave from '../model/getUpdateSave.js'
 import analyzeSaveHistory from '../model/analyzeSaveHistory.js'
+import ScoreHistory from '../model/class/scoreHistory.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -44,6 +45,10 @@ export class phiuser extends phiPluginBase {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(年度总结|2025history)(.*)$`,
                     fnc: 'analyze2025SaveHistory'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(hisb30)(.*)$`,
+                    fnc: 'b30history'
                 }
             ]
         })
@@ -657,6 +662,261 @@ export class phiuser extends phiPluginBase {
             background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
         }));
     }
+
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
+    async b30history(e) {
+        if (await getBanGroup.get(e, 'b30history')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        const save = await send.getsave_result(e)
+
+        if (!save) {
+            return true
+        }
+
+        const history = await getUpdateSave.getHistoryFromApi(e, ['scoreHistory']);
+
+        if (!history) {
+            return true;
+        }
+
+        const { scoreHistory } = history;
+
+        const records = [];
+
+        for (const ids of fCompute.objectKeys(scoreHistory)) {
+            const songRecords = scoreHistory[ids];
+            for (const level of Level) {
+                const levelRecords = songRecords[level];
+                if (!levelRecords) continue;
+                for (const record of levelRecords) {
+                    const openedRecord = ScoreHistory.open(record);
+                    records.push({
+                        id: ids,
+                        level: level,
+                        ...openedRecord
+                    });
+                }
+            }
+        }
+
+        /**@type {Record<string, LevelRecordInfo[]>} */
+        const timeKeyRecords = {}
+
+        for (const record of records) {
+            if (!timeKeyRecords[`${record.date.getTime()}`]) {
+                timeKeyRecords[`${record.date.getTime()}`] = [];
+            }
+            timeKeyRecords[`${record.date.getTime()}`].push(new LevelRecordInfo(record, record.id, Level.indexOf(record.level)));
+        }
+
+        const times = fCompute.objectKeys(timeKeyRecords)
+
+        times.sort((a, b) => Number(a) - Number(b));
+
+        /**@type {Record<'phi' | 'b27', LevelRecordInfo[]>} */
+        let b30List = {
+            phi: [],
+            b27: [],
+        }
+
+        /**@typedef {LevelRecordInfo & {newPhi?: number, newB27?: number, exitPhi?: boolean, exitB27?: boolean}} b30ChangeResult*/
+
+        /**@type {Record<string, b30ChangeResult[]>} */
+        const changeB30Result = {};
+
+        for (const time of times) {
+            /**维护 time 对应时间戳的变化情况 */
+
+            /**所有新成绩 */
+            const records = timeKeyRecords[time];
+
+            /**加入后新B30 */
+            const newB30List = fCompute.updateB30(b30List, records);
+
+            /**旧的keys */
+            const oldPhiCharts = b30List.phi.map(item => `${item.id}-${item.rank}`);
+            const oldB27Charts = b30List.b27.map(item => `${item.id}-${item.rank}`);
+
+            /**新的keys */
+            const newPhiCharts = newB30List.phi.map(item => `${item.id}-${item.rank}`);
+            const newB27Charts = newB30List.b27.map(item => `${item.id}-${item.rank}`);
+
+            /**@type {b30ChangeResult[]} 新的phi成绩*/
+            const newPhi = [];
+            /**@type {b30ChangeResult[]} 新的b27成绩*/
+            const newB27 = [];
+
+            newB30List.phi.forEach((item, index) => {
+                if (!oldPhiCharts.includes(`${item.id}-${item.rank}`)) {
+                    newPhi.push({ ...item, newPhi: index + 1 });
+                }
+            });
+
+            newB30List.b27.forEach((item, index) => {
+                if (!oldB27Charts.includes(`${item.id}-${item.rank}`)) {
+                    newB27.push({ ...item, newB27: index + 1 });
+                }
+            });
+
+            /**@type {Record<string, b30ChangeResult>} */
+            const newPhiVis = {};
+            /**@type { b30ChangeResult[]} 合并后新的phi成绩*/
+            const newPhiResult = []
+            /**@type { b30ChangeResult[]} 合并后新的b27成绩*/
+            const newB27Result = []
+
+            /**先标记phi，优先合并到phi上 */
+            newPhi.forEach(item => {
+                newPhiVis[`${item.id}-${item.rank}`] = item;
+            });
+
+            /**b27中有的合并到phi上 */
+            newB27.forEach(item => {
+                const key = `${item.id}-${item.rank}`;
+                if (newPhiCharts.includes(key)) {
+                    newPhiVis[key].newB27 = item.newB27;
+                    return;
+                }
+                newB27Result.push(item);
+            });
+
+            /**合并后的新的phi成绩 */
+            for (const key of fCompute.objectKeys(newPhiVis)) {
+                newPhiResult.push(newPhiVis[key]);
+            }
+
+            /**退出的成绩，逻辑同上 */
+
+            /**@type {b30ChangeResult[]} */
+            const exitPhi = [];
+            /**@type {b30ChangeResult[]} */
+            const exitB27 = [];
+
+            b30List.phi.forEach(item => {
+                if (!newPhiCharts.includes(`${item.id}-${item.rank}`)) {
+                    exitPhi.push({ ...item, exitPhi: true });
+                }
+            });
+
+            b30List.b27.forEach(item => {
+                if (!newB27Charts.includes(`${item.id}-${item.rank}`)) {
+                    exitB27.push({ ...item, exitB27: true });
+                }
+            });
+
+            /**@type {Record<string, b30ChangeResult>} */
+            const exitPhiVis = {};
+            /**@type { b30ChangeResult[]} */
+            const exitPhiResult = [];
+            /**@type { b30ChangeResult[]} */
+            const exitB27Result = [];
+
+            exitPhi.forEach(item => {
+                exitPhiVis[`${item.id}-${item.rank}`] = item;
+            });
+
+            exitB27.forEach(item => {
+                const key = `${item.id}-${item.rank}`;
+                if (newB27Charts.includes(key)) {
+                    exitPhiVis[key].exitB27 = item.exitB27;
+                    return;
+                }
+                exitB27Result.push(item);
+            });
+
+            for (const key of fCompute.objectKeys(exitPhiVis)) {
+                exitPhiResult.push(exitPhiVis[key]);
+            }
+
+            if (newPhiResult.length + newB27Result.length + exitPhiResult.length + exitB27Result.length > 0) {
+                changeB30Result[time] = [
+                    ...newPhiResult,
+                    ...newB27Result,
+                    ...exitPhiResult,
+                    ...exitB27Result,
+                ];
+            }
+
+
+            b30List = newB30List;
+
+        }
+
+        /**
+         * @typedef {object} B30HistorySongs
+         * @property {string} ill 曲绘
+         * @property {string} rank 难度
+         * @property {number} [newPhi] 新φ30排名
+         * @property {number} [newB27] 新b27排名
+         * @property {boolean} [exitPhi] 退出φ30
+         * @property {boolean} [exitB27] 退出b27
+         */
+
+        /**
+         * @type {object[]}
+         * @property {string} date 时间
+         * @property {string} color 颜色
+         * @property {B30HistorySongs[]} songs 变化内容
+         */
+        const rows = [];
+
+        times.reverse().forEach(time => {
+            if (changeB30Result[time]) {
+                const date = fCompute.formatDate(Number(time));
+
+                /** @type {B30HistorySongs[]} */
+                const songs = [];
+                changeB30Result[time].forEach(item => {
+                    songs.push({
+                        ill: getInfo.getill(item.id, 'low'),
+                        rank: item.rank,
+                        newPhi: item.newPhi,
+                        newB27: item.newB27,
+                        exitPhi: item.exitPhi,
+                        exitB27: item.exitB27,
+                    });
+                });
+                rows.push({
+                    date,
+                    songs,
+                    color: fCompute.getRandomBgColor(),
+                });
+            }
+        })
+
+        const pluginData = await getNotes.getNotesData(e.user_id);
+
+        // let dan = await get.getDan(e.user_id)
+        const money = save.gameProgress?.money || [0, 0, 0, 0, 0]
+        const gameuser = {
+            avatar: getInfo.idgetavatar(save.gameuser.avatar),
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save.saveInfo.summary.rankingScore,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: save.gameuser.selfIntro,
+            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
+            // dan: dan,
+        }
+
+        send.send_with_At(e, await picmodle.common(e, 'historyB30', {
+            gameuser,
+            rows,
+            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)]),
+            theme: pluginData?.theme || 'star',
+        }))
+
+    }
+
+
 
 }
 

@@ -1,0 +1,143 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/historyB30/historyB30.css" />
+{{/block}}
+
+{{block 'main'}}
+<div class="title">
+  <div class="playerInfo">
+    <div class="blackBlock clip-box"></div>
+    <div class="avatar clip-box">
+      <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}" />
+    </div>
+    <div class="playerId">
+      <p name="pvis">{{#gameuser.PlayerId}}</p>
+    </div>
+    <div class="rks clip-box">
+      <p>{{gameuser.rks.toFixed(4)}}</p>
+    </div>
+    <div class="clgBox">
+      <div class="Challenge">
+        <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="Challenge" />
+        <p>{{gameuser.ChallengeModeRank}}</p>
+      </div>
+    </div>
+    <div class="date">
+      <p>{{Date}}</p>
+    </div>
+    <div class="dataBox clip-box">
+      <img src="{{_res_path}}html/otherimg/data.png" alt="data" />
+      <p>{{gameuser.data}}</p>
+    </div>
+    {{if spInfo}}
+    <div class="spInfo colorful-background clip-box">
+      <p>{{spInfo}}</p>
+    </div>
+    {{/if}}
+  </div>
+</div>
+
+<div class="descTip">
+  <p>*B30变化仅以当前定数为准，实际历史定数敬请期待</p>
+</div>
+
+<div class="main-box">
+  {{each rows row}}
+  <div class="row" style="--row-color: {{row.color}}">
+    <div class="date-box">
+      <div class="upLine"></div>
+      <div class="midCirc">
+        <div class="circInner"></div>
+      </div>
+      <div class="downLine"></div>
+    </div>
+    <div class="songs-box">
+      <div class="row-date">
+        <p>{{row.date}}</p>
+        <div class="underLine"></div>
+      </div>
+      {{each row.songs song}}
+      <div class="s-song">
+        <div class="ill-box">
+          <div class="ill clip-box">
+            <img src="{{song.ill}}" alt="{{song.ill}}" />
+          </div>
+          <div class="levelKind {{song.rank}}-BKG clip-box">
+            <p>{{song.rank}}</p>
+          </div>
+        </div>
+        <div class="tag-box">
+          {{if song.newPhi}}
+          <div class="changeTag phiTag clip-box">
+            <img src="{{_res_path}}html/otherimg/phi.png" alt="phi">
+            <p>{{song.newPhi}}</p>
+            <div class="changeTagLine clip-box"></div>
+          </div>
+          {{/if}}
+          {{if song.newB27}}
+          <div class="changeTag b27Tag clip-box">
+            <svg viewBox="0 0 1024 1024">
+              <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+              ></path>
+            </svg>
+            <p>{{song.newB27}}</p>
+            <div class="changeTagLine clip-box"></div>
+          </div>
+          {{/if}}
+          {{if song.exitPhi}}
+          <div class="changeTag exitTag clip-box">
+            <img src="{{_res_path}}html/otherimg/phi.png" alt="phi">
+            <div class="changeTagLine clip-box"></div>
+          </div>
+          {{/if}}
+          {{if song.exitB27}}
+          <div class="changeTag exitTag clip-box">
+            <svg viewBox="0 0 1024 1024">
+              <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+              ></path>
+            </svg>
+            <div class="changeTagLine clip-box"></div>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+<div class="createdbox">
+  <div class="phi-plugin">
+    <p>{{_plugin}}</p>
+  </div>
+  <div class="ver">
+    <p>{{Version.ver}}</p>
+  </div>
+</div>
+
+{{if theme == "snow"}}
+<div class="snow-box"></div>
+<script>
+  themeSnow()
+</script>
+{{else if theme == "topText" || theme == "foolsDay"}}
+<div class="topTextBox" id="topTextBox"></div>
+<script>
+  themeTopText()
+</script>
+{{else if theme == "star"}}
+<canvas id="stars"></canvas>
+<script>
+  themeStar()
+</script>
+{{/if}}
+
+{{/block}}

@@ -4,6 +4,8 @@
 
 * /ranklist 改为先图后文
 * 修复getSongHistory
+* B30展示AVG
+* 新增/b30history 指令，根据历史记录计算B30变化情况
 
 ## 1.0.0
 

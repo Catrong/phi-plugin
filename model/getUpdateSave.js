@@ -2,6 +2,7 @@ import { Config } from "../components/index.js";
 import logger from "../components/Logger.js";
 import PhigrosUser from "../lib/PhigrosUser.js";
 import Save from "./class/Save.js";
+import saveHistory from "./class/saveHistory.js";
 import { allLevel, LevelNum } from "./constNum.js";
 import fCompute from "./fCompute.js";
 import getNotes from "./getNotes.js";
@@ -174,10 +175,12 @@ export default class getUpdateSave {
 
     /**
      * 
+     * @template {keyof saveHistoryObject} K1
      * @param {botEvent} e 
-     * @param {(keyof saveHistoryObject)[]} field 
+     * @param {K1[]} [field] 
+     * @returns {Promise<saveHistory | null>}
      */
-    static async getHistoryFromApi(e, field) {
+    static async getHistoryFromApi(e, field = []) {
         const sessionToken = await getSave.get_user_token(e.user_id);
         if (!sessionToken) {
             if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
@@ -205,7 +208,7 @@ export default class getUpdateSave {
         } catch (err) {
             logger.warn('[phi-plugin]获取历史记录失败', err)
             send.send_with_At(e, "从API获取历史记录失败，将使用本地存档的历史记录哦");
-            return oldHistory;
+            return  /**@type {any} */(oldHistory);
         }
     }
 }

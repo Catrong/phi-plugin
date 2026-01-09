@@ -1,7 +1,9 @@
 import Config from '../components/Config.js'
 import logger from '../components/Logger.js'
+import LevelRecordInfo from './class/LevelRecordInfo.js'
 import { MAX_DIFFICULTY } from './constNum.js'
 import getInfo from './getInfo.js'
+
 export default class fCompute {
     /**
      * 计算等效rks
@@ -615,4 +617,57 @@ export default class fCompute {
     static objectKeys(record) {
         return /**@type {(keyof T)[]} */(Object.keys(record));
     }
+
+    /**
+     * 
+     * @param {{phi: LevelRecordInfo[], b27: LevelRecordInfo[]}} b30List 
+     * @param {LevelRecordInfo[]} newRecords 
+     */
+    static updateB30(b30List, newRecords) {
+        let phi = [...b30List.phi];
+        let b27 = [...b30List.b27];
+        newRecords = newRecords.sort((a, b) => b.rks - a.rks);
+        const newPhis = newRecords.filter(record => record.acc >= 100);
+
+        const newPhiKeys = newPhis.map(item => `${item.id}-${item.difficulty}`);
+        const newRecordKeys = newRecords.map(item => `${item.id}-${item.difficulty}`);
+
+        phi = phi.filter(item => !newPhiKeys.includes(`${item.id}-${item.difficulty}`));
+        b27 = b27.filter(item => !newRecordKeys.includes(`${item.id}-${item.difficulty}`));
+
+        phi.push(...newPhis);
+        phi = phi.sort((a, b) => b.rks - a.rks);
+        phi = phi.slice(0, 3);
+        b27.push(...newRecords);
+        b27 = b27.sort((a, b) => b.rks - a.rks);
+        b27 = b27.slice(0, 27);
+        return { phi, b27 };
+    }
+
+    /**
+     * 定义一个函数，接受一个整数参数，返回它的十六进制形式
+     * @param {number} num 
+     * @returns 
+     */
+    static toHex(num) {
+        // 如果数字小于 16，就在前面补一个 0
+        if (num < 16) {
+            return "0" + num.toString(16);
+        } else {
+            return num.toString(16);
+        }
+    }
+
+    // 定义一个函数，不接受参数，返回一个随机的背景色
+    static getRandomBgColor() {
+        // 生成三个 0 到 200 之间的随机整数，分别代表红、绿、蓝分量
+        let red = Math.floor(Math.random() * 201);
+        let green = Math.floor(Math.random() * 201);
+        let blue = Math.floor(Math.random() * 201);
+        // 将三个分量转换为十六进制形式，然后拼接成一个 RGB 颜色代码
+        let hexColor = "#" + this.toHex(red) + this.toHex(green) + this.toHex(blue);
+        // 返回生成的颜色代码
+        return hexColor;
+    }
+
 }

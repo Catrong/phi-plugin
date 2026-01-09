@@ -109,8 +109,9 @@ export default class getSaveFromApi {
 
     /**
      * 获取 user_id 对应的历史记录
-     * @param {*} e 
-     * @param {(keyof saveHistoryObject)[]} request
+     * @template {keyof saveHistoryObject} K
+     * @param {botEvent} e 
+     * @param {K[]} [request]
      * @returns {Promise<saveHistory>}
      */
     static async getHistory(e, request = []) {
@@ -119,7 +120,7 @@ export default class getSaveFromApi {
             throw new Error('apiId is undefined')
         }
         let result = await makeRequest.getHistory({ ...makeRequestFnc.makePlatform(e), request })
-        return new saveHistory(result)
+        return /**@type {any} */(new saveHistory(result))
     }
 
     /**

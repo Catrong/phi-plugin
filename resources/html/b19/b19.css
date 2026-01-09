@@ -6,7 +6,6 @@ body {
   display: flex;
   width: 1200px;
   height: fit-content;
-  --clipSlope: 0.3;
 }
 
 body p {
@@ -336,17 +335,6 @@ body p {
 .ill img {
   width: 100%;
   display: block;
-}
-
-.clip-box {
-  height: var(--height);
-  clip-path: polygon(
-    100% 0,
-    calc(100% - calc(var(--height) * var(--clipSlope))) 100%,
-    0 100%,
-    calc(var(--height) * var(--clipSlope)) 0
-  );
-  overflow: hidden;
 }
 
 .rank-AT,

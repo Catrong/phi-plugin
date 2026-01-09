@@ -25,7 +25,7 @@ import { LevelNum } from '../constNum.js';
 /**@type {LevelRecordInfoWithoutInfo | LevelRecordInfoWithInfo} */
 export default class LevelRecordInfo {
     /**
-     * @param {{fc:boolean|number, score:number, acc: number}} data 原始数据
+     * @param {{fc:boolean | number, score:number, acc: number}} data 原始数据
      * @param {idString} id 曲目id
      * @param {number} rank 难度
      */

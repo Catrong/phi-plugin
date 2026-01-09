@@ -27,6 +27,8 @@
  * | 'lvscore'
  * | 'chap'
  * | 'suggest'
+ * | 'analyze2025SaveHistory'
+ * | 'b30history'
  * | 'bestn'
  * | 'data'
  * | 'song'
@@ -65,7 +67,6 @@
  * | 'auth'
  * | 'clearApiData'
  * | 'updateHistory'
- * | 'analyze2025SaveHistory'
  * } allFnc 全部指令
  */
 

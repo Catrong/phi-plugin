@@ -2,7 +2,7 @@ import common from '../../../lib/common/common.js'
 import Config from '../components/Config.js';
 import send from '../model/send.js';
 import altas from '../model/picmodle.js'
-import scoreHistory from '../model/class/scoreHistory.js';
+import ScoreHistory from '../model/class/scoreHistory.js';
 import fCompute from '../model/fCompute.js';
 import getInfo from '../model/getInfo.js';
 import getSave from '../model/getSave.js';
@@ -861,7 +861,7 @@ async function getScore(songId, e, args = {}) {
         for (let i of allLevel) {
             if (!HistoryData[i]) continue
             HistoryData[i].forEach((item) => {
-                const tem = scoreHistory.extend(songId, i, item)
+                const tem = ScoreHistory.extend(songId, i, item)
                 history.push({ ...tem, date_new: fCompute.formatDate(tem.date_new) })
             })
         }
