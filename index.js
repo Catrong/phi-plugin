@@ -8,8 +8,8 @@ import getInfo from './model/getInfo.js'
 import Version from './components/Version.js'
 import Config from './components/Config.js';
 import logger from './components/Logger.js';
-import segment from './components/segment.js';
 import { APIBASEURL } from './model/constNum.js';
+import chalk from 'chalk';
 
 await getInfo.init();
 
@@ -22,7 +22,7 @@ await getInfo.init();
 //曲绘资源来源于网络
 //由于我没学过js，这个插件是一点一点照着其他大佬的插件抄的，如果有什么地方写的不对欢迎提出意见或做出修改
 //如果有什么好的建议也欢迎提出
-logger.mark(logger.rgb(255, 255, 0)('-------φ^_^φ-------'))
+logger.mark(chalk.rgb(255, 255, 0)('-------φ^_^φ-------'))
 logger.mark('正在载入phi插件...')
 
 const files = fs.readdirSync('./plugins/phi-plugin/apps').filter(file => file.endsWith('.js'))
@@ -56,7 +56,7 @@ for (let i in files) {
 export { apps }
 
 if (Config.getUserCfg('config', 'autoOpenApi')) {
-    logger.mark(logger.yellow(`正在测试API链接...`))
+    logger.mark(chalk.yellow(`正在测试API链接...`))
     let url = `${APIBASEURL}/status`
     try {
         const agent = new https.Agent({ rejectUnauthorized: false })
@@ -65,29 +65,29 @@ if (Config.getUserCfg('config', 'autoOpenApi')) {
             // console.log(res)
             if (res.status != 200) {
                 logger.error(res)
-                logger.mark(logger.red('API地址测试失败！已自动关闭API功能'))
+                logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
                 Config.modify('config', 'openPhiPluginApi', false)
             } else {
                 res = res.data
-                logger.mark(logger.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
+                logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
                 Config.modify('config', 'openPhiPluginApi', true)
             }
         })
     } catch (e) {
         // @ts-ignore
         logger.error(e.cause)
-        logger.mark(logger.red('API地址测试失败！已自动关闭API功能'))
+        logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
         Config.modify('config', 'openPhiPluginApi', false)
     }
 }
 
 if (!errvis) {
-    logger.mark(logger.rgb(178, 233, 250)('--------------------------------------'))
-    logger.mark(logger.rgb(0, 183, 240)(`|phi插件${Version.ver}载入完成~`))
+    logger.mark(chalk.rgb(178, 233, 250)('--------------------------------------'))
+    logger.mark(chalk.rgb(0, 183, 240)(`|phi插件${Version.ver}载入完成~`))
     logger.mark(`|作者：@Cartong`)
-    logger.mark(logger.rgb(0, 183, 240)(`|仓库地址：`))
+    logger.mark(chalk.rgb(0, 183, 240)(`|仓库地址：`))
     logger.mark(`|https://github.com/Catrong/phi-plugin`)
-    logger.mark((logger.rgb(0, 183, 240)`|本项目云存档功能由 7aGiven/PhigrosLibrary 改写而来`))
+    logger.mark((chalk.rgb(0, 183, 240)`|本项目云存档功能由 7aGiven/PhigrosLibrary 改写而来`))
     logger.mark(`|感谢文酱的帮助！`)
-    logger.mark(logger.rgb(178, 233, 250)('--------------------------------------'))
+    logger.mark(chalk.rgb(178, 233, 250)('--------------------------------------'))
 }
