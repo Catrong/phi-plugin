@@ -265,13 +265,12 @@ export class phisstk extends phiPluginBase {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-
+        let updateData;
+        let history;
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
-                let updateData = await getUpdateSave.getNewSaveFromApi(e)
-                let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
-                await build(e, updateData, history)
-                return true
+                updateData = await getUpdateSave.getNewSaveFromApi(e)
+                history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
             } catch (/**@type {any} */ err) {
                 if (err?.message != APII18NCN.userNotFound) {
                     send.send_with_At(e, `${err}\n从API获取存档失败，本次更新将使用本地数据QAQ！`)
@@ -290,14 +289,23 @@ export class phisstk extends phiPluginBase {
         if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
             e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
         }
+        if (!updateData || !history) {
+            try {
+                updateData = await getUpdateSave.getNewSaveFromLocal(e, session)
+                if (!updateData) return true;
+                history = await getSave.getHistory(e.user_id)
+            } catch (error) {
+                logger.error(error)
+                send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确QAQ！\n错误信息：${error}`)
+                return true
+            }
+        }
+
         try {
-            let updateData = await getUpdateSave.getNewSaveFromLocal(e, session)
-            if (!updateData) return true;
-            let history = await getSave.getHistory(e.user_id)
             await build(e, updateData, history)
         } catch (error) {
             logger.error(error)
-            send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确QAQ！\n错误信息：${error}`)
+            send.send_with_At(e, `更新失败QAQ！\n错误信息：${error}`)
         }
 
         return true
@@ -624,6 +632,8 @@ async function build(e, updateData, history) {
                     // @ts-ignore
                     task_data[i].request.value = task_data[i].request.value.toString().padStart(6, '0')
                 }
+                // @ts-ignore
+                task_data[i].song = getInfo.idgetsong(task_data[i].song)
             }
         }
     }
@@ -635,7 +645,7 @@ async function build(e, updateData, history) {
     let data = {
         PlayerId: fCompute.convertRichText(now.saveInfo.PlayerId),
         Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
-        Date: now.saveInfo.summary.updatedAt,
+        Date: fCompute.formatDate(now.saveInfo.summary.updatedAt),
         ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
         ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
         background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
