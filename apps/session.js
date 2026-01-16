@@ -269,6 +269,11 @@ export class phisstk extends phiPluginBase {
         let history;
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
+
+                if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
+                    e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
+                }
+
                 updateData = await getUpdateSave.getNewSaveFromApi(e)
                 history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
             } catch (/**@type {any} */ err) {
@@ -279,17 +284,18 @@ export class phisstk extends phiPluginBase {
                 }
             }
         }
-
-        let session = await getSave.get_user_token(e.user_id)
-        if (!session) {
-            e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
-            return true
-        }
-
-        if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
-            e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
-        }
         if (!updateData || !history) {
+
+            let session = await getSave.get_user_token(e.user_id)
+            if (!session) {
+                e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
+                return true
+            }
+            
+            if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
+                e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
+            }
+
             try {
                 updateData = await getUpdateSave.getNewSaveFromLocal(e, session)
                 if (!updateData) return true;
