@@ -663,7 +663,7 @@ async function build(e, updateData, history) {
         rks_history, rks_range,
     }
 
-    send.send_with_At(e, [`PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`, await picmodle.update(e, data)])
+    send.send_with_At(e, [await picmodle.update(e, data), `PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`])
 
     return false
 }
