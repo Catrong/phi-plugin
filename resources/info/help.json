@@ -128,9 +128,9 @@
                 "desc": "查看谱面标签，标签可选项见回复说明，难度默认为IN<br>eg: /tag df IN"
             },
             {
-                "title": "/addtag",
-                "eg": "/addtag <曲名> <难度> <标签>",
-                "desc": "为谱面添加标签给谱面打标签，推荐先使用/tag查询标签列表，难度默认为IN<br>eg: /addtag df IN 底力"
+                "title": "/settag",
+                "eg": "/settag <曲名> <难度> <标签>",
+                "desc": "为谱面添加标签给谱面打标签，推荐先使用/tag查询标签列表，难度默认为IN<br>eg: /settag df IN 底力"
             },
             {
                 "title": "/cmt",
