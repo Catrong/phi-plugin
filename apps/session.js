@@ -80,11 +80,7 @@ export class phisstk extends phiPluginBase {
 
         if (!sessionToken) {
             let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]+/g)?.[0]
-            if (apiId) {
-                if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-                    send.send_with_At(e, `这里没有连接查分平台哦！请使用sessionToken进行绑定！`)
-                    return false
-                }
+            if (Config.getUserCfg('config', 'openPhiPluginApi')) {
                 try {
                     let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId })
                     if (result?.data?.internal_id) {
@@ -110,7 +106,13 @@ export class phisstk extends phiPluginBase {
                     }
                     return false
                 }
-            } else if (!localPhigrosToken) {
+            } else {
+                if (apiId) {
+                    send.send_with_At(e, `这里没有连接查分平台哦！请使用sessionToken进行绑定！`)
+                    return false
+                }
+            }
+            if (!localPhigrosToken) {
                 send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
                 return false
             }
@@ -291,7 +293,7 @@ export class phisstk extends phiPluginBase {
                 e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
                 return true
             }
-            
+
             if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
                 e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
             }

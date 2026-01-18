@@ -7,7 +7,6 @@
 import { pinyin } from 'pinyin-pro'
 
 import Config from '../../components/Config.js'
-import get from '../../model/getdata.js'
 import send from '../../model/send.js'
 import getInfo from '../../model/getInfo.js'
 import getPic from '../../model/getPic.js'
@@ -434,7 +433,7 @@ export default new class guessLetter {
                 }
 
                 currentGame.winnerlist[num] = sender.card //记录猜对者
-                const isEmpty = Object.getOwnPropertyNames(currentGame.blurlist).length === 0 //是否全部猜完
+                const isEmpty = allGuessed(currentGame) //是否全部猜完
 
                 if (!isEmpty) {
                     output.push('开字母进行中：')
