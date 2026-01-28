@@ -1,0 +1,345 @@
+body {
+  width: 1200px;
+  height: auto;
+}
+
+.page {
+  width: 1200px;
+  height: auto;
+  box-sizing: border-box;
+  padding: 46px 56px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title-main {
+  font-size: 56px;
+  color: #fff;
+  text-shadow: 0 0 18px #00baff;
+  letter-spacing: 1px;
+}
+
+.title-sub {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.meta-item {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.meta-k {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.meta-v {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card {
+  background: rgb(36 36 36 / 73%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    700px 220px at 30% -20%,
+    rgba(0, 186, 255, 0.28),
+    rgba(0, 0, 0, 0)
+  );
+  pointer-events: none;
+}
+
+.card-h {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+
+.card-v {
+  font-size: 44px;
+  color: #fff;
+  text-shadow: 0 0 16px rgba(0, 186, 255, 0.45);
+  margin-bottom: 8px;
+}
+
+.card-s {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.mono {
+  font-family: "Aldrich", "PHI";
+  font-size: 28px;
+  letter-spacing: 0.2px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 6px 0 8px;
+}
+
+.row.compact {
+  margin-top: 2px;
+}
+
+.row-main,
+.row-side {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.row-main {
+  flex: 1;
+}
+
+.row-k {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.row-v {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.strong {
+  color: #fff;
+  text-shadow: 0 0 16px rgba(255, 247, 0, 0.25);
+}
+
+.badge {
+  width: 54px;
+  height: 30px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-family: "Aldrich", "PHI";
+  letter-spacing: 0.8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.badge.up {
+  background: rgba(0, 186, 255, 0.22);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 0 12px rgba(0, 186, 255, 0.55);
+}
+
+.badge.down {
+  background: rgba(255, 97, 97, 0.2);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 0 12px rgba(255, 97, 97, 0.55);
+}
+
+.badge.ap {
+  background: rgba(255, 247, 0, 0.16);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 0 12px rgba(255, 247, 0, 0.5);
+}
+
+.split {
+  display: flex;
+  gap: 12px;
+  margin: 6px 0 8px;
+  flex-direction: column;
+}
+
+.split-item {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.split-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.split-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* resTotalScoreRecords：更紧凑的“上标题 / 下数值”小卡片 */
+.statgrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 6px 0 8px;
+}
+
+.statcard {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.12);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.statcard-k {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.statcard-v {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.smallprint .kv {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.kv-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.kv-k {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.kv-v {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.footer {
+  margin-top: auto;
+}
+
+.ranklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 6px 0 8px;
+}
+
+.rankitem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.rankno {
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-family: "Aldrich", "PHI";
+  letter-spacing: 0.6px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.rankmain {
+  flex: 1;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rankside {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: right;
+}
+
+.mostApDaysTop3 {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.mostApDaysTop3 .rankitem {
+  width: 32%;
+}
+
+.createdbox {
+  margin-top: 5%;
+}
+
+.phi-plugin p {
+  font-size: 50px;
+}
+
+.ver p {
+  font-size: 30px;
+}

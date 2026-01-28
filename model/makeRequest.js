@@ -2,27 +2,39 @@ import axios from 'axios';
 import https from 'node:https';
 import { Config } from '../components/index.js';
 import saveHistory from './class/saveHistory.js';
+import logger from '../components/Logger.js';
+import { APIBASEURL } from './constNum.js';
+
 
 /**
- * @import * from './type/type.js'
+ * @typedef {Object} platformAuth
+ * @property {string} platform 平台名称
+ * @property {string} platform_id 用户平台内id
  */
 
 /**
- * @typedef {object} baseAu 基础鉴权
- * @property {string?} platform 平台名称
- * @property {string?} platform_id 用户平台内id
- * @property {string?} token PhigrosToken
- * @property {string?} api_user_id 用户api内id
- * @property {string?} api_token 用户api token
- */
-
-/**
- * @typedef {object} highAu 高级鉴权
- * @property {string?} platform 平台名称
- * @property {string?} platform_id 用户平台内id
- * @property {string} token PhigrosToken
+ * @typedef {Object} apiAuth
  * @property {string} api_user_id 用户api内id
+ */
+
+/**
+ * @typedef {Object} tokenAuth
+ * @property {string} token PhigrosToken
+ */
+
+/**
+ * @typedef {Object} apiTokenAuth
  * @property {string} api_token 用户api token
+ */
+
+/**
+ * 基础鉴权：(platform+platform_id | api_user_id) + (token | api_token)
+ * @typedef {(platformAuth | apiAuth | tokenAuth) & Partial<(tokenAuth | apiTokenAuth)>} baseAu
+ */
+
+/**
+ * 高级鉴权：(platform+platform_id | api_user_id) + (token | api_token)
+ * @typedef {(platformAuth | apiAuth | tokenAuth) & (tokenAuth | apiTokenAuth)} highAu
  */
 
 /**
@@ -103,7 +115,7 @@ import saveHistory from './class/saveHistory.js';
  * 分数概要信息
  * @typedef {Object} SummaryInfo
  * @property {number} rankingScore 排名分数
- * @property {integer} challengeModeRank 挑战模式排名
+ * @property {number} challengeModeRank 挑战模式排名
  * @property {string} [updatedAt] 更新时间（仅me对象中存在）
  * @property {string} [avatar] 头像（仅me对象中存在）
  */
@@ -119,13 +131,14 @@ import saveHistory from './class/saveHistory.js';
  * @typedef {Object} SaveInfo
  * @property {SummaryInfo} summary 分数概要
  * @property {ModifiedTime} modifiedAt 修改时间
+ * @property {string} PlayerId 玩家ID
  */
 
 /**
  * 挑战模式条目
  * @typedef {Object} ChallengeListItem
- * @property {integer} ChallengeMode 挑战模式
- * @property {integer} ChallengeModeRank 挑战模式排名
+ * @property {number} ChallengeMode 挑战模式
+ * @property {number} ChallengeModeRank 挑战模式排名
  * @property {string} date 日期
  */
 
@@ -134,20 +147,21 @@ import saveHistory from './class/saveHistory.js';
  * @typedef {Object} UserItem
  * @property {GameUserBasic} gameuser 基础信息（普通用户只有background）
  * @property {SaveInfo} saveInfo 存档信息
- * @property {integer} index 用户索引
+ * @property {number} index 用户索引
+ * @property {boolean} me 是否为当前用户
  */
 
 /**
  * 当前用户数据
  * @typedef {Object} MeData
  * @property {oriSave} save 存档数据
- * @property {saveHistory} history 用户历史记录
+ * @property {saveHistoryObject} history 用户历史记录
  */
 
 /**
  * ranklist响应数据主体
  * @typedef {Object} ranklistResponseData
- * @property {integer} totDataNum 数据总数
+ * @property {number} totDataNum 数据总数
  * @property {UserItem[]} users 用户数组
  * @property {MeData} me 当前用户扩展数据
  */
@@ -155,7 +169,7 @@ import saveHistory from './class/saveHistory.js';
 /**
  * scoreList用户对象
  * @typedef {Object} ScoreListUserItem
- * @property {integer} index 用户排名
+ * @property {number} index 用户排名
  * @property {Object} gameuser 用户基础信息
  * @property {string} gameuser.background 背景图
  * @property {number} gameuser.rankingScore rks
@@ -172,14 +186,38 @@ import saveHistory from './class/saveHistory.js';
 /** 
  * scoreList响应数据主体
  * @typedef {Object} ScoreListResponseData
- * @property {integer} totDataNum 数据总数
- * @property {integer} userRank 用户排名
+ * @property {number} totDataNum 数据总数
+ * @property {number} userRank 用户排名
  * @property {ScoreListUserItem[]} users 用户数组
  */
 
 /**
- * @typedef {Object} commentObject 评论对象
- * @property {?phigrosToken} sessionToken 仅在新建时添加
+ * @typedef {object} liteScoreDetail
+ * @property {number} score 分数
+ * @property {number} acc 准确率
+ * @property {number} fc 是否FC
+ * @property {number} rksWhenInsert 插入时RKS
+ * @property {number} updated_at 更新时间戳
+ */
+
+/**
+ * @typedef {Object} APIUpdateCommentObject 评论对象
+ * @property {string} songId 曲目ID
+ * @property {allLevelKind} rank 等级
+ * @property {apiUserId} apiUserId 用户ID
+ * @property {number} rks
+ * @property {number} score
+ * @property {number} acc
+ * @property {boolean} fc
+ * @property {string} [spInfo] FC AP
+ * @property {number} challenge
+ * @property {string} [time]
+ * @property {string} comment 评论内容
+ */
+
+/**
+ * @typedef {Object} APICommentObject 评论对象
+ * @property {phigrosToken} [sessionToken] 仅在新建时添加
  * @property {number} id 自增长ID
  * @property {string} songId 曲目ID
  * @property {allLevelKind} rank 等级
@@ -201,13 +239,28 @@ import saveHistory from './class/saveHistory.js';
  * @property {boolean} allowDataCollection 是否允许数据收集
  */
 
+/**
+ * @typedef {object} chartsTagRequestData
+ * @property {idString} song_id 曲目ID
+ * @property {levelKind[]} [rank] 难度
+ */
+
+/**
+ * @typedef {object} chartsTagResponseData
+ * @property {apiUserId} user_id 用户ID
+ * @property {idString} songId 曲目ID
+ * @property {levelKind} rank 难度
+ * @property {string} time 时间
+ * @property {chartsTagString[]} tags 标签内容
+ */
+
 const agent = new https.Agent({ rejectUnauthorized: false });
 
 export default class makeRequest {
 
     /**
-     * 绑定平台账号与用户Token
-     * @param {baseAu} params 
+     * 绑定平台账号与用户Token/getPgrToken
+     * @param {baseAu & {isGlobal?: boolean}} params 
      * @returns {Promise<BindSuccessResponse>}
      */
     static async bind(params) {
@@ -241,6 +294,15 @@ export default class makeRequest {
      */
     static async setApiToken(params) {
         return await makeFetch(burl('/setApiToken'), params)
+    }
+
+    /**
+     * 获取用户的 PgrToken
+     * @param {highAu} params 
+     * @returns {Promise<{apiId: apiUserId, token: phigrosToken}>}
+     */
+    static async getPgrToken(params) {
+        return (await makeFetch(burl('/getPgrToken'), params)).data
     }
 
     /**
@@ -326,28 +388,74 @@ export default class makeRequest {
     }
 
     /**
+     * 获取谱面平均ACC
+     * @param {{songId: idString, rank: levelKind, minRks?: number, maxRks?: number}} params id+.0
+     * @returns {Promise<{accAvg: number, count: number}>}
+     */
+    static async getSongAccAvg(params) {
+        return (await makeFetch(burl('/get/scoreList/songAccAvg'), params)).data
+    }
+
+    /**
+     * 获取谱面所有成绩
+     * @param {{songId: idString, rank: levelKind, minRks?: number, maxRks?: number, requestField?: (keyof liteScoreDetail)[], numPrecision: number}} params id+.0
+     * @returns {Promise<(string[] | number[])[]>}
+     */
+    static async getSongAccList(params) {
+        return (await makeFetch(burl('/get/scoreList/songAccList'), params)).data
+    }
+
+    /**
+     * 获取所有谱面平均ACC
+     * @param {{songIds?: idString[], minRks?: number, maxRks?: number}} params id+.0
+     * @returns {Promise<Record<idString, Record<levelKind, {accAvg: number | null, count: number}>>>}
+     */
+    static async getAllSongAccAvg(params) {
+        return (await makeFetch(burl('/get/scoreList/allAccAvg'), params)).data
+    }
+
+    /**
+     * @overload
+     * @param {baseAu} params 
+     * @returns {Promise<saveHistoryObject>}
+     */
+    /**
+     * @template {keyof saveHistoryObject} K
+     * @overload
+     * @param {baseAu & {request: K[]}} params 
+     * @returns {Promise<Pick<saveHistoryObject, K>>}
+     */
+    /**
      * 获取用户data历史记录
-     * @param {baseAu & {request: keyof saveHistoryObject}} params 
-     * @returns {Promise<{data: Array<saveHistoryObject>}>}
+     * @template {keyof saveHistoryObject} K
+     * @param {baseAu & {request?: K[]}} params 
+     * @returns {Promise<Partial<saveHistoryObject>>}
      */
     static async getHistory(params) {
         return (await makeFetch(burl('/get/history/history'), params)).data
     }
 
     /**
+     * @overload
+     * @param {baseAu} params 
+     * @returns {Promise<{data: scoreHistoryObject}>}
+     */
+    /**
+     * @overload
+     * @param {baseAu & { song_id: idString }} params
+     * @returns {Promise<{ data: songRecordHistory }>}
+     */
+    /**
+     * @overload
+     * @param {baseAu & { song_id: idString, difficulty: levelKind }} params
+     * @returns {Promise<{ data: ScoreDetail[] }>}
+     */
+    /**
      * 获取用户成绩历史记录
-     * @param {baseAu & songInfoRequest} params 
+     * @param {baseAu & Partial<songInfoRequest>} params 
      * @returns {Promise<{
-     *   data: params extends { song_id: string }
-     *     ? ScoreDetail
-     *     : params extends { difficulty: levelKind }
-     *       ? songRecordHistory[]
-     *       : { [x: string]: ScoreDetail }
+     *   data: ScoreDetail[] | songRecordHistory | scoreHistoryObject
      * }>}
-     * 
-     * - 如果 params 中含有 song_id，返回 ScoreDetail
-     * - 如果 params 中含有 difficulty，返回 Array<recordHistory>
-     * - 否则返回 { [x:string]: ScoreDetail }
      */
     static async getHistoryRecord(params) {
         return (await makeFetch(burl('/get/history/record'), params)).data
@@ -364,7 +472,7 @@ export default class makeRequest {
 
     /**
      * 上传用户tk
-     * @param {{data: {[userId:string]:string}}} params 
+     * @param {{data: phigrosToken[]}} params 
      * @returns {Promise<{message: string}>}
      */
     static async setUsersToken(params) {
@@ -383,7 +491,7 @@ export default class makeRequest {
     /**
      * 获取歌曲评论
      * @param {{song_id: idString}} params 
-     * @returns {Promise<commentObject[]>}
+     * @returns {Promise<APICommentObject[]>}
      */
     static async getCommentsBySongId(params) {
         return (await makeFetch(burl('/comment/get/bySongId'), params)).data
@@ -392,7 +500,7 @@ export default class makeRequest {
     /**
      * 获取歌曲评论
      * @param {baseAu} params 
-     * @returns {Promise<commentObject[]>}
+     * @returns {Promise<APICommentObject[]>}
      */
     static async getCommentsByUserId(params) {
         return (await makeFetch(burl('/comment/get/byUserId'), params)).data
@@ -400,7 +508,7 @@ export default class makeRequest {
 
     /**
      * 添加单条评论
-     * @param {baseAu & {data: {comment: commentObject}}} params 
+     * @param {highAu & {data: {comment: APIUpdateCommentObject}}} params 
      * @returns {Promise<{message: string}>}
      */
     static async addComment(params) {
@@ -409,7 +517,7 @@ export default class makeRequest {
 
     /**
      * 删除单条评论
-     * @param {baseAu & {comment_id: string}} params 
+     * @param {highAu & {comment_id: string}} params 
      * @returns {Promise<{message: string}>}
      */
     static async delComment(params) {
@@ -418,11 +526,46 @@ export default class makeRequest {
 
     /**
      * 批量添加评论
-     * @param {{data: {comments: commentObject[]}}} params 
+     * @param {{data: import('./getComment.js').commentObject[]}} params 
      * @returns {Promise<{message: string}>}
      */
     static async updateComments(params) {
         return (await makeFetch(burl('/comment/update'), params))
+    }
+
+    /**
+     * 获取谱面标签名称列表
+     * @returns {Promise<chartsTagString[]>}
+     */
+    static async getChartsTagsName() {
+        return (await makeFetch(burl('/chartsTag/get/tagNames'), {}, 'GET')).data
+    }
+
+    /**
+     * 获取谱面标签信息
+     * @param {{song_id: idString, rank: levelKind}} params 
+     * @returns {Promise<{[tag: chartsTagString]: number}>}
+     */
+    static async getChartsTagbySongRank(params) {
+        return (await makeFetch(burl('/chartsTag/get/bySongRank'), params)).data
+    }
+
+    /**
+     * 
+     * @param {baseAu & {data: chartsTagRequestData[]}} params 
+     * @returns {Promise<chartsTagResponseData[]>}
+     */
+    static async getChartsUsersVote(params) {
+        return (await makeFetch(burl('/chartsTag/get/usersVote'), params)).data
+    }
+
+    /**
+     * 用户设置谱面标签
+     * @param {highAu & {song_id: idString, rank: levelKind, content: chartsTagString[]}} params 
+     * @returns {Promise<{message: string}>}
+     */
+    static async setChartsTag(params) {
+        return (await makeFetch(burl('/chartsTag/set/set'), params))
     }
 
     /**
@@ -452,13 +595,29 @@ export default class makeRequest {
     }
 }
 
-async function makeFetch(url, params) {
+/**
+ * 
+ * @param {string} url 
+ * @param {any} [params] 
+ * @param {'POST'|'GET'} [method='POST'] 
+ * @returns 
+ */
+async function makeFetch(url, params, method = 'POST') {
     if (Config.getUserCfg('config', 'debug') > 3) {
         logger.info(`[phi-plugin] 请求API: ${url}`, JSON.stringify(params));
     }
     let result
     try {
-        result = await axios.post(new URL(url), JSON.stringify(params), { headers: { 'Content-Type': 'application/json' }, httpsAgent: agent });
+        switch (method.toUpperCase()) {
+            case 'GET':
+                result = await axios.get(url, { params: params });
+                break;
+            case 'POST':
+                result = await axios.post(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' } });
+                break;
+            default:
+                throw new Error(`不支持的请求方法: ${method}`);
+        }
     } catch (e) {
         logger.error(`请求失败: ${url}`, e);
         throw new Error('API离线');
@@ -476,9 +635,11 @@ async function makeFetch(url, params) {
     return json
 }
 
+/**
+ * 拼接基础URL
+ * @param {string} path 
+ * @returns 
+ */
 function burl(path) {
-    if (!Config.getUserCfg('config', 'phiPluginApiUrl')) {
-        throw new Error('请先设置API地址')
-    }
-    return `${Config.getUserCfg('config', 'phiPluginApiUrl')}${path}`
+    return `${APIBASEURL}${path}`
 }

@@ -1,8 +1,17 @@
 
-/**难度映射 */
-const Level = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
+/**
+ * 难度映射
+ * @type {allLevelKind[]}
+ */
+export const allLevel = ['EZ', 'HD', 'IN', 'AT', 'LEGACY']
 
-const LevelNum = {
+/**
+ * 难度映射
+ * @type {levelKind[]}
+ */
+export const Level = ['EZ', 'HD', 'IN', 'AT']
+
+export const LevelNum = {
     EZ: 0,
     HD: 1,
     IN: 2,
@@ -11,15 +20,14 @@ const LevelNum = {
 }
 
 /**redis路径前缀 */
-const redisPath = "phiPlugin"
+export const redisPath = "phiPlugin"
 
 /**最大难度 */
-const MAX_DIFFICULTY = 17.6
-
-const APII18NCN = {
+export const MAX_DIFFICULTY = 17.6
+    
+export const APII18NCN = {
     userNotFound: `未找到对应 用户`
 }
 
-export {
-    Level, LevelNum, redisPath, MAX_DIFFICULTY, APII18NCN
-}
+export const APIBASEURL = "https://phib19.top:8080"
+// export const APIBASEURL = "http://localhost:8081"

@@ -1,29 +1,32 @@
 import common from '../../../lib/common/common.js'
-import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js';
-import get from '../model/getdata.js'
 import send from '../model/send.js';
 import altas from '../model/picmodle.js'
-import scoreHistory from '../model/class/scoreHistory.js';
+import ScoreHistory from '../model/class/scoreHistory.js';
 import fCompute from '../model/fCompute.js';
 import getInfo from '../model/getInfo.js';
 import getSave from '../model/getSave.js';
-import { APII18NCN, LevelNum } from '../model/constNum.js';
+import { allLevel, APII18NCN } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
 import getSaveFromApi from '../model/getSaveFromApi.js';
 import makeRequest from '../model/makeRequest.js';
 import makeRequestFnc from '../model/makeRequestFnc.js';
+import getUpdateSave from '../model/getUpdateSave.js';
+import phiPluginBase from '../components/baseClass.js';
+import logger from '../components/Logger.js';
+import LevelRecordInfo from '../model/class/LevelRecordInfo.js';
+import SongsInfo from '../model/class/SongsInfo.js';
+
+/**@import {botEvent} from '../components/baseClass.js' */
 
 const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
+/**@type {levelKind[]} */
 const Level = ['EZ', 'HD', 'IN', 'AT'] //存档的难度映射
 
-/** @type {{[key:string]: {songs:songString[], args: {[x: string]: any}}}} */
-const wait_to_chose_song = {}
-
-export class phib19 extends plugin {
+export class phib19 extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-b19',
@@ -32,11 +35,11 @@ export class phib19 extends plugin {
             priority: 1000,
             rule: [
                 {
-                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(b\\s*[0-9]+|rks|pgr).*$`, 'i'),
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)((b|B)\\s*[0-9]+|rks|pgr|RKS|PGR).*$`,
                     fnc: 'b19'
                 },
                 {
-                    reg: new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|x|fc)\\s*[0-9]+.*$`, 'i'),
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(p|x|fc|P|X|FC)\\s*[0-9]+.*$`,
                     fnc: 'p30'
                 },
                 {
@@ -67,16 +70,38 @@ export class phib19 extends plugin {
         })
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async b19(e) {
 
         if (await getBanGroup.get(e, 'b19')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
+        let save;
+        let msg = e.msg
 
-        let save = await send.getsave_result(e)
-        if (!save) {
-            return true
+        let askOtherId = msg.match(/-id\s+([0-9]+)/i)
+        msg = msg.replace(askOtherId?.[0] || '', '')
+
+        if (askOtherId && Config.getUserCfg('config', 'openPhiPluginApi')) {
+            let otherId = /** @type {apiUserId} */ (askOtherId[1]);
+
+            try {
+                save = await getUpdateSave.getUIDSaveFromApi(otherId);
+            } catch (err) {
+                send.send_with_At(e, `获取用户 ${otherId} 的存档失败！请确认该用户公开了存档且ID正确喵！\n错误信息：${err}`);
+                return true;
+            }
+        } else {
+            save = await send.getsave_result(e)
+            if (!save) {
+                return true
+            }
+
         }
 
         let err = save.checkNoInfo()
@@ -86,9 +111,9 @@ export class phib19 extends plugin {
         }
 
 
-        let nnum = e.msg.match(/^.*?(b|rks|pgr)[0-9]*/i)[0]
+        let numMsg = e.msg.match(/^.*?(b|rks|pgr)[0-9]*/i)?.[0]
 
-        nnum = Number(nnum.replace(/^.*?(b|rks|pgr)/i, ''))
+        let nnum = Number(numMsg?.replace(/^.*?(b|rks|pgr)/i, '') ?? 33)
         if (!nnum) {
             nnum = 33
         }
@@ -96,20 +121,19 @@ export class phib19 extends plugin {
         nnum = Math.max(nnum, 33)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
-        let bksong = e.msg.replace(/^.*?(b|rks|pgr)[0-9]*\s*/g, '')
+        let bksong = msg.replace(/^.*?(b|rks|pgr)[0-9]*\s*/g, '')
 
         if (bksong) {
-            let tem = getInfo.fuzzysongsnick(bksong)[0]
-            if (tem) {
+            let songId = getInfo.fuzzysongsnick(bksong)[0]
+            if (songId) {
                 // console.info(tem)
-                bksong = getInfo.getill(tem, 'blur')
+                bksong = getInfo.getill(songId, 'blur')
             } else {
-                bksong = undefined
+                bksong = ''
             }
         }
 
         let plugin_data = await getNotes.getNotesData(e.user_id)
-
 
         if (!Config.getUserCfg('config', 'isGuild')) {
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
@@ -120,8 +144,8 @@ export class phib19 extends plugin {
         let stats = await save.getStats()
 
 
-        let dan = await get.getDan(e.user_id)
-        let money = save.gameProgress.money
+        // let dan = await get.getDan(e.user_id)
+        let money = save.gameProgress?.money || [0, 0, 0, 0, 0]
         let gameuser = {
             avatar: getInfo.idgetavatar(save.gameuser.avatar),
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
@@ -131,7 +155,7 @@ export class phib19 extends plugin {
             selfIntro: save.gameuser.selfIntro,
             backgroundUrl: await fCompute.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-            dan: dan,
+            // dan: dan,
         }
         // console.info(save_b19.b19_list)
         let data = {
@@ -139,12 +163,12 @@ export class phib19 extends plugin {
             b19_list: save_b19.b19_list,
             PlayerId: gameuser.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
-            Date: save.saveInfo.summary.updatedAt,
+            Date: fCompute.formatDate(save.saveInfo.summary.updatedAt),
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            dan: await get.getDan(e.user_id),
+            // dan: await get.getDan(e.user_id),
             background: bksong || getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
-            theme: plugin_data?.plugin_data?.theme || 'star',
+            theme: plugin_data?.theme || 'star',
             gameuser,
             nnum,
             stats,
@@ -157,7 +181,11 @@ export class phib19 extends plugin {
         send.send_with_At(e, res)
     }
 
-    /**P30 */
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async p30(e) {
 
         if (await getBanGroup.get(e, 'p30')) {
@@ -177,9 +205,9 @@ export class phib19 extends plugin {
         }
 
 
-        let nnum = e.msg.match(/^.*?(p|x|fc)[0-9]+/i)[0]
+        let numMsg = e.msg.match(/^.*?(p|x|fc)[0-9]+/i)?.[0]
 
-        nnum = Number(nnum.replace(/^.*?(p|x|fc)/i, ''))
+        let nnum = Number(numMsg?.replace(/^.*?(p|x|fc)/i, '') || 33)
         if (!nnum) {
             nnum = 33
         }
@@ -190,12 +218,12 @@ export class phib19 extends plugin {
         let bksong = e.msg.replace(/^.*?(p|x|fc)[0-9]+\s*/i, '')
 
         if (bksong) {
-            let tem = getInfo.fuzzysongsnick(bksong)[0]
-            if (tem) {
+            let songId = getInfo.fuzzysongsnick(bksong)[0]
+            if (songId) {
                 // console.info(tem)
-                bksong = getInfo.getill(tem, 'blur')
+                bksong = getInfo.getill(songId, 'blur')
             } else {
-                bksong = undefined
+                bksong = ''
             }
         }
 
@@ -208,7 +236,7 @@ export class phib19 extends plugin {
         let save_b19;
         let spInfo = '';
 
-        const type = e.msg.match(/^.*?(p|x|fc)([0-9]+)/i)[1].toLowerCase();
+        const type = e.msg.match(/^.*?(p|x|fc)([0-9]+)/i)?.[1].toLowerCase();
         switch (type) {
             case 'p': {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
@@ -224,18 +252,22 @@ export class phib19 extends plugin {
                 save_b19 = await save.getBestWithLimit(nnum, [{
                     type: 'custom',
                     value: (record) => {
-                        return fCompute.comJust1Good(record.score, getInfo.ori_info[record.song].chart[record.rank].combo)
+                        return fCompute.comJust1Good(record.score, getInfo.ori_info[record.id]?.chart?.[record.rank]?.combo || 1e9)
                     }
                 }], false)
                 spInfo = "1 Good Mode";
                 break;
+            }
+            default: {
+                save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
+                spInfo = "All Perfect Mode";
             }
         }
 
         let stats = await save.getStats()
 
 
-        let dan = await get.getDan(e.user_id)
+        // let dan = await get.getDan(e.user_id)
         let money = save.gameProgress.money
         let gameuser = {
             avatar: getInfo.idgetavatar(save.gameuser.avatar),
@@ -246,7 +278,7 @@ export class phib19 extends plugin {
             selfIntro: save.gameuser.selfIntro,
             backgroundUrl: await fCompute.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-            dan: dan,
+            // dan: dan,
         }
 
         let data = {
@@ -257,9 +289,9 @@ export class phib19 extends plugin {
             Date: save.saveInfo.summary.updatedAt,
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            dan: await get.getDan(e.user_id),
+            // dan: await get.getDan(e.user_id),
             background: bksong || getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
-            theme: plugin_data?.plugin_data?.theme || 'star',
+            theme: plugin_data?.theme || 'star',
             gameuser,
             nnum,
             stats,
@@ -271,7 +303,11 @@ export class phib19 extends plugin {
         send.send_with_At(e, res)
     }
 
-    /**arc版查分图 */
+    /**
+     * arc版查分图
+     * @param {botEvent} e 
+     * @returns 
+     */
     async arcgrosB19(e) {
 
         if (await getBanGroup.get(e, 'arcgrosB19')) {
@@ -292,8 +328,8 @@ export class phib19 extends plugin {
         }
 
 
-        let nnum = e.msg.match(/(b|B)[0-9]*/g)
-        nnum = nnum ? Number(nnum[0].replace(/(b|B)/g, '')) - 1 : 32
+        let numMsg = e.msg.match(/(b|B)[0-9]*/g)
+        let nnum = numMsg ? Number(numMsg[0].replace(/(b|B)/g, '')) - 1 : 32
         if (!nnum) { nnum = 32 }
 
         nnum = Math.max(nnum, 30)
@@ -324,16 +360,20 @@ export class phib19 extends plugin {
             Date: save.saveInfo.summary.updatedAt,
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            dan: await get.getDan(e.user_id),
+            // dan: await get.getDan(e.user_id),
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
-            theme: plugin_data?.plugin_data?.theme || 'star',
+            theme: plugin_data?.theme || 'star',
             nnum: nnum,
         }
 
         send.send_with_At(e, await altas.arcgros_b19(e, data))
     }
 
-    /**限制最低acc后的rks */
+    /**
+     * 限制最低acc后的rks
+     * @param {botEvent} e 
+     * @returns 
+     */
     async lmtAcc(e) {
         if (await getBanGroup.get(e, 'lmtAcc')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -362,7 +402,7 @@ export class phib19 extends plugin {
 
         let nnum = 33
 
-        let plugin_data = await get.getpluginData(e.user_id)
+        let plugin_data = await getNotes.getNotesData(e.user_id)
 
 
         if (!Config.getUserCfg('config', 'isGuild'))
@@ -372,7 +412,7 @@ export class phib19 extends plugin {
         let stats = await save.getStats()
 
 
-        let dan = await get.getDan(e.user_id)
+        // let dan = await get.getDan(e.user_id)
         let money = save.gameProgress.money
         let gameuser = {
             avatar: getInfo.idgetavatar(save.gameuser.avatar),
@@ -383,7 +423,7 @@ export class phib19 extends plugin {
             selfIntro: save.gameuser.selfIntro,
             backgroundUrl: await fCompute.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-            dan: dan,
+            // dan: dan,
         }
 
         let data = {
@@ -394,9 +434,9 @@ export class phib19 extends plugin {
             Date: save.saveInfo.summary.updatedAt,
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            dan: await get.getDan(e.user_id),
+            // dan: await get.getDan(e.user_id),
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
-            theme: plugin_data?.plugin_data?.theme || 'star',
+            theme: plugin_data?.theme || 'star',
             gameuser,
             nnum,
             stats,
@@ -409,7 +449,11 @@ export class phib19 extends plugin {
 
     }
 
-    /**获取bestn文字版 */
+    /**
+     * 获取bestn文字版
+     * @param {botEvent} e 
+     * @returns 
+     */
     async bestn(e) {
 
         if (await getBanGroup.get(e, 'bestn')) {
@@ -422,14 +466,14 @@ export class phib19 extends plugin {
             return true
         }
 
-        let num = e.msg.replace(/[#/](.*?)(best)(\s*)/g, '')
+        let numMsg = e.msg.replace(/[#/](.*?)(best)(\s*)/g, '')
 
-        if (Number(num) % 1 != 0) {
-            await e.reply(`${num}不是个数字吧！`, true)
+        if (Number(numMsg) % 1 != 0) {
+            await e.reply(`${numMsg}不是个数字吧！`, true)
             return true
         }
 
-        num = Number(num)
+        let num = Number(numMsg)
 
         if (!num)
             num = 19 //未指定默认b19
@@ -441,7 +485,7 @@ export class phib19 extends plugin {
         let tmsg = ''
         tmsg += `PlayerId: ${save.saveInfo.PlayerId} Rks: ${Number(save.saveInfo.summary.rankingScore).toFixed(4)} ChallengeMode: ${ChallengeModeName[(save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100]}${save.saveInfo.summary.challengeModeRank % 100} Date: ${save.saveInfo.updatedAt}`
         phi.forEach((item, index) => {
-            if (item.song) {
+            if (item?.song) {
                 tmsg += `\n#φ:${item.song}<${item.rank}>${item.difficulty}`
             } else {
                 tmsg += "\n你还没有满分的曲目哦！收掉一首歌可以让你的RKS大幅度增加的！"
@@ -466,17 +510,17 @@ export class phib19 extends plugin {
             /**群聊只发送10条 */
             send.send_with_At(e, Remsg[0])
             send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
-            send.pick_send(e, await common.makeForwardMsg(e, Remsg))
+            send.pick_send(e, await common.makeForwardMsg(e, Remsg, undefined))
         } else {
-            e.reply(await common.makeForwardMsg(e, Remsg))
+            e.reply(await common.makeForwardMsg(e, Remsg, undefined))
         }
-
-
-
-
     }
 
 
+    /**
+     * @param {botEvent} e 
+     * @returns 
+     */
     async singlescore(e) {
 
         if (await getBanGroup.get(e, 'singlescore')) {
@@ -491,9 +535,10 @@ export class phib19 extends plugin {
             song = song.replace(difArgs, '');
             difArgs = difArgs.replace(/-dif\s+/i, '').toUpperCase();
         }
-        let unRankArgs = song.match(/-unrank/i)?.[0];
-        if (unRankArgs) {
-            song = song.replace(unRankArgs, '');
+        let unRankArgsMsg = song.match(/-unrank/i)?.[0];
+        let unRankArgs;
+        if (unRankArgsMsg) {
+            song = song.replace(unRankArgsMsg, '');
             unRankArgs = true;
         } else {
             unRankArgs = false;
@@ -511,23 +556,20 @@ export class phib19 extends plugin {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} score <曲名>`)
             return true
         }
-        const songs = getInfo.fuzzysongsnick(song)
-        if (!songs[0]) {
+        const songIds = getInfo.fuzzysongsnick(song)
+        if (!songIds[0]) {
             send.send_with_At(e, `未找到 ${song} 的有关信息哦！`)
             return true
         }
-        if (songs.length > 1) {
-            send.send_with_At(e, fCompute.mutiNick(songs))
-            wait_to_chose_song[e.user_id] = {
-                songs, args: {
-                    dif: difArgs,
-                    unRank: unRankArgs,
-                    orderBy: orderByArgs
-                }
+        if (songIds.length > 1) {
+            const options = {
+                dif: difArgs,
+                unRank: unRankArgs,
+                orderBy: orderByArgs
             }
-            this.setContext('mutiNick', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'))
+            this.choseMutiNick(e, songIds, options, (e, songId, options) => { getScore(songId, e, options); })
         } else {
-            await getScore(songs[0], e, {
+            await getScore(songIds[0], e, {
                 dif: difArgs,
                 unRank: unRankArgs,
                 orderBy: orderByArgs
@@ -536,24 +578,11 @@ export class phib19 extends plugin {
         return true
     }
 
-    mutiNick() {
-        const { msg } = this.e;
-        const num = Number(msg.match(/([0-9]+)/)?.[0]);
-        const songs = wait_to_chose_song[this.e.user_id].songs;
-        if (!num) {
-            send.send_with_At(this.e, `请输入正确的序号哦！`);
-        } else if (!songs[num - 1]) {
-            send.send_with_At(this.e, `未找到${num}所对应的曲目哦！`);
-        } else {
-            const song = songs[num - 1];
-            getScore(song, this.e, wait_to_chose_song[this.e.user_id].args);
-        }
-        delete wait_to_chose_song[this.e.user_id];
-        this.finish('mutiNick', false)
-        return true;
-    }
-
-    /**推分建议，建议的是RKS+0.01的所需值 */
+    /**
+     * 推分建议，建议的是RKS+0.01的所需值
+     * @param {botEvent} e 
+     * @returns 
+     */
     async suggest(e) {
 
         if (await getBanGroup.get(e, 'suggest')) {
@@ -574,30 +603,48 @@ export class phib19 extends plugin {
         let Record = save.gameRecord
 
         /**计算 */
+
+        /**
+         * @type {({ suggest: string } & { illustration: string, difficulty: number, rank: levelKind } & SongsInfo)[]}
+         */
         let data = []
 
-        for (let id in Record) {
-            let song = getInfo.idgetsong(id)
-            if (!song) {
+
+
+        for (const id of fCompute.objectKeys(Record)) {
+            const info = getInfo.info(id)
+            if (!info) {
                 logger.warn('[phi-plugin]', id, '曲目无信息')
                 continue
             }
-            let info = getInfo.info(song, true)
+            /**
+             * @type {(((LevelRecordInfo | {}) & { suggest?: string }) | null)[]}
+             */
             let record = Record[id]
-            for (let lv in [0, 1, 2, 3]) {
+            for (let lv of [0, 1, 2, 3]) {
                 if (!info.chart[Level[lv]]) continue
-                let difficulty = info.chart[Level[lv]].difficulty
+                let difficulty = info.chart[Level[lv]]?.difficulty
+                if (!difficulty) continue
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
                     if ((!record[lv] && !scoreAsk.NEW)) continue
-                    if (record[lv] && !scoreAsk[record[lv].Rating.toUpperCase()]) continue
                     if (!record[lv]) {
-                        record[lv] = {}
+                        record[lv] = { suggest: '' };
+                    } else {
+                        if ('id' in record[lv] && !scoreAsk[record[lv].Rating == 'phi' ? 'PHI' : record[lv].Rating]) continue
                     }
-                    record[lv].suggest = save.getSuggest(id, lv, 4, difficulty)
-                    if (record[lv].suggest.includes('无')) {
+                    const x = record[lv]
+                    x.suggest = save.getSuggest(id, lv, 4, difficulty) || ''
+                    if (!x.suggest || x.suggest.includes('无')) {
                         continue
                     }
-                    data.push({ ...record[lv], ...info, illustration: getInfo.getill(getInfo.idgetsong(id), 'low'), difficulty: difficulty, rank: Level[lv] })
+                    data.push({
+                        ...info,
+                        difficulty: difficulty,
+                        ...x,
+                        rank: Level[lv],
+                        illustration: getInfo.getill(id, 'low') ?? '',
+                        suggest: x.suggest
+                    })
                 }
             }
         }
@@ -610,24 +657,28 @@ export class phib19 extends plugin {
 
         data = data.sort(cmpsugg())
 
-        let plugin_data = get.getpluginData(e.user_id)
+        let plugin_data = await getNotes.getNotesData(e.user_id)
 
         send.send_with_At(e, await altas.list(e, {
             head_title: "推分建议",
             song: data,
             background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
-            theme: plugin_data?.plugin_data?.theme || 'star',
+            theme: plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: save.saveInfo.summary.updatedAt,
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            dan: await get.getDan(e.user_id)
+            // dan: await get.getDan(e.user_id)
         }))
 
     }
 
-    /**查询章节成绩 */
+    /**
+     * 查询章节成绩
+     * @param {botEvent} e 
+     * @returns 
+     */
     async chap(e) {
 
         if (await getBanGroup.get(e, 'chap')) {
@@ -652,6 +703,9 @@ export class phib19 extends plugin {
             return false
         }
 
+        /**
+         * @type {Record<string, { illustration: string, chart: Partial<Record<levelKind, Partial<{ difficulty: number, Rating: string, score?: number, acc?: string, rks?: string, fc?: boolean, suggest: string }>>> }>}
+         */
         let song_box = {}
 
         /**统计各评分出现次数 */
@@ -684,30 +738,33 @@ export class phib19 extends plugin {
             AT: 0
         }
 
-        for (let song in getInfo.ori_info) {
-            if (getInfo.ori_info[song].chapter == chap || msg == 'ALL') {
-                song_box[song] = { illustration: getInfo.getill(song, 'low'), chart: {} }
-                let id = getInfo.idssong[song]
+        const ids = fCompute.objectKeys(getInfo.ori_info)
+
+        for (const id of ids) {
+            if (getInfo.ori_info[id]?.chapter == chap || msg == 'ALL') {
+                song_box[id] = { illustration: getInfo.getill(id, 'low'), chart: {} }
                 /**曲目成绩对象 */
                 let songRecord = save.getSongsRecord(id)
-                let info = getInfo.info(song, true)
-                for (let level in info.chart) {
-                    let i = LevelNum[level]
+                let info = getInfo.info(id, true)
+                if (!info) continue;
+                getInfo.allLevel?.forEach((level, i) => {
                     /**SP */
-                    if (i === undefined) continue
+                    if (i === undefined) return
                     /**跳过旧谱 */
-                    if (!level) continue
-                    let Record = songRecord[i]
-                    song_box[song].chart[level] = {
+                    if (level == 'LEGACY') return
+                    if (!info.chart[level]) return
+                    if (!info.chart[level].difficulty) return
+                    let Record = songRecord?.[i]
+                    song_box[id].chart[level] = {
                         difficulty: info.chart[level].difficulty,
                         Rating: Record?.Rating || 'NEW',
                         suggest: save.getSuggest(id, i, 4, info.chart[level].difficulty)
                     }
                     if (Record) {
-                        song_box[song].chart[level].score = Record.score
-                        song_box[song].chart[level].acc = Record.acc.toFixed(4)
-                        song_box[song].chart[level].rks = Record.rks.toFixed(4)
-                        song_box[song].chart[level].fc = Record.fc
+                        song_box[id].chart[level].score = Record.score
+                        song_box[id].chart[level].acc = Record.acc.toFixed(4)
+                        song_box[id].chart[level].rks = Record.rks.toFixed(4)
+                        song_box[id].chart[level].fc = Record.fc
                     }
                     ++count.tot
                     if (Record?.Rating) {
@@ -717,12 +774,18 @@ export class phib19 extends plugin {
                         ++count.NEW
                     }
                     ++rank[level]
-                }
+                })
             }
         }
 
+        /**
+         * @type {Partial<Record<levelKind, number>>}
+         */
         let progress = {}
-        for (let level in rank) {
+
+
+
+        for (let level of Level) {
             if (rank[level]) {
                 progress[level] = rankAcc[level] / rank[level]
             }
@@ -741,100 +804,112 @@ export class phib19 extends plugin {
     }
 }
 
-async function getScore(song, e, args = {}) {
+/**
+ * 
+ * @param {idString} songId 
+ * @param {botEvent} e 
+ * @param {any} args 
+ * @returns 
+ */
+async function getScore(songId, e, args = {}) {
 
 
     const save = await send.getsave_result(e)
-
-    const songId = getInfo.SongGetId(song)
 
     if (!save) {
         return true
     }
 
-    let Record = save.gameRecord
-    let ans = Record[songId]
-
-    if (!ans) {
-        send.send_with_At(e, `我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
+    const info = getInfo.info(songId, true)
+    if (!info) {
+        send.send_with_At(e, `未找到${songId}的相关信息QAQ！`)
         return true
     }
 
-    const dan = await get.getDan(e.user_id)
+    /**获取成绩 */
+
+    let Record = save.gameRecord
+    let songRecord = Record[songId]
+
+    if (!songRecord) {
+        send.send_with_At(e, `我不知道你关于[${info.song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
+        return true
+    }
+
+    // const dan = await get.getDan(e.user_id)
 
     /**获取历史成绩 */
-
-    let HistoryData = null;
+    /**
+     * @type {songRecordHistory | undefined}
+     */
+    let HistoryData = undefined;
     if (Config.getUserCfg('config', 'openPhiPluginApi')) {
         try {
             HistoryData = await getSaveFromApi.getSongHistory(e, songId)
         } catch (err) {
             logger.warn(`[phi-plugin] API ERR`, err)
-            HistoryData = await getSave.getHistory(e.user_id)
-            if (HistoryData) {
-                HistoryData = HistoryData[songId]
-            }
+            HistoryData = (await getSave.getHistory(e.user_id))?.scoreHistory[songId]
         }
     } else {
-        HistoryData = await getSave.getHistory(e.user_id)
-        if (HistoryData) {
-            HistoryData = HistoryData[songId]
-        }
+        HistoryData = (await getSave.getHistory(e.user_id))?.scoreHistory[songId]
     }
 
-
+    /** @type {(import('../model/class/scoreHistory.js').extendedScoreHistoryDetail | {date_new: string})[]} */
     let history = []
 
     if (HistoryData) {
-        for (let i in HistoryData) {
-            for (let j in HistoryData[i]) {
-                const tem = scoreHistory.extend(songId, i, HistoryData[i][j])
-                tem.date_new = fCompute.date_to_string(tem.date_new)
-                history.push(tem)
-            }
+        for (let i of allLevel) {
+            if (!HistoryData[i]) continue
+            HistoryData[i].forEach((item) => {
+                const tem = ScoreHistory.extend(songId, i, item)
+                history.push({ ...tem, date_new: fCompute.formatDate(tem.date_new) })
+            })
         }
     }
 
-    history.sort((a, b) => new Date(b.date_new) - new Date(a.date_new))
+    history.sort((a, b) => new Date(b.date_new).getTime() - new Date(a.date_new).getTime())
 
     history.splice(16)
 
 
     let data = {
-        songName: song,
+        songName: info.song,
         PlayerId: save.saveInfo.PlayerId,
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar),
         Rks: Number(save.saveInfo.summary.rankingScore).toFixed(2),
         Date: save.saveInfo.summary.updatedAt,
         ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
         ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+        /**@type {Partial<Record<allLevelKind, any>>} */
         scoreData: {},
-        CLGMOD: dan?.Dan,
-        EX: dan?.EX,
+        // CLGMOD: dan?.Dan,
+        // EX: dan?.EX,
         history: history,
+        illustration: '',
     }
 
 
-    data.illustration = getInfo.getill(song)
-    let songsinfo = getInfo.info(song, true);
+    data.illustration = getInfo.getill(songId)
 
-
-    for (let i in Level) {
-        if (!songsinfo.chart[Level[i]]) break
-        data.scoreData[Level[i]] = {}
-        data.scoreData[Level[i]].difficulty = songsinfo['chart'][Level[i]]['difficulty']
+    for (let level of Level) {
+        if (!info.chart[level]) break
+        data.scoreData[level] = { difficulty: info.chart[level].difficulty }
     }
     // console.info(ans)
-    /**用户游玩过的最高难度 */
+    /**
+     * 用户游玩过的最高难度
+     * @type {levelKind | ''}
+     */
     let maxRank = ''
-    for (let i in ans) {
-        if (!songsinfo['chart'][Level[i]]) break
-        if (ans[i]) {
-            ans[i].acc = ans[i].acc.toFixed(4)
-            ans[i].rks = ans[i].rks.toFixed(4)
+    songRecord.forEach((record, i) => {
+        const chartInfo = info.chart[Level[i]]
+        if (!chartInfo) return
+        if (record) {
             data.scoreData[Level[i]] = {
-                ...ans[i],
-                suggest: save.getSuggest(songId, i, 4, songsinfo['chart'][Level[i]]['difficulty']),
+                ...record,
+                acc: record.acc.toFixed(4),
+                rks: record.rks.toFixed(4),
+                suggest: save.getSuggest(songId, i, 4, chartInfo.difficulty),
             }
             maxRank = Level[i]
         } else {
@@ -842,7 +917,7 @@ async function getScore(song, e, args = {}) {
                 Rating: 'NEW',
             }
         }
-    }
+    })
 
     maxRank = args?.dif || maxRank
 
@@ -853,22 +928,29 @@ async function getScore(song, e, args = {}) {
             const scoreRanklist = await makeRequest.getScoreRanklistByUser({
                 ...makeRequestFnc.makePlatform(e),
                 songId,
-                rank: maxRank,
+                rank: maxRank || 'IN',
                 orderBy: args?.orderBy || 'acc'
             });
             scoreRanklist.users.forEach(item => {
+                // @ts-ignore
                 item.gameuser.challengeMode = Math.floor(item.gameuser.challengeModeRank / 100);
                 item.gameuser.challengeModeRank = item.gameuser.challengeModeRank % 100;
                 item.gameuser.avatar = getInfo.idgetavatar(item.gameuser.avatar);
-                item.record.Rating = fCompute.rate(item.record.score, 1e6);
-                item.record.updated_at = fCompute.date_to_string(item.record.updated_at);
+                // @ts-ignore
+                item.record.Rating = fCompute.rate(item.record.score, item.record.fc);
+                // @ts-ignore
+                item.record.updated_at = fCompute.formatDate(item.record.updated_at);
                 if (item.index == scoreRanklist.userRank) {
+                    // @ts-ignore
                     item.isUser = true;
                 }
             })
+            // @ts-ignore
             data.ranklist = scoreRanklist;
+            // @ts-ignore
             data.ranklist.selected = maxRank;
         } catch (err) {
+            // @ts-ignore
             if (err?.message != APII18NCN.userNotFound) {
                 logger.warn(`[phi-plugin] API错误 getScoreRanklistByUser`)
                 logger.warn(err)
@@ -881,14 +963,18 @@ async function getScore(song, e, args = {}) {
 
 }
 
-function cmp() {
-    return function (a, b) {
-        return b.rks - a.rks
-    }
-}
-
 function cmpsugg() {
-    return function (a, b) {
+    /** 
+     * @param {object & {suggest: string, difficulty: number}} a 
+     * @param {object & {suggest: string, difficulty: number}} b 
+     * @returns 
+     */
+    const tem = (a, b) => {
+        /**
+         * @param {number} difficulty 
+         * @param {number} suggest 
+         * @returns 
+         */
         function com(difficulty, suggest) {
             return difficulty + Math.min(suggest - 98, 1) * Math.min(suggest - 98, 1) * difficulty * 0.089
         }
@@ -897,9 +983,5 @@ function cmpsugg() {
         return com(a.difficulty, s_a) - com(b.difficulty, s_b)
         // return (Number(a.suggest.replace("%", '')) - a.rks) - (Number(b.suggest.replace("%", '')) - b.rks)
     }
-}
-
-
-function comRecord(a, b) {
-    return Number(a.acc).toFixed(4) == Number(b.acc).toFixed(4) && Number(a.score) == Number(b.score) && Number(a.rks) == Number(b.rks)
+    return tem
 }

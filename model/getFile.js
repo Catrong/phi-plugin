@@ -4,6 +4,7 @@ import { dataPath, pluginDataPath, savePath } from "./path.js";
 import csv from 'csvtojson'
 import path from 'node:path';
 import getRksRank from './getRksRank.js';
+import logger from '../components/Logger.js';
 
 
 
@@ -20,7 +21,7 @@ export default class readFile {
             if (!fs.existsSync(filePath)) { return false }
             // console.info(filePath)
             if (!style) {
-                style = path.extname(filePath).toUpperCase().replace('.', '')
+                style = /** @type {any} */(path.extname(filePath).toUpperCase().replace('.', ''))
             }
             switch (style) {
                 case 'JSON': {
@@ -49,8 +50,7 @@ export default class readFile {
 
     /**
      * 存储文件
-     * @param {string} fileName 文件名，含后缀
-     * @param {string} fatherPath 父路径
+     * @param {string} filepath 文件名，含后缀
      * @param {any} data 目标数据
      * @param {'JSON'|'YAML'|'TXT'} [style=undefined] 强制指定保存格式
      */
@@ -64,7 +64,7 @@ export default class readFile {
                 fs.mkdirSync(fatherPath, { recursive: true });
             }
             if (!style) {
-                style = path.extname(filepath).toUpperCase().replace('.', '')
+                style = /** @type {any} */(path.extname(filepath).toUpperCase().replace('.', ''))
             }
             switch (style) {
                 case 'JSON': {
@@ -93,7 +93,10 @@ export default class readFile {
         }
     }
 
-
+    /**
+     * 删除指定文件
+     * @param {string} path 
+     */
     static async DelFile(path) {
         try {
             if (!fs.existsSync(`${path}`)) { return false }
@@ -137,7 +140,10 @@ export default class readFile {
         }
     }
 
-    /**更改数据储存位置,user_id和sessionToken关系转移到redis中 */
+    /**
+     * 更改数据储存位置,user_id和sessionToken关系转移到redis中 
+     * @param {string} _path 旧存储路径
+     */
     static async movJsonFile(_path) {
         let user_token = await this.FileReader(path.join(_path, 'user_token.json')) || {}
         if (!fs.existsSync(`${_path}`)) { return false }
@@ -155,14 +161,14 @@ export default class readFile {
             files.forEach(file => {
                 if (!fs.lstatSync(`${_path}/${file}`).isDirectory() && file != 'user_token.json') {
                     let user_id = file.replace('.json', '')
-                    this.FileReader(`${_path}/${file}`).then((json) => {
+                    this.FileReader(`${_path}/${file}`).then((/** @type {any} */ json) => {
                         if (json) {
                             let session = json.session
                             /**保存user_id和session映射 */
                             user_token[user_id] = session
                             ++already
                             if (this.SetFile(path.join(savePath, session, 'save.json'), json)) {
-                                this.FileReader(path.join(pluginDataPath, `${user_id}_.json`)).then((json_) => {
+                                this.FileReader(path.join(pluginDataPath, `${user_id}_.json`)).then((/** @type {any} */ json_) => {
                                     if (json_) {
                                         let tem_file = {
                                             data: json_.data,
@@ -208,7 +214,7 @@ export default class readFile {
                     await getSave.add_user_token(id, user_token[id])
                     let save = await getSave.getSave(id)
                     if (!save) continue
-                    if (save.getRks() == NaN) {
+                    if (isNaN(save.getRks())) {
                         logger.mark('[phi-plugin][数据转移，请勿中断进程]', `奇怪的rks ${save?.saveInfo?.summary?.rankingScore}`)
                         continue
                     }

@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import fs from 'node:fs';
 import https from 'node:https';
 import axios from 'axios';
@@ -8,14 +7,9 @@ import getInfo from './model/getInfo.js'
 
 import Version from './components/Version.js'
 import Config from './components/Config.js';
-import path from 'node:path';
-if (!global.segment) {
-    try {
-        global.segment = (await import("icqq")).segment
-    } catch {
-        global.segment = (await import("oicq")).segment
-    }
-}
+import logger from './components/Logger.js';
+import { APIBASEURL } from './model/constNum.js';
+import chalk from 'chalk';
 
 await getInfo.init();
 
@@ -33,14 +27,20 @@ logger.mark('正在载入phi插件...')
 
 const files = fs.readdirSync('./plugins/phi-plugin/apps').filter(file => file.endsWith('.js'))
 let errvis = false
-let ret = []
+/**
+ * @type {Promise<unknown>[]}
+ */
+let pend = []
 
 files.forEach((file) => {
-    ret.push(import(`./apps/${file}`))
+    pend.push(import(`./apps/${file}`))
 })
 
-ret = await Promise.allSettled(ret)
+let ret = await Promise.allSettled(pend)
 
+/**
+ * @type {Record<string, any>}
+ */
 let apps = {}
 for (let i in files) {
     let name = files[i].replace('.js', '')
@@ -49,28 +49,32 @@ for (let i in files) {
         console.error(files[i])
         throw new Error(ret[i].reason)
     }
+    // @ts-ignore
     apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
 }
 
 export { apps }
 
-if (Config.getUserCfg('config', 'phiPluginApiUrl')) {
-    logger.mark(`检测到API地址，正在测试链接...`)
-    let url = `${Config.getUserCfg('config', 'phiPluginApiUrl')}/status`
+if (Config.getUserCfg('config', 'autoOpenApi')) {
+    logger.mark(chalk.yellow(`正在测试API链接...`))
+    let url = `${APIBASEURL}/status`
     try {
         const agent = new https.Agent({ rejectUnauthorized: false })
-        let res = (await axios.get(url, { httpsAgent: agent }))
-        // console.log(res)
-        if (res.status != 200) {
-            logger.error(res)
-            logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
-            Config.modify('config', 'openPhiPluginApi', false)
-        } else {
-            res = res.data
-            logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
-            Config.modify('config', 'openPhiPluginApi', true)
-        }
+        axios.get(url, { httpsAgent: agent }).then((res) => {
+
+            // console.log(res)
+            if (res.status != 200) {
+                logger.error(res)
+                logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
+                Config.modify('config', 'openPhiPluginApi', false)
+            } else {
+                res = res.data
+                logger.mark(chalk.green(`API地址测试成功！${res.data.id} ${res.data.version}`))
+                Config.modify('config', 'openPhiPluginApi', true)
+            }
+        })
     } catch (e) {
+        // @ts-ignore
         logger.error(e.cause)
         logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
         Config.modify('config', 'openPhiPluginApi', false)

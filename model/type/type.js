@@ -1,19 +1,14 @@
 /**
  * @typedef {string & { readonly brand: unique symbol }} idString 曲目id
+ * @typedef {string & { readonly brand: unique symbol }} idStringWithout0 曲目id
  * @typedef {string & { readonly brand: unique symbol }} songString 曲目名称
- * @typedef {string & { readonly brand: unique symbol }} phigorsToken phigrosToken
+ * @typedef {string & { readonly brand: unique symbol }} chartsTagString 谱面标签
+ * @typedef {string & { readonly brand: unique symbol }} phigrosToken phigrosToken
  * @typedef {string & { readonly brand: unique symbol }} apiToken apiToken
- * @typedef {string & { readonly brand: unique symbol }} apiId apiId
+ * @typedef {string & { readonly brand: unique symbol }} apiUserId apiId
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT'} levelKind 有效难度分级
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT' | 'LEGACY'} allLevelKind 全部难度分级
  * @typedef {'tap' | 'drag' | 'hold' | 'flick'} noteKind note分类
- */
-
-/**
- * @typedef {Object} ori_record
- * @property {number} score
- * @property {number} acc
- * @property {number} fc
  */
 
 /**
@@ -32,11 +27,14 @@
  * | 'lvscore'
  * | 'chap'
  * | 'suggest'
+ * | 'analyze2025SaveHistory'
+ * | 'hisb30'
  * | 'bestn'
  * | 'data'
  * | 'song'
  * | 'ill'
  * | 'chart'
+ * | 'tag'
  * | 'addtag'
  * | 'retag'
  * | 'search'
@@ -88,6 +86,7 @@
  * @typedef {'HistoryScoreNum'} HistoryScoreNum 历史成绩展示数量
  * @typedef {'listScoreMaxNum'} listScoreMaxNum /list 最大数量
  * 系统设置
+ * @typedef {'defaultGlobal'} defaultGlobal 默认使用国际服
  * @typedef {'watchInfoPath'} watchInfoPath 监听信息文件
  * @typedef {'allowComment'} allowComment 曲目评论
  * @typedef {'allowChartTag'} allowChartTag 曲目标签
@@ -99,7 +98,7 @@
  * @typedef {'cmdhead'} cmdhead 命令头
  * @typedef {'phigrousUpdateUrl'} phigrousUpdateUrl Phigrous更新日志API
  * @typedef {'openPhiPluginApi'} openPhiPluginApi 是否启用Phigros联合查分API地址
- * @typedef {'phiPluginApiUrl'} phiPluginApiUrl Phigros联合查分API地址
+ * @typedef {'autoOpenApi'} autoOpenApi 检测API状态成功后，是否自动开启API
  * @typedef {'debug'} debug 输出测试日志
  * @typedef {'otherinfo'} otherinfo 曲库
  * @typedef {'mutiNickWaitTimeOut'} mutiNickWaitTimeOut 多个曲目回复序号等待时长
@@ -135,6 +134,7 @@
  * |HistoryScoreDate
  * |HistoryScoreNum
  * |listScoreMaxNum
+ * |defaultGlobal
  * |watchInfoPath
  * |allowComment
  * |allowChartTag
@@ -146,7 +146,7 @@
  * |cmdhead
  * |phigrousUpdateUrl
  * |openPhiPluginApi
- * |phiPluginApiUrl
+ * |autoOpenApi
  * |debug
  * |otherinfo
  * |mutiNickWaitTimeOut
@@ -172,7 +172,7 @@
  * @typedef {object} ori_record
  * @property {number} score
  * @property {number} acc
- * @property {number} fc
+ * @property {boolean} fc
  */
 
 /**
@@ -256,6 +256,8 @@
  * 
  * @typedef {object} oriSave
  * @property {phigrosToken} session
+ * @property {apiUserId} [apiId]
+ * @property {boolean} global
  * @property {saveInfo} saveInfo
  * @property {string} saveUrl
  * @property {number} Recordver
@@ -266,14 +268,15 @@
 
 /**
  * 基础历史记录结构
- * @typedef {Object} BaseHistoryObject
+ * @template T
+ * @typedef {object} BaseHistoryObject<T>
  * @property {string} date - 日期 ISO格式
- * @property {number[] | number | object} value - 值
+ * @property {T} value - 值
  */
 
 /**
  * 单条成绩详细记录
- * @typedef {Array} ScoreDetail
+ * @typedef {[acc: string, score: number, date: string, fc: number | boolean]} ScoreDetail
  * 0 - acc
  * 1 - score
  * 2 - 记录日期
@@ -282,19 +285,19 @@
 
 /**
  * 
- * @typedef {Object} songRecordHistory
- * @property {ScoreDetail[]} EZ
- * @property {ScoreDetail[]} HD
- * @property {ScoreDetail[]} IN
- * @property {ScoreDetail[]} AT
+ * @typedef {Partial<Record<allLevelKind, ScoreDetail[]>>} songRecordHistory
+ */
+
+/**
+ * @typedef {Record<idString, songRecordHistory>} scoreHistoryObject
  */
 
 /**
  * 玩家存档历史数据对象
  * @typedef {Object} saveHistoryObject
- * @property {Array<BaseHistoryObject>} [data] - 成绩记录数组（包含日期和五个数值的元组）
- * @property {Array<BaseHistoryObject>} [rks] - RKS(评级分数)历史记录数组
- * @property {Object.<string, songRecordHistory>} [scoreHistory] - 成绩历史数据（按歌曲ID和难度分类的详细记录）
- * @property {Array<BaseHistoryObject>} [challengeModeRank] - 课题模式排名记录
+ * @property {BaseHistoryObject<number[]>[]} [data] - 成绩记录数组（包含日期和五个数值的元组）
+ * @property {BaseHistoryObject<number>[]} [rks] - RKS(评级分数)历史记录数组
+ * @property {scoreHistoryObject} [scoreHistory] - 成绩历史数据（按歌曲ID和难度分类的详细记录）
+ * @property {BaseHistoryObject<number>[]} [challengeModeRank] - 课题模式排名记录
  * @property {number} [version] - 数据版本号
  */

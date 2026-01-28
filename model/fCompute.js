@@ -1,7 +1,10 @@
 import Config from '../components/Config.js'
+import logger from '../components/Logger.js'
+import LevelRecordInfo from './class/LevelRecordInfo.js'
 import { MAX_DIFFICULTY } from './constNum.js'
 import getInfo from './getInfo.js'
-export default class compute {
+
+export default class fCompute {
     /**
      * 计算等效rks
      * @param {number} acc 
@@ -21,6 +24,19 @@ export default class compute {
         }
     }
 
+    /**
+     * @overload
+     * @param {Number} rks 目标rks
+     * @param {Number} difficulty 定数
+     * @param {Number} count 保留位数
+     * @returns {string}
+     */
+    /**
+     * @overload
+     * @param {Number} rks 目标rks
+     * @param {Number} difficulty 定数
+     * @returns {number}
+     */
     /**
      * 计算所需acc
      * @param {Number} rks 目标rks
@@ -69,8 +85,10 @@ export default class compute {
             }
 
         } catch (err) {
+            // @ts-ignore
             logger.error(`文件上传错误：${logger.red(err.stack)}`)
             console.error(err)
+            // @ts-ignore
             await e.reply(`文件上传错误：${err.stack}`)
         }
     }
@@ -108,7 +126,7 @@ export default class compute {
                     break
                 }
             }
-            return getInfo.getill(getInfo.idgetsong(save_background) || save_background)
+            return getInfo.getill(/**@type {idString} */(save_background))
         } catch (err) {
             logger.error(`获取背景曲绘错误`, err)
             return false
@@ -148,30 +166,55 @@ export default class compute {
     }
 
     /**
+     * 随机数，不包含上界
+     * @param {number} min 最小值
+     * @param {number} max 最大值
+     * @param {number} [precision=4] 小数位数
+     * @returns 随机数
+     */
+    static randFloatBetween(min, max, precision = 4) {
+        return Math.floor((Math.random() * (max - min) + min) * (10 ** precision)) / (10 ** precision)
+    }
+
+    /**
      * 随机打乱数组
-     * @param {Array} arr 原数组
-     * @returns 随机打乱的数组
+     * @template T
+     * @param {T[]} arr 原数组
+     * @returns {T[]} 返回传入类型的数组
      */
     static randArray(arr) {
-        let newArr = []
-        while (arr.length > 0) {
-            newArr.push(arr.splice(Math.floor(Math.random() * arr.length), 1)[0])
-        }
-        return newArr
+        const newArr = [...arr];
+        return newArr.sort(() => Math.random() - 0.5);
     }
 
     /**
      * 转换时间格式
-     * @param {Date|string} date 时间
-     * @returns 2020/10/8 10:08:08
+     * @param {Date|string|number} [date] 时间
+     * @param {boolean} [withDate=true] 是否包含日期
+     * @returns 2020/10/08 10:08:08
      */
-    static formatDate(date) {
+    static formatDate(date, withDate = true) {
+        if (!date) {
+            date = new Date()
+        }
         date = new Date(date)
-        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
+
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const day = date.getDate().toString().padStart(2, '0')
+        const hours = date.getHours().toString().padStart(2, '0')
+        const minutes = date.getMinutes().toString().padStart(2, '0')
+        const seconds = date.getSeconds().toString().padStart(2, '0')
+
+        return (withDate ? `${date.getFullYear()}/${month}/${day} ` : '') + `${hours}:${minutes}:${seconds}`
     }
 
+    /**
+     * 转换时间格式
+     * @param {Date|string|number} date 时间
+     * @returns {string} -100d
+     */
     static formatDateToNow(date) {
-        return `-${((new Date() - new Date(date)) / (24 * 60 * 60 * 1000)).toFixed(0)}d`;
+        return `-${((new Date().getTime() - new Date(date).getTime()) / (24 * 60 * 60 * 1000)).toFixed(0)}d`;
     }
 
     /**
@@ -185,23 +228,31 @@ export default class compute {
             return richText
         }
         richText = richText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        let reg = [/&lt;color\s*=\s*.*?&gt;(.*?)&lt;\/color&gt;/, /&lt;size\s*=\s*.*?&gt;(.*?)&lt;\/size&gt;/, /&lt;i&gt;(.*?)&lt;\/i&gt;/, /&lt;b&gt;(.*?)&lt;\/b&gt;/]
+        let reg = [
+            /&lt;color\s*=\s*.*?&gt;(.*?)&lt;\/color&gt;/,
+            /&lt;size\s*=\s*.*?&gt;(.*?)&lt;\/size&gt;/,
+            /&lt;i&gt;(.*?)&lt;\/i&gt;/, /&lt;b&gt;(.*?)&lt;\/b&gt;/
+        ]
         while (1) {
-            if (richText.match(reg[0])) {
-                let txt = richText.match(reg[0])[1]
-                let color = richText.match(reg[0])[0].match(/&lt;color\s*=\s*(.*?)&gt;/)[1].replace(/[\s\"]/g, '')
+            let matched = richText.match(reg[0])
+            if (matched?.[1]) {
+                let txt = matched[1]
+                let colorTag = matched[0].match(/&lt;color\s*=\s*(.*?)&gt;/)
+                let color = colorTag?.[1].replace(/[\s\"]/g, '') || 'inherit'
                 richText = richText.replace(reg[0], onlyText ? txt : `<span style="color:${color}">${txt}</span>`)
                 continue
             }
 
-            if (richText.match(reg[2])) {
-                let txt = richText.match(reg[2])[1]
+            matched = richText.match(reg[2])
+            if (matched) {
+                let txt = matched[1]
                 richText = richText.replace(reg[2], onlyText ? txt : `<i>${txt}</i>`)
                 continue
             }
 
-            if (richText.match(reg[3])) {
-                let txt = richText.match(reg[3])[1]
+            matched = richText.match(reg[3])
+            if (matched) {
+                let txt = matched[1]
                 richText = richText.replace(reg[3], onlyText ? txt : `<b>${txt}</b>`)
                 continue
             }
@@ -221,7 +272,10 @@ export default class compute {
         return richText
     }
 
-    /**是否是管理员 */
+    /**
+     * 是否是管理员
+     * @param {any} e
+     */
     static is_admin(e) {
         //console.info(e)
         if (e?.member?.is_admin) {
@@ -248,17 +302,17 @@ export default class compute {
     /**
      * 捕获消息中的范围
      * @param {string} msg 消息字符串
-     * @param {Array} range 范围数组
+     * @param {number[]} range 范围数组
      */
     static match_range(msg, range) {
         if (!range) {
-            range[0] = 0
-            range[1] = MAX_DIFFICULTY
+            range = [0, MAX_DIFFICULTY]
         }
         if (msg.match(/[0-9]+(\.[0-9]+)?\s*[-～~]\s*[0-9]+(\.[0-9]+)?/g)) {
             /**0-16.9 */
-            msg = msg.match(/[0-9]+(\.[0-9]+)?\s*[-～~]\s*[0-9]+(\.[0-9]+)?/g)[0]
-            let result = msg.split(/\s*[-～~]\s*/g)
+            let matched = msg.match(/[0-9]+(\.[0-9]+)?\s*[-～~]\s*[0-9]+(\.[0-9]+)?/g)?.[0]
+            if (!matched) return range;
+            let result = matched.split(/\s*[-～~]\s*/g)
             range[0] = Number(result[0])
             range[1] = Number(result[1])
             if (range[0] > range[1]) {
@@ -269,19 +323,21 @@ export default class compute {
             if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
         } else if (msg.match(/[0-9]+(\.[0-9]+)?\s*[-+]/g)) {
             /**16.9- 15+ */
-            msg = msg.match(/[0-9]+(\.[0-9]+)?\s*[-+]/g)[0]
-            let result = msg.replace(/\s*[-+]/g, '')
-            if (msg.includes('+')) {
-                range[0] = result
+            let matched = msg.match(/[0-9]+(\.[0-9]+)?\s*[-+]/g)?.[0]
+            if (!matched) return range;
+            let result = matched.replace(/\s*[-+]/g, '')
+            if (matched.includes('+')) {
+                range[0] = Number(result)
             } else {
-                range[1] = result
+                range[1] = Number(result)
                 if (range[1] % 1 == 0 && !result.includes(".0")) range[1] += 0.9
             }
         } else if (msg.match(/[0-9]+(\.[0-9]+)?/g)) {
             /**15 */
-            msg = msg.match(/[0-9]+(\.[0-9]+)?/g)[0]
-            range[0] = range[1] = Number(msg)
-            if (!msg.includes('.')) {
+            let matched = msg.match(/[0-9]+(\.[0-9]+)?/g)?.[0]
+            if (!matched) return range;
+            range[0] = range[1] = Number(matched)
+            if (!matched.includes('.')) {
                 range[1] += 0.9
             }
         }
@@ -290,8 +346,8 @@ export default class compute {
 
     /**
      * 匹配消息中对成绩的筛选
-     * @param {string} msg 
-     * @param {number} max_range 最大范围
+     * @param {string} e_msg 
+     * @param {number} [max_range] 最大范围
      * @returns 
      */
     static match_request(e_msg, max_range) {
@@ -317,9 +373,10 @@ export default class compute {
 
         if (msg.includes(' NEW') || msg.includes(' F') || msg.includes(' C') || msg.includes(' B') || msg.includes(' A') || msg.includes(' S') || msg.includes(' V') || msg.includes(' FC') || msg.includes(' PHI')) {
             scoreAsk = { NEW: false, F: false, C: false, B: false, A: false, S: false, V: false, FC: false, PHI: false }
-            let rating = ['NEW', 'F', 'C', 'B', 'A', 'S', 'V', 'FC', 'PHI']
-            for (let i in rating) {
-                if (msg.includes(` ${rating[i]}`)) { scoreAsk[rating[i]] = true }
+            /** @type {(keyof typeof scoreAsk)[]}*/
+            let rating = /** @type {any}*/(Object.keys(scoreAsk))
+            for (let rate of rating) {
+                if (msg.includes(` ${rate}`)) { scoreAsk[rate] = true }
             }
         }
         if (msg.includes(` AP`)) { scoreAsk.PHI = true }
@@ -332,11 +389,11 @@ export default class compute {
     /**
      * 
      * @param {number} real_score 真实成绩
-     * @param {number} tot_score 总成绩
-     * @param {boolean} fc 是否fc
+     * @param {boolean | number} fc 是否fc
+     * @param {number} [tot_score=1000000] 
      * @returns 
      */
-    static rate(real_score, tot_score, fc) {
+    static rate(real_score, fc, tot_score = 1000000) {
 
         if (!real_score) {
             return 'F'
@@ -359,35 +416,17 @@ export default class compute {
         }
     }
 
-
-    /**
-     * 转换时间格式
-     * @param {Date|string} date 时间
-     * @returns 2020/10/8 10:08:08
-     */
-    static date_to_string(date) {
-        if (!date) return undefined
-        date = new Date(date)
-
-        let month = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
-        let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
-
-        return `${date.getFullYear()}/${month}/${day} ${date.toString().match(/([0-9])+:([0-9])+:([0-9])+/)[0]}`
-    }
-
-
-
     /**
      * 计算百分比
      * @param {Number} value 值
-     * @param {Array} range 区间数组 (0,..,1)
+     * @param {number[]} range 区间数组 (0,..,1)，只考虑首尾
      * @returns 百分数，单位%
      */
     static range(value, range) {
         if (range[0] == range[range.length - 1]) {
             return 50
         } else {
-            return (value - range[0]) / (range[range.length - 1] - range[0]) * 100
+            return Math.abs((value - range[0]) / (range[range.length - 1] - range[0]) * 100)
         }
     }
 
@@ -398,6 +437,9 @@ export default class compute {
      * @returns {Array<{ key:string, score:number, value:string }>} 相似度大于0.8的结果
      */
     static fuzzySearch(str, data) {
+        /**
+         * @type {{ key:string, score:number, value:string }[]}
+         */
         let result = []
         for (let key in data) {
             let score = this.jaroWinklerDistance(str, key)
@@ -494,20 +536,27 @@ export default class compute {
         return weight
     }
 
+    /**
+     * 获取BOT平台名称
+     * @param {any} e 
+     * @returns 
+     */
     static getAdapterName(e) {
         return e.bot?.adapter?.name || e.bot?.adapter
     }
 
     /**
      * 多别名的返回消息
-     * @param {songString[]} songArr 
+     * @param {idString[]} idArr 
      */
-    static mutiNick(songArr) {
-        /**筛选出重复的别名 */
+    static mutiNick(idArr) {
+        /**
+         * 筛选出重复的别名
+         * @type {Record<string, number>}
+         */
         const nickCnt = {};
-        songArr.forEach((song) => {
-            const info = getInfo.info(song);
-            (getInfo.nicklist[info.song] || []).forEach((nick) => {
+        idArr.forEach((id) => {
+            (getInfo?.nicklist?.[id] || []).forEach((nick) => {
                 if (!nickCnt[nick]) {
                     nickCnt[nick] = 1;
                 } else {
@@ -515,6 +564,9 @@ export default class compute {
                 }
             })
         })
+        /**
+         * @type {string[]}
+         */
         const nickList = []
         for (let nick in nickCnt) {
             if (nickCnt[nick] > 1) {
@@ -523,12 +575,12 @@ export default class compute {
         }
         /**生成消息 */
         let msg = '你要找的是不是：\n';
-        songArr.forEach((song, index) => {
-            let info = getInfo.info(song)
+        idArr.forEach((id, index) => {
+            let info = getInfo.info(id);
             if (info) {
                 msg += `${index + 1}. ${info.song}\n-作者：${info.composer}\n`;
-                if (getInfo.nicklist?.[info.song]) {
-                    for (let nick of getInfo.nicklist[info.song]) {
+                if (getInfo.nicklist?.[id]) {
+                    for (let nick of getInfo.nicklist[id]) {
                         if (!nickList.includes(nick)) {
                             msg += `-其他别名：${nick}\n`;
                             break;
@@ -555,4 +607,67 @@ export default class compute {
         const tar = 900000 * (1 - (0.35 / maxc)) + 100000;
         return Math.abs(score - tar) <= 2;
     }
+
+    /**
+     * 从Record中获取key数组
+     * @template {Record<PropertyKey, unknown>} T
+     * @param {T} record 
+     * @returns {(keyof T)[]} key数组
+     */
+    static objectKeys(record) {
+        return /**@type {(keyof T)[]} */(Object.keys(record));
+    }
+
+    /**
+     * 
+     * @param {{phi: LevelRecordInfo[], b27: LevelRecordInfo[]}} b30List 
+     * @param {LevelRecordInfo[]} newRecords 
+     */
+    static updateB30(b30List, newRecords) {
+        let phi = [...b30List.phi];
+        let b27 = [...b30List.b27];
+        newRecords = newRecords.sort((a, b) => b.rks - a.rks);
+        const newPhis = newRecords.filter(record => record.acc >= 100);
+
+        const newPhiKeys = newPhis.map(item => `${item.id}-${item.difficulty}`);
+        const newRecordKeys = newRecords.map(item => `${item.id}-${item.difficulty}`);
+
+        phi = phi.filter(item => !newPhiKeys.includes(`${item.id}-${item.difficulty}`));
+        b27 = b27.filter(item => !newRecordKeys.includes(`${item.id}-${item.difficulty}`));
+
+        phi.push(...newPhis);
+        phi = phi.sort((a, b) => b.rks - a.rks);
+        phi = phi.slice(0, 3);
+        b27.push(...newRecords);
+        b27 = b27.sort((a, b) => b.rks - a.rks);
+        b27 = b27.slice(0, 27);
+        return { phi, b27 };
+    }
+
+    /**
+     * 定义一个函数，接受一个整数参数，返回它的十六进制形式
+     * @param {number} num 
+     * @returns 
+     */
+    static toHex(num) {
+        // 如果数字小于 16，就在前面补一个 0
+        if (num < 16) {
+            return "0" + num.toString(16);
+        } else {
+            return num.toString(16);
+        }
+    }
+
+    // 定义一个函数，不接受参数，返回一个随机的背景色
+    static getRandomBgColor() {
+        // 生成三个 0 到 200 之间的随机整数，分别代表红、绿、蓝分量
+        let red = Math.floor(Math.random() * 201);
+        let green = Math.floor(Math.random() * 201);
+        let blue = Math.floor(Math.random() * 201);
+        // 将三个分量转换为十六进制形式，然后拼接成一个 RGB 颜色代码
+        let hexColor = "#" + this.toHex(red) + this.toHex(green) + this.toHex(blue);
+        // 返回生成的颜色代码
+        return hexColor;
+    }
+
 }

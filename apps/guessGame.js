@@ -1,15 +1,27 @@
-import plugin from '../../../lib/plugins/plugin.js';
 import Config from '../components/Config.js';
 import send from '../model/send.js';
 import guessTips from './guessGame/guessTips.js';
 import guessLetter from './guessGame/guessLetter.js';
 import guessIll from './guessGame/guessIll.js';
 import getBanGroup from '../model/getBanGroup.js';
+import phiPluginBase from '../components/baseClass.js';
+import logger from '../components/Logger.js';
 
-let games = "(提示猜曲|tipgame|ltr|letter|开字母|guess|猜曲绘)"
+let games = "(提示猜曲|tipgame|(ltr|letter|开字母).*|guess|猜曲绘)"
+
+/**@import {botEvent} from '../components/baseClass.js' */
+
+/**
+ * @typedef {Record<string, {gameType: string}>} GameList
+ */
+
+/**
+ * 进行中的游戏列表
+ * @type {GameList}
+ */
 let gameList = {}
 
-export class phiGames extends plugin {
+export class phiGames extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-games',
@@ -42,14 +54,22 @@ export class phiGames extends plugin {
         })
     }
 
+    /**
+     * 开始游戏
+     * @param {botEvent} e 
+     * @returns 
+     */
     async start(e) {
-        let msg = e.msg.match(new RegExp(games))[0]
+        let msg = e.msg.match(new RegExp(games))?.[0]
         if (!e.group_id) {
             send.send_with_At(e, '请在群聊中使用这个功能嗷！')
             return false
         }
         if (gameList[e.group_id]) {
             send.send_with_At(e, `当前存在其他未结束的游戏嗷！如果想要开启新游戏请 /${Config.getUserCfg('config', 'cmdhead')} ans 结束进行的游戏嗷！`)
+            return false
+        }
+        if (!msg) {
             return false
         }
         switch (msg) {
@@ -63,17 +83,6 @@ export class phiGames extends plugin {
 
                 return await guessTips.start(e, gameList)
             }
-            case "letter":
-            case "ltr":
-            case "开字母": {
-
-                if (await getBanGroup.get(e, 'ltrgame')) {
-                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-                    return false
-                }
-
-                return await guessLetter.start(e, gameList)
-            }
             case "guess":
             case "猜曲绘": {
 
@@ -85,11 +94,26 @@ export class phiGames extends plugin {
                 return await guessIll.start(e, gameList)
             }
             default: {
+                if (msg.startsWith("ltr") || msg.startsWith("letter") || msg.startsWith("开字母")) {
+
+                    if (await getBanGroup.get(e, 'ltrgame')) {
+                        send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                        return false
+                    }
+
+                    return await guessLetter.start(e, gameList)
+                }
                 return false
             }
         }
     }
 
+
+    /**
+     * 翻开字母
+     * @param {botEvent} e 
+     * @returns 
+     */
     async reveal(e) {
         switch (gameList[e.group_id]?.gameType) {
             case "guessLetter": {
@@ -101,6 +125,12 @@ export class phiGames extends plugin {
         }
     }
 
+
+    /**
+     * 猜测
+     * @param {botEvent} e 
+     * @returns 
+     */
     async guess(e) {
         /**过滤特殊消息 */
         if (!e.msg) {
@@ -125,6 +155,12 @@ export class phiGames extends plugin {
         }
     }
 
+
+    /**
+     * 获取提示
+     * @param {botEvent} e 
+     * @returns 
+     */
     async getTip(e) {
         switch (gameList[e.group_id]?.gameType) {
             case "guessTips": {
@@ -139,6 +175,12 @@ export class phiGames extends plugin {
         }
     }
 
+
+    /**
+     * 结束游戏
+     * @param {botEvent} e 
+     * @returns 
+     */
     async ans(e) {
         switch (gameList[e.group_id]?.gameType) {
             case "guessTips": {

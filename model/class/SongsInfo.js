@@ -3,10 +3,11 @@ import Chart from "./Chart.js"
 
 export default class SongsInfo {
     /**
-     * @param { } data 原始数据
+     * @param {any} data 原始数据
      */
     constructor(data) {
         if (!data) {
+            //@ts-ignore
             return {}
         }
         /** @type {idString} id */
@@ -14,7 +15,7 @@ export default class SongsInfo {
         /** @type {songString} 曲目 */
         this.song = data.song
         /** @type {string} 曲绘 */
-        this.illustration = getInfo.getill(data.song)
+        this.illustration = getInfo.getill(data.id)
         /** @type {boolean} 是否不参与猜字母 */
         this.can_t_be_letter = data.can_t_be_letter || false
         /** @type {boolean} 是否不参与猜曲绘 */
@@ -33,7 +34,7 @@ export default class SongsInfo {
         this.spinfo = data.spinfo
         /**
          * 谱面详情
-         * @type {{EZ: Chart,HD: Chart,IN: Chart,AT?: Chart,LEGACY?: Chart}} 
+         * @type {Partial<Record<allLevelKind, Chart>>} 
          */
         this.chart = data.chart
         /** @type {boolean} 是否是特殊谱面 */

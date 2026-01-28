@@ -1401,7 +1401,7 @@
         }
     },
     "雪降り雪が降っている.AiSSw夜輪ft結月ゆかり": {
-        "bpm": "234",
+        "bpm": "156",
         "length": "2:29",
         "chapter": "单曲精选集"
     },
@@ -1459,5 +1459,32 @@
         "bpm": "160",
         "length": "2:30",
         "chapter": "Chapter EX-CYTUS II 精选集"
+    },
+    "最高傑作.PYKAMIA":{
+        "bpm": "140",
+        "length": "2:24",
+        "chapter": "Single-单曲 精选集"
+    },
+    "Locomotive.K":{
+        "bpm": "128",
+        "length": "2:28",
+        "chapter": "Single-单曲 精选集"
+    },
+    "Alb.Avans":{
+        "bpm": "140",
+        "length": "2:31",
+        "chapter": "Chapter EX-CYTUS II 精选集"
+    },
+    "Incyde.YbeLL":{
+        "bpm": "180",
+        "length": "3:20",
+        "chapter": "Chapter EX-CYTUS II 精选集"
+    },
+    "彩.MisoilePunch":{
+        "bpm": "170",
+        "length": "2:42",
+        "chapter": "Chapter EX-CYTUS II 精选集"
     }
 }
+
+

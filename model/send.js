@@ -5,6 +5,7 @@ import common from "../../../lib/common/common.js";
 import getSave from "./getSave.js";
 import Save from "./class/Save.js";
 import getUpdateSave from "./getUpdateSave.js";
+import logger from "../components/Logger.js";
 
 class send {
 
@@ -32,11 +33,11 @@ class send {
     /**
      * 检查存档部分
      * @param {*} e 
-     * @param {Number} ver 存档版本
-     * @param {boolean} [send=false] 是否发送提示
-     * @returns {Promise<Save>}
+     * @param {Number} [ver] 存档版本
+     * @param {boolean} [send=true] 是否发送提示
+     * @returns {Promise<Save|false>} 存档对象或false
      */
-    async getsave_result(e, ver, send = true) {
+    async getsave_result(e, ver = undefined, send = true) {
 
         let user_save = null
         let sessionToken = null
@@ -44,7 +45,7 @@ class send {
             try {
                 user_save = await getUpdateSave.getNewSaveFromApi(e)
                 return user_save.save
-            } catch (err) {
+            } catch (/**@type {any} */ err) {
                 /**如果是没有绑定过就执行绑定 */
                 if (err.message == '缺少 phigrosToken 参数') {
                     try {
@@ -64,7 +65,7 @@ class send {
                 }
             }
         }
-        
+
         sessionToken = await getSave.get_user_token(e.user_id)
 
         if (!sessionToken) {
@@ -74,7 +75,7 @@ class send {
             return false
         }
 
-        user_save = (await getUpdateSave.getNewSaveFromLocal(e, sessionToken)).save
+        user_save = (await getUpdateSave.getNewSaveFromLocal(e, sessionToken))?.save
 
 
         if (!user_save || (ver && (!user_save.Recordver || user_save.Recordver < ver))) {
@@ -94,6 +95,7 @@ class send {
      */
     async pick_send(e, msg) {
         try {
+            // @ts-ignore
             await Bot.pickMember(e.group_id, e.user_id).sendMsg(msg)
             await common.sleep(500)
         } catch (err) {

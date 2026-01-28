@@ -1,19 +1,22 @@
-import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
-import getFile from '../model/getFile.js'
 import getSave from '../model/getSave.js'
 import ProgressBar from "../model/progress-bar.js";
 import { redisPath } from '../model/constNum.js'
 import getBanGroup from '../model/getBanGroup.js'
 import getComment from '../model/getComment.js'
+import phiPluginBase from '../components/baseClass.js'
+import logger from '../components/Logger.js'
+import getSaveFromApi from '../model/getSaveFromApi.js'
 
 
+/**@import {botEvent} from '../components/baseClass.js' */
+/** @type {Record<string, any>} */
 const tokenManageData = {}
 
-export class phihelp extends plugin {
+export class phihelp extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-api-set',
@@ -61,7 +64,11 @@ export class phihelp extends plugin {
         })
 
     }
-
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async setApiToken(e) {
 
         if (await getBanGroup.get(e, 'setApiToken')) {
@@ -86,38 +93,27 @@ export class phihelp extends plugin {
             send.send_with_At(e, `请输入apiToken！\n格式：\n设置密码：/${Config.getUserCfg('config', 'cmdhead')} setApiToken <新Token> `)
             return true
         }
-        if (apiToken.includes('\n')) {
-            let lines = apiToken.split('\n');
-            if (lines.length == 2) {
-                try {
-                    await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, api_token: lines[0], token_new: lines[1] })
-                } catch (err) {
-                    send.send_with_At(e, '设置 API Token 失败: ' + err.message)
-                    return false
-                }
-                send.send_with_At(e, 'API Token 已设置为: \n' + lines[1])
-            } else {
-                send.send_with_At(e, '请使用正确的格式设置 API Token！\n格式：\n/setApiToken（换行）<旧Token>（换行）<新Token>\n或\n/setApiToken <新Token>')
-                return false
-            }
-        } else {
-            if (/[\s\x00-\x1F\x7F'"\\]/.test(apiToken)) {
-                send.send_with_At(e, 'API Token 包含非法字符，请检查后重试！\n格式：\n/setApiToken（换行）<旧Token>（换行）<新Token>\n或\n/setApiToken <新Token>')
-                return false
-            }
-            try {
-                await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, token_new: apiToken })
-            } catch (err) {
-                send.send_with_At(e, '设置 API Token 失败: ' + err.message)
-                return false
-            }
-            send.send_with_At(e, 'API Token 已设置为: \n' + apiToken)
+        if (/[\s\x00-\x1F\x7F'"\\]/.test(apiToken)) {
+            send.send_with_At(e, 'API Token 包含非法字符，请检查后重试！\n格式：\n/setApiToken <新Token>')
+            return false
         }
+        try {
+            await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, token_new: apiToken })
+        } catch (err) {
+            send.send_with_At(e, ['设置 API Token 失败: ', err])
+            return false
+        }
+        send.send_with_At(e, 'API Token 已设置为: \n' + apiToken)
 
 
         return true
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async tokenList(e) {
         if (await getBanGroup.get(e, 'tokenList')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -138,7 +134,7 @@ export class phihelp extends plugin {
         try {
             tokenList = await makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
         } catch (err) {
-            send.send_with_At(e, '获取 Token 列表失败: ' + err.message)
+            send.send_with_At(e, ['获取 Token 列表失败: ', err])
             return false
         }
 
@@ -162,6 +158,11 @@ export class phihelp extends plugin {
         return true
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async tokenManage(e) {
         if (await getBanGroup.get(e, 'tokenManage')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -175,7 +176,8 @@ export class phihelp extends plugin {
 
         /** @type {string} */
         let msg = e.msg.replace(/^[#/].*?tokenManage\s*/, '');
-        let operation = msg.match(/(delete|rmau)/i)?.[1];
+        /** @type {'delete'|'rmau'|undefined} */
+        let operation = /**@type {any} */ (msg.match(/(delete|rmau)/i)?.[1]);
 
         if (!operation) {
             send.send_with_At(e, `请指定操作类型！\n类型：\ndelete - 解绑对应编号平台`);
@@ -192,13 +194,13 @@ export class phihelp extends plugin {
         try {
             tokenList = await makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken });
         } catch (err) {
-            send.send_with_At(e, '获取 Token 列表失败: ' + err.message)
+            send.send_with_At(e, ['获取 Token 列表失败: ', err])
             return false
         }
 
         let force = msg.match('-f')?.[0] ? true : false;
 
-        let choseNum = msg.match(/[0-9]+/)?.[0];
+        let choseNum = Number(msg.match(/[0-9]+/)?.[0]);
 
         if (choseNum) {
             if (choseNum > tokenList.platform_data.length) {
@@ -241,6 +243,10 @@ export class phihelp extends plugin {
         return true
     }
 
+    /**
+     * 
+     * @returns 
+     */
     async tokenManageChose() {
         let e = this.e;
         /** @type {string} */
@@ -277,6 +283,11 @@ export class phihelp extends plugin {
 
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async auth(e) {
 
         if (await getBanGroup.get(e, 'auth')) {
@@ -295,24 +306,31 @@ export class phihelp extends plugin {
             return false
         }
 
-        const sessionToken = await getSave.get_user_token(e.user_id);
-        if (!sessionToken) {
-            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+        const apiId = await getSaveFromApi.get_user_apiId(e.user_id);
+        if (!apiId) {
+            send.send_with_At(e, `本地没有您的apiId记录嗷！请尝试重新绑定呐！`)
             return;
         }
-
+        let sessionToken = null
         try {
-            await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, token_new: apiToken })
+            sessionToken = await makeRequest.getPgrToken({ ...makeRequestFnc.makePlatform(e), api_token: apiToken })
         } catch (err) {
-            send.send_with_At(e, 'API Token 验证失败: ' + err.message)
+            send.send_with_At(e, ['API Token 验证失败: ', err])
             return false
         }
 
-        send.send_with_At(e, '验证成功')
+        send.send_with_At(e, `验证成功！\n您的用户Token为：\n${sessionToken.token}\n请妥善保管您的Token哦~`);
+
+        getSave.add_user_token(e.user_id, sessionToken.token);
 
         return true
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async clearApiData(e) {
         if (await getBanGroup.get(e, 'clearApiData')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -333,7 +351,7 @@ export class phihelp extends plugin {
         try {
             await makeRequest.clear({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
         } catch (err) {
-            send.send_with_At(e, '清除数据失败: ' + err.message)
+            send.send_with_At(e, ['清除数据失败: ', err])
             return false
         }
 
@@ -342,6 +360,10 @@ export class phihelp extends plugin {
         return true
     }
 
+    /**
+     * @param {botEvent} e 
+     * @returns 
+     */
     async updateUserToken(e) {
         if (!e.isMaster) {
             e.reply("无权限");
@@ -357,7 +379,10 @@ export class phihelp extends plugin {
         send.send_with_At(e, '开始提取user_token，请稍等...')
         console.info('\n[phi-plugin][backup] 开始提取user_token数据...')
         let bar = new ProgressBar('[phi-plugin] user_token提取中', 20)
-        /**获取user_token */
+        /**
+         * 获取user_token
+         * @type {phigrosToken[]}
+         */
         let user_token = []
         console.info('[phi-plugin] 获取user_token列表...')
         // 使用SCAN非阻塞遍历所有userToken键
@@ -365,13 +390,19 @@ export class phihelp extends plugin {
         let cnt = 0;
         let vis = 0;
         do {
-            let info = await redis.scan(cursor, { MATCH: `${redisPath}:userToken:*`, COUNT: 100 });
+            /** @type {{cursor:number,keys:string[]}} */
+            let info =
+                // @ts-ignore
+                (await redis.scan(cursor, { MATCH: `${redisPath}:userToken:*`, COUNT: 100 }));
             cursor = info.cursor; // 更新游标
             let keys = info.keys; // 获取当前批次的键
             if (keys.length > 0) {
                 // 并发获取本批次所有user_token
                 let userIds = keys.map(key => key.replace(`${redisPath}:userToken:`, ''));
-                let tokenValues = await Promise.all(keys.map(key => redis.get(key)));
+                let tokenValues = await Promise.all(keys.map(key =>
+                    // @ts-ignore
+                    redis.get(key)
+                ));
                 userIds.forEach((user_id, idx) => {
                     user_token.push(tokenValues[idx]);
                 });
@@ -397,12 +428,17 @@ export class phihelp extends plugin {
             send.send_with_At(e, '上传用户Token成功')
 
         } catch (err) {
-            send.send_with_At(e, '上传用户Token失败: ' + err.message)
+            send.send_with_At(e, ['上传用户Token失败: ', err])
             return false
         }
 
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async updateComment(e) {
         if (!e.isMaster) {
             e.reply("无权限");
@@ -417,17 +453,26 @@ export class phihelp extends plugin {
         send.send_with_At(e, '开始上传评论数据，请稍等...')
         const data = getComment.data;
 
+        /**@type {import('../model/getComment.js').commentObject[]} */
         const updateData = []
 
-        for (let songId in data) {
+        /** @type {idString[]} */
+        const ids = /**@type {any} */ (Object.keys(data));
+
+        for (let songId of ids) {
             for (let comment of data[songId]) {
                 updateData.push({ ...comment, songId });
             }
         }
-        logger.info(updateData);
-        logger.info(await makeRequest.updateComments({ data: { comments: updateData } }));
+
+        logger.info(await makeRequest.updateComments({ data: updateData }));
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async noapi(e) {
 
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
@@ -439,26 +484,33 @@ export class phihelp extends plugin {
         if (!save) {
             return true
         }
+
+        const token = await getSave.get_user_token(e.user_id)
+        if (!token) {
+            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
+            return;
+        }
+
         let userSetting
         try {
-            userSetting = await makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e) });
+            userSetting = await makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e), token });
         } catch (error) {
-            send.send_with_At(e, '获取用户设置失败: ' + error.message);
+            send.send_with_At(e, '获取用户设置失败: ' + error);
             return true;
         }
         if (!userSetting.allowDataCollection) {
             try {
-                await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), setting: { allowDataCollection: true } });
+                await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), token, setting: { allowDataCollection: true } });
             } catch (error) {
-                send.send_with_At(e, '设置失败: ' + error.message);
+                send.send_with_At(e, '设置失败: ' + error);
                 return true;
             }
             send.send_with_At(e, '感谢您参与数据统计！');
         } else {
             try {
-                await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), setting: { allowDataCollection: false } });
+                await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), token, setting: { allowDataCollection: false } });
             } catch (error) {
-                send.send_with_At(e, '设置失败: ' + error.message);
+                send.send_with_At(e, '设置失败: ' + error);
                 return true;
             }
             send.send_with_At(e, '退出数据统计计划成功！');

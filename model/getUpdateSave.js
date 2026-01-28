@@ -1,8 +1,10 @@
 import { Config } from "../components/index.js";
+import logger from "../components/Logger.js";
 import PhigrosUser from "../lib/PhigrosUser.js";
 import Save from "./class/Save.js";
-import { Level } from "./constNum.js";
-import getInfo from "./getInfo.js";
+import saveHistory from "./class/saveHistory.js";
+import { allLevel, LevelNum } from "./constNum.js";
+import fCompute from "./fCompute.js";
 import getNotes from "./getNotes.js";
 import getSave from "./getSave.js";
 import getSaveFromApi from "./getSaveFromApi.js";
@@ -10,11 +12,13 @@ import makeRequest from "./makeRequest.js";
 import makeRequestFnc from "./makeRequestFnc.js";
 import send from "./send.js";
 
+/**@import {botEvent} from "../components/baseClass.js" */
+
 export default class getUpdateSave {
     /**
      * 
      * @param {*} e 
-     * @param {string} [token] sessionToken
+     * @param {phigrosToken} [token] sessionToken
      */
     static async getNewSaveFromApi(e, token) {
         let old = await getSaveFromApi.getSave(e.user_id)
@@ -36,14 +40,33 @@ export default class getUpdateSave {
         }
     }
 
-    static async getNewSaveFromLocal(e, token) {
+    /**
+     * 
+     * @param {apiUserId} uid 
+     * @returns {Promise<Save>}
+     */
+    static async getUIDSaveFromApi(uid) {
+        let newSave = await makeRequest.getCloudSaves({ api_user_id: uid });
+        let result = new Save(newSave)
+        await result.init()
+        return result
+    }
+
+    /**
+     * 
+     * @param {*} e e
+     * @param {phigrosToken} token 
+     * @param {boolean} [global] 是否是国际服
+     * @returns 
+     */
+    static async getNewSaveFromLocal(e, token, global = undefined) {
         let old = await getSave.getSave(e.user_id)
-        token = token || old.session
-        let User = new PhigrosUser(token)
+        token = token ?? old?.session
+        let User = new PhigrosUser(token, global || old?.global);
         try {
             let save_info = await User.getSaveInfo()
             if (old && old.saveInfo.modifiedAt.iso.getTime() == new Date(save_info.modifiedAt.iso).getTime()) {
-                return { save: old, added_rks_notes: [0, 0] }
+                // return { save: old, added_rks_notes: [0, 0] }
             }
             await User.buildRecord()
         } catch (err) {
@@ -53,7 +76,7 @@ export default class getUpdateSave {
                 send.send_with_At(e, "更新失败！QAQ\n请稍后重试")
             }
             logger.error(err)
-            return false
+            return undefined
         }
 
         try {
@@ -61,7 +84,7 @@ export default class getUpdateSave {
         } catch (err) {
             send.send_with_At(e, `保存存档失败！` + err)
             logger.error(err)
-            return false
+            return undefined
         }
         let now = new Save(User)
 
@@ -92,42 +115,48 @@ export default class getUpdateSave {
 
     /**
      * 更新存档
+     * @param {botEvent} e 
+     * @param {Save | oriSave | undefined} old
+     * @param {Save | oriSave} now 
      * @returns {Promise<[number,number]>} [rks变化值，note变化值]，失败返回 false
      */
-    static async buildingRecord(old, now, e) {
+    static async buildingRecord(old = undefined, now, e) {
 
 
         let notesData = await getNotes.getNotesData(e.user_id)
-        /**修正 */
+        /**删除旧字段 */
+        // @ts-ignore
         if (notesData.update || notesData.task_update) {
+            // @ts-ignore
             delete notesData.update
+            // @ts-ignore
             delete notesData.task_update
         }
 
         /**note数量变化 */
         let add_money = 0
 
-        let task = notesData?.plugin_data?.task
+        let task = notesData?.task
         if (task) {
-            for (let id in now.gameRecord) {
+            for (let id of fCompute.objectKeys(now.gameRecord)) {
                 for (let i in task) {
                     if (!task[i]) continue
-                    if (!task[i].finished && getInfo.idgetsong(id) == task[i].song) {
-                        let level = Level.indexOf(task[i].request.rank)
+                    if (!task[i].finished && id == task[i].song) {
+                        let level = LevelNum[task[i].request.rank]
                         if (!now.gameRecord[id][level]) continue
                         switch (task[i].request.type) {
                             case 'acc': {
                                 if (now.gameRecord[id][level].acc >= task[i].request.value) {
-                                    notesData.plugin_data.task[i].finished = true
-                                    notesData.plugin_data.money += task[i].reward
+                                    notesData.task[i].finished = true
+                                    notesData.money += task[i].reward
                                     add_money += task[i].reward
                                 }
                                 break
                             }
                             case 'score': {
                                 if (now.gameRecord[id][level].score >= task[i].request.value) {
-                                    notesData.plugin_data.task[i].finished = true
-                                    notesData.plugin_data.money += task[i].reward
+                                    notesData.task[i].finished = true
+                                    notesData.money += task[i].reward
                                     add_money += task[i].reward
                                 }
                                 break
@@ -142,5 +171,44 @@ export default class getUpdateSave {
         /**rks变化 */
         let add_rks = old ? now.saveInfo.summary.rankingScore - old.saveInfo.summary.rankingScore : 0
         return [add_rks, add_money]
+    }
+
+    /**
+     * 
+     * @template {keyof saveHistoryObject} K1
+     * @param {botEvent} e 
+     * @param {K1[]} [field] 
+     * @returns {Promise<saveHistory | null>}
+     */
+    static async getHistoryFromApi(e, field = []) {
+        const sessionToken = await getSave.get_user_token(e.user_id);
+        if (!sessionToken) {
+            if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+                send.send_with_At(e, "请先绑定sessionToken哦！")
+                return null;
+            }
+            try {
+                return await getSaveFromApi.getHistory(e, field)
+            } catch (err) {
+                logger.warn('[phi-plugin]获取历史记录失败', err)
+                send.send_with_At(e, "从API获取历史记录失败，请稍后重试或绑定sessionToken后重试哦");
+                return null;
+            }
+        }
+        let oldHistory = await getSave.getHistory(e.user_id);
+        if (oldHistory) {
+            try {
+                await makeRequest.setHistory({ ...makeRequestFnc.makePlatform(e), token: sessionToken, data: oldHistory });
+            } catch (err) {
+                logger.warn('[phi-plugin]上传历史记录失败', err)
+            }
+        }
+        try {
+            return await getSaveFromApi.getHistory(e, field)
+        } catch (err) {
+            logger.warn('[phi-plugin]获取历史记录失败', err)
+            send.send_with_At(e, "从API获取历史记录失败，将使用本地存档的历史记录哦");
+            return  /**@type {any} */(oldHistory);
+        }
     }
 }

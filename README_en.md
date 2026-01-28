@@ -13,8 +13,8 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/Plugin_Version-0.9.9.4-9cf?style=flat-square)
-![version](https://img.shields.io/badge/Phigros-3.18.0-9cf?style=flat-square)  
+![version](https://img.shields.io/badge/Plugin_Version-1.0.0-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Phigros-3.18.2-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/TimeRainStarSky/Yunzai)
@@ -70,6 +70,9 @@ pnpm install -P
 * [ ] Song selection via phi
 * [ ] Optimize sessionToken QR scanning
 * [ ] Modify settings via commands
+* [ ] Query Song History Constants
+* [ ] Score Map Tags
+* [ ] Adapt to TapTap International Version
 * [ ] ...
 
 ---
@@ -83,7 +86,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | **Command** | **Description** |
 | :- | :- |
 | `#phi help` | Show help |
-| `#phi (bind\|bind)xxx` | Bind sessionToken |
+| `#phi (cn\|gb)?(bind\|bind)xxx` | Bind sessionToken (supports CN/Global, default is CN) |
 | `#phi (unbind\|unbind)` | Remove sessionToken & records |
 | `#phi clean` | Delete all records |
 | `#phi (update\|update)` | Update save data |
@@ -96,18 +99,21 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi (lvsco(re)\|scolv) <rating range> <difficulty>` | Get scores in range |
 | `#phi chap <chapter name\|help>` | Get chapter scores |
 | `#phi list <-dif difficultyRange> <-acc accRange> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | List scores per song in range |
+| `#phi hisb30` | Calculate B30 changes based on history |
 | `#phi best1(+)` | Text-based b30 (up to b99) |
 | `#phi score xxx  [-dif (EZ\|HD\|IN\|AT)] [-or (acc\|score\|fc\|time)] [-unrank]` | Get single score & improvement tips (parameters for score ranking, API required) |
 | `#phi (suggest\|suggest)` | Get songs that can increase Rks by +0.01 |
-| `#phi (ranklist\|ranking)` | Rks leaderboard |
+| `#phi (ranklist\|ranking) [rank]` | Rks leaderboard |
+| `#phi rankfind <rks>` | Find how many users have higher RKS than the queried RKS |
 | `#phi data` | Check user data count |
 | `#phi (guess\|guess)` | Guess song from illustration (reply directly) |
 | `#phi (ltr\|letter)` | Guess song via letters (use #open/#ans) |
 | `#phi (tipgame\|hint)` | Guess song via hints (use #tip/#ans) |
 | `#phi (song\|song) xxx` | Query song info (supports aliases) |
-| `#phi chart <song> <difficulty>` | View chart details |
-| `#phi (addtag\|subtag\|retag) <song> <difficulty> <tag>` | Vote on tags (default IN) |
-| `#phi (comment\|cmt) <song> <difficulty?>(newline)<text>` | Comment on songs |
+| `#phi chart <song> [difficulty=IN]` | View chart details |
+| `#phi tag <song name> [difficulty=IN] <tag>` | View chart tags, available tags shown in response, default difficulty is IN |
+| `#phi settag <song name> [difficulty=IN] <tag>` | Tag a chart, recommended to use /tag to query tag list first, default difficulty is IN |
+| `#phi (comment\|cmt) <song> [difficulty=IN](newline)<text>` | Comment on songs |
 | `#phi mycmt` | View own cloud comments |
 | `#phi recmt <ID>` | Delete comment (owner/admin) |
 | `#phi (table\|ratings) <rating>` | Phigros rating table (by Rhythematics) |
@@ -165,6 +171,25 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | dan | Dan authentication | /dan /danupdate |
 </details>
 
+## API Feature Testing Now Open
+
+API features can be manually enabled/disabled in settings. When enabled, it automatically syncs user usage records and historical scores from Phi-Plugin applications (web, Yunzai, excluding Koishi for now) to the API server. Some features require API to be enabled.
+
+| **Command** | **Description**
+| :- | :-
+| `#phi bind <userId>` | Enable score query API, bind API account
+| `#phi setApiToken <token>` | Set API Token
+| `#phi tokenList` | Get list of currently bound platforms
+| `#phi tokenManage (delete) <platform number> (-f)?` | Delete bound platform, -f to skip confirmation
+| `#phi auth <api Token>` | Get sessionToken via API Token
+| `#phi clearApiData` | Clear API data
+| `#phi updateHistory` | Update historical scores from BOT to API server
+| `#phi updateUserToken` | **Owner command** Upload current BOT user tokens to API server
+
+#### Detailed Permission Explanation:
+
+Binding and retrieving saves only requires a score query ID. When binding with `sessionToken` for the first time, the `API Token` will be set to the `sessionToken`, and if users provide a `sessionToken` during binding, the bot will save it locally.
+
 ---
 
 ### Support Development
@@ -186,6 +211,7 @@ Special thanks to these sponsors (list may not be fully updated):
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/7f56847012a911f0853552540025c377/avatar/752eaae4cf8018a82719ea8f42569eae_w2000_h2000_s2699.png?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="茗亿"/><br /><sub><b>茗亿</b></sub><br/>🌸 30 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/fbcb2b98204611eea8f152540025c377/avatar/d4e7f58683064153bfbedb99ad95c6d8_w855_h875_s117.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="..."/><br /><sub><b>...</b></sub><br/>🌸 50 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/4041ac584eb111f0b57952540025c377/avatar/04de899ed964c6cfe315d27ea56a1fea_w1080_h1080_s69.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="夏夏肃炎"/><br /><sub><b>夏夏肃炎</b></sub><br/>🌸 5 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/7737c9cca1f211ed896a5254001e7c00/avatar/7a320f384ead8f4fca4630efa31c0c3b_w705_h705_s346.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="Bluerosion"/><br /><sub><b>Bluerosion</b></sub><br/>🌸 52.0 🌸</td>
     </tr>
 </table>
 

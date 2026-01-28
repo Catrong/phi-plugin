@@ -1,6 +1,11 @@
 import fCompute from './fCompute.js'
 
 export default class makeRequestFnc {
+    /**
+     * 
+     * @param {import('../components/baseClass.js').botEvent} e 
+     * @returns {import('./makeRequest.js').platformAuth}
+     */
     static makePlatform(e) {
         return {
             platform: fCompute.getAdapterName(e),

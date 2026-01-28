@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" type="text/css" href="../common/common.css" />
+    <link rel="stylesheet" href="./analyzeSaveHistory.css" />
+    <title>phi-plugin - 存档历史分析</title>
+    <style>
+      /* standalone 预览用背景（与 defaultLayout 类似） */
+      body {
+        background: url("../otherimg/phigros.png") center no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .background {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: -1;
+      }
+
+      .background img {
+        height: 100%;
+        min-width: 100%;
+        min-height: 100%;
+        position: absolute;
+        overflow: hidden;
+        transform: scale(1.2);
+        filter: blur(20px) brightness(75%);
+        z-index: -1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="background">
+      <img src="../otherimg/phigros.png" alt="background" />
+    </div>
+
+    <div id="container" class="page">
+      <header class="header">
+        <div class="title">
+          <div class="title-main">存档历史分析</div>
+          <div class="title-sub">
+            展示 analyzeSaveHistory(history) 的统计结果
+          </div>
+        </div>
+
+        <div class="meta">
+          <div class="meta-item" id="generatedAtRow" style="display: none">
+            <span class="meta-k">生成时间</span>
+            <span class="meta-v" data-k="generatedAt">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-k">统计口径</span>
+            <span class="meta-v">按本地日期聚合；更新次数按时间戳去重</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="grid grid-2">
+        <div class="card">
+          <div class="card-h">查分天数</div>
+          <div class="card-v" data-k="totalDays">0</div>
+          <div class="card-s">
+            发生过 score / rks / data / challenge 任一事件的天数
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">更新次数</div>
+          <div class="card-v" data-k="totalUpdates">0</div>
+          <div class="card-s">按所有事件时间戳去重统计</div>
+        </div>
+      </section>
+
+      <section class="grid grid-2">
+        <div class="card">
+          <div class="card-h">打得最多的谱</div>
+          <div class="ranklist" data-list="mostPlayedSongsTop3"></div>
+          <div class="card-s">按曲目 id 统计 score 记录条数</div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">总新纪录 / 总 Note</div>
+          <div class="statgrid">
+            <div class="statcard">
+              <div class="statcard-k">总新纪录</div>
+              <div class="statcard-v strong" data-k="resTotalScoreRecords.count">--</div>
+            </div>
+            <div class="statcard">
+              <div class="statcard-k">Tap</div>
+              <div class="statcard-v" data-k="resTotalScoreRecords.tap">--</div>
+            </div>
+            <div class="statcard">
+              <div class="statcard-k">Drag</div>
+              <div class="statcard-v" data-k="resTotalScoreRecords.drag">--</div>
+            </div>
+            <div class="statcard">
+              <div class="statcard-k">Hold</div>
+              <div class="statcard-v" data-k="resTotalScoreRecords.hold">--</div>
+            </div>
+            <div class="statcard">
+              <div class="statcard-k">Flick</div>
+              <div class="statcard-v" data-k="resTotalScoreRecords.flick">--</div>
+            </div>
+            <div class="statcard">
+              <div class="statcard-k">Combo</div>
+              <div class="statcard-v" data-k="resTotalScoreRecords.combo">--</div>
+            </div>
+            <div class="statcard">
+              <div class="statcard-k">Time</div>
+              <div class="statcard-v" data-k="resTotalScoreRecords.time">--</div>
+            </div>
+          </div>
+          <div class="card-s">按 score 事件累加谱面 note 信息</div>
+        </div>
+      </section>
+
+      <section class="grid grid-2">
+        <div class="card">
+          <div class="card-h">RKS 最大上升</div>
+          <div class="row">
+            <div class="badge up">UP</div>
+            <div class="row-main">
+              <div class="row-k">日期</div>
+              <div class="row-v" data-k="rksMaxUpDay.day">--</div>
+            </div>
+            <div class="row-side">
+              <div class="row-k">增量</div>
+              <div class="row-v strong" data-k="rksMaxUpDay.delta">--</div>
+            </div>
+          </div>
+          <div class="card-s">
+            按天累计增量（变化归到“变化后”的那条记录日期）
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">RKS 最大下降</div>
+          <div class="row">
+            <div class="badge down">DOWN</div>
+            <div class="row-main">
+              <div class="row-k">日期</div>
+              <div class="row-v" data-k="rksMaxDownDay.day">--</div>
+            </div>
+            <div class="row-side">
+              <div class="row-k">增量</div>
+              <div class="row-v strong" data-k="rksMaxDownDay.delta">--</div>
+            </div>
+          </div>
+          <div class="card-s">按天累计减量（为负数）</div>
+        </div>
+      </section>
+
+      <section class="grid grid-3">
+        <div class="card">
+          <div class="card-h">新纪录最多</div>
+          <div class="ranklist" data-list="mostNewRecordsDaysTop3"></div>
+          <div class="card-s">同曲目+难度：score 更高，或同分 acc 更高</div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">Data 最大波动</div>
+          <div class="split">
+            <div class="split-item">
+              <div class="badge up">UP</div>
+              <div class="split-body">
+                <div class="split-line">
+                  <span>日期</span
+                  ><span data-k="dataMaxUpDownDay.up.day">--</span>
+                </div>
+                <div class="split-line">
+                  <span>增量</span
+                  ><span class="strong" data-k="dataMaxUpDownDay.up.deltaBytes"
+                    >--</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="split-item">
+              <div class="badge down">DOWN</div>
+              <div class="split-body">
+                <div class="split-line">
+                  <span>日期</span
+                  ><span data-k="dataMaxUpDownDay.down.day">--</span>
+                </div>
+                <div class="split-line">
+                  <span>增量</span
+                  ><span
+                    class="strong"
+                    data-k="dataMaxUpDownDay.down.deltaBytes"
+                    >--</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-s">按天累计字节变化（KiB/MiB/GiB 自动换算）</div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">推分最晚</div>
+          <div class="ranklist" data-list="latestPushScoreDaysTop3"></div>
+          <div class="card-s">
+            从 score 事件中取每一天的最晚时间，再取全局最大
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <div class="card-h">AP 最多</div>
+          <div class="ranklist mostApDaysTop3" data-list="mostApDaysTop3"></div>
+          <div class="card-s">
+            按“同曲目+难度首次达到 AP”的事件计数（acc≈1 或 acc≈100）
+          </div>
+        </div>
+
+        <!-- <div class="card smallprint">
+        <div class="card-h">字段速查</div>
+        <div class="kv">
+          <div class="kv-item"><span class="kv-k">totalDays</span><span class="kv-v">查分天数</span></div>
+          <div class="kv-item"><span class="kv-k">totalUpdates</span><span class="kv-v">更新次数</span></div>
+          <div class="kv-item"><span class="kv-k">mostPlayedSong</span><span class="kv-v">打得最多的谱</span></div>
+          <div class="kv-item"><span class="kv-k">rksMaxUpDay / rksMaxDownDay</span><span class="kv-v">RKS 最大涨跌</span></div>
+          <div class="kv-item"><span class="kv-k">mostNewRecordsDay</span><span class="kv-v">新纪录最多</span></div>
+          <div class="kv-item"><span class="kv-k">dataMaxUpDownDay</span><span class="kv-v">Data 最大涨跌</span></div>
+          <div class="kv-item"><span class="kv-k">latestPushScoreDay</span><span class="kv-v">推分最晚</span></div>
+          <div class="kv-item"><span class="kv-k">mostApDay</span><span class="kv-v">AP 最多</span></div>
+        </div>
+      </div> -->
+      </section>
+
+      <footer class="footer">
+        <div class="createdbox">
+          <div class="phi-plugin"><p>phi-plugin</p></div>
+          <div class="ver"><p>preview</p></div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      function fmtSigned(n, digits) {
+        const x = Number(n);
+        if (!Number.isFinite(x)) return "--";
+        const sign = x > 0 ? "+" : "";
+        return sign + (digits == null ? String(x) : x.toFixed(digits));
+      }
+
+      function fmtBytes(n) {
+        const x0 = Number(n);
+        if (!Number.isFinite(x0)) return "--";
+        const sign = x0 < 0 ? "-" : "";
+        let x = Math.abs(x0);
+        const units = ["B", "KiB", "MiB", "GiB", "TiB", "PiB"];
+        let u = 0;
+        while (x >= 1024 && u < units.length - 1) {
+          x /= 1024;
+          u++;
+        }
+        const v = u === 0 ? Math.round(x) : Math.round(x * 100) / 100;
+        return sign + v + units[u];
+      }
+
+      function get(obj, path) {
+        return path
+          .split(".")
+          .reduce(
+            (acc, k) => (acc && acc[k] != null ? acc[k] : undefined),
+            obj
+          );
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function renderRankList(el, items, renderMain, renderSide) {
+        if (!el) return;
+        const list = Array.isArray(items) ? items : [];
+        if (!list.length) {
+          el.innerHTML =
+            '<div class="rankitem"><div class="rankno">#1</div><div class="rankmain">--</div><div class="rankside">--</div></div>';
+          return;
+        }
+        el.innerHTML = list
+          .slice(0, 3)
+          .map((it, idx) => {
+            const main = renderMain ? renderMain(it) : "--";
+            const side = renderSide ? renderSide(it) : "--";
+            return (
+              '<div class="rankitem">' +
+              '<div class="rankno">#' +
+              (idx + 1) +
+              "</div>" +
+              '<div class="rankmain">' +
+              escapeHtml(main) +
+              "</div>" +
+              '<div class="rankside">' +
+              escapeHtml(side) +
+              "</div>" +
+              "</div>"
+            );
+          })
+          .join("");
+      }
+
+      function setStats(stats) {
+        if (!stats || typeof stats !== "object") return;
+
+        const generatedAt = get(stats, "generatedAt");
+        if (generatedAt) {
+          document.getElementById("generatedAtRow").style.display = "";
+          document.querySelector('[data-k="generatedAt"]').textContent =
+            String(generatedAt);
+        }
+
+        const mappings = [
+          ["totalDays", (v) => String(v ?? 0)],
+          ["totalUpdates", (v) => String(v ?? 0)],
+          ["rksMaxUpDay.day", (v) => String(v ?? "--")],
+          ["rksMaxUpDay.delta", (v) => (typeof v === "string" ? v : fmtSigned(v, 4))],
+          ["rksMaxDownDay.day", (v) => String(v ?? "--")],
+          ["rksMaxDownDay.delta", (v) => (typeof v === "string" ? v : fmtSigned(v, 4))],
+          ["dataMaxUpDownDay.up.day", (v) => String(v ?? "--")],
+          ["dataMaxUpDownDay.up.deltaBytes", (v) => (typeof v === "string" ? v : fmtBytes(v))],
+          ["dataMaxUpDownDay.down.day", (v) => String(v ?? "--")],
+          ["dataMaxUpDownDay.down.deltaBytes", (v) => (typeof v === "string" ? v : fmtBytes(v))],
+          ["resTotalScoreRecords.count", (v) => String(v ?? "--")],
+          ["resTotalScoreRecords.tap", (v) => String(v ?? "--")],
+          ["resTotalScoreRecords.drag", (v) => String(v ?? "--")],
+          ["resTotalScoreRecords.hold", (v) => String(v ?? "--")],
+          ["resTotalScoreRecords.flick", (v) => String(v ?? "--")],
+          ["resTotalScoreRecords.combo", (v) => String(v ?? "--")],
+          ["resTotalScoreRecords.time", (v) => String(v ?? "--")],
+        ];
+
+        for (const [key, fn] of mappings) {
+          const elList = document.querySelectorAll(`[data-k="${key}"]`);
+          const val = get(stats, key);
+          elList.forEach((el) => (el.textContent = fn(val)));
+        }
+
+        // Top3 lists
+        renderRankList(
+          document.querySelector('[data-list="mostPlayedSongsTop3"]'),
+          stats.mostPlayedSongsTop3,
+          (it) => (it && it.id != null ? String(it.id) : "--"),
+          (it) => (it && it.count != null ? String(it.count) : "--")
+        );
+
+        renderRankList(
+          document.querySelector('[data-list="mostNewRecordsDaysTop3"]'),
+          stats.mostNewRecordsDaysTop3,
+          (it) => (it && it.day != null ? String(it.day) : "--"),
+          (it) => (it && it.count != null ? String(it.count) : "--")
+        );
+
+        renderRankList(
+          document.querySelector('[data-list="latestPushScoreDaysTop3"]'),
+          stats.latestPushScoreDaysTop3,
+          (it) => (it && it.day != null ? String(it.day) : "--"),
+          (it) => (it && it.time != null ? String(it.time) : "--")
+        );
+
+        renderRankList(
+          document.querySelector('[data-list="mostApDaysTop3"]'),
+          stats.mostApDaysTop3,
+          (it) => (it && it.day != null ? String(it.day) : "--"),
+          (it) => (it && it.count != null ? String(it.count) : "--")
+        );
+      }
+
+      // 你可以在外部注入 window.__STATS__，否则用示例数据预览
+      const demo = {
+        generatedAt: new Date().toLocaleString("zh-CN", { hour12: false }),
+        totalDays: 37,
+        totalUpdates: 94,
+        mostPlayedSongsTop3: [
+          { id: "0.0.001", count: 58 },
+          { id: "0.0.014", count: 41 },
+          { id: "0.0.207", count: 36 },
+        ],
+        resTotalScoreRecords: {
+          count: "135",
+          tap: "52340",
+          drag: "1120",
+          hold: "12870",
+          flick: "935",
+          combo: "67265",
+          time: "8421s",
+        },
+        rksMaxUpDay: { day: "2025-12-18", delta: 0.1532 },
+        rksMaxDownDay: { day: "2025-11-03", delta: -0.0721 },
+        mostNewRecordsDaysTop3: [
+          { day: "2025-12-12", count: 11 },
+          { day: "2025-12-06", count: 9 },
+          { day: "2025-11-28", count: 8 },
+        ],
+        dataMaxUpDownDay: {
+          up: { day: "2025-12-01", deltaBytes: 1024 * 1024 * 180 },
+          down: { day: "2025-12-25", deltaBytes: -(1024 * 1024 * 64) },
+        },
+        latestPushScoreDaysTop3: [
+          { day: "2025-12-29", time: "23:58:12" },
+          { day: "2025-12-18", time: "23:47:05" },
+          { day: "2025-11-03", time: "23:40:01" },
+        ],
+        mostApDaysTop3: [
+          { day: "2025-12-20", count: 3 },
+          { day: "2025-12-18", count: 2 },
+          { day: "2025-11-29", count: 2 },
+        ],
+      };
+
+      setStats(window.__STATS__ || demo);
+      window.setStats = setStats;
+    </script>
+  </body>
+</html>

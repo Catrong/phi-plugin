@@ -1,46 +1,80 @@
-import { Level, MAX_DIFFICULTY } from "../constNum.js"
+import { allLevel, LevelNum, MAX_DIFFICULTY } from "../constNum.js"
 import Save from "./Save.js"
 import fCompute from "../fCompute.js";
 import LevelRecordInfo from "./LevelRecordInfo.js";
 
+/**
+ * @template T
+ * @typedef {object} formatedHistoryBaseObject<T>
+ * @property {Date} date - 日期
+ * @property {T} value - 值
+ */
 export default class saveHistory {
 
     /**
      * 
-     * @param {{
-     * data:[{date:Date,value:[number,number,number,number,number]}],
-     * rks:[{date:Date,value:number}],
-     * scoreHistory:{song:{dif:[[number,number,Date,boolean]]}},
-     * dan:Array,
-     * challengeModeRank:[{date:Date,value:number}],
-     * version:number
-     * }
-     * } data 
+     * @param { (saveHistoryObject & {version?: number}) } data 
      */
     constructor(data) {
+
+        const ids = fCompute.objectKeys(data?.scoreHistory || {})
+
+        for (const id of ids) {
+            const record = data?.scoreHistory?.[id];
+            if (!record) continue;
+            for (const level of allLevel) {
+                if (!record[level]) continue;
+                record[level].forEach(item => {
+                    //@ts-ignore
+                    item[2] = new Date(item[2]);
+                })
+            }
+        }
+
         /**
-         * @type {{[song:string]:{[dif:string]:[number,number,Date,boolean][]}}}
-         * @description 歌曲成绩记录
-         * @property {string}  曲目id
-         * @property {string} dif 难度
+         * @type {{[id:idString]: Partial<Record<allLevelKind, ScoreDetail[]>>}}
          * @property {Array<[number, number, Date, boolean]>} [acc, score, date, fc] acc为4位小数，score为整数，date为日期，fc为boolean
          */
+        //@ts-ignore
         this.scoreHistory = data?.scoreHistory || {};
         /**
-         * @type {Array<{date:Date,value:number[5]}>}
+         * @type {formatedHistoryBaseObject<number[]>[]}
          * @description data货币变更记录 
         */
-        this.data = data?.data || [];
+        this.data = [];
+
+        data?.data?.forEach(item => {
+            this.data.push({
+                date: new Date(item.date),
+                value: item.value
+            })
+        })
+
         /**
-         * @type {Array<{date:Date,value:number}>}
+         * @type {formatedHistoryBaseObject<number>[]}
          * @description rks变更记录
          */
-        this.rks = data?.rks || [];
+        this.rks = [];
+
+        data?.rks?.forEach(item => {
+            this.rks.push({
+                date: new Date(item.date),
+                value: item.value
+            })
+        });
+
         /**
-         * @type {Array<{date:Date,value:number}>}
+         * @type {formatedHistoryBaseObject<number>[]}
          * @description 课题模式成绩
          */
-        this.challengeModeRank = data?.challengeModeRank || [];
+        this.challengeModeRank = [];
+
+        data?.challengeModeRank?.forEach(item => {
+            this.challengeModeRank.push({
+                date: new Date(item.date),
+                value: item.value
+            })
+        });
         /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
         /**v1.1,更正scoreHistory */
         /**v2,由于曲名错误，删除所有记录，曲名使用id记录 */
@@ -48,7 +82,6 @@ export default class saveHistory {
         /**历史记录版本号 */
         this.version = data?.version
         /**民间考核 */
-        this.dan = data?.dan || [];
 
         /**检查版本 */
         if (!this.version || this.version < 2) {
@@ -76,24 +109,28 @@ export default class saveHistory {
         this.data = merge(this.data, data.data)
         this.rks = merge(this.rks, data.rks)
         this.challengeModeRank = merge(this.challengeModeRank, data.challengeModeRank)
-        for (let song in data.scoreHistory) {
-            if (!this.scoreHistory[song]) this.scoreHistory[song] = {}
-            for (let dif in data.scoreHistory[song]) {
-                if (this.scoreHistory[song] && this.scoreHistory[song][dif]) {
-                    this.scoreHistory[song][dif] = this.scoreHistory[song][dif].concat(data.scoreHistory[song][dif])
-                    this.scoreHistory[song][dif].sort((a, b) => {
-                        return openHistory(a).date - openHistory(b).date
-                    })
+        const ids = fCompute.objectKeys(data.scoreHistory || {})
+        for (let id of ids) {
+            if (!this.scoreHistory[id]) this.scoreHistory[id] = {}
+            for (let dif of allLevel) {
+                if (this.scoreHistory[id] && this.scoreHistory[id][dif]) {
+                    if (data.scoreHistory[id][dif]) {
+                        this.scoreHistory[id][dif] = [...this.scoreHistory[id][dif], ...data.scoreHistory[id][dif]]
+                        this.scoreHistory[id][dif].sort((a, b) => {
+                            return openHistory(a).date.getTime() - openHistory(b).date.getTime()
+                        })
+                    }
                 } else {
-                    this.scoreHistory[song][dif] = data.scoreHistory[song][dif]
+                    this.scoreHistory[id][dif] = data.scoreHistory[id][dif]
                 }
+                if (!this.scoreHistory[id][dif]) continue
                 let i = 1
-                while (i < this.scoreHistory[song][dif].length) {
-                    let last = openHistory(this.scoreHistory[song][dif][i - 1])
-                    let now = openHistory(this.scoreHistory[song][dif][i])
+                while (i < this.scoreHistory[id][dif].length) {
+                    let last = openHistory(this.scoreHistory[id][dif][i - 1])
+                    let now = openHistory(this.scoreHistory[id][dif][i])
                     if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
                         // console.info(last.date.toISOString(), now.date.toISOString())
-                        this.scoreHistory[song][dif].splice(i, 1)
+                        this.scoreHistory[id][dif].splice(i, 1)
                     } else {
                         ++i
                     }
@@ -108,12 +145,16 @@ export default class saveHistory {
      */
     update(save) {
         /**更新单曲成绩 */
-        for (let id in save.gameRecord) {
+        const ids = fCompute.objectKeys(save.gameRecord || {})
+        for (let id of ids) {
             if (!this.scoreHistory[id]) this.scoreHistory[id] = {}
             for (let i in save.gameRecord[id]) {
                 /**难度映射 */
-                let level = Level[i]
-                /**提取成绩 */
+                let level = allLevel[i]
+                /**
+                 * 提取成绩
+                 * @type {LevelRecordInfo & {date?: Date} | null}
+                 */
                 let now = save.gameRecord[id][i]
                 if (!now) continue
                 now.date = save.saveInfo.modifiedAt.iso
@@ -138,7 +179,7 @@ export default class saveHistory {
                     /**找到第一个日期小于新成绩的日期 */
                     if (old.date < new Date(now.date)) {
                         /**历史记录acc仅保存4位，检查是否与第一个小于该日期的记录一致 */
-                        if (old.acc != Number(now.acc).toFixed(4) || old.score != now.score || old.fc != now.fc) {
+                        if (old.acc != Number(now.acc.toFixed(4)) || old.score != now.score || old.fc != now.fc) {
                             /**不一致在第i项插入 */
                             this.scoreHistory[id][level].splice(i, 0, createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc))
                         }
@@ -225,30 +266,39 @@ export default class saveHistory {
 
     /**
      * 获取歌曲最新的历史记录
-     * @param {string} id 曲目id
+     * @param {idString} id 曲目id
      * @returns 
      */
     async getSongsLastRecord(id) {
         let t = { ...this.scoreHistory[id] }
-        for (let level in t) {
-            t[level] = t[level] ? openHistory(t[level].at(-1)) : null
-            let date = t[level].date
-            t[level] = new LevelRecordInfo(t[level], id, level)
-            t[level].date = date
+        /**
+         * @type {Partial<Record<allLevelKind, LevelRecordInfo & {date?: Date}>>}
+         */
+        const result = {}
+        for (let level of allLevel) {
+            if (!t[level]) continue
+            const lastRecord = t[level] ? openHistory(t[level][t[level].length - 1]) : null
+            if (!lastRecord) continue
+            let date = lastRecord?.date
+            result[level] = new LevelRecordInfo(lastRecord, id, LevelNum[level])
+            result[level].date = date
         }
-        return t
+        return result
     }
 
-
     /**
-     * 折线图数据
-     * @returns {Object} 
+     * @typedef {Object} rksAndDataLineObject
      * @property {Array<Array<number>>} rks_history - RKS历史折线数据点集合
      * @property {number[]} rks_range - RKS值域范围 [min, max]
      * @property {number[]} rks_date - RKS时间戳范围 [最早, 最晚]
      * @property {number[][]} data_history - 数据历史折线数据点集合
      * @property {(number | string)[]} data_range - 数据值域范围，可能为数值数组 [min, max] 或格式化字符串数组，如 ['1MiB', '4GiB']
      * @property {number[]} data_date - 数据时间戳范围 [最早, 最晚]
+     */
+
+    /**
+     * 折线图数据
+     * @returns {rksAndDataLineObject}
      */
     getRksAndDataLine() {
         let rks = this.getRksLine()
@@ -257,38 +307,40 @@ export default class saveHistory {
     }
 
     getRksLine() {
-        
+
+        /**@type {formatedHistoryBaseObject<number>[]} */
         let rks_history_ = []
         let user_rks_data = this.rks
         let rks_range = [MAX_DIFFICULTY, 0]
-        let rks_date = [];
+        /** @type {[dateBegin: number, dateAfter: number]} */
+        let rks_date = [0, 0];
         let rks_history = []
 
         if (user_rks_data.length) {
             rks_date = [new Date(user_rks_data[0].date).getTime(), 0]
-            for (let i in user_rks_data) {
-                user_rks_data[i].date = new Date(user_rks_data[i].date)
-                if (i <= 1 || user_rks_data[i].value != rks_history_[rks_history_.length - 2].value) {
-                    rks_history_.push(user_rks_data[i])
-                    rks_range[0] = Math.min(rks_range[0], user_rks_data[i].value)
-                    rks_range[1] = Math.max(rks_range[1], user_rks_data[i].value)
+            user_rks_data.forEach((item, i) => {
+                item.date = new Date(item.date)
+                if (i <= 1 || item.value != rks_history_[rks_history_.length - 2].value) {
+                    rks_history_.push(item)
+                    rks_range[0] = Math.min(rks_range[0], item.value)
+                    rks_range[1] = Math.max(rks_range[1], item.value)
                 } else {
-                    rks_history_[rks_history_.length - 1].date = user_rks_data[i].date
+                    rks_history_[rks_history_.length - 1].date = item.date
                 }
-                rks_date[1] = user_rks_data[i].date.getTime()
-            }
+                rks_date[1] = item.date.getTime()
+            })
 
-            for (let i in rks_history_) {
+            rks_history_.forEach((item, i) => {
 
                 i = Number(i)
 
-                if (!rks_history_[i + 1]) break
-                let x1 = fCompute.range(rks_history_[i].date, rks_date)
-                let y1 = fCompute.range(rks_history_[i].value, rks_range)
-                let x2 = fCompute.range(rks_history_[i + 1].date, rks_date)
+                if (!rks_history_[i + 1]) return
+                let x1 = fCompute.range(item.date.getTime(), rks_date)
+                let y1 = fCompute.range(item.value, rks_range)
+                let x2 = fCompute.range(rks_history_[i + 1].date.getTime(), rks_date)
                 let y2 = fCompute.range(rks_history_[i + 1].value, rks_range)
                 rks_history.push([x1, y1, x2, y2])
-            }
+            });
             if (!rks_history.length) {
                 rks_history.push([0, 50, 100, 50])
             }
@@ -303,59 +355,75 @@ export default class saveHistory {
     }
 
     getDataLine() {
+
+        /**@type {formatedHistoryBaseObject<number>[]} */
         let data_history_ = []
         let user_data_data = this.data
-        let data_range = [1e9, 0]
+        const data_range_num = [1e16, 0]
+        const data_range = ['', '']
+        /** @type {[dateBegin: number, dateAfter: number] | []} */
         let data_date = []
+        /** @type {[x1: number, y1: number, x2: number, y2: number][]} */
         let data_history = []
 
         if (user_data_data.length) {
             data_date = [new Date(user_data_data[0].date).getTime(), 0]
-            for (let i in user_data_data) {
-                let value = user_data_data[i]['value']
-                user_data_data[i].value = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
-                user_data_data[i].date = new Date(user_data_data[i].date)
-                if (i <= 1 || user_data_data[i].value != data_history_[data_history_.length - 2].value) {
-                    data_history_.push(user_data_data[i])
-                    data_range[0] = Math.min(data_range[0], user_data_data[i].value)
-                    data_range[1] = Math.max(data_range[1], user_data_data[i].value)
-                } else {
-                    data_history_[data_history_.length - 1].date = user_data_data[i].date
+            user_data_data.forEach((item, i) => {
+                const value = item.value
+                const totValue = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
+                item.date = new Date(item.date)
+                const temObj = {
+                    date: item.date,
+                    value: totValue
                 }
-                data_date[1] = user_data_data[i].date.getTime()
-            }
+                if (i <= 1 || temObj.value != data_history_[data_history_.length - 2].value) {
+                    data_history_.push(temObj)
+                    data_range_num[0] = Math.min(data_range_num[0], totValue)
+                    data_range_num[1] = Math.max(data_range_num[1], totValue)
+                } else {
+                    data_history_[data_history_.length - 1].date = item.date
+                }
+                data_date[1] = item.date.getTime()
+            })
 
-            for (let i in data_history_) {
+            data_history_.forEach((item, i) => {
 
                 i = Number(i)
 
-                if (!data_history_[i + 1]) break
-                let x1 = fCompute.range(data_history_[i].date, data_date)
-                let y1 = fCompute.range(data_history_[i].value, data_range)
-                let x2 = fCompute.range(data_history_[i + 1].date, data_date)
-                let y2 = fCompute.range(data_history_[i + 1].value, data_range)
+                if (!data_history_[i + 1]) return
+                let x1 = fCompute.range(item.date.getTime(), data_date)
+                let y1 = fCompute.range(item.value, data_range_num)
+                let x2 = fCompute.range(data_history_[i + 1].date.getTime(), data_date)
+                let y2 = fCompute.range(data_history_[i + 1].value, data_range_num)
                 data_history.push([x1, y1, x2, y2])
+            })
+            if (!data_history.length) {
+                data_history.push([0, 50, 100, 50])
             }
 
 
             let unit = ["KiB", "MiB", "GiB", "TiB", "Pib"]
 
-            for (let i in [1, 2, 3, 4]) {
-                if (Math.floor(data_range[0] / (Math.pow(1024, i))) < 1024) {
-                    data_range[0] = `${Math.floor(data_range[0] / (Math.pow(1024, i)))}${unit[i]}`
+
+
+            for (const i of [4, 3, 2, 1, 0]) {
+                if (data_range_num[0] / (Math.pow(1024, i)) < 1024) {
+                    data_range[0] = `${Math.floor(data_range_num[0] / (Math.pow(1024, i)))}${unit[i]}`
+                    break;
                 }
             }
 
-            for (let i in [1, 2, 3, 4]) {
-                if (Math.floor(data_range[1] / (Math.pow(1024, i))) < 1024) {
-                    data_range[1] = `${Math.floor(data_range[1] / (Math.pow(1024, i)))}${unit[i]}`
+            for (const i of [4, 3, 2, 1, 0]) {
+                if (data_range_num[1] / (Math.pow(1024, i)) < 1024) {
+                    data_range[1] = `${Math.floor(data_range_num[1] / (Math.pow(1024, i)))}${unit[i]}`
+                    break;
                 }
             }
         }
-        
+
         return {
             data_history,
-            data_range,
+            data_range: data_range_num,
             data_date
         }
     }
@@ -364,13 +432,13 @@ export default class saveHistory {
 
 /**
  * 数组合并按照 date 排序并去重
- * @param {Array} m 
- * @param {Array} n 
+ * @param {formatedHistoryBaseObject<any>[]} m 
+ * @param {formatedHistoryBaseObject<any>[]} n 
  */
 function merge(m, n) {
     let t = m.concat(n)
     t.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date)
+        return new Date(a.date).getTime() - new Date(b.date).getTime()
     })
     let i = 1
     while (i < t.length - 1) {
@@ -383,14 +451,23 @@ function merge(m, n) {
     }
     return t
 }
+
+/**
+ * 
+ * @param {number} acc 
+ * @param {number} score 
+ * @param {Date} date 
+ * @param {boolean} fc 
+ * @returns {ScoreDetail}
+ */
 function createHistory(acc, score, date, fc) {
-    return [acc.toFixed(4), score, date, fc]
+    return [acc.toFixed(4), score, date.toISOString(), fc]
 }
 
 
 /**
  * 展开信息
- * @param {Array} data 历史成绩
+ * @param {ScoreDetail} data 历史成绩
  */
 function openHistory(data) {
     return {

@@ -250,5 +250,22 @@
                 "charter": "Journey's End"
             }
         }
+    },
+    "Introduction" : {
+        "song": "Introduction",
+        "chapter": "SP",
+        "spinfo": "新手教程",
+        "bpm": "138",
+        "composer": "姜米條&ElousΛ.-FZ",
+        "length": "2:30",
+        "illustrator": "L-sp4",
+        "chart": {
+            "EZ": {
+                "level": "1",
+                "difficulty": "1",
+                "combo": "288",
+                "charter": "Catcats"
+            }
+        }
     }
 }

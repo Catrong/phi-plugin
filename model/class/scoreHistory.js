@@ -1,7 +1,23 @@
 import fCompute from "../fCompute.js"
 import getInfo from "../getInfo.js"
 
-export default new class scoreHistory {
+
+/**
+ * @typedef {object} extendedScoreHistoryDetail
+ * @property {idString|object} song 曲目id或曲目对象
+ * @property {allLevelKind} rank 难度
+ * @property {string} illustration 插画链接
+ * @property {string} Rating 该成绩的Rating
+ * @property {number} [rks_new] 新成绩的RKS
+ * @property {number} [rks_old] 旧成绩的RKS
+ * @property {number} acc_new 新成绩的准确率
+ * @property {number} [acc_old] 旧成绩的准确率
+ * @property {number} score_new 新成绩的分数
+ * @property {number} [score_old] 旧成绩的分数
+ * @property {Date} date_new 新成绩的日期
+ * @property {Date} [date_old] 旧成绩的日期
+ */
+export default class ScoreHistory {
 
     /**
      * 生成成绩记录数组
@@ -11,37 +27,34 @@ export default new class scoreHistory {
      * @param {boolean} fc 
      * @returns []
      */
-    create(acc, score, date, fc) {
+    static create(acc, score, date, fc) {
         return [acc.toFixed(4), score, date, fc]
     }
 
     /**
      * 扩充信息
-     * @param {string} songsid 曲目id
-     * @param {EZ|HD|IN|AT|LEGACY} level 难度
-     * @param {Array} now 
-     * @param {Array} old 
-     * @returns {Object}
+     * @param {idString} songId 曲目id
+     * @param {allLevelKind} level 难度
+     * @param {ScoreDetail} now 
+     * @param {ScoreDetail} [old=undefined]
+     * @returns {extendedScoreHistoryDetail} 扩展后的成绩信息
      */
-    extend(songsid, level, now, old) {
-        let song = getInfo.idgetsong(songsid) || songsid
-        now[0] = Number(now[0])
-        now[1] = Number(now[1])
-        if (old) {
-            old[0] = Number(old[0])
-            old[1] = Number(old[1])
-        }
-        if (getInfo.info(song, true)?.chart[level]?.difficulty) {
+    static extend(songId, level, now, old = undefined) {
+        let song = getInfo.idgetsong(songId) || songId
+        let nowAcc = Number(now[0])
+        let oldAcc = old ? Number(old[0]) : undefined
+        const info = getInfo.info(songId, true)
+        if (info?.chart[level]?.difficulty) {
             /**有难度信息 */
             return {
                 song: song,
                 rank: level,
-                illustration: getInfo.getill(song),
-                Rating: Rating(now[1], now[3]),
-                rks_new: fCompute.rks(now[0], getInfo.info(song, true).chart[level].difficulty),
-                rks_old: old ? fCompute.rks(old[0], getInfo.info(song, true).chart[level].difficulty) : undefined,
-                acc_new: now[0],
-                acc_old: old ? old[0] : undefined,
+                illustration: getInfo.getill(songId),
+                Rating: fCompute.rate(now[1], now[3]),
+                rks_new: fCompute.rks(nowAcc, info.chart[level].difficulty),
+                rks_old: oldAcc ? fCompute.rks(oldAcc, info.chart[level].difficulty) : undefined,
+                acc_new: nowAcc,
+                acc_old: old ? oldAcc : undefined,
                 score_new: now[1],
                 score_old: old ? old[1] : undefined,
                 date_new: new Date(now[2]),
@@ -52,10 +65,10 @@ export default new class scoreHistory {
             return {
                 song: song,
                 rank: level,
-                illustration: getInfo.getill(song),
-                Rating: Rating(now[1], now[3]),
-                acc_new: now[0],
-                acc_old: old ? old[0] : undefined,
+                illustration: getInfo.getill(songId),
+                Rating: fCompute.rate(now[1], now[3]),
+                acc_new: nowAcc,
+                acc_old: old ? oldAcc : undefined,
                 score_new: now[1],
                 score_old: old ? old[1] : undefined,
                 date_new: new Date(now[2]),
@@ -66,43 +79,23 @@ export default new class scoreHistory {
 
     /**
      * 展开信息
-     * @param {Array} data 历史成绩
+     * @param {ScoreDetail} data 历史成绩
      */
-    open(data) {
+    static open(data) {
         return {
-            acc: data[0],
+            acc: Number(data[0]),
             score: data[1],
             date: new Date(data[2]),
-            fc: data[3]
+            fc: Boolean(data[3])
         }
     }
 
     /**
      * 获取该成绩记录的日期
-     * @param {Array} data 成绩记录
+     * @param {ScoreDetail} data 成绩记录
      * @returns {Date} 该成绩的日期
      */
-    date(data) {
+    static date(data) {
         return new Date(data[2])
     }
-}
-
-
-function Rating(score, fc) {
-    if (score >= 1000000)
-        return 'phi'
-    else if (fc)
-        return 'FC'
-    else if (score < 700000)
-        return 'F'
-    else if (score < 820000)
-        return 'C'
-    else if (score < 880000)
-        return 'B'
-    else if (score < 920000)
-        return 'A'
-    else if (score < 960000)
-        return 'S'
-    else
-        return 'V'
 }

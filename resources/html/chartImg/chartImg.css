@@ -214,10 +214,11 @@ body {
 
 .info-box {
     width: 20%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 .basic-box {
@@ -304,9 +305,10 @@ body {
     height: calc(100% - 10px);
     background-color: var(--box-background-color);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 5px;
     align-items: flex-start;
+    justify-content: space-evenly;
 }
 
 .content-item > * {
@@ -315,13 +317,13 @@ body {
 
 .content-title p {
     font-family: "Aldrich", "PHI";
-    font-size: 26px;
+    font-size: 60px;
     color: var(--content-title-color);
     text-shadow: 1px 1px 5px var(--text-color-dark);
 }
 
 .content p {
-    font-size: 25px;
+    font-size: 50px;
     color: var(--text-color-light);
     text-shadow: 1px 1px 1px var(--text-color-dark);
     margin: 0px 0px 0px 2rem;
@@ -336,17 +338,16 @@ body {
 }
 
 .notes-bar {
-    position: absolute;
-    width: 90%;
-    left: 5%;
-    bottom: 20px;
+    position: relative;
+    width: 35%;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .bar-box {
     width: 100%;
-    height: 100px;
+    height: 90%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -368,9 +369,6 @@ body {
 
 .notes-box {
     display: flex;
-    position: absolute;
-    left: 25%;
-    top: 20px;
     flex-direction: column;
 }
 
@@ -393,12 +391,12 @@ body {
 }
 
 .notes-content p:nth-child(1) {
-    font-size: 30px;
+    font-size: 60px;
 }
 
 .notes-content p:nth-child(2) {
-    font-size: 20px;
-    margin-top: -10px;
+    font-size: 40px;
+    margin-top: -35px;
 }
 
 .tap-p p {
@@ -418,28 +416,24 @@ body {
 }
 
 .words-box {
-    position: absolute;
+    position: relative;
     display: flex;
-    width: 70%;
-    height: 60%;
-    right: 5%;
-    top: 20px;
+    width: 18%;
+    height: 100%;
     flex-direction: column;
 }
 
-.box-tip {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
+.box-tip {position: absolute;right: 0;}
 
 .box-tip p {
     color: var(--text-color-light);
-    font-size: 20px;
+    font-size: 50px;
     text-shadow: 1px 1px 1px var(--text-color-dark);
 }
 
 .words {
-    width: 100%;
+    width: 80%;
     height: 100%;
+    position: absolute;
+    right: 0;
 }

@@ -1,5 +1,4 @@
-import plugin from '../../../lib/plugins/plugin.js'
-import get from '../model/getdata.js'
+// import get from '../model/getdata.js'
 import common from "../../../lib/common/common.js"
 import Config from '../components/Config.js'
 import send from '../model/send.js'
@@ -8,7 +7,7 @@ import getPic from '../model/getPic.js'
 import picmodle from '../model/picmodle.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
-import { LevelNum } from '../model/constNum.js'
+import { allLevel, Level, LevelNum } from '../model/constNum.js'
 import { segment } from 'oicq'
 import getComment from '../model/getComment.js'
 import getSave from '../model/getSave.js'
@@ -16,14 +15,24 @@ import getChartTag from '../model/getChartTag.js'
 import Version from '../components/Version.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
+import phiPluginBase from '../components/baseClass.js'
+import logger from '../components/Logger.js'
+import SongsInfo from '../model/class/SongsInfo.js'
+import Chart from "../model/class/Chart.js"
+import getNotes from "../model/getNotes.js"
 
-const Level = ['EZ', 'HD', 'IN', 'AT'] //难度映射
+/**@import {botEvent} from '../components/baseClass.js' */
+
+/**
+ * @type {{ [x: string]: string | number; }}
+ */
 let wait_to_del_list
+/**
+ * @type {string | number}
+ */
 let wait_to_del_nick
-/** @type {{[key:string]: {page: number, addComment: boolean, songs: songString[]}}} */
-const wait_to_chose_song = {}
 
-export class phisong extends plugin {
+export class phisong extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-图鉴',
@@ -43,10 +52,10 @@ export class phisong extends plugin {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(设置别名|setnic(k?)).*$`,
                     fnc: 'setnick'
                 },
-                {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(删除别名|delnic(k?)).*$`,
-                    fnc: 'delnick'
-                },
+                // {
+                //     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(删除别名|delnic(k?)).*$`,
+                //     fnc: 'delnick'
+                // },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(曲绘|ill|Ill).*$`,
                     fnc: 'ill'
@@ -109,7 +118,10 @@ export class phisong extends plugin {
     }
 
 
-    /**歌曲图鉴 */
+    /**
+     * 歌曲图鉴
+     * @param {botEvent} e
+     */
     async song(e) {
 
         if (await getBanGroup.get(e, 'song')) {
@@ -120,44 +132,32 @@ export class phisong extends plugin {
         let msg = e.msg.replace(/[#/](.*?)(曲|song)(\s*)/, "")
         let addComment = msg.match(/\s+-comment/)?.[0] ? true : false;
         if (addComment) msg = msg.replace(/\s+-comment/, "")
-        let page = msg.match(/\s+-p\s+([0-9]+)/)?.[1];
+        let page = msg.match(/\s+-p\s+([0-9]+)/)?.[1] ? Number(msg.match(/\s+-p\s+([0-9]+)/)?.[1]) : 0;
         msg = msg.replace(/\s+-p\s+([0-9]+)/, "")
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} song <曲名>`)
             return true
         }
-        let songs = get.fuzzysongsnick(msg)
-        if (songs[0]) {
-            if (!songs[1]) {
-                e.reply(await songInfo(page, addComment, songs[0], e))
+        let ids = getInfo.fuzzysongsnick(msg)
+        if (ids[0]) {
+            if (!ids[1]) {
+                send.send_with_At(e, await songInfo(page, addComment, ids[0], e))
             } else {
-                send.send_with_At(e, fCompute.mutiNick(songs))
-                wait_to_chose_song[e.user_id] = { page, addComment, songs }
-                this.setContext('mutiNick', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'))
+                this.choseMutiNick(e, ids, { page, addComment }, async (e, id, options) => {
+                    send.send_with_At(e, await songInfo(options.page, options.addComment, id, e));
+                })
             }
         } else {
-            e.reply(`未找到${msg}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`)
         }
         return true
     }
 
-    async mutiNick() {
-        const { msg } = this.e;
-        const num = Number(msg.match(/([0-9]+)/)?.[0]);
-        const { page, addComment, songs } = wait_to_chose_song[this.e.user_id] || {};
-        if (!num) {
-            send.send_with_At(this.e, `请输入正确的序号哦！`);
-        } else if (!songs[num - 1]) {
-            send.send_with_At(this.e, `未找到${num}所对应的曲目哦！`);
-        } else {
-            const song = songs[num - 1];
-            this.e.reply(await songInfo(page, addComment, song, this.e));
-        }
-        delete wait_to_chose_song[this.e.user_id];
-        this.finish('mutiNick', false)
-        return true;
-    }
-
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async search(e) {
 
         if (await getBanGroup.get(e, 'search')) {
@@ -167,6 +167,9 @@ export class phisong extends plugin {
 
         let msg = e.msg.replace(/[#/](.*?)(查找|检索|search)(\s*)/g, "").toLowerCase()
 
+        /**
+         * @type {Record<string, {regex: RegExp, predicate: (item: any, bottom: number, top: number) => boolean}>}
+         */
         const patterns = {
             'bpm': {
                 'regex': /bpm([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
@@ -182,26 +185,31 @@ export class phisong extends plugin {
             }
         }
 
-        let remain = get.info()
+        /**@type {Partial<Record<idString, SongsInfo>>} */
+        let remain = getInfo.all_info()
+        /**@type {Partial<Record<idString, SongsInfo>>} */
         let result = {}
+        /**
+         * @type {{ [x: string]: [number, number]; }} filters
+         */
         let filters = {}
 
         for (let key in patterns) {
             let { regex, predicate } = patterns[key]
             let match = msg.match(regex)
             if (match) {
-                match = match[0].replace(/((bpm|difficulty|dif|难度|定级|定数|combo|cmb|物量|连击)([\s:：,，/|~是为]*))(\d)/g, '$1 $4')
-                match = match.replace(/((bpm|difficulty|dif|难度|定级|定数|combo|cmb|物量|连击)([\s:：,，/|~是为]*))|\s/g, '')
-                let [bottom, top] = match.includes('-') ? match.split('-').sort((a, b) => a - b) : [match, match]
-                bottom = Number(bottom)
-                top = Number(top)
-                if (key === 'difficulty' && !match.includes('.0') && top % 1 === 0) {
-                    top += 0.9
+                let matchStr = match[0].replace(/((bpm|difficulty|dif|难度|定级|定数|combo|cmb|物量|连击)([\s:：,，/|~是为]*))(\d)/g, '$1 $4')
+                matchStr = matchStr.replace(/((bpm|difficulty|dif|难度|定级|定数|combo|cmb|物量|连击)([\s:：,，/|~是为]*))|\s/g, '')
+                let [bottom, top] = matchStr.includes('-') ? matchStr.split('-').sort((a, b) => Number(a) - Number(b)) : [matchStr, matchStr]
+                let bottomNum = Number(bottom)
+                let topNum = Number(top)
+                if (key === 'difficulty' && !matchStr.includes('.0') && topNum % 1 === 0) {
+                    topNum += 0.9
                 }
-                filters[key] = [bottom, top]
-                for (let i in remain) {
-                    if (predicate(remain[i], bottom, top)) {
-                        result[i] = remain[i]
+                filters[key] = [bottomNum, topNum]
+                for (let id of fCompute.objectKeys(remain)) {
+                    if (predicate(remain[id], bottomNum, topNum)) {
+                        result[id] = remain[id]
                     }
                 }
                 remain = result
@@ -214,16 +222,17 @@ export class phisong extends plugin {
             let tot = 0
             let count = 1
             let single = `当前筛选：${filters.bpm ? `BPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? ` 物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`
-            for (let i in remain) {
-                let song = remain[i]
+            for (let id of fCompute.objectKeys(remain)) {
+                let songInfo = remain[id]
+                if (!songInfo) continue;
                 let msg
                 if (count) {
-                    msg = `\n${i} BPM:${song.bpm}`
+                    msg = `\n${id} BPM:${songInfo.bpm}`
                 } else {
-                    msg = `${i} BPM:${song.bpm}`
+                    msg = `${id} BPM:${songInfo.bpm}`
                 }
-                for (let level in song.chart) {
-                    msg += `<${level}> ${song['chart'][level]['difficulty']} ${song['chart'][level]['combo']}`
+                for (let level of fCompute.objectKeys(songInfo.chart)) {
+                    msg += `<${level}> ${songInfo.chart[level]?.difficulty} ${songInfo.chart[level]?.combo}`
                 }
                 single += msg
                 ++tot
@@ -241,18 +250,19 @@ export class phisong extends plugin {
             }
             if (e.isGroup) {
                 send.send_with_At(e, `找到了${tot}个结果，自动转为私聊发送喵～`, true)
-                send.pick_send(e, await common.makeForwardMsg(e, Resmsg))
+                send.pick_send(e, await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
 
             } else {
-                e.reply(await common.makeForwardMsg(e, Resmsg))
+                e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
             }
         } else {
             let Resmsg = [`当前筛选：${filters.bpm ? `\nBPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `\n定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? `\n物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`]
-            for (let i in remain) {
-                let song = remain[i]
-                let msg = `${i}\nBPM:${song.bpm}`
-                for (let level in song.chart) {
-                    msg += `\n${level} ${song['chart'][level]['difficulty']} ${song['chart'][level]['combo']}`
+            for (let id of fCompute.objectKeys(remain)) {
+                let songInfo = remain[id]
+                if (!songInfo) continue;
+                let msg = `${id}\nBPM:${songInfo.bpm}`
+                for (let level of fCompute.objectKeys(songInfo.chart)) {
+                    msg += `\n${level} ${songInfo.chart[level]?.difficulty} ${songInfo.chart[level]?.combo}`
                 }
                 Resmsg.push(msg)
             }
@@ -262,33 +272,39 @@ export class phisong extends plugin {
     }
 
 
-    /**设置别名 */
+    /**
+     * 设置别名
+     * @param {botEvent} e
+     */
     async setnick(e) {
         if (!(e.is_admin || e.isMaster)) {
             e.reply("只有管理员可以设置别名哦！")
             return true
         }
         let msg = e.msg.replace(/[#/](.*?)(设置别名|setnic(k?))(\s*)/g, "")
+        /**@type {string[]} */
+        let parts = []
         if (msg.includes("--->")) {
             msg = msg.replace(/(\s*)--->(\s*)/g, " ---> ")
-            msg = msg.split(" ---> ")
+            parts = msg.split(" ---> ")
         } else if (msg.includes("\n")) {
-            msg = msg.split("\n")
+            parts = msg.split("\n")
         }
-        if (msg[1]) {
-            let mic = get.fuzzysongsnick(msg[0], 1)
-            if (mic[0]) {
-                mic = mic[0]
+        if (parts[1]) {
+            let P0Ids = getInfo.fuzzysongsnick(parts[0], 1)
+            let P0Id = ''
+            if (P0Ids[0]) {
+                P0Id = P0Ids[0]
             } else {
                 e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
                 return true
             }
-            if (mic in get.fuzzysongsnick(msg[1], 1)) {
+            if (P0Id in getInfo.fuzzysongsnick(parts[1], 1)) {
                 /**已经添加过该别名 */
-                e.reply(`${mic} 已经有 ${msg[1]} 这个别名了哦！`)
+                e.reply(`${P0Id} 已经有 ${parts[1]} 这个别名了哦！`)
                 return true
             } else {
-                get.setnick(`${mic}`, `${msg[1]}`)
+                getInfo.setnick(P0Id, parts[1])
                 e.reply("设置完成！")
             }
         } else {
@@ -297,49 +313,10 @@ export class phisong extends plugin {
         return true
     }
 
-    async delnick() {
-        if (!(this.e.is_admin || this.e.isMaster)) {
-            this.e.reply("只有管理员可以删除别名哦！")
-            return true
-        }
-        let msg = this.e.msg.replace(/[#/](.*?)(删除别名|delnic(k?))(\s*)/g, '')
-        let ans = Config.getConfig('nickconfig', msg)
-        ans = ans[msg]
-        if (ans) {
-            if (ans.length == 1) {
-                Config.modifyarr('nickconfig', msg, ans[0], 'del', 'config')
-                await this.reply("删除成功！")
-            } else {
-                wait_to_del_list = ans
-                wait_to_del_nick = msg
-                let Remsg = []
-                Remsg.push("找到了多个别名！请发送 /序号 进行选择！")
-                for (let i in ans) {
-                    Remsg.push(`#${i}\n${ans[i]}`)
-                }
-                this.reply(common.makeForwardMsg(this.e, Remsg, "找到了多个结果！"))
-                this.setContext('choosesdelnick', true, 30)
-
-            }
-        } else {
-            await this.reply(`未找到 ${msg} 所对应的别名哦！`)
-        }
-        return true
-    }
-
-    choosesdelnick() {
-        let msg = this.e.msg.match(/\/\s*[0-9]+/g, '')[0]
-        msg = Number(msg.replace('/', ''))
-        if (wait_to_del_list[msg]) {
-            Config.modifyarr('nickconfig', wait_to_del_nick, wait_to_del_list[msg], 'del', 'config')
-            this.reply("删除成功！")
-        } else {
-            this.reply(`未找到 ${msg} 所对应的别名哦！`)
-        }
-        this.finish('choosesdelnick', true)
-        return true
-    }
-
+    /**
+     * 获取曲绘
+     * @param {botEvent} e
+     */
     async ill(e) {
 
         if (await getBanGroup.get(e, 'ill')) {
@@ -352,30 +329,29 @@ export class phisong extends plugin {
             send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ill <曲名>`)
             return true
         }
-        let songs = get.fuzzysongsnick(msg)
-        if (songs[0]) {
+        let ids = getInfo.fuzzysongsnick(msg)
+        if (ids[0]) {
             let msgRes
 
-            if (!songs[1]) {
-                songs = songs[0]
-                msgRes = await get.GetSongsIllAtlas(e, songs)
-                e.reply(msgRes)
+            if (!ids[1]) {
+                send.send_with_At(e, await getPic.GetSongsIllAtlas(e, ids[0]))
             } else {
-                msgRes = []
-                for (let i in songs) {
-                    msgRes.push(await get.GetSongsIllAtlas(e, songs[i]))
-                }
-                e.reply(await common.makeForwardMsg(e, msgRes, `找到了${songs.length}首歌曲！`))
+                this.choseMutiNick(e, ids, {}, async (e, id) => {
+                    send.send_with_At(e, await getPic.GetSongsIllAtlas(e, id));
+                })
             }
         } else {
-            e.reply(`未找到${msg}的相关曲目信息QAQ`, true)
+            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ`)
             return false
         }
         return true
 
     }
 
-    /**随机定级范围内曲目 */
+    /**
+     * 随机定级范围内曲目
+     * @param {botEvent} e
+     */
     async randmic(e) {
 
         if (await getBanGroup.get(e, 'randmic')) {
@@ -406,35 +382,34 @@ export class phisong extends plugin {
                     send.send_with_At(e, `含有 '+' 的难度不支持指定范围哦！\n/${Config.getUserCfg('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`, true)
                     return true
                 } else {
-                    rank[0] = Number(rank[0].replace('+', ''))
-                    bottom = rank[0]
+                    bottom = Number(rank[0].replace('+', ''))
                     top = 100
                 }
             } else if (rank[0].includes('-') && !rank[1]) {
-                rank[0] = Number(rank[0].replace('-', ''))
-                if (rank[0] == NaN) {
+                const tb = Number(rank[0].replace('-', ''))
+                if (isNaN(tb)) {
                     send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getUserCfg('config', 'cmdhead')} rand <定数>- <难度(可多选)>`, true)
                     return true
                 } else {
                     bottom = 0
-                    top = rank[0]
+                    top = tb
                 }
             } else {
-                rank[0] = Number(rank[0])
+                const tb = Number(rank[0])
                 if (rank[1]) {
-                    rank[1] = Number(rank[1])
-                    if (Number(rank[0]) == NaN || Number(rank[1]) == NaN) {
+                    const tt = Number(rank[1])
+                    if (isNaN(tb) || isNaN(tt)) {
                         send.send_with_At(e, `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getUserCfg('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`, true)
                         return true
                     }
-                    top = Math.max(rank[0], rank[1])
-                    bottom = Math.min(rank[0], rank[1])
+                    top = Math.max(tb, tt)
+                    bottom = Math.min(tb, tt)
                 } else {
-                    if (rank[0] == NaN) {
+                    if (isNaN(tb)) {
                         send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getUserCfg('config', 'cmdhead')} rand <定数> <难度(可多选)>`, true)
                         return true
                     } else {
-                        top = bottom = rank[0]
+                        top = bottom = tb
                     }
                 }
             }
@@ -446,18 +421,19 @@ export class phisong extends plugin {
         if (top % 1 == 0 && !msg.includes(".0")) top += 0.9
 
         let songsname = []
-        for (let i in get.ori_info) {
-            for (let level in Level) {
-                if (isask[level] && get.ori_info[i]['chart'][Level[level]]) {
-                    let difficulty = get.ori_info[i]['chart'][Level[level]]['difficulty']
+        for (let id of fCompute.objectKeys(getInfo.ori_info)) {
+            if (!getInfo.ori_info[id]?.chart) continue;
+            for (let level of Level) {
+                if (isask[LevelNum[level]] && getInfo.ori_info[id].chart[level]) {
+                    let difficulty = getInfo.ori_info[id].chart[level].difficulty
                     if (difficulty >= bottom && difficulty <= top) {
                         songsname.push({
-                            ...get.ori_info[i]['chart'][Level[level]],
-                            rank: Level[level],
-                            illustration: get.getill(i),
-                            song: get.ori_info[i]['song'],
-                            illustrator: get.ori_info[i]['illustrator'],
-                            composer: get.ori_info[i]['composer'],
+                            ...getInfo.ori_info[id].chart[level],
+                            rank: level,
+                            illustration: getInfo.getill(id),
+                            song: getInfo.ori_info[id].song,
+                            illustrator: getInfo.ori_info[id].illustrator,
+                            composer: getInfo.ori_info[id].composer,
                         })
                     }
                 }
@@ -471,11 +447,14 @@ export class phisong extends plugin {
 
         let result = songsname[randbt(songsname.length - 1)]
 
-        send.send_with_At(e, await get.getrand(e, result))
+        send.send_with_At(e, await picmodle.rand(e, result))
         return true
     }
 
-    /**查询歌曲别名 */
+    /**
+     * 查询歌曲别名
+     * @param {botEvent} e
+     */
     async alias(e) {
 
         if (await getBanGroup.get(e, 'alias')) {
@@ -484,26 +463,45 @@ export class phisong extends plugin {
         }
 
         let msg = e.msg.replace(/[#/](.*?)alias(\s*)/, "")
-        let song = getInfo.idgetsong(msg) || getInfo.fuzzysongsnick(msg)
-        if (song[0]) {
-            let info = getInfo.info(song[0])
-            let nick = '======================\n已有别名：\n'
-            let usernick = Config.getUserCfg('nickconfig', song[0])
-            if (usernick) {
-                nick += usernick.join('\n') + '\n'
+        let id = getInfo.info(/**@type {idString} */(msg))?.id;
+        let ids = id ? [id] : getInfo.fuzzysongsnick(msg);
+
+        /**
+         * @param {botEvent} e 
+         * @param {idString} id 
+         */
+        function makeNickMsg(e, id) {
+            let info = getInfo.info(id)
+            let nicks = ['======================\n已有别名：']
+            const usernick = Config.getUserCfg('nickconfig')
+            for (let nick of fCompute.objectKeys(usernick)) {
+                if (usernick[nick].includes(id)) {
+                    nicks.push(`${nick}`)
+                }
             }
-            if (getInfo.nicklist[info.song]) {
-                nick += getInfo.nicklist[info.song].join('\n')
+            if (getInfo?.nicklist?.[id]) {
+                nicks = nicks.concat(getInfo.nicklist[id])
             }
             // console.info(getInfo.nicklist)
             // console.info(info.song)
-            send.send_with_At(e, [`\nname: ${song[0]}\nid: ${info.id}\n`, getPic.getIll(song[0]), nick])
+            send.send_with_At(e, [getPic.getIll(id), `\nname: ${info?.song}\nid: ${id}\n` + nicks.join('\n')])
+        }
+
+        if (ids[0]) {
+            if (!ids[1]) {
+                makeNickMsg(e, ids[0])
+            } else {
+                this.choseMutiNick(e, ids, {}, (e, id) => makeNickMsg(e, id));
+            }
         } else {
             send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
         }
     }
 
-    /**计算等效rks */
+    /**
+     * 计算等效rks
+     * @param {botEvent} e
+     */
     async comrks(e) {
 
         if (await getBanGroup.get(e, 'comrks')) {
@@ -513,10 +511,10 @@ export class phisong extends plugin {
 
         let msg = e.msg.replace(/^[#/].*(com|计算)\s*/, '')
         let data = msg.split(' ')
-        data[0] = Number(data[0])
-        data[1] = Number(data[1])
-        if (data && data[1] && data[0] > 0 && data[0] <= 18 && data[1] > 0 && data[1] <= 100) {
-            send.send_with_At(e, `dif: ${data[0]} acc: ${data[1]}\n计算结果：${fCompute.rks(Number(data[1]), Number(data[0]))}`, true)
+        let data0 = Number(data[0])
+        let data1 = Number(data[1])
+        if (data && data1 && data0 > 0 && data0 <= 18 && data1 > 0 && data1 <= 100) {
+            send.send_with_At(e, `dif: ${data0} acc: ${data1}\n计算结果：${fCompute.rks(Number(data1), Number(data0))}`, true)
             return true
         } else {
             send.send_with_At(e, `格式错误QAQ！\n格式：${Config.getUserCfg('config', 'cmdhead')} com <定数> <acc>`)
@@ -524,7 +522,10 @@ export class phisong extends plugin {
         }
     }
 
-    /**随机tips */
+    /**
+     * 随机tips
+     * @param {botEvent} e
+     */
     async tips(e) {
 
         if (await getBanGroup.get(e, 'tips')) {
@@ -535,37 +536,40 @@ export class phisong extends plugin {
         send.send_with_At(e, getInfo.tips[fCompute.randBetween(0, getInfo.tips.length - 1)])
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async randClg(e) {
-        if (await getBanGroup.get(e, 'randclg')) {
+        if (await getBanGroup.get(e, 'randClg')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
 
         let songReg = /[\(（].*[\)）]/
-        let songReq = ""
-        let arg = e.msg.replace(/^.*randclg\s*/, '')
-        // console.info(arg.match(songReg))
-        if (arg.match(songReg)) {
-            songReq = arg.match(songReg)[0].replace(/[\(\)（）]/g, "")
-            arg = arg.replace(arg.match(songReg)[0], "")
-        }
+        let arg = e.msg.replace(/^.*?randClg\s*/i, '')
+        let songReq = arg.match(songReg)?.[0].replace(/[\(\)（）]/g, "") ?? ""
+        arg = arg.replace(arg.match(songReg)?.[0] ?? "", "")
 
         let songAsk = fCompute.match_request(songReq)
 
         // console.info(songAsk, songReq)
 
-        let { isask, range } = fCompute.match_request(arg, 48)
+        let { isask, range } = fCompute.match_request(arg, 51)
 
         let NumList = []
         for (let i = range[0]; i <= range[1]; i++) {
             NumList.push(i)
         }
 
+        /**@type {Record<number, Chart[]>} */
         let chartList = {}
-        for (let dif in getInfo.info_by_difficulty) {
+        for (let dif of fCompute.objectKeys(getInfo.info_by_difficulty)) {
             if (Number(dif) < range[1]) {
                 for (let i in getInfo.info_by_difficulty[dif]) {
                     let chart = getInfo.info_by_difficulty[dif][i]
+                    if (!chart) continue;
                     let difficulty = Math.floor(chart.difficulty)
                     if (isask[LevelNum[chart.rank]] && chartMatchReq(songAsk, chart)) {
                         if (chartList[difficulty]) {
@@ -580,26 +584,32 @@ export class phisong extends plugin {
 
         NumList = fCompute.randArray(NumList)
 
-
-        let res = randClg(NumList.shift(), { ...chartList })
-        while (!res && NumList.length) {
-            res = randClg(NumList.shift(), { ...chartList })
+        let shiftNum = NumList.shift()
+        if (!shiftNum) {
+            send.send_with_At(e, `未找到符合条件的谱面QAQ！`)
+            return true;
+        }
+        let res = undefined;
+        while (!res && shiftNum) {
+            res = randClg(shiftNum, { ...chartList })
+            shiftNum = NumList.shift()
         }
         // console.info(res)
         if (res) {
 
             let songs = []
 
-            let plugin_data = await get.getpluginData(e.user_id)
+            let plugin_data = await getNotes.getNotesData(e.user_id)
 
             for (let i in res) {
-                let info = getInfo.info(getInfo.idgetsong(res[i].id))
+                let info = getInfo.info(res[i].id)
+                if (!info) continue;
                 songs.push({
                     id: info.id,
                     song: info.song,
                     rank: res[i].rank,
                     difficulty: res[i].difficulty,
-                    illustration: getInfo.getill(info.song),
+                    illustration: getInfo.getill(info.id),
                     ...info.chart[res[i].rank]
                 })
             }
@@ -608,7 +618,7 @@ export class phisong extends plugin {
                 songs,
                 tot_clg: Math.floor(res[0].difficulty) + Math.floor(res[1].difficulty) + Math.floor(res[2].difficulty),
                 background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
-                theme: plugin_data?.plugin_data?.theme || 'star',
+                theme: plugin_data?.theme || 'star',
             }))
 
             // ans += `${getInfo.idgetsong(res[0].id)} ${res[0].rank} ${res[0].difficulty}\n`
@@ -622,25 +632,36 @@ export class phisong extends plugin {
         return true;
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async newSong(e) {
 
         if (await getBanGroup.get(e, 'newSong')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
+        /**
+         * @type {{ cnt: any; col?: number; row?: number; color?: string; bkg?: string; }[][]}
+         */
         const ans = []
         let msg = ''
         try {
+            /**@type {any} */
             let info = await (await fetch(Config.getUserCfg('config', 'phigrousUpdateUrl'))).json()
             msg += `最新版本：${info?.data?.list?.[0]?.version_label}\n更新信息：\n${info?.data?.list?.[0]?.whatsnew?.text?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
         } catch (e) { }
         msg += `信息文件版本：${Version.phigros}\n`
         ans.push([{ cnt: '新曲速递', col: 4 }]);
         ans.push([{ cnt: '曲名' }, { cnt: '难度' }, { cnt: '定数' }, { cnt: '物量' }])
-        for (let i in getInfo.updatedSong) {
-            let info = getInfo.info(getInfo.updatedSong[i])
-            for (let j in info.chart) {
-                if(Level.indexOf(j)===-1) continue;
+        for (let id of getInfo.updatedSong) {
+            let info = getInfo.info(id)
+            if (!info) continue;
+            for (let j of Level) {
+                if (Level.indexOf(j) === -1) continue;
+                if (!info.chart[j]) continue;
                 const bkg = levelColor(j)
                 ans.push([{ cnt: info.song }, { cnt: j, bkg }, { cnt: info.chart[j].difficulty, bkg }, { cnt: info.chart[j].combo, bkg }])
             }
@@ -648,26 +669,27 @@ export class phisong extends plugin {
 
         ans.push([{ cnt: '定数&谱面修改', col: 4 }])
         ans.push([{ cnt: '曲名' }, { cnt: '难度' }, { cnt: '条目' }, { cnt: '情况' }])
-        for (let song in getInfo.updatedChart) {
-            let tem = getInfo.updatedChart[song]
-            for (let level in tem) {
-                if(Level.indexOf(level)===-1) continue;
+        for (let id of fCompute.objectKeys(getInfo.updatedChart)) {
+            let tem = getInfo.updatedChart[id]
+            for (let level of Level) {
+                if (!tem[level]) continue;
                 if (tem[level].isNew) {
                     delete tem[level].isNew
-                    for (let obj in tem[level]) {
+                    for (let objKey of fCompute.objectKeys(tem[level])) {
                         const bkg = levelColor(level)
-                        ans.push([{ cnt: song }, { cnt: level, bkg }, { cnt: obj.replace('difficulty', '定数'), bkg }, { cnt: tem[level][obj], bkg }])
+                        ans.push([{ cnt: id }, { cnt: level, bkg }, { cnt: objKey.replace('difficulty', '定数'), bkg }, { cnt: tem[level][objKey], bkg }])
                     }
                 } else {
-                    for (let obj in tem[level]) {
-                        const incr = tem[level][obj][0] < tem[level][obj][1]
+                    for (let objKey of fCompute.objectKeys(tem[level])) {
+                        if (!Array.isArray(tem[level][objKey])) continue;
+                        const incr = tem[level][objKey][0] < tem[level][objKey][1]
                         const bkg = levelColor(level)
                         ans.push([
-                            { cnt: song },
+                            { cnt: id },
                             { cnt: level, bkg },
-                            { cnt: obj.replace('difficulty', '定数'), bkg },
+                            { cnt: objKey.replace('difficulty', '定数'), bkg },
                             {
-                                cnt: `${tem[level][obj][0]} (${incr ? '+' : '-'}) ${tem[level][obj][1]}`,
+                                cnt: `${tem[level][objKey][0]} (${incr ? '+' : '-'}) ${tem[level][objKey][1]}`,
                                 color: incr ? 'red' : 'green',
                                 bkg
                             }
@@ -698,6 +720,11 @@ export class phisong extends plugin {
         send.send_with_At(e, newSongImg);
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async live(e) {
 
         if (await getBanGroup.get(e, 'newSong')) {
@@ -713,6 +740,11 @@ export class phisong extends plugin {
         send.send_with_At(e, ans)
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async table(e) {
 
         if (await getBanGroup.get(e, 'table')) {
@@ -741,6 +773,11 @@ export class phisong extends plugin {
 
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async comment(e) {
 
         if (await getBanGroup.get(e, 'comment') || !(await Config.getUserCfg('config', 'allowComment'))) {
@@ -754,16 +791,21 @@ export class phisong extends plugin {
             return true
         }
 
+        const sessionToken = await getSave.get_user_token(e.user_id);
+
+        if (!sessionToken) {
+            send.send_with_At(e, `请先绑定sessionToken哦！`)
+            return true
+        }
+
         let msg = e.msg.replace(/[#/](.*?)(comment|cmt|评论|评价)(\s*)/, "");
         if (!msg) {
             send.send_with_At(e, `请指定曲名哦！\n格式：\n/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <难度?>(换行)\n<内容>`)
             return true
         }
 
-        /**
-         * @type {allLevelKind}
-         */
-        let rankKind = msg.match(/ (EZ|HD|IN|AT|LEGACY)\s*\n/i)?.[1] || ''
+
+        let rankKind =/**@type {any} */(msg.match(/ (EZ|HD|IN|AT|LEGACY)\s*\n/i)?.[1] || '')
         rankKind = rankKind.toUpperCase()
         let rankNum = 0;
         switch (rankKind) {
@@ -789,13 +831,18 @@ export class phisong extends plugin {
 
         let nickname = msg.replace(/( (EZ|HD|IN|AT|LEGACY))?\s*\n[\s\S]*?$/i, '')
 
-        let song = getInfo.fuzzysongsnick(nickname)?.[0]
+        let id = getInfo.fuzzysongsnick(nickname)?.[0]
 
-        if (!song) {
+        if (!id) {
             send.send_with_At(e, `未找到${nickname}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
             return true;
         }
-        let songInfo = getInfo.info(song)
+        let songInfo = getInfo.info(id)
+        if (!songInfo) {
+            logger.error(`[phi-plugin] 评论时获取曲目信息失败，id: ${id}`);
+            send.send_with_At(e, `发生未知错误QAQ！请回报管理员`);
+            return true;
+        }
         if (!songInfo.sp_vis) {
             if (!rankKind) {
                 rankKind = 'IN';
@@ -803,14 +850,14 @@ export class phisong extends plugin {
             } else if (rankNum == -1) {
                 send.send_with_At(e, `${rankKind} 不是一个难度QAQ！`);
                 return true;
-            } else if (!songInfo.chart[rankKind]) {
-                send.send_with_At(e, `${song} 没有 ${rankKind} 这个难度QAQ！`);
+            } else if (!songInfo.chart?.[allLevel[rankNum]]) {
+                send.send_with_At(e, `${id} 没有 ${allLevel[rankNum]} 这个难度QAQ！`);
                 return true;
             }
         } else {
             rankKind = 'IN';
         }
-        /** @type {string} */
+        /** @type {string | undefined} */
         let comment = msg.match(/\n([\s\S]*)/)?.[1];
         if (!comment) {
             send.send_with_At(e, `不可发送空白内容w(ﾟДﾟ)w！`)
@@ -823,9 +870,9 @@ export class phisong extends plugin {
 
         let songId = songInfo.id;
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (Config.getUserCfg('config', 'openPhiPluginApi') && save.apiId) {
             try {
-                /**@type {commentObject} */
+                /**@type {import("../model/makeRequest.js").APIUpdateCommentObject} */
                 let cmtobj = {
                     songId: songInfo.id,
                     rank: rankKind,
@@ -833,23 +880,26 @@ export class phisong extends plugin {
                     rks: save.saveInfo.summary.rankingScore,
                     score: 0,
                     acc: 0,
-                    fc: 0,
+                    fc: false,
                     challenge: save.saveInfo.summary.challengeModeRank,
-                    time: new Date(),
+                    time: new Date().toISOString(),
                     comment: comment
                 };
                 let songRecord = save.getSongsRecord(songId);
-                if (!songInfo.sp_vis && songRecord?.[rankNum]) {
+                const record = songRecord?.[rankNum];
+                if (!songInfo.sp_vis && record?.score) {
                     let { phi, b19_list } = await save.getB19(27)
                     let spInfo = '';
 
                     for (let i = 0; i < phi.length; ++i) {
-                        if (phi[i].id == songId && phi[i].rank == rankKind) {
+                        const x = phi[i];
+                        if (!x) continue;
+                        if (x.id == songId && x.rank == rankKind) {
                             spInfo = `Perfect ${i + 1}`;
                             break;
                         }
                     }
-                    if (!spInfo && songRecord[rankNum].score == 1000000) {
+                    if (!spInfo && record.score == 1000000) {
                         spInfo = 'All Perfect';
                     }
                     for (let i = 0; i < b19_list.length; ++i) {
@@ -860,15 +910,15 @@ export class phisong extends plugin {
                     }
                     cmtobj = {
                         ...cmtobj,
-                        score: songRecord[rankNum].score,
-                        acc: songRecord[rankNum].acc,
-                        fc: songRecord[rankNum].fc,
+                        score: record.score,
+                        acc: record.acc,
+                        fc: record.fc,
                         spInfo,
                     }
                 };
                 await makeRequest.addComment({
-                    ...makeRequestFnc.makePlatform(e),
-                    comment: cmtobj
+                    token: sessionToken,
+                    data: { comment: cmtobj }
                 });
                 send.send_with_At(e, `在线评论成功！φ(゜▽゜*)♪`);
                 return true;
@@ -876,12 +926,7 @@ export class phisong extends plugin {
                 logger.warn(`[phi-plugin] API评论失败`, error)
             }
         }
-
-        if (!save.session && !(await getSave.get_user_token(e.user_id))) {
-            send.send_with_At(e, `暂不支持通过API绑定的用户进行评论哦！`)
-            return true
-        }
-
+        /**@type {import("../model/getComment.js").commentObject} */
         let cmtobj = {
             sessionToken: save.session,
             userObjectId: save.saveInfo.objectId,
@@ -892,20 +937,24 @@ export class phisong extends plugin {
             fc: false,
             challenge: save.saveInfo.summary.challengeModeRank,
             time: new Date(),
-            comment: comment
+            comment: comment,
+            spInfo: '',
         };
         let songRecord = save.getSongsRecord(songId);
-        if (!songInfo.sp_vis && songRecord?.[rankNum]) {
+        const record = songRecord?.[rankNum];
+        if (!songInfo.sp_vis && record?.score) {
             let { phi, b19_list } = await save.getB19(27)
             let spInfo = '';
 
             for (let i = 0; i < phi.length; ++i) {
-                if (phi[i].id == songId && phi[i].rank == rankKind) {
+                const x = phi[i];
+                if (!x) continue;
+                if (x.id == songId && x.rank == rankKind) {
                     spInfo = `Perfect ${i + 1}`;
                     break;
                 }
             }
-            if (!spInfo && songRecord[rankNum].score == 1000000) {
+            if (!spInfo && record.score == 1000000) {
                 spInfo = 'All Perfect';
             }
             for (let i = 0; i < b19_list.length; ++i) {
@@ -916,9 +965,9 @@ export class phisong extends plugin {
             }
             cmtobj = {
                 ...cmtobj,
-                score: songRecord[rankNum].score,
-                acc: songRecord[rankNum].acc,
-                fc: songRecord[rankNum].fc,
+                score: record.score,
+                acc: record.acc,
+                fc: record.fc,
                 spInfo,
             }
         };
@@ -931,16 +980,27 @@ export class phisong extends plugin {
         return true;
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async recallComment(e) {
         if (await getBanGroup.get(e, 'recallComment') || !(await Config.getUserCfg('config', 'allowComment'))) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
         let save;
+        const sessionToken = await getSave.get_user_token(e.user_id);
         if (!e.isMaster) {
             save = await send.getsave_result(e);
             if (!save) {
                 return true;
+            }
+
+            if (!sessionToken) {
+                send.send_with_At(e, `请先绑定sessionToken哦！`)
+                return true
             }
         }
 
@@ -955,7 +1015,7 @@ export class phisong extends plugin {
         if (!comment) {
             if (Config.getUserCfg('config', 'openPhiPluginApi')) {
                 try {
-                    await makeRequest.delComment({ ...makeRequestFnc.makePlatform(e), comment_id: commentId });
+                    await makeRequest.delComment({ token: sessionToken, comment_id: commentId });
                     send.send_with_At(e, `删除在线评论成功！φ(゜▽゜*)♪`);
                     return true;
                 } catch (error) {
@@ -966,7 +1026,7 @@ export class phisong extends plugin {
             return true;
         }
 
-        if (!e.isMaster && !(comment.sessionToken == save.session || comment.userObjectId == save.saveInfo.objectId)) {
+        if (!e.isMaster && !(comment.sessionToken == sessionToken || comment.userObjectId == save?.saveInfo.objectId)) {
             send.send_with_At(e, `您没有权限操作这条评论捏(。﹏。)`);
             return true;
         }
@@ -976,6 +1036,11 @@ export class phisong extends plugin {
             send.send_with_At(e, `删除失败QAQ！`);
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async myComment(e) {
         if (await getBanGroup.get(e, 'myComment')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -995,7 +1060,7 @@ export class phisong extends plugin {
                 if (comments && comments.length > 0) {
                     let msg = `您的评论列表：\nID | 曲目 | 难度 | 内容 | 时间\n`;
                     for (let comment of comments) {
-                        msg += `${comment.id} | ${comment.songId} | ${comment.rank} | ${comment.comment} | ${fCompute.date_to_string(comment.time)}\n`
+                        msg += `${comment.id} | ${comment.songId} | ${comment.rank} | ${comment.comment} | ${fCompute.formatDate(comment.time)}\n`
                     }
                     send.send_with_At(e, msg);
                 } else {
@@ -1009,112 +1074,126 @@ export class phisong extends plugin {
         return false;
     }
 
-    async chart(e) {
-        if (await getBanGroup.get(e, 'chart')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-            return false
-        }
+    // /**
+    //  * 
+    //  * @param {botEvent} e 
+    //  * @returns 
+    //  */
+    // async chart(e) {
+    //     if (await getBanGroup.get(e, 'chart')) {
+    //         send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+    //         return false
+    //     }
 
-        let msg = e.msg.replace(/[#/](.*?)(chart)(\s*)/, "")
+    //     let msg = e.msg.replace(/[#/](.*?)(chart)(\s*)/, "")
 
-        /** @type {levelKind} */
-        let rank = msg.match(/\s+(EZ|HD|IN|AT)/i)?.[1] || 'IN'
-        rank = rank.toUpperCase()
-        msg = msg.replace(/\s+(EZ|HD|IN|AT)/i, '')
+    //     /** @type {levelKind} */
+    //     let rank = /** @type {levelKind} */(msg.match(/\s+(EZ|HD|IN|AT)/i)?.[1] || 'IN')
+    //     rank = /** @type {levelKind} */(rank.toUpperCase())
+    //     msg = msg.replace(/\s+(EZ|HD|IN|AT)/i, '')
 
-        let song = getInfo.fuzzysongsnick(msg)?.[0]
-        if (!song) {
-            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
-            return true
-        }
-        let info = getInfo.info(song, true)
-        if (!info.chart[rank]) {
-            send.send_with_At(e, `${song} 没有 ${rank} 这个难度QAQ！`)
-            return true
-        }
+    //     let ids = getInfo.fuzzysongsnick(msg)
+    //     if (!ids) {
+    //         send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+    //         return true
+    //     }
+    //     let info = getInfo.info(ids, true)
+    //     if (!info) {
+    //         send.send_with_At(e, `未找到${ids}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+    //         return true
+    //     }
+    //     if (!info.chart[rank]) {
+    //         send.send_with_At(e, `${ids} 没有 ${rank} 这个难度QAQ！`)
+    //         return true
+    //     }
 
-        let chart = info.chart[rank]
+    //     let chart = info.chart[rank]
 
-        let allowChartTag = await Config.getUserCfg('config', 'allowChartTag')
+    //     let allowChartTag = await Config.getUserCfg('config', 'allowChartTag')
 
-        let data = {
-            illustration: info.illustration,
-            song: info.song,
-            length: info.length,
-            rank: rank,
-            difficulty: chart.difficulty,
-            charter: chart.charter,
-            tap: chart.tap,
-            drag: chart.drag,
-            hold: chart.hold,
-            flick: chart.flick,
-            combo: chart.combo,
-            distribution: chart.distribution,
-            tip: allowChartTag ? `发送 /${Config.getUserCfg('config', 'cmdhead')} addtag <曲名> <难度> <tag> 来添加标签哦！` : `标签词云功能暂时被管理员禁用了哦！快去联系BOT主开启吧！`,
-            chartLength: `${Math.floor(chart.maxTime / 60)}:${Math.floor(chart.maxTime % 60).toString().padStart(2, '0')}`,
-            words: allowChartTag ? getChartTag.get(info.id, rank) : '',
-        }
-        e.reply(await picmodle.common(e, 'chartInfo', data))
-    }
+    //     let data = {
+    //         illustration: info.illustration,
+    //         song: info.song,
+    //         length: info.length,
+    //         rank: rank,
+    //         difficulty: chart.difficulty,
+    //         charter: chart.charter,
+    //         tap: chart.tap,
+    //         drag: chart.drag,
+    //         hold: chart.hold,
+    //         flick: chart.flick,
+    //         combo: chart.combo,
+    //         distribution: chart.distribution,
+    //         tip: allowChartTag ? `发送 /${Config.getUserCfg('config', 'cmdhead')} addtag <曲名> <难度> <tag> 来添加标签哦！` : `标签词云功能暂时被管理员禁用了哦！快去联系BOT主开启吧！`,
+    //         chartLength: `${Math.floor(chart.maxTime / 60)}:${Math.floor(chart.maxTime % 60).toString().padStart(2, '0')}`,
+    //         words: allowChartTag ? getChartTag.get(info.id, rank) : '',
+    //     }
+    //     e.reply(await picmodle.common(e, 'chartInfo', data))
+    // }
 
-    async addtag(e) {
-        if (await getBanGroup.get(e, 'addtag') || !(await Config.getUserCfg('config', 'allowChartTag'))) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-            return false
-        }
+    // /**
+    //  * 
+    //  * @param {botEvent} e 
+    //  * @returns 
+    //  */
+    // async addtag(e) {
+    //     if (await getBanGroup.get(e, 'addtag') || !(await Config.getUserCfg('config', 'allowChartTag'))) {
+    //         send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+    //         return false
+    //     }
 
-        /** @type {'addtag'|'subtag'|'retag'} */
-        let op = e.msg.match(/(addtag|subtag|retag)/i)?.[1]
+    //     /** @type {'addtag'|'subtag'|'retag'} */
+    //     let op = /** @type {'addtag'|'subtag'|'retag'} */(e.msg.match(/(addtag|subtag|retag)/i)?.[1])
 
-        let msg = e.msg.replace(/[#/](.*?)(addtag|subtag|retag)(\s*)/, "")
+    //     let msg = e.msg.replace(/[#/](.*?)(addtag|subtag|retag)(\s*)/, "")
 
-        /** @type {levelKind} */
-        let rank = msg.match(/\s+(EZ|HD|IN|AT)\s+/i)?.[1] || 'IN'
-        rank = rank.toUpperCase()
-        msg = msg.replace(/\s+(EZ|HD|IN|AT)/i, '')
+    //     /** @type {levelKind} */
+    //     let rank = msg.match(/\s+(EZ|HD|IN|AT)\s+/i)?.[1] || 'IN'
+    //     rank = rank.toUpperCase()
+    //     msg = msg.replace(/\s+(EZ|HD|IN|AT)/i, '')
 
-        let tag = msg.match(/(?<=\s)[^\s]+$/)?.[0]
-        if (!tag) {
-            send.send_with_At(e, `请输入标签哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ${op} <曲名> <rank> <tag>`)
-            return true
-        }
-        if (tag.length > 6) {
-            send.send_with_At(e, `${tag} 太长了呐QAQ！请限制在6个字符以内嗷！`)
-            return true
-        }
-        msg = msg.replace(tag, '')
-        let song = getInfo.fuzzysongsnick(msg)?.[0]
-        if (!song) {
-            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
-            return true
-        }
-        let info = getInfo.info(song, true)
-        if (!info.chart[rank]) {
-            send.send_with_At(e, `${song} 没有 ${rank} 这个难度QAQ！`)
-            return true
-        }
-        if (!tag) {
-            send.send_with_At(e, `请输入标签哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ${op} <曲名> <rank> <tag>`)
-            return true
-        }
-        let callback = false;
-        switch (op) {
-            case 'addtag':
-                callback = getChartTag.add(info.id, tag, rank, true, e.user_id)
-                break;
-            case 'subtag':
-                callback = getChartTag.add(info.id, tag, rank, false, e.user_id)
-                break;
-            case 'retag':
-                callback = getChartTag.cancel(info.id, tag, rank, e.user_id)
-                break;
-        }
-        if (callback) {
-            send.send_with_At(e, `操作成功！`)
-        } else {
-            send.send_with_At(e, `操作失败QAQ！`)
-        }
-    }
+    //     let tag = msg.match(/(?<=\s)[^\s]+$/)?.[0]
+    //     if (!tag) {
+    //         send.send_with_At(e, `请输入标签哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ${op} <曲名> <rank> <tag>`)
+    //         return true
+    //     }
+    //     if (tag.length > 6) {
+    //         send.send_with_At(e, `${tag} 太长了呐QAQ！请限制在6个字符以内嗷！`)
+    //         return true
+    //     }
+    //     msg = msg.replace(tag, '')
+    //     let song = getInfo.fuzzysongsnick(msg)?.[0]
+    //     if (!song) {
+    //         send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+    //         return true
+    //     }
+    //     let info = getInfo.info(song, true)
+    //     if (!info.chart[rank]) {
+    //         send.send_with_At(e, `${song} 没有 ${rank} 这个难度QAQ！`)
+    //         return true
+    //     }
+    //     if (!tag) {
+    //         send.send_with_At(e, `请输入标签哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ${op} <曲名> <rank> <tag>`)
+    //         return true
+    //     }
+    //     let callback = false;
+    //     switch (op) {
+    //         case 'addtag':
+    //             callback = getChartTag.add(info.id, tag, rank, true, e.user_id)
+    //             break;
+    //         case 'subtag':
+    //             callback = getChartTag.add(info.id, tag, rank, false, e.user_id)
+    //             break;
+    //         case 'retag':
+    //             callback = getChartTag.cancel(info.id, tag, rank, e.user_id)
+    //             break;
+    //     }
+    //     if (callback) {
+    //         send.send_with_At(e, `操作成功！`)
+    //     } else {
+    //         send.send_with_At(e, `操作失败QAQ！`)
+    //     }
+    // }
 
 }
 
@@ -1122,42 +1201,51 @@ export class phisong extends plugin {
  * 获取歌曲信息图片
  * @param {number} page 
  * @param {boolean} addComment 
- * @param {songString} song 
+ * @param {idString} id 
+ * @param {botEvent} e
  * @returns 
  */
-async function songInfo(page, addComment, song, e) {
-    let infoData = getInfo.info(song);
+async function songInfo(page, addComment, id, e) {
+    let infoData = getInfo.info(id);
+    /**@type {any} */
     let data = {
         ...infoData,
+        comment: undefined,
     };
+    if (!infoData) {
+        logger.error(`[phi-plugin] songInfo: 未找到id为${id}的歌曲信息`);
+        return `发生未知错误QAQ！请回报管理员！`;
+    }
     if (await Config.getUserCfg('config', 'allowComment') && (addComment || page)) {
         let commentData;
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
             commentData = await makeRequest.getCommentsBySongId({ song_id: infoData.id });
             for (const item of commentData) {
-                item.PlayerId = item.PlayerId > 15 ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;
-                item.avatar = getInfo.idgetavatar(item.avatar);
+                item.PlayerId = (item.PlayerId && item.PlayerId.length > 15) ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;
+                item.avatar = getInfo.idgetavatar(item.avatar || '');
                 item.comment = fCompute.convertRichText(item.comment);
-                item.time = fCompute.date_to_string(item.time);
-                item.thisId = item.id;
+                item.time = fCompute.formatDate(item.time);
+                // @ts-ignore
+                item.thisId = item.thisId || item.id;
             }
         } else {
             commentData = getComment.get(infoData.id);
             for (let item of commentData) {
-                let save = await getSave.getSaveBySessionToken(item.sessionToken);
+                let save = item.sessionToken ? await getSave.getSaveBySessionToken(item.sessionToken) : null;
                 if (!save) {
-                    getComment.del(item.thisId);
+                    item.thisId && getComment.del(`${item.thisId}`);
                     commentData.splice(commentData.indexOf(item), 1);
                     continue;
                 }
                 item.PlayerId = save.saveInfo.PlayerId.length > 15 ? save.saveInfo.PlayerId.slice(0, 12) + '...' : save.saveInfo.PlayerId;
                 item.avatar = getInfo.idgetavatar(save.gameuser.avatar);
                 item.comment = fCompute.convertRichText(item.comment);
-                item.time = fCompute.date_to_string(item.time);
+                // @ts-ignore
+                item.time = fCompute.formatDate(item.time);
             }
         }
         commentData.sort((a, b) => {
-            return new Date(b.time) - new Date(a.time);
+            return new Date(b.time).getTime() - new Date(a.time).getTime();
         });
         if (!page) page = 1
         let commentsAPage = Config.getUserCfg('config', 'commentsAPage') || 1
@@ -1167,6 +1255,7 @@ async function songInfo(page, addComment, song, e) {
             ...infoData,
             comment: {
                 command: `当前共有${commentData.length}条评论，第${Math.min(page, maxPage)}页，共${maxPage}页，发送/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <定级?>(换行)<内容> 进行评论，-p <页码> 选择页数`,
+                // @ts-ignore
                 list: commentData.slice((commentsAPage * (page - 1)), commentsAPage * page - 1)
             }
         };
@@ -1182,7 +1271,12 @@ function randbt(top, bottom = 0) {
     return Math.floor((Math.random() * (top - bottom + 1))) + bottom
 }
 
-
+/**
+ * 
+ * @param {number} clgNum 
+ * @param {Record<number, Chart[]>} chartList 
+ * @returns 
+ */
 function randClg(clgNum, chartList) {
     let difList = null;
     let rand1 = [], rand2 = []
@@ -1204,6 +1298,7 @@ function randClg(clgNum, chartList) {
             let b = rand2[j]
             if (a + b >= clgNum) continue
             let c = clgNum - a - b
+            /** @type {Record<number, number>} */
             let tem = {}
             tem[a] = 1
             tem[b] ? ++tem[b] : tem[b] = 1
@@ -1237,6 +1332,12 @@ function randClg(clgNum, chartList) {
     return ans;
 }
 
+/**
+ * 
+ * @param {any} ask 
+ * @param {Chart} chart 
+ * @returns 
+ */
 function chartMatchReq(ask, chart) {
     if (ask.isask[LevelNum[chart.rank]]) {
         if (chart.difficulty >= ask.range[0] && chart.difficulty <= ask.range[1]) {
@@ -1247,6 +1348,11 @@ function chartMatchReq(ask, chart) {
     return false
 }
 
+/**
+ * 
+ * @param {levelKind} level 
+ * @returns 
+ */
 function levelColor(level) {
     switch (level) {
         case 'EZ': {

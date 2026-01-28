@@ -82,10 +82,6 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    label: '',
-                    component: 'Divider'
-                },
-                {
                     field: 'renderNum',
                     label: '并行渲染数量',
                     bottomHelpMessage: '并行数量越多，占用的资源越多，建议谨慎修改，修改后重启生效',
@@ -96,6 +92,10 @@ export function supportGuoba() {
                         max: 10,
                         placeholder: '请输入并行渲染数量',
                     },
+                },
+                {
+                    label: '',
+                    component: 'Divider'
                 },
                 {
                     field: 'commentsAPage',
@@ -190,6 +190,12 @@ export function supportGuoba() {
                     component: 'SOFT_GROUP_BEGIN'
                 },
                 {
+                    field: 'defaultGlobal',
+                    label: '默认使用国际服',
+                    bottomHelpMessage: '开启后默认使用国际服查询，关闭后默认使用国服查询',
+                    component: 'Switch',
+                },
+                {
                     field: 'onLinePhiIllUrl',
                     label: '在线曲绘来源',
                     bottomHelpMessage: '仅在未下载曲绘时有效，不影响下载曲绘指令。在线曲绘将重复下载曲绘资源，建议使用 /下载曲绘 将曲绘缓存到本地',
@@ -207,8 +213,12 @@ export function supportGuoba() {
                                 value: "https://github.com/Catrong/phi-plugin-ill/blob/main"
                             },
                             {
-                                label: 'github代理',
-                                value: "https://ghproxy.sakuramoe.dev/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+                                label: 'github代理(gh-proxy)',
+                                value: "https://gh-proxy.org/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/refs/heads/main"
+                            },
+                            {
+                                label: 'github代理(gitproxy.click)',
+                                value: "https://gitproxy.click/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/refs/heads/main"
                             }
                         ]
                     }
@@ -231,8 +241,12 @@ export function supportGuoba() {
                                 value: "https://github.com/Catrong/phi-plugin-ill.git"
                             },
                             {
-                                label: 'github代理',
-                                value: "https://ghproxy.sakuramoe.dev/https://github.com/Catrong/phi-plugin-ill.git"
+                                label: 'github代理(gh-proxy)',
+                                value: "https://gh-proxy.com/https://github.com/Catrong/phi-plugin-ill.git"
+                            },
+                            {
+                                label: 'github代理(gitproxy.click)',
+                                value: "https://gitproxy.click/https://github.com/Catrong/phi-plugin-ill.git"
                             }
                         ]
                     }
@@ -249,12 +263,12 @@ export function supportGuoba() {
                     bottomHelpMessage: '是否开启曲目评论功能，该功能目前暂无敏感词校验',
                     component: 'Switch',
                 },
-                {
-                    field: 'allowChartTag',
-                    label: '谱面标签',
-                    bottomHelpMessage: '是否开启谱面标签功能，该功能目前暂无敏感词校验',
-                    component: 'Switch',
-                },
+                // {
+                //     field: 'allowChartTag',
+                //     label: '谱面标签',
+                //     bottomHelpMessage: '是否开启谱面标签功能，该功能目前暂无敏感词校验',
+                //     component: 'Switch',
+                // },
                 {
                     field: 'autoPullPhiIll',
                     label: '自动更新曲绘',
@@ -300,14 +314,10 @@ export function supportGuoba() {
                     component: 'Switch',
                 },
                 {
-                    field: 'phiPluginApiUrl',
-                    label: 'API地址',
-                    bottomHelpMessage: 'Phigros联合查分API地址',
-                    component: 'Input',
-                    required: false,
-                    componentProps: {
-                        placeholder: '请输入API地址',
-                    },
+                    field: 'autoOpenApi',
+                    label: '自动开启API',
+                    bottomHelpMessage: '检测API状态成功后，是否自动开启API',
+                    component: 'Switch',
                 },
                 {
                     field: 'mutiNickWaitTimeOut',
@@ -519,21 +529,21 @@ export function supportGuoba() {
                     label: '其他设置',
                     component: 'SOFT_GROUP_BEGIN'
                 },
-                {
-                    field: 'VikaToken',
-                    label: 'token',
-                    bottomHelpMessage: 'token 填写后请重启',
-                    component: 'Input',
-                    required: false,
-                    componentProps: {
-                        placeholder: '请输入token',
-                    },
-                },
+                // {
+                //     field: 'VikaToken',
+                //     label: 'token',
+                //     bottomHelpMessage: 'token 填写后请重启',
+                //     component: 'Input',
+                //     required: false,
+                //     componentProps: {
+                //         placeholder: '请输入token',
+                //     },
+                // },
             ],
             // 获取配置数据方法（用于前端填充显示数据）
             getConfigData() {
                 const defset = Config.getdefSet('config')
-
+                /**@type {Record<configName, any> | {}} */
                 let config = {}
                 for (var i in defset) {
                     config[i] = Config.getUserCfg('config', i)
@@ -547,18 +557,18 @@ export function supportGuoba() {
                     data.WordSuggImg = false
                 }
                 var vis = false
-                if (data.VikaToken && data.VikaToken.length != 23) {
-                    data.VikaToken = ''
-                    vis = true
-                }
+                // if (data.VikaToken && data.VikaToken.length != 23) {
+                //     data.VikaToken = ''
+                //     vis = true
+                // }
                 for (let [keyPath, value] of Object.entries(data)) {
                     Config.modify('config', keyPath, value)
                 }
-                if (vis) {
-                    return Result.ok({}, 'VikaToken非法')
-                } else {
-                    return Result.ok({}, '保存成功~')
-                }
+                // if (vis) {
+                //     return Result.ok({}, 'VikaToken非法')
+                // } else {
+                return Result.ok({}, '保存成功~')
+                // }
             },
         },
     }

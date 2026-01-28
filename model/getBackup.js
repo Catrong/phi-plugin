@@ -7,16 +7,24 @@ import saveHistory from "./class/saveHistory.js";
 import { redisPath } from "./constNum.js";
 import ProgressBar from "./progress-bar.js";
 import fCompute from './fCompute.js'
+import send from "./send.js";
+import logger from "../components/Logger.js";
+import Save from "./class/Save.js";
 
 const MaxNum = 1e4
 
-export default new class getBackup {
+/**@import {botEvent} from "../components/baseClass.js" */
+export default class getBackup {
 
-    /**备份 */
-    async backup(e, send) {
+    /**
+     * 备份
+     * @param {botEvent} e 
+     */
+    static async backup(e) {
         let zip = new JSZip()
         /**data目录下存档 */
-        let bar
+        /**@type {ProgressBar|undefined} */
+        let bar = undefined
         let list = fs.readdirSync(savePath)
         if (list.length >= MaxNum) {
             send.send_with_At(e, `存档数量过多，请手动备份 /data/saveData/ 目录！`)
@@ -33,10 +41,10 @@ export default new class getBackup {
                     if (file.isDirectory()) {
                         logger.error(filePath, '[phi-plugin] 备份错误：意料之外的文件夹');
                     } else {
-                        zip.folder('saveData').folder(folderName).file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
+                        zip.folder('saveData')?.folder(folderName)?.file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
                     }
                 });
-                bar.render({ completed: index + 1, total: array.length });
+                bar?.render({ completed: index + 1, total: array.length });
             });
         }
         /**data目录下plugin数据 */
@@ -54,15 +62,18 @@ export default new class getBackup {
                 if (file.isDirectory()) {
                     logger.error(filePath, '[phi-plugin] 备份错误：意料之外的文件夹');
                 } else {
-                    zip.folder('pluginData').file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
+                    zip?.folder('pluginData')?.file(fileName, fs.readFileSync(filePath)); //压缩目录添加文件
                 }
-                bar.render({ completed: index + 1, total: array.length });
+                bar?.render({ completed: index + 1, total: array.length });
             });
         }
         /**提取redis中user_id数据 */
         send.send_with_At(e, '开始备份user_token，请稍等...')
         console.info('\n[phi-plugin][backup] 开始备份user_token数据...')
-        /**获取user_token */
+        /**
+         * 获取user_token
+         * @type {Record<string, string>}
+         */
         let user_token = {}
         console.info('[phi-plugin] 获取user_token列表...')
         // 使用SCAN非阻塞遍历所有userToken键
@@ -70,13 +81,16 @@ export default new class getBackup {
         let cnt = 0;
         let vis = 0;
         do {
+            // @ts-ignore
             let info = await redis.scan(cursor, { MATCH: `${redisPath}:userToken:*`, COUNT: 100 });
             cursor = info.cursor; // 更新游标
             let keys = info.keys; // 获取当前批次的键
             if (keys.length > 0) {
                 // 并发获取本批次所有user_token
-                let userIds = keys.map(key => key.replace(`${redisPath}:userToken:`, ''));
-                let tokenValues = await Promise.all(keys.map(key => redis.get(key)));
+                /**@type {string[]} */
+                let userIds = keys.map((/** @type {string} */ key) => key.replace(`${redisPath}:userToken:`, ''));
+                // @ts-ignore
+                let tokenValues = await Promise.all(keys.map((/** @type {any} */ key) => redis.get(key)));
                 userIds.forEach((user_id, idx) => {
                     user_token[user_id] = tokenValues[idx];
                 });
@@ -110,9 +124,9 @@ export default new class getBackup {
 
     /**
      * 从zip中恢复
-     * @param {path} zipPath 
+     * @param {string} zipPath 
      */
-    async restore(zipPath) {
+    static async restore(zipPath) {
         let zip = await JSZip.loadAsync(fs.readFileSync(zipPath))
         /**存档相关 */
         zip.folder('saveData')?.forEach((session) => {
@@ -120,8 +134,8 @@ export default new class getBackup {
                 /**阻止遍历文件user_token.json */
                 if (!session.includes('.json')) {
                     /**history */
-                    getFile.FileReader(path.join(savePath, session, 'history.json')).then((old) => {
-                        zip.folder('saveData').folder(session).file('history.json').async('string').then((history) => {
+                    getFile.FileReader(path.join(savePath, session, 'history.json')).then((/** @type {saveHistoryObject & { version?: number; }} */ old) => {
+                        zip.folder('saveData')?.folder(session)?.file('history.json')?.async('string').then((history) => {
                             /**格式化为 JSON */
                             let now = new saveHistory(JSON.parse(history))
                             /**有本地记录，合并；无本地记录，直接覆盖 */
@@ -130,8 +144,8 @@ export default new class getBackup {
                         })
                     })
                     /**save */
-                    getFile.FileReader(path.join(savePath, session, 'save.json')).then((old) => {
-                        zip.folder('saveData').folder(session).file('save.json').async('string').then((save) => {
+                    getFile.FileReader(path.join(savePath, session, 'save.json')).then((/** @type {Save} */ old) => {
+                        zip.folder('saveData')?.folder(session)?.file('save.json')?.async('string').then((save) => {
                             /**格式化为 JSON */
                             let now = JSON.parse(save)
                             /**有本地记录，保留最新记录；无本地记录，直接覆盖 */
@@ -156,15 +170,20 @@ export default new class getBackup {
             }
         })
         /**user_id->tk */
-        zip.file('user_token.json')?.async('string').then((data) => {
+        zip.file('user_token.json')?.async('text').then((data) => {
             try {
                 let now = JSON.parse(data)
                 for (let user_id in now) {
-                    redis.set(`${redisPath}:userToken:${user_id}`, now[user_id])
+                    try {
+                        // @ts-ignore
+                        redis.set(`${redisPath}:userToken:${user_id}`, now[user_id])
+                    } catch (e) {
+                        logger.error(`恢复 user_token 对照 [${user_id}]:${now[user_id]} 错误：` + e);
+                    }
                 }
             } catch (e) {
-                logger.error(`恢复 user_token 对照 [${user_id}]:${now[user_id]} 错误：` + e);
+                logger.error(`恢复 user_token 对照错误：` + e);
             }
         })
     }
-}()
+}

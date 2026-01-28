@@ -1,4 +1,3 @@
-import plugin from '../../../lib/plugins/plugin.js'
 import Save from '../model/class/Save.js'
 import fCompute from '../model/fCompute.js'
 import getInfo from '../model/getInfo.js'
@@ -7,14 +6,16 @@ import getSave from '../model/getSave.js'
 import send from '../model/send.js'
 import picmodle from '../model/picmodle.js'
 import Config from '../components/Config.js'
-import getNotes from '../model/getNotes.js'
-import PhigrosUser from '../lib/PhigrosUser.js'
 import getBanGroup from '../model/getBanGroup.js';
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 import saveHistory from '../model/class/saveHistory.js'
+import phiPluginBase from '../components/baseClass.js'
+import logger from '../components/Logger.js'
 
-export class phiRankList extends plugin {
+/**@import {botEvent} from '../components/baseClass.js' */
+
+export class phiRankList extends phiPluginBase {
 
     constructor() {
         super({
@@ -40,6 +41,11 @@ export class phiRankList extends plugin {
         })
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async rankList(e) {
 
         if (await getBanGroup.get(e, 'rankList')) {
@@ -54,7 +60,9 @@ export class phiRankList extends plugin {
                 let data = {
                     Title: "RankingScore排行榜",
                     totDataNum: 0,
+                    // @ts-ignore
                     BotNick: Bot.nickname,
+                    /** @type {rankingListObject[]} */
                     users: [],
                     me: {},
                 }
@@ -71,7 +79,7 @@ export class phiRankList extends plugin {
                     data.users.push({ ...await makeSmallLine(item), index: item.index, me: item.me })
                 }
                 data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history))
-                send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
+                send.send_with_At(e, [await picmodle.common(e, 'rankingList', data), `总数据量：${data.totDataNum}\n`])
                 return true
             } catch (err) {
                 logger.warn(`[phi-plugin] API ERR`, err)
@@ -80,7 +88,9 @@ export class phiRankList extends plugin {
         let data = {
             Title: "RankingScore排行榜",
             totDataNum: 0,
+            // @ts-ignore
             BotNick: Bot.nickname,
+            /** @type {rankingListObject[]} */
             users: [],
             me: {},
         }
@@ -90,7 +100,7 @@ export class phiRankList extends plugin {
         data.totDataNum = await getRksRank.getAllRank()
 
         if (msg) {
-            rankNum = Math.max(Math.min(msg[0], data.totDataNum), 1) - 1
+            rankNum = Math.max(Math.min(Number(msg[0]), data.totDataNum), 1) - 1
         } else {
             let save = await send.getsave_result(e)
             if (!save) {
@@ -119,22 +129,27 @@ export class phiRankList extends plugin {
             }
             let item = list[index]
             let sessionToken = item
-            let save = await getSave.getSaveBySessionToken(sessionToken)
+            const save = await getSave.getSaveBySessionToken(sessionToken)
             if (!save) {
                 data.users.push({ playerId: '无效用户', index: index + rankNum - 2 })
                 getRksRank.delUserRks(sessionToken)
             } else {
                 data.users.push({ ...await makeSmallLine(save), index: Math.max(index + rankNum - 1, index + 1), me: myTk === save.getSessionToken() })
-            }
-            if (myTk === sessionToken) {
-                let history = await getSave.getHistoryBySessionToken(save.getSessionToken())
-                data.me = await makeLargeLine(save, history)
+                if (myTk === sessionToken) {
+                    let history = await getSave.getHistoryBySessionToken(save.getSessionToken())
+                    data.me = await makeLargeLine(save, history)
+                }
             }
         }
 
         send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
     }
 
+    /**
+     * 
+     * @param {botEvent} e 
+     * @returns 
+     */
     async rankfind(e) {
         if (await getBanGroup.get(e, 'rankList')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -167,49 +182,56 @@ export class phiRankList extends plugin {
         return true
     }
 
-    async godList(e) {
 
-        if (await getBanGroup.get(e, 'godList')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-            return false
-        }
+    // /**
+    //  * 
+    //  * @param {botEvent} e 
+    //  * @returns 
+    //  */
+    // async godList(e) {
 
-        let list = await getSave.getGod()
-        let plugin_data = await getNotes.getPluginData(e.user_id)
-        let data = {
-            Title: "封神榜",
-            totDataNum: 0,
-            BotNick: Bot.nickname,
-            users: [],
-            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
-            theme: plugin_data?.plugin_data?.theme || 'star',
-        }
+    //     if (await getBanGroup.get(e, 'godList')) {
+    //         send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+    //         return false
+    //     }
 
-        if (!list) {
-            data.totDataNum = 0
-            send.send_with_At(e, await picmodle.common(e, 'rankingList', data))
-            return true
-        }
+    //     let list = await getSave.getGod()
+    //     let plugin_data = await getNotes.getPluginData(e.user_id)
+    //     let data = {
+    //         Title: "封神榜",
+    //         totDataNum: 0,
+    //         BotNick: Bot.nickname,
+    //         users: [],
+    //         background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+    //         theme: plugin_data?.plugin_data?.theme || 'star',
+    //     }
 
-        data.totDataNum = list.length
+    //     if (!list) {
+    //         data.totDataNum = 0
+    //         send.send_with_At(e, await picmodle.common(e, 'rankingList', data))
+    //         return true
+    //     }
 
-        for (let i = 0; i < list.length; i++) {
-            try {
-                let godRecord = new PhigrosUser(list[i].match(/[a-zA-Z0-9]{25}/)[0])
-                await godRecord.buildRecord()
-                let god = new Save(godRecord, true)
-                await god.init()
-                data.users.push(await makeLargeLine(god))
-                data.users[data.users.length].index = i
-            } catch (e) { }
-        }
-        send.send_with_At(e, await picmodle.common(e, 'rankingList', data))
-    }
+    //     data.totDataNum = list.length
+
+    //     for (let i = 0; i < list.length; i++) {
+    //         try {
+    //             let godRecord = new PhigrosUser(list[i].match(/[a-zA-Z0-9]{25}/)[0])
+    //             await godRecord.buildRecord()
+    //             let god = new Save(godRecord, true)
+    //             await god.init()
+    //             data.users.push(await makeLargeLine(god))
+    //             data.users[data.users.length].index = i
+    //         } catch (e) { }
+    //     }
+    //     send.send_with_At(e, await picmodle.common(e, 'rankingList', data))
+    // }
 }
 
 /**
  * 创建一个详细对象
  * @param {Save} save 
+ * @param {saveHistory} history
  */
 async function makeLargeLine(save, history) {
     if (!save) {
@@ -221,9 +243,13 @@ async function makeLargeLine(save, history) {
 
     let lineData = history.getRksAndDataLine()
     lineData.rks_date.forEach((item, index) => {
+        // @ts-ignore
         item = fCompute.formatDateToNow(item)
         lineData.rks_date[index] = item
     });
+    /**
+     * @type {{ ChallengeMode: number; ChallengeModeRank: number; date: string; }[]}
+     */
     let clgHistory = []
     history.challengeModeRank.forEach((item, index, array) => {
         if (!index || item.value != array[index - 1].value) {
@@ -271,18 +297,30 @@ async function makeLargeLine(save, history) {
 }
 
 /**
+ * @typedef {Object} rankingListObject
+ * @property {string} playerId
+ * @property {string} [backgroundurl]
+ * @property {string} [avatar]
+ * @property {number} [rks]
+ * @property {number} [ChallengeMode]
+ * @property {number} [ChallengeModeRank]
+ * @property {boolean} [me]
+ * @property {number} index
+ */
+
+/**
  * 创建一个简略对象
- * @param {Save} save 
+ * @param {Save | import('../model/makeRequest.js').UserItem} save 
  */
 async function makeSmallLine(save) {
     if (!save) {
         return {
-            playerId: "无效用户"
+            playerId: "无效用户",
         }
     }
     return {
         backgroundurl: getInfo.getBackground(save?.gameuser?.background),
-        avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
+        avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar || ''),
         playerId: fCompute.convertRichText(save.saveInfo.PlayerId),
         rks: save.saveInfo.summary.rankingScore,
         ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),

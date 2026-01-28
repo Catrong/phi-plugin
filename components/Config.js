@@ -42,12 +42,34 @@ class Config {
         return { ...defCfg, ...config }
     }
 
+    /**
+     * @overload
+     * @param {'config'} name 文件名
+     * @param {configName} style key值
+     * @returns {any} 配置值
+     */
+    /**
+     * @overload
+     * @param {'nickconfig'} name 文件名
+     * @param {string} mic 别名
+     * @returns {idString[]} 原曲id
+     */
+    /**
+     * @overload
+     * @param {'nickconfig'} name 文件名
+     * @returns {Record<string, idString[]>} <别名: 原曲id[]>
+     */
+    /**
+     * @overload
+     * @param {'otherinfo'} name 文件名
+     * @returns {any} 其他信息
+     */
     /** 
      * @param {'config'|'nickconfig'|'otherinfo'} name 文件名
-     * @param {configName} style key值
+     * @param {any} [style] key值
      * @description 默认配置和用户配置
     */
-    getUserCfg(name, style) {
+    getUserCfg(name, style = undefined) {
         let def = this.getdefSet(name)
         let config = this.getConfig(name)
         if (name == 'otherinfo' && config) {
@@ -120,11 +142,27 @@ class Config {
     }
 
     /**
+     * @overload
+     * @param {'config'} name 文件名
+     * @param {configName} key 修改的key值
+     * @param {String|Number|boolean} value 修改的value值
+     * @param {'config'|'default_config'} [type] 配置文件或默认，默认为配置
+     * @returns {void}
+     */
+    /**
+     * @overload
+     * @param {'nickconfig'} name 文件名
+     * @param {any} key 别名
+     * @param {String|Number|any[]} value 修改的value值
+     * @param {'config'|'default_config'} [type] 配置文件或默认，默认为配置
+     * @returns {void}
+     */
+    /**
      * @description: 修改设置
      * @param {'config'|'nickconfig'} name 文件名
-     * @param {configName} key 修改的key值
-     * @param {String|Number} value 修改的value值
-     * @param {'config'|'default_config'} type 配置文件或默认，默认为配置
+     * @param {any} key 修改的key值
+     * @param {String|Number|boolean|any[]} value 修改的value值
+     * @param {'config'|'default_config'} [type] 配置文件或默认
      */
     modify(name, key, value, type = 'config') {
         let path = `${Plugin_Path}/config/${type}/${name}.yaml`

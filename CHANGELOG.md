@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.0.*
+
+* /ranklist 改为先图后文
+* 修复getSongHistory
+* B30展示AVG
+* 新增/hisb30 指令，根据历史记录计算B30变化情况
+
+## 1.0.0
+
+* 修复临时文件清理
+* /x30 /fc30
+* /session\[Tt\]oken 
+* /cnbind /gbbind 绑定国服/国际服
+* API公测
+* /chart 展示谱面六维图
+* 新增/settag 指令，投票谱面标签
+* 新增/tag 指令，查看谱面标签
+* 代码重构
+* 修复/update不显示task问题
+* 修复/list背景不跟随设置的问题
+* 修复历史记录合并时可能发生错误的问题
+
 ## 0.9.9.4
 
 * /score 排行榜（仅开启API后有效）

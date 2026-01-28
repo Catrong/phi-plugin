@@ -581,6 +581,8 @@ body {
     margin-top: -50px;
     writing-mode: horizontal-tb;
     justify-content: center;
+    position: absolute;
+    bottom: 50px;
 }
 
 .createdbox p {
@@ -610,9 +612,4 @@ body {
 .ver p {
     font-size: 20px;
     text-shadow: 0 0 20px #fff700;
-}
-
-.createdbox {
-    position: absolute;
-    bottom: 50px;
 }
