@@ -218,7 +218,7 @@ body p {
 .Player_data_line-left,
 .Player_data_line-right {
     display: flex;
-
+    width: 44%;
     flex-direction: column;
 }
 
