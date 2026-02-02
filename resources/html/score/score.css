@@ -43,7 +43,7 @@ body {
 
 .rank_dif_1 {
     /* background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%); */
-    background: linear-gradient(-75deg, #9c9c9c88 24%, #00000000 24%, #00000000 28%, #ff616188 28%, #ff616188 49%, #00000000 49%, #00000000 53%, #009dff88 53%, #009dff88 73%, #00000000 73%, #00000000 77%, #7ae07a88 77%);
+    background: linear-gradient(-75deg,#80808088 0% , #9c9c9c88 25%, #00000000 25%, #00000000 27%, #ff000088 27%, #ff616188 50%, #00000000 50%, #00000000 52%, #009dff88 52%, #4dbbff88 74%, #00000000 74%, #00000000 76%, #00ff0088 76%, #4dff4d88 100%);
     margin-top: 20px;
     width: 98%;
     height: 100px;
@@ -55,7 +55,7 @@ body {
 
 .rank_dif_0 {
     /* background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%); */
-    background: linear-gradient(-75deg, #ff616188 32%, #00000000 32%, #00000000 36%, #009dff88 36%, #009dff88 65%, #00000000 65%, #00000000 70%, #7ae07a88 70%);
+    background: linear-gradient(-75deg, #ff000088 0%, #ff616188 33%, #00000000 33%, #00000000 35%, #009dff88 35%, #4dbbff88 66%, #00000000 66%, #00000000 68%, #00ff0088 68%, #4dff4d88 100%);
     margin-top: 20px;
     width: 98%;
     height: 100px;

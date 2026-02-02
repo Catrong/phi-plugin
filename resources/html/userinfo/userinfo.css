@@ -212,13 +212,13 @@ body p {
     justify-content: center;
     flex-direction: row;
     margin-top: 2%;
+    background: linear-gradient(-75deg, #87cfeb80 54%, #00000000 54%, #00000000 56%, #87cfeb80 56%);
 }
 
 .Player_data_line-left,
 .Player_data_line-right {
     display: flex;
-    width: 44%;
-    background-color: rgba(135, 207, 235, 0.5);
+
     flex-direction: column;
 }
 
