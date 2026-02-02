@@ -585,13 +585,13 @@ circle {
     align-items: center;
     z-index: 1;
     position: absolute;
-    bottom: 5px;
-    right: 8px;
+    bottom: 0px;
+    left: 18px;
 }
 
 .rank p {
-    font-size: 73px;
-    color: rgba(255, 255, 255, 0.2);
+    font-size: 53px;
+    color: rgba(255, 255, 255, 0.3);
     margin-top: -5%;
 }
 
