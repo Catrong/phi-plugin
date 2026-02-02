@@ -212,7 +212,7 @@ body p {
     justify-content: center;
     flex-direction: row;
     margin-top: 2%;
-    background: linear-gradient(-75deg, #87cfeb80 54%, #00000000 54%, #00000000 56%, #87cfeb80 56%);
+    background: linear-gradient(-75deg, #87cfeb80 49%, #00000000 49%, #00000000 51%, #87cfeb80 51%);
 }
 
 .Player_data_line-left,
