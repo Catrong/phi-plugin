@@ -269,9 +269,10 @@ export default new class getInfo {
 
             this.ori_info[id] = { ...Jsoninfo[CsvInfo[i].id] }
             if (!this.ori_info[id]) {
-                this.ori_info[id] = { id: id, song: CsvInfo[i].song, chapter: '', bpm: '', length: '', chart: {} }
+                this.ori_info[id] = { chapter: '', bpm: '', length: '' }
                 logger.mark(`[phi-plugin]曲目详情未更新：${id}`)
             }
+
             this.ori_info[id].id = id
             this.ori_info[id].song = CsvInfo[i].song
             this.ori_info[id].composer = CsvInfo[i].composer
@@ -335,6 +336,10 @@ export default new class getInfo {
                         }
                     }
 
+                    if (!this.ori_info[id].chart) {
+                        this.ori_info[id].chart = {}
+                    }
+
                     this.ori_info[id].chart[level] = {
                         id: id,
                         rank: level,
@@ -353,8 +358,8 @@ export default new class getInfo {
                     this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))
                 }
             }
-            if (Jsoninfo[id]?.chart) {
-                this.ori_info[id].chart = { ...this.ori_info[id].chart, ...Jsoninfo[id].chart }
+            if (Jsoninfo[idWithout0]?.chart) {
+                this.ori_info[id].chart = { ...this.ori_info[id].chart, ...Jsoninfo[idWithout0].chart }
             }
             this.illlist.push(id)
             this.songlist.push(this.ori_info[id].song)
