@@ -1,0 +1,136 @@
+.playerInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 50%;
+  --boxHeight: 80px;
+  --k: calc(var(--boxHeight) / 80px);
+  height: var(--boxHeight);
+  position: relative;
+}
+
+.playerInfo .blackBlock {
+  width: 98%;
+  --height: calc(var(--boxHeight) * 0.91);
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  z-index: 0;
+  right: 0px;
+  backdrop-filter: blur(5px);
+}
+
+.playerInfo .avatar {
+  --height: calc(var(--boxHeight) * 1);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+.playerInfo .avatar img {
+  height: 200%;
+}
+
+.playerInfo .playerId {
+  position: absolute;
+  height: 80%;
+  width: 51%;
+  right: 6%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playerInfo .playerId p {
+  font-size: calc(2rem * var(--k));
+  color: white;
+}
+
+.playerInfo .rks {
+  --height: calc(var(--boxHeight) * 0.3);
+  display: flex;
+  justify-self: center;
+  align-items: center;
+  background-color: white;
+  z-index: 1;
+  justify-content: center;
+  position: absolute;
+  left: calc(var(--boxHeight) * 1.74);
+  bottom: 13%;
+}
+
+.playerInfo .rks p {
+  font-size: calc(1.3rem * var(--k));
+  color: black;
+  padding: 0 calc(0.5rem * var(--k));
+}
+
+.playerInfo .clgBox {
+  width: calc(4rem * var(--k));
+  height: calc(1rem * var(--k));
+  left: calc(var(--boxHeight) * 2);
+  top: 17%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.playerInfo .clgBox p {
+  font-size: calc(1.5rem * var(--k));
+  color: white;
+}
+
+.playerInfo .date {
+  position: absolute;
+  right: calc(-6px * var(--k));
+  top: calc(-20px * var(--k));
+}
+
+.playerInfo .date p {
+  color: white;
+  font-size: calc(1rem * var(--k));
+}
+
+.playerInfo .dataBox {
+  position: absolute;
+  --height: calc(var(--boxHeight) * 0.3);
+  bottom: calc((var(--height) + 4px) * -1);
+  left: calc((var(--height) + 4px) * var(--clipSlope) * -1);
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  padding-right: calc(0.6rem * var(--k));
+  padding-left: calc(10px * var(--k));
+  white-space: nowrap;
+}
+
+.playerInfo .dataBox img {
+  height: 100%;
+  padding: calc(4px * var(--k));
+  box-sizing: border-box;
+}
+
+.playerInfo .dataBox p {
+  color: white;
+  font-size: calc(1rem * var(--k));
+}
+
+.playerInfo .spInfo {
+  position: absolute;
+  --height: calc(var(--boxHeight) * 0.3);
+  bottom: calc((var(--height) + 4px) * -1);
+  right: calc((4px + var(--boxHeight)) * var(--clipSlope));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: calc(0.7rem * var(--k));
+  padding-left: calc(0.6rem * var(--k));
+  white-space: nowrap;
+}
+
+.playerInfo .spInfo p {
+  color: black;
+  text-shadow: 1px 1px white;
+  font-size: calc(1rem * var(--k));
+}

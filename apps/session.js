@@ -445,7 +445,7 @@ export class phisstk extends phiPluginBase {
             return true
         }
 
-        send.send_with_At(e, `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)}\nsessionToken: ${await getSave.get_user_token(e.user_id)}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}`)
+        send.send_with_At(e, `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)}\nsessionToken: ${await getSave.get_user_token(e.user_id)}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}\nAPIId: ${await getSaveFromApi.get_user_apiId(e.user_id) || '未绑定'}`)
 
     }
 

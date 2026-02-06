@@ -85,6 +85,9 @@ export default await new class picmodle {
      * @returns 
      */
     async b19(e, data) {
+        if(data.theme == 'dss2') {
+            return await this.common(e, 'b19', data, 'dss2');
+        }
         return await this.common(e, 'b19', data)
     }
 
@@ -272,10 +275,11 @@ export default await new class picmodle {
      * @param {*} e 
      * @param {picKind} kind 
      * @param {*} data
+     * @param {string} [tplName] 模板名称，默认为kind
      * @returns 
      */
-    async common(e, kind, data) {
-        return await this.render(`${kind}/${kind}`, {
+    async common(e, kind, data, tplName = kind) {
+        return await this.render(`${kind}/${tplName}`, {
             ...data,
         }, {
             e,

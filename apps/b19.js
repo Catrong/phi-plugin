@@ -159,6 +159,7 @@ export class phib19 extends phiPluginBase {
         }
         // console.info(save_b19.b19_list)
         let data = {
+            BSIllPath: getInfo.getill(/**@type {idString} */('BANGINGSTRIKE.DewPleiades.0'), 'common'),
             phi: save_b19.phi,
             b19_list: save_b19.b19_list,
             PlayerId: gameuser.PlayerId,

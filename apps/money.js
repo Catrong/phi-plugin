@@ -14,7 +14,7 @@ import { Level, LevelNum } from '../model/constNum.js'
 /**@import {botEvent} from '../components/baseClass.js' */
 
 const illlist = getInfo.illlist
-const theme = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }]
+const theme = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }, { id: "dss2", src: "大师赛2" }]
 
 // const sp_date = 'Apr 01 2025'
 // const sp_date_num = [41]
@@ -52,7 +52,7 @@ export class phimoney extends phiPluginBase {
                     fnc: 'send'
                 },
                 {
-                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(theme)(\\s*)[0-2]$`,
+                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(theme)(\\s*)[0-3]$`,
                     fnc: 'theme'
                 },
             ]
@@ -379,8 +379,8 @@ export class phimoney extends phiPluginBase {
 
         let msg = e.msg.replace(/.*?theme\s*/g, '')
         let aim = Number(msg)
-        if (typeof aim != 'number' || aim < 0 || aim > 2) {
-            send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getUserCfg('config', 'cmdhead')} theme 0-2`)
+        if (typeof aim != 'number' || aim < 0 || aim > theme.length - 1) {
+            send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getUserCfg('config', 'cmdhead')} theme 0-${theme.length - 1}`)
             return false
         }
 

@@ -209,8 +209,8 @@
             },
             {
                 "title": "/theme",
-                "eg": "/theme [0-2]",
-                "desc": "切换主题，作用于 pgr update list task<br>eg: /theme 1"
+                "eg": "/theme [0-3]",
+                "desc": "切换主题，作用于 pgr update list task<br>0：默认&ensp;&ensp;&ensp;1：寒冬<br>2：使一颗心免于哀伤<br>3：大师赛2eg: /theme 1"
             },
             {
                 "title": "/sign",
