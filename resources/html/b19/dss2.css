@@ -185,7 +185,7 @@ body p {
   width: 100%;
   height: 60px;
   background: linear-gradient(#192022 50%, #19202200 100%);
-  --boxHeight: 70px;
+  --boxHeight: 60px;
   --k: calc(var(--boxHeight) / 80px);
 }
 
