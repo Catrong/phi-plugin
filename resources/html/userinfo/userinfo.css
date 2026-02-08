@@ -587,6 +587,7 @@ circle {
     position: absolute;
     bottom: 0px;
     left: 18px;
+    align-items: flex-end;
 }
 
 .rank p {
@@ -692,7 +693,7 @@ circle {
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     height: 90;
     z-index: 2;
 }
