@@ -177,7 +177,7 @@ export class phib19 extends phiPluginBase {
 
         let res = [await altas.b19(e, data)]
         if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
-            res.push(`请注意，当前版本可能更改了计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+            res.push(`请注意，当前版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         }
         send.send_with_At(e, res)
     }
