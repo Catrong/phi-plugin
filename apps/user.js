@@ -9,7 +9,7 @@ import LevelRecordInfo from '../model/class/LevelRecordInfo.js'
 import getSaveFromApi from '../model/getSaveFromApi.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
-import { Level } from '../model/constNum.js'
+import { Level, MAX_DIFFICULTY } from '../model/constNum.js'
 import getNotes from '../model/getNotes.js'
 import getUpdateSave from '../model/getUpdateSave.js'
 import analyzeSaveHistory from '../model/analyzeSaveHistory.js'
@@ -455,8 +455,8 @@ export class phiuser extends phiPluginBase {
             range: {
                 bottom: range[0],
                 top: range[1],
-                left: range[0] / 16.9 * 100,
-                length: (range[1] - range[0]) / 16.9 * 100
+                left: range[0] / MAX_DIFFICULTY * 100,
+                length: (range[1] - range[0]) / MAX_DIFFICULTY * 100
             },
             illustration: illustration,
             highest: tothighest,
