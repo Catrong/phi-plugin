@@ -32,7 +32,7 @@ body p {
 }
 
 .background img {
-    filter: blur(5px) brightness(0.7);
+    filter: blur(0px) brightness(0.7);
     width: 2844.44px;
     height: 1500px;
 }
@@ -43,6 +43,7 @@ body p {
     /* backdrop-filter: blur(50px); */
     height: 1320px;
     padding-bottom: 0px;
+    backdrop-filter: blur(10px);
 }
 
 .left {
@@ -591,7 +592,7 @@ circle {
 }
 
 .rank p {
-    font-size: 53px;
+    font-size: 50px;
     color: rgba(255, 255, 255, 0.3);
     margin-top: -5%;
 }

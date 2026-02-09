@@ -201,6 +201,13 @@ import { APIBASEURL } from './constNum.js';
  */
 
 /**
+ * @typedef {object} apFcCountResult
+ * @property {number} total 总成绩数
+ * @property {number} fcCount FC数量
+ * @property {number} apCount AP数量
+ */
+
+/**
  * @typedef {Object} APIUpdateCommentObject 评论对象
  * @property {string} songId 曲目ID
  * @property {allLevelKind} rank 等级
@@ -403,6 +410,15 @@ export default class makeRequest {
      */
     static async getSongAccList(params) {
         return (await makeFetch(burl('/get/scoreList/songAccList'), params)).data
+    }
+
+    /**
+     * 获取谱面所有成绩
+     * @param {{songId: idString, rank?: levelKind[]}} params id+.0
+     * @returns {Promise<Record<levelKind, apFcCountResult>>}
+     */
+    static async getSongApFcCount(params) {
+        return (await makeFetch(burl('/get/scoreList/songApFcCount'), params)).data
     }
 
     /**

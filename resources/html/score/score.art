@@ -135,16 +135,23 @@
                     <div class="data_acc">
                         <p>{{rank.acc}}%</p>
                     </div>
-                </div>
-                <div class="data_bottom">
-                    <div class="data_suggest">
-                        <p>>> {{rank.suggest}}</p>
+                    <div class="suggest suggest-kind-{{rank.suggestType}}">
+                        <div class="suggest-tip"></div>
+                        <p>{{rank.suggest}}</p>
                     </div>
                 </div>
                 {{/if}}
                 {{else}}
                 <div class="no_info">
                     <p>Locked</p>
+                </div>
+                {{/if}}
+                {{if rank.apFcCount}}
+                <div class="data_bottom">
+                    <div class="APCount">AP: {{(rank.apFcCount.ap * 100).toFixed(2)}}%</div>
+                    <div class="FCCount">FC: {{(rank.apFcCount.fc * 100).toFixed(2)}}%</div>
+                    <div class="total">total:</div>
+                    <div class="count">{{rank.apFcCount.total}}</div>
                 </div>
                 {{/if}}
             </div>
@@ -184,7 +191,8 @@
             <p>RANK_LIST</p>
         </div>
         <div class="selected">
-            <p>{{ranklist.userRank}} / {{ranklist.totDataNum}}&ensp;&ensp;Selected >> {{ranklist.selected}}</p>
+            <p>{{ranklist.userRank}} / {{ranklist.totDataNum}}</p>
+            <p>Selected >> {{ranklist.selected}}</p>
         </div>
         {{each ranklist.users user}}
         <div class="rankUser{{user.isUser ? ' rankUserMe' : ''}}">

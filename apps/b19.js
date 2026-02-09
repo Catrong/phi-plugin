@@ -922,11 +922,6 @@ async function getScore(songId, e, args = {}) {
 
 
     data.illustration = getInfo.getill(songId)
-
-    for (let level of Level) {
-        if (!info.chart[level]) break
-        data.scoreData[level] = { difficulty: info.chart[level].difficulty }
-    }
     // console.info(ans)
     /**
      * 用户游玩过的最高难度
@@ -943,13 +938,39 @@ async function getScore(songId, e, args = {}) {
                 rks: record.rks.toFixed(4),
                 suggest: save.getSuggest(songId, i, 4, chartInfo.difficulty),
             }
+            const suggest = data.scoreData[Level[i]].suggest
+            if (typeof suggest == 'number') {
+                data.scoreData[Level[i]].suggest = suggest.toFixed(2) + '%'
+                if (suggest < 98.5) {
+                    data.scoreData[Level[i]].suggestType = 0
+                } else if (suggest < 99) {
+                    data.scoreData[Level[i]].suggestType = 1
+                } else if (suggest < 99.5) {
+                    data.scoreData[Level[i]].suggestType = 2
+                } else if (suggest < 99.7) {
+                    data.scoreData[Level[i]].suggestType = 3
+                } else if (suggest < 99.85) {
+                    data.scoreData[Level[i]].suggestType = 4
+                } else {
+                    data.scoreData[Level[i]].suggestType = 5
+                }
+            } else {
+                data.scoreData[Level[i]].suggest = "无法推分"
+            }
             maxRank = Level[i]
         } else {
             data.scoreData[Level[i]] = {
+                ...data.scoreData[Level[i]],
                 Rating: 'NEW',
+                suggest: save.getSuggest(songId, i, 4, chartInfo.difficulty) || '无法推分'
             }
         }
     })
+
+    for (let level of Level) {
+        if (!info.chart[level]) break
+        data.scoreData[level].difficulty = info.chart[level].difficulty
+    }
 
     maxRank = args?.dif || maxRank
 
@@ -987,6 +1008,26 @@ async function getScore(songId, e, args = {}) {
                 logger.warn(`[phi-plugin] API错误 getScoreRanklistByUser`)
                 logger.warn(err)
             }
+        }
+        try {
+            const apFcCount = await makeRequest.getSongApFcCount({ songId });
+            if (apFcCount) {
+
+                for (let level of Level) {
+                    if (!info.chart[level]) break;
+                    const count = apFcCount[level];
+                    if (!count || !count.total) continue;
+                    data.scoreData[level].apFcCount = {
+                        ap: count.apCount / count.total,
+                        fc: count.fcCount / count.total,
+                        total: count.total
+                    };
+                }
+
+            }
+        } catch (err) {
+            logger.warn(`[phi-plugin] API错误 getSongApFcCount`)
+            logger.warn(err)
         }
     }
 
