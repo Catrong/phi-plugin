@@ -28,8 +28,9 @@ export default class LevelRecordInfo {
      * @param {{fc:boolean | number, score:number, acc: number}} data 原始数据
      * @param {idString} id 曲目id
      * @param {number} rank 难度
+     * @param {string} [ver] 版本号
      */
-    constructor(data, id, rank) {
+    constructor(data, id, rank, ver) {
         this.fc = Boolean(data.fc);
         this.score = data.score;
         this.acc = data.acc;
@@ -54,13 +55,26 @@ export default class LevelRecordInfo {
         this.song = info.song //曲名
         this.illustration = getInfo.getill(id) //曲绘链接
 
-        const difficulty = info?.chart?.[this.rank]?.difficulty
-        if (difficulty) {
-            this.difficulty = difficulty //难度
-            this.rks = fCompute.rks(this.acc, this.difficulty) //等效rks
+        if (!ver || this.rank == 'LEGACY') {
+            //未指定版本或难度为LGC，使用当前版本信息
+            const difficulty = info?.chart?.[this.rank]?.difficulty
+            if (difficulty) {
+                this.difficulty = difficulty //难度
+                this.rks = fCompute.rks(this.acc, this.difficulty) //等效rks
+            } else {
+                this.difficulty = 0
+                this.rks = 0
+            }
         } else {
-            this.difficulty = 0
-            this.rks = 0
+            //使用指定版本信息
+            const difficulty = getInfo.historyDifficultyBySongId[id]?.[ver]?.[this.rank]
+            if (difficulty) {
+                this.difficulty = difficulty //难度
+                this.rks = fCompute.rks(this.acc, this.difficulty) //等效rks
+            } else {
+                this.difficulty = 0
+                this.rks = 0
+            }
         }
 
 

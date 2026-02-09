@@ -1,7 +1,8 @@
 import Config from '../../components/Config.js'
 import logger from '../../components/Logger.js'
+import Version from '../../components/Version.js'
 import PhigrosUser from '../../lib/PhigrosUser.js'
-import { Level, MAX_DIFFICULTY } from '../constNum.js'
+import { Level, LevelNum, MAX_DIFFICULTY } from '../constNum.js'
 import fCompute from '../fCompute.js'
 import getInfo from '../getInfo.js'
 import getRksRank from '../getRksRank.js'
@@ -164,7 +165,7 @@ export default class Save {
             throw new Error(`您的存档rks异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
         }
         /**
-         * @type {{[id:idString]: (LevelRecordInfo|null)[]}}
+         * @type {Record<idString, (LevelRecordInfo|null)[]>}
          */
         this.gameRecord = {}
 
@@ -337,13 +338,27 @@ export default class Save {
      */
     async getB19(num) {
 
-        let getInfo = (await import('../getInfo.js')).default
         /**计算得到的rks，仅作为测试使用 */
         let sum_rks = 0
         /**满分且 rks 最高的成绩数组 */
         let philist = this.findAccRecord(100)
+
         /**
-         * @type {(LevelRecordInfo & {suggestType?: number, suggest?: string} | undefined)[]}
+         * @typedef {object} otherLevelRecordInfo
+         * @property {number|string} num B几
+         * @property {string} suggest 推分建议
+         * @property {number} suggestType 推分建议类型 0-5 分别对应 红橙黄绿青蓝六种建议等级
+         * @property {number} accAvg 同rks玩家的平均准确率
+         * @property {string} accKind 同rks玩家的平均准确率类型 'Higher' 'Lower' 'Hyper' 'Finished' 分别对应高于平均、低于平均、远高于平均、完成推分建议的玩家占比超过95%四种情况
+         * @property {object} cpToOld 若为旧版本，则对比新定数与旧版本rks 'Higher' 'Lower'
+         * @property {string} cpToOld.type 对比结果 'Higher' 'Lower'
+         * @property {string} cpToOld.dif 与旧版本rks差值
+         * @property {string} cpToOld.rks 与旧版本rks差值（保留两位小数）
+         * 
+         */
+
+        /**
+         * @type {((LevelRecordInfo & Partial<otherLevelRecordInfo>) | undefined)[]}
          */
         let phi = philist.splice(0, Math.min(philist.length, 3))
 
@@ -370,7 +385,7 @@ export default class Save {
 
         /**
          * 所有成绩
-         * @type {(LevelRecordInfo & {suggestType?: number, suggest?: string, num?: number|string, accAvg?: number, accKind?: string})[]}
+         * @type {(LevelRecordInfo & Partial<otherLevelRecordInfo>)[]}
          */
         let rkslist = this.getRecord()
         /**真实 rks */
@@ -464,6 +479,30 @@ export default class Save {
                 }
             }
         }
+
+        /**如果版本低于插件对应pgr版本 */
+        const saveVer = this.saveInfo.summary.gameVersion
+        if (saveVer &&
+            !isNaN(saveVer) &&
+            saveVer < Number(Version.phigrosVerNum) &&
+            getInfo.versionInfo[`${saveVer}`]) {
+            const oldGameRecord = buildGameRecord(this.gameRecord, `${saveVer}`);
+            const addCp = (/**@type {(LevelRecordInfo & Partial<otherLevelRecordInfo>) | undefined} */record) => {
+                if (!record) return;
+                const oldRecord = oldGameRecord[record.id]?.[LevelNum[record.rank]]
+                if (!oldRecord?.rks) return;
+                if (record.difficulty == oldRecord.difficulty) return; //定数未变动不对比
+                record.cpToOld = { type: '', dif: Math.abs(record.rks - oldRecord.rks).toFixed(1), rks: Math.abs(record.rks - oldRecord.rks).toFixed(2) }
+                if (record.difficulty > oldRecord.difficulty) {
+                    record.cpToOld.type = 'Higher'
+                } else if (record.difficulty < oldRecord.difficulty) {
+                    record.cpToOld.type = 'Lower'
+                }
+            }
+            phi.forEach(addCp)
+            b19_list.forEach(addCp)
+        }
+
 
         this.B19List = { phi, b19_list }
 
@@ -761,4 +800,37 @@ function checkIg(save) {
     if (Math.floor(save.saveInfo.summary.challengeModeRank / 100) == 0 && save.saveInfo.summary.challengeModeRank != 0) return true
     if (save.saveInfo.summary.challengeModeRank % 1 != 0) return true
     return false
+}
+
+
+/**
+ * 
+ * @param {Record<idString, (ori_record|null)[]>} data 
+ * @param {string} ver 
+ */
+function buildGameRecord(data, ver) {
+
+    /**
+     * @type {Record<idString, (LevelRecordInfo|null)[]>}
+     */
+    const gameRecord = {};
+
+    /**@type {idString[]} */
+    const idList = fCompute.objectKeys(data)
+
+    for (const id of idList) {
+        gameRecord[id] = []
+        for (let i in data[id]) {
+            let level = Number(i)
+            if (!data[id][level]) {
+                gameRecord[id][level] = null
+                continue
+            }
+            // this.gameRecord[id][level] = new (import('./LevelRecordInfo')).default(data.gameRecord[id][level], id, level)
+
+
+            gameRecord[id][level] = new LevelRecordInfo(data[id][level], id, level, ver)
+        }
+    }
+    return gameRecord
 }

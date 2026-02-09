@@ -18,6 +18,7 @@ import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
 import LevelRecordInfo from '../model/class/LevelRecordInfo.js';
 import SongsInfo from '../model/class/SongsInfo.js';
+import Version from '../components/Version.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -143,6 +144,38 @@ export class phib19 extends phiPluginBase {
         let save_b19 = await save.getB19(nnum)
         let stats = await save.getStats()
 
+        const spInfo = [];
+
+        /**
+         * 回复的消息
+         * @type {any[]}
+         */
+        const res = [];
+
+        const saveVer = save.saveInfo.summary.gameVersion
+        if (saveVer &&
+            !isNaN(saveVer) &&
+            saveVer != Number(Version.phigrosVerNum)) {
+            if (saveVer < Number(Version.phigrosVerNum)) {
+                spInfo.push(`${getInfo.versionInfo[`${saveVer}`]?.version_label || saveVer} Update to ${Version.phigros}`)
+                spInfo.push(`Real RKS: ${save_b19.com_rks.toFixed(4)}`)
+                if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                    res.push(`请注意，当前版本可能更改了定数\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+                }
+            } else {
+                spInfo.push(`${getInfo.versionInfo[`${saveVer}`]?.version_label || saveVer} later than ${Version.phigros}`)
+
+                if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                    res.push(`请注意，您的版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+                }
+            }
+
+        } else {
+            if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                res.push(`请注意，您的版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+            }
+        }
+
 
         // let dan = await get.getDan(e.user_id)
         let money = save.gameProgress?.money || [0, 0, 0, 0, 0]
@@ -173,12 +206,10 @@ export class phib19 extends phiPluginBase {
             gameuser,
             nnum,
             stats,
+            spInfo
         }
 
-        let res = [await altas.b19(e, data)]
-        if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
-            res.push(`请注意，当前版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        }
+        res.unshift(await altas.b19(e, data))
         send.send_with_At(e, res)
     }
 
@@ -235,18 +266,18 @@ export class phib19 extends phiPluginBase {
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
         let save_b19;
-        let spInfo = '';
+        let spInfo = [];
 
         const type = e.msg.match(/^.*?(p|x|fc)([0-9]+)/i)?.[1].toLowerCase();
         switch (type) {
             case 'p': {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
-                spInfo = "All Perfect Mode";
+                spInfo.push("All Perfect Mode");
                 break;
             }
             case 'fc': {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'custom', value: (record) => ((record.fc === true) && (record.score != 1e6)) }], false)
-                spInfo = "Full Combo Mode";
+                spInfo.push("Full Combo Mode");
                 break;
             }
             case 'x': {
@@ -256,12 +287,12 @@ export class phib19 extends phiPluginBase {
                         return fCompute.comJust1Good(record.score, getInfo.ori_info[record.id]?.chart?.[record.rank]?.combo || 1e9)
                     }
                 }], false)
-                spInfo = "1 Good Mode";
+                spInfo.push("1 Good Mode");
                 break;
             }
             default: {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
-                spInfo = "All Perfect Mode";
+                spInfo.push("All Perfect Mode");
             }
         }
 

@@ -1,0 +1,61 @@
+@import "../common/common.css";
+@import "../common/playerInfo.css";
+
+body {
+  height: 1080px;
+  width: 2048px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  --left-margin: 430px;
+}
+
+.background img {
+  filter: none;
+}
+
+.backGlass {
+  --height: 864px;
+  width: 1638.4px;
+  backdrop-filter: blur(10px) brightness(60%);
+}
+
+.leftAbsolute {
+  position: absolute;
+  top: var(--top);
+  left: calc(var(--top) * var(--clipSlope) * -1 + var(--left-margin));
+}
+
+.playerInfo {
+  width: 30%;
+  --top: 150px;
+  margin-left: calc(80px * var(--clipSlope) * -1);
+}
+
+.rankProgress {
+  width: 5%;
+  --height: 400px;
+  --top: 333px;
+  display: flex;
+}
+
+.rankProgressBkg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin-left: calc(var(--height) * var(--clipSlope) * -1);
+}
+
+.rankProgressBar {
+  margin-left: calc(var(--height) * var(--clipSlope) * -1);
+  width: calc(var(--width) + var(--height) * var(--clipSlope) * 1);
+}
+
+.rangeBar {
+  background-color: #fff;
+  --width: 3px;
+}
+
+.rankBar {
+  --width: 15px;
+}
