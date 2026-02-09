@@ -16,6 +16,15 @@ export default new class getInfo {
 
 
     /**
+     * @typedef csvDifObject
+     * @property {idStringWithout0} id 曲目id
+     * @property {number} EZ EZ难度
+     * @property {number} HD HD难度
+     * @property {number} IN IN难度
+     * @property {number} [AT] AT难度
+     */
+
+    /**
      * @typedef {Object} updatedChartObject
      * @property {number|number[]|undefined} tap
      * @property {number|number[]|undefined} drag
@@ -26,10 +35,29 @@ export default new class getInfo {
      * @property {boolean|undefined} isNew
      */
 
+    /**
+     * @typedef {object} versionInfoObject
+     * @property {string} version_label 版本号
+     * @property {number} update_date 版本更新时间戳
+     * @property {string} whatsnew 版本更新内容
+     * @property {number} version_code 版本号（整数）
+     * @property {string} version 版本号（整数）字符版
+     * 
+     */
+
+    /**
+     * @typedef {Record<string, versionInfoObject>} versionInfoMap
+     */
+
+    /**
+     * @typedef {Record<string, Record<idString, csvDifObject>>} historyDifficultyByVersionObject
+     */
+
+    /**
+     * @typedef {Record<idString, Record<string, Record<levelKind, number>>>} historyDifficultyBySongIdObject
+     */
+
     constructor() {
-
-
-
         /**
          * 难度映射
          * @type {allLevelKind[]}
@@ -93,6 +121,15 @@ export default new class getInfo {
          * @type {Record<idString, Partial<Record<levelKind, updatedChartObject>>>}
          */
         this.updatedChart = {}
+
+        /** @type {versionInfoMap} */
+        this.versionInfo = {}
+
+        /** @type {historyDifficultyByVersionObject} */
+        this.historyDifficultyByVersion = {}
+
+        /** @type {historyDifficultyBySongIdObject} */
+        this.historyDifficultyBySongId = {}
     }
 
     static initIng = false
@@ -101,6 +138,78 @@ export default new class getInfo {
 
         if (Config.getUserCfg('config', 'watchInfoPath')) {
             chokidar.watch(infoPath).on('change', () => {
+                /**
+                 * 难度映射
+                 * @type {allLevelKind[]}
+                 */
+                this.allLevel = allLevel
+
+                /**
+                 * 难度映射
+                 * @type {levelKind[]}
+                 */
+                this.Level = Level
+
+                /**
+                 * @type {string[]}
+                 * @description Tips
+                 */
+                this.tips = []
+
+
+                /**
+                 * @type {{[key:idString]:Partial<SongsInfo> | undefined}}
+                 * @description 原版信息
+                 */
+                this.ori_info = {}
+                /**
+                 * @type {{[key:idString]:songString}}
+                 * @description 通过id获取曲名
+                 */
+                this.songsid = {}
+                /**
+                 * @type {{[key:songString]:idString}}
+                 * @description 原曲名称获取id
+                 */
+                this.idssong = {}
+                /**
+                 * @type {idString[]}
+                 * @description 含有曲绘的曲目列表，id名称
+                 */
+                this.illlist = []
+
+                /**
+                 * @type {{[key:string]: string[]}}
+                 * @description 章节别名，以别名为key，内容为章节名
+                 */
+                this.chapNick = {}
+
+                /**
+                 * 按dif分的info
+                 * @type {Record<number, Chart[]>}
+                 */
+                this.info_by_difficulty = {}
+
+
+                /**
+                 * @type {idString[]}
+                 */
+                this.updatedSong = []
+
+                /**
+                 * @type {Record<idString, Partial<Record<levelKind, updatedChartObject>>>}
+                 */
+                this.updatedChart = {}
+
+                /** @type {versionInfoMap} */
+                this.versionInfo = {}
+
+                /** @type {historyDifficultyByVersionObject} */
+                this.historyDifficultyByVersion = {}
+
+                /** @type {historyDifficultyBySongIdObject} */
+                this.historyDifficultyBySongId = {}
+
                 this.init()
             });
         }
@@ -438,6 +547,38 @@ export default new class getInfo {
                 }
             }
         }
+
+        const historyVersionList = fs.readdirSync(oldInfoPath)
+
+        for (let ver of historyVersionList) {
+            const verInfo = await readFile.FileReader(path.join(oldInfoPath, ver, 'info.json'))
+            /**@type {csvDifObject[]} */
+            const csvDifInfo = await readFile.FileReader(path.join(oldInfoPath, ver, 'change.csv'))
+            /**@type {Record<idString, csvDifObject>} */
+            const difInfo = {}
+            csvDifInfo.forEach(item => {
+                difInfo[idWithout0ToIdWith0(item.id)] = item
+            })
+            this.versionInfo[ver] = verInfo
+
+            this.historyDifficultyByVersion[ver] = difInfo
+
+            const ids = fCompute.objectKeys(difInfo)
+
+            for (let id of ids) {
+                /** @type {Record<levelKind, number>} */
+                const dif = /** @type {any} */ ({})
+                Level.forEach(level => difInfo[id][level] && (dif[level] = difInfo[id][level]))
+                if (!this.historyDifficultyBySongId[id]) {
+                    this.historyDifficultyBySongId[id] = {}
+                    this.historyDifficultyBySongId[id][ver] = dif
+                } else {
+                    this.historyDifficultyBySongId[id][ver] = dif
+                }
+            }
+
+        }
+
 
         this.initIng = false
         logger.info(`[phi-plugin]初始化曲目信息完成`)

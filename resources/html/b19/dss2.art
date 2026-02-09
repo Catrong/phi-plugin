@@ -44,9 +44,11 @@
           <p>{{gameuser.data}}</p>
         </div>
         {{if spInfo}}
+        {{each spInfo v}}
         <div class="spInfo colorful-background clip-box">
-          <p>{{spInfo}}</p>~
+          <p>{{v}}</p>
         </div>
+        {{/each}}
         {{/if}}
       </div>
     </div>

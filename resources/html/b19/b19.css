@@ -141,11 +141,18 @@ body p {
   box-sizing: border-box;
 }
 
-.spInfo {
+.spInfoBox {
   position: absolute;
   --height: 20px;
   bottom: -31%;
   right: 4%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.spInfo {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -553,8 +560,8 @@ body p {
 }
 
 .accLower {
-  --bkgColor: #f000004d;
-  --lineColor: hsl(350, 100%, 70%);
+  --bkgColor: hsl(334.64deg 100% 21.47% / 67.5%);
+  --lineColor: hsl(351.09deg 100% 70%);
 }
 
 .accHyper {
@@ -587,24 +594,42 @@ body p {
   background-color: var(--lineColor);
 }
 
-.accAvg p {
-    font-size: 12px;
+.accAvg p,
+.cpToOld p {
+  font-size: 12px;
 }
 
-.accAvg svg {
+.accAvg svg,
+.cpToOld svg {
   height: 75%;
 }
 
 .accLower svg {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .accHyper svg {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
-.accAvg path {
-    fill: var(--lineColor);
+.accAvg path,
+.cpToOld path {
+  fill: var(--lineColor);
+}
+
+.cpToOld {
+  position: absolute;
+  top: -14px;
+  right: 4%;
+  /* width: 17px; */
+  --height: 19px;
+  padding: 0 8px;
+  white-space: nowrap;
+  background-color: var(--bkgColor);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 3px solid var(--lineColor);
 }
 
 .Nosignal {

@@ -1,0 +1,7 @@
+{
+  "version_label": "3.13.0",
+  "update_date": 1744966800,
+  "whatsnew": "1.新增Immaculée Sekai精选集，包含以下歌曲：\n•「Aphrodite's Child (short ver.)」 by: RUQOA\n•「DevIAtiOn (short ver.)」 by: polysha\n•「NO x」 by: Juggernaut.\n2.修复选择排序靠后的Another Me作为背景时，重新进入玩家页时会被排序靠前的Another Me覆盖的情况\n3.修复使用重演游玩第八章OS模式时，所有已解锁曲封面都是Luminescence的问题\n4.修复使用重演游玩Crave Wave时无法弹出结算画面的问题\n5.修复未通关第5、6、7章时，章节封面丢失的问题\n6.修复初次游玩Phigros时，个人面板背景的Introduction丢失的问题\n7.修复重演按钮的UI文本显示不正常的问题",
+  "version_code": 126,
+  "version": "126"
+}
