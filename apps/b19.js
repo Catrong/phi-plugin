@@ -938,9 +938,9 @@ async function getScore(songId, e, args = {}) {
                 rks: record.rks.toFixed(4),
                 suggest: save.getSuggest(songId, i, 4, chartInfo.difficulty),
             }
-            const suggest = data.scoreData[Level[i]].suggest
+            const suggest = save.getSuggest(songId, i, undefined, chartInfo.difficulty);
             if (typeof suggest == 'number') {
-                data.scoreData[Level[i]].suggest = suggest.toFixed(2) + '%'
+                data.scoreData[Level[i]].suggest = suggest.toFixed(4) + '%'
                 if (suggest < 98.5) {
                     data.scoreData[Level[i]].suggestType = 0
                 } else if (suggest < 99) {

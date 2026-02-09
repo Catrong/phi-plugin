@@ -26,29 +26,34 @@ export default class fCompute {
 
     /**
      * @overload
-     * @param {Number} rks 目标rks
-     * @param {Number} difficulty 定数
-     * @param {Number} count 保留位数
+     * @param {number} rks 目标rks
+     * @param {number} difficulty 定数
+     * @param {number} count 保留位数
      * @returns {string}
      */
     /**
      * @overload
-     * @param {Number} rks 目标rks
-     * @param {Number} difficulty 定数
+     * @param {number} rks 目标rks
+     * @param {number} difficulty 定数
+     * @param {undefined} [count=undefined] 保留位数
      * @returns {number}
      */
     /**
      * 计算所需acc
-     * @param {Number} rks 目标rks
-     * @param {Number} difficulty 定数
-     * @param {Number} [count=undefined] 保留位数
+     * @param {number} rks 目标rks
+     * @param {number} difficulty 定数
+     * @param {number | undefined} [count=undefined] 保留位数
      * @returns 所需acc
      */
     static suggest(rks, difficulty, count = undefined) {
         let ans = 45 * Math.sqrt(rks / difficulty) + 55
 
         if (ans >= 100)
-            return "无法推分"
+            if (count != undefined) {
+                return "无法推分"
+            } else {
+                return -1;
+            }
         else {
             if (count != undefined) {
                 return `${ans.toFixed(count)}%`

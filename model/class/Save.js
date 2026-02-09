@@ -408,10 +408,10 @@ export default class Save {
             /**推分建议 */
             if (rkslist[i].acc < 100) {
                 let suggest = fCompute.suggest(Number((i < 26) ? rkslist[i].rks : rkslist[26].rks) + minuprks * 30, rkslist[i].difficulty)
-                if (typeof suggest != 'number' && (!phi?.[0] || (rkslist[i].rks > (phi[phi.length - 1]?.rks || 0)))) {
+                if (suggest == -1 && (!phi?.[0] || (rkslist[i].rks > (phi[phi.length - 1]?.rks || 0)))) {
                     suggest = 100;
                 }
-                if (typeof suggest == 'number') {
+                if (suggest != -1) {
                     rkslist[i].suggest = suggest.toFixed(2) + '%'
                     if (suggest < 98.5) {
                         rkslist[i].suggestType = 0
@@ -612,7 +612,7 @@ export default class Save {
      * 
      * @param {idString} id 
      * @param {number} lv 
-     * @param {number} count 保留位数
+     * @param {number | undefined} count 保留位数
      * @param {number} difficulty 
      * @returns 
      */
@@ -623,13 +623,26 @@ export default class Save {
             this.b0_rks = this.findAccRecord(100, true)[0]?.rks
         }
         // console.info(this.b19_rks, this.gameRecord[id][lv]?.rks ? this.gameRecord[id][lv].rks : 0, this.gameRecord[id])
-        let suggest = ''
+        let suggest = 0
         if (!this.gameRecord[id] || !this.gameRecord[id][lv] || !this.gameRecord[id][lv].rks) {
-            suggest = fCompute.suggest(Math.max(this.b19_rks, 0) + this.minUpRks() * 30, difficulty, count)
+            suggest = fCompute.suggest(Math.max(this.b19_rks, 0) + this.minUpRks() * 30, difficulty)
         } else {
-            suggest = fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks) + this.minUpRks() * 30, difficulty, count)
+            suggest = fCompute.suggest(Math.max(this.b19_rks, this.gameRecord[id][lv].rks) + this.minUpRks() * 30, difficulty)
         }
-        return suggest.includes('无') ? (difficulty > this.b0_rks + this.minUpRks() * 30 ? Number(100).toFixed(count) + '%' : suggest) : suggest
+
+        if (suggest == -1 && difficulty > this.b0_rks + this.minUpRks() * 30) {
+            suggest = 100
+        }
+
+        if (count == undefined) {
+            return suggest
+        } else {
+            if (suggest != -1) {
+                return suggest.toFixed(count) + '%'
+            } else {
+                return "无法推分"
+            }
+        }
     }
 
     /**
