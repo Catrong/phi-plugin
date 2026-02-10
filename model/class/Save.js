@@ -609,6 +609,22 @@ export default class Save {
     }
 
     /**
+     * @overload
+     * @param {idString} id 
+     * @param {number} lv 
+     * @param {number} count 保留位数
+     * @param {number} difficulty 
+     * @returns {string}
+     */
+    /**
+     * @overload
+     * @param {idString} id 
+     * @param {number} lv 
+     * @param {undefined} count 保留位数
+     * @param {number} difficulty 
+     * @returns {number}
+     */
+    /**
      * 
      * @param {idString} id 
      * @param {number} lv 
