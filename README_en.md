@@ -116,7 +116,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi (comment\|cmt) <song> [difficulty=IN](newline)<text>` | Comment on songs |
 | `#phi mycmt` | View own cloud comments |
 | `#phi recmt <ID>` | Delete comment (owner/admin) |
-| `#phi (table\|ratings) <rating>` | Phigros rating table (by Rhythematics) |
+| `#phi (table\|ratings) <rating>` | Phigros rating table |
 | `#phi new` | Check new songs |
 | `#phi tips` | Random tips |
 | `#phi jrrp` | Daily luck |
