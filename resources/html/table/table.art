@@ -1,23 +1,82 @@
-<head>
-    <link rel="stylesheet" href="./table.css">
-</head>
+{{extend defaultLayout}}
 
-<body>
-    <div class="background">
-        <img src="https://img.moegirl.org.cn/common/0/0b/Glaciaxion_Phigros.png" alt="曲绘-模糊">
-    </div>
-    <div class="createdbox">
-        <div class="phi-plugin">
-            <p>{{_plugin}}</p>
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/table/table.css">
+{{/block}}
+
+{{block 'main'}}
+  <div class="row">
+    <div class="title">
+      <div class="phigrosTitle">
+        <p class="phigros-title-font">Phigros</p>
+      </div>
+      <div class="title-line">
+        <div class="titleDesc">
+          <p>Constant Table</p>
         </div>
-        <div class="ver">
-            <p>{{Version.ver}}</p>
+        <div class="phigrosVersion clip-box">
+          <p>{{title.version}}</p>
         </div>
-        <div class="phi-plugin">
-            <p>使用帮助</p>
+      </div>
+    </div>
+    <div class="queryDifficulty">
+      <div class="qdBox">
+        <div class="query">
+          <p>difficulty</p>
         </div>
+        <div class="total">
+          <p>total: {{title.total}}</p>
+        </div>
+        <div class="index clip-box">
+          <div class="query">
+            <p>difficulty</p>
+          </div>
+          <p>{{title.difficulty}}</p>
+          <div class="total">
+            <p>total: {{title.total}}</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="helpbox">
-        
+  </div>
+  <div class="tableBox">
+    {{each table dif}}
+    <div class="label">
+      <div class="labelHead">
+        <div class="heng">
+          <div class="line clip-box"></div>
+        </div>
+        <div class="shu leftSlopeAbsolute">
+          <div class="line clip-box"></div>
+        </div>
+      </div>
+      <div class="labelContentBox">
+        <div class="labelContent clip-box">
+          <p>{{dif.difficulty}}</p>
+        </div>
+      </div>
     </div>
-</body>
+    <div class="content">
+      {{each dif.songs song}}
+      <div class="song table-{{song.rank}}">
+        <div class="ill clip-box">
+          <img src="{{song.illustration}}" alt="{{song.illustration}}" />
+        </div>
+        <div class="rank clip-box">
+          <div class="rankBlock clip-box"></div>
+          <p>{{song.rank}}</p>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/each}}
+  </div>
+  <div class="createdbox">
+    <div class="phi-plugin">
+      <p>{{_plugin}}</p>
+    </div>
+    <div class="ver">
+      <p>{{Version.ver}}</p>
+    </div>
+  </div>
+{{/block}}

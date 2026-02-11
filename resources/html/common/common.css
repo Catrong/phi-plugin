@@ -269,23 +269,13 @@ body p {
 
 .clip-box-right {
   height: var(--height);
-  clip-path: polygon(
-    100% 0,
-    calc(100% - calc(var(--height) * var(--clipSlope))) 100%,
-    0 100%,
-    0 0
-  );
+  clip-path: polygon(100% 0, calc(100% - calc(var(--height) * var(--clipSlope))) 100%, 0 100%, 0 0);
   overflow: hidden;
 }
 
 .clip-box-left {
   height: var(--height);
-  clip-path: polygon(
-    100% 0,
-    100% 100%,
-    0 100%,
-    calc(var(--height) * var(--clipSlope)) 0
-  );
+  clip-path: polygon(100% 0, 100% 100%, 0 100%, calc(var(--height) * var(--clipSlope)) 0);
   overflow: hidden;
 }
 
@@ -296,4 +286,16 @@ body p {
 
 .weight-font {
   font-weight: 1000;
+}
+
+.phigros-title-font {
+  font-family: "Aldrich", "PHI";
+  text-shadow: 0 0 20px #00baff;
+  color: white;
+}
+
+.leftSlopeAbsolute {
+  position: absolute;
+  top: var(--top);
+  left: calc(var(--top) * var(--clipSlope) * -1 + var(--left-margin));
 }

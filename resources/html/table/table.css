@@ -1,19 +1,321 @@
 @import "../common/common.css";
 
 body {
-    width: 1920px;
-    height: 2000px;
-    border: 5px solid white;
+  width: 960px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  /* margin-bottom: 50px; */
+  height: 270px;
+}
+
+.title {
+  width: 46%;
+  padding-left: 9%;
+  height: 55.6%;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.phigrosTitle {
+  /* position: absolute; */
+  /* top: 27%; */
+  /* left: 6%; */
+  /* margin-top: 11%; */
+}
+
+.phigrosTitle p {
+  font-size: 60px;
+}
+
+.title-line {
+  width: 100%;
+  --height: 30px;
+  height: var(--height);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.titleDesc {
+  /* position: absolute; */
+  height: 56px;
+}
+
+.titleDesc p {
+  font-size: 49px;
+  color: white;
+}
+
+.phigrosVersion {
+  /* position: absolute; */
+  padding: 0px 20px;
+  width: 64px;
+  background-color: #ffffff;
+  display: flex;
+  /* right: 10%; */
+  /* bottom: 10%; */
+  align-items: center;
+  justify-content: center;
+}
+
+.phigrosVersion p {
+  font-size: 25px;
+}
+
+.queryDifficulty {
+  width: 41%;
+  height: 100%;
+  /* height: 200px; */
+  display: flex;
+  justify-content: center;
+  filter: drop-shadow(2px 4px 6px black);
+  /* margin-bottom: 50px; */
+  align-items: center;
+  flex-direction: column;
+}
+
+.qdBox {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.queryDifficulty .index {
+  --height: 150px;
+  width: 220px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* position: relative; */
+}
+
+.queryDifficulty .index p {
+  font-size: 75px;
+  color: black;
+  text-align: center;
+}
+
+.query {
+  position: absolute;
+  top: -7%;
+  right: 55%;
+}
+
+.queryDifficulty .query p {
+  font-size: 30px;
+  color: white;
+}
+
+.queryDifficulty .index .query p {
+  color: black;
+}
+
+.total {
+  position: absolute;
+  bottom: -7%;
+  left: 55%;
+}
+
+.queryDifficulty .total p {
+  font-size: 30px;
+  color: white;
+}
+
+.queryDifficulty .index .total p {
+  color: black;
+}
+
+.tableBox {
+  width: 87%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  justify-content: flex-start;
+  --shadow: 2px 4px 6px #00b5ff;
+  margin: 0 auto;
+}
+
+.label {
+  width: 400px;
+  position: relative;
+  left: -20px;
+}
+
+.labelHead {
+  width: 100%;
+  position: absolute;
+  top: 25px;
+  left: 50px;
+  z-index: 1;
+}
+
+.labelHead .heng,
+.labelHead .shu {
+  --shadow-x: 0px;
+  --shadow-y: 0px;
+  --shadow: var(--shadow-x) var(--shadow-y) 6px #006792a1;
+  --drop-shadow: drop-shadow(var(--shadow-x) var(--shadow-y) 5px #000000) drop-shadow(var(--shadow)) drop-shadow(var(--shadow)) drop-shadow(var(--shadow)) drop-shadow(var(--shadow)) drop-shadow(var(--shadow));
+}
+
+.labelHead .heng {
+  --shadow-x: -12px;
+  --shadow-y: 0px;
+  width: 100%;
+  filter: var(--drop-shadow);
+  --height: 4px;
+  clip-path: polygon(
+    1000% 0,
+    1000% 1000%,
+    calc(var(--height) * -9 * var(--clipSlope)) 1000%,
+    calc(var(--height) * var(--clipSlope)) 0
+  );
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.labelHead .heng .line {
+  width: 100%;
+  background: #fff;
+}
+
+.labelHead .shu {
+  --shadow-x: 3px;
+  --shadow-y: -10px;
+  filter: var(--drop-shadow);
+  --height: 90px;
+  height: var(--height);
+  width: 31px;
+  --clip-top: 0.9px;
+  clip-path: polygon(
+    1000% var(--clip-top),
+    1000% 1000%,
+    calc(var(--height) * -9 * var(--clipSlope)) 1000%,
+    calc((var(--height) - var(--clip-top)) * var(--clipSlope)) var(--clip-top)
+  );
+  position: absolute;
+  --top: 3px;
+  --left-margin: -25.8px;
+}
+
+.labelHead .shu .line {
+  height: 100%;
+  background-color: #fff;
+}
+
+.labelContentBox {
+  filter: drop-shadow(var(--shadow));
+}
+
+.labelContent {
+  --height: 30px;
+  width: 70px;
+  /* padding: 0px 10px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  position: absolute;
+  left: 51.3px;
+  top: -5px;
+  z-index: 0;
+}
+
+.labelContent p {
+  font-size: 25px;
+  color: black;
+}
+
+.content {
+  display: flex;
+  margin-top: 50px;
+  --margin-left-size: 29px;
+  width: calc(100% - var(--margin-left-size));
+  margin-left: var(--margin-left-size);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.table-EZ {
+  --shadow-color: var(--EZ);
+  --bkg-color: var(--EZ);
+}
+
+.table-HD {
+  --shadow-color: var(--HD);
+  --bkg-color: var(--HD);
+}
+
+.table-IN {
+  --IN: #ff5d5d;
+  --shadow-color: var(--IN);
+  --bkg-color: var(--IN);
+}
+
+.table-AT {
+  --shadow-color: var(--AT);
+  --bkg-color: var(--AT);
+}
+
+.song {
+  --height: 75px;
+  filter: drop-shadow(2px 4px 0px var(--shadow-color)) drop-shadow(0px 0px 2px #ffffff88);
+  height: var(--height);
+  position: relative;
+  margin: 0 -8px 20px 0;
+}
+
+.ill img {
+  height: 100%;
+}
+
+.rank {
+  position: absolute;
+  left: calc(5px + var(--clipSlope) * 5px);
+  bottom: 5px;
+  --height: 19px;
+  padding: 0px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bkg-color);
+}
+
+.rankBlock {
+  position: absolute;
+  --k: 0.8;
+  width: calc(100% * var(--k) * 1.05);
+  --height: calc(19px * var(--k));
+  background-color: white;
+}
+
+.rank p {
+  z-index: 2;
+  font-size: 16px;
 }
 
 .createdbox {
-    position: absolute;
-    left: 10px;
-    width: auto;
+  margin-bottom: 20px;
 }
 
-.helpbox {
-    width: 400px;
-    height: 200px;
-    
+.phi-plugin p {
+  font-size: 35px;
+  text-shadow: 0 0 20px rgb(0 186 255);
+}
+
+.ver p {
+  font-size: 15px;
+  text-shadow: 0 0 20px #fff700;
 }
