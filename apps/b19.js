@@ -920,6 +920,12 @@ async function getScore(songId, e, args = {}) {
         illustration: '',
     }
 
+    for (let level of Level) {
+        if (!info.chart[level]) break
+        data.scoreData[level] = {};
+        data.scoreData[level].difficulty = info.chart[level].difficulty
+    }
+
 
     data.illustration = getInfo.getill(songId)
     // console.info(ans)
@@ -966,14 +972,6 @@ async function getScore(songId, e, args = {}) {
             }
         }
     })
-
-    for (let level of Level) {
-        if (!info.chart[level]) break
-        if (!data.scoreData[level]) {
-            data.scoreData[level] = {};
-        }
-        data.scoreData[level].difficulty = info.chart[level].difficulty
-    }
 
     maxRank = args?.dif || maxRank
 
