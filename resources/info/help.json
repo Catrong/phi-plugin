@@ -150,7 +150,7 @@
             {
                 "title": "/table",
                 "eg": "/table <定数>",
-                "desc": "查询定数表 from @yuhao7370"
+                "desc": "查询定数表"
             },
             {
                 "title": "/ill",

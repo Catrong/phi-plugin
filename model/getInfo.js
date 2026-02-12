@@ -106,7 +106,7 @@ export default new class getInfo {
 
         /**
          * 按dif分的info
-         * @type {Record<number, Chart[]>}
+         * @type {Record<string, Chart[]>}
          */
         this.info_by_difficulty = {}
 
@@ -130,98 +130,42 @@ export default new class getInfo {
 
         /** @type {historyDifficultyBySongIdObject} */
         this.historyDifficultyBySongId = {}
+
+        if (Config.getUserCfg('config', 'watchInfoPath')) {
+            chokidar.watch(infoPath).on('change', () => {
+                this.init()
+            });
+        }
     }
 
     static initIng = false
 
     async init() {
-
-        if (Config.getUserCfg('config', 'watchInfoPath')) {
-            chokidar.watch(infoPath).on('change', () => {
-                /**
-                 * 难度映射
-                 * @type {allLevelKind[]}
-                 */
-                this.allLevel = allLevel
-
-                /**
-                 * 难度映射
-                 * @type {levelKind[]}
-                 */
-                this.Level = Level
-
-                /**
-                 * @type {string[]}
-                 * @description Tips
-                 */
-                this.tips = []
-
-
-                /**
-                 * @type {{[key:idString]:Partial<SongsInfo> | undefined}}
-                 * @description 原版信息
-                 */
-                this.ori_info = {}
-                /**
-                 * @type {{[key:idString]:songString}}
-                 * @description 通过id获取曲名
-                 */
-                this.songsid = {}
-                /**
-                 * @type {{[key:songString]:idString}}
-                 * @description 原曲名称获取id
-                 */
-                this.idssong = {}
-                /**
-                 * @type {idString[]}
-                 * @description 含有曲绘的曲目列表，id名称
-                 */
-                this.illlist = []
-
-                /**
-                 * @type {{[key:string]: string[]}}
-                 * @description 章节别名，以别名为key，内容为章节名
-                 */
-                this.chapNick = {}
-
-                /**
-                 * 按dif分的info
-                 * @type {Record<number, Chart[]>}
-                 */
-                this.info_by_difficulty = {}
-
-
-                /**
-                 * @type {idString[]}
-                 */
-                this.updatedSong = []
-
-                /**
-                 * @type {Record<idString, Partial<Record<levelKind, updatedChartObject>>>}
-                 */
-                this.updatedChart = {}
-
-                /** @type {versionInfoMap} */
-                this.versionInfo = {}
-
-                /** @type {historyDifficultyByVersionObject} */
-                this.historyDifficultyByVersion = {}
-
-                /** @type {historyDifficultyBySongIdObject} */
-                this.historyDifficultyBySongId = {}
-
-                this.init()
-            });
-        }
         if (!fs.existsSync('./plugins/phi-plugin/resources/original_ill/.git')) {
             logger.error(`[phi-plugin] 未下载曲绘文件，建议使用 /phi downill 命令进行下载`)
         }
 
         if (this.initIng) return
+        this.initIng = true
 
         logger.info(`[phi-plugin]初始化曲目信息`)
 
-        this.initIng = true
+
+        this.allLevel = allLevel
+        this.Level = Level
+        this.tips = []
+        this.ori_info = {}
+        this.songsid = {}
+        this.idssong = {}
+        this.illlist = []
+        this.chapNick = {}
+        this.info_by_difficulty = {}
+        this.updatedSong = []
+        this.updatedChart = {}
+        this.versionInfo = {}
+        this.historyDifficultyByVersion = {}
+        this.historyDifficultyBySongId = {}
+
 
         /**
          * @type {Record<string, string[]>}
@@ -536,12 +480,13 @@ export default new class getInfo {
             for (let level of this.allLevel) {
                 let info = this.ori_info[songId]
                 if (!info?.chart?.[level]?.difficulty) continue;
-                if (this.info_by_difficulty[info.chart[level].difficulty]) {
-                    this.info_by_difficulty[info.chart[level].difficulty].push({
+                const difStr = info.chart[level].difficulty.toFixed(1);
+                if (this.info_by_difficulty[difStr]) {
+                    this.info_by_difficulty[difStr].push({
                         ...info.chart[level],
                     })
                 } else {
-                    this.info_by_difficulty[info.chart[level].difficulty] = [{
+                    this.info_by_difficulty[difStr] = [{
                         ...info.chart[level],
                     }]
                 }
