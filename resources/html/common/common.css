@@ -70,6 +70,8 @@
   --hold: #29b0e6;
   --flick: pink;
   --clipSlope: 0.3;
+  --phi-color: #fff700;
+  --fc-color: #00f0d1;
 }
 
 body {
@@ -263,4 +265,37 @@ body p {
     calc(var(--height) * var(--clipSlope)) 0
   );
   overflow: hidden;
+}
+
+.clip-box-right {
+  height: var(--height);
+  clip-path: polygon(100% 0, calc(100% - calc(var(--height) * var(--clipSlope))) 100%, 0 100%, 0 0);
+  overflow: hidden;
+}
+
+.clip-box-left {
+  height: var(--height);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%, calc(var(--height) * var(--clipSlope)) 0);
+  overflow: hidden;
+}
+
+.skew {
+  font-size: calc(var(--fontSize) * 1px);
+  transform: skew(calc(var(--clipSlope) * -50deg));
+}
+
+.weight-font {
+  font-weight: 1000;
+}
+
+.phigros-title-font {
+  font-family: "Aldrich", "PHI";
+  text-shadow: 0 0 20px #00baff;
+  color: white;
+}
+
+.leftSlopeAbsolute {
+  position: absolute;
+  top: var(--top);
+  left: calc(var(--top) * var(--clipSlope) * -1 + var(--left-margin));
 }

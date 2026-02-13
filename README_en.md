@@ -14,7 +14,7 @@
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
 ![version](https://img.shields.io/badge/Plugin_Version-1.0.0-9cf?style=flat-square)
-![version](https://img.shields.io/badge/Phigros-3.18.2-9cf?style=flat-square)  
+![version](https://img.shields.io/badge/Phigros-3.18.3-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/TimeRainStarSky/Yunzai)
@@ -116,7 +116,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi (comment\|cmt) <song> [difficulty=IN](newline)<text>` | Comment on songs |
 | `#phi mycmt` | View own cloud comments |
 | `#phi recmt <ID>` | Delete comment (owner/admin) |
-| `#phi (table\|ratings) <rating>` | Phigros rating table (by Rhythematics) |
+| `#phi (table\|ratings) <rating>` | Phigros rating table |
 | `#phi new` | Check new songs |
 | `#phi tips` | Random tips |
 | `#phi jrrp` | Daily luck |

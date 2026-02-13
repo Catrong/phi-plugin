@@ -16,6 +16,15 @@ export default new class getInfo {
 
 
     /**
+     * @typedef csvDifObject
+     * @property {idStringWithout0} id 曲目id
+     * @property {number} EZ EZ难度
+     * @property {number} HD HD难度
+     * @property {number} IN IN难度
+     * @property {number} [AT] AT难度
+     */
+
+    /**
      * @typedef {Object} updatedChartObject
      * @property {number|number[]|undefined} tap
      * @property {number|number[]|undefined} drag
@@ -26,10 +35,29 @@ export default new class getInfo {
      * @property {boolean|undefined} isNew
      */
 
+    /**
+     * @typedef {object} versionInfoObject
+     * @property {string} version_label 版本号
+     * @property {number} update_date 版本更新时间戳
+     * @property {string} whatsnew 版本更新内容
+     * @property {number} version_code 版本号（整数）
+     * @property {string} version 版本号（整数）字符版
+     * 
+     */
+
+    /**
+     * @typedef {Record<string, versionInfoObject>} versionInfoMap
+     */
+
+    /**
+     * @typedef {Record<string, Record<idString, csvDifObject>>} historyDifficultyByVersionObject
+     */
+
+    /**
+     * @typedef {Record<idString, Record<string, Record<levelKind, number>>>} historyDifficultyBySongIdObject
+     */
+
     constructor() {
-
-
-
         /**
          * 难度映射
          * @type {allLevelKind[]}
@@ -78,7 +106,7 @@ export default new class getInfo {
 
         /**
          * 按dif分的info
-         * @type {Record<number, Chart[]>}
+         * @type {Record<string, Chart[]>}
          */
         this.info_by_difficulty = {}
 
@@ -93,26 +121,51 @@ export default new class getInfo {
          * @type {Record<idString, Partial<Record<levelKind, updatedChartObject>>>}
          */
         this.updatedChart = {}
-    }
 
-    static initIng = false
+        /** @type {versionInfoMap} */
+        this.versionInfo = {}
 
-    async init() {
+        /** @type {historyDifficultyByVersionObject} */
+        this.historyDifficultyByVersion = {}
+
+        /** @type {historyDifficultyBySongIdObject} */
+        this.historyDifficultyBySongId = {}
 
         if (Config.getUserCfg('config', 'watchInfoPath')) {
             chokidar.watch(infoPath).on('change', () => {
                 this.init()
             });
         }
+    }
+
+    static initIng = false
+
+    async init() {
         if (!fs.existsSync('./plugins/phi-plugin/resources/original_ill/.git')) {
             logger.error(`[phi-plugin] 未下载曲绘文件，建议使用 /phi downill 命令进行下载`)
         }
 
         if (this.initIng) return
+        this.initIng = true
 
         logger.info(`[phi-plugin]初始化曲目信息`)
 
-        this.initIng = true
+
+        this.allLevel = allLevel
+        this.Level = Level
+        this.tips = []
+        this.ori_info = {}
+        this.songsid = {}
+        this.idssong = {}
+        this.illlist = []
+        this.chapNick = {}
+        this.info_by_difficulty = {}
+        this.updatedSong = []
+        this.updatedChart = {}
+        this.versionInfo = {}
+        this.historyDifficultyByVersion = {}
+        this.historyDifficultyBySongId = {}
+
 
         /**
          * @type {Record<string, string[]>}
@@ -269,9 +322,10 @@ export default new class getInfo {
 
             this.ori_info[id] = { ...Jsoninfo[CsvInfo[i].id] }
             if (!this.ori_info[id]) {
-                this.ori_info[id] = { id: id, song: CsvInfo[i].song, chapter: '', bpm: '', length: '', chart: {} }
+                this.ori_info[id] = { chapter: '', bpm: '', length: '' }
                 logger.mark(`[phi-plugin]曲目详情未更新：${id}`)
             }
+
             this.ori_info[id].id = id
             this.ori_info[id].song = CsvInfo[i].song
             this.ori_info[id].composer = CsvInfo[i].composer
@@ -335,6 +389,10 @@ export default new class getInfo {
                         }
                     }
 
+                    if (!this.ori_info[id].chart) {
+                        this.ori_info[id].chart = {}
+                    }
+
                     this.ori_info[id].chart[level] = {
                         id: id,
                         rank: level,
@@ -353,8 +411,8 @@ export default new class getInfo {
                     this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))
                 }
             }
-            if (Jsoninfo[id]?.chart) {
-                this.ori_info[id].chart = { ...this.ori_info[id].chart, ...Jsoninfo[id].chart }
+            if (Jsoninfo[idWithout0]?.chart) {
+                this.ori_info[id].chart = { ...this.ori_info[id].chart, ...Jsoninfo[idWithout0].chart }
             }
             this.illlist.push(id)
             this.songlist.push(this.ori_info[id].song)
@@ -422,17 +480,50 @@ export default new class getInfo {
             for (let level of this.allLevel) {
                 let info = this.ori_info[songId]
                 if (!info?.chart?.[level]?.difficulty) continue;
-                if (this.info_by_difficulty[info.chart[level].difficulty]) {
-                    this.info_by_difficulty[info.chart[level].difficulty].push({
+                const difStr = info.chart[level].difficulty.toFixed(1);
+                if (this.info_by_difficulty[difStr]) {
+                    this.info_by_difficulty[difStr].push({
                         ...info.chart[level],
                     })
                 } else {
-                    this.info_by_difficulty[info.chart[level].difficulty] = [{
+                    this.info_by_difficulty[difStr] = [{
                         ...info.chart[level],
                     }]
                 }
             }
         }
+
+        const historyVersionList = fs.readdirSync(oldInfoPath)
+
+        for (let ver of historyVersionList) {
+            const verInfo = await readFile.FileReader(path.join(oldInfoPath, ver, 'info.json'))
+            /**@type {csvDifObject[]} */
+            const csvDifInfo = await readFile.FileReader(path.join(oldInfoPath, ver, 'change.csv'))
+            /**@type {Record<idString, csvDifObject>} */
+            const difInfo = {}
+            csvDifInfo.forEach(item => {
+                difInfo[idWithout0ToIdWith0(item.id)] = item
+            })
+            this.versionInfo[ver] = verInfo
+
+            this.historyDifficultyByVersion[ver] = difInfo
+
+            const ids = fCompute.objectKeys(difInfo)
+
+            for (let id of ids) {
+                /** @type {Record<levelKind, number>} */
+                const dif = /** @type {any} */ ({})
+                Level.forEach(level => difInfo[id][level] && (dif[level] = difInfo[id][level]))
+                if (!this.historyDifficultyBySongId[id]) {
+                    this.historyDifficultyBySongId[id] = {}
+                    this.historyDifficultyBySongId[id][ver] = dif
+                } else {
+                    this.historyDifficultyBySongId[id][ver] = dif
+                }
+            }
+
+        }
+
 
         this.initIng = false
         logger.info(`[phi-plugin]初始化曲目信息完成`)

@@ -1,0 +1,293 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/b19/dss2.css">
+{{/block}}
+
+{{block 'main'}}
+  <div class="title">
+    <div class="gameuser_background">
+      <div class="gameuser_background_cover_block"></div>
+      <img
+        src="{{BSIllPath}}"
+        alt="BS"
+      />
+    </div>
+    <div class="frontBlock"></div>
+    <div class="phigrosTitle">
+      <div class="blackBar clip-box-right"></div>
+      <p>Phigros</p>
+    </div>
+    <div class="titleDesc">
+      <p class="weight-font">RKS组成列表</p>
+    </div>
+    <div class="titlePlayerInfo">
+      <div class="playerId">
+        <p name="pvis" class="weight-font">{{#gameuser.PlayerId}}</p>
+      </div>
+      <div class="rks">
+        <div class="clgBox">
+          <div class="Challenge">
+            <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="Challenge">
+            <p>{{gameuser.ChallengeModeRank}}</p>
+          </div>
+        </div>
+        <p class="weight-font">{{gameuser.rks.toFixed(4)}}</p>
+      </div>
+    </div>
+    <div class="backBlockBox">
+      <div class="backBlock1"></div>
+      <div class="backBlock2"></div>
+      <div class="backBlock3">
+        <div class="dataBox clip-box">
+          <img src="{{_res_path}}html/otherimg/data.png" alt="data">
+          <p>{{gameuser.data}}</p>
+        </div>
+        {{if spInfo}}
+        {{each spInfo v}}
+        <div class="spInfo colorful-background clip-box">
+          <p>{{v}}</p>
+        </div>
+        {{/each}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+
+  <div class="label clip-box-right">
+    <p class="skew weight-font">P3</p>
+  </div>
+
+  <div class="content-box">
+    {{if phi}}
+
+    {{each phi song}}
+
+    <div class="song phi_song">
+      <div class="leftBar clip-box"></div>
+      <div class="numBox">
+        <p class="weight-font">P{{$index+1}}</p>
+        <p class="">P{{$index+1}}</p>
+        <p class="">P{{$index+1}}</p>
+      </div>
+      <div class="starBox">
+        <div class="star"></div>
+      </div>
+      
+      {{if song}}
+      <div class="rank-{{song.rank}} clip-box">
+          <div class="org">
+              <p>{{song.rank}}&ensp;{{song.difficulty.toFixed(1)}}</p>
+          </div>
+          <div class="rel">
+              <p>{{song.rks.toFixed(2)}}</p>
+          </div>
+      </div>
+      <div class="ill clip-box">
+        <img src="{{song.illustration}}" alt="ill">
+      </div>
+      
+      <div class="info-AT">
+        <div class="songname">
+          <p name="pvis">{{song.song}}</p>
+        </div>
+        <div class="acc-box">
+          <div class="acc">
+              <p>{{song.acc.toFixed(2)}}%</p>
+          </div>
+          <div class="suggest suggest-kind-{{song.suggestType}}">
+              <div class="suggest-tip"></div>
+              <p>{{song.suggest}}</p>
+          </div>
+        </div>
+        <div class="chengji">
+          <div class="score">
+            <p>{{song.score}}</p>
+          </div>
+          <div class="line"></div>
+          <div class="Rating">
+            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+          </div>
+        </div>
+      </div>
+      {{else}}
+      
+      <div class="clipBarBox clipBarBox1">
+        <div class="clipBar clip-box"></div>
+        <div class="clipBar clip-box"></div>
+        <div class="clipBar clip-box"></div>
+        <div class="clipBar clip-box"></div>
+        <div class="clipBar clip-box"></div>
+      </div>
+      <div class="clipBarBox clipBarBox2">
+        <div class="clipBar clip-box"></div>
+        <div class="clipBar clip-box"></div>
+        <div class="clipBar clip-box"></div>
+        <div class="clipBar clip-box"></div>
+        <div class="clipBar clip-box"></div>
+      </div>
+      <div class="noBestTip">
+        <p>虚位以待</p>
+        <p>虚位以待</p>
+        <p>虚位以待</p>
+        <p>虚位以待</p>
+        <p>虚位以待</p>
+      </div>
+      {{/if}}
+
+    </div>
+
+    {{/each}}
+
+    {{/if}}
+  </div>
+  <div class="label clip-box-right">
+    <p class="skew weight-font">B27</p>
+  </div>
+
+  
+  <div class="content-box">
+  
+    {{each b19_list song}}
+    {{ if $index < (phi ? 27 : 30) }}
+    <div class="song b_song">
+      <div class="leftBar clip-box"></div>
+      <div class="numBox">
+        <p class="weight-font">B{{$index+1}}</p>
+        <p class="">B{{$index+1}}</p>
+        <p class="">B{{$index+1}}</p>
+      </div>
+      <div class="starBox">
+        <div class="star"></div>
+      </div>
+      <div class="rank-{{song.rank}} clip-box">
+          <div class="org">
+              <p>{{song.rank}}&ensp;{{song.difficulty.toFixed(1)}}</p>
+          </div>
+          <div class="rel">
+              <p>{{song.rks.toFixed(2)}}</p>
+          </div>
+      </div>
+      <div class="ill clip-box">
+        <img src="{{song.illustration}}" alt="ill">
+      </div>
+      
+      <div class="info-AT">
+        <div class="songname">
+          <p name="pvis">{{song.song}}</p>
+        </div>
+        <div class="acc-box">
+          <div class="acc">
+              <p>{{song.acc.toFixed(2)}}%</p>
+          </div>
+          <div class="suggest suggest-kind-{{song.suggestType}}">
+              <div class="suggest-tip"></div>
+              <p>{{song.suggest}}</p>
+          </div>
+        </div>
+        <div class="chengji">
+          <div class="score">
+            <p>{{song.score}}</p>
+          </div>
+          <div class="line"></div>
+          <div class="Rating">
+            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+    {{/each}}
+  </div>
+
+  
+  
+  {{if b19_list.length > (phi ? 27 : 30)}}
+
+  <div class="label clip-box-right">
+    <p class="skew weight-font">OVERFLOW</p>
+  </div>
+  
+  {{/if}}
+  
+  <div class="content-box">
+  
+    {{each b19_list song}}
+    {{ if $index >= (phi ? 27 : 30) }}
+    <div class="song">
+      <div class="leftBar clip-box"></div>
+      <div class="numBox">
+        <p class="weight-font">B{{$index+1}}</p>
+        <p class="">B{{$index+1}}</p>
+        <p class="">B{{$index+1}}</p>
+      </div>
+      <div class="starBox">
+        <div class="star"></div>
+      </div>
+      <div class="rank-{{song.rank}} clip-box">
+          <div class="org">
+              <p>{{song.rank}}&ensp;{{song.difficulty.toFixed(1)}}</p>
+          </div>
+          <div class="rel">
+              <p>{{song.rks.toFixed(2)}}</p>
+          </div>
+      </div>
+      <div class="ill clip-box">
+        <img src="{{song.illustration}}" alt="ill">
+      </div>
+      
+      <div class="info-AT">
+        <div class="songname">
+          <p name="pvis">{{song.song}}</p>
+        </div>
+        <div class="acc-box">
+          <div class="acc">
+              <p>{{song.acc.toFixed(2)}}%</p>
+          </div>
+          <div class="suggest suggest-kind-{{song.suggestType}}">
+              <div class="suggest-tip"></div>
+              <p>{{song.suggest}}</p>
+          </div>
+        </div>
+        <div class="chengji">
+          <div class="score">
+            <p>{{song.score}}</p>
+          </div>
+          <div class="line"></div>
+          <div class="Rating">
+            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+          </div>
+        </div>
+      </div>
+    </div>
+    {{ /if }}
+    {{/each}}
+  </div>
+
+  <div class="createdbox">
+    <div class="phi-plugin">
+        <p>{{_plugin}}</p>
+    </div>
+    <div class="ver">
+        <p>{{Version.ver}}</p>
+    </div>
+  </div>
+
+  {{if theme == "snow"}}
+  <div class="snow-box"> </div>
+  <script>
+      themeSnow();
+  </script>
+  {{else if theme == "topText" || theme == "foolsDay"}}
+  <div class="topTextBox" id="topTextBox"></div>
+  <script>
+      themeTopText();
+  </script>
+  {{else if theme == "star"}}
+  <canvas id="stars"></canvas>
+  <script>
+      themeStar();
+  </script>
+  {{/if}}
+
+{{/block}}

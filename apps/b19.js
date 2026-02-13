@@ -18,6 +18,7 @@ import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
 import LevelRecordInfo from '../model/class/LevelRecordInfo.js';
 import SongsInfo from '../model/class/SongsInfo.js';
+import Version from '../components/Version.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -143,6 +144,38 @@ export class phib19 extends phiPluginBase {
         let save_b19 = await save.getB19(nnum)
         let stats = await save.getStats()
 
+        const spInfo = [];
+
+        /**
+         * 回复的消息
+         * @type {any[]}
+         */
+        const res = [];
+
+        const saveVer = save.saveInfo.summary.gameVersion
+        if (saveVer &&
+            !isNaN(saveVer) &&
+            saveVer != Number(Version.phigrosVerNum)) {
+            if (saveVer < Number(Version.phigrosVerNum)) {
+                spInfo.push(`${getInfo.versionInfo[`${saveVer}`]?.version_label || saveVer} Update to ${Version.phigros}`)
+                spInfo.push(`Real RKS: ${save_b19.com_rks.toFixed(4)}`)
+                if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                    res.push(`请注意，当前版本可能更改了定数\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+                }
+            } else {
+                spInfo.push(`${getInfo.versionInfo[`${saveVer}`]?.version_label || saveVer} later than ${Version.phigros}`)
+
+                if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                    res.push(`请注意，您的版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+                }
+            }
+
+        } else {
+            if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                res.push(`请注意，您的版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+            }
+        }
+
 
         // let dan = await get.getDan(e.user_id)
         let money = save.gameProgress?.money || [0, 0, 0, 0, 0]
@@ -159,6 +192,7 @@ export class phib19 extends phiPluginBase {
         }
         // console.info(save_b19.b19_list)
         let data = {
+            BSIllPath: getInfo.getill(/**@type {idString} */('BANGINGSTRIKE.DewPleiades.0'), 'common'),
             phi: save_b19.phi,
             b19_list: save_b19.b19_list,
             PlayerId: gameuser.PlayerId,
@@ -172,12 +206,10 @@ export class phib19 extends phiPluginBase {
             gameuser,
             nnum,
             stats,
+            spInfo
         }
 
-        let res = [await altas.b19(e, data)]
-        if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 0.1) {
-            res.push(`请注意，当前版本可能更改了计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        }
+        res.unshift(await altas.b19(e, data))
         send.send_with_At(e, res)
     }
 
@@ -234,18 +266,18 @@ export class phib19 extends phiPluginBase {
             e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
         let save_b19;
-        let spInfo = '';
+        let spInfo = [];
 
         const type = e.msg.match(/^.*?(p|x|fc)([0-9]+)/i)?.[1].toLowerCase();
         switch (type) {
             case 'p': {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
-                spInfo = "All Perfect Mode";
+                spInfo.push("All Perfect Mode");
                 break;
             }
             case 'fc': {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'custom', value: (record) => ((record.fc === true) && (record.score != 1e6)) }], false)
-                spInfo = "Full Combo Mode";
+                spInfo.push("Full Combo Mode");
                 break;
             }
             case 'x': {
@@ -255,12 +287,12 @@ export class phib19 extends phiPluginBase {
                         return fCompute.comJust1Good(record.score, getInfo.ori_info[record.id]?.chart?.[record.rank]?.combo || 1e9)
                     }
                 }], false)
-                spInfo = "1 Good Mode";
+                spInfo.push("1 Good Mode");
                 break;
             }
             default: {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
-                spInfo = "All Perfect Mode";
+                spInfo.push("All Perfect Mode");
             }
         }
 
@@ -888,13 +920,14 @@ async function getScore(songId, e, args = {}) {
         illustration: '',
     }
 
-
-    data.illustration = getInfo.getill(songId)
-
     for (let level of Level) {
         if (!info.chart[level]) break
-        data.scoreData[level] = { difficulty: info.chart[level].difficulty }
+        data.scoreData[level] = {};
+        data.scoreData[level].difficulty = info.chart[level].difficulty
     }
+
+
+    data.illustration = getInfo.getill(songId)
     // console.info(ans)
     /**
      * 用户游玩过的最高难度
@@ -909,12 +942,33 @@ async function getScore(songId, e, args = {}) {
                 ...record,
                 acc: record.acc.toFixed(4),
                 rks: record.rks.toFixed(4),
-                suggest: save.getSuggest(songId, i, 4, chartInfo.difficulty),
+                suggest: '',
+            }
+            const suggest = save.getSuggest(songId, i, undefined, chartInfo.difficulty);
+            if (suggest != -1) {
+                data.scoreData[Level[i]].suggest = suggest.toFixed(4) + '%'
+                if (suggest < 98.5) {
+                    data.scoreData[Level[i]].suggestType = 0
+                } else if (suggest < 99) {
+                    data.scoreData[Level[i]].suggestType = 1
+                } else if (suggest < 99.5) {
+                    data.scoreData[Level[i]].suggestType = 2
+                } else if (suggest < 99.7) {
+                    data.scoreData[Level[i]].suggestType = 3
+                } else if (suggest < 99.85) {
+                    data.scoreData[Level[i]].suggestType = 4
+                } else {
+                    data.scoreData[Level[i]].suggestType = 5
+                }
+            } else {
+                data.scoreData[Level[i]].suggest = "无法推分"
             }
             maxRank = Level[i]
         } else {
             data.scoreData[Level[i]] = {
+                ...data.scoreData[Level[i]],
                 Rating: 'NEW',
+                suggest: save.getSuggest(songId, i, 4, chartInfo.difficulty) || '无法推分'
             }
         }
     })
@@ -955,6 +1009,26 @@ async function getScore(songId, e, args = {}) {
                 logger.warn(`[phi-plugin] API错误 getScoreRanklistByUser`)
                 logger.warn(err)
             }
+        }
+        try {
+            const apFcCount = await makeRequest.getSongApFcCount({ songId });
+            if (apFcCount) {
+
+                for (let level of Level) {
+                    if (!info.chart[level]) break;
+                    const count = apFcCount[level];
+                    if (!count || !count.total) continue;
+                    data.scoreData[level].apFcCount = {
+                        ap: count.apCount / count.total,
+                        fc: count.fcCount / count.total,
+                        total: count.total
+                    };
+                }
+
+            }
+        } catch (err) {
+            logger.warn(`[phi-plugin] API错误 getSongApFcCount`)
+            logger.warn(err)
         }
     }
 

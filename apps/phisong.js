@@ -769,7 +769,31 @@ export class phisong extends phiPluginBase {
             return false
         }
 
-        send.send_with_At(e, segment.image(getInfo.getTableImg(dif)))
+        const data = {
+            title: {
+                difficulty: dif,
+                total: 0,
+                version: Version.phigros
+            },
+            /**@type {{difficulty: string, songs: {rank: string, illustration: string}[]}[]} */
+            table: [],
+            background: getInfo.getill(/**@type {any} */("ShineAfter.ADeanJocularACE.0"), 'blur')
+        }
+        for (let i = 0; i < 10; ++i) {
+            const difStr = (dif + i * 0.1).toFixed(1);
+            if (!getInfo.info_by_difficulty[difStr]) continue;
+            data.title.total += getInfo.info_by_difficulty[difStr].length;
+            data.table.push({
+                difficulty: difStr,
+                songs: getInfo.info_by_difficulty[difStr]?.map(chart => ({
+                    rank: chart.rank,
+                    illustration: getInfo.getill(chart.id, 'low'),
+                })) || []
+            })
+
+        }
+
+        send.send_with_At(e, await picmodle.common(e, 'table', data));
 
     }
 

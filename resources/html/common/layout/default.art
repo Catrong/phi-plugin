@@ -55,6 +55,8 @@
 
     <script>
         function isBiggerThanParent(songName, parentElement) {
+            console.log(songName, parentElement)
+            console.log(songName.scrollWidth, parentElement.offsetWidth, songName.scrollHeight, parentElement.offsetHeight)
             return songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight
         }
         function adjustFontSize() {

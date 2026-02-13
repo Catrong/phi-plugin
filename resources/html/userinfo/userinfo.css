@@ -32,7 +32,7 @@ body p {
 }
 
 .background img {
-    filter: blur(5px) brightness(0.7);
+    filter: blur(0px) brightness(0.7);
     width: 2844.44px;
     height: 1500px;
 }
@@ -43,6 +43,7 @@ body p {
     /* backdrop-filter: blur(50px); */
     height: 1320px;
     padding-bottom: 0px;
+    backdrop-filter: blur(10px);
 }
 
 .left {
@@ -212,13 +213,13 @@ body p {
     justify-content: center;
     flex-direction: row;
     margin-top: 2%;
-    background: linear-gradient(-75deg, #87cfeb80 54%, #00000000 54%, #00000000 56%, #87cfeb80 56%);
+    background: linear-gradient(-75deg, #87cfeb80 49%, #00000000 49%, #00000000 51%, #87cfeb80 51%);
 }
 
 .Player_data_line-left,
 .Player_data_line-right {
     display: flex;
-
+    width: 44%;
     flex-direction: column;
 }
 
@@ -585,13 +586,14 @@ circle {
     align-items: center;
     z-index: 1;
     position: absolute;
-    bottom: 5px;
-    right: 8px;
+    bottom: 0px;
+    left: 18px;
+    align-items: flex-end;
 }
 
 .rank p {
-    font-size: 73px;
-    color: rgba(255, 255, 255, 0.2);
+    font-size: 50px;
+    color: rgba(255, 255, 255, 0.3);
     margin-top: -5%;
 }
 
@@ -692,7 +694,7 @@ circle {
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     height: 90;
     z-index: 2;
 }

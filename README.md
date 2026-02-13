@@ -14,7 +14,8 @@
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
 ![version](https://img.shields.io/badge/插件版本-1.0.0-9cf?style=flat-square)
-![version](https://img.shields.io/badge/Phigros-3.18.2-9cf?style=flat-square)  
+![version](https://img.shields.io/badge/Phigros-3.18.3-9cf?style=flat-square)
+![version](https://img.shields.io/badge/PhigrosVer-141-9cf?style=flat-square)
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../TimeRainStarSky/Yunzai)
@@ -148,7 +149,7 @@ pnpm install -P
 | `#phi (comment\|cmt\|评论\|评价) <曲名> [难度=IN](换行)<内容>` | 评论曲目，难度默认为IN
 | `#phi recmt <评论ID>` | 查看并确认是否删评，仅发送者和主人权限，需要二次确认
 | `#phi mycmt` | 查看自己的云端评论
-| `#phi (table\|定数表) <定数>` | 查询phigros定数表（定数表 by Rhythematics）
+| `#phi (table\|定数表) <定数>` | 查询phigros定数表
 | `#phi new` | 查询更新的曲目
 | `#phi tips` | 随机tips
 | `#phi jrrp` | 今日人品
