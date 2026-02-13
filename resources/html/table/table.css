@@ -9,7 +9,9 @@ body {
   align-items: center;
   flex-direction: row;
   /* margin-bottom: 50px; */
-  height: 270px;
+  height: 210px;
+  background: linear-gradient(#00000000 20%,#00b8f0 20%,#00b8f0 23%,#00b5ff80 23%,#00b5ff80 80%,#00000000 80%);
+  filter: drop-shadow(4px 5px 0px #ffffff60)
 }
 
 .title {
@@ -75,7 +77,7 @@ body {
   /* height: 200px; */
   display: flex;
   justify-content: center;
-  filter: drop-shadow(2px 4px 6px black);
+  filter: drop-shadow(2px 4px 6px #00000060);
   /* margin-bottom: 50px; */
   align-items: center;
   flex-direction: column;
@@ -99,7 +101,7 @@ body {
 }
 
 .queryDifficulty .index p {
-  font-size: 75px;
+  font-size: 80px;
   color: black;
   text-align: center;
 }
@@ -226,8 +228,8 @@ body {
   justify-content: center;
   background-color: white;
   position: absolute;
-  left: 51.3px;
-  top: -5px;
+  left: 52.4px;
+  top: -9px;
   z-index: 0;
 }
 
@@ -271,7 +273,7 @@ body {
 
 .song {
   --height: 75px;
-  filter: drop-shadow(2px 4px 0px var(--shadow-color)) drop-shadow(0px 0px 2px #ffffff88);
+  filter: drop-shadow(2px 4px 0px #50505030) drop-shadow(2px 4px 0px var(--shadow-color)) drop-shadow(0px 0px 2px #ffffff88);
   height: var(--height);
   position: relative;
   margin: 0 -8px 20px 0;
@@ -298,12 +300,14 @@ body {
   --k: 0.8;
   width: calc(100% * var(--k) * 1.05);
   --height: calc(19px * var(--k));
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .rank p {
   z-index: 2;
   font-size: 16px;
+  color: white;
+  text-shadow: 1px 1px#00000050;
 }
 
 .createdbox {

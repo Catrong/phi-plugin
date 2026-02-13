@@ -22,18 +22,18 @@
     <div class="queryDifficulty">
       <div class="qdBox">
         <div class="query">
-          <p>difficulty</p>
+          <p>Difficulty</p>
         </div>
         <div class="total">
-          <p>total: {{title.total}}</p>
+          <p>Total: {{title.total}}</p>
         </div>
         <div class="index clip-box">
           <div class="query">
-            <p>difficulty</p>
+            <p>Difficulty</p>
           </div>
           <p>{{title.difficulty}}</p>
           <div class="total">
-            <p>total: {{title.total}}</p>
+            <p>Total: {{title.total}}</p>
           </div>
         </div>
       </div>
