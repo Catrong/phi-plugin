@@ -485,7 +485,7 @@ export default class Save {
         if (saveVer &&
             !isNaN(saveVer) &&
             saveVer < Number(Version.phigrosVerNum) &&
-            getInfo.versionInfo[`${saveVer}`]) {
+            getInfo.versionInfoByVersion[`${saveVer}`]) {
             const oldGameRecord = buildGameRecord(this.gameRecord, `${saveVer}`);
             const addCp = (/**@type {(LevelRecordInfo & Partial<otherLevelRecordInfo>) | undefined} */record) => {
                 if (!record) return;

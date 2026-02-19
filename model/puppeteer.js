@@ -10,6 +10,7 @@ import cfg from "../../../lib/config/config.js"
 import { redisPath } from './constNum.js'
 import { tempPath } from "./path.js"
 import logger from "../components/Logger.js"
+import fs from "fs"
 const _path = process.cwd()
 // mac地址
 let mac = ""
@@ -28,6 +29,7 @@ export default class Puppeteer extends Renderer {
         })
         this.browser = false
         this.lock = false
+        this.ulid = false
 
         /**
          * @type {any[]}
@@ -67,6 +69,15 @@ export default class Puppeteer extends Renderer {
 
         logger.info("puppeteer Chromium 启动中...")
 
+        if (this.ulid) {
+            try {
+                fs.rmSync(`${tempPath}/puppeteer/${this.ulid}`, { recursive: true, force: true })
+            } catch (err) {
+                logger.error("[phi-plugin] 临时文件删除失败", err)
+            }
+            this.ulid = false
+        }
+
         let connectFlag = false
         try {
             // 获取Mac地址
@@ -92,7 +103,8 @@ export default class Puppeteer extends Renderer {
         } catch { }
 
         if (!this.browser || !connectFlag) {
-            let config = { ...this.config, userDataDir: `${tempPath}/puppeteer/${ulid()}` }
+            this.ulid = ulid()
+            let config = { ...this.config, userDataDir: `${tempPath}/puppeteer/${this.ulid}` }
             // 如果没有实例，初始化puppeteer
             this.browser = await puppeteer.launch(config).catch(async (err, trace) => {
                 const errMsg = err.toString() + (trace ? trace.toString() : "")
@@ -109,6 +121,12 @@ export default class Puppeteer extends Renderer {
         this.lock = false
         if (!this.browser) {
             logger.error("puppeteer Chromium 启动失败")
+            try {
+                fs.rmSync(`${tempPath}/puppeteer/${this.ulid}`, { recursive: true, force: true })
+            } catch (err) {
+                logger.error("[phi-plugin] 临时文件删除失败", err)
+            }
+            this.ulid = false
             return false
         }
         if (!connectFlag) {
