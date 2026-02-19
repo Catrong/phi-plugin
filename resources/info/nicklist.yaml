@@ -762,6 +762,7 @@ YouaretheMiserable.tpazolite:
   - izamairimasu
 OnAndOn.ETIAfeatJenga:
   - OAO
+  - 自由飞奔
   - 勇往直前
 DataErr0r.Cosmograph:
   - 2015冠军
@@ -1026,6 +1027,7 @@ SATELLITE.かめりあ:
   - satellite
   - 花花龙卷风
 ERABYECONNEC10N.かめりあ:
+  - 原神
   - 咬人鸠
   - +++
   - 兆字节连接
@@ -1034,10 +1036,10 @@ ERABYECONNEC10N.かめりあ:
   - +E
   - 字节
   - TERABYTE CONNECTION
-  - 原神
   - 下原神
   - 我的电脑正在自动下载原神
   - terabyte
+  - tb
   - TB连接
   - TC
   - 太字节传输
@@ -1074,6 +1076,7 @@ TriumphRegret.typeMARS:
   - tr
   - 胜利&遗憾
   - 胜利与遗憾
+  - 火枪手
 DiamondEyes.SYNTHETIC:
   - 钻石眼
   - 星空眼
@@ -1149,6 +1152,7 @@ Orthodox.tokiwa:
 Trojan.litmus:
   - 特洛伊
   - 图鉴
+  - tj
 Bitterblossom.imvi:
   - bb
   - 美女与鬼兽
@@ -1175,6 +1179,7 @@ InvertedWorld.ARForest:
 SecretIllumination.Yooh:
   - 秘密照明
   - 秘光寻旅
+  - 仰望天空
   - 暗照
   - 神秘光
   - 密光
@@ -1395,6 +1400,7 @@ BraveNotes.TurquoiseDRIVENota:
   - 勇敢的音符
 ShineAfter.ADeanJocularACE:
   - sa
+  - 洋葱圈
   - 曙光过后
 Demiurge.Rabpit:
   - 造物主
@@ -1500,6 +1506,7 @@ NightTheater.わかどり:
   - 夜剧院
   - 夜鹿
   - 鹿
+  - 夜剧场
 月詠に鳴る.Feryquitousfeat藍月なくる:
   - 月鸣
   - 月光皎洁
@@ -1515,6 +1522,7 @@ CrushBETA.shadow_bling:
   - beta
 Ramification.rareguyReina:
   - 支流
+  - 分叉
   - 衍生物
 Spotlight.Ardolf:
   - 游戏模拟器
@@ -1886,6 +1894,7 @@ RetributionCycleofRedemption.ArdolfvsDaily天利:
   - 雪降雪降
   - 新雪降
   - 后年雪降
+  - 正在下雪
   - 雪降2
   - 雪降²
   - 小雪降sp
@@ -1898,6 +1907,7 @@ RetributionCycleofRedemption.ArdolfvsDaily天利:
 Komplexe.雄之助featSennzai:
   - 复杂
   - complex
+  - 黑姬	
 slips.rintarosoma:
   - slips
   - 滑动
@@ -1991,7 +2001,9 @@ Hydra.JamesLandinoXAkiraComplex:
 TheWholeRest.KIVΛ:
   - twr
   - 整个休息
+  - 全都休息
   - 整休
+  - 全休
   - 整修
   - 全休止符
   - 全部安宁
@@ -2009,6 +2021,7 @@ Locomotive.K:
   - 最高杰作
 彩.MisoilePunch:
   - 菜
+  - 唐三
 Incyde.YbeLL:
   - 切入
   - inside
