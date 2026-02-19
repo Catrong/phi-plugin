@@ -157,13 +157,13 @@ export class phib19 extends phiPluginBase {
             !isNaN(saveVer) &&
             saveVer != Number(Version.phigrosVerNum)) {
             if (saveVer < Number(Version.phigrosVerNum)) {
-                spInfo.push(`${getInfo.versionInfo[`${saveVer}`]?.version_label || saveVer} Update to ${Version.phigros}`)
+                spInfo.push(`${getInfo.versionInfoByVersion[`${saveVer}`]?.version_label || saveVer} Update to ${Version.phigros}`)
                 spInfo.push(`Real RKS: ${save_b19.com_rks.toFixed(4)}`)
                 if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
                     res.push(`请注意，当前版本可能更改了定数\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
                 }
             } else {
-                spInfo.push(`${getInfo.versionInfo[`${saveVer}`]?.version_label || saveVer} later than ${Version.phigros}`)
+                spInfo.push(`${getInfo.versionInfoByVersion[`${saveVer}`]?.version_label || saveVer} later than ${Version.phigros}`)
 
                 if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
                     res.push(`请注意，您的版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)

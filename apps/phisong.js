@@ -89,7 +89,7 @@ export class phisong extends phiPluginBase {
                     fnc: 'live'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(table|定数表)\\s*[0-9]+$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(table|定数表)\\s*[0-9]+\\s*(-v\\s*\\S*)$`,
                     fnc: 'table'
                 },
                 {
@@ -769,23 +769,53 @@ export class phisong extends phiPluginBase {
             return false
         }
 
+        let matchVersion = e.msg.match(/-v\s*(\S+)/i)?.[1];
+        let matchVerCode = 0;
+        if (matchVersion) {
+            if (matchVersion.includes('.')) {
+                if (!getInfo.versionInfoByVersion[matchVersion]) {
+                    send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                    return true
+                }
+                matchVerCode = getInfo.versionInfoByVersion[matchVersion].version_code
+            } else {
+                let verCodeNum = Number(matchVersion)
+                if (!getInfo.versionInfoByCode[verCodeNum]) {
+                    send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                    return true
+                }
+                matchVerCode = verCodeNum
+            }
+        } else {
+            matchVerCode = Version.phigrosVerNum
+        }
+
+        const versionInfo = getInfo.versionInfoByCode[matchVerCode]
+        if (!versionInfo) {
+            console.error(`[phi-plugin] 版本信息获取失败，versionCode: ${matchVerCode}`);
+            send.send_with_At(e, `发生未知错误QAQ！请回报管理员！`)
+            return true
+        }
+
         const data = {
             title: {
                 difficulty: dif,
                 total: 0,
-                version: Version.phigros
+                version: versionInfo.version_label
             },
             /**@type {{difficulty: string, songs: {rank: string, illustration: string}[]}[]} */
             table: [],
             background: getInfo.getill(/**@type {any} */("ShineAfter.ADeanJocularACE.0"), 'blur')
         }
+
+        const info_by_difficulty = getInfo.historyDifficultyByVerDifficulty[versionInfo.version_code];
         for (let i = 0; i < 10; ++i) {
-            const difStr = (dif + i * 0.1).toFixed(1);
-            if (!getInfo.info_by_difficulty[difStr]) continue;
-            data.title.total += getInfo.info_by_difficulty[difStr].length;
+            const difStr = Math.round((dif + i * 0.1) * 10) / 10;
+            if (!info_by_difficulty[difStr]) continue;
+            data.title.total += info_by_difficulty[difStr].length;
             data.table.push({
-                difficulty: difStr,
-                songs: getInfo.info_by_difficulty[difStr]?.map(chart => ({
+                difficulty: difStr.toFixed(1),
+                songs: info_by_difficulty[difStr]?.map(chart => ({
                     rank: chart.rank,
                     illustration: getInfo.getill(chart.id, 'low'),
                 })) || []
