@@ -164,7 +164,7 @@ body p {
     position: absolute;
     top: -49px;
     align-items: center;
-    clip-path: polygon(0% 0%, 100% 0%, 81% 100%, 0% 100%, 0px 0px);
+    clip-path: polygon(0% 0%, 81% 0%, 100% 50%, 81% 100%, 0% 100%, 0px 0px);
     justify-content: center;
     margin-left: -2%;
     backdrop-filter: blur(10px);
