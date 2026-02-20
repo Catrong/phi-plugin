@@ -149,8 +149,8 @@
             },
             {
                 "title": "/table",
-                "eg": "/table <定数>",
-                "desc": "查询定数表"
+                "eg": "/table <定数> [-v <版本号|verCode>]",
+                "desc": "查询定数表，可以指定版本号，支持版本标签或版本数<br>eg: /table 15 -v 3.5.1<br>eg2: /table 15 -v 99"
             },
             {
                 "title": "/ill",

@@ -32,7 +32,7 @@ body p {
     flex-direction: row;
     align-items: flex-start;
     margin-top: 100px;
-    filter: drop-shadow(2px 4px 6px black);
+    filter: drop-shadow(2px 4px 10px black);
 }
 
 .box-left {
@@ -53,7 +53,7 @@ body p {
 .name-right,
 .mid-up,
 .right-up {
-    background-color: rgba(255, 0, 0, 0.3);
+    background-color: rgba(140, 0, 0, 0.5);
 }
 
 .name-left {
@@ -84,6 +84,8 @@ body p {
 
 .leave {
     FONT-WEIGHT: 200;
+    position: relative;
+    left: -5px;
     width: 220px;
     height: 170px;
     display: flex;
@@ -108,24 +110,24 @@ body p {
 }
 
 .leave-diff p {
-    font-size: 80px;
+    font-size: 70px;
     font-weight: 46;
 }
 
 .leave-rank {
-    height: 10%;
+    height: 20%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .leave-rank p {
-    font-size: 25px;
+    font-size: 35px;
 }
 
 .name-right {
     height: 100%;
-    width: 35px;
+    width: 33.25px;
     clip-path: polygon(0% 0, 100% 0%, 0% 100%);
 }
 
@@ -139,7 +141,7 @@ body p {
 .info-left,
 .info-mid,
 .mid-down {
-    background-color: rgba(255, 0, 0, 0.2);
+    background-color: rgba(240, 0, 0, 0.4);
 }
 
 .info-left {
@@ -197,7 +199,7 @@ body p {
 
 .right-up {
     height: 100%;
-    width: 300px;
+    width: 285px;
     margin-right: -195px;
 }
 
@@ -209,8 +211,8 @@ body p {
 
 .info-right {
     height: 100%;
-    width: 50px;
-    clip-path: polygon(45px 0, 50px 0, 5px 100%, 0 100%);
+    width: 60px;
+    clip-path: polygon(45px 0, 52px 0, 7px 100%, 0 100%);
     margin-left: -50px;
     background-color: #fff;
 }

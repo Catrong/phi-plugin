@@ -46,15 +46,11 @@ export default new class getInfo {
      */
 
     /**
-     * @typedef {Record<string, versionInfoObject>} versionInfoMap
+     * @typedef {Record<number, Record<idString, csvDifObject>>} historyDifficultyByVersionObject
      */
 
     /**
-     * @typedef {Record<string, Record<idString, csvDifObject>>} historyDifficultyByVersionObject
-     */
-
-    /**
-     * @typedef {Record<idString, Record<string, Record<levelKind, number>>>} historyDifficultyBySongIdObject
+     * @typedef {Record<idString, Record<number, Record<levelKind, number>>>} historyDifficultyBySongIdObject
      */
 
     constructor() {
@@ -122,14 +118,20 @@ export default new class getInfo {
          */
         this.updatedChart = {}
 
-        /** @type {versionInfoMap} */
-        this.versionInfo = {}
+        /** @type {Record<string, versionInfoObject>} */
+        this.versionInfoByVersion = {}
+
+        /** @type {Record<number, versionInfoObject>} */
+        this.versionInfoByCode = {}
 
         /** @type {historyDifficultyByVersionObject} */
         this.historyDifficultyByVersion = {}
 
         /** @type {historyDifficultyBySongIdObject} */
         this.historyDifficultyBySongId = {}
+
+        /** @type {Record<number, Record<number, {id: idString, rank: levelKind, difficulty: number}[]>>} */
+        this.historyDifficultyByVerDifficulty = {}
 
         if (Config.getUserCfg('config', 'watchInfoPath')) {
             chokidar.watch(infoPath).on('change', () => {
@@ -162,7 +164,8 @@ export default new class getInfo {
         this.info_by_difficulty = {}
         this.updatedSong = []
         this.updatedChart = {}
-        this.versionInfo = {}
+        this.versionInfoByVersion = {}
+        this.versionInfoByCode = {}
         this.historyDifficultyByVersion = {}
         this.historyDifficultyBySongId = {}
 
@@ -257,6 +260,69 @@ export default new class getInfo {
          */
         let notesInfo = await readFile.FileReader(path.join(infoPath, 'notesInfo.json'))
 
+
+        const historyVersionList = fs.readdirSync(oldInfoPath)
+
+        /**@type {csvDifObject[]} */
+        let oldDif = /**@type {any} */({})
+
+        let versionCodes = historyVersionList.map(ver => Number(ver))
+
+        versionCodes = versionCodes.sort((a, b) => a - b)
+
+        let lastVersionCode = versionCodes[versionCodes.length - 2]
+
+        for (let ver of historyVersionList) {
+            /**@type {versionInfoObject} */
+            const verInfo = await readFile.FileReader(path.join(oldInfoPath, ver, 'info.json'))
+            /**@type {csvDifObject[]} */
+            const csvDifInfo = await readFile.FileReader(path.join(oldInfoPath, ver, 'change.csv'))
+            /**@type {Record<idString, csvDifObject>} */
+            const difInfo = {}
+            const verCode = Number(ver)
+
+            if (verCode == lastVersionCode) {
+                oldDif = csvDifInfo
+            }
+
+            csvDifInfo.forEach(item => {
+                difInfo[idWithout0ToIdWith0(item.id)] = item
+            })
+            this.versionInfoByCode[verCode] = verInfo
+            this.versionInfoByVersion[verInfo.version_label] = verInfo
+
+            this.historyDifficultyByVersion[verCode] = difInfo
+
+            this.historyDifficultyByVerDifficulty[verCode] = {}
+
+            const ids = fCompute.objectKeys(difInfo)
+
+            for (let id of ids) {
+                /** @type {Record<levelKind, number>} */
+                const dif = /** @type {any} */ ({})
+                Level.forEach(level => {
+                    if (!difInfo[id][level]) return;
+                    const songDif = difInfo[id][level];
+                    dif[level] = songDif;
+                    if (!this.historyDifficultyByVerDifficulty[verCode][songDif]) {
+                        this.historyDifficultyByVerDifficulty[verCode][songDif] = []
+                    }
+                    this.historyDifficultyByVerDifficulty[verCode][songDif].push({
+                        id: id,
+                        rank: level,
+                        difficulty: songDif
+                    })
+                })
+                if (!this.historyDifficultyBySongId[id]) {
+                    this.historyDifficultyBySongId[id] = {}
+                    this.historyDifficultyBySongId[id][verCode] = dif
+                } else {
+                    this.historyDifficultyBySongId[id][verCode] = dif
+                }
+            }
+
+        }
+
         /**
          * @typedef {Object} csvInfoObject
          * @property {idStringWithout0} id 曲目id
@@ -276,14 +342,13 @@ export default new class getInfo {
         let Csvdif = await readFile.FileReader(path.join(infoPath, 'difficulty.csv'))
         let Jsoninfo = await readFile.FileReader(path.join(infoPath, 'infolist.json'))
 
-        let oldDif = await readFile.FileReader(path.join(oldInfoPath, 'difficulty.csv'))
         /**
          * note统计
          * @type {{[x:idStringWithout0]:Record<levelKind, notesInfoObject>}}
          */
-        let oldNotes = await readFile.FileReader(path.join(oldInfoPath, 'notesInfo.json'))
+        let oldNotes = await readFile.FileReader(path.join(infoPath, 'oldNotesInfo.json'))
         /**
-         * @type {Record<idStringWithout0, Record<levelKind, number>>}
+         * @type {Record<idStringWithout0, Partial<Record<levelKind, number>>>}
          */
         let OldDifList = {}
         for (let i in oldDif) {
@@ -493,36 +558,6 @@ export default new class getInfo {
             }
         }
 
-        const historyVersionList = fs.readdirSync(oldInfoPath)
-
-        for (let ver of historyVersionList) {
-            const verInfo = await readFile.FileReader(path.join(oldInfoPath, ver, 'info.json'))
-            /**@type {csvDifObject[]} */
-            const csvDifInfo = await readFile.FileReader(path.join(oldInfoPath, ver, 'change.csv'))
-            /**@type {Record<idString, csvDifObject>} */
-            const difInfo = {}
-            csvDifInfo.forEach(item => {
-                difInfo[idWithout0ToIdWith0(item.id)] = item
-            })
-            this.versionInfo[ver] = verInfo
-
-            this.historyDifficultyByVersion[ver] = difInfo
-
-            const ids = fCompute.objectKeys(difInfo)
-
-            for (let id of ids) {
-                /** @type {Record<levelKind, number>} */
-                const dif = /** @type {any} */ ({})
-                Level.forEach(level => difInfo[id][level] && (dif[level] = difInfo[id][level]))
-                if (!this.historyDifficultyBySongId[id]) {
-                    this.historyDifficultyBySongId[id] = {}
-                    this.historyDifficultyBySongId[id][ver] = dif
-                } else {
-                    this.historyDifficultyBySongId[id][ver] = dif
-                }
-            }
-
-        }
 
 
         this.initIng = false
