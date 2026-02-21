@@ -18,10 +18,10 @@ export default new class getInfo {
     /**
      * @typedef csvDifObject
      * @property {idStringWithout0} id 曲目id
-     * @property {number} EZ EZ难度
-     * @property {number} HD HD难度
-     * @property {number} IN IN难度
-     * @property {number} [AT] AT难度
+     * @property {string} EZ EZ难度
+     * @property {string} HD HD难度
+     * @property {string} IN IN难度
+     * @property {string} [AT] AT难度
      */
 
     /**
@@ -130,7 +130,7 @@ export default new class getInfo {
         /** @type {historyDifficultyBySongIdObject} */
         this.historyDifficultyBySongId = {}
 
-        /** @type {Record<number, Record<number, {id: idString, rank: levelKind, difficulty: number}[]>>} */
+        /** @type {Record<number, Record<string, {id: idString, rank: levelKind, difficulty: number}[]>>} */
         this.historyDifficultyByVerDifficulty = {}
 
         if (Config.getUserCfg('config', 'watchInfoPath')) {
@@ -302,12 +302,12 @@ export default new class getInfo {
                 const dif = /** @type {any} */ ({})
                 Level.forEach(level => {
                     if (!difInfo[id][level]) return;
-                    const songDif = difInfo[id][level];
+                    const songDif = Number(difInfo[id][level]);
                     dif[level] = songDif;
-                    if (!this.historyDifficultyByVerDifficulty[verCode][songDif]) {
-                        this.historyDifficultyByVerDifficulty[verCode][songDif] = []
+                    if (!this.historyDifficultyByVerDifficulty[verCode][songDif.toFixed(1)]) {
+                        this.historyDifficultyByVerDifficulty[verCode][songDif.toFixed(1)] = []
                     }
-                    this.historyDifficultyByVerDifficulty[verCode][songDif].push({
+                    this.historyDifficultyByVerDifficulty[verCode][songDif.toFixed(1)].push({
                         id: id,
                         rank: level,
                         difficulty: songDif
@@ -352,7 +352,12 @@ export default new class getInfo {
          */
         let OldDifList = {}
         for (let i in oldDif) {
-            OldDifList[oldDif[i].id] = oldDif[i]
+            OldDifList[oldDif[i].id] = {}
+            for (let level of this.Level) {
+                if (oldDif[i][level]) {
+                    OldDifList[oldDif[i].id][level] = Number(oldDif[i][level])
+                }
+            }
         }
 
 

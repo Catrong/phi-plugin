@@ -811,11 +811,11 @@ export class phisong extends phiPluginBase {
         const info_by_difficulty = getInfo.historyDifficultyByVerDifficulty[versionInfo.version_code];
         for (let i = 0; i < 10; ++i) {
             const difStr = Math.round((dif + i * 0.1) * 10) / 10;
-            if (!info_by_difficulty[difStr]) continue;
-            data.title.total += info_by_difficulty[difStr].length;
+            if (!info_by_difficulty[difStr.toFixed(1)]) continue;
+            data.title.total += info_by_difficulty[difStr.toFixed(1)].length;
             data.table.push({
                 difficulty: difStr.toFixed(1),
-                songs: info_by_difficulty[difStr]?.map(chart => ({
+                songs: info_by_difficulty[difStr.toFixed(1)]?.map(chart => ({
                     rank: chart.rank,
                     illustration: getInfo.getill(chart.id, 'low'),
                 })) || []
