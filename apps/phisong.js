@@ -773,11 +773,11 @@ export class phisong extends phiPluginBase {
         let matchVerCode = 0;
         if (matchVersion) {
             if (matchVersion.includes('.')) {
-                if (!getInfo.versionInfoByVersion[matchVersion]) {
+                if (!getInfo.versionInfoByLabel[matchVersion]) {
                     send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
                     return true
                 }
-                matchVerCode = getInfo.versionInfoByVersion[matchVersion].version_code
+                matchVerCode = getInfo.versionInfoByLabel[matchVersion].version_code
             } else {
                 let verCodeNum = Number(matchVersion)
                 if (!getInfo.versionInfoByCode[verCodeNum]) {

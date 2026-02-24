@@ -46,11 +46,11 @@ export default new class getInfo {
      */
 
     /**
-     * @typedef {Record<number, Record<idString, csvDifObject>>} historyDifficultyByVersionObject
+     * @typedef {Record<string, Record<idString, csvDifObject>>} historyDifficultyByVersionObject
      */
 
     /**
-     * @typedef {Record<idString, Record<number, Record<levelKind, number>>>} historyDifficultyBySongIdObject
+     * @typedef {Record<idString, Record<string, Record<levelKind, number>>>} historyDifficultyBySongIdObject
      */
 
     constructor() {
@@ -119,9 +119,9 @@ export default new class getInfo {
         this.updatedChart = {}
 
         /** @type {Record<string, versionInfoObject>} */
-        this.versionInfoByVersion = {}
+        this.versionInfoByLabel = {}
 
-        /** @type {Record<number, versionInfoObject>} */
+        /** @type {Record<string, versionInfoObject>} */
         this.versionInfoByCode = {}
 
         /** @type {historyDifficultyByVersionObject} */
@@ -130,7 +130,7 @@ export default new class getInfo {
         /** @type {historyDifficultyBySongIdObject} */
         this.historyDifficultyBySongId = {}
 
-        /** @type {Record<number, Record<string, {id: idString, rank: levelKind, difficulty: number}[]>>} */
+        /** @type {Record<string, Record<string, {id: idString, rank: levelKind, difficulty: number}[]>>} */
         this.historyDifficultyByVerDifficulty = {}
 
         if (Config.getUserCfg('config', 'watchInfoPath')) {
@@ -164,7 +164,7 @@ export default new class getInfo {
         this.info_by_difficulty = {}
         this.updatedSong = []
         this.updatedChart = {}
-        this.versionInfoByVersion = {}
+        this.versionInfoByLabel = {}
         this.versionInfoByCode = {}
         this.historyDifficultyByVersion = {}
         this.historyDifficultyBySongId = {}
@@ -270,7 +270,7 @@ export default new class getInfo {
 
         versionCodes = versionCodes.sort((a, b) => a - b)
 
-        let lastVersionCode = versionCodes[versionCodes.length - 2]
+        let lastVersionCode = versionCodes[versionCodes.length - 2].toFixed(0)
 
         for (let ver of historyVersionList) {
             /**@type {versionInfoObject} */
@@ -281,19 +281,19 @@ export default new class getInfo {
             const difInfo = {}
             const verCode = Number(ver)
 
-            if (verCode == lastVersionCode) {
+            if (ver == lastVersionCode) {
                 oldDif = csvDifInfo
             }
 
             csvDifInfo.forEach(item => {
                 difInfo[idWithout0ToIdWith0(item.id)] = item
             })
-            this.versionInfoByCode[verCode] = verInfo
-            this.versionInfoByVersion[verInfo.version_label] = verInfo
+            this.versionInfoByCode[ver] = verInfo
+            this.versionInfoByLabel[verInfo.version_label] = verInfo
 
-            this.historyDifficultyByVersion[verCode] = difInfo
+            this.historyDifficultyByVersion[ver] = difInfo
 
-            this.historyDifficultyByVerDifficulty[verCode] = {}
+            this.historyDifficultyByVerDifficulty[ver] = {}
 
             const ids = fCompute.objectKeys(difInfo)
 
@@ -304,10 +304,10 @@ export default new class getInfo {
                     if (!difInfo[id][level]) return;
                     const songDif = Number(difInfo[id][level]);
                     dif[level] = songDif;
-                    if (!this.historyDifficultyByVerDifficulty[verCode][songDif.toFixed(1)]) {
-                        this.historyDifficultyByVerDifficulty[verCode][songDif.toFixed(1)] = []
+                    if (!this.historyDifficultyByVerDifficulty[ver][songDif.toFixed(1)]) {
+                        this.historyDifficultyByVerDifficulty[ver][songDif.toFixed(1)] = []
                     }
-                    this.historyDifficultyByVerDifficulty[verCode][songDif.toFixed(1)].push({
+                    this.historyDifficultyByVerDifficulty[ver][songDif.toFixed(1)].push({
                         id: id,
                         rank: level,
                         difficulty: songDif
@@ -315,9 +315,9 @@ export default new class getInfo {
                 })
                 if (!this.historyDifficultyBySongId[id]) {
                     this.historyDifficultyBySongId[id] = {}
-                    this.historyDifficultyBySongId[id][verCode] = dif
+                    this.historyDifficultyBySongId[id][ver] = dif
                 } else {
-                    this.historyDifficultyBySongId[id][verCode] = dif
+                    this.historyDifficultyBySongId[id][ver] = dif
                 }
             }
 
