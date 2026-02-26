@@ -32,7 +32,7 @@ body p {
 }
 
 .background img {
-    filter: blur(0px) brightness(0.7);
+    filter: blur(0px) brightness(0.5);
     width: 2844.44px;
     height: 1500px;
 }
