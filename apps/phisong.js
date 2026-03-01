@@ -773,11 +773,11 @@ export class phisong extends phiPluginBase {
         let matchVerCode = 0;
         if (matchVersion) {
             if (matchVersion.includes('.')) {
-                if (!getInfo.versionInfoByVersion[matchVersion]) {
+                if (!getInfo.versionInfoByLabel[matchVersion]) {
                     send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
                     return true
                 }
-                matchVerCode = getInfo.versionInfoByVersion[matchVersion].version_code
+                matchVerCode = getInfo.versionInfoByLabel[matchVersion].version_code
             } else {
                 let verCodeNum = Number(matchVersion)
                 if (!getInfo.versionInfoByCode[verCodeNum]) {
@@ -811,11 +811,11 @@ export class phisong extends phiPluginBase {
         const info_by_difficulty = getInfo.historyDifficultyByVerDifficulty[versionInfo.version_code];
         for (let i = 0; i < 10; ++i) {
             const difStr = Math.round((dif + i * 0.1) * 10) / 10;
-            if (!info_by_difficulty[difStr]) continue;
-            data.title.total += info_by_difficulty[difStr].length;
+            if (!info_by_difficulty[difStr.toFixed(1)]) continue;
+            data.title.total += info_by_difficulty[difStr.toFixed(1)].length;
             data.table.push({
                 difficulty: difStr.toFixed(1),
-                songs: info_by_difficulty[difStr]?.map(chart => ({
+                songs: info_by_difficulty[difStr.toFixed(1)]?.map(chart => ({
                     rank: chart.rank,
                     illustration: getInfo.getill(chart.id, 'low'),
                 })) || []

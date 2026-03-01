@@ -18,7 +18,7 @@ Anomaly:
   - 雪降愚人节
   - 愚人节雪降
   - 雪降愚人节
-  - 雪崩
+  - 雪崩SP
   - jnxj
   - 今年雪降
   - 今年雪降目指顽张
@@ -360,12 +360,14 @@ Chronologika.Hundotte:
   - 编年史
 ChronosCollapseLaCampanella.SunsetRay:
   - 时崩
+  - 时溃
   - 钟
   - 李斯特的钟
   - 李斯特
   - 时间崩塌
   - 时空坍塌
   - 破钟
+  - cclc
   - La Campanella
 Chronomia.Lime:
   - 天文钟
@@ -511,6 +513,7 @@ Aleph0.LeaF:
   - 2016冠军
   - a0
   - 阿列夫0
+  - 阿尔法零
   - 数学课堂
   - 数学小课堂
   - 草先生的数学课堂
@@ -1032,6 +1035,7 @@ ERABYECONNEC10N.かめりあ:
   - +++
   - 兆字节连接
   - 千兆字节
+  - 万兆链接
   - 10N+
   - +E
   - 字节
@@ -1326,6 +1330,7 @@ IndelibleScar.Noah:
   - IS
   - 永存之伤
   - 不可磨灭的伤疤
+  - 伤痕
 ArtificialExistence.JunKuroda:
   - AE
   - 人为存在
@@ -1334,7 +1339,6 @@ Xenolith.Tatsh:
   - Xe
   - 捕虏体
   - 捕虏岩
-  - 流萤
 BRAINHACKER.SOMON:
   - 大脑黑客
   - 牢大
@@ -1439,6 +1443,7 @@ atruthseekerCommunicationwithUtopiawillbelost.kuro:
   - 一个卡车
   - 求真者
   - 真理探寻者
+  - 真理
   - ats
   - 真理寻求者
   - 真寻
@@ -1452,6 +1457,7 @@ BoundedQuietude.FiniteLimitvsSiLiS:
   - bq
   - 束缚之静
   - 业内之寂
+  - 大咩兔
 iLArtifact.Link0:
   - iL
   - 无源之光
@@ -1518,6 +1524,8 @@ NightTheater.わかどり:
 CrushBETA.shadow_bling:
   - 过年回家
   - 拜年
+  - 心动测试版
+  - 怦然心动
   - CB
   - beta
 Ramification.rareguyReina:
@@ -1545,6 +1553,7 @@ ATHAZA.LeaF:
   - 笼中花
   - 大蓝花
   - 大兰花
+  - 蓝莲花
   - 诶踢哈砸
   - 被遗忘恐惧症
   - 挨踢哈砸
@@ -1837,6 +1846,7 @@ Rebirth.ああああ:
   - 新重生
   - 终生
   - 再诞
+  - 再世
   - 黑化
   - 黑复生
   - 英文重生
@@ -1883,11 +1893,12 @@ RetributionCycleofRedemption.ArdolfvsDaily天利:
   - 报应愚人节
   - 粉报应
 雪降り雪が降っている.AiSSw夜輪ft結月ゆかり:
-  - 三色雪糕
+  - 小雪崩
   - 雪降柔和版
   - 雪降抒情版
   - 雪崩抒情版
   - 雪降常驻版
+  - 三色雪糕
   - 双雪降
   - 雪降AT
   - 二重雪降
@@ -1907,7 +1918,7 @@ RetributionCycleofRedemption.ArdolfvsDaily天利:
 Komplexe.雄之助featSennzai:
   - 复杂
   - complex
-  - 黑姬	
+  - 黑姬
 slips.rintarosoma:
   - slips
   - 滑动
@@ -1963,12 +1974,14 @@ BANGINGSTRIKE.DewPleiades:
   - 砰砰砰
   - 邦
   - PMT2
+  - 大师赛2
   - 黄鸠
   - 橙小鸽
   - 梆硬打击
   - DBS
   - 梆硬
   - 敲罢工
+  - 大咩免
 百鬼夜行.SaladSavior:
   - 百鬼夜行
   - ֎
@@ -1977,6 +1990,7 @@ BANGINGSTRIKE.DewPleiades:
   - 曲奇饼干
   - 夜行
   - 亍
+  - 彳亍
   - ֍
   - 百鬼֍夜行
 Xepion.Acotto:
@@ -2025,6 +2039,7 @@ Locomotive.K:
 Incyde.YbeLL:
   - 切入
   - inside
+  - 音赛德
 Alb.Avans:
   - 白裳
   - 阿拉伯
@@ -2047,3 +2062,5 @@ ABYSSMOTION192333.ariiolTSAR奏Sou:
   - 爽口歌曲
   - 深渊运动
   - 深渊律动
+青丘.BLACK0:
+  - 青灵之泉
