@@ -1351,14 +1351,17 @@
     },
     "Radiance.Nhato": {
         "bpm": "155",
+        "length": "2:27",
         "chapter": "Chapter EX-オンゲキ 精选集"
     },
     "DiamondDust.MasahiroGodspeedAoki": {
         "bpm": "200",
+        "length": "2:35",
         "chapter": "Chapter EX-オンゲキ 精选集"
     },
     "StardustRAY.kanonevsBlackY": {
         "bpm": "164",
+        "length": "2:47",
         "chapter": "Chapter EX-オンゲキ 精选集"
     },
     "FrozenHeart.A39沙包P": {
@@ -1424,6 +1427,16 @@
         "bpm": "257",
         "length": "2:18",
         "chapter": "Chapter EX-maimai 精选集"
+    },
+    "000AinSophAur.Yumeji": {
+        "bpm": "194",
+        "length": "2:35",
+        "chapter": "Single-单曲 精选集"
+    },
+    "SolaggyfeatUzumaki.ShrimpCatsはぁち後藤涼輔": {
+        "bpm": "180",
+        "length": "2:03",
+        "chapter": "Single-单曲 精选集"
     },
     "Xepion.Acotto": {
         "bpm": "170",
@@ -1496,6 +1509,7 @@
         "chapter": "Single-单曲 精选集"
     }
 }
+
 
 
 
