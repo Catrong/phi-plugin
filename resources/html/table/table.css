@@ -10,6 +10,7 @@ body {
   flex-direction: row;
   /* margin-bottom: 50px; */
   height: 210px;
+  z-index: 2;
   background: linear-gradient(#00000000 20%,#00b8f0 20%,#00b8f0 23%,#00b5ff80 23%,#00b5ff80 80%,#00000000 80%);
   filter: drop-shadow(4px 5px 0px #ffffff60)
 }
@@ -142,6 +143,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   position: relative;
+  z-index: 2;
   justify-content: flex-start;
   --shadow: 2px 4px 6px #00b5ff;
   margin: 0 auto;
@@ -312,6 +314,7 @@ body {
 
 .createdbox {
   margin-bottom: 20px;
+  z-index: 2;
 }
 
 .phi-plugin p {
