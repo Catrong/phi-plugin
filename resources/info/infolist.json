@@ -102,7 +102,16 @@
     "ENERGYSYNERGYMATRIX.Tanchiky": {
         "bpm": "160",
         "length": "2:05",
-        "chapter": "Chapter Legacy 过去的章节"
+        "chapter": "Chapter Legacy 过去的章节",
+        "spinfo": "本曲目存在Legacy谱面，长按难度标识即可进入",
+        "chart": {
+            "LY": {
+                "rgba": "183,0,253,1",
+                "difficulty": "14",
+                "combo": "615",
+                "charter": "Ctymax vs. 阿爽"
+            }
+        }
     },
     "NYA.FLuoRiTe姜米條": {
         "bpm": "154",
@@ -337,7 +346,16 @@
     "Aleph0.LeaF": {
         "bpm": "35~400",
         "length": "2:20",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "spinfo": "本曲目存在Legacy谱面，长按难度标识即可进入",
+        "chart": {
+            "LY": {
+                "rgba": "183,0,253,1",
+                "difficulty": "15",
+                "combo": "684",
+                "charter": "阿爽 VS Arenn Saki"
+            }
+        }
     },
     "NextTime.SaMZIng": {
         "bpm": "175",
@@ -367,7 +385,16 @@
     "BreakThroughTheBarrier.lixound": {
         "bpm": "176",
         "length": "2:12",
-        "chapter": "Chapter EX-Rising Sun Traxx 精选集"
+        "chapter": "Chapter EX-Rising Sun Traxx 精选集",
+        "spinfo": "本曲目存在Legacy谱面，长按难度标识即可进入",
+        "chart": {
+            "LY": {
+                "rgba": "183,0,253,1",
+                "difficulty": "15",
+                "combo": "1293",
+                "charter": "CatCats"
+            }
+        }
     },
     "Chronostasis.黒皇帝": {
         "bpm": "196",
@@ -997,7 +1024,16 @@
     "Lyrith迷宮リリス.ユメミド": {
         "bpm": "177",
         "length": "2:27",
-        "chapter": "Side Story 1 忘忧宫"
+        "chapter": "Side Story 1 忘忧宫",
+        "spinfo": "本曲目存在Legacy谱面，长按难度标识即可进入",
+        "chart": {
+            "LY": {
+                "rgba": "183,0,253,1",
+                "difficulty": "15",
+                "combo": "1122",
+                "charter": "Arenn Saki as \"lAβyrinS\""
+            }
+        }
     },
     "Demiurge.Rabpit": {
         "bpm": "111",
