@@ -798,6 +798,9 @@ export default new class getInfo {
      */
     idgetavatar(id) {
         if (this.avatarid?.includes(id)) {
+            if (id == "Cipher : /2&//<|0") {
+                return "Cipher1"
+            }
             return id
         } else {
             return 'Introduction'
