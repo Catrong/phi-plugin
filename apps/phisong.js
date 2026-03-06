@@ -797,6 +797,7 @@ export class phisong extends phiPluginBase {
             return true
         }
 
+        let pluginData = await getNotes.getNotesData(e.user_id)
         const data = {
             title: {
                 difficulty: dif,
@@ -805,7 +806,8 @@ export class phisong extends phiPluginBase {
             },
             /**@type {{difficulty: string, songs: {rank: string, illustration: string}[]}[]} */
             table: [],
-            background: getInfo.getill(/**@type {any} */("ShineAfter.ADeanJocularACE.0"), 'blur')
+            background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))], 'blur'),
+            theme: pluginData?.theme || 'star'
         }
 
         const info_by_difficulty = getInfo.historyDifficultyByVerDifficulty[versionInfo.version_code];
