@@ -15,7 +15,8 @@
                 "combo": "2000",
                 "charter": "XwX"
             }
-        }
+        },
+        "isOriginal": true
     },
     "The Chariot ~REVIIVAL~(2024 April Fools' Day)": {
         "song": "The Chariot ~REVIIVAL~(2024 April Fools' Day)",
@@ -75,7 +76,8 @@
                 "combo": "2500",
                 "charter": "今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\\\リンコ*198食べ放題//"
             }
-        }
+        },
+        "isOriginal": true
     },
     "Christmas": {
         "song": "Christmas",
@@ -93,7 +95,8 @@
                 "combo": "177",
                 "charter": "Catcats"
             }
-        }
+        },
+        "isOriginal": true
     },
     "Spasmodic(Haocore Mix)": {
         "song": "Spasmodic(Haocore Mix)",
@@ -266,6 +269,7 @@
                 "combo": "93",
                 "charter": "Catcats"
             }
-        }
+        },
+        "isOriginal": true
     }
 }

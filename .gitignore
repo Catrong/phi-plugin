@@ -39,6 +39,9 @@ plugin-ill/
 
 # 忽略 apps 目录中的特定文件
 /apps/guessName.js
+/apps/phiChartFile.js
+/apps/guessGame.js
+/apps/guessGame/guessSong.js
 plugin-ill/
 
 # 忽略临时文件

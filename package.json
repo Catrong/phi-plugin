@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Catrong/phi-plugin#readme",
   "dependencies": {
+    "archiver": "^7.0.1",
     "axios": "^1.11.0",
     "chalk": "^5.6.2",
     "crypto-js": "^4.1.1",
@@ -28,6 +29,7 @@
     "csvtojson": "^2.0.10",
     "echarts": "^5.6.0",
     "echarts-wordcloud": "^2.1.0",
+    "iconv-lite": "^0.6.3",
     "jszip": "^3.10.1",
     "node-csv": "^0.1.2",
     "pinyin-pro": "^3.15.4",

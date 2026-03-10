@@ -89,6 +89,9 @@
             </div>
             <div class="ill-box">
                 <img src="{{illustration}}" alt="曲绘">
+                {{if isOriginal}}
+                <div class="original-tag">Phigros Original</div>
+                {{/if}}
             </div>
         </div>
         <div class="other-info">
