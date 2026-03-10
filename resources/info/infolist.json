@@ -2,12 +2,14 @@
     "Introduction": {
         "bpm": "138",
         "length": "2:30",
-        "chapter": "--"
+        "chapter": "--",
+        "isOriginal": true
     },
     "Glaciaxion.SunsetRay": {
         "bpm": "140",
         "length": "2:43",
-        "chapter": "Chapter Legacy 过去的章节"
+        "chapter": "Chapter Legacy 过去的章节",
+        "isOriginal": true
     },
     "EradicationCatastrophe.NceS": {
         "bpm": "120",
@@ -27,12 +29,14 @@
     "EnginexStartmelodymix.CrossingSound": {
         "bpm": "186",
         "length": "1:31",
-        "chapter": "Chapter Legacy 过去的章节"
+        "chapter": "Chapter Legacy 过去的章节",
+        "isOriginal": true
     },
     "光.姜米條": {
         "bpm": "180",
         "length": "2:11",
-        "chapter": "Chapter Legacy 过去的章节"
+        "chapter": "Chapter Legacy 过去的章节",
+        "isOriginal": true
     },
     "Wintercube.CtymaxfeatNceS": {
         "bpm": "104",
@@ -141,12 +145,14 @@
     "Spasmodic.姜米條颶風元力上人": {
         "bpm": "200",
         "length": "2:34",
-        "chapter": "Chapter 5 霓虹灯牌"
+        "chapter": "Chapter 5 霓虹灯牌",
+        "isOriginal": true
     },
     "LeaveAllBehind.rider": {
         "bpm": "150",
         "length": "2:07",
-        "chapter": "Chapter 5 霓虹灯牌"
+        "chapter": "Chapter 5 霓虹灯牌",
+        "isOriginal": true
     },
     "ColorfulDays.P4koofeatつゆり花鈴": {
         "bpm": "136",
@@ -156,17 +162,20 @@
     "microwav.dandeless": {
         "bpm": "172",
         "length": "2:04",
-        "chapter": "Chapter 6 方舟蜃景"
+        "chapter": "Chapter 6 方舟蜃景",
+        "isOriginal": true
     },
     "重生.姜米條": {
         "bpm": "195",
         "length": "2:23",
-        "chapter": "Chapter 6 方舟蜃景"
+        "chapter": "Chapter 6 方舟蜃景",
+        "isOriginal": true
     },
     "NOONEYESMAN.MYUKKE": {
         "bpm": "170",
         "length": "2:04",
-        "chapter": "Chapter 6 方舟蜃景"
+        "chapter": "Chapter 6 方舟蜃景",
+        "isOriginal": true
     },
     "望影の方舟Six.SeURa": {
         "bpm": "209",
@@ -176,17 +185,20 @@
     "Igallta.SeURa": {
         "bpm": "230",
         "length": "2:02",
-        "chapter": "Chapter 6 方舟蜃景"
+        "chapter": "Chapter 6 方舟蜃景",
+        "isOriginal": true
     },
     "ClockParadox.WyvernP": {
         "bpm": "140",
         "length": "2:30",
-        "chapter": "Chapter 7 时钟链接"
+        "chapter": "Chapter 7 时钟链接",
+        "isOriginal": true
     },
     "Chronologika.Hundotte": {
         "bpm": "180",
         "length": "2:14",
-        "chapter": "Chapter 7 时钟链接"
+        "chapter": "Chapter 7 时钟链接",
+        "isOriginal": true
     },
     "NickofTime.P4koo": {
         "bpm": "175",
@@ -206,37 +218,44 @@
     "Rrharil.TeamGrimoire": {
         "bpm": "190",
         "length": "2:12",
-        "chapter": "Chapter 7 时钟链接"
+        "chapter": "Chapter 7 时钟链接",
+        "isOriginal": true
     },
     "CraveWave.LandRoot": {
         "bpm": "150",
         "length": "2:08",
-        "chapter": "Chapter 8 凌日潮汐"
+        "chapter": "Chapter 8 凌日潮汐",
+        "isOriginal": true
     },
     "TheChariotREVIIVAL.Attoclef": {
         "bpm": "190",
         "length": "2:26",
-        "chapter": "Chapter 8 凌日潮汐"
+        "chapter": "Chapter 8 凌日潮汐",
+        "isOriginal": true
     },
     "Luminescence.米虾Fomiki初云CLoudie": {
         "bpm": "184",
         "length": "2:35",
-        "chapter": "Chapter 8 凌日潮汐"
+        "chapter": "Chapter 8 凌日潮汐",
+        "isOriginal": true
     },
     "Retribution.nmyKryexe": {
         "bpm": "190",
         "length": "2:25",
-        "chapter": "Chapter 8 凌日潮汐"
+        "chapter": "Chapter 8 凌日潮汐",
+        "isOriginal": true
     },
     "DESTRUCTION321.Normal1zervsBrokenNerdz": {
         "bpm": "321.321",
         "length": "2:38",
-        "chapter": "Chapter 8 凌日潮汐"
+        "chapter": "Chapter 8 凌日潮汐",
+        "isOriginal": true
     },
     "DistortedFate.Sakuzyo": {
         "bpm": "150",
         "length": "2:42",
-        "chapter": "Chapter 8 凌日潮汐"
+        "chapter": "Chapter 8 凌日潮汐",
+        "isOriginal": true
     },
     "Doppelganger.LeaF": {
         "bpm": "280",
@@ -336,7 +355,8 @@
     "SnowDesert.WyvernP": {
         "bpm": "125",
         "length": "2:22",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "Burn.NceS": {
         "bpm": "148",
@@ -424,7 +444,8 @@
     "SpeedUp.DarTokki": {
         "bpm": "145",
         "length": "2:20",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "MagentaPotion.EmoCo": {
         "bpm": "150",
@@ -519,7 +540,8 @@
     "雪降りメリクリ.A39": {
         "bpm": "180",
         "length": "2:38",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "CervelleConnexion.SCTL": {
         "bpm": "142",
@@ -634,12 +656,14 @@
     "Concvssion.Halv": {
         "bpm": "190",
         "length": "2:31",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "ジングルベルJingleBell.A39沙包P": {
         "bpm": "175",
         "length": "2:47",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "TimetoNightSkyfeatLeeYuJin.HyuNKLYDIX": {
         "bpm": "128",
@@ -759,12 +783,14 @@
     "心之所向.姜米條": {
         "bpm": "180",
         "length": "2:16",
-        "chapter": "Chapter EX-姜米條 精选集"
+        "chapter": "Chapter EX-姜米條 精选集",
+        "isOriginal": true
     },
     "inferior.姜米條": {
         "bpm": "200",
         "length": "2:03",
-        "chapter": "Chapter EX-姜米條 精选集"
+        "chapter": "Chapter EX-姜米條 精选集",
+        "isOriginal": true
     },
     "csqn.Aoi": {
         "bpm": "174",
@@ -799,17 +825,20 @@
     "ElCondorPasaPhigrosEdit.PlasticFruits": {
         "bpm": "150",
         "length": "2:12",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "BreakOver.Kforest": {
         "bpm": "185",
         "length": "2:08",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "BelieveLightfeat果丸哒呦.ScalerMestie果丸哒呦": {
         "bpm": "150",
         "length": "2:50",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "Pontdessouvenirs.VeetaCrushvsitsufeatitsu": {
         "bpm": "185",
@@ -829,7 +858,8 @@
     "Feast远东之宴.茶鸣拾贰律": {
         "bpm": "128",
         "length": "2:40",
-        "chapter": "Chapter EX-茶鸣拾贰律 精选集"
+        "chapter": "Chapter EX-茶鸣拾贰律 精选集",
+        "isOriginal": true
     },
     "インフェルノシティ.Ponchifeatはぁち": {
         "bpm": "215",
@@ -889,7 +919,8 @@
     "Ajourneytothemoonlight.Yesod": {
         "bpm": "174",
         "length": "2:35",
-        "chapter": "Chapter EX-OverRapid 精选集"
+        "chapter": "Chapter EX-OverRapid 精选集",
+        "isOriginal": true
     },
     "RainyHeart.BelieverInYou阿卡姆巫师": {
         "bpm": "140",
@@ -984,7 +1015,8 @@
     "聖夜讃歌.A39沙包P": {
         "bpm": "178",
         "length": "3:06",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "ストレイソウルアラウンド.みーに": {
         "bpm": "150",
@@ -1038,12 +1070,14 @@
     "Demiurge.Rabpit": {
         "bpm": "111",
         "length": "2:49",
-        "chapter": "Side Story 2 弭刻日"
+        "chapter": "Side Story 2 弭刻日",
+        "isOriginal": true
     },
     "Demonkin.ForgedReigns": {
         "bpm": "192",
         "length": "2:18",
-        "chapter": "Side Story 2 弭刻日"
+        "chapter": "Side Story 2 弭刻日",
+        "isOriginal": true
     },
     "Re_NascencePsystyleVer.Rinth_live": {
         "bpm": "150",
@@ -1072,8 +1106,9 @@
     },
     "BrokenSky.JungoMAX3feat刘佳宜Snow幻影刃shadow": {
         "bpm": "130",
-        "length": "2:35(?)",
-        "chapter": "单曲精选集"
+        "length": "2:35",
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "Khalid.Dolphin": {
         "bpm": "128",
@@ -1093,7 +1128,8 @@
     "PANICPARADISE.DJSHIONY": {
         "bpm": "170",
         "length": "2:08",
-        "chapter": "Side Story 3 盗乐行"
+        "chapter": "Side Story 3 盗乐行",
+        "isOriginal": true
     },
     "ReEndofaDream.umavsモリモリあつし": {
         "bpm": "212",
@@ -1143,7 +1179,8 @@
     "ShineAfter.ADeanJocularACE": {
         "bpm": "170",
         "length": "2:45",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "Bloom.targ麻团qwq": {
         "bpm": "150",
@@ -1238,7 +1275,8 @@
     "Spotlight.Ardolf": {
         "bpm": "160",
         "length": "2:09",
-        "chapter": "Side Story 4 无相乡"
+        "chapter": "Side Story 4 无相乡",
+        "isOriginal": true
     },
     "NightTheater.わかどり": {
         "bpm": "151",
@@ -1248,12 +1286,14 @@
     "Ramification.rareguyReina": {
         "bpm": "175",
         "length": "2:17",
-        "chapter": "Side Story 4 无相乡"
+        "chapter": "Side Story 4 无相乡",
+        "isOriginal": true
     },
     "DerRichter.Ωμεγα": {
         "bpm": "192",
         "length": "2:27",
-        "chapter": "Side Story 4 无相乡"
+        "chapter": "Side Story 4 无相乡",
+        "isOriginal": true
     },
     "ATHAZA.LeaF": {
         "bpm": "240~280",
@@ -1363,7 +1403,8 @@
     "AbsoluTedisoRdeR.AcuteDisarray": {
         "bpm": "256",
         "length": "3:10",
-        "chapter": "Chapter EX-EGTS 精选集"
+        "chapter": "Chapter EX-EGTS 精选集",
+        "isOriginal": true
     },
     "AphroditesChildshortver.RUQOA": {
         "bpm": "128",
@@ -1437,12 +1478,14 @@
                 "combo": "2500",
                 "charter": "SPΔDE ~what awaits ahead is destruction and destruction~"
             }
-        }
+        },
+        "isOriginal": true
     },
     "雪降り雪が降っている.AiSSw夜輪ft結月ゆかり": {
         "bpm": "156",
         "length": "2:29",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "isOriginal": true
     },
     "アンビバレンス.すりぃ相沢": {
         "bpm": "187",
@@ -1472,7 +1515,8 @@
     "SolaggyfeatUzumaki.ShrimpCatsはぁち後藤涼輔": {
         "bpm": "180",
         "length": "2:03",
-        "chapter": "Single-单曲 精选集"
+        "chapter": "Single-单曲 精选集",
+        "isOriginal": true
     },
     "Xepion.Acotto": {
         "bpm": "170",
@@ -1492,7 +1536,8 @@
     "BANGINGSTRIKE.DewPleiades": {
         "bpm": "234",
         "length": "2:28",
-        "chapter": "Single-单曲 精选集"
+        "chapter": "Single-单曲 精选集",
+        "isOriginal": true
     },
     "TheWholeRest.KIVΛ":{
         "bpm": "157",
