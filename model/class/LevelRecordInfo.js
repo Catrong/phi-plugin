@@ -81,8 +81,6 @@ export default class LevelRecordInfo {
     }
 }
 
-/**@typedef { "phi" | "FC" | "NEW" | "F" | "C" | "B" | "A" | "S" | "V" } ratingKind */
-
 /**
  * 
  * @param {number} score 

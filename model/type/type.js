@@ -9,7 +9,8 @@
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT'} levelKind 有效难度分级
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT' | 'LEGACY'} allLevelKind 全部难度分级
  * @typedef {'tap' | 'drag' | 'hold' | 'flick'} noteKind note分类
- */
+ * @typedef {  "NEW" | "F" | "C" | "B" | "A" | "S" | "V" | "FC" | "phi" } ratingKind
+ **/
 
 /**
  * @typedef {'help'
@@ -26,6 +27,7 @@
  * | 'singlescore'
  * | 'lvscore'
  * | 'chap'
+ * | 'achievement'
  * | 'suggest'
  * | 'analyze2025SaveHistory'
  * | 'hisb30'

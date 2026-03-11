@@ -8,10 +8,8 @@ import picmodle from '../model/picmodle.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
 import { allLevel, Level, LevelNum } from '../model/constNum.js'
-import { segment } from 'oicq'
 import getComment from '../model/getComment.js'
 import getSave from '../model/getSave.js'
-import getChartTag from '../model/getChartTag.js'
 import Version from '../components/Version.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
@@ -1129,128 +1127,6 @@ export class phisong extends phiPluginBase {
         }
         return false;
     }
-
-    // /**
-    //  * 
-    //  * @param {botEvent} e 
-    //  * @returns 
-    //  */
-    // async chart(e) {
-    //     if (await getBanGroup.get(e, 'chart')) {
-    //         send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-    //         return false
-    //     }
-
-    //     let msg = e.msg.replace(/[#/](.*?)(chart)(\s*)/, "")
-
-    //     /** @type {levelKind} */
-    //     let rank = /** @type {levelKind} */(msg.match(/\s+(EZ|HD|IN|AT)/i)?.[1] || 'IN')
-    //     rank = /** @type {levelKind} */(rank.toUpperCase())
-    //     msg = msg.replace(/\s+(EZ|HD|IN|AT)/i, '')
-
-    //     let ids = getInfo.fuzzysongsnick(msg)
-    //     if (!ids) {
-    //         send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
-    //         return true
-    //     }
-    //     let info = getInfo.info(ids, true)
-    //     if (!info) {
-    //         send.send_with_At(e, `未找到${ids}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
-    //         return true
-    //     }
-    //     if (!info.chart[rank]) {
-    //         send.send_with_At(e, `${ids} 没有 ${rank} 这个难度QAQ！`)
-    //         return true
-    //     }
-
-    //     let chart = info.chart[rank]
-
-    //     let allowChartTag = await Config.getUserCfg('config', 'allowChartTag')
-
-    //     let data = {
-    //         illustration: info.illustration,
-    //         song: info.song,
-    //         length: info.length,
-    //         rank: rank,
-    //         difficulty: chart.difficulty,
-    //         charter: chart.charter,
-    //         tap: chart.tap,
-    //         drag: chart.drag,
-    //         hold: chart.hold,
-    //         flick: chart.flick,
-    //         combo: chart.combo,
-    //         distribution: chart.distribution,
-    //         tip: allowChartTag ? `发送 /${Config.getUserCfg('config', 'cmdhead')} addtag <曲名> <难度> <tag> 来添加标签哦！` : `标签词云功能暂时被管理员禁用了哦！快去联系BOT主开启吧！`,
-    //         chartLength: `${Math.floor(chart.maxTime / 60)}:${Math.floor(chart.maxTime % 60).toString().padStart(2, '0')}`,
-    //         words: allowChartTag ? getChartTag.get(info.id, rank) : '',
-    //     }
-    //     e.reply(await picmodle.common(e, 'chartInfo', data))
-    // }
-
-    // /**
-    //  * 
-    //  * @param {botEvent} e 
-    //  * @returns 
-    //  */
-    // async addtag(e) {
-    //     if (await getBanGroup.get(e, 'addtag') || !(await Config.getUserCfg('config', 'allowChartTag'))) {
-    //         send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-    //         return false
-    //     }
-
-    //     /** @type {'addtag'|'subtag'|'retag'} */
-    //     let op = /** @type {'addtag'|'subtag'|'retag'} */(e.msg.match(/(addtag|subtag|retag)/i)?.[1])
-
-    //     let msg = e.msg.replace(/[#/](.*?)(addtag|subtag|retag)(\s*)/, "")
-
-    //     /** @type {levelKind} */
-    //     let rank = msg.match(/\s+(EZ|HD|IN|AT)\s+/i)?.[1] || 'IN'
-    //     rank = rank.toUpperCase()
-    //     msg = msg.replace(/\s+(EZ|HD|IN|AT)/i, '')
-
-    //     let tag = msg.match(/(?<=\s)[^\s]+$/)?.[0]
-    //     if (!tag) {
-    //         send.send_with_At(e, `请输入标签哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ${op} <曲名> <rank> <tag>`)
-    //         return true
-    //     }
-    //     if (tag.length > 6) {
-    //         send.send_with_At(e, `${tag} 太长了呐QAQ！请限制在6个字符以内嗷！`)
-    //         return true
-    //     }
-    //     msg = msg.replace(tag, '')
-    //     let song = getInfo.fuzzysongsnick(msg)?.[0]
-    //     if (!song) {
-    //         send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
-    //         return true
-    //     }
-    //     let info = getInfo.info(song, true)
-    //     if (!info.chart[rank]) {
-    //         send.send_with_At(e, `${song} 没有 ${rank} 这个难度QAQ！`)
-    //         return true
-    //     }
-    //     if (!tag) {
-    //         send.send_with_At(e, `请输入标签哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ${op} <曲名> <rank> <tag>`)
-    //         return true
-    //     }
-    //     let callback = false;
-    //     switch (op) {
-    //         case 'addtag':
-    //             callback = getChartTag.add(info.id, tag, rank, true, e.user_id)
-    //             break;
-    //         case 'subtag':
-    //             callback = getChartTag.add(info.id, tag, rank, false, e.user_id)
-    //             break;
-    //         case 'retag':
-    //             callback = getChartTag.cancel(info.id, tag, rank, e.user_id)
-    //             break;
-    //     }
-    //     if (callback) {
-    //         send.send_with_At(e, `操作成功！`)
-    //     } else {
-    //         send.send_with_At(e, `操作失败QAQ！`)
-    //     }
-    // }
-
 }
 
 /**

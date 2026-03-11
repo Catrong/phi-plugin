@@ -98,6 +98,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi lmtacc [0-100]` | Calculate Rks with minimum ACC limit |
 | `#phi (lvsco(re)\|scolv) <rating range> <difficulty>` | Get scores in range |
 | `#phi chap <chapter name\|help>` | Get chapter scores |
+| `#phi ahv <rating>[-v version]` | Get rating score table |
 | `#phi list <-dif difficultyRange> <-acc accRange> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | List scores per song in range |
 | `#phi hisb30` | Calculate B30 changes based on history |
 | `#phi best1(+)` | Text-based b30 (up to b99) |

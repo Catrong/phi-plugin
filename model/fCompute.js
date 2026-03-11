@@ -103,9 +103,8 @@ export default class fCompute {
      * @param {string} save_background 
      * @returns 
      */
-    static async getBackground(save_background) {
+    static getBackground(save_background) {
         try {
-            let getInfo = (await import('./getInfo.js')).default
             switch (save_background) {
                 case 'Another Me ': {
                     save_background = 'Another Me (KALPA)'
@@ -396,13 +395,10 @@ export default class fCompute {
      * @param {number} real_score 真实成绩
      * @param {boolean | number} fc 是否fc
      * @param {number} [tot_score=1000000] 
-     * @returns 
+     * @returns {ratingKind} 评级
      */
     static rate(real_score, fc, tot_score = 1000000) {
-
-        if (!real_score) {
-            return 'F'
-        } else if (real_score == tot_score) {
+        if (real_score == tot_score) {
             return 'phi'
         } else if (fc) {
             return 'FC'
@@ -416,8 +412,10 @@ export default class fCompute {
             return 'B'
         } else if (real_score >= tot_score * 0.70) {
             return 'C'
-        } else {
+        } else if (real_score > 0) {
             return 'F'
+        } else {
+            return 'NEW';
         }
     }
 
@@ -673,6 +671,18 @@ export default class fCompute {
         let hexColor = "#" + this.toHex(red) + this.toHex(green) + this.toHex(blue);
         // 返回生成的颜色代码
         return hexColor;
+    }
+
+    /**
+     * 
+     * @param {ratingKind} a 
+     * @param {ratingKind} b 
+     * @returns 
+     */
+    static cmpRat(a, b) {
+        /**@type {ratingKind[]} */
+        const rankOrder = ['NEW', 'F', 'C', 'B', 'A', 'S', 'V', 'FC', 'phi']
+        return rankOrder.indexOf(a) - rankOrder.indexOf(b);
     }
 
 }

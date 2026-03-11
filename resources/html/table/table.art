@@ -5,7 +5,7 @@
 {{/block}}
 
 {{block 'main'}}
-  <div class="row">
+  <div class="row titleRow">
     <div class="title">
       <div class="phigrosTitle">
         <p class="phigros-title-font">Phigros</p>
@@ -39,6 +39,44 @@
       </div>
     </div>
   </div>
+  {{if gameuser}}
+  <div class="row playerInfoRow">
+    <div class="playerInfo">
+        <div class="blackBlock clip-box"></div>
+        <div class="avatar clip-box">
+            <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
+        </div>
+        <div class="playerId">
+            <p name="pvis">{{#gameuser.PlayerId}}</p>
+        </div>
+        <div class="rks clip-box">
+            <p>{{gameuser.rks.toFixed(4)}}</p>
+        </div>
+        <div class="clgBox">
+            <div class="Challenge">
+            <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="Challenge">
+            <p>{{gameuser.ChallengeModeRank}}</p>
+            </div>
+        </div>
+        <div class="date">
+            <p>{{gameuser.date}}</p>
+        </div>
+        <div class="dataBox clip-box">
+            <img src="{{_res_path}}html/otherimg/data.png" alt="data">
+            <p>{{gameuser.data}}</p>
+        </div>
+        {{if spInfo}}
+        <div class="spInfoBox">
+            {{each spInfo v}}
+            <div class="spInfo colorful-background clip-box">
+                <p>{{v}}</p>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+  </div>
+  {{/if}}
   <div class="tableBox">
     {{each table dif}}
     <div class="label">
@@ -54,6 +92,9 @@
         <div class="labelContent clip-box">
           <p>{{dif.difficulty}}</p>
         </div>
+        <div class="labelContent clip-box">
+          <img src="{{_imgPath}}{{dif.rating}}.png" alt="score" />
+        </div>
       </div>
     </div>
     <div class="content">
@@ -61,6 +102,15 @@
       <div class="song table-{{song.rank}}">
         <div class="ill clip-box">
           <img src="{{song.illustration}}" alt="{{song.illustration}}" />
+          <div class="score">
+            {{if song.score == 100}}
+            <img src="{{_imgPath}}phi.png" alt="phi" />
+            {{else if song.score == 0}}
+            <img src="{{_imgPath}}NEW.png" alt="NEW" />
+            {{else}}
+            <p>{{song.score.toFixed(2)}}</p>
+            {{/if}}
+          </div>
         </div>
         <div class="rank clip-box">
           <div class="rankBlock clip-box"></div>

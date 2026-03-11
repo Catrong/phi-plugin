@@ -1,7 +1,7 @@
 import common from '../../../lib/common/common.js'
 import Config from '../components/Config.js';
 import send from '../model/send.js';
-import altas from '../model/picmodle.js'
+import picmodle from '../model/picmodle.js'
 import ScoreHistory from '../model/class/scoreHistory.js';
 import fCompute from '../model/fCompute.js';
 import getInfo from '../model/getInfo.js';
@@ -66,6 +66,10 @@ export class phib19 extends phiPluginBase {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)chap.*$`,
                     fnc: 'chap'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(achievement|ahv).*$`,
+                    fnc: 'achievement'
                 }
             ]
         })
@@ -209,7 +213,7 @@ export class phib19 extends phiPluginBase {
             spInfo
         }
 
-        res.unshift(await altas.b19(e, data))
+        res.unshift(await picmodle.b19(e, data))
         send.send_with_At(e, res)
     }
 
@@ -330,7 +334,7 @@ export class phib19 extends phiPluginBase {
             spInfo,
         }
 
-        let res = [await altas.b19(e, data)]
+        let res = [await picmodle.b19(e, data)]
         res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         send.send_with_At(e, res)
     }
@@ -398,7 +402,7 @@ export class phib19 extends phiPluginBase {
             nnum: nnum,
         }
 
-        send.send_with_At(e, await altas.arcgros_b19(e, data))
+        send.send_with_At(e, await picmodle.arcgros_b19(e, data))
     }
 
     /**
@@ -475,7 +479,7 @@ export class phib19 extends phiPluginBase {
             spInfo: [`ACC is limited to ${acc}%`],
         }
 
-        let res = [await altas.b19(e, data)]
+        let res = [await picmodle.b19(e, data)]
         res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         send.send_with_At(e, res)
 
@@ -691,7 +695,7 @@ export class phib19 extends phiPluginBase {
 
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
-        send.send_with_At(e, await altas.list(e, {
+        send.send_with_At(e, await picmodle.list(e, {
             head_title: "推分建议",
             song: data,
             background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
@@ -823,7 +827,7 @@ export class phib19 extends phiPluginBase {
             }
         }
 
-        send.send_with_At(e, await altas.chap(e, {
+        send.send_with_At(e, await picmodle.chap(e, {
             player: { id: save.saveInfo.PlayerId },
             count,
             song_box,
@@ -833,6 +837,110 @@ export class phib19 extends phiPluginBase {
             chapIll: getInfo.getChapIll(msg == 'ALL' ? 'AllSong' : chap),
         }))
 
+    }
+
+    /**
+     * 
+     * @param {botEvent} e 
+     */
+    async achievement(e) {
+        if (await getBanGroup.get(e, 'achievement')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return false
+        }
+
+        let dif = Number(e.msg.match(/[0-9]+/)?.[0])
+
+        if (!dif) {
+            send.send_with_At(e, `请输入定数嗷！\n/格式：${Config.getUserCfg('config', 'cmdhead')} table <定数>`, true)
+            return false
+        }
+
+        if (dif > getInfo.MAX_DIFFICULTY) {
+            send.send_with_At(e, `定数已经超过最高的定数${getInfo.MAX_DIFFICULTY}了QAQ！`)
+            return false
+        }
+
+        if (dif < 1) {
+            send.send_with_At(e, `定数不能小于 1 QAQ！`)
+            return false
+        }
+
+        let matchVersion = e.msg.match(/-v\s*(\S+)/i)?.[1];
+        let matchVerCode = 0;
+        if (matchVersion) {
+            if (matchVersion.includes('.')) {
+                if (!getInfo.versionInfoByLabel[matchVersion]) {
+                    send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                    return true
+                }
+                matchVerCode = getInfo.versionInfoByLabel[matchVersion].version_code
+            } else {
+                let verCodeNum = Number(matchVersion)
+                if (!getInfo.versionInfoByCode[verCodeNum]) {
+                    send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                    return true
+                }
+                matchVerCode = verCodeNum
+            }
+        } else {
+            matchVerCode = Version.phigrosVerNum
+        }
+
+        const versionInfo = getInfo.versionInfoByCode[matchVerCode]
+        if (!versionInfo) {
+            console.error(`[phi-plugin] 版本信息获取失败，versionCode: ${matchVerCode}`);
+            send.send_with_At(e, `发生未知错误QAQ！请回报管理员！`)
+            return true
+        }
+
+        let pluginData = await getNotes.getNotesData(e.user_id)
+        const data = {
+            title: {
+                difficulty: dif,
+                total: 0,
+                version: versionInfo.version_label,
+                dec: "Player Achievements"
+            },
+            /**@type {{difficulty: string, songs: {rank: string, illustration: string}[], rating: ratingKind}[]} */
+            table: [],
+            background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))], 'blur'),
+            theme: pluginData?.theme || 'star',
+            gameuser: save.getPlayerInfo(),
+        }
+
+        const info_by_difficulty = getInfo.historyDifficultyByVerDifficulty[versionInfo.version_code];
+        for (let i = 0; i < 10; ++i) {
+            const difStr = Math.round((dif + i * 0.1) * 10) / 10;
+            if (!info_by_difficulty[difStr.toFixed(1)]) continue;
+            data.title.total += info_by_difficulty[difStr.toFixed(1)].length;
+            let minScore = Infinity;
+            let fcFlag = true;
+            data.table.push({
+                difficulty: difStr.toFixed(1),
+                songs: info_by_difficulty[difStr.toFixed(1)]?.map(chart => {
+                    const playerRecord = save.getScore(chart.id, chart.rank);
+                    minScore = Math.min(minScore, playerRecord?.score || 0);
+                    if (!playerRecord?.fc) {
+                        fcFlag = false;
+                    }
+                    return ({
+                        rank: chart.rank,
+                        illustration: getInfo.getill(chart.id, 'low'),
+                        score: playerRecord?.acc || 0,
+                    })
+                }) || [],
+                rating: fCompute.rate(minScore, fcFlag)
+            })
+
+        }
+
+        send.send_with_At(e, await picmodle.common(e, 'table', data));
     }
 }
 
@@ -1033,7 +1141,7 @@ async function getScore(songId, e, args = {}) {
     }
 
 
-    send.send_with_At(e, await altas.score(e, data, 1))
+    send.send_with_At(e, await picmodle.score(e, data, 1))
 
 }
 

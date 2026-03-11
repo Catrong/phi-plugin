@@ -131,6 +131,7 @@ pnpm install -P
 | `#phi lmtacc [0-100]` | 计算限制最低 ACC 后的 RKS
 | `#phi (lvsco(re)\|scolv) <定数范围> <难度>` | 获取区间成绩
 | `#phi chap <章节名称\|help>` | 获取章节成绩
+| `#phi ahv <定数>[-v 版本]` | 获取定数成绩表
 | `#phi list <-dif 定数范围> <-acc ACC范围> <EZ\|HD\|IN\|AT> <NEW\|C\|B\|A\|S\|V\|FC\|PHI>` | 获取区间每首曲目的成绩
 | `#phi hisb30` | 根据历史记录计算B30变化情况
 | `#phi best1(+)` | 查询文字版b30（或更多），最高b99

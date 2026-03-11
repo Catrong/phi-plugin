@@ -1,4 +1,5 @@
 @import "../common/common.css";
+@import "../common/css/playerInfo.css";
 
 body {
   width: 960px;
@@ -8,16 +9,35 @@ body {
   display: flex;
   align-items: center;
   flex-direction: row;
-  /* margin-bottom: 50px; */
-  height: 210px;
   z-index: 2;
-  background: linear-gradient(#00000000 20%,#00b8f0 20%,#00b8f0 23%,#00b5ff80 23%,#00b5ff80 80%,#00000000 80%);
-  filter: drop-shadow(4px 5px 0px #ffffff60)
+  justify-content: center;
+}
+
+.titleRow {
+  background: linear-gradient(
+    #00000000 20%,
+    #00b8f0 20%,
+    #00b8f0 23%,
+    #00b5ff80 23%,
+    #00b5ff80 80%,
+    #00000000 80%
+  );
+  filter: drop-shadow(4px 5px 0px #ffffff60);
+  height: 210px;
+}
+
+.playerInfoRow {
+  height: 120px;
+  margin-bottom: 30px;
+}
+
+.playerInfo {
+  width: 70%;
 }
 
 .title {
   width: 46%;
-  padding-left: 9%;
+  padding-left: 5%;
   height: 50%;
   position: relative;
   display: flex;
@@ -168,7 +188,9 @@ body {
   --shadow-x: 0px;
   --shadow-y: 0px;
   --shadow: var(--shadow-x) var(--shadow-y) 6px #006792a1;
-  --drop-shadow: drop-shadow(var(--shadow-x) var(--shadow-y) 5px #000000) drop-shadow(var(--shadow)) drop-shadow(var(--shadow)) drop-shadow(var(--shadow)) drop-shadow(var(--shadow)) drop-shadow(var(--shadow));
+  --drop-shadow: drop-shadow(var(--shadow-x) var(--shadow-y) 5px #000000) drop-shadow(var(--shadow))
+    drop-shadow(var(--shadow)) drop-shadow(var(--shadow)) drop-shadow(var(--shadow))
+    drop-shadow(var(--shadow));
 }
 
 .labelHead .heng {
@@ -219,25 +241,34 @@ body {
 
 .labelContentBox {
   filter: drop-shadow(var(--shadow));
+  display: flex;
+  position: absolute;
+  left: 52.4px;
+  top: -9px;
+  z-index: 0;
+  --height: 30px;
 }
 
 .labelContent {
-  --height: 30px;
   width: 70px;
   /* padding: 0px 10px; */
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: white;
-  position: absolute;
-  left: 52.4px;
-  top: -9px;
-  z-index: 0;
+}
+
+.labelContent:nth-child(2) {
+  background-color: #0000;
 }
 
 .labelContent p {
   font-size: 25px;
   color: black;
+}
+
+.labelContent img {
+  height: 100%;
 }
 
 .content {
@@ -275,7 +306,8 @@ body {
 
 .song {
   --height: 75px;
-  filter: drop-shadow(2px 4px 0px #50505030) drop-shadow(2px 4px 0px var(--shadow-color)) drop-shadow(0px 0px 2px #ffffff88);
+  filter: drop-shadow(2px 4px 0px #50505030) drop-shadow(2px 4px 0px var(--shadow-color))
+    drop-shadow(0px 0px 2px #ffffff88);
   height: var(--height);
   position: relative;
   margin: 0 -8px 20px 0;
@@ -310,6 +342,32 @@ body {
   font-size: 16px;
   color: white;
   text-shadow: 1px 1px#00000050;
+}
+
+.score {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #00000080;
+  top: 0;
+}
+
+.score p {
+  font-size: 27px;
+  color: white;
+  text-shadow: 0px 0px 1px #00000050;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.score img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 80%;
 }
 
 .createdbox {
