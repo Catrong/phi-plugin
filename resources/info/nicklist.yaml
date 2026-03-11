@@ -845,6 +845,7 @@ Random.SobremSilentroom:
 雪降りメリクリ.A39:
   - 雪降
   - 雪崩
+  - 初音雪降
   - Yuki Furi
 DropIt.Asuka:
   - 搓碟
@@ -1648,6 +1649,7 @@ FixationsTowardtheStars.Foodbot:
 GetBack.CAP3:
   - 回来
   - 返回
+  - gb
 AnotherMe.DAAN:
   - Another Me1
   - AM1
