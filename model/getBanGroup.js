@@ -70,6 +70,7 @@ export default class getBanGroup {
             case 'singlescore':
             case 'lvscore':
             case 'chap':
+            case 'achievement':
             case 'suggest':
             case 'analyze2025SaveHistory':
             case 'hisb30':

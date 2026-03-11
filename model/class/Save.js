@@ -774,6 +774,31 @@ export default class Save {
 
         return stats
     }
+
+    /**
+     * 获取指定歌曲和难度等级的成绩
+     * @param {idString} id 
+     * @param {levelKind} lv 
+     * @returns 
+     */
+    getScore(id, lv) {
+        return this.gameRecord[id]?.[LevelNum[lv]]
+    }
+
+    getPlayerInfo() {
+        const money = this.gameProgress.money
+        return {
+            avatar: getInfo.idgetavatar(this.gameuser.avatar),
+            ChallengeMode: Math.floor(this.saveInfo.summary.challengeModeRank / 100),
+            ChallengeModeRank: this.saveInfo.summary.challengeModeRank % 100,
+            rks: this.saveInfo.summary.rankingScore,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: this.gameuser.selfIntro,
+            backgroundUrl: fCompute.getBackground(this.gameuser.background),
+            PlayerId: fCompute.convertRichText(this.saveInfo.PlayerId),
+            date: fCompute.formatDate(this.saveInfo.summary.updatedAt)
+        }
+    }
 }
 
 /**
