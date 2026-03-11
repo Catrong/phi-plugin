@@ -291,8 +291,29 @@ body {
     align-items: center;
     z-index: 2;
     overflow: hidden;
+    position: relative; /* 新增，为内部绝对定位提供参考 */
 }
-
+.original-tag {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    height: 50px;
+    background-color: white;
+    color: black;
+    display: flex;
+    font-size: 22px;
+    font-weight: normal;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
+    padding: 0 5px;
+    box-sizing: border-box;
+    /* 多边形裁剪：使左边线与曲绘左下角斜边平行 */
+    clip-path: polygon(0 50px, 187.2px 50px, 200px 0, 12.8px 0);
+    z-index: 3;
+}
 .ill-box img {
     width: 100%;
     clip-path: polygon(

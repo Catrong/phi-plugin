@@ -32,6 +32,8 @@ export default class SongsInfo {
         this.illustrator = data.illustrator
         /** @type {string} 特殊信息 */
         this.spinfo = data.spinfo
+        /** @type {boolean} 独占曲标记 */
+        this.isOriginal = data.isOriginal
         /**
          * 谱面详情
          * @type {Partial<Record<allLevelKind, Chart>>} 
@@ -40,4 +42,5 @@ export default class SongsInfo {
         /** @type {boolean} 是否是特殊谱面 */
         this.sp_vis = data.sp_vis
     }
+
 }
