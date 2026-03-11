@@ -196,6 +196,20 @@ body {
     font-size: 31px;
 }
 
+.file-content-right {
+    position: absolute;
+    right: 1px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 1%;
+}
+
+.file-content-right p {
+    font-size: 23px;
+}
+
 .b30list p {
     font-size: 40px;
     /*color: black;*/
