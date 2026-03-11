@@ -41,7 +41,16 @@
     "Wintercube.CtymaxfeatNceS": {
         "bpm": "104",
         "length": "2:35",
-        "chapter": "Chapter Legacy 过去的章节"
+        "chapter": "Chapter Legacy 过去的章节",
+        "spinfo": "SP版本为1.2.4版本限定\n在本曲选取界面点击久住手指的星星进入",
+        "chart": {
+            "SP": {
+                "rgba": "236,107,195,1",
+                "difficulty": "♂",
+                "combo": "924",
+                "charter": "小鹏"
+            }
+        }
     },
     "Cipher20.TetrajectoryfeatCtymax": {
         "bpm": "179",
@@ -265,7 +274,16 @@
     "もぺもぺ.LeaF": {
         "bpm": "100",
         "length": "1:50",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "spinfo": "SP版本为1.4.1版本4月1日限定\n在本曲选曲界面点击mope花进入\n实际上就是AT谱面加了一点特效",
+        "chart": {
+            "SP": {
+                "rgba": "212,167,180,1",
+                "difficulty": "?",
+                "combo": "720",
+                "charter": "阿爽"
+            }
+        }
     },
     "MARENOL.LeaF": {
         "bpm": "140",
@@ -385,7 +403,16 @@
     "RubbishSorting.CtymaxvsNceS": {
         "bpm": "128",
         "length": "2:46",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "spinfo": "SP版本为1.4.1版本4月1日限定\n在本曲选曲界面依次点击四个垃圾桶进入",
+        "chart": {
+            "SP": {
+                "rgba": "212,167,180,1",
+                "difficulty": "🗑",
+                "combo": "416",
+                "charter": "Gausbon"
+            }
+        }
     },
     "AnotherMe.NeutralMoon": {
         "bpm": "175",
@@ -424,7 +451,16 @@
     "DeadSoul.SoundSouler": {
         "bpm": "132",
         "length": "2:27",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "spinfo": "SP版本为1.4.1版本4月1日限定\n在本曲选曲界面连续点五次EZ难度进入\n谱面还原了多种音乐游戏",
+        "chart": {
+            "SP": {
+                "rgba": "88,88,88,1",
+                "difficulty": "👻",
+                "combo": "564",
+                "charter": "Phigros Charting Team"
+            }
+        }
     },
     "InfinityHeaven.HyuN": {
         "bpm": "160",
@@ -556,7 +592,16 @@
     "Wavetapper.Frums": {
         "bpm": "112",
         "length": "2:41",
-        "chapter": "单曲精选集"
+        "chapter": "单曲精选集",
+        "spinfo": "SP版本为1.6.5版本4月1日限定\n在本曲选曲界面跟着节奏点击曲绘方块进入",
+        "chart": {
+            "SP": {
+                "rgba": "128,128,128,1",
+                "difficulty": "📞",
+                "combo": "906",
+                "charter": ".---- ----.---../-...-."
+            }
+        }
     },
     "大和撫子WildDances.adapatorvsDRIVE": {
         "bpm": "158",
@@ -673,7 +718,16 @@
     "HAZARD.Limpid": {
         "bpm": "128",
         "length": "2:07",
-        "chapter": "Chapter EX-KALPA 精选集"
+        "chapter": "Chapter EX-KALPA 精选集",
+        "spinfo": "SP版本为2.1.4版本4月1日限定\n在本曲选曲界面连续切换EZ HD IN难度进入",
+        "chart": {
+            "SP": {
+                "rgba": "192,167,180,1",
+                "difficulty": "?",
+                "combo": "541",
+                "charter": "G U B N"
+            }
+        }
     },
     "AnotherMe.DAAN": {
         "bpm": "210",
