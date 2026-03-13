@@ -12,7 +12,7 @@
     <div class="big-box">
         <div class="box">
             <div class="info-box">
-                <div class="name-box">
+                <div class="name-box clip-box">
                     <div class="song">
                         <p name="pvis">{{song}}</p>
                         <!-- <p style="font-size: 45px;">{{song}}</p> -->
@@ -43,11 +43,14 @@
                             {{/each}}
                         </div>
                         <div class="rank">
-                            <p>\</p>
+                            <div class="pBox">
+                                <p name="pvis">Dif</p>
+                            </div>
                             {{each chart}}
                             <div class="pBox">
                                 <p name="pvis">{{$index}}</p>
                             <p>{{$value.difficulty}}</p>
+                            </div>
                             {{/each}}
                         </div>
                         <div class="rank-box">
@@ -81,12 +84,12 @@
                     </div>
                 </div>
             </div>
-            <div class="ill-box">
+            <div class="ill-box clip-box">
                 <img src="{{illustration}}" alt="曲绘">
-                {{if isOriginal}}
-                <div class="original-tag">Phigros Original</div>
-                {{/if}}
             </div>
+            {{if isOriginal}}
+                <div class="original-tag"><p>Phigros Original</p></div>
+            {{/if}}
         </div>
         <div class="other-info">
         {{if bpm}}
@@ -119,33 +122,6 @@
                 </div>
             </div>
         {{/if}}
-        </div>
-        <div class="leave">
-            <div class="leave-box">
-                {{each chart}}
-
-                {{if $index == 'EZ'}}
-                <div class="leave-ez">
-                {{else if $index == 'HD'}}
-                <div class="leave-hd">
-                {{else if $index == 'IN'}}
-                <div class="leave-in">
-                {{else if $index == 'AT'}}
-                <div class="leave-at">
-                {{else if $index == 'SP'}}
-                <div class="leave-sp">
-                {{else}}
-                <div class="leave-sp" style="background-color: rgba({{$value.rgba}});">
-                {{/if}}
-                <div class="ldif">
-                    <p name="pvis">{{$value.difficulty}}</p>
-                </div>
-                <div class="lrank">
-                    <p name="pvis">{{$index}}</p>
-                </div>
-                </div>
-
-            {{/each}}
         </div>
     </div>
 </div>

@@ -8,7 +8,7 @@
 
 body {
     width: 2048px;
-    min-height: 1080px;
+    min-height: 1100px;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -56,7 +56,7 @@ body {
     --height: 144px;
     width: 833px;
     background-color: rgba(0, 0, 0, 0.75);
-    margin-left: 230px;
+    margin-left: 200px;
     /*clip-path: polygon(36px 0px, 100% 0%, 100% 100%, 0% 100%, 36px 0px);*/
     flex-direction: column;
     z-index: 1;
@@ -93,9 +93,9 @@ body {
 
 .charts-box {
     height: 600px;
-    width: 1500;
+    width: 1500px;
     transform: skewX(-0.245rad);
-    background-color: rgba(0, 77, 100, 0.8);
+    background-color: rgba(0, 77, 100, 0.555);
     border-left: 12px solid;
     border-color: rgb(0, 183, 240);
     margin-top: 20px;
