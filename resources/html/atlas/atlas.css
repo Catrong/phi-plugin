@@ -94,7 +94,7 @@ body {
 .charts-box {
     height: 600px;
     width: 1500;
-    transform: skewX(-0.255rad);
+    transform: skewX(-0.245rad);
     background-color: rgba(0, 77, 100, 0.8);
     border-left: 12px solid;
     border-color: rgb(0, 183, 240);
@@ -106,10 +106,10 @@ body {
 }
 
 .charts-box p {
-    font-size: 19px;
+    font-size: 20px;
     z-index: 1;
     text-shadow: 0 0 2px black;
-    transform: skewX(0.225rad);
+    transform: skewX(0.245rad);
 }
 
 .charts-box .length {
@@ -200,23 +200,42 @@ body {
 
 .rank-EZ {
    background: linear-gradient(90deg,
-    #92d050 90px,
-    #92d05088 100px,
-    #92d05088 60%
-    #00000000 80%
+    #92d050 95px,
+    #00000000 95px,
+    #92d05088 105px,
+    #92d05088 50%,
+    #00000000 100%
   );
 }
 
 .rank-HD {
-    background-color: #00b0f088;
+    background: linear-gradient(90deg,
+    #00b0f0 95px,
+    #00000000 95px,
+    #00b0f088 105px,
+    #00b0f088 50%,
+    #00000000 100%
+  );
 }
 
 .rank-IN {
-    background-color: #ff000088;
+    background: linear-gradient(90deg,
+    #ff0000 95px,
+    #00000000 95px,
+    #ff000088 105px,
+    #ff000088 50%,
+    #00000000 100%
+  );
 }
 
 .rank-AT {
-    background-color: #6e6e6e88;
+    background: linear-gradient(90deg,
+    #6e6e6e 95px,
+    #00000000 95px,
+    #6e6e6e88 105px,
+    #6e6e6e88 50%,
+    #00000000 100%
+  );
 }
 
 .rank {
@@ -224,7 +243,7 @@ body {
     flex-direction: column;
     align-items: center;
     margin-left: 5px;
-    width: 5%;
+    width: 85px;
 }
 
 .rank p {
@@ -249,40 +268,49 @@ body {
 .rank-box {
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 470px;
     margin-left: 5px;
+}
+
+.rank-box p {
+    font-weight: bold;
 }
 
 .charter {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 26px;
+    height: calc(var(--rankHight)/2);
     width: 100%;
+    justify-content: center;
 }
 
 .chart-info {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    height: 26px;
+    height: calc(var(--rankHight)/2);
     align-items: center;
 }
 
 .chart-info :nth-child(1) {
     color: var(--tap);
+    font-size: 25px;
 }
 
 .chart-info :nth-child(2) {
     color: var(--drag);
+    font-size: 25px;
 }
 
 .chart-info :nth-child(3) {
     color: var(--hold);
+    font-size: 25px;
 }
 
 .chart-info :nth-child(4) {
     color: var(--flick);
+    font-size: 25px;
 }
 
 .note-box {
@@ -293,7 +321,7 @@ body {
 }
 
 .note-box p {
-    font-size: 24px;
+    font-size: 30px;
     height: var(--rankHight);
     display: flex;
     justify-content: center;
@@ -312,8 +340,8 @@ body {
 }
 .original-tag {
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: 290px;
+    right: 100px;
     width: 200px;
     height: 50px;
     background-color: white;
@@ -328,9 +356,16 @@ body {
     padding: 0 5px;
     box-sizing: border-box;
     /* 多边形裁剪：使左边线与曲绘左下角斜边平行 */
-    clip-path: polygon(0 50px, 187.2px 50px, 200px 0, 12.8px 0);
+    transform: skewX(-0.245rad);
+    filter: drop-shadow(2px 4px 5px #0000004f);
     z-index: 3;
+    
 }
+
+.original-tag p {
+    transform: skewX(0.245rad);
+}
+
 .ill-box img {
     width: 100%;
     /*clip-path: polygon(
@@ -346,21 +381,26 @@ body {
 .other-info {
     display: flex;
     position: absolute;
-    right: 1130px;
-    bottom: 0px;
+    left: 794px;
+    bottom: 100px;
     flex-direction: column;
+    z-index: 2;
+    transform: skewX(-0.245rad);
+}
+
+.other-box .title {
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 160px;
+    justify-content:center ;
+    display: flex;
 }
 
 .other-box .title p {
-    color: turquoise;
+    color: rgb(255, 255, 255);
 }
 
-.other-info :nth-child(2) {
-    margin-right: 20px;
-}
-
-.other-info :nth-child(3) {
-    margin-right: 40px;
+.other-box .dcr {
+    margin-left: 15px;
 }
 
 .other-info p {
@@ -369,18 +409,16 @@ body {
     margin: 0;
     text-shadow: 0 0 3px black;
     text-align: right;
+    transform: skewX(0.245rad);
 }
 
 .other-box {
     display: flex;
     position: relative;
-    flex-direction: column;
+    flex-direction: row;
     margin-left: 50px;
     align-items: flex-end;
-}
-
-.other-box :nth-child(2) {
-    margin-right: 10px;
+    margin: 10px 0px 10px 0px;
 }
 
 .leave {
