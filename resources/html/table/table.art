@@ -112,9 +112,11 @@
             {{/if}}
           </div>
         </div>
-        <div class="rank clip-box">
-          <div class="rankBlock clip-box"></div>
-          <p>{{song.rank}}</p>
+        <div class="rank-box">
+          <div class="rank clip-box">
+            <div class="rankBlock clip-box"></div>
+            <p>{{song.rank}}</p>
+          </div>
         </div>
       </div>
       {{/each}}
