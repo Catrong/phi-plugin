@@ -47,12 +47,6 @@
                             {{each chart}}
                             <div class="pBox">
                                 <p name="pvis">{{$index}}</p>
-                            </div>
-                            {{/each}}
-                        </div>
-                        <div class="note-box">
-                            <p>Difficulty</p>
-                            {{each chart}}
                             <p>{{$value.difficulty}}</p>
                             {{/each}}
                         </div>
