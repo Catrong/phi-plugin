@@ -1,161 +1,80 @@
 {{extend defaultLayout}}
 {{block 'css'}}
-    <link rel="stylesheet" href="{{_res_path}}html/rankingList/rankingList.css">
+    <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css" />
+    <link rel="stylesheet" href="{{_res_path}}html/score/score.css" />
+    <link rel="stylesheet" href="{{_res_path}}html/rankingList/RankList.css" />
 {{/block}}
 
 {{block 'main'}}
 
+<body style="scale: 1">
     <div class="background">
-        <img src="{{me.backgroundurl}}" alt="{{me.backgroundurl}}" />
+        <img
+            src="{{me.backgroundurl}}"
+            alt="{{me.backgroundurl}}"
+        />
     </div>
-    <div class="list">
-        <div class="list_bkg"></div>
-        {{each users user}}
-        {{if user.backgroundurl}}
-        <div class="aUser{{user.me?' you':''}}">
-            <div class="profileIll">
-                {{if !user.me}}
-                <img
-                    src="{{user.backgroundurl}}"
-                    alt="{{user.backgroundurl}}"
-                />
-                {{/if}}
-            </div>
-            <div class="avatar_box">
-                <div class="avatar">
-                    <img
-                        src="{{_res_path}}html/avatar/{{user.avatar}}.png"
-                        alt="{{user.avatar}}"
-                    />
-                </div>
-            </div>
-            <div class="num">
-                <p>#{{user.index}}</p>
-            </div>
-            <div class="playerId">
-                <p name="pvis">{{#user.playerId}}</p>
-            </div>
-            <div class="clgBox">
-                <div class="Challenge">
-                    <img src="{{_res_path}}html/otherimg/{{user.ChallengeMode}}.png" alt="{{user.ChallengeMode}}">
-                    <p>{{user.ChallengeModeRank}}</p>
-                </div>
-            </div>
-            <div class="rks">
-                <p>{{user.rks.toFixed(4)}}</p>
-            </div>
+    <div class="left">
+        <div class="Player_Info">
+            <p>PLAYER_INFO</p>
         </div>
-        {{else}}
-        <div class="aUser{{user.me?' you':''}}">
-            <div class="playerId">
-                <p name="pvis">NO INFO</p>
-            </div>
-        </div>
-        {{/if}}
-        {{/each}}
-    </div>
-    <div class="info">
-        <div class="txt_box">
-            <p>Updated at:</p>
-            <p>{{me.updated}}</p>
-        </div>
-        <div class="player_profile_box">
-            {{if me.selfIntro}}
-            <p name="pvis">{{#me.selfIntro}}</p>
-            {{else}}
-            <p style="color: #005273;" name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
-            {{/if}}
-        </div>
-        <div class="rks_line">
-            <div class="svg-box">
-                {{if me.rks_history?.[0]}}
-                <div class="value_box">
-                    <p>{{me.rks_range[1].toFixed(4)}}</p>
-                    <p>{{me.rks_range[0].toFixed(4)}}</p>
-                </div>
-                <div class="line-box">
-                    <div class="line">
-                        <svg>
-                            <defs>
-                                <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="2" refY="2">
-                                    <circle cx="2" cy="2" r="1"></circle>
-                                </marker>
-                            </defs>
-                            {{each me.rks_history}}
-                            <line x1="{{$value[0]}}%" y1="{{$value[1]}}%" x2="{{$value[2]}}%" y2="{{$value[3]}}%">
-                            </line>
-                            {{/each}}
-                        </svg>
-                    </div>
-                    <div class="date_box">
-                        <p>{{me.rks_date[0]}}</p>
-                        <p>{{me.rks_date[1]}}</p>
-                    </div>
-                </div>
-                {{else}}
-                <p>NO_INFO</p>
-                {{/if}}
-            </div>
-        </div>
-        <div class="clg_info">
-            <p>ChallengeMode History</p>
-        </div>
-        <div class="clg_list_box">
-            <div class="clg_line"></div>
-            <div class="clg_list">
-                {{each me.clg_list clg}}
-                <div class="a_clg_box">
-                    <div class="clg_box">
-                        <div class="Challenge">
-                            <img src="{{_res_path}}html/otherimg/{{clg.ChallengeMode}}.png" alt="{{clg.ChallengeMode}}">
-                            <p>{{clg.ChallengeModeRank}}</p>
-                        </div>
-                    </div>
-                    <p>{{clg.date}}</p>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-        <div class="b30list">
-            {{each me.b30list e index}}
-            <div class="b30Alist {{index}}">
-                <p>{{e.title}}</p>
-                {{if e.list.length}}
-                <% for (var i = 0; i < e.list.length; i++) { %>
-                    {{set song = e.list[i]}}
-                    {{if song}}
-                    <div class="ill_box">
-                        <img
-                            src="{{song.illustration}}"
-                            alt="{{song.illustration}}"
-                        />
-                        <div class="b30_dif {{song.rank}}-BKG">
-                            <p>{{song.rank}} {{song.difficulty.toFixed(1)}}</p>
-                        </div>
-                        <div class="Rating">
-                            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
-                        </div>
-                    </div>
-                    {{else}}
-                    <div class="ill_box">
-                        <p>NO INFO</p>
-                    </div>
-                    {{/if}}
-                <% } %>
-                {{else}}
-                    <div class="ill_box">
-                        <p>NO INFO</p>
-                    </div>
-                    <div class="ill_box">
-                        <p>NO INFO</p>
-                    </div>
-                    <div class="ill_box">
-                        <p>NO INFO</p>
-                    </div>
-                {{/if}}
 
+        <div class="basic-box">
+            <div class="basic-img">
+                <img src="{{me.backgroundurl}}" alt="{{me.backgroundurl}}">
             </div>
-            {{/each}}
+            <div class="Player_Id">
+                <div class="avatar">
+                    <img src="{{_res_path}}html/avatar/{{me.avatar}}.png" alt="{{me.avatar}}">
+                </div>
+                <div class="Player_Id-box">
+                    <div class="Player_Id-left">
+                        <p>ID</p>
+                    </div>
+                    <div class="Player_Id-right">
+                        <p id="Player_Id">
+                            {{#me.playerId}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="left_title">
+            <div class="left_title-left">
+                <p>PLAYER_DETAIL</p>
+            </div>
+        </div>
+        <div class="Player_data_line">
+            <div class="Player_data_line-left">
+                <div class="Player_data_title" id="Player_data_left">
+                    <p>RKS</p>
+                </div>
+                <div class="Player_data_value" id="Player_data_left">
+                    <p>{{me.rks.toFixed(4)}}</p>
+                </div>
+            </div>
+            <div class="Player_data_line-right">
+                <div class="Player_data_title" id="Player_data_right">
+                    <p>CLG MOD</p>
+                </div>
+                <div class="Challenge" id="Challenge2">
+                    <img src="{{_res_path}}html/otherimg/{{me.ChallengeMode}}.png" alt="{{me.ChallengeMode}}">
+                    <span>{{me.ChallengeModeRank}}</span>
+                </div>
+                <div class="Player_data_value CLG colorful" id="Player_data_right">
+                    <p id="CLG">{{me.clg}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="Player_data_box" id="data_box">
+            <div class="Player_box_title">
+                <p>DATA</p>
+            </div>
+            <div class="Player_box_value">
+                <p id="data">{{me.data}}</p>
+            </div>
+        </div>
+        <div class="Player_profile_box">
+            <font color='white' id="profile">{{#me.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
         </div>
         <div class="createdbox">
             <div class="phi-plugin">
@@ -166,6 +85,242 @@
             </div>
         </div>
     </div>
-</body>
+    <div class="right">
+        <div class="file-content">
+            <div class="file-content-left">
+                <p>SAVE_DATA</p>
+            </div>
+            <div class="file-content-right">
+                <p>{{me.saveData}}</p>
+            </div>
+        </div>
+        <div class="data_title">
+            <div class="data_title-left">
+                <p>B30_DATA</p>
+            </div>
+        </div>
+        <div class="b30list">
+            {{each me.b30 P3}}
+            <div class="b30Alist P3">
+                <p>Perfect 3</p>
+                {{each $value songs}}
+                <div class="ill_box">
+                    <img
+                        src="{{songs.illustration}}"
+                        alt="{{songs.illustration}}"
+                    />
+                    <div class="b30_dif {{songs.difficulty}}-BKG">
+                        <p>{{songs.difficulty}} {{songs.level}}</p>
+                    </div>
+                    <div class="Rating">
+                        <img src="{{_res_path}}html/otherimg/{{songs.rating}}.png" alt="{{songs.rating}}" />
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            {{/each}}
+            {{each me.b30 B3}}
+            <div class="b30Alist B3">
+                <p>Best 3</p>
+                {{each $value songs}}
+                <div class="ill_box">
+                    <img
+                        src="{{songs.illustration}}"
+                        alt="{{songs.illustration}}"
+                    />
+                    <div class="b30_dif {{songs.difficulty}}-BKG">
+                        <p>{{songs.difficulty}} {{songs.level}}</p>
+                    </div>
+                    <div class="Rating">
+                        <img src="{{_res_path}}html/otherimg/{{songs.rating}}.png" alt="{{songs.rating}}" />
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            {{/each}}
+            {{each me.b30 F3}}
+            <div class="b30Alist F3">
+                <p>Floor 3</p>
+                {{each $value songs}}
+                <div class="ill_box">
+                    <img
+                        src="{{songs.illustration}}"
+                        alt="{{songs.illustration}}"
+                    />
+                    <div class="b30_dif {{songs.difficulty}}-BKG">
+                        <p>{{songs.difficulty}} {{songs.level}}</p>
+                    </div>
+                    <div class="Rating">
+                        <img src="{{_res_path}}html/otherimg/{{songs.rating}}.png" alt="{{songs.rating}}" />
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            {{/each}}
+            {{each me.b30 O3}}
+            <div class="b30Alist">
+                <p>Overflow 3</p>
+                {{each $value songs}}
+                <div class="ill_box">
+                    <img
+                        src="{{songs.illustration}}"
+                        alt="{{songs.illustration}}"
+                    />
+                    <div class="b30_dif {{songs.difficulty}}-BKG">
+                        <p>{{songs.difficulty}} {{songs.level}}</p>
+                    </div>
+                    <div class="Rating">
+                        <img src="{{_res_path}}html/otherimg/{{songs.rating}}.png" alt="{{songs.rating}}" />
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            {{/each}}
+        </div>
+        <div class="data_title">
+            <div class="data_title-left">
+                <p>CLG_MODE_HISTORY</p>
+            </div>
+        </div>
+        <div class="clg_data_box">
+           <div class="clg_list">
+                {{each me.clg_history}}
+                <div class="a_clg_box">
+                    <div class="clg_box">
+                        <div class="Challenge">
+                            <img src="{{_res_path}}html/otherimg/{{$value.mode}}.png" alt="Challenge" />
+                            <p>{{$value.rank}}</p>
+                        </div>
+                    </div>
+                    <p>{{$value.date}}</p>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="data_title">
+            <div class="data_title-left">
+                <p>RKS_HISTORY</p>
+            </div>
+        </div>
+        <div class="svg-box">
+            <div class="value_box">
+                <p>{{me.rks_range[1]}}</p>
+                <p>{{me.rks_range[0]}}</p>
+            </div>
+            <div class="line-box">
+                <div class="line">
+                    <svg>
+                        <defs>
+                            <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="2" refY="2">
+                                <circle cx="2" cy="2" r="1"></circle>
+                            </marker>
+                            <linearGradient id="linear-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                                <stop offset="0%" stop-color="#87ceebff" />
+                                <stop offset="100%" stop-color="#87ceeb00" />
+                            </linearGradient>
+                        </defs>
+                        <path
+                            d="{{me.rks_path}}"
+                            stroke="#00000000" fill="url(#linear-gradient)">
+                        </path>
+                        {{each me.rks_lines}}
+                        <line x1="{{$value.x1}}" y1="{{$value.y1}}" x2="{{$value.x2}}" y2="{{$value.y2}}"></line>
+                        {{/each}}
+                    </svg>
+                </div>
+                <div class="date_box">
+                    <p>{{me.rks_date[0]}}</p>
+                    <p>{{me.rks_date[1]}}</p>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+    <div class="ranklist">
+        <div class="Player_Info">
+            <p>RANK_LIST</p>
+        </div>
+        {{each users user}}
+        <div class="rankUser{{user.me?' rankUserMe':''}}">
+            <div class="ranking">
+                <p>#{{user.index}}</p>
+                <p>{{user.updated}}</p>
+            </div>
+            <div class="rankUserAvatar">
+                <img src="{{_res_path}}html/avatar/{{user.avatar}}.png" alt="{{user.avatar}}" />
+            </div>
+            <div class="rankUserInfo">
+                <div class="rankUserName">
+                    <p name="pvis">{{#user.playerId}}</p>
+                </div>
+                <div class="rankUserRks">
+                    <p>{{user.rks.toFixed(4)}}</p>
+                </div>
+                <div class="rankUserClg">
+                    <div class="Challenge">
+                        <img src="{{_res_path}}html/otherimg/{{user.ChallengeMode}}.png" alt="{{user.ChallengeMode}}" />
+                        <span>{{user.ChallengeModeRank}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <!-- 曲目名称自适应name-box的宽度 -->
+    <script>
+        function adjustFontSize() {
+            //获取p元素
+            var a = document.getElementsByName("pvis");
+            for (var i = 0; i < a.length; ++i) {
+                const songName = a[i];
+                if (!songName) continue;
 
-{{/block}}
+                /*调整曲目名称字体大小*/
+                var parentElement = songName.parentElement;
+
+                var maxFontSize = 23.5; //设置最大字体大小
+
+                //如果字体宽度小于父元素宽度，则增大字体大小
+                while (
+                    songName.scrollWidth < parentElement.offsetWidth &&
+                    songName.scrollHeight < parentElement.offsetHeight
+                ) {
+                    var style = window
+                        .getComputedStyle(songName, null)
+                        .getPropertyValue("font-size");
+                    var fontSize = parseFloat(style);
+
+                    //检查是否已经达到最大字体大小
+                    if (fontSize >= maxFontSize) {
+                        break;
+                    }
+
+                    songName.style.fontSize = fontSize + 1 + "px";
+                }
+
+                //如果字体宽度大于父元素宽度，则减小字体大小
+                while (
+                    songName.scrollWidth > parentElement.offsetWidth ||
+                    songName.scrollHeight > parentElement.offsetHeight
+                ) {
+                    var style = window
+                        .getComputedStyle(songName, null)
+                        .getPropertyValue("font-size");
+                    var fontSize = parseFloat(style);
+
+                    //检查是否已经达到最小字体大小
+                    if (fontSize <= 10) {
+                        break;
+                    }
+
+                    songName.style.fontSize = fontSize - 1 + "px";
+                }
+            }
+        }
+        window.onload = adjustFontSize;
+        window.onresize = adjustFontSize;
+    </script>
+</body>
+{{/block}}</content>
+<parameter name="filePath">d:\Yunzai\plugins\phi-plugin\resources\html\rankingList\RankList.art
