@@ -11,6 +11,7 @@ body {
   flex-direction: row;
   z-index: 2;
   justify-content: center;
+  position: relative;
 }
 
 .titleRow {
@@ -187,7 +188,7 @@ body {
 .labelHead .shu {
   --shadow-x: 0px;
   --shadow-y: 0px;
-  --shadow: var(--shadow-x) var(--shadow-y) 6px #006792a1;
+  --shadow: var(--shadow-x) var(--shadow-y) 6px #0079ada1;
   --drop-shadow: drop-shadow(var(--shadow-x) var(--shadow-y) 5px #000000) drop-shadow(var(--shadow))
     drop-shadow(var(--shadow)) drop-shadow(var(--shadow)) drop-shadow(var(--shadow))
     drop-shadow(var(--shadow));
@@ -320,13 +321,17 @@ body {
 .rank {
   position: absolute;
   left: calc(5px + var(--clipSlope) * 5px);
-  bottom: 5px;
+  bottom: 6px;
   --height: 19px;
   padding: 0px 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--bkg-color);
+}
+
+.rank-box {
+  filter: drop-shadow(1px 2px 0px #ffffff30);
 }
 
 .rankBlock {
@@ -350,24 +355,34 @@ body {
   height: 100%;
   background: #00000080;
   top: 0;
+  display: flex;
+  justify-self: start;
 }
 
 .score p {
   font-size: 27px;
+  font-weight: bold;
   color: white;
+  float: right;
+  margin-left: auto;
+  margin-right: 18px;
+  margin-top: 4px;
   text-shadow: 0px 0px 1px #00000050;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  /*position: absolute;
+  left: 55%;
+  top: 35%;
+  transform: translate(-50%, -50%);*/
 }
 
 .score img {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  height: 80%;
+  /*position: absolute;
+  left: 65%;
+  top: 35%;
+  transform: translate(-50%, -50%);*/
+  height: 70%;
+  float: right;
+  margin-left: auto;
+  margin-right: 8px;
 }
 
 .createdbox {

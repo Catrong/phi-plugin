@@ -92,9 +92,11 @@
         <div class="labelContent clip-box">
           <p>{{dif.difficulty}}</p>
         </div>
+        {{if gameuser}}
         <div class="labelContent clip-box">
           <img src="{{_imgPath}}{{dif.rating}}.png" alt="score" />
         </div>
+        {{/if}}
       </div>
     </div>
     <div class="content">
@@ -102,6 +104,7 @@
       <div class="song table-{{song.rank}}">
         <div class="ill clip-box">
           <img src="{{song.illustration}}" alt="{{song.illustration}}" />
+          {{if gameuser}}
           <div class="score">
             {{if song.score == 100}}
             <img src="{{_imgPath}}phi.png" alt="phi" />
@@ -111,10 +114,13 @@
             <p>{{song.score.toFixed(2)}}</p>
             {{/if}}
           </div>
+          {{/if}}
         </div>
-        <div class="rank clip-box">
-          <div class="rankBlock clip-box"></div>
-          <p>{{song.rank}}</p>
+        <div class="rank-box">
+          <div class="rank clip-box">
+            <div class="rankBlock clip-box"></div>
+            <p>{{song.rank}}</p>
+          </div>
         </div>
       </div>
       {{/each}}
