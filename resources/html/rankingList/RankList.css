@@ -314,7 +314,7 @@ body {
     margin: 20px;
     background-color: #87ceeb5e;
     border: skyblue 1px solid;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-around;
     align-items: center;
     align-content: center;

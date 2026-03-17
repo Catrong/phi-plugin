@@ -113,25 +113,25 @@ export class phiRankList extends phiPluginBase {
         /**展示的用户数据 */
         let list = []
         let myTk = ''
-        if (rankNum < 2) {
-            list = await getRksRank.getRankUser(0, 5)
+        if (rankNum < 4) {
+            list = await getRksRank.getRankUser(0, 9)
             myTk = list[rankNum]
         } else {
-            list = await getRksRank.getRankUser(rankNum - 2, rankNum + 3)
-            myTk = list[2]
+            list = await getRksRank.getRankUser(rankNum - 4, rankNum + 5)
+            myTk = list[4]
         }
 
 
-        for (let index = 0; index < Math.max(list.length, 5); index++) {
+        for (let index = 0; index < Math.max(list.length, 9); index++) {
             if (index >= list.length) {
-                data.users.push({ playerId: '无效用户', index: index + rankNum - 2 })
+                data.users.push({ playerId: '无效用户', index: index + rankNum - 4 })
                 continue
             }
             let item = list[index]
             let sessionToken = item
             const save = await getSave.getSaveBySessionToken(sessionToken)
             if (!save) {
-                data.users.push({ playerId: '无效用户', index: index + rankNum - 2 })
+                data.users.push({ playerId: '无效用户', index: index + rankNum - 4 })
                 getRksRank.delUserRks(sessionToken)
             } else {
                 data.users.push({ ...await makeSmallLine(save), index: Math.max(index + rankNum - 1, index + 1), me: myTk === save.getSessionToken() })
@@ -279,6 +279,7 @@ async function makeLargeLine(save, history) {
             list: b30Data.b19_list.slice(27, 30)
         }
     }
+    let money = save.gameProgress.money
     return {
         backgroundurl: getInfo.getBackground(save?.gameuser?.background),
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
@@ -291,6 +292,8 @@ async function makeLargeLine(save, history) {
         rks_history: lineData.rks_history,
         rks_range: lineData.rks_range,
         rks_date: lineData.rks_date,
+        created: fCompute.formatDate(save.saveInfo.createdAt),
+        data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
         b30list: b30list,
         clg_list: clgHistory,
     }

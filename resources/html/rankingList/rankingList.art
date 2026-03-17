@@ -91,7 +91,7 @@
                 <p>SAVE_DATA</p>
             </div>
             <div class="file-content-right">
-                <p>{{me.saveData}}</p>
+                <p>{{me.created}} ~ {{me.updated}}</p>
             </div>
         </div>
         <div class="data_title">
@@ -147,15 +147,15 @@
         </div>
         <div class="clg_data_box">
            <div class="clg_list">
-                {{each me.clg_history}}
+                {{each me.clg_list clg}}
                 <div class="a_clg_box">
                     <div class="clg_box">
                         <div class="Challenge">
-                            <img src="{{_res_path}}html/otherimg/{{$value.mode}}.png" alt="Challenge" />
-                            <p>{{$value.rank}}</p>
+                            <img src="{{_res_path}}html/otherimg/{{clg.ChallengeMode}}.png" alt="{{clg.ChallengeMode}}">
+                            <p>{{clg.ChallengeModeRank}}</p>
                         </div>
                     </div>
-                    <p>{{$value.date}}</p>
+                    <p>{{clg.date}}</p>
                 </div>
                 {{/each}}
             </div>
@@ -167,8 +167,8 @@
         </div>
         <div class="svg-box">
             <div class="value_box">
-                <p>{{me.rks_range[1]}}</p>
-                <p>{{me.rks_range[0]}}</p>
+                <p>{{me.rks_range[1].toFixed(4)}}</p>
+                <p>{{me.rks_range[0].toFixed(4)}}</p>
             </div>
             <div class="line-box">
                 <div class="line">
@@ -177,17 +177,10 @@
                             <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="2" refY="2">
                                 <circle cx="2" cy="2" r="1"></circle>
                             </marker>
-                            <linearGradient id="linear-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
-                                <stop offset="0%" stop-color="#87ceebff" />
-                                <stop offset="100%" stop-color="#87ceeb00" />
-                            </linearGradient>
                         </defs>
-                        <path
-                            d="{{me.rks_path}}"
-                            stroke="#00000000" fill="url(#linear-gradient)">
-                        </path>
-                        {{each me.rks_lines}}
-                        <line x1="{{$value.x1}}" y1="{{$value.y1}}" x2="{{$value.x2}}" y2="{{$value.y2}}"></line>
+                        {{each me.rks_history}}
+                        <line x1="{{$value[0]}}%" y1="{{$value[1]}}%" x2="{{$value[2]}}%" y2="{{$value[3]}}%">
+                        </line>
                         {{/each}}
                     </svg>
                 </div>
