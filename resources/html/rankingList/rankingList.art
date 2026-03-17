@@ -100,80 +100,43 @@
             </div>
         </div>
         <div class="b30list">
-            {{each me.b30 P3}}
-            <div class="b30Alist P3">
-                <p>Perfect 3</p>
-                {{each $value songs}}
-                <div class="ill_box">
-                    <img
-                        src="{{songs.illustration}}"
-                        alt="{{songs.illustration}}"
-                    />
-                    <div class="b30_dif {{songs.difficulty}}-BKG">
-                        <p>{{songs.difficulty}} {{songs.level}}</p>
+            {{each me.b30list e index}}
+            <div class="b30Alist {{index}}">
+                <p>{{e.title}}</p>
+                {{if e.list.length}}
+                <% for (var i = 0; i < e.list.length; i++) { %>
+                    {{set song = e.list[i]}}
+                    {{if song}}
+                    <div class="ill_box">
+                        <img
+                            src="{{song.illustration}}"
+                            alt="{{song.illustration}}"
+                        />
+                        <div class="b30_dif {{song.rank}}-BKG">
+                            <p>{{song.rank}} {{song.difficulty.toFixed(1)}}</p>
+                        </div>
+                        <div class="Rating">
+                            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                        </div>
                     </div>
-                    <div class="Rating">
-                        <img src="{{_res_path}}html/otherimg/{{songs.rating}}.png" alt="{{songs.rating}}" />
+                    {{else}}
+                    <div class="ill_box">
+                        <p>NO INFO</p>
                     </div>
-                </div>
-                {{/each}}
-            </div>
-            {{/each}}
-            {{each me.b30 B3}}
-            <div class="b30Alist B3">
-                <p>Best 3</p>
-                {{each $value songs}}
-                <div class="ill_box">
-                    <img
-                        src="{{songs.illustration}}"
-                        alt="{{songs.illustration}}"
-                    />
-                    <div class="b30_dif {{songs.difficulty}}-BKG">
-                        <p>{{songs.difficulty}} {{songs.level}}</p>
+                    {{/if}}
+                <% } %>
+                {{else}}
+                    <div class="ill_box">
+                        <p>NO INFO</p>
                     </div>
-                    <div class="Rating">
-                        <img src="{{_res_path}}html/otherimg/{{songs.rating}}.png" alt="{{songs.rating}}" />
+                    <div class="ill_box">
+                        <p>NO INFO</p>
                     </div>
-                </div>
-                {{/each}}
-            </div>
-            {{/each}}
-            {{each me.b30 F3}}
-            <div class="b30Alist F3">
-                <p>Floor 3</p>
-                {{each $value songs}}
-                <div class="ill_box">
-                    <img
-                        src="{{songs.illustration}}"
-                        alt="{{songs.illustration}}"
-                    />
-                    <div class="b30_dif {{songs.difficulty}}-BKG">
-                        <p>{{songs.difficulty}} {{songs.level}}</p>
+                    <div class="ill_box">
+                        <p>NO INFO</p>
                     </div>
-                    <div class="Rating">
-                        <img src="{{_res_path}}html/otherimg/{{songs.rating}}.png" alt="{{songs.rating}}" />
-                    </div>
-                </div>
-                {{/each}}
-            </div>
-            {{/each}}
-            {{each me.b30 O3}}
-            <div class="b30Alist">
-                <p>Overflow 3</p>
-                {{each $value songs}}
-                <div class="ill_box">
-                    <img
-                        src="{{songs.illustration}}"
-                        alt="{{songs.illustration}}"
-                    />
-                    <div class="b30_dif {{songs.difficulty}}-BKG">
-                        <p>{{songs.difficulty}} {{songs.level}}</p>
-                    </div>
-                    <div class="Rating">
-                        <img src="{{_res_path}}html/otherimg/{{songs.rating}}.png" alt="{{songs.rating}}" />
-                    </div>
-                </div>
-                {{/each}}
+                {{/if}}
+
             </div>
             {{/each}}
         </div>
