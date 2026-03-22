@@ -334,9 +334,12 @@ export default class Save {
     /**
      * 
      * @param {number} num B几
+     * @param {object} option
+     * @param {"all" | "b30" | "top"} option.avgType
+     * @param {"red" | "gold" | "blue" | "green"} option.color
      * @returns phi, b19_list
      */
-    async getB19(num) {
+    async getB19(num, option = { avgType: "all", color: "blue" }) {
 
         /**计算得到的rks，仅作为测试使用 */
         let sum_rks = 0
@@ -348,13 +351,12 @@ export default class Save {
          * @property {number|string} num B几
          * @property {string} suggest 推分建议
          * @property {number} suggestType 推分建议类型 0-5 分别对应 红橙黄绿青蓝六种建议等级
-         * @property {number} accAvg 同rks玩家的平均准确率
+         * @property {string} accAvg 同rks玩家的平均准确率
          * @property {string} accKind 同rks玩家的平均准确率类型 'Higher' 'Lower' 'Hyper' 'Finished' 分别对应高于平均、低于平均、远高于平均、完成推分建议的玩家占比超过95%四种情况
          * @property {object} cpToOld 若为旧版本，则对比新定数与旧版本rks 'Higher' 'Lower'
          * @property {string} cpToOld.type 对比结果 'Higher' 'Lower'
          * @property {string} cpToOld.dif 与旧版本rks差值
          * @property {string} cpToOld.rks 与旧版本rks差值（保留两位小数）
-         * 
          */
 
         /**
@@ -397,6 +399,7 @@ export default class Save {
         }
 
         const b19Ids = []
+        const b19Dual = []
 
         /**bestN 列表 */
         let b19_list = []
@@ -436,45 +439,106 @@ export default class Save {
             rkslist[i].illustration = getInfo.getill(rkslist[i].id, 'common')
             /**b19列表 */
             b19_list.push(rkslist[i])
-            b19Ids.push(rkslist[i].id)
+            b19Ids.push(rkslist[i].id);
+            b19Dual.push({ songId: rkslist[i].id, rank: /**@type {levelKind} */(rkslist[i].rank), acc: rkslist[i].acc })
         }
 
         let com_rks = sum_rks / 30
 
         if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-            const res = await makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05, maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05 })
-            let allhiger = true
-            for (let i = 0; i < b19_list.length; ++i) {
-                if (i >= 27 && allhiger) {
-                    break;
-                }
-                const x = b19_list[i];
-                if (x.rank == 'LEGACY') continue;
-                const accAvg = res[x.id][x.rank]?.accAvg
-                if (accAvg != null && !isNaN(accAvg)) {
-                    b19_list[i].accAvg = accAvg
-                    if (x.acc < accAvg) {
-                        allhiger = false
-                        b19_list[i].accKind = 'Lower'
-                    } else {
-                        b19_list[i].accKind = 'Higher'
+            if (!option.avgType || option.avgType === "all") {
+                const res = await makeRequest.getAllSongAccAvg({
+                    songIds: b19Ids,
+                    minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                    maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                })
+                let allhiger = true
+                for (let i = 0; i < b19_list.length; ++i) {
+                    if (i >= 27 && allhiger) {
+                        break;
+                    }
+                    const x = b19_list[i];
+                    if (x.rank == 'LEGACY') continue;
+                    const accAvg = res[x.id][x.rank]?.accAvg
+                    if (accAvg != null && !isNaN(accAvg)) {
+                        b19_list[i].accAvg = `Avg: ${accAvg.toFixed(4)}%`
+                        if (x.acc < accAvg) {
+                            allhiger = false
+                            b19_list[i].accKind = 'Lower'
+                        } else {
+                            b19_list[i].accKind = 'Higher'
+                        }
                     }
                 }
-            }
-            if (allhiger) {
-                const res = await makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: (Math.floor((com_rks - 0.05) / 0.05) + 2) * 0.05, maxRks: (Math.ceil((com_rks + 0.05) / 0.05) + 2) * 0.05 })
+                if (allhiger) {
+                    const res = await makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: (Math.floor((com_rks - 0.05) / 0.05) + 2) * 0.05, maxRks: (Math.ceil((com_rks + 0.05) / 0.05) + 2) * 0.05 })
+                    for (let i = 0; i < b19_list.length; ++i) {
+                        const x = b19_list[i];
+                        if (x.rank == 'LEGACY') continue;
+                        const accAvg = res[x.id][x.rank]?.accAvg
+                        if (accAvg != null && !isNaN(accAvg)) {
+                            b19_list[i].accAvg = `Avg: ${accAvg.toFixed(4)}%`
+                            if (x.acc < accAvg) {
+                                allhiger = false
+                                b19_list[i].accKind = 'Hyper'
+                            } else {
+                                b19_list[i].accKind = 'Finished'
+                            }
+                        }
+                    }
+                }
+            } else if (option.avgType === "b30") {
+                const res = await makeRequest.getAllSongAccAvgB30({
+                    songIds: b19Ids,
+                    minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                    maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                })
+                const kind = option.color === "red" || option.color === "gold";
+                const low = kind ? "Lower" : "Hyper"
+                const high = kind ? "Higher" : "Finished"
                 for (let i = 0; i < b19_list.length; ++i) {
                     const x = b19_list[i];
                     if (x.rank == 'LEGACY') continue;
                     const accAvg = res[x.id][x.rank]?.accAvg
                     if (accAvg != null && !isNaN(accAvg)) {
-                        b19_list[i].accAvg = accAvg
+                        b19_list[i].accAvg = `Avg: ${accAvg.toFixed(4)}%`
                         if (x.acc < accAvg) {
-                            allhiger = false
-                            b19_list[i].accKind = 'Hyper'
+                            b19_list[i].accKind = low
                         } else {
-                            b19_list[i].accKind = 'Finished'
+                            b19_list[i].accKind = high
                         }
+                    }
+                }
+            } else if (option.avgType === "top") {
+                const res = await makeRequest.getAllSongAccRank({
+                    queries: b19Dual,
+                    dimension: ["all", "b30"],
+                    minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                    maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                })
+                let kind = "Finished"
+                switch (option.color) {
+                    case "red":
+                        kind = "Lower";
+                        break;
+                    case "gold":
+                        kind = "Higher";
+                        break;
+                    case "blue":
+                        kind = "Hyper";
+                        break;
+                    case "green":
+                        kind = "Finished";
+                        break;
+                }
+                for (let i = 0; i < b19_list.length; ++i) {
+                    const x = b19_list[i];
+                    if (x.rank == 'LEGACY') continue;
+                    const topAll = res.all?.[i].topPercent;
+                    const topB30 = res.b30?.[i].topPercent;
+                    b19_list[i].accKind = kind
+                    if (topAll != null && !isNaN(topAll) && topB30 != null && !isNaN(topB30)) {
+                        b19_list[i].accAvg = `Top ${topAll.toFixed(2)}% / ${topB30.toFixed(2)}%`
                     }
                 }
             }

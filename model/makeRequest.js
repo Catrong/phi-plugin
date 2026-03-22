@@ -431,6 +431,33 @@ export default class makeRequest {
     }
 
     /**
+     * 获取所有谱面平均ACC(B30版)
+     * @param {{songIds?: idString[], minRks?: number, maxRks?: number}} params id+.0
+     * @returns {Promise<Record<idString, Record<levelKind, {accAvg: number | null, count: number}>>>}
+     */
+    static async getAllSongAccAvgB30(params) {
+        return (await makeFetch(burl('/get/scoreList/allAccAvgB30'), params)).data
+    }
+
+    /**
+     * 获取所有谱面平均ACC(全部)
+     * @param {{songIds?: idString[], minRks?: number, maxRks?: number}} params id+.0
+     * @returns {Promise<Record<idString, Record<levelKind, {accAvg: number | null, count: number}>>>}
+     */
+    static async getAllSongAccAvgDual(params) {
+        return (await makeFetch(burl('/get/scoreList/allAccAvgDual'), params)).data
+    }
+
+    /**
+     * 获取所有谱面acc排行列表
+     * @param {{queries: {songId: idString, rank: levelKind, acc: number}[], dimension:("all" | "b30")[], minRks?: number, maxRks?: number}} params 
+     * @returns {Promise<Record<"all" | "b30", {songId: idString, rank: levelKind, acc: number, topPercent: number, betterCount: number, totalCount: number}[]>>}
+     */
+    static async getAllSongAccRank(params) {
+        return (await makeFetch(burl('/get/scoreList/allAccRank'), params)).data
+    }
+
+    /**
      * @overload
      * @param {baseAu} params 
      * @returns {Promise<saveHistoryObject>}

@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/Plugin_Version-1.0.0-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Plugin_Version-1.0.1-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.18.4-9cf?style=flat-square)  
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
@@ -86,10 +86,10 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | **Command** | **Description** |
 | :- | :- |
 | `#phi help` | Show help |
-| `#phi (cn\|gb)?(bind\|bind)xxx` | Bind sessionToken (supports CN/Global, default is CN) |
-| `#phi (unbind\|unbind)` | Remove sessionToken & records |
+| `#phi (gb\|cn)?bind <token>` | Bind sessionToken (supports CN/Global, default is CN) |
+| `#phi unbind` | Remove sessionToken & records |
 | `#phi clean` | Delete all records |
-| `#phi (update\|update)` | Update save data |
+| `#phi update` | Update save data |
 | `#phi (rks\|pgr\|b30)` | Query Rks (provides b30 results) |
 | `#phi x30` | Query 1Good b30 |
 | `#phi fc30` | Query Full Combo b30 |
@@ -103,11 +103,11 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi hisb30` | Calculate B30 changes based on history |
 | `#phi best1(+)` | Text-based b30 (up to b99) |
 | `#phi score xxx  [-dif (EZ\|HD\|IN\|AT)] [-or (acc\|score\|fc\|time)] [-unrank]` | Get single score & improvement tips (parameters for score ranking, API required) |
-| `#phi (suggest\|suggest)` | Get songs that can increase Rks by +0.01 |
+| `#phi suggest` | Get songs that can increase Rks by +0.01 |
 | `#phi (ranklist\|ranking) [rank]` | Rks leaderboard |
 | `#phi rankfind <rks>` | Find how many users have higher RKS than the queried RKS |
 | `#phi data` | Check user data count |
-| `#phi (guess\|guess)` | Guess song from illustration (reply directly) |
+| `#phi guess` | Guess song from illustration (reply directly) |
 | `#phi (ltr\|letter)` | Guess song via letters (use #open/#ans) |
 | `#phi (tipgame\|hint)` | Guess song via hints (use #tip/#ans) |
 | `#phi (song\|song) xxx` | Query song info (supports aliases) |
@@ -124,9 +124,10 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi alias xxx` | Query song aliases |
 | `#phi (rand\|random) [rating] [difficulty]` | Random song by criteria |
 | `#phi randclg [total] [difficulty] ([rating range])` | Random challenge (e.g., /rand 40 (IN 13-15)) |
-| `#phi (ill\|ill) xxx` | View song illustration |
-| `#phi (search\|search) <criteria>` | Search songs by BPM/rating/notes |
-| `#phi (theme\|theme) [0-2]` | Switch themes (affects b30/update/randclg/sign/task) |
+| `#phi ill xxx` | View song illustration |
+| `#phi search <criteria>` | Search songs by BPM/rating/notes |
+| `#phi theme [0-2]` | Switch themes (affects b30/update/randclg/sign/task) |
+| `#phi myset <field> <value>` | View/modify user settings, value supports selection by number (e.g., /myset theme 1) |
 | `sign/sign` | Daily check-in |
 | `task/mytasks` | View tasks |
 | `retask/refresh` | Refresh tasks (20 Notes) |
