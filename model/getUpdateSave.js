@@ -138,7 +138,8 @@ export default class getUpdateSave {
 
         let task = notesData?.task
         if (task) {
-            for (let id of fCompute.objectKeys(now.gameRecord)) {
+            const idList = fCompute.objectKeys(now.gameRecord)
+            for (let id of idList) {
                 for (let i in task) {
                     if (!task[i]) continue
                     if (!task[i].finished && id == task[i].song) {

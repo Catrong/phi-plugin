@@ -254,7 +254,7 @@
  * @property {string} background
  * @property {string} CLGMOD
  * 
- * @typedef {{[id:idString]: ori_record[]}} gameRecord
+ * @typedef {Record<idString, ori_record[]>} gameRecord
  * 
  * @typedef {object} oriSave
  * @property {phigrosToken} session

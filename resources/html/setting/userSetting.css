@@ -1,0 +1,148 @@
+@import '../common/common.css';
+
+body {
+    width: 1080px;
+}
+
+.background img {
+    filter: blur(4px) brightness(65%);
+}
+
+.page-wrap {
+    width: 100%;
+    padding: 36px 38px 22px;
+    box-sizing: border-box;
+}
+
+.panel {
+    width: 100%;
+    border: 1px solid #8ccbe9;
+    background: linear-gradient(145deg, rgb(6 25 42 / 88%), rgb(10 46 74 / 76%));
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 0 0 1px rgb(201 239 255 / 20%), 0 16px 36px rgb(0 0 0 / 35%);
+    padding: 24px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.title-box {
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    border-left: 4px solid #66d4ff;
+    background: linear-gradient(90deg, rgb(102 212 255 / 22%), rgb(102 212 255 / 0%));
+}
+
+.page-title,
+.page-desc,
+.setting-title,
+.setting-current,
+.setting-desc,
+.option-title,
+.option-desc {
+    margin: 0;
+}
+
+.page-title {
+    color: #f5fdff;
+    font-size: 34px;
+    font-family: 'Aldrich', 'PHI';
+    text-shadow: 0 0 18px rgb(0 200 255 / 55%);
+}
+
+.page-desc {
+    color: #caecff;
+    font-size: 15px;
+    margin-top: 8px;
+}
+
+.setting-group {
+    margin-top: 18px;
+    padding: 14px 0 16px;
+    border-top: 1px solid rgb(255 255 255 / 12%);
+}
+
+.setting-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.setting-title {
+    color: #ffffff;
+    font-size: 25px;
+    font-family: 'Aldrich', 'PHI';
+}
+
+.setting-current {
+    color: #9be6ff;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.setting-desc {
+    margin-top: 6px;
+    color: #c6def1;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.option-row {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.option-card {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 10px 10px;
+    border: 1px solid rgb(186 224 245 / 28%);
+    background: linear-gradient(170deg, rgb(14 41 63 / 70%), rgb(8 24 38 / 78%));
+    /* clip-path: polygon(0 12%, 5% 0, 95% 0, 100% 12%, 100% 88%, 95% 100%, 5% 100%, 0 88%); */
+    box-sizing: border-box;
+}
+
+.option-card.selected {
+    border-color: #7be7ff;
+    background: linear-gradient(170deg, rgb(26 81 118 / 88%), rgb(12 50 77 / 85%));
+    box-shadow: 0 0 0 1px rgb(120 235 255 / 35%), 0 0 16px rgb(74 216 255 / 35%);
+}
+
+.option-title-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.option-title {
+    color: #f6fcff;
+    font-size: 17px;
+    font-family: 'Aldrich', 'PHI';
+}
+
+.option-tag {
+    color: #07283f;
+    background: #8eeeff;
+    font-size: 11px;
+    line-height: 18px;
+    padding: 0 7px;
+    border-radius: 10px;
+}
+
+.option-desc {
+    margin-top: 7px;
+    color: #d2e6f8;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.phi-plugin p {
+    font-size: 30px;
+}
+
+.ver p {
+    font-size: 20px;
+}

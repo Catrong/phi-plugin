@@ -3,6 +3,9 @@ import picmodle from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import getNotes from '../model/getNotes.js'
 import phiPluginBase from '../components/baseClass.js'
+import { USER_SETTING_META, USER_SETTING_OPTIONS } from '../model/constNum.js'
+import getBanGroup from '../model/getBanGroup.js'
+import send from '../model/send.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -18,6 +21,10 @@ export class phihelp extends phiPluginBase {
             event: 'message',
             priority: 1001,
             rule: [
+                {
+                    reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)(用户设置|个人设置|mysetting|myset)(\\s*.*)?$`,
+                    fnc: 'showUserSetting'
+                },
                 {
                     reg: `^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)(设置|set).*$`,
                     fnc: 'set'
@@ -176,5 +183,168 @@ export class phihelp extends phiPluginBase {
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
             theme: plugin_data?.theme || 'star'
         }))
+    }
+
+    /**
+     * 渲染用户个性化设置展示图
+     * @param {botEvent} e
+     */
+    async showUserSetting(e) {
+        if (await getBanGroup.get(e, 'help')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+        const pluginData = await getNotes.getNotesData(e.user_id)
+
+        /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor', string[]>} */
+        const settingKeyAlias = {
+            theme: ['theme', '主题', '主题风格'],
+            b30AvgKind: ['b30avgkind', 'b30kind', 'avgkind', '均值范围', '统计范围', '均值类型'],
+            b30AvgColor: ['b30avgcolor', 'avgcolor', '颜色', '配色', '均值颜色']
+        }
+
+        /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor', Record<string, string>>} */
+        const settingValueAlias = {
+            theme: {
+                default: 'default',
+                snow: 'snow',
+                star: 'star',
+                dss2: 'dss2',
+                默认: 'default',
+                寒冬: 'snow',
+                星空: 'star',
+                使一颗心免于哀伤: 'star',
+                大师赛2: 'dss2'
+            },
+            b30AvgKind: {
+                all: 'all',
+                b30: 'b30',
+                top: 'top',
+                none: 'none',
+                全部: 'all',
+                全部统计: 'all',
+                仅b30: 'b30',
+                仅top: 'top',
+                不展示: 'none',
+                关: 'none',
+                隐藏: 'none'
+            },
+            b30AvgColor: {
+                red: 'red',
+                gold: 'gold',
+                blue: 'blue',
+                green: 'green',
+                红: 'red',
+                红色: 'red',
+                金: 'gold',
+                金色: 'gold',
+                蓝: 'blue',
+                蓝色: 'blue',
+                绿: 'green',
+                绿色: 'green'
+            }
+        }
+
+        const usage = [
+            '用法示例：',
+            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置`,
+            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 主题 star`,
+            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 主题 3`,
+            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 均值范围 b30`,
+            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 配色 gold`
+        ].join('\n')
+
+        const rawArgs = e.msg.replace(new RegExp(`^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)(用户设置|个人设置|mysetting|myset)`), '').trim()
+
+        if (rawArgs) {
+            const normalized = rawArgs.replace(/[：:=]/g, ' ').replace(/\s+/g, ' ').trim()
+            const args = normalized.split(' ')
+
+            if (args.length < 2) {
+                send.send_with_At(e, `参数不足，请提供“设置项 + 目标值”。\n${usage}`)
+                return true
+            }
+
+            const keyInput = args[0].toLowerCase()
+            const valueInputRaw = args.slice(1).join('')
+            const valueInput = valueInputRaw.toLowerCase()
+
+            /**@type {'theme' | 'b30AvgKind' | 'b30AvgColor' | null} */
+            let settingKey = null
+            for (const key of /**@type {('theme' | 'b30AvgKind' | 'b30AvgColor')[]} */ (Object.keys(settingKeyAlias))) {
+                if (settingKeyAlias[key].map(i => i.toLowerCase()).includes(keyInput)) {
+                    settingKey = key
+                    break
+                }
+            }
+
+            if (!settingKey) {
+                send.send_with_At(e, `未知设置项：${args[0]}\n支持：主题 / 均值范围 / 配色\n${usage}`)
+                return true
+            }
+
+            const optionMap = /** @type {Record<string, { title: string, description: string }>} */ (USER_SETTING_OPTIONS[settingKey])
+            const optionKeys = Object.keys(optionMap)
+            const valueAliasMap = settingValueAlias[settingKey]
+
+            let canonicalValue = valueAliasMap[valueInput] || valueAliasMap[valueInputRaw] || valueInputRaw
+
+            // 支持通过 1 开始的序号选择：1=第一个选项
+            if (/^\d+$/.test(valueInputRaw)) {
+                const optionIndex = Number(valueInputRaw)
+                if (optionIndex >= 0 && optionIndex < optionKeys.length) {
+                    canonicalValue = optionKeys[optionIndex]
+                }
+            }
+
+            if (!optionMap[canonicalValue]) {
+                const optionalValues = optionKeys.map((value, index) => `${index + 1}.${value}`).join(' / ')
+                send.send_with_At(e, `无效值：${valueInputRaw}\n${USER_SETTING_META[settingKey].title} 可选：${optionalValues}`)
+                return true
+            }
+
+            // @ts-ignore
+            pluginData[settingKey] = canonicalValue
+            getNotes.putNotesData(e.user_id, pluginData)
+
+            send.send_with_At(e, `设置成功：${USER_SETTING_META[settingKey].title} -> ${optionMap[canonicalValue].title}`)
+        }
+
+        /**
+         * @param {'theme' | 'b30AvgKind' | 'b30AvgColor'} key
+         * @param {string} current
+         */
+        const buildItem = (key, current) => {
+            const options = /** @type {Record<string, { title: string, description: string }>} */ (USER_SETTING_OPTIONS[key])
+            return {
+                key,
+                title: USER_SETTING_META[key].title,
+                description: USER_SETTING_META[key].description,
+                currentTitle: options[current]?.title || current,
+                options: Object.keys(options).map((value) => ({
+                    value,
+                    title: options[value].title,
+                    description: options[value].description,
+                    selected: value === current
+                }))
+            }
+        }
+
+        const data = {
+            pageTitle: 'Phi-Plugin 用户设置',
+            pageDescription: '以下选项为你的个人偏好展示，选择结果将用于对应图片渲染。',
+            items: [
+                buildItem('theme', pluginData?.theme || 'default'),
+                buildItem('b30AvgKind', pluginData?.b30AvgKind || 'all'),
+                buildItem('b30AvgColor', pluginData?.b30AvgColor || 'red')
+            ]
+        }
+
+        send.send_with_At(e, await picmodle.common(e, 'setting', {
+            ...data,
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
+            theme: 'default'
+        }, 'userSetting'))
+        return true
     }
 }

@@ -1,0 +1,48 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/setting/userSetting.css">
+{{/block}}
+
+{{block 'main'}}
+<div class="page-wrap">
+    <div class="panel">
+        <div class="title-box">
+            <p class="page-title">{{pageTitle}}</p>
+            <p class="page-desc">{{pageDescription}}</p>
+        </div>
+
+        {{each items as item}}
+        <div class="setting-group">
+            <div class="setting-head">
+                <p class="setting-title">{{item.title}}</p>
+                <p class="setting-current">当前：{{item.currentTitle}}</p>
+            </div>
+            <p class="setting-desc">{{item.description}}</p>
+
+            <div class="option-row">
+                {{each item.options as option}}
+                <div class="option-card{{option.selected ? ' selected' : ''}}">
+                    <div class="option-title-line">
+                        <p class="option-title">{{option.title}}</p>
+                        {{if option.selected}}
+                        <span class="option-tag">已选中</span>
+                        {{/if}}
+                    </div>
+                    <p class="option-desc">{{option.description}}</p>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>{{_plugin}}</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
+</div>
+{{/block}}

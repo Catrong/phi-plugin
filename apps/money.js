@@ -10,11 +10,12 @@ import fCompute from '../model/fCompute.js'
 import picmodle from '../model/picmodle.js'
 import Save from '../model/class/Save.js'
 import { Level, LevelNum } from '../model/constNum.js'
+import { themeList } from '../model/class/pluginData.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
 const illlist = getInfo.illlist
-const theme = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }, { id: "dss2", src: "大师赛2" }]
+const theme = themeList
 
 // const sp_date = 'Apr 01 2025'
 // const sp_date_num = [41]
@@ -151,7 +152,7 @@ export class phimoney extends phiPluginBase {
         let last_task = new Date(data.task_time)
         let now_time = new Date()
         let request_time = getDayZeroTimestamp(now_time) //每天0点
-        /**@type {import('../model/getNotes.js').taskObj[]} */
+        /**@type {import('../model/class/pluginData.js').taskObj[]} */
         let oldtask = []
 
         /**note变化 */
@@ -385,6 +386,7 @@ export class phimoney extends phiPluginBase {
         }
 
         const plugin_data = await getNotes.getNotesData(e.user_id)
+        // @ts-ignore
         plugin_data.theme = theme[aim].id
 
         getNotes.putNotesData(e.user_id, plugin_data)
@@ -398,7 +400,7 @@ export class phimoney extends phiPluginBase {
 /**
  * 
  * @param {Save} save 
- * @param {import('../model/getNotes.js').taskObj[]} task 
+ * @param {import('../model/class/pluginData.js').taskObj[]} task 
  * @returns 
  */
 function randtask(save, task = []) {

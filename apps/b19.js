@@ -145,7 +145,7 @@ export class phib19 extends phiPluginBase {
         }
 
 
-        let save_b19 = await save.getB19(nnum)
+        let save_b19 = await save.getB19(nnum, { avgType: plugin_data.b30AvgKind, color: plugin_data.b30AvgColor })
         let stats = await save.getStats()
 
         const spInfo = [];
