@@ -291,7 +291,7 @@ export class phihelp extends phiPluginBase {
 
             // 支持通过 1 开始的序号选择：1=第一个选项
             if (/^\d+$/.test(valueInputRaw)) {
-                const optionIndex = Number(valueInputRaw) - 1
+                const optionIndex = Number(valueInputRaw)
                 if (optionIndex >= 0 && optionIndex < optionKeys.length) {
                     canonicalValue = optionKeys[optionIndex]
                 }
