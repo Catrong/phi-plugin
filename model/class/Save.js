@@ -501,7 +501,7 @@ export default class Save {
                     if (x.rank == 'LEGACY') continue;
                     const accAvg = res[x.id][x.rank]?.accAvg
                     if (accAvg != null && !isNaN(accAvg)) {
-                        b19_list[i].accAvg = `Avg: ${accAvg.toFixed(4)}%`
+                        b19_list[i].accAvg = `BAvg: ${accAvg.toFixed(4)}%`
                         if (x.acc < accAvg) {
                             b19_list[i].accKind = low
                         } else {
