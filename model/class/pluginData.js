@@ -38,6 +38,7 @@ export default class PluginData {
       case "all":
       case "b30":
       case "top":
+      case "none":
         this.b30AvgKind = data.b30AvgKind
     }
 

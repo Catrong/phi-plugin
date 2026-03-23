@@ -84,6 +84,10 @@ export const USER_SETTING_OPTIONS = {
         top: {
             title: '仅 Top',
             description: '展示玩家成绩在相近rks的玩家中所有成绩和仅考虑B30成绩中的排名百分比，展示格式：[Top： 全体 / B30]。将全部使用下个选项选择的颜色进行展示'
+        },
+        none: {
+            title: '隐藏',
+            description: '不展示B30均值相关信息，界面更简洁。'
         }
     },
     b30AvgColor: {

@@ -220,10 +220,14 @@ export class phihelp extends phiPluginBase {
                 all: 'all',
                 b30: 'b30',
                 top: 'top',
+                none: 'none',
                 全部: 'all',
                 全部统计: 'all',
                 仅b30: 'b30',
-                仅top: 'top'
+                仅top: 'top',
+                不展示: 'none',
+                关: 'none',
+                隐藏: 'none'
             },
             b30AvgColor: {
                 red: 'red',
@@ -301,7 +305,7 @@ export class phihelp extends phiPluginBase {
 
             // @ts-ignore
             pluginData[settingKey] = canonicalValue
-            await getNotes.putNotesData(e.user_id, pluginData)
+            getNotes.putNotesData(e.user_id, pluginData)
 
             send.send_with_At(e, `设置成功：${USER_SETTING_META[settingKey].title} -> ${optionMap[canonicalValue].title}`)
         }
