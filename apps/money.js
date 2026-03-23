@@ -301,6 +301,7 @@ export class phimoney extends phiPluginBase {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
+        const tmp = `\n格式：/${Config.getUserCfg('config', 'cmdhead')} send <@ or id> <数量>`;
         let msg = e.msg.replace(/[#/](.*?)(send|送|转)(\s*)/g, "")
         msg = msg.replace(/[\<\>]/g, "")
         let target = e.at
@@ -311,24 +312,32 @@ export class phimoney extends phiPluginBase {
                 target = parts[0]
                 num = Number(parts[1])
             } else {
-                send.send_with_At(e, `格式错误！请指定目标\n格式：/${Config.getUserCfg('config', 'cmdhead')} send <@ or id> <数量>`, true)
+                send.send_with_At(e, `格式错误！请指定目标${tmp}`, true)
                 return true
             }
         } else {
             num = Number(msg)
         }
         if (isNaN(num)) {
-            send.send_with_At(e, `非法数字：${msg}\n格式：/${Config.getUserCfg('config', 'cmdhead')} send <@ or id> <数量>`, true)
+            send.send_with_At(e, `非法数字：${msg}${tmp}`, true)
             return true
+        }
+
+        if (!target) {
+            send.send_with_At(e, `格式错误！请指定目标${tmp}`, true);
         }
 
         try {
             // @ts-ignore
-            await Bot.pickMember(e.group_id, target)
+            const tar = await Bot.pickMember(e.group_id, target);
+            if (!tar) throw new Error("not found");
         } catch (err) {
-            send.send_with_At(e, `这个QQ号……好像没有见过呢……`)
+            send.send_with_At(e, `这个QQ号……好像没有见过呢……`);
             return true
         }
+
+
+        let target_data = await getNotes.getNotesData(target)
 
         let sender_data = await getNotes.getNotesData(e.user_id)
 
@@ -352,7 +361,11 @@ export class phimoney extends phiPluginBase {
             return true
         }
 
-        let target_data = await getNotes.getNotesData(target)
+        if (!isFinite(num) || num < 0) {
+            send.send_with_At(e, "你看看你输入的是正常数字嘛！");
+            return true;
+        }
+
         target_data.money += Math.ceil(num * 0.8)
 
         let sender_old = sender_data.money
