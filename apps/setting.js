@@ -298,7 +298,7 @@ export class phihelp extends phiPluginBase {
             }
 
             if (!optionMap[canonicalValue]) {
-                const optionalValues = optionKeys.map((value, index) => `${index + 1}.${value}`).join(' / ')
+                const optionalValues = optionKeys.map((value, index) => `${index + 1}. ${value}`).join(' / ')
                 send.send_with_At(e, `无效值：${valueInputRaw}\n${USER_SETTING_META[settingKey].title} 可选：${optionalValues}`)
                 return true
             }
