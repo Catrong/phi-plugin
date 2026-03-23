@@ -60,7 +60,7 @@ if (Config.getUserCfg('config', 'autoOpenApi')) {
     let url = `${APIBASEURL}/status`
     try {
         const agent = new https.Agent({ rejectUnauthorized: false })
-        axios.get(url, { httpsAgent: agent }).then((res) => {
+        axios.get(url, { httpsAgent: agent, timeout: 5000 }).then((res) => {
 
             // console.log(res)
             if (res.status != 200) {

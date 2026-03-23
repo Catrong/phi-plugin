@@ -651,6 +651,8 @@ async function makeFetch(url, params, method = 'POST') {
     }
     let result
     try {
+        params = params || {}
+        params.timeout = 10000
         switch (method.toUpperCase()) {
             case 'GET':
                 result = await axios.get(url, { params: params });
