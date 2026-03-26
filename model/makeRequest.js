@@ -652,13 +652,12 @@ async function makeFetch(url, params, method = 'POST') {
     let result
     try {
         params = params || {}
-        params.timeout = 10000
         switch (method.toUpperCase()) {
             case 'GET':
-                result = await axios.get(url, { params: params });
+                result = await axios.get(url, { params: params, timeout: 10000 });
                 break;
             case 'POST':
-                result = await axios.post(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' } });
+                result = await axios.post(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' }, timeout: 10000 });
                 break;
             default:
                 throw new Error(`不支持的请求方法: ${method}`);
