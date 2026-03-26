@@ -357,4 +357,9 @@ body p {
     font-size: 30px;
 }
 
-.createdbox {right: 4%;bottom: 4%;width: auto;position: absolute;}
+.createdbox {
+    right: 4%;
+    bottom: 4%;
+    width: auto;
+    position: absolute;
+}
