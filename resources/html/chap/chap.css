@@ -360,7 +360,6 @@ body p {
 .createdbox {
     right: 4%;
     bottom: 4%;
-    width: 150px;
-    word-wrap: break-word;
+    width: auto;
     position: absolute;
 }
