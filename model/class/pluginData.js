@@ -19,9 +19,18 @@ export default class PluginData {
   constructor(data) {
     this.money = isNaN(data?.money) ? 0 : data.money
     this.sign_in = data?.sign_in || "Wed Apr 03 2024 23:03:52 GMT+0800 (中国标准时间)"
+    /**
+     * 签到记录（YYYY-MM-DD），用于渲染签到日历与累计签到天数
+     * @type {string[]}
+     */
+    this.sign_history = Array.isArray(data?.sign_history) ? data.sign_history : []
     this.task_time = data?.task_time || "Wed Apr 03 2024 23:03:52 GMT+0800 (中国标准时间)"
     /**@type {taskObj[]} */
     this.task = Array.isArray(data?.task) ? data.task : []
+
+    /**@type {number} */
+    this.noticeCode = isNaN(data?.noticeCode) ? 0 : data.noticeCode
+
     /**@type {"default" | "snow" | "star" | "dss2"} */
     this.theme = "default"
     switch (data?.theme) {

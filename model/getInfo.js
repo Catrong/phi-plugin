@@ -53,6 +53,19 @@ export default new class getInfo {
      * @typedef {Record<idString, Record<string, Record<levelKind, number>>>} historyDifficultyBySongIdObject
      */
 
+    /**
+     * @typedef {string & { readonly brand: unique symbol }} kongYouId 空游的id
+     * 
+     * @typedef {Object} kongYouSongListObject
+     * @property {idString} id 曲目id
+     * @property {kongYouId} kyId 空游id
+     * @property {object} videoLink 攻略链接
+     * @property {string} videoLink.ez EZ难度攻略链接
+     * @property {string} videoLink.hd HD难度攻略链接
+     * @property {string} videoLink.in IN难度攻略链接
+     * @property {string} videoLink.at AT难度攻略链接
+     */
+
     constructor() {
         /**
          * 难度映射
@@ -133,6 +146,17 @@ export default new class getInfo {
         /** @type {Record<string, Record<string, {id: idString, rank: levelKind, difficulty: number}[]>>} */
         this.historyDifficultyByVerDifficulty = {}
 
+        /**@type {{title: string, code: number, content: string[]}} */
+        this.noticeJson = { title: '', code: 0, content: [] }
+        
+
+        this.kongYouData = {
+            timeStamp: 0,
+            songList: [],
+            tagsTree: [],
+            tagsTop: {},
+        }
+
         if (Config.getUserCfg('config', 'watchInfoPath')) {
             chokidar.watch(infoPath).on('change', () => {
                 this.init()
@@ -153,21 +177,22 @@ export default new class getInfo {
         logger.info(`[phi-plugin]初始化曲目信息`)
 
 
-        this.allLevel = allLevel
-        this.Level = Level
-        this.tips = []
-        this.ori_info = {}
-        this.songsid = {}
-        this.idssong = {}
-        this.illlist = []
-        this.chapNick = {}
-        this.info_by_difficulty = {}
-        this.updatedSong = []
-        this.updatedChart = {}
-        this.versionInfoByLabel = {}
-        this.versionInfoByCode = {}
-        this.historyDifficultyByVersion = {}
-        this.historyDifficultyBySongId = {}
+        this.allLevel = allLevel;
+        this.Level = Level;
+        this.tips = [];
+        this.ori_info = {};
+        this.songsid = {};
+        this.idssong = {};
+        this.illlist = [];
+        this.chapNick = {};
+        this.info_by_difficulty = {};
+        this.updatedSong = [];
+        this.updatedChart = {};
+        this.versionInfoByLabel = {};
+        this.versionInfoByCode = {};
+        this.historyDifficultyByVersion = {};
+        this.historyDifficultyBySongId = {};
+        this.noticeJson = readFile.FileReader(path.join(infoPath, 'notice.json'));
 
 
         /**

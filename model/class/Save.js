@@ -335,11 +335,12 @@ export default class Save {
      * 
      * @param {number} num B几
      * @param {object} option
-     * @param {"all" | "b30" | "top"} option.avgType
-     * @param {"red" | "gold" | "blue" | "green"} option.color
+     * @param {"all" | "b30" | "top" | "none"} [option.avgType]
+     * @param {"red" | "gold" | "blue" | "green"} [option.color]
+     * @param {boolean} [option.avgText] 平均值文本是否使用 "Avg: " 前缀
      * @returns phi, b19_list
      */
-    async getB19(num, option = { avgType: "all", color: "blue" }) {
+    async getB19(num, option = { avgType: "all", color: "blue", avgText: true }) {
 
         /**计算得到的rks，仅作为测试使用 */
         let sum_rks = 0
@@ -351,7 +352,7 @@ export default class Save {
          * @property {number|string} num B几
          * @property {string} suggest 推分建议
          * @property {number} suggestType 推分建议类型 0-5 分别对应 红橙黄绿青蓝六种建议等级
-         * @property {string} accAvg 同rks玩家的平均准确率
+         * @property {string | number} accAvg 同rks玩家的平均准确率
          * @property {string} accKind 同rks玩家的平均准确率类型 'Higher' 'Lower' 'Hyper' 'Finished' 分别对应高于平均、低于平均、远高于平均、完成推分建议的玩家占比超过95%四种情况
          * @property {object} cpToOld 若为旧版本，则对比新定数与旧版本rks 'Higher' 'Lower'
          * @property {string} cpToOld.type 对比结果 'Higher' 'Lower'
@@ -461,7 +462,7 @@ export default class Save {
                     if (x.rank == 'LEGACY') continue;
                     const accAvg = res[x.id][x.rank]?.accAvg
                     if (accAvg != null && !isNaN(accAvg)) {
-                        b19_list[i].accAvg = `Avg: ${accAvg.toFixed(4)}%`
+                        b19_list[i].accAvg = option.avgText ? `Avg: ${accAvg.toFixed(4)}%` : accAvg
                         if (x.acc < accAvg) {
                             allhiger = false
                             b19_list[i].accKind = 'Lower'
@@ -477,7 +478,7 @@ export default class Save {
                         if (x.rank == 'LEGACY') continue;
                         const accAvg = res[x.id][x.rank]?.accAvg
                         if (accAvg != null && !isNaN(accAvg)) {
-                            b19_list[i].accAvg = `Avg: ${accAvg.toFixed(4)}%`
+                            b19_list[i].accAvg = option.avgText ? `Avg: ${accAvg.toFixed(4)}%` : accAvg
                             if (x.acc < accAvg) {
                                 allhiger = false
                                 b19_list[i].accKind = 'Hyper'
@@ -501,7 +502,7 @@ export default class Save {
                     if (x.rank == 'LEGACY') continue;
                     const accAvg = res[x.id][x.rank]?.accAvg
                     if (accAvg != null && !isNaN(accAvg)) {
-                        b19_list[i].accAvg = `BAvg: ${accAvg.toFixed(4)}%`
+                        b19_list[i].accAvg = option.avgText ? `BAvg: ${accAvg.toFixed(4)}%` : accAvg
                         if (x.acc < accAvg) {
                             b19_list[i].accKind = low
                         } else {
@@ -806,9 +807,11 @@ export default class Save {
             }
             let record = Record[id]
             for (let lv in [0, 1, 2, 3]) {
-                if (!record[lv]) continue
+                if (record[lv] === undefined) continue
 
                 ++stats[lv].unlock
+
+                if (record[lv] === null) continue
 
                 if (record[lv].score >= 700000) {
                     ++stats[lv].cleared

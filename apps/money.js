@@ -1,16 +1,21 @@
 import common from '../../../lib/common/common.js'
 import plugin from '../../../lib/plugins/plugin.js'
+import path from 'path'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 import getNotes from '../model/getNotes.js'
 import getBanGroup from '../model/getBanGroup.js';
 import getInfo from '../model/getInfo.js'
+import readFile from '../model/getFile.js'
+import { infoPath } from '../model/path.js'
 import phiPluginBase from '../components/baseClass.js'
 import fCompute from '../model/fCompute.js'
 import picmodle from '../model/picmodle.js'
 import Save from '../model/class/Save.js'
-import { Level, LevelNum } from '../model/constNum.js'
+import { Level, LevelNum, redisPath } from '../model/constNum.js'
 import { themeList } from '../model/class/pluginData.js'
+import makeRequest from '../model/makeRequest.js'
+import logger from '../components/Logger.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -27,6 +32,9 @@ const spData = [{
     sp_date_num: [2026],
     sp_date_tips: ["2！0！2！6！新！年！快！乐！o(≧v≦)o"]
 }]
+
+/**@type {any[] | null} */
+let sentenceCache = null
 
 export class phimoney extends phiPluginBase {
     constructor() {
@@ -76,13 +84,17 @@ export class phimoney extends phiPluginBase {
         let last_sign = new Date(data.sign_in)
         let now_time = new Date()
         let request_time = getDayZeroTimestamp(now_time) //每天0点
+        let todayKey = formatDateKey(now_time)
 
         // 特殊日期处理
         let spDateIndex = checkSpDateIndex(now_time);
 
-        if (request_time > last_sign) {
-            let getnum = randint(20, 5)
+        let signedJustNow = false
+        let getnum = 0
 
+        if (request_time > last_sign) {
+            signedJustNow = true
+            getnum = randint(20, 5)
             if (spDateIndex !== -1) {
                 getnum = spData[spDateIndex].sp_date_num[randint(spData[spDateIndex].sp_date_num.length - 1)]
             }
@@ -90,43 +102,129 @@ export class phimoney extends phiPluginBase {
             data.money += getnum
             data.sign_in = now_time.toISOString();
 
+            if (!Array.isArray(data.sign_history)) data.sign_history = []
+            if (!data.sign_history.includes(todayKey)) data.sign_history.push(todayKey)
 
             getNotes.putNotesData(e.user_id, data)
-            /**判断时间段 */
-            let Remsg = ['签到成功！' + helloMsg(now_time, 0)]
-
-
-
-            if (spDateIndex !== -1) {
-                Remsg.push(`${spData[spDateIndex].sp_date_tips[randint(spData[spDateIndex].sp_date_tips.length - 1)]}恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.money}`)
-            } else {
-                Remsg.push(`恭喜您获得了${getnum}个Note！当前您所拥有的 Note 数量为：${data.money}`)
-                Remsg.push(`祝您今日愉快呐！（￣︶￣）↗　`)
-            }
-
-            let save = await send.getsave_result(e, undefined, false)
-            let last_task = new Date(data.task_time)
-
-            if (save) {
-                if (last_task < request_time) {
-                    /**如果有存档并且没有刷新过任务自动刷新 */
-                    this.retask(e)
-                    Remsg.push(`已自动为您刷新任务！您今日份的任务如下：`)
-                } else {
-                    this.tasks(e)
-                    Remsg.push(`您今日已经领取过任务了哦！您今日份的任务如下：`)
-                }
-            } else {
-                Remsg.push(`您当前没有绑定sessionToken呐！任务需要绑定sessionToken后才能获取哦！\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
-            }
-            send.send_with_At(e, Remsg.join('\n'))
-
         } else {
-            if (spDateIndex !== -1) {
-                send.send_with_At(e, `${spData[spDateIndex].sp_date_tips[randint(spData[spDateIndex].sp_date_tips.length - 1)]}你在今天${fCompute.formatDate(last_sign, false)}的时候已经签过到了哦！\n你现在的Note数量: ${data.money}`)
-            } else {
-                send.send_with_At(e, `你在今天${fCompute.formatDate(last_sign, false)}的时候已经签过到了哦！\n你现在的Note数量: ${data.money}`)
+            // 兼容旧数据：已签但历史缺失时补一条，保证日历正确
+            if (!Array.isArray(data.sign_history)) data.sign_history = []
+            if (!data.sign_history.includes(todayKey)) {
+                data.sign_history.push(todayKey)
+                getNotes.putNotesData(e.user_id, data)
             }
+        }
+
+        /** 尝试拿存档（无存档也照样渲染） */
+        let save = await send.getsave_result(e, undefined, false)
+
+        /** 今日任务：有存档且今日未刷新时，静默刷新一次并写回 */
+        if (save) {
+            let last_task = new Date(data.task_time)
+            if (last_task < request_time) {
+                data.task_time = now_time.toISOString()
+                data.task = await randtask(save, [])
+                getNotes.putNotesData(e.user_id, data)
+            }
+        }
+
+        /** 今日人品（复用 jrrp 的 redis 数据，保证一致） */
+        let fortune = await getOrCreateFortune(e.user_id)
+
+        /** 进度条（解锁/FC/PHI 三层叠加） */
+        let edgeRate = {
+            EZ: { unlock: '0%', fc: '0%', phi: '0%' },
+            HD: { unlock: '0%', fc: '0%', phi: '0%' },
+            IN: { unlock: '0%', fc: '0%', phi: '0%' },
+            AT: { unlock: '0%', fc: '0%', phi: '0%' },
+        }
+        if (save) {
+            try {
+                let stats = await save.getStats()
+                edgeRate.EZ.unlock = percent(stats?.[0]?.unlock, stats?.[0]?.tot)
+                edgeRate.EZ.fc = percent(stats?.[0]?.fc, stats?.[0]?.tot)
+                edgeRate.EZ.phi = percent(stats?.[0]?.phi, stats?.[0]?.tot)
+
+                edgeRate.HD.unlock = percent(stats?.[1]?.unlock, stats?.[1]?.tot)
+                edgeRate.HD.fc = percent(stats?.[1]?.fc, stats?.[1]?.tot)
+                edgeRate.HD.phi = percent(stats?.[1]?.phi, stats?.[1]?.tot)
+
+                edgeRate.IN.unlock = percent(stats?.[2]?.unlock, stats?.[2]?.tot)
+                edgeRate.IN.fc = percent(stats?.[2]?.fc, stats?.[2]?.tot)
+                edgeRate.IN.phi = percent(stats?.[2]?.phi, stats?.[2]?.tot)
+
+                edgeRate.AT.unlock = percent(stats?.[3]?.unlock, stats?.[3]?.tot)
+                edgeRate.AT.fc = percent(stats?.[3]?.fc, stats?.[3]?.tot)
+                edgeRate.AT.phi = percent(stats?.[3]?.phi, stats?.[3]?.tot)
+            } catch { }
+        }
+
+        /** 日历（当月） */
+        let calendar = buildCalendar(now_time.getFullYear(), now_time.getMonth() + 1, new Set(data.sign_history || []), todayKey)
+
+        /** 公告 */
+        let notice = null;
+
+        if (data.noticeCode < getInfo.noticeJson.code) {
+            notice = getInfo.noticeJson
+            data.noticeCode = getInfo.noticeJson.code
+            getNotes.putNotesData(e.user_id, data)
+        }
+
+        /** 任务列表（展示前 5 条） */
+        /**@type {{index: string, song: string, illustration: string, meta: string, finished: boolean}[]} */
+        let dailyTasks = []
+        if (save && Array.isArray(data.task)) {
+            for (let i = 0; i < Math.min(5, data.task.length); i++) {
+                // @ts-ignore
+                let t = data.task[i]
+                if (!t) continue
+                const songInfo = getInfo.ori_info?.[t.song];
+                // @ts-ignore
+                let ill = getInfo.getill(t.song)
+                // @ts-ignore
+                let songName = songInfo?.song || t.song
+                // @ts-ignore
+                let meta = `${t.request?.rank || ''} ${songInfo?.chart[t.request.rank]?.difficulty || ''} · ${(t.request?.type || '').toUpperCase()} ${t.request?.value ?? ''} · +${t.reward || 0} Notes`
+                dailyTasks.push({
+                    index: fCompute.ped(i + 1, 2),
+                    song: songName,
+                    illustration: ill,
+                    meta,
+                    finished: Boolean(t.finished),
+                })
+            }
+        }
+
+        let picdata = {
+            PlayerId: save ? save.saveInfo.PlayerId : (e.sender?.card || e.sender?.nickname || `${e.user_id}`),
+            Rks: save ? Number(save.saveInfo.summary.rankingScore).toFixed(4) : '0.0000',
+            Date: fCompute.formatDate(now_time),
+            ChallengeMode: save ? Math.floor(save.saveInfo.summary.challengeModeRank / 100) : 0,
+            ChallengeModeRank: save ? (save.saveInfo.summary.challengeModeRank % 100) : 0,
+            avatar: save ? getInfo.idgetavatar(save.gameuser.avatar) : 'Introduction',
+            background: getInfo.getill(illlist[Math.floor(Math.random() * (illlist.length - 1))]),
+            Notes: data.money,
+            signDays: Array.isArray(data.sign_history) ? data.sign_history.length : 0,
+            lucky: fortune.lucky,
+            good: fortune.good,
+            bad: fortune.bad,
+            quote: fortune.quote,
+            edgeRate,
+            dailyTasks,
+            calendar,
+            notice,
+            theme: data?.theme || 'default',
+        }
+
+        const img = await picmodle.common(e, 'sign', picdata);
+        if (signedJustNow) {
+            const tips = spDateIndex !== -1
+                ? spData[spDateIndex].sp_date_tips[randint(spData[spDateIndex].sp_date_tips.length - 1)]
+                : `签到成功！${helloMsg(now_time, 0)}`
+            send.send_with_At(e, [img, `${tips}\n恭喜您获得了${getnum}个Note！当前 Note：${data.money}`])
+        } else {
+            send.send_with_At(e, [img, `你在今天${fCompute.formatDate(last_sign, false)}的时候已经签过到了哦！\n你现在的Note数量: ${data.money}`])
         }
         return true
     }
@@ -173,7 +271,7 @@ export class phimoney extends phiPluginBase {
         }
 
         data.task_time = now_time.toISOString();
-        data.task = randtask(save, oldtask)
+        data.task = await randtask(save, oldtask)
 
         let vis = false
         for (let i in data.task) {
@@ -416,7 +514,7 @@ export class phimoney extends phiPluginBase {
  * @param {import('../model/class/pluginData.js').taskObj[]} task 
  * @returns 
  */
-function randtask(save, task = []) {
+async function randtask(save, task = []) {
     let rks = save.saveInfo.summary.rankingScore
     let gameRecord = save.gameRecord
     for (let id of fCompute.objectKeys(gameRecord)) {
@@ -424,90 +522,174 @@ function randtask(save, task = []) {
     }
 
     let info = getInfo.ori_info
+
+    const { com_rks } = await save.getB19(1000, { avgType: "none" });
+
+    /**
+     * @type {{ id: idString; level: allLevelKind; type: string; value: number; diff: number; oldAcc: number; }[]}
+     */
+    let allTaskList = [];
+
+    if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+
+        try {
+            const res = await makeRequest.getAllSongAccAvgB30({
+                songIds: getInfo.idList,
+                minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+            })
+            const ids = fCompute.objectKeys(res)
+            ids.forEach(id => {
+                if (!getInfo.ori_info[id]) {
+                    return;
+                }
+                Level.forEach(lv => {
+                    if (!getInfo.ori_info[id]?.chart?.[lv]) {
+                        return;
+                    }
+                    const avg = res[id][lv].accAvg || 0;
+                    if (avg > (save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0)) {
+                        allTaskList.push({
+                            id,
+                            level: lv,
+                            type: 'acc',
+                            value: avg,
+                            diff: getInfo.ori_info[id].chart[lv].difficulty,
+                            oldAcc: save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0
+                        });
+                    }
+                })
+            })
+        } catch (err) {
+            logger.error(`[phi-plugin][api-getAllSongAccAvgB30]`, err);
+        }
+    }
+
+    allTaskList.sort((a, b) => b.value - a.value)
+
+    for (let i = 0; i < allTaskList.length; i++) {
+        if (allTaskList[i].value < 95) {
+            allTaskList = allTaskList.slice(0, i);
+            break;
+        }
+    }
+
+
     /**@type {{song: idString, level: number}[][]} */
     let ranked_songs = [[], [], [], [], []] //任务难度分级后的曲目列表
 
-    let rank_line = [] //割分歌曲的临界定数
+    if (allTaskList.length < 5) {
+        const rank_line = [];
+        if (rks < 15) {
+            rank_line.push(rks - 1)
+            rank_line.push(rks - 0.5)
+            rank_line.push(rks + 0)
+            rank_line.push(rks + 1)
+        } else if (rks < 16) {
+            rank_line.push(rks - 1.5)
+            rank_line.push(rks - 0.3)
+            rank_line.push(rks + 0)
+            rank_line.push(rks + 0.5)
+        } else {
+            rank_line.push(rks - 2)
+            rank_line.push(rks - 1)
+            rank_line.push(rks - 0.5)
+            rank_line.push(rks + 0)
+        }
 
+        rank_line.push(18)
 
-    if (rks < 15) {
-        rank_line.push(rks - 1)
-        rank_line.push(rks - 0.5)
-        rank_line.push(rks + 0)
-        rank_line.push(rks + 1)
-    } else if (rks < 16) {
-        rank_line.push(rks - 1.5)
-        rank_line.push(rks - 0.3)
-        rank_line.push(rks + 0)
-        rank_line.push(rks + 0.5)
-    } else {
-        rank_line.push(rks - 2)
-        rank_line.push(rks - 1)
-        rank_line.push(rks - 0.5)
-        rank_line.push(rks + 0)
-    }
-
-    rank_line.push(18)
-
-    /**将曲目分级并处理 */
-    for (let id of fCompute.objectKeys(info)) {
-        if (id == 'テリトリーバトル.ツユ') continue
-        if (!info[id]?.chart) continue
-        for (let level of Level) {
-            if (info[id].chart[level]) {
-                if (!gameRecord[id] || !gameRecord[id][LevelNum[level]] || gameRecord[id][LevelNum[level]]?.acc != 100) {
-                    let dif = info[id].chart[level].difficulty
-                    for (let i in rank_line) {
-                        if (dif < rank_line[i]) {
-                            ranked_songs[i].push({ song: id, level: LevelNum[level] })
-                            break
+        /**将曲目分级并处理 */
+        for (let id of fCompute.objectKeys(info)) {
+            if (!info[id]?.chart) continue
+            for (let level of Level) {
+                if (info[id].chart[level]) {
+                    if (!gameRecord[id] || !gameRecord[id][LevelNum[level]] || gameRecord[id][LevelNum[level]]?.acc != 100) {
+                        let dif = info[id].chart[level].difficulty
+                        for (let i in rank_line) {
+                            if (dif < rank_line[i]) {
+                                ranked_songs[i].push({ song: id, level: LevelNum[level] })
+                                break
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    let reward = [10, 15, 30, 60, 80, 100]
+    }
 
     for (let i in ranked_songs) {
         if (task[i] && task[i].finished == true) {
             continue
         }
-        let aim = ranked_songs[i][randint(ranked_songs[i].length - 1)]
-        if (!aim) {
-            continue
-        }
-        let id = aim.song
-        let level = aim.level
-        let type = randint(1) //0 acc, 1 score
-        let value
-        let old_acc = 0
-        let old_score = 0
-        if (gameRecord[id] && gameRecord[id][level]) {
-            old_acc = gameRecord[id][level].acc
-            old_score = gameRecord[id][level].score
-        }
-        if (type) {
-            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_score + 1, 1e6), 1e6 - Math.min(old_score + 1, 1e6), 1).toFixed(0)), 1e6)
-        } else {
-            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_acc + 0.01, 100), 100 - Math.min(old_acc + 0.01, 100), 1).toFixed(2)), 100)
-        }
-        task[i] = {
-            song: id,
-            reward: randint(reward[Number(i) + 1], reward[i]),
-            finished: false,
-            request: {
-                rank: Level[level],
-                type: type ? 'score' : 'acc',
-                value: value,
+        if (allTaskList.length) {
+            const randIndex = randint(allTaskList.length - 1);
+            let aim = allTaskList.splice(randIndex, 1)[0];
+            task[i] = {
+                song: aim.id,
+                reward: comReward(com_rks, aim.diff, aim.value, aim.oldAcc),
+                finished: false,
+                request: {
+                    // @ts-ignore
+                    rank: aim.level,
+                    type: aim.type,
+                    value: Number(aim.value.toFixed(2)),
+                }
             }
+        } else if (ranked_songs[i].length) {
+            const randIndex = randint(ranked_songs[i].length - 1);
+            let aim = ranked_songs[i][randIndex];
+            if (!aim) {
+                continue
+            }
+            let id = aim.song
+            let level = aim.level
+            let diff = info?.[id]?.chart?.[Level[level]]?.difficulty || 0
+            let value
+            let old_acc = 0
+            let old_score = 0
+            if (gameRecord[id] && gameRecord[id][level]) {
+                old_acc = gameRecord[id][level].acc
+                old_score = gameRecord[id][level].score
+            }
+            value = Math.min(Number(easeInSine(Math.random(), Math.min(old_acc + 0.01, 100), 100 - Math.min(old_acc + 0.01, 100), 1).toFixed(2)), 100)
+
+            task[i] = {
+                song: aim.song,
+                reward: comReward(com_rks, diff, value, old_acc),
+                finished: false,
+                request: {
+                    // @ts-ignore
+                    rank: aim.level,
+                    type: 'acc',
+                    value,
+                }
+            }
+
         }
+
     }
+
 
     return task
 }
 
+/**
+ * 计算任务奖励
+ * @param {number} rks 
+ * @param {number} diff 
+ * @param {number} value 
+ * @param {number} oldAcc 
+ * @returns 
+ */
+function comReward(rks, diff, value, oldAcc) {
+    const p1 = pCeil(pmax(diff - rks, 0) * 4)
+    const p2 = pCeil(pmin(pmax(value - oldAcc, 0) * 10, 50))
+    const p3 = pCeil((pmax(value - 95, 0) / 5) ** 3 * 20)
+    // console.log(`reward debug: rks=${rks} diff=${diff} value=${value} oldAcc=${oldAcc} => p1=${p1} p2=${p2} p3=${p3}`)
+    return p1 + p2 + p3;
+}
 
 /**
  * 定义生成指定区间整数随机数的函数
@@ -612,4 +794,202 @@ function checkSpDateIndex(now_time) {
         }
     }
     return spDateIndex;
+}
+
+/**
+ * 生成 YYYY-MM-DD（按本地日期）
+ * @param {Date} date
+ */
+function formatDateKey(date) {
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
+}
+
+/**
+ * @param {number} a
+ * @param {number} b
+ */
+function percent(a, b) {
+    const aa = Number(a) || 0
+    const bb = Number(b) || 0
+    if (!bb) return '0%'
+    return `${Math.max(0, Math.min(100, Math.round((aa / bb) * 100)))}%`
+}
+
+/**
+ * 构建当月日历（周一为起始）
+ * @param {number} year
+ * @param {number} month 1-12
+ * @param {Set<string>} signHistory YYYY-MM-DD
+ * @param {string} todayKey YYYY-MM-DD
+ */
+function buildCalendar(year, month, signHistory, todayKey) {
+    const weekdays = ['一', '二', '三', '四', '五', '六', '日']
+    const daysInMonth = new Date(year, month, 0).getDate()
+    const first = new Date(year, month - 1, 1)
+    const firstIndex = (first.getDay() + 6) % 7 // Monday=0 ... Sunday=6
+
+    /**@type {Array<Array<{empty: boolean, day?: number, signed?: boolean, today?: boolean}>>} */
+    const weeks = []
+    let day = 1
+
+    for (let w = 0; w < 6; w++) {
+        /**@type {Array<{empty: boolean, day?: number, signed?: boolean, today?: boolean}>} */
+        const week = []
+        for (let i = 0; i < 7; i++) {
+            if ((w === 0 && i < firstIndex) || day > daysInMonth) {
+                week.push({ empty: true })
+                continue
+            }
+            const key = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+            week.push({
+                empty: false,
+                day,
+                signed: signHistory.has(key),
+                today: key === todayKey,
+            })
+            day++
+        }
+        weeks.push(week)
+    }
+
+    return {
+        title: `${year} 年 ${month} 月`,
+        weekdays,
+        weeks,
+    }
+}
+
+/**
+ * 复用 jrrp 的 redis 数据，保证同一用户同一天 fortune 一致
+ * @param {string|number} userId
+ */
+async function getOrCreateFortune(userId) {
+    try {
+        // @ts-ignore
+        let jrrp = await redis.get(`${redisPath}:jrrp:${userId}`)
+        if (jrrp) {
+            try {
+                const arr = JSON.parse(jrrp)
+                const quote = await pickSentenceText(arr?.[1])
+                return {
+                    lucky: Number(arr?.[0]) || 0,
+                    good: Array.isArray(arr) ? arr.slice(2, 6) : [],
+                    bad: Array.isArray(arr) ? arr.slice(6, 10) : [],
+                    quote,
+                }
+            } catch { }
+        }
+
+        if (!getInfo.word) {
+            return { lucky: 0, good: [], bad: [], quote: '' }
+        }
+
+        const sentenceList = await getSentenceList()
+        const lucky = Math.round(easeOutCubic(Math.random()) * 100)
+        const sentenceIndex = sentenceList.length ? Math.floor(Math.random() * sentenceList.length) : 0
+
+        let good = [...getInfo.word.good]
+        let bad = [...getInfo.word.bad]
+        let common = [...getInfo.word.common]
+
+        /**@type {any[]} */
+        const data = [lucky, sentenceIndex]
+
+        for (let i = 0; i < 4; i++) {
+            let id = Math.floor(Math.random() * (good.length + common.length))
+            if (id < good.length) {
+                data.push(good[id])
+                good.splice(id, 1)
+            } else {
+                data.push(common[id - good.length])
+                common.splice(id - good.length, 1)
+            }
+        }
+        for (let i = 0; i < 4; i++) {
+            let id = Math.floor(Math.random() * (bad.length + common.length))
+            if (id < bad.length) {
+                data.push(bad[id])
+                bad.splice(id, 1)
+            } else {
+                data.push(common[id - bad.length])
+                common.splice(id - bad.length, 1)
+            }
+        }
+
+        // @ts-ignore 有效期到第二天 8 点
+        redis.set(`${redisPath}:jrrp:${userId}`, JSON.stringify(data), {
+            PX: 86400000 - ((new Date().valueOf() + 28800000) % 86400000)
+        })
+
+        const quote = await pickSentenceText(sentenceIndex)
+        return {
+            lucky,
+            good: data.slice(2, 6),
+            bad: data.slice(6, 10),
+            quote,
+        }
+    } catch {
+        return { lucky: 0, good: [], bad: [], quote: '' }
+    }
+}
+
+/**
+ * @param {number} x
+ */
+function easeOutCubic(x) {
+    return 1 - Math.pow(1 - x, 3)
+}
+
+async function getSentenceList() {
+    if (Array.isArray(sentenceCache)) return sentenceCache
+    const list = await readFile.FileReader(path.join(infoPath, 'sentences.json'))
+    sentenceCache = Array.isArray(list) ? list : []
+    return sentenceCache
+}
+
+/**
+ * @param {number} idx
+ */
+async function pickSentenceText(idx) {
+    const list = await getSentenceList()
+    const item = list?.[idx]
+    if (!item) return ''
+    if (typeof item === 'string') return item
+    return item.hitokoto || item.text || ''
+}
+
+/**
+ * max
+ * @param {number} a 
+ * @param {number} b 
+ * @returns {number}
+ */
+function pmax(a, b) {
+    if (a === undefined) return b
+    if (b === undefined) return a
+    return Math.max(a, b)
+}
+
+/** min
+ * @param {number} a 
+ * @param {number} b
+ * @returns {number}
+ */
+function pmin(a, b) {
+    if (a === undefined) return b
+    if (b === undefined) return a
+    return Math.min(a, b)
+}
+
+/**
+ * ceil
+ * @param {number} num
+ * @return {number}
+ */
+function pCeil(num) {
+    if (num === undefined) return 0
+    return Math.ceil(num)
 }
