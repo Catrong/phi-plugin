@@ -13,7 +13,7 @@ import fCompute from '../model/fCompute.js'
 import picmodle from '../model/picmodle.js'
 import Save from '../model/class/Save.js'
 import { Level, LevelNum, redisPath } from '../model/constNum.js'
-import { themeList } from '../model/class/pluginData.js'
+import PluginData, { themeList } from '../model/class/pluginData.js'
 import makeRequest from '../model/makeRequest.js'
 import logger from '../components/Logger.js'
 
@@ -128,96 +128,8 @@ export class phimoney extends phiPluginBase {
             }
         }
 
-        /** 今日人品（复用 jrrp 的 redis 数据，保证一致） */
-        let fortune = await getOrCreateFortune(e.user_id)
 
-        /** 进度条（解锁/FC/PHI 三层叠加） */
-        let edgeRate = {
-            EZ: { unlock: '0%', fc: '0%', phi: '0%' },
-            HD: { unlock: '0%', fc: '0%', phi: '0%' },
-            IN: { unlock: '0%', fc: '0%', phi: '0%' },
-            AT: { unlock: '0%', fc: '0%', phi: '0%' },
-        }
-        if (save) {
-            try {
-                let stats = await save.getStats()
-                edgeRate.EZ.unlock = percent(stats?.[0]?.unlock, stats?.[0]?.tot)
-                edgeRate.EZ.fc = percent(stats?.[0]?.fc, stats?.[0]?.tot)
-                edgeRate.EZ.phi = percent(stats?.[0]?.phi, stats?.[0]?.tot)
-
-                edgeRate.HD.unlock = percent(stats?.[1]?.unlock, stats?.[1]?.tot)
-                edgeRate.HD.fc = percent(stats?.[1]?.fc, stats?.[1]?.tot)
-                edgeRate.HD.phi = percent(stats?.[1]?.phi, stats?.[1]?.tot)
-
-                edgeRate.IN.unlock = percent(stats?.[2]?.unlock, stats?.[2]?.tot)
-                edgeRate.IN.fc = percent(stats?.[2]?.fc, stats?.[2]?.tot)
-                edgeRate.IN.phi = percent(stats?.[2]?.phi, stats?.[2]?.tot)
-
-                edgeRate.AT.unlock = percent(stats?.[3]?.unlock, stats?.[3]?.tot)
-                edgeRate.AT.fc = percent(stats?.[3]?.fc, stats?.[3]?.tot)
-                edgeRate.AT.phi = percent(stats?.[3]?.phi, stats?.[3]?.tot)
-            } catch { }
-        }
-
-        /** 日历（当月） */
-        let calendar = buildCalendar(now_time.getFullYear(), now_time.getMonth() + 1, new Set(data.sign_history || []), todayKey)
-
-        /** 公告 */
-        let notice = null;
-
-        if (data.noticeCode < getInfo.noticeJson.code) {
-            notice = getInfo.noticeJson
-            data.noticeCode = getInfo.noticeJson.code
-            getNotes.putNotesData(e.user_id, data)
-        }
-
-        /** 任务列表（展示前 5 条） */
-        /**@type {{index: string, song: string, illustration: string, meta: string, finished: boolean}[]} */
-        let dailyTasks = []
-        if (save && Array.isArray(data.task)) {
-            for (let i = 0; i < Math.min(5, data.task.length); i++) {
-                // @ts-ignore
-                let t = data.task[i]
-                if (!t) continue
-                const songInfo = getInfo.ori_info?.[t.song];
-                // @ts-ignore
-                let ill = getInfo.getill(t.song)
-                // @ts-ignore
-                let songName = songInfo?.song || t.song
-                // @ts-ignore
-                let meta = `${t.request?.rank || ''} ${songInfo?.chart[t.request.rank]?.difficulty || ''} · ${(t.request?.type || '').toUpperCase()} ${t.request?.value ?? ''} · +${t.reward || 0} Notes`
-                dailyTasks.push({
-                    index: fCompute.ped(i + 1, 2),
-                    song: songName,
-                    illustration: ill,
-                    meta,
-                    finished: Boolean(t.finished),
-                })
-            }
-        }
-
-        let picdata = {
-            PlayerId: save ? save.saveInfo.PlayerId : (e.sender?.card || e.sender?.nickname || `${e.user_id}`),
-            Rks: save ? Number(save.saveInfo.summary.rankingScore).toFixed(4) : '0.0000',
-            Date: fCompute.formatDate(now_time),
-            ChallengeMode: save ? Math.floor(save.saveInfo.summary.challengeModeRank / 100) : 0,
-            ChallengeModeRank: save ? (save.saveInfo.summary.challengeModeRank % 100) : 0,
-            avatar: save ? getInfo.idgetavatar(save.gameuser.avatar) : 'Introduction',
-            background: getInfo.getill(illlist[Math.floor(Math.random() * (illlist.length - 1))]),
-            Notes: data.money,
-            signDays: Array.isArray(data.sign_history) ? data.sign_history.length : 0,
-            lucky: fortune.lucky,
-            good: fortune.good,
-            bad: fortune.bad,
-            quote: fortune.quote,
-            edgeRate,
-            dailyTasks,
-            calendar,
-            notice,
-            theme: data?.theme || 'default',
-        }
-
-        const img = await picmodle.common(e, 'sign', picdata);
+        const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
         if (signedJustNow) {
             const tips = spDateIndex !== -1
                 ? spData[spDateIndex].sp_date_tips[randint(spData[spDateIndex].sp_date_tips.length - 1)]
@@ -287,41 +199,9 @@ export class phimoney extends phiPluginBase {
         }
 
         getNotes.putNotesData(e.user_id, data)
-
-        /**判断时间段 */
-        const Remsg = helloMsg(now_time, 1)
-
-        /**添加曲绘 */
-        if (data.task) {
-            for (let i in data.task) {
-                // @ts-ignore
-                data.task[i].illustration = getInfo.getill(data.task[i].song)
-                // @ts-ignore
-                data.task[i].song = getInfo.idgetsong(data.task[i].song) || data.task[i].song
-            }
-        }
-
-        let picdata = {
-            PlayerId: save.saveInfo.PlayerId,
-            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
-            Date: fCompute.formatDate(now_time),
-            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
-            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            background: getInfo.getill(illlist[Math.floor(Math.random() * (illlist.length - 1))]),
-            task: data.task,
-            task_ans: Remsg[0],
-            task_ans1: Remsg[1],
-            Notes: data.money,
-            tips: getInfo.tips[Math.floor((Math.random() * (getInfo.tips.length - 1)) + 1)],
-            change_notes: `${change_note ? change_note : ''}`,
-            theme: data?.theme || 'star',
-        }
-
-        const spDateIndex = checkSpDateIndex(now_time);
-        if (spDateIndex !== -1) {
-            picdata.tips = spData[spDateIndex].sp_date_tips[randint(spData[spDateIndex].sp_date_tips.length - 1)]
-        }
-        send.send_with_At(e, await picmodle.tasks(e, picdata))
+        
+        const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
+        send.send_with_At(e, img);
 
         return true
 
@@ -340,9 +220,9 @@ export class phimoney extends phiPluginBase {
             return false
         }
 
-        let now = await send.getsave_result(e)
+        let save = await send.getsave_result(e)
 
-        if (!now) {
+        if (!save) {
             return false
         }
         let now_time = new Date()
@@ -362,12 +242,13 @@ export class phimoney extends phiPluginBase {
             }
         }
 
+        const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
         let picdata = {
-            PlayerId: now.saveInfo.PlayerId,
-            Rks: Number(now.saveInfo.summary.rankingScore).toFixed(4),
+            PlayerId: save.saveInfo.PlayerId,
+            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
             Date: fCompute.formatDate(task_time),
-            ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
-            ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
+            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             background: getInfo.getill(illlist[Math.floor(Math.random() * (illlist.length - 1))]),
             task: data.task,
             task_ans: Remsg[0],
@@ -673,6 +554,106 @@ async function randtask(save, task = []) {
 
 
     return task
+}
+
+/**
+ * 
+ * @param {Save | false} save 
+ * @param {PluginData} plugin_data 
+ * @param {any} user_id 
+ */
+async function picData(save, plugin_data, user_id) {
+    let now_time = new Date()
+    let todayKey = formatDateKey(now_time)
+
+    /** 今日人品（复用 jrrp 的 redis 数据，保证一致） */
+    let fortune = await getOrCreateFortune(user_id)
+
+    /** 进度条（解锁/FC/PHI 三层叠加） */
+    let edgeRate = {
+        EZ: { unlock: '0%', fc: '0%', phi: '0%' },
+        HD: { unlock: '0%', fc: '0%', phi: '0%' },
+        IN: { unlock: '0%', fc: '0%', phi: '0%' },
+        AT: { unlock: '0%', fc: '0%', phi: '0%' },
+    }
+    if (save) {
+        try {
+            let stats = await save.getStats()
+            edgeRate.EZ.unlock = percent(stats?.[0]?.unlock, stats?.[0]?.tot)
+            edgeRate.EZ.fc = percent(stats?.[0]?.fc, stats?.[0]?.tot)
+            edgeRate.EZ.phi = percent(stats?.[0]?.phi, stats?.[0]?.tot)
+
+            edgeRate.HD.unlock = percent(stats?.[1]?.unlock, stats?.[1]?.tot)
+            edgeRate.HD.fc = percent(stats?.[1]?.fc, stats?.[1]?.tot)
+            edgeRate.HD.phi = percent(stats?.[1]?.phi, stats?.[1]?.tot)
+
+            edgeRate.IN.unlock = percent(stats?.[2]?.unlock, stats?.[2]?.tot)
+            edgeRate.IN.fc = percent(stats?.[2]?.fc, stats?.[2]?.tot)
+            edgeRate.IN.phi = percent(stats?.[2]?.phi, stats?.[2]?.tot)
+
+            edgeRate.AT.unlock = percent(stats?.[3]?.unlock, stats?.[3]?.tot)
+            edgeRate.AT.fc = percent(stats?.[3]?.fc, stats?.[3]?.tot)
+            edgeRate.AT.phi = percent(stats?.[3]?.phi, stats?.[3]?.tot)
+        } catch { }
+    }
+
+    /** 日历（当月） */
+    let calendar = buildCalendar(now_time.getFullYear(), now_time.getMonth() + 1, new Set(plugin_data.sign_history || []), todayKey)
+
+    /** 公告 */
+    let notice = null;
+
+    if (plugin_data.noticeCode < getInfo.noticeJson.code) {
+        notice = getInfo.noticeJson
+        plugin_data.noticeCode = getInfo.noticeJson.code
+        getNotes.putNotesData(user_id, plugin_data)
+    }
+
+    /** 任务列表（展示前 5 条） */
+    /**@type {{index: string, song: string, illustration: string, meta: string, finished: boolean}[]} */
+    let dailyTasks = []
+    if (save && Array.isArray(plugin_data.task)) {
+        for (let i = 0; i < Math.min(5, plugin_data.task.length); i++) {
+            // @ts-ignore
+            let t = plugin_data.task[i]
+            if (!t) continue
+            const songInfo = getInfo.ori_info?.[t.song];
+            // @ts-ignore
+            let ill = getInfo.getill(t.song)
+            // @ts-ignore
+            let songName = songInfo?.song || t.song
+            // @ts-ignore
+            let meta = `${t.request?.rank || ''} ${songInfo?.chart[t.request.rank]?.difficulty || ''} · ${(t.request?.type || '').toUpperCase()} ${t.request?.value ?? ''} · +${t.reward || 0} Notes`
+            dailyTasks.push({
+                index: fCompute.ped(i + 1, 2),
+                song: songName,
+                illustration: ill,
+                meta,
+                finished: Boolean(t.finished),
+            })
+        }
+    }
+
+    return {
+        PlayerId: save ? save.saveInfo.PlayerId : '游客玩家',
+        Rks: save ? Number(save.saveInfo.summary.rankingScore).toFixed(4) : '0.0000',
+        Date: fCompute.formatDate(now_time),
+        ChallengeMode: save ? Math.floor(save.saveInfo.summary.challengeModeRank / 100) : 0,
+        ChallengeModeRank: save ? (save.saveInfo.summary.challengeModeRank % 100) : 0,
+        avatar: save ? getInfo.idgetavatar(save.gameuser.avatar) : 'Introduction',
+        background: getInfo.getill(illlist[Math.floor(Math.random() * (illlist.length - 1))]),
+        Notes: plugin_data.money,
+        signDays: Array.isArray(plugin_data.sign_history) ? plugin_data.sign_history.length : 0,
+        lucky: fortune.lucky,
+        good: fortune.good,
+        bad: fortune.bad,
+        quote: fortune.quote,
+        edgeRate,
+        dailyTasks,
+        calendar,
+        notice,
+        theme: plugin_data?.theme || 'default',
+    }
 }
 
 /**
