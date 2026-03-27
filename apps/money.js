@@ -199,7 +199,7 @@ export class phimoney extends phiPluginBase {
         }
 
         getNotes.putNotesData(e.user_id, data)
-        
+
         const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
         send.send_with_At(e, img);
 
@@ -407,7 +407,8 @@ async function randtask(save, task = []) {
     const { com_rks } = await save.getB19(1000, { avgType: "none" });
 
     /**
-     * @type {{ id: idString; level: allLevelKind; type: string; value: number; diff: number; oldAcc: number; }[]}
+     * @typedef {{ id: idString; level: allLevelKind; type: string; value: number; diff: number; oldAcc: number; }} taskObj
+     * @type {taskObj[]}
      */
     let allTaskList = [];
 
@@ -447,10 +448,24 @@ async function randtask(save, task = []) {
     }
 
     allTaskList.sort((a, b) => b.value - a.value)
-
-    for (let i = 0; i < allTaskList.length; i++) {
+    /** @type {taskObj[]} */
+    let cmdTask = [];
+    /** @type {taskObj[]} */
+    let phiTask = [];
+    for (let i = 0, j = 0; i < allTaskList.length; i++) {
+        if (allTaskList[i].value >= 100) {
+            j = i;
+        }
         if (allTaskList[i].value < 95) {
-            allTaskList = allTaskList.slice(0, i);
+            phiTask = allTaskList.slice(0, j + 1);
+            cmdTask = allTaskList.slice(j + 1, i);
+            allTaskList = allTaskList.slice(i);
+            break;
+        }
+        if (i == allTaskList.length - 1) {
+            phiTask = allTaskList.slice(0, j + 1);
+            cmdTask = allTaskList.slice(j + 1, i);
+            allTaskList = allTaskList.slice(i);
             break;
         }
     }
@@ -504,9 +519,16 @@ async function randtask(save, task = []) {
         if (task[i] && task[i].finished == true) {
             continue
         }
-        if (allTaskList.length) {
-            const randIndex = randint(allTaskList.length - 1);
-            let aim = allTaskList.splice(randIndex, 1)[0];
+        if (cmdTask.length || phiTask.length) {
+            /**@type {taskObj[]} */
+            let crtTaskList = [];
+            if (!phiTask.length || randint(100) < 80) {
+                crtTaskList = cmdTask;
+            } else {
+                crtTaskList = phiTask;
+            }
+            const randIndex = randint(crtTaskList.length - 1);
+            let aim = crtTaskList.splice(randIndex, 1)[0];
             task[i] = {
                 song: aim.id,
                 reward: comReward(com_rks, aim.diff, aim.value, aim.oldAcc),
@@ -665,10 +687,9 @@ async function picData(save, plugin_data, user_id) {
  * @returns 
  */
 function comReward(rks, diff, value, oldAcc) {
-    const p1 = pCeil(pmax(diff - rks, 0) * 4)
-    const p2 = pCeil(pmin(pmax(value - oldAcc, 0) * 10, 50))
-    const p3 = pCeil((pmax(value - 95, 0) / 5) ** 3 * 20)
-    // console.log(`reward debug: rks=${rks} diff=${diff} value=${value} oldAcc=${oldAcc} => p1=${p1} p2=${p2} p3=${p3}`)
+    const p1 = pCeil(pmin(pmax(diff - rks, 0) * 20, 50))
+    const p2 = pCeil(pmin(pmax(value - oldAcc, 0) * 5, 20))
+    const p3 = pCeil((pmax(value - 95, 0) / 5) ** 3 * 30)
     return p1 + p2 + p3;
 }
 
