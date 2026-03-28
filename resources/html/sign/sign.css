@@ -1,5 +1,5 @@
 @import "../common/common.css";
-@import "../common/playerInfo.css";
+@import "../common/css/playerInfo.css";
 
 body {
   height: 1080px;
@@ -7,7 +7,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  --left-margin: 430px;
+  --left-margin: 390px;
+  --bkg-color: #0000008c;
+  --blurM: blur(30px);
 }
 
 .background img {
@@ -16,46 +18,663 @@ body {
 
 .backGlass {
   --height: 864px;
-  width: 1638.4px;
-  backdrop-filter: blur(10px) brightness(60%);
+  width: 1850px;
+  backdrop-filter: blur(5px) brightness(70%);
+  position: absolute;
+  top: 110px;
+  /* left: 260px; */
+  /* background: #0000002b; */
+  border: 2px solid #b2e8ff47;
+  /* box-shadow: 0 18px 70px rgb(0 0 0 / 48%); */
 }
 
 .leftAbsolute {
   position: absolute;
   top: var(--top);
-  left: calc(var(--top) * var(--clipSlope) * -1 + var(--left-margin));
+  left: calc(var(--top) * var(--clipSlope) * -1 + var(--left-margin, 0px));
 }
 
-.playerInfo {
-  width: 30%;
-  --top: 150px;
-  margin-left: calc(80px * var(--clipSlope) * -1);
-}
-
-.rankProgress {
-  width: 5%;
-  --height: 400px;
-  --top: 333px;
-  display: flex;
-}
-
-.rankProgressBkg {
+/* dashboard：模仿 leftRail 的定位方式（面板本体使用 leftAbsolute 定位） */
+.dashboard {
+  z-index: 3;
+  left: 14px;
+  top: 0;
   position: absolute;
+  --dashTop: 160px;
+}
+
+.dashboard > * {
+  backdrop-filter: var(--blurM);
+}
+
+/* 顶部玩家信息条（复用 playerInfo.css 的结构） */
+.playerInfo {
+  width: 534px;
+  --boxHeight: 80px;
+  margin-left: calc(80px * var(--clipSlope) * -1);
+  transform: translate(-71px, 0px);
+  z-index: 4;
+  --top: var(--dashTop);
+  backdrop-filter: none;
+}
+
+.playerInfo .blackBlock {
+  background: var(--bkg-color);
+}
+
+/* 左侧四彩条：竖向并列靠边 */
+.edgeProgress {
+  --top: calc(var(--dashTop) + 450px);
+  --height: 640px;
+  width: 300px;
+  display: flex;
+  box-sizing: border-box;
+  transform: translate(-165px, -50%);
+  backdrop-filter: var(--blurM);
+  background: var(--bkg-color);
+  justify-content: center;
+  border-top: 3px solid var(--bkg-color);
+  border-bottom: 3px solid var(--bkg-color);
+}
+
+.edgeTrack {
+  --height: 640px;
+  --width: 25px;
+  width: calc(var(--width) + 192px);
+  margin: 0 -96px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.edgeTrack p {
+  position: absolute;
+  bottom: -32px;
+  color: #d8f1ff;
+  font-family: "Aldrich", "PHI";
+  font-size: 20px;
+}
+
+.edgeFill {
+  width: 100%;
+  height: var(--rate);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.edgeFill--EZ {
+  --theme-color: var(--EZ);
+}
+
+.edgeFill--HD {
+  --theme-color: var(--HD);
+}
+
+.edgeFill--IN {
+  --theme-color: var(--IN);
+}
+
+.edgeFill--AT {
+  --theme-color: var(--AT);
+}
+
+/* 三层叠加：解锁(高透明)、FC(网格)、PHI(实心) */
+.edgeFill--unlock {
+  z-index: 1;
+  background: var(--theme-color);
+  filter: brightness(30%);
+}
+
+.edgeFill--fc {
+  z-index: 2;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--theme-color),
+    var(--theme-color) 3px,
+    #0000 0,
+    #0000 6px
+  );
+}
+
+.edgeFill--phi {
+  z-index: 3;
+  background: var(--theme-color);
+}
+
+.rate-ez {
+  --rate: 88%;
+}
+
+.rate-hd {
+  --rate: 76%;
+}
+
+.rate-in {
+  --rate: 63%;
+}
+
+.rate-at {
+  --rate: 41%;
+}
+
+/* leftRail：保持你当前的绝对布局风格 */
+.leftRail {
+  width: 400px;
+  height: 600px;
+  --top: calc(var(--dashTop) + 130px);
+  position: absolute;
+  --left-margin: 430px;
+  backdrop-filter: none;
+}
+
+.leftRail > * {
+  --left-margin: 0px;
+}
+
+.panelTitle p,
+.panelHeader p {
+  font-family: "Aldrich", "PHI";
+  color: white;
+  margin-left: 32px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgb(255 255 255 / 35%);
+}
+
+.luckCard,
+.quoteCard,
+.keyWordsCard,
+.wordsBox {
+  background: var(--bkg-color);
+  padding: 0px 35px;
+  box-sizing: border-box;
+  --height: 150px;
+  backdrop-filter: var(--blurM);
+}
+
+.luckCard {
+  --top: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.keyWordsCard {
+  --top: 186px;
+  width: 112%;
+  background: none;
+  display: flex;
+  padding: 0;
+  justify-content: space-between;
+  transform: translate(-48px, 0px);
+  backdrop-filter: none;
+}
+
+.wordsBox {
+  width: 50%;
+  position: relative;
+  --height: 310px;
+  padding: 0px;
+  --left-margin: 150px;
+  --line-top: 10px;
+  --line-margin: 58px;
+}
+
+.wordsBox p {
+  color: #d8f1ff;
+  font-size: 28px;
+  transform: translate(-50%, 0px);
+}
+
+.wordsBox p:nth-child(1) {
+  color: #a8deff;
+  --top: var(--line-top);
+}
+
+.wordsBox p:nth-child(2) {
+  --top: calc(var(--line-margin) * 1.2 + var(--line-top));
+}
+
+.wordsBox p:nth-child(3) {
+  --top: calc(var(--line-margin) * 2.2 + var(--line-top));
+}
+
+.wordsBox p:nth-child(4) {
+  --top: calc(var(--line-margin) * 3.2 + var(--line-top));
+}
+
+.wordsBox p:nth-child(5) {
+  --top: calc(var(--line-margin) * 4.2 + var(--line-top));
+}
+
+.quoteCard {
+  --top: 528px;
+  --height: 110px;
+  width: 1104px;
+  transform: translate(12px, 0px);
+}
+
+.cardTitle,
+.luckValue,
+.quoteText {
+  --left-margin: 55px;
+}
+
+.cardTitle {
+  --top: 10px;
+  color: #a8deff;
+  font-family: "Aldrich", "PHI";
+  font-size: 24px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.luckValue {
+  --top: 55px;
+  color: #fff700;
+  font-family: "Aldrich", "PHI";
+  font-size: 90px;
+  line-height: 1;
+  text-shadow: 0 0 16px rgb(255 247 0 / 45%);
+}
+
+.quoteText {
+  --top: 55px;
+  width: 95%;
+  color: #edf6ff;
+  font-size: 28px;
+}
+
+.panelHeader {
+  --height: 54px;
+  display: flex;
+  align-items: center;
+  background: #00b0ff7a;
+}
+
+.panelHeader p {
+  font-family: "Aldrich", "PHI";
+  color: white;
+  margin-left: 32px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgb(255 255 255 / 35%);
+}
+
+.dailySongsPanel {
+  --height: 628px;
+  width: 860px;
+  --top: var(--dashTop);
+  position: absolute;
+  background: rgb(4 20 40 / 54%);
+  /* border: 1px solid rgb(190 236 255 / 22%); */
+  /* padding: 18px 20px 22px; */
+  box-sizing: border-box;
+  --left-margin: 685px;
+  --line-top: 26px;
+  --line-content: 118px;
+  --line-margin: 113px;
+}
+
+.dailySongsPanel > * {
+  --left-margin: 525px;
+}
+
+.dailySongsPanel .panelHeader {
+  transform: translate(-50%, -50%);
+  --top: calc(var(--line-top));
+  width: 82%;
+}
+
+.dailySongsPanel .songItem:nth-child(2) {
+  --top: calc(var(--line-content));
+}
+
+.dailySongsPanel .songItem:nth-child(3) {
+  --top: calc(var(--line-content) + var(--line-margin) * 1);
+}
+
+.dailySongsPanel .songItem:nth-child(4) {
+  --top: calc(var(--line-content) + var(--line-margin) * 2);
+}
+
+.dailySongsPanel .songItem:nth-child(5) {
+  --top: calc(var(--line-content) + var(--line-margin) * 3);
+}
+
+.dailySongsPanel .songItem:nth-child(6) {
+  --top: calc(var(--line-content) + var(--line-margin) * 4);
+}
+
+.songItem {
+  --height: 106px;
+  width: 82%;
+  display: flex;
+  align-items: center;
+  background: var(--bkg-color);
+  border: 1px solid rgb(255 255 255 / 24%);
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 26%),
+    2px 4px 0 rgb(0 181 255 / 22%);
+  padding: 0 16px 0 10px;
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+}
+
+.taskStatus {
+  position: absolute;
+  bottom: 8px;
+  right: 29px;
+  --height: 30px;
+  z-index: 5;
+  padding: 4px 10px;
+  font-size: 18px;
+  line-height: 1;
+  color: #ffffff;
+  background: #ffff4145;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.songItem--finished {
+  background: linear-gradient(45deg, #ffff4145, var(--bkg-color));
+}
+
+.songCover {
+  --height: 88px;
+  width: 178px;
+  min-width: 178px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 24%);
+  filter: drop-shadow(1px 2px 2px rgb(0 0 0 / 45%));
+}
+
+.songCover img {
   width: 100%;
   height: 100%;
-  margin-left: calc(var(--height) * var(--clipSlope) * -1);
+  object-fit: cover;
 }
 
-.rankProgressBar {
-  margin-left: calc(var(--height) * var(--clipSlope) * -1);
-  width: calc(var(--width) + var(--height) * var(--clipSlope) * 1);
+.songText {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  grid-template-rows: 40px 40px;
+  align-items: center;
+  width: 100%;
+  column-gap: 0px;
+  margin-left: -6px;
 }
 
-.rangeBar {
-  background-color: #fff;
-  --width: 3px;
+.songIndex {
+  grid-row: 1 / 3;
+  width: 50px;
+  text-align: left;
+  color: #fff700;
+  font-family: "Aldrich", "PHI";
+  font-size: 32px;
+  text-shadow: 0 0 8px rgb(255 247 0 / 42%);
 }
 
-.rankBar {
-  --width: 15px;
+.songName {
+  width: 100%;
+  color: white;
+  font-size: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.songMeta {
+  width: 100%;
+  color: #b8ecff;
+  font-size: 22px;
+  text-align: left;
+}
+
+.noticePanel {
+  --height: 628px;
+  width: 640px;
+  --top: var(--dashTop);
+  --left-margin: 1400px;
+  background: var(--bkg-color);
+  /* border: 1px solid #beecff38; */
+  backdrop-filter: var(--blurM);
+  box-sizing: border-box;
+  position: absolute;
+}
+
+.noticePanel .panelHeader {
+  /* width: 80%; */
+  position: absolute;
+  right: -1px;
+  left: 170px;
+}
+
+.noticePanel .noticeBody {
+  top: 65px;
+  left: 153px;
+  --height: 542px;
+  width: 75%;
+  box-sizing: border-box;
+  position: absolute;
+}
+
+.noticeCalendar {
+  --line-top: 30px;
+  --line-content: 100px;
+  --line-margin: 64px;
+  --left-margin: 240px;
+}
+
+.noticeNotice {
+  --line-top: 30px;
+  --line-content: 105px;
+  --line-margin: 100px;
+  --left-margin: 240px;
+}
+
+/* ===== 签到日历（只作用于 noticePanel） ===== */
+.noticePanel .noticeBody .calendarTitle {
+  --top: var(--line-top);
+  transform: translate(-50%, -50%);
+}
+
+.noticePanel .noticeBody .calendarTitle p {
+  margin: 0;
+  color: #fff700;
+  font-size: 32px;
+  font-family: "Aldrich", "PHI";
+  text-shadow: 0 0 8px rgb(255 247 0 / 28%);
+  white-space: nowrap;
+}
+
+.noticePanel .noticeBody .calendarWeekHeader,
+.noticePanel .noticeBody .calendarWeek {
+  width: 470px;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+}
+
+.noticePanel .noticeBody .calendarWeekHeader {
+  --height: 65px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bkg-color);
+  border: 1px solid rgb(255 255 255 / 16%);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 18%);
+}
+
+.noticePanel .noticeBody .calendarWeekHeader span {
+  width: 54px;
+  text-align: center;
+  color: #b8ecff;
+  font-size: 22px;
+  font-family: "Aldrich", "PHI";
+}
+
+.noticePanel .noticeBody .calendarWeek {
+  --height: 65px;
+  padding: 0px 23px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* background: linear-gradient(90deg, #0e2742e6, #113b5ccc); */
+  /* border: 1px solid rgb(255 255 255 / 20%); */
+  /* box-shadow:
+    inset 0 0 0 1px #00000038,
+    2px 4px 0 #00b5ff2e; */
+}
+
+.noticePanel .noticeBody .calendarCell {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  /* border: 1px solid rgb(255 255 255 / 14%); */
+  /* background: rgb(255 255 255 / 7%); */
+  color: #ecf8ff;
+  font-size: 22px;
+  font-family: "Aldrich", "PHI";
+}
+
+.noticePanel .noticeBody .calendarCell.empty {
+  border-color: rgb(255 255 255 / 0%);
+  background: rgb(255 255 255 / 0%);
+  color: rgb(255 255 255 / 0%);
+}
+
+.noticePanel .noticeBody .calendarCell.signed {
+  background: linear-gradient(135deg, rgb(0 181 255 / 26%), rgb(255 247 0 / 10%));
+  border: 1px solid rgb(255 247 0 / 35%);
+  box-shadow: 0 0 10px rgb(0 181 255 / 18%);
+}
+
+.noticePanel .noticeBody .calendarCell.today {
+  outline: 2px solid rgb(255 247 0 / 55%);
+  outline-offset: 1px;
+}
+
+/* 斜向排布：仿照 dailySongsPanel 的 nth-child 位置计算（noticeBody 里顺序固定） */
+.noticePanel .noticeBody .calendarTitle {
+  --top: calc(var(--line-top));
+}
+
+.noticePanel .noticeBody .calendarWeekHeader {
+  --top: calc(var(--line-content));
+}
+
+.noticePanel .noticeBody .calendarWeek:nth-child(3) {
+  --top: calc(var(--line-content) + var(--line-margin) * 1);
+}
+
+.noticePanel .noticeBody .calendarWeek:nth-child(4) {
+  --top: calc(var(--line-content) + var(--line-margin) * 2);
+}
+
+.noticePanel .noticeBody .calendarWeek:nth-child(5) {
+  --top: calc(var(--line-content) + var(--line-margin) * 3);
+}
+
+.noticePanel .noticeBody .calendarWeek:nth-child(6) {
+  --top: calc(var(--line-content) + var(--line-margin) * 4);
+}
+
+.noticePanel .noticeBody .calendarWeek:nth-child(7) {
+  --top: calc(var(--line-content) + var(--line-margin) * 5);
+}
+
+.noticePanel .noticeBody .calendarWeek:nth-child(8) {
+  --top: calc(var(--line-content) + var(--line-margin) * 6);
+}
+
+.noticePanel .noticeBody .calendarWeek:nth-child(9) {
+  --top: calc(var(--line-content) + var(--line-margin) * 7);
+}
+
+/* 签到公告：同样斜向排布，且每条公告占满整行（不考虑过多文本换行的情况） */
+.noticePanel .noticeBody .noticeRow {
+  width: 100%;
+  transform: translate(-240px, -50%);
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.noticePanel .noticeBody .noticeRow.clip-box {
+  --height: 90px;
+  padding: 9px 35px;
+  background: var(--bkg-color);
+}
+
+.noticePanel .noticeBody .noticeRow p {
+  color: #ecf8ff;
+  font-size: 26px;
+  line-height: 1.25;
+  margin: 0;
+  /* white-space: nowrap; */
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+}
+
+.noticePanel .noticeBody .noticeTitleRow {
+  --top: var(--line-top);
+  line-height: 1;
+  width: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.noticePanel .noticeBody .noticeTitleRow .noticeTitle {
+  color: #fff700;
+  font-size: 34px;
+  text-shadow: 0 0 8px rgb(255 247 0 / 32%);
+  white-space: nowrap;
+}
+
+/* 逐条分块竖向排版：仿照 dailySongsPanel 的 nth-child 位置计算（注意第 1 个是标题行） */
+.noticePanel .noticeBody .noticeRow:nth-child(2) {
+  --top: calc(var(--line-content));
+}
+
+.noticePanel .noticeBody .noticeRow:nth-child(3) {
+  --top: calc(var(--line-content) + var(--line-margin) * 1);
+}
+
+.noticePanel .noticeBody .noticeRow:nth-child(4) {
+  --top: calc(var(--line-content) + var(--line-margin) * 2);
+}
+
+.noticePanel .noticeBody .noticeRow:nth-child(5) {
+  --top: calc(var(--line-content) + var(--line-margin) * 3);
+}
+
+.noticePanel .noticeBody .noticeRow:nth-child(6) {
+  --top: calc(var(--line-content) + var(--line-margin) * 4);
+}
+
+.createdbox {
+  position: absolute;
+  width: 470px;
+  z-index: 5;
+  --top: calc((var(--dashTop) + 690px));
+  --left-margin: 1580px;
+  backdrop-filter: none;
+}
+
+.createdbox p {
+  font-size: 56px;
+}
+
+.ver p {
+  font-size: 28px;
+  margin-top: 19px;
+  margin-left: 8px;
 }

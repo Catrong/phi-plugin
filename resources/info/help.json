@@ -30,7 +30,7 @@
             {
                 "title": "/pgr",
                 "eg": "/pgr [背景(可选)]",
-                "desc": "获取 B30 成绩图，在主题为⌈默认⌋或⌈雪花⌋或时可以选择背景曲绘<br>eg1: /pgr    eg2: /pgr df"
+                "desc": "获取 B30 成绩图，在主题为⌈默认⌋或⌈雪花⌋时可以选择背景曲绘<br>eg1: /pgr    eg2: /pgr df"
             },
             {
                 "title": "/p30",
@@ -216,6 +216,11 @@
                 "title": "/theme",
                 "eg": "/theme [0-3]",
                 "desc": "切换主题，作用于 pgr update list task<br>0：默认&ensp;&ensp;&ensp;1：寒冬<br>2：使一颗心免于哀伤<br>3：大师赛2eg: /theme 1"
+            },
+            {
+                "title": "/myset",
+                "eg": "/myset <字段> <值>",
+                "desc": "查看和修改设置，值支持使用序号选择<br>eg: /myset theme 1"
             },
             {
                 "title": "/sign",

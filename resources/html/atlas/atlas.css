@@ -2,12 +2,13 @@
 @import "../common/snow.css";
 
 :root {
-    --rankHight: 52px;
+    --rankHight: 80px;
+    --clipSlope:0.25;
 }
 
 body {
     width: 2048px;
-    min-height: 1080px;
+    min-height: 1100px;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -24,17 +25,18 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     height: 972px;
     position: relative;
 }
 
 .box {
     display: flex;
+    margin-top: 120px;
     width: 1736px;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     z-index: 1;
+    margin-left: 120px;
 }
 
 .box p {
@@ -43,19 +45,19 @@ body {
 }
 
 .info-box {
-    width: 1013px;
+    width: 700px;
+    margin-top: 30px;
     height: auto;
-    margin-right: -342px;
     z-index: 1;
 }
 
 .name-box {
     display: flex;
-    height: 144px;
+    --height: 144px;
     width: 833px;
     background-color: rgba(0, 0, 0, 0.75);
-    margin-left: 185px;
-    clip-path: polygon(36px 0px, 100% 0%, 100% 100%, 0% 100%, 36px 0px);
+    margin-left: 200px;
+    /*clip-path: polygon(36px 0px, 100% 0%, 100% 100%, 0% 100%, 36px 0px);*/
     flex-direction: column;
     z-index: 1;
     backdrop-filter: blur(3px);
@@ -90,9 +92,10 @@ body {
 }
 
 .charts-box {
-    height: 356px;
-    width: 760;
-    background-color: rgba(0, 183, 240, 0.3);
+    height: 600px;
+    width: 1500px;
+    transform: skewX(-0.245rad);
+    background-color: rgba(0, 77, 100, 0.555);
     border-left: 12px solid;
     border-color: rgb(0, 183, 240);
     margin-top: 20px;
@@ -103,9 +106,10 @@ body {
 }
 
 .charts-box p {
-    font-size: 19px;
+    font-size: 20px;
     z-index: 1;
     text-shadow: 0 0 2px black;
+    transform: skewX(0.245rad);
 }
 
 .charts-box .length {
@@ -184,7 +188,7 @@ body {
 }
 
 .rankbkg {
-    width: 100%;
+    width: 45%;
     position: absolute;
     z-index: 0;
 }
@@ -195,19 +199,43 @@ body {
 }
 
 .rank-EZ {
-    background-color: #92d05088;
+   background: linear-gradient(90deg,
+    #92d050 95px,
+    #00000000 95px,
+    #92d05088 105px,
+    #92d05088 50%,
+    #00000000 100%
+  );
 }
 
 .rank-HD {
-    background-color: #00b0f088;
+    background: linear-gradient(90deg,
+    #00b0f0 95px,
+    #00000000 95px,
+    #00b0f088 105px,
+    #00b0f088 50%,
+    #00000000 100%
+  );
 }
 
 .rank-IN {
-    background-color: #ff000088;
+    background: linear-gradient(90deg,
+    #ff0000 95px,
+    #00000000 95px,
+    #ff000088 105px,
+    #ff000088 50%,
+    #00000000 100%
+  );
 }
 
 .rank-AT {
-    background-color: #6e6e6e88;
+    background: linear-gradient(90deg,
+    #6e6e6e 95px,
+    #00000000 95px,
+    #6e6e6e88 105px,
+    #6e6e6e88 50%,
+    #00000000 100%
+  );
 }
 
 .rank {
@@ -215,57 +243,74 @@ body {
     flex-direction: column;
     align-items: center;
     margin-left: 5px;
-    max-width: 5%;
+    width: 85px;
 }
 
 .rank p {
-    font-size: 35px;
+    font-size: 30px;
     text-align: center;
+    height: calc(var(--rankHight)/2);
+    justify-content: center;
+    margin-top: -2px;
+    margin-bottom: 2px;
 }
 
 .rank .pBox {
     height: var(--rankHight);
     display: flex;
     align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .rank-box {
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 470px;
     margin-left: 5px;
+}
+
+.rank-box p {
+    font-weight: bold;
 }
 
 .charter {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 26px;
+    height: calc(var(--rankHight)/2);
     width: 100%;
+    justify-content: center;
 }
 
 .chart-info {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    height: 26px;
+    height: calc(var(--rankHight)/2);
     align-items: center;
 }
 
 .chart-info :nth-child(1) {
     color: var(--tap);
+    font-size: 25px;
 }
 
 .chart-info :nth-child(2) {
     color: var(--drag);
+    font-size: 25px;
 }
 
 .chart-info :nth-child(3) {
     color: var(--hold);
+    font-size: 25px;
 }
 
 .chart-info :nth-child(4) {
     color: var(--flick);
+    font-size: 25px;
 }
 
 .note-box {
@@ -276,7 +321,7 @@ body {
 }
 
 .note-box p {
-    font-size: 24px;
+    font-size: 30px;
     height: var(--rankHight);
     display: flex;
     justify-content: center;
@@ -284,8 +329,8 @@ body {
 
 .ill-box {
     display: flex;
-    width: 1063px;
-    height: 560px;
+    width: 1024px;
+    --height: 540px;
     filter: drop-shadow(0px 0px 30px #000);
     justify-content: center;
     align-items: center;
@@ -295,8 +340,8 @@ body {
 }
 .original-tag {
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: 290px;
+    right: 100px;
     width: 200px;
     height: 50px;
     background-color: white;
@@ -311,39 +356,51 @@ body {
     padding: 0 5px;
     box-sizing: border-box;
     /* 多边形裁剪：使左边线与曲绘左下角斜边平行 */
-    clip-path: polygon(0 50px, 187.2px 50px, 200px 0, 12.8px 0);
+    transform: skewX(-0.245rad);
+    filter: drop-shadow(2px 4px 5px #0000004f);
     z-index: 3;
+    
 }
+
+.original-tag p {
+    transform: skewX(0.245rad);
+}
+
 .ill-box img {
     width: 100%;
-    clip-path: polygon(
+    /*clip-path: polygon(
         139px 0px,
         1063px 0px,
         924px 560px,
         0px 560px,
         139px 0px
-    );
+    );*/
     z-index: 2;
 }
 
 .other-info {
     display: flex;
     position: absolute;
-    right: 1130px;
-    bottom: 0px;
+    left: 794px;
+    bottom: 100px;
     flex-direction: column;
+    z-index: 2;
+    transform: skewX(-0.245rad);
+}
+
+.other-box .title {
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 160px;
+    justify-content:center ;
+    display: flex;
 }
 
 .other-box .title p {
-    color: turquoise;
+    color: rgb(255, 255, 255);
 }
 
-.other-info :nth-child(2) {
-    margin-right: 20px;
-}
-
-.other-info :nth-child(3) {
-    margin-right: 40px;
+.other-box .dcr {
+    margin-left: 15px;
 }
 
 .other-info p {
@@ -352,18 +409,16 @@ body {
     margin: 0;
     text-shadow: 0 0 3px black;
     text-align: right;
+    transform: skewX(0.245rad);
 }
 
 .other-box {
     display: flex;
     position: relative;
-    flex-direction: column;
+    flex-direction: row;
     margin-left: 50px;
     align-items: flex-end;
-}
-
-.other-box :nth-child(2) {
-    margin-right: 10px;
+    margin: 10px 0px 10px 0px;
 }
 
 .leave {

@@ -289,7 +289,7 @@
             ></path>
             {{/if}}
             </svg>
-            <p>Avg: {{song.accAvg.toFixed(4)}}%</p>
+            <p>{{song.accAvg}}</p>
         </div>
         {{/if}}
         {{if song.cpToOld}}

@@ -431,6 +431,33 @@ export default class makeRequest {
     }
 
     /**
+     * 获取所有谱面平均ACC(B30版)
+     * @param {{songIds?: idString[], minRks?: number, maxRks?: number}} params id+.0
+     * @returns {Promise<Record<idString, Record<levelKind, {accAvg: number | null, count: number}>>>}
+     */
+    static async getAllSongAccAvgB30(params) {
+        return (await makeFetch(burl('/get/scoreList/allAccAvgB30'), params)).data
+    }
+
+    /**
+     * 获取所有谱面平均ACC(全部)
+     * @param {{songIds?: idString[], minRks?: number, maxRks?: number}} params id+.0
+     * @returns {Promise<Record<idString, Record<levelKind, {accAvg: number | null, count: number}>>>}
+     */
+    static async getAllSongAccAvgDual(params) {
+        return (await makeFetch(burl('/get/scoreList/allAccAvgDual'), params)).data
+    }
+
+    /**
+     * 获取所有谱面acc排行列表
+     * @param {{queries: {songId: idString, rank: levelKind, acc: number}[], dimension:("all" | "b30")[], minRks?: number, maxRks?: number}} params 
+     * @returns {Promise<Record<"all" | "b30", {songId: idString, rank: levelKind, acc: number, topPercent: number, betterCount: number, totalCount: number}[]>>}
+     */
+    static async getAllSongAccRank(params) {
+        return (await makeFetch(burl('/get/scoreList/allAccRank'), params)).data
+    }
+
+    /**
      * @overload
      * @param {baseAu} params 
      * @returns {Promise<saveHistoryObject>}
@@ -624,12 +651,13 @@ async function makeFetch(url, params, method = 'POST') {
     }
     let result
     try {
+        params = params || {}
         switch (method.toUpperCase()) {
             case 'GET':
-                result = await axios.get(url, { params: params });
+                result = await axios.get(url, { params: params, timeout: 10000 });
                 break;
             case 'POST':
-                result = await axios.post(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' } });
+                result = await axios.post(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' }, timeout: 10000 });
                 break;
             default:
                 throw new Error(`不支持的请求方法: ${method}`);

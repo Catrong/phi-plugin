@@ -1,0 +1,159 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/sign/sign.css" />
+{{/block}}
+
+{{block 'main'}}
+  <div class="backGlass clip-box"></div>
+  <div class="dashboard">
+    <div class="playerInfo leftAbsolute">
+      <div class="blackBlock clip-box"></div>
+      <div class="avatar clip-box">
+        <img src="{{_res_path}}html/avatar/{{avatar}}.png" alt="玩家头像" />
+      </div>
+      <div class="playerId">
+        <p>{{#PlayerId}}</p>
+      </div>
+      <div class="rks clip-box">
+        <p>{{Rks}}</p>
+      </div>
+      <div class="clgBox">
+        <div class="Challenge">
+          <img src="{{_res_path}}html/otherimg/{{ChallengeMode}}.png" alt="Challenge" />
+          <p>{{ChallengeModeRank}}</p>
+        </div>
+      </div>
+      <div class="date">
+        <p>{{Date}}</p>
+      </div>
+      <div class="dataBox clip-box">
+        <p>{{Notes}} Notes</p>
+      </div>
+      <div class="spInfo colorful-background clip-box">
+        <p>累计签到 {{signDays}} 天</p>
+      </div>
+    </div>
+
+    <div class="edgeProgress clip-box leftAbsolute">
+      <div class="edgeTrack clip-box edgeFill--EZ">
+        <div class="edgeFill edgeFill--unlock" style="--rate: {{edgeRate.EZ.unlock}}"></div>
+        <div class="edgeFill edgeFill--fc" style="--rate: {{edgeRate.EZ.fc}}"></div>
+        <div class="edgeFill edgeFill--phi" style="--rate: {{edgeRate.EZ.phi}}"></div>
+      </div>
+      <div class="edgeTrack clip-box edgeFill--HD">
+        <div class="edgeFill edgeFill--unlock" style="--rate: {{edgeRate.HD.unlock}}"></div>
+        <div class="edgeFill edgeFill--fc" style="--rate: {{edgeRate.HD.fc}}"></div>
+        <div class="edgeFill edgeFill--phi" style="--rate: {{edgeRate.HD.phi}}"></div>
+      </div>
+      <div class="edgeTrack clip-box edgeFill--IN">
+        <div class="edgeFill edgeFill--unlock" style="--rate: {{edgeRate.IN.unlock}}"></div>
+        <div class="edgeFill edgeFill--fc" style="--rate: {{edgeRate.IN.fc}}"></div>
+        <div class="edgeFill edgeFill--phi" style="--rate: {{edgeRate.IN.phi}}"></div>
+      </div>
+      <div class="edgeTrack clip-box edgeFill--AT">
+        <div class="edgeFill edgeFill--unlock" style="--rate: {{edgeRate.AT.unlock}}"></div>
+        <div class="edgeFill edgeFill--fc" style="--rate: {{edgeRate.AT.fc}}"></div>
+        <div class="edgeFill edgeFill--phi" style="--rate: {{edgeRate.AT.phi}}"></div>
+      </div>
+    </div>
+
+    <div class="leftRail leftAbsolute">
+      <div class="luckCard clip-box leftAbsolute">
+        <p class="cardTitle leftAbsolute">今日人品</p>
+        <p class="luckValue leftAbsolute">{{lucky}}</p>
+      </div>
+      <div class="keyWordsCard leftAbsolute">
+        <div class="wordsBox clip-box">
+          <p class="leftAbsolute">宜</p>
+          {{each good word}}
+          <p class="leftAbsolute">{{word}}</p>
+          {{/each}}
+        </div>
+        <div class="wordsBox clip-box">
+          <p class="leftAbsolute">忌</p>
+          {{each bad word}}
+          <p class="leftAbsolute">{{word}}</p>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="quoteCard clip-box leftAbsolute">
+        <p class="cardTitle leftAbsolute">每日一言</p>
+        <p class="quoteText leftAbsolute">{{quote}}</p>
+      </div>
+    </div>
+
+    <div class="dailySongsPanel clip-box leftAbsolute">
+      <div class="panelHeader clip-box leftAbsolute">
+        <p>DAILY TASK SONGS</p>
+      </div>
+      {{each dailyTasks t}}
+      <div class="songItem clip-box leftAbsolute {{t.finished ? 'songItem--finished' : ''}}">
+        {{if t.finished}}
+        <div class="taskStatus clip-box taskStatus--finished">已完成</div>
+        {{/if}}
+        <div class="songCover clip-box">
+          <img src="{{t.illustration}}" alt="{{t.song}}" />
+        </div>
+        <div class="songText">
+          <p class="songIndex">{{t.index}}</p>
+          <p class="songName">{{t.song}}</p>
+          <p class="songMeta">{{t.meta}}</p>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="noticePanel clip-box leftAbsolute">
+    {{if notice}}
+    <div class="panelHeader clip-box">
+        <p>Notice Board</p>
+    </div>
+    <div class="noticeBody noticeNotice">
+      <div class="noticeRow noticeTitleRow leftAbsolute">
+        <p class="noticeTitle">{{notice.title}}</p>
+      </div>
+      {{each notice.content d i}}
+      <div class="noticeRow clip-box leftAbsolute">
+        <p><span style="color: skyblue;">{{i + 1}}.</span>{{d}}</p>
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+      <div class="panelHeader clip-box">
+        <p>SIGN-IN CALENDAR</p>
+      </div>
+      <div class="noticeBody noticeCalendar">
+        <div class="calendarTitle leftAbsolute">
+          <p>{{calendar.title}}</p>
+        </div>
+
+        <div class="calendarWeekHeader clip-box leftAbsolute">
+          {{each calendar.weekdays d}}<span>{{d}}</span>{{/each}}
+        </div>
+
+        {{each calendar.weeks week}}
+        <div class="calendarWeek clip-box leftAbsolute">
+          {{each week cell}}
+            {{if cell.empty}}
+              <div class="calendarCell empty"></div>
+            {{else}}
+              <div class="calendarCell {{cell.signed ? 'signed' : ''}} {{cell.today ? 'today' : ''}}"><span>{{cell.day}}</span></div>
+            {{/if}}
+          {{/each}}
+        </div>
+        {{/each}}
+      </div>
+    {{/if}}
+    </div>
+
+    <div class="createdbox leftAbsolute">
+      <div class="phi-plugin">
+        <p>{{_plugin}}</p>
+      </div>
+      <div class="ver">
+        <p>{{Version.ver}}</p>
+      </div>
+    </div>
+  </div>
+{{/block}}

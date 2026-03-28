@@ -13,7 +13,7 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/插件版本-1.0.0-9cf?style=flat-square)
+![version](https://img.shields.io/badge/插件版本-1.0.1-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/Phigros-3.18.4-9cf?style=flat-square)
 ![version](https://img.shields.io/badge/PhigrosVer-142-9cf?style=flat-square)
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](../../yoimiya-kokomi/Yunzai-Bot)
@@ -160,6 +160,7 @@ pnpm install -P
 | `#phi (曲绘\|ill\|Ill) xxx` | 查询phigros中某一曲目的曲绘
 | `#phi (search\|查询\|检索) <条件 值>` | 检索曲库中的曲目，支持BPM 定数 物量，条件 bpm dif cmb，值可以为区间，以 - 间隔
 | `#phi (theme\|主题) [0-2]` | 切换绘图主题，仅对 b30, update, randclg, sign, task 生效
+| `#phi (myset\|个人设置)` | 查看和修改用户设置，参数为设置项名称，值支持使用序号选择，建议先查看设置项列表
 | `sign/签到` | 签到获取Notes
 | `task/我的任务` | 查看自己的任务
 | `retask/刷新任务` | 刷新任务，需要花费20Notes
@@ -190,7 +191,7 @@ pnpm install -P
 | 参数 | 功能 | 影响指令
 | :- | :- | :-
 | 全部 | 全部功能 | 所有
-| help | 帮助功能 | /help /tkhelp
+| help | 帮助功能 | /help /tkhelp /myset
 | bind | 绑定功能 | /bind /unbind
 | b19 | 图片查分功能 | /pgr /update /info /list /pb30 /p30 /lmtacc /score /lvsco /chap /suggest
 | wb19 | 文字查分功能 | /data /best
@@ -248,6 +249,7 @@ pnpm install -P
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/fbcb2b98204611eea8f152540025c377/avatar/d4e7f58683064153bfbedb99ad95c6d8_w855_h875_s117.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="..."/><br /><sub><b>...</b></sub><br/>🌸 50 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/4041ac584eb111f0b57952540025c377/avatar/04de899ed964c6cfe315d27ea56a1fea_w1080_h1080_s69.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="夏夏肃炎"/><br /><sub><b>夏夏肃炎</b></sub><br/>🌸 5 🌸</td>
         <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/7737c9cca1f211ed896a5254001e7c00/avatar/7a320f384ead8f4fca4630efa31c0c3b_w705_h705_s346.jpeg?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="Bluerosion"/><br /><sub><b>Bluerosion</b></sub><br/>🌸 52.0 🌸</td>
+        <td align="center" valign="top" width="35%" nowrap="nowrap"><img src="https://pic1.afdiancdn.com/user/00794630e24f11ebac7252540025c377/avatar/f67fff0ab78bcf86d81a7b12a55ba3ca_w374_h354_s148.png?imageView2/1/w/240/h/240" style="border-radius: 50%" width="50px;" alt="Bluerosion"/><br /><sub><b>铃</b></sub><br/>🌸 5 🌸</td>
     </tr>
 </table>
 
