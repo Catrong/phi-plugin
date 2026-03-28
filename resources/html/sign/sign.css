@@ -12,6 +12,13 @@ body {
   --blurM: blur(30px);
 }
 
+.clip-box {
+  transform: skewX(-0.000rad);
+  height: var(--height);
+  clip-path: none;
+  overflow: hidden;
+} 
+
 .background img {
   filter: none;
 }
@@ -31,7 +38,8 @@ body {
 .leftAbsolute {
   position: absolute;
   top: var(--top);
-  left: calc(var(--top) * var(--clipSlope) * -1 + var(--left-margin, 0px));
+  left: calc(var(--left-margin, 0px));
+  filter: drop-shadow(4px 5px 0px #50505030)
 }
 
 /* dashboard：模仿 leftRail 的定位方式（面板本体使用 leftAbsolute 定位） */
