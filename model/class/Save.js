@@ -337,10 +337,10 @@ export default class Save {
      * @param {object} option
      * @param {"all" | "b30" | "top" | "none"} [option.avgType]
      * @param {"red" | "gold" | "blue" | "green"} [option.color]
-     * @param {boolean} [option.avgText] 平均值文本是否使用 "Avg: " 前缀
+     * @param {boolean} [option.avgValue] 平均值是否直接返回
      * @returns phi, b19_list
      */
-    async getB19(num, option = { avgType: "all", color: "blue", avgText: true }) {
+    async getB19(num, option = { avgType: "all", color: "blue", avgValue: false }) {
 
         /**计算得到的rks，仅作为测试使用 */
         let sum_rks = 0
@@ -462,7 +462,7 @@ export default class Save {
                     if (x.rank == 'LEGACY') continue;
                     const accAvg = res[x.id][x.rank]?.accAvg
                     if (accAvg != null && !isNaN(accAvg)) {
-                        b19_list[i].accAvg = option.avgText ? `Avg: ${accAvg.toFixed(4)}%` : accAvg
+                        b19_list[i].accAvg = option.avgValue ? accAvg : `Avg: ${accAvg.toFixed(4)}%`
                         if (x.acc < accAvg) {
                             allhiger = false
                             b19_list[i].accKind = 'Lower'
@@ -478,7 +478,7 @@ export default class Save {
                         if (x.rank == 'LEGACY') continue;
                         const accAvg = res[x.id][x.rank]?.accAvg
                         if (accAvg != null && !isNaN(accAvg)) {
-                            b19_list[i].accAvg = option.avgText ? `Avg: ${accAvg.toFixed(4)}%` : accAvg
+                            b19_list[i].accAvg = option.avgValue ? accAvg : `Avg: ${accAvg.toFixed(4)}%`
                             if (x.acc < accAvg) {
                                 allhiger = false
                                 b19_list[i].accKind = 'Hyper'
@@ -502,7 +502,7 @@ export default class Save {
                     if (x.rank == 'LEGACY') continue;
                     const accAvg = res[x.id][x.rank]?.accAvg
                     if (accAvg != null && !isNaN(accAvg)) {
-                        b19_list[i].accAvg = option.avgText ? `BAvg: ${accAvg.toFixed(4)}%` : accAvg
+                        b19_list[i].accAvg = option.avgValue ? accAvg : `BAvg: ${accAvg.toFixed(4)}%`;
                         if (x.acc < accAvg) {
                             b19_list[i].accKind = low
                         } else {
