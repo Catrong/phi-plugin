@@ -79,7 +79,7 @@
 
       <div class="quoteCard clip-box leftAbsolute">
         <p class="cardTitle leftAbsolute">每日一言</p>
-        <p class="quoteText leftAbsolute">{{quote}}</p>
+        <div class="quoteText leftAbsolute"><p name="pvis">{{quote}}</p></div>
       </div>
     </div>
 
@@ -115,7 +115,7 @@
       </div>
       {{each notice.content d i}}
       <div class="noticeRow clip-box leftAbsolute">
-        <p><span style="color: skyblue;">{{i + 1}}.</span>{{d}}</p>
+        <div class="noticeRowIndex"><p><span style="color: skyblue;">{{i + 1}}.</span>{{d}}</p></div>
       </div>
       {{/each}}
     </div>

@@ -647,52 +647,52 @@ export class phib19 extends phiPluginBase {
             gameRecord[id] = gameRecord[id]
         }
 
-        let info = getInfo.ori_info
+        // let info = getInfo.ori_info
 
-        const { com_rks } = await save.getB19(1000, { avgType: "none" });
+        // const { com_rks } = await save.getB19(1000, { avgType: "none" });
 
         /**  
          * @typedef {{ id: idString; level: allLevelKind; type: string; value: number; diff: number; oldAcc: number; }} taskObj
          * @type {taskObj[]}
          */
-        let allTaskList = [];
-        let phiTaskList = [];
-        let cmdTaskList = [];
+        // let allTaskList = [];
+        // let phiTaskList = [];
+        // let cmdTaskList = [];
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        // if (Config.getUserCfg('config', 'openPhiPluginApi')) {
 
-            try {
-                const res = await makeRequest.getAllSongAccAvgB30({
-                    songIds: getInfo.idList,
-                    minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                    maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                })
-                const ids = fCompute.objectKeys(res)
-                ids.forEach(id => {
-                    if (!getInfo.ori_info[id]) {
-                        return;
-                    }
-                    Level.forEach(lv => {
-                        if (!getInfo.ori_info[id]?.chart?.[lv]) {
-                            return;
-                        }
-                        const avg = res[id][lv].accAvg || 0;
-                        if (avg > (save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0)) {
-                            allTaskList.push({
-                                id,
-                                level: lv,
-                                type: 'acc',
-                                value: avg,
-                                diff: getInfo.ori_info[id].chart[lv].difficulty,
-                                oldAcc: save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0
-                            });
-                        }
-                    })
-                })
-            } catch (err) {
-                logger.error(`[phi-plugin][api-getAllSongAccAvgB30]`, err);
-            }
-        }
+        //     try {
+        //         const res = await makeRequest.getAllSongAccAvgB30({
+        //             songIds: getInfo.idList,
+        //             minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+        //             maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+        //         })
+        //         const ids = fCompute.objectKeys(res)
+        //         ids.forEach(id => {
+        //             if (!getInfo.ori_info[id]) {
+        //                 return;
+        //             }
+        //             Level.forEach(lv => {
+        //                 if (!getInfo.ori_info[id]?.chart?.[lv]) {
+        //                     return;
+        //                 }
+        //                 const avg = res[id][lv].accAvg || 0;
+        //                 if (avg > (save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0)) {
+        //                     allTaskList.push({
+        //                         id,
+        //                         level: lv,
+        //                         type: 'acc',
+        //                         value: avg,
+        //                         diff: getInfo.ori_info[id].chart[lv].difficulty,
+        //                         oldAcc: save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0
+        //                     });
+        //                 }
+        //             })
+        //         })
+        //     } catch (err) {
+        //         logger.error(`[phi-plugin][api-getAllSongAccAvgB30]`, err);
+        //     }
+        // }
 
         
 
