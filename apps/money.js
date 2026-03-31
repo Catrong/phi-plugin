@@ -28,7 +28,7 @@ const theme = themeList
 
 const spData = [{
     sp_month: '04',
-    sp_date: '04',
+    sp_date: '01',
     sp_date_num: [41],
     sp_date_tips: ["签到成功！恭喜您差一点就与失去获得-2147483648个Note的机会失之交臂！"]
 }]
