@@ -212,8 +212,9 @@ export class phib19 extends phiPluginBase {
             stats,
             spInfo
         }
-
-        res.unshift(await picmodle.b19(e, data))
+        const isAp1st = Date.now() > 1774972800000 && Date.now() < 1775059200000
+        const img = (isAp1st && nnum == 33 && save_b19.b19_list.length == 33) ? (await picmodle.common(e, 'b19', data, 'b19666')) : await picmodle.common(e, 'b19', data)
+        res.unshift(img);
         send.send_with_At(e, res)
     }
 
@@ -694,7 +695,7 @@ export class phib19 extends phiPluginBase {
         //     }
         // }
 
-        
+
 
         /**
          * @type {({ suggest: string } & { illustration: string, difficulty: number, rank: levelKind } & SongsInfo)[]}

@@ -1,0 +1,350 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/b19/b19666.css">
+{{/block}}
+
+{{block 'main'}}
+
+<div class="background">
+<img src="{{_res_path}}html/b19/res/666.jpeg" alt="曲绘-模糊" id="bkg" />
+</div>
+<div class="title">
+    <div class="playerInfo">
+        <div class="blackBlock clip-box"></div>
+        <div class="avatar clip-box">
+            <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
+        </div>
+        <div class="playerId">
+            <p name="pvis">{{#gameuser.PlayerId}}</p>
+        </div>
+        <div class="rks clip-box">
+            <p>{{gameuser.rks.toFixed(4)}}</p>
+        </div>
+        <div class="clgBox">
+            <div class="Challenge">
+            <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="Challenge">
+            <p>{{gameuser.ChallengeModeRank}}</p>
+            </div>
+        </div>
+        <div class="date">
+            <p>{{Date}}</p>
+        </div>
+        <div class="dataBox clip-box">
+            <img src="{{_res_path}}html/otherimg/data.png" alt="data">
+            <p>{{gameuser.data}}</p>
+        </div>
+        {{if spInfo}}
+        <div class="spInfoBox">
+            {{each spInfo v}}
+            <div class="spInfo colorful-background clip-box">
+                <p>{{v}}</p>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+    <div class="recordInfo clip-box">
+        <div class="whiteLine clip-box"></div>
+        <div class="sheet">
+            <div class="row">
+                <div class="poz">
+                    <p>\</p>
+                </div>
+                {{each stats v i}}
+                <div class="poz">
+                    <p>{{v.title}}</p>
+                </div>
+                {{/each}}
+            </div>
+            <div class="row">
+                <div class="poz">
+                    <p>C</p>
+                </div>
+                {{each stats v i}}
+                <div class="poz">
+                    <p>{{v.cleared}}</p>
+                </div>
+                {{/each}}
+            </div>
+            <div class="row">
+                <div class="poz">
+                    <p>FC</p>
+                </div>
+                {{each stats v i}}
+                <div class="poz">
+                    <p>{{v.fc}}</p>
+                </div>
+                {{/each}}
+            </div>
+            <div class="row">
+                <div class="poz">
+                    <p>Phi</p>
+                </div>
+                {{each stats v i}}
+                <div class="poz">
+                    <p>{{v.phi}}</p>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="b19">
+    {{if phi}}
+
+    {{each phi song}}
+
+    {{if song}}
+
+
+    <div class="song phi_song">
+        <div class="ill-box">
+            <div class="num clip-box">
+                <p name="pvis">P{{$index+1}}</p>
+            </div>
+            <div class="ill clip-box">
+                <img src="{{song.illustration}}" alt="ill">
+            </div>
+            <div class="rank-{{song.rank}} clip-box">
+                <div class="org">
+                    <p>{{song.rank}}&ensp;{{song.difficulty.toFixed(1)}}</p>
+                </div>
+                <div class="rel">
+                    <p>{{song.rks.toFixed(2)}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="info-{{song.rank}}">
+            <div class="songname">
+                <p name="pvis">{{song.song}}</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                </div>
+                <div class="chengji">
+                    <div class="score">
+                        <p>{{song.score}}</p>
+                    </div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc">
+                            <p>{{song.acc.toFixed(2)}}%</p>
+                        </div>
+                        <div class="suggest suggest-kind-{{song.suggestType}}">
+                            <div class="suggest-tip"></div>
+                            <p>{{song.suggest}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{if song.accAvg}}
+        <div class="accAvg acc{{song.accKind}} clip-box">
+            <div class="accAvgLine clip-box"></div>
+            <svg viewBox="0 0 1024 1024">
+            {{if song.accKind == 'Finished'}}
+            <path
+            d="M892.064 261.888a31.936 31.936 0 0 0-45.216 1.472L421.664 717.248l-220.448-185.216a32 32 0 1 0-41.152 48.992l243.648 204.704a31.872 31.872 0 0 0 20.576 7.488 31.808 31.808 0 0 0 23.36-10.112L893.536 307.136a32 32 0 0 0-1.472-45.248z"
+            p-id="5526"
+            ></path>
+            {{else}}
+            <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+            ></path>
+            {{/if}}
+            </svg>
+            <p>Avg: {{song.accAvg.toFixed(4)}}%</p>
+        </div>
+        {{/if}}
+        {{if song.cpToOld}}
+        <div class="cpToOld acc{{song.cpToOld.type}} clip-box-left">
+            <p>Dif</p>
+            <svg viewBox="0 0 1024 1024">
+            <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+            ></path>
+            </svg>
+            <p>{{song.cpToOld.dif}}&ensp;&ensp;&ensp;RKS</p>
+            <svg viewBox="0 0 1024 1024">
+            <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+            ></path>
+            </svg>
+            <p>{{song.cpToOld.rks}}</p>
+        </div>
+        {{/if}}
+    </div>
+
+    {{else}}
+
+    <div class="Nosignal">
+        <div class="border_corner border_corner_left_top"></div>
+        <div class="border_corner border_corner_right_top"></div>
+        <div class="border_corner border_corner_left_bottom"></div>
+        <div class="border_corner border_corner_right_bottom"></div>
+        <div class="line"></div>
+        <div class="timeout">
+            <p>TIME_OUT</p>
+        </div>
+        <div class="client">
+            <p>>>> PhigrOS Client Finding Phi.score</p>
+        </div>
+        <div class="sqrt"></div>
+    </div>
+
+    {{/if}}
+
+    {{/each}}
+
+    {{/if}}
+
+
+    {{each b19_list song}}
+    
+    {{if $index == (phi ? 27 : 30)}}
+    <div class="over_flow">
+        <div class="flow_line_box_l">
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+        </div>
+        <p><i>OVER FLOW</i></p>
+        <div class="flow_line_box_r">
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+            <div class="flow_line"></div>
+        </div>
+    </div>
+    {{/if}}
+
+
+    <div class="song {{$index < (phi ? 27 : 30) ? 'b_song':''}}">
+        <div class="ill-box">
+            <div class="num clip-box">
+                <p name="pvis">#{{song.num}}</p>
+            </div>
+            <div class="ill clip-box">
+                <img src="{{song.illustration}}" alt="ill">
+            </div>
+            <div class="rank-{{song.rank}} clip-box">
+                <div class="org">
+                    <p>{{song.rank}}&ensp;{{song.difficulty.toFixed(1)}}</p>
+                </div>
+                <div class="rel">
+                    <p>{{song.rks.toFixed(2)}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="info-{{song.rank}}">
+            <div class="songname">
+                <p name="pvis">{{song.song}}</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                </div>
+                <div class="chengji">
+                    <div class="score">
+                        <p>{{song.score}}</p>
+                    </div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc">
+                            <p>{{song.acc.toFixed(2)}}%</p>
+                        </div>
+                        <div class="suggest suggest-kind-{{song.suggestType}}">
+                            <div class="suggest-tip"></div>
+                            <p>{{song.suggest}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        {{if song.accAvg}}
+        <div class="accAvg acc{{song.accKind}} clip-box">
+            <div class="accAvgLine clip-box"></div>
+            <svg viewBox="0 0 1024 1024">
+            {{if song.accKind == 'Finished'}}
+            <path
+            d="M892.064 261.888a31.936 31.936 0 0 0-45.216 1.472L421.664 717.248l-220.448-185.216a32 32 0 1 0-41.152 48.992l243.648 204.704a31.872 31.872 0 0 0 20.576 7.488 31.808 31.808 0 0 0 23.36-10.112L893.536 307.136a32 32 0 0 0-1.472-45.248z"
+            p-id="5526"
+            ></path>
+            {{else}}
+            <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+            ></path>
+            {{/if}}
+            </svg>
+            <p>{{song.accAvg}}</p>
+        </div>
+        {{/if}}
+        {{if song.cpToOld}}
+        <div class="cpToOld acc{{song.cpToOld.type}} clip-box-left">
+            <p>Dif</p>
+            <svg viewBox="0 0 1024 1024">
+            <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+            ></path>
+            </svg>
+            <p>{{song.cpToOld.dif}}&ensp;&ensp;&ensp;RKS</p>
+            <svg viewBox="0 0 1024 1024">
+            <path
+                d="M564.8 465.184l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z m0-256l4.192 3.904 274.72 274.752a32 32 0 0 1 0 45.248l-22.624 22.624a32 32 0 0 1-45.248 0l-263.456-263.392-263.424 263.392a32 32 0 0 1-42.24 2.656l-3.008-2.656-22.624-22.624a32 32 0 0 1 0-45.248l274.784-274.752a80 80 0 0 1 108.96-3.904z"
+                fill="#333333"
+                p-id="1589"
+            ></path>
+            </svg>
+            <p>{{song.cpToOld.rks}}</p>
+        </div>
+        {{/if}}
+    </div>
+
+    {{/each}}
+
+</div>
+<div class="createdbox">
+    <div class="phi-plugin">
+        <p>{{_plugin}}</p>
+    </div>
+    <div class="ver">
+        <p>{{Version.ver}}</p>
+    </div>
+</div>
+
+{{if theme == "snow"}}
+<div class="snow-box"> </div>
+<script>
+    themeSnow();
+</script>
+{{else if theme == "topText" || theme == "foolsDay"}}
+<div class="topTextBox" id="topTextBox"></div>
+<script>
+    themeTopText();
+</script>
+{{else if theme == "star"}}
+<canvas id="stars"></canvas>
+<script>
+    themeStar();
+</script>
+{{/if}}
+
+{{/block}}
