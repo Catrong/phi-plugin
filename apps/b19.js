@@ -711,6 +711,9 @@ export class phib19 extends phiPluginBase {
                         if (!(phi.length < 3 || diff > (phi[2]?.difficulty || 0))) {
                             return;
                         }
+                        if ((save.gameRecord?.[id]?.[LevelNum[lv]]?.score || 0) >= 1e6) {
+                            return;
+                        }
                         if (res[id][lv].apCount > 0) {
                             phiTaskList.push({
                                 id,
