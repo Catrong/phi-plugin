@@ -213,7 +213,7 @@ export class phib19 extends phiPluginBase {
             spInfo
         }
         const isAp1st = Date.now() > 1774972800000 && Date.now() < 1775059200000
-        const img = (isAp1st && nnum == 33 && save_b19.b19_list.length == 33) ? (await picmodle.common(e, 'b19', data, 'b19666')) : await picmodle.common(e, 'b19', data)
+        const img = (isAp1st && nnum == 33 && save_b19.b19_list.length == 33) ? (await picmodle.common(e, 'b19', { ...data, theme: 'default' }, 'b19666')) : await picmodle.common(e, 'b19', data)
         res.unshift(img);
         send.send_with_At(e, res)
     }
@@ -648,95 +648,130 @@ export class phib19 extends phiPluginBase {
             gameRecord[id] = gameRecord[id]
         }
 
-        // let info = getInfo.ori_info
+        let info = getInfo.ori_info
 
-        // const { com_rks } = await save.getB19(1000, { avgType: "none" });
+        const { com_rks, phi } = await save.getB19(1000, { avgType: "none" });
 
-        /**  
-         * @typedef {{ id: idString; level: allLevelKind; type: string; value: number; diff: number; oldAcc: number; }} taskObj
-         * @type {taskObj[]}
+        /**@type {Record<idString, Record<levelKind, number>>} */
+        const allTaskList = {};
+        /**
+         * @type {{ id: idString; level: levelKind; apCount: number; total: number; illustration: string }[]}
          */
-        // let allTaskList = [];
-        // let phiTaskList = [];
-        // let cmdTaskList = [];
+        const phiTaskList = [];
 
-        // if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
 
-        //     try {
-        //         const res = await makeRequest.getAllSongAccAvgB30({
-        //             songIds: getInfo.idList,
-        //             minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-        //             maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-        //         })
-        //         const ids = fCompute.objectKeys(res)
-        //         ids.forEach(id => {
-        //             if (!getInfo.ori_info[id]) {
-        //                 return;
-        //             }
-        //             Level.forEach(lv => {
-        //                 if (!getInfo.ori_info[id]?.chart?.[lv]) {
-        //                     return;
-        //                 }
-        //                 const avg = res[id][lv].accAvg || 0;
-        //                 if (avg > (save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0)) {
-        //                     allTaskList.push({
-        //                         id,
-        //                         level: lv,
-        //                         type: 'acc',
-        //                         value: avg,
-        //                         diff: getInfo.ori_info[id].chart[lv].difficulty,
-        //                         oldAcc: save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0
-        //                     });
-        //                 }
-        //             })
-        //         })
-        //     } catch (err) {
-        //         logger.error(`[phi-plugin][api-getAllSongAccAvgB30]`, err);
-        //     }
-        // }
+            try {
+                const res = await makeRequest.getAllSongAccAvgB30({
+                    songIds: getInfo.idList,
+                    minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                    maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                })
+                const ids = fCompute.objectKeys(res)
+                ids.forEach(id => {
+                    if (!info[id]) {
+                        return;
+                    }
+                    if (!allTaskList[id]) {
+                        allTaskList[id] = /** @type {Record<levelKind, number>} */ ({});
+                    }
+                    Level.forEach(lv => {
+                        if (!info[id]?.chart?.[lv]) {
+                            return;
+                        }
+                        const avg = res[id][lv].accAvg || 0;
+                        if (avg > (save.gameRecord?.[id]?.[LevelNum[lv]]?.acc || 0)) {
+                            allTaskList[id][lv] = avg;
+                        }
+                    })
+                })
+            } catch (err) {
+                logger.error(`[phi-plugin][api-getAllSongAccAvgB30]`, err);
+            }
+            try {
+                const res = await makeRequest.getSongsApFcCount({
+                    songId: getInfo.idList || [],
+                    rank: Level,
+                    rksRange: {
+                        min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                        max: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                    }
+                })
+                const ids = fCompute.objectKeys(res);
+                ids.forEach(id => {
+                    if (!info[id]) {
+                        return;
+                    }
+                    Level.forEach(lv => {
+                        if (!info[id]?.chart?.[lv]) {
+                            return;
+                        }
+                        const songInfo = info[id];
+                        const diff = info[id].chart[lv].difficulty;
+                        if (!(phi.length < 3 || diff > (phi[2]?.difficulty || 0))) {
+                            return;
+                        }
+                        if (res[id][lv].apCount > 0) {
+                            phiTaskList.push({
+                                id,
+                                level: lv,
+                                total: res[id][lv].total || 0,
+                                // diff: diff,
+                                apCount: res[id][lv].apCount || 0,
+                                ...songInfo,
+                                illustration: getInfo.getill(id, 'low') ?? '',
+                            });
+                        }
+                    })
+                })
+            } catch (err) {
+                logger.error(`[phi-plugin][api-getSongsApFcCount]`, err);
+            }
+        }
 
 
 
         /**
-         * @type {({ suggest: string } & { illustration: string, difficulty: number, rank: levelKind } & SongsInfo)[]}
+         * @type {({ suggest: number, avg: number } & { illustration: string, difficulty: number, rank: levelKind } & SongsInfo)[][]}
          */
-        let data = []
+        let data = [[], [], [], [], [], []]
 
 
 
         for (const id of fCompute.objectKeys(Record)) {
-            const info = getInfo.info(id)
-            if (!info) {
+            const songInfo = getInfo.info(id);
+            if (!songInfo) {
                 logger.warn('[phi-plugin]', id, '曲目无信息')
                 continue
             }
             /**
-             * @type {(((LevelRecordInfo | {}) & { suggest?: string }) | null)[]}
+             * @type {(((LevelRecordInfo | {}) & { suggest?: number }) | null)[]}
              */
             let record = Record[id]
             for (let lv of [0, 1, 2, 3]) {
-                if (!info.chart[Level[lv]]) continue
-                let difficulty = info.chart[Level[lv]]?.difficulty
+                if (!songInfo.chart[Level[lv]]) continue
+                let difficulty = songInfo.chart[Level[lv]]?.difficulty
                 if (!difficulty) continue
                 if (range[0] <= difficulty && difficulty <= range[1] && isask[lv]) {
                     if ((!record[lv] && !scoreAsk.NEW)) continue
                     if (!record[lv]) {
-                        record[lv] = { suggest: '' };
+                        record[lv] = { suggest: -1 };
                     } else {
                         if ('id' in record[lv] && !scoreAsk[record[lv].Rating == 'phi' ? 'PHI' : record[lv].Rating]) continue
                     }
                     const x = record[lv]
-                    x.suggest = save.getSuggest(id, lv, 4, difficulty) || ''
-                    if (!x.suggest || x.suggest.includes('无')) {
+                    x.suggest = save.getSuggest(id, lv, undefined, difficulty)
+                    if (x.suggest == -1) {
                         continue
                     }
-                    data.push({
-                        ...info,
+                    data[suggestType(x.suggest)].push({
+                        ...songInfo,
                         difficulty: difficulty,
                         ...x,
                         rank: Level[lv],
                         illustration: getInfo.getill(id, 'low') ?? '',
-                        suggest: x.suggest
+                        suggest: x.suggest,
+                        avg: allTaskList[id]?.[Level[lv]] || 0,
                     })
                 }
             }
@@ -748,13 +783,20 @@ export class phib19 extends phiPluginBase {
 
         data.splice(Config.getUserCfg('config', 'listScoreMaxNum'))
 
-        data = data.sort(cmpsugg())
+        for (let i = 0; i < data.length; ++i) {
+            data[i] = data[i].sort(cmpsugg()).slice(0, 3);
+        }
+
+        const phidata = phiTaskList.sort((a, b) => {
+            return b.apCount - a.apCount
+        }).slice(0, 3);
 
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
-        send.send_with_At(e, await picmodle.list(e, {
+        send.send_with_At(e, await picmodle.common(e, 'suggest', {
             head_title: "推分建议",
             song: data,
+            phisong: phidata,
             background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
             theme: plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
@@ -1204,23 +1246,46 @@ async function getScore(songId, e, args = {}) {
 
 function cmpsugg() {
     /** 
-     * @param {object & {suggest: string, difficulty: number}} a 
-     * @param {object & {suggest: string, difficulty: number}} b 
+     * @param {object & {suggest: number, difficulty: number, avg: number}} a 
+     * @param {object & {suggest: number, difficulty: number, avg: number}} b 
      * @returns 
      */
     const tem = (a, b) => {
         /**
          * @param {number} difficulty 
          * @param {number} suggest 
+         * @param {number} avg
          * @returns 
          */
-        function com(difficulty, suggest) {
-            return difficulty + Math.min(suggest - 98, 1) * Math.min(suggest - 98, 1) * difficulty * 0.089
+        function com(difficulty, suggest, avg) {
+            return difficulty * 100 * (suggest - avg);
         }
-        let s_a = Number(a.suggest.replace("%", ''))
-        let s_b = Number(b.suggest.replace("%", ''))
-        return com(a.difficulty, s_a) - com(b.difficulty, s_b)
+        let s_a = a.suggest
+        let s_b = b.suggest
+        return com(a.difficulty, s_a, a.avg) - com(b.difficulty, s_b, b.avg)
         // return (Number(a.suggest.replace("%", '')) - a.rks) - (Number(b.suggest.replace("%", '')) - b.rks)
     }
     return tem
+}
+
+/**
+ * 
+ * @param {number} suggest 
+ * @returns 
+ */
+function suggestType(suggest) {
+
+    if (suggest < 98.5) {
+        return 0;
+    } else if (suggest < 99) {
+        return 1;
+    } else if (suggest < 99.5) {
+        return 2;
+    } else if (suggest < 99.7) {
+        return 3;
+    } else if (suggest < 99.85) {
+        return 4;
+    } else {
+        return 5;
+    }
 }

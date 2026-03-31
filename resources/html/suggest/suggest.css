@@ -1,0 +1,300 @@
+@import "../common/common.css";
+
+body {
+  flex-direction: column;
+  display: flex;
+  width: 1200px;
+  height: fit-content;
+  font-family: 'PHI', 'HIMALAYA', '吞弥恰俊';
+  align-items: center;
+  color: white;
+  margin: 0;
+  position: relative;
+  padding-bottom: 80px;
+}
+
+body p {
+  color: white;
+  margin: 0;
+}
+
+.background img {
+  height: 100%;
+  min-width: 100%;
+}
+
+.head_title {
+  display: flex;
+  width: 94%;
+  margin: 20px;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.head_title p {
+  font-size: 50px;
+  text-shadow: 0 0 20px rgb(0 186 255);
+  font-family: 'Aldrich', 'PHI';
+  color: white;
+}
+
+.group_list {
+  /* width: 96%; */
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 1;
+  margin-bottom: 30px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group_title {
+  height: 30px;
+  width: 220px;
+  background: #0000008a;
+  border-left: 4px solid #ffffffaa;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+}
+
+.group_title p {
+  font-size: 20px;
+  font-family: 'Aldrich', 'PHI';
+}
+
+.row_box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.line {
+  flex: 0 0 320px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 320px;
+  height: 82px;
+  background-color: #00151d54;
+  backdrop-filter: blur(10px);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.song_name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 20px;
+  color: white;
+  font-size: 10px;
+  white-space: nowrap;
+  position: absolute;
+  z-index: 1;
+}
+
+.num,
+.song,
+.dif {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+}
+
+.num {
+  text-align: center;
+  width: 12%;
+  background-color: #4a7aa1cc;
+}
+
+.song {
+  width: 72%;
+  background-color: #00000088;
+}
+
+.dif {
+  width: 16%;
+}
+
+.AT {
+  background: #9c9c9c88;
+}
+
+.IN {
+  background: #ff616188;
+}
+
+.HD {
+  background: #009dff88;
+}
+
+.EZ {
+  background: #7ae07a88;
+}
+
+.ill_box {
+  height: 100%;
+  width: 49%;
+}
+
+.ill_box img {
+  height: 100%;
+  min-width: 100%;
+}
+
+.info_box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 51%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+}
+
+.down {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 75%;
+  width: 97%;
+}
+
+.acc {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 42%;
+  position: relative;
+  background: #87ceeb69;
+  overflow: hidden;
+  border-radius: 2px;
+  font-size: 10px;
+  box-sizing: border-box;
+}
+
+.box-content {
+  width: 50%;
+  text-align: center;
+}
+
+.suggest {
+  width: 50%;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  --bkg-color: rgba(0, 0, 0, 0.5);
+  background: var(--bkg-color);
+  border-radius: 20px;
+  padding: 2px 0;
+}
+
+.suggest-kind-0 {
+  --bkg-color: hsla(0, 80%, 60%, 0.675);
+}
+
+.suggest-kind-1 {
+  --bkg-color: hsla(34, 80%, 60%, 0.675);
+}
+
+.suggest-kind-2 {
+  --bkg-color: hsla(136, 80%, 60%, 0.675);
+}
+
+.suggest-kind-3 {
+  --bkg-color: hsla(183, 80%, 60%, 0.675);
+}
+
+.suggest-kind-4 {
+  --bkg-color: hsla(276, 80%, 60%, 0.675);
+}
+
+.suggest-kind-5 {
+  --bkg-color: hsla(276, 80%, 60%, 0.675);
+}
+
+.score_rating {
+  display: flex;
+  height: 42%;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+}
+
+.score {
+  width: 70%;
+  border-radius: 2px;
+  height: 100%;
+  font-size: 14px;
+  display: flex;
+  background: #87ceeb69;
+  align-items: center;
+  justify-content: center;
+}
+
+.rating {
+  display: flex;
+  height: 100%;
+  width: 30%;
+  justify-content: center;
+}
+
+.rating img {
+  height: 100%;
+}
+
+.createdbox {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  writing-mode: horizontal-tb;
+  justify-content: center;
+}
+
+.createdbox p {
+  color: white;
+  font-size: 70px;
+  font-family: 'Aldrich', 'PHI';
+}
+
+.phi-plugin {
+  display: flex;
+  z-index: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.ver {
+  display: flex;
+  z-index: 1;
+}
+
+.phi-plugin p {
+  font-size: 30px;
+  text-shadow: 0 0 20px rgb(0 186 255);
+}
+
+.ver p {
+  font-size: 16px;
+  text-shadow: 0 0 20px #fff700;
+}
