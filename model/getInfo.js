@@ -826,6 +826,9 @@ export default new class getInfo {
             if (id == "Cipher : /2&//<|0") {
                 return "Cipher1"
             }
+            if (id == "Oblivion: PHIN") {
+                return "OblivionPHIN"
+            }
             return id
         } else {
             return 'Introduction'
