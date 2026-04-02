@@ -762,10 +762,10 @@ export default new class getInfo {
                     }
                 }
             } else {
-                if (fs.existsSync(path.join(originalIllPath, "SP", songsinfo.song + '.png'))) {
-                    ans = path.join(originalIllPath, "SP", songsinfo.song + '.png')
+                if (fs.existsSync(path.join(originalIllPath, "SP", songsinfo.id.replace(/.0$/, '.png')))) {
+                    ans = path.join(originalIllPath, "SP", songsinfo.id.replace(/.0$/, '.png'))
                 } else {
-                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${songsinfo.song}.png`
+                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${songsinfo.id.replace(/.0$/, '.png')}`
                 }
             }
         } else if (ans) {
@@ -825,6 +825,9 @@ export default new class getInfo {
         if (this.avatarid?.includes(id)) {
             if (id == "Cipher : /2&//<|0") {
                 return "Cipher1"
+            }
+            if (id == "Oblivion: PHIN") {
+                return "OblivionPHIN"
             }
             return id
         } else {

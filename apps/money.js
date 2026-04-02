@@ -27,10 +27,10 @@ const theme = themeList
 // const sp_date_tips = ["渲...渲染失败QAQ！啊...什么！这里不是B30吗？！不...不管了！愚人节快乐！"]
 
 const spData = [{
-    sp_month: '01',
+    sp_month: '04',
     sp_date: '01',
-    sp_date_num: [2026],
-    sp_date_tips: ["2！0！2！6！新！年！快！乐！o(≧v≦)o"]
+    sp_date_num: [41],
+    sp_date_tips: ["签到成功！恭喜您差一点就与失去获得-2147483648个Note的机会失之交臂！"]
 }]
 
 /**@type {any[] | null} */

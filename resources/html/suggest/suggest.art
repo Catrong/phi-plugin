@@ -1,0 +1,271 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/suggest/suggest.css">
+{{/block}}
+
+{{block 'main'}}
+<div class="head_title">
+  <p>{{head_title}}</p>
+</div>
+
+<div class="group_list">
+  <div class="group group-phi">
+    <div class="group_title"><p>phi</p></div>
+    <div class="row_box">
+      {{if phisong && phisong.length}}
+      {{each phisong line}}
+      <div class="line">
+        <div class="song_name">
+          <div class="num"><span name="pvis">{{$index + 1}}</span></div>
+          <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+          <div class="dif {{line.level}}"><span name="pvis">{{(line.chart && line.chart[line.level] && line.chart[line.level].difficulty) || '---'}}</span></div>
+        </div>
+        <div class="ill_box">
+          <img src="{{line.illustration}}" alt="{{line.illustration}}">
+        </div>
+        <div class="info_box">
+          <div class="down">
+            <div class="acc">
+              <div class="box-content">AP Count</div>
+              <div class="suggest suggest-kind-5">{{line.apCount}} / {{line.total || 0}}</div>
+            </div>
+            <div class="score_rating">
+              <div class="score">{{line.level}}</div>
+              <div class="rating">
+                <img src="{{_res_path}}html/otherimg/phi.png" alt="phi">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="group group-kind-5">
+    <div class="group_title"><p>99.85% ~ 100%</p></div>
+    <div class="row_box">
+      {{if song && song[5] && song[5].length}}
+      {{each song[5] line}}
+      <div class="line">
+        <div class="song_name">
+          <div class="num"><span name="pvis">{{$index + 1}}</span></div>
+          <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+          <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
+        </div>
+        <div class="ill_box">
+          <img src="{{line.illustration}}" alt="{{line.illustration}}">
+        </div>
+        <div class="info_box">
+          <div class="down">
+            <div class="acc">
+              <div class="box-content">{{line.acc ? line.acc.toFixed(4) : '---'}}%</div>
+              <div class="suggest suggest-kind-5">&gt; {{line.suggest.toFixed(4) || '---'}}</div>
+            </div>
+            <div class="score_rating">
+              <div class="score">{{line.score}}</div>
+              <div class="rating">
+                <img src="{{line.Rating ? `${_res_path}html/otherimg/${line.Rating}.png` : `${_res_path}html/otherimg/NEW.png`}}" alt="{{line.Rating}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="group group-kind-4">
+    <div class="group_title"><p>99.70% ~ 99.85%</p></div>
+    <div class="row_box">
+      {{if song && song[4] && song[4].length}}
+      {{each song[4] line}}
+      <div class="line">
+        <div class="song_name">
+          <div class="num"><span name="pvis">{{$index + 1}}</span></div>
+          <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+          <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
+        </div>
+        <div class="ill_box">
+          <img src="{{line.illustration}}" alt="{{line.illustration}}">
+        </div>
+        <div class="info_box">
+          <div class="down">
+            <div class="acc">
+              <div class="box-content">{{line.acc ? line.acc.toFixed(4) : '---'}}%</div>
+              <div class="suggest suggest-kind-4">&gt; {{line.suggest.toFixed(4) || '---'}}</div>
+            </div>
+            <div class="score_rating">
+              <div class="score">{{line.score}}</div>
+              <div class="rating">
+                <img src="{{line.Rating ? `${_res_path}html/otherimg/${line.Rating}.png` : `${_res_path}html/otherimg/NEW.png`}}" alt="{{line.Rating}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="group group-kind-3">
+    <div class="group_title"><p>99.50% ~ 99.70%</p></div>
+    <div class="row_box">
+      {{if song && song[3] && song[3].length}}
+      {{each song[3] line}}
+      <div class="line">
+        <div class="song_name">
+          <div class="num"><span name="pvis">{{$index + 1}}</span></div>
+          <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+          <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
+        </div>
+        <div class="ill_box">
+          <img src="{{line.illustration}}" alt="{{line.illustration}}">
+        </div>
+        <div class="info_box">
+          <div class="down">
+            <div class="acc">
+              <div class="box-content">{{line.acc ? line.acc.toFixed(4) : '---'}}%</div>
+              <div class="suggest suggest-kind-3">&gt; {{line.suggest.toFixed(4) || '---'}}</div>
+            </div>
+            <div class="score_rating">
+              <div class="score">{{line.score}}</div>
+              <div class="rating">
+                <img src="{{line.Rating ? `${_res_path}html/otherimg/${line.Rating}.png` : `${_res_path}html/otherimg/NEW.png`}}" alt="{{line.Rating}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="group group-kind-2">
+    <div class="group_title"><p>99.00% ~ 99.50%</p></div>
+    <div class="row_box">
+      {{if song && song[2] && song[2].length}}
+      {{each song[2] line}}
+      <div class="line">
+        <div class="song_name">
+          <div class="num"><span name="pvis">{{$index + 1}}</span></div>
+          <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+          <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
+        </div>
+        <div class="ill_box">
+          <img src="{{line.illustration}}" alt="{{line.illustration}}">
+        </div>
+        <div class="info_box">
+          <div class="down">
+            <div class="acc">
+              <div class="box-content">{{line.acc ? line.acc.toFixed(4) : '---'}}%</div>
+              <div class="suggest suggest-kind-2">&gt; {{line.suggest.toFixed(4) || '---'}}</div>
+            </div>
+            <div class="score_rating">
+              <div class="score">{{line.score}}</div>
+              <div class="rating">
+                <img src="{{line.Rating ? `${_res_path}html/otherimg/${line.Rating}.png` : `${_res_path}html/otherimg/NEW.png`}}" alt="{{line.Rating}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="group group-kind-1">
+    <div class="group_title"><p>98.50% ~ 99.00%</p></div>
+    <div class="row_box">
+      {{if song && song[1] && song[1].length}}
+      {{each song[1] line}}
+      <div class="line">
+        <div class="song_name">
+          <div class="num"><span name="pvis">{{$index + 1}}</span></div>
+          <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+          <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
+        </div>
+        <div class="ill_box">
+          <img src="{{line.illustration}}" alt="{{line.illustration}}">
+        </div>
+        <div class="info_box">
+          <div class="down">
+            <div class="acc">
+              <div class="box-content">{{line.acc ? line.acc.toFixed(4) : '---'}}%</div>
+              <div class="suggest suggest-kind-1">&gt; {{line.suggest.toFixed(4) || '---'}}</div>
+            </div>
+            <div class="score_rating">
+              <div class="score">{{line.score}}</div>
+              <div class="rating">
+                <img src="{{line.Rating ? `${_res_path}html/otherimg/${line.Rating}.png` : `${_res_path}html/otherimg/NEW.png`}}" alt="{{line.Rating}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="group group-kind-0">
+    <div class="group_title"><p>00.00% ~ 98.50%</p></div>
+    <div class="row_box">
+      {{if song && song[0] && song[0].length}}
+      {{each song[0] line}}
+      <div class="line">
+        <div class="song_name">
+          <div class="num"><span name="pvis">{{$index + 1}}</span></div>
+          <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+          <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
+        </div>
+        <div class="ill_box">
+          <img src="{{line.illustration}}" alt="{{line.illustration}}">
+        </div>
+        <div class="info_box">
+          <div class="down">
+            <div class="acc">
+              <div class="box-content">{{line.acc ? line.acc.toFixed(4) : '---'}}%</div>
+              <div class="suggest suggest-kind-0">&gt; {{line.suggest.toFixed(4) || '---'}}</div>
+            </div>
+            <div class="score_rating">
+              <div class="score">{{line.score}}</div>
+              <div class="rating">
+                <img src="{{line.Rating ? `${_res_path}html/otherimg/${line.Rating}.png` : `${_res_path}html/otherimg/NEW.png`}}" alt="{{line.Rating}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+<div class="createdbox">
+  <div class="phi-plugin">
+    <p>{{_plugin}}</p>
+  </div>
+  <div class="ver">
+    <p>{{Version.ver}}</p>
+  </div>
+</div>
+
+{{if theme == "snow"}}
+<div class="snow-box"></div>
+<script>
+  themeSnow();
+</script>
+{{else if theme == "star"}}
+<canvas id="stars"></canvas>
+<script>
+  themeStar();
+</script>
+{{/if}}
+{{/block}}

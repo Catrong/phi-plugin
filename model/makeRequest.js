@@ -413,12 +413,21 @@ export default class makeRequest {
     }
 
     /**
-     * 获取谱面所有成绩
+     * 获取谱面所有成绩AP FC数量
      * @param {{songId: idString, rank?: levelKind[]}} params id+.0
      * @returns {Promise<Record<levelKind, apFcCountResult>>}
      */
     static async getSongApFcCount(params) {
         return (await makeFetch(burl('/get/scoreList/songApFcCount'), params)).data
+    }
+
+    /**
+     * 批量获取谱面所有成绩AP FC数量
+     * @param {{songId: idString[], rank?: levelKind[],rksRange?: {min: number, max: number}}} params id+.0
+     * @returns {Promise<Record<idString, Record<levelKind, apFcCountResult>>>}
+     */
+    static async getSongsApFcCount(params) {
+        return (await makeFetch(burl('/get/scoreList/songsApFcCount'), params)).data
     }
 
     /**
