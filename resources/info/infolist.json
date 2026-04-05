@@ -112,6 +112,10 @@
             "LY": {
                 "rgba": "183,0,253,1",
                 "difficulty": "14",
+                "tap": "450",
+                "hold": "13",
+                "flick": "14",
+                "drag": "138",
                 "combo": "615",
                 "charter": "Ctymax vs. 阿爽"
             }
@@ -271,6 +275,10 @@
             "SP": {
                 "rgba": "212,167,180,1",
                 "difficulty": "?",
+                "tap": "529",
+                "hold": "33",
+                "flick": "20",
+                "drag": "138",
                 "combo": "720",
                 "charter": "阿爽"
             }
@@ -381,6 +389,10 @@
             "LY": {
                 "rgba": "183,0,253,1",
                 "difficulty": "15",
+                "tap": "604",
+                "hold": "32",
+                "flick": "31",
+                "drag": "17",
                 "combo": "684",
                 "charter": "阿爽 VS Arenn Saki"
             }
@@ -400,6 +412,10 @@
             "SP": {
                 "rgba": "212,167,180,1",
                 "difficulty": "🗑",
+                "tap": "84",
+                "hold": "82",
+                "flick": "103",
+                "drag": "147",
                 "combo": "416",
                 "charter": "Gausbon"
             }
@@ -429,6 +445,10 @@
             "LY": {
                 "rgba": "183,0,253,1",
                 "difficulty": "15",
+                "tap": "577",
+                "hold": "67",
+                "flick": "54",
+                "drag": "595",
                 "combo": "1293",
                 "charter": "CatCats"
             }
@@ -448,6 +468,10 @@
             "SP": {
                 "rgba": "88,88,88,1",
                 "difficulty": "👻",
+                "tap": "439",
+                "hold": "49",
+                "flick": "31",
+                "drag": "45",
                 "combo": "564",
                 "charter": "Phigros Charting Team"
             }
@@ -589,6 +613,10 @@
             "SP": {
                 "rgba": "128,128,128,1",
                 "difficulty": "📞",
+                "tap": "384",
+                "hold": "132",
+                "flick": "49",
+                "drag": "341",
                 "combo": "906",
                 "charter": ".---- ----.---../-...-."
             }
@@ -715,6 +743,10 @@
             "SP": {
                 "rgba": "192,167,180,1",
                 "difficulty": "?",
+                "tap": "441",
+                "hold": "58",
+                "flick": "36",
+                "drag": "6",
                 "combo": "541",
                 "charter": "G U B N"
             }
@@ -1107,6 +1139,10 @@
             "LY": {
                 "rgba": "183,0,253,1",
                 "difficulty": "15",
+                "tap": "726",
+                "hold": "39",
+                "flick": "84",
+                "drag": "273",
                 "combo": "1122",
                 "charter": "Arenn Saki as \"lAβyrinS\""
             }
@@ -1520,8 +1556,12 @@
             "SP": {
                 "rgba": "212,167,180,1",
                 "difficulty": "👽",
+                "tap": "857",
+                "hold": "623",
+                "flick": "408",
+                "drag": "612",
                 "combo": "2500",
-                "charter": "SPΔDE ~what awaits ahead is destruction and destruction~"
+                "charter": "SP△DE～前方是毁灭亦是毁灭～"
             }
         },
         "isOriginal": true
