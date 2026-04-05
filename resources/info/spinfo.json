@@ -12,6 +12,10 @@
                 "rgba": "247,228,63,1",
                 "level": "?",
                 "difficulty": "🖊",
+                "tap": "512",
+                "hold": "147",
+                "flick": "205",
+                "drag": "1162",
                 "combo": "2026",
                 "charter": "没想好一会再改先这么写吧"
             }
@@ -30,6 +34,10 @@
                 "rgba": "57,65,106,1",
                 "level": "?",
                 "difficulty": "采样",
+                "tap": "940",
+                "hold": "187",
+                "flick": "306",
+                "drag": "567",
                 "combo": "2000",
                 "charter": "XwX"
             }
@@ -84,13 +92,17 @@
             "IN": {
                 "level": "?",
                 "difficulty": "|2",
-                "combo": "2500",
+                "combo": "365",
                 "charter": "今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\\\リンコ*198食べ放題//"
             },
             "lN": {
                 "rgba": "0,0,0,1",
                 "level": "?",
                 "difficulty": "0℃",
+                "tap": "1290",
+                "hold": "225",
+                "flick": "173",
+                "drag": "812",
                 "combo": "2500",
                 "charter": "今年も「NerSANTA」「BarbarianerSLEDGE」と遊ぼう！！\\\\リンコ*198食べ放題//"
             }
@@ -110,6 +122,10 @@
                 "rgba": "244,179,169,1",
                 "level": "?",
                 "difficulty": "0℃",
+                "tap": "115",
+                "hold": "5",
+                "flick": "50",
+                "drag": "7",
                 "combo": "177",
                 "charter": "Catcats"
             }
@@ -129,6 +145,10 @@
                 "rgba": "244,110,113,1",
                 "level": "?",
                 "difficulty": "❤",
+                "tap": "952",
+                "hold": "237",
+                "flick": "309",
+                "drag": "1002",
                 "combo": "2500",
                 "charter": "Phigros Spasming Team “無極病院”"
             }
@@ -147,6 +167,10 @@
                 "rgba": "155,38,30,1",
                 "level": "?",
                 "difficulty": "🚫",
+                "tap": "944",
+                "hold": "233",
+                "flick": "0",
+                "drag": "338",
                 "combo": "1515",
                 "charter": "Catcats"
             }
@@ -165,6 +189,10 @@
                 "rgba": "203,199,214,1",
                 "level": "?",
                 "difficulty": "♂",
+                "tap": "471",
+                "hold": "48",
+                "flick": "63",
+                "drag": "342",
                 "combo": "924",
                 "charter": "小鹏"
             }
@@ -183,6 +211,10 @@
                 "rgba": "3,166,55,1",
                 "level": "?",
                 "difficulty": "嘿！",
+                "tap": "419",
+                "hold": "103",
+                "flick": "223",
+                "drag": "407",
                 "combo": "1152",
                 "charter": "Barbari...太长了后面不写了"
             }
@@ -201,6 +233,10 @@
                 "rgba": "216,195,156,1",
                 "level": "?",
                 "difficulty": "exe",
+                "tap": "890",
+                "hold": "415",
+                "flick": "518",
+                "drag": "2177",
                 "combo": "4000",
                 "charter": "Σ as Nαrcατυs"
             }
@@ -220,18 +256,30 @@
             "EZ": {
                 "level": "7",
                 "difficulty": "7.5",
+                "tap": "126",
+                "hold": "0",
+                "flick": "29",
+                "drag": "718",
                 "combo": "873",
                 "charter": "NerSAN"
             },
             "HD": {
                 "level": "7",
                 "difficulty": "7.9",
+                "tap": "50",
+                "hold": "198",
+                "flick": "9",
+                "drag": "12",
                 "combo": "269",
                 "charter": "NerSAN"
             },
             "IN": {
                 "level": "14",
                 "difficulty": "14.6",
+                "tap": "247",
+                "hold": "74",
+                "flick": "74",
+                "drag": "817",
                 "combo": "1212",
                 "charter": "NerSAN"
             }
@@ -249,24 +297,40 @@
             "EZ": {
                 "level": "3",
                 "difficulty": "3.6",
+                "tap": "140",
+                "hold": "1",
+                "flick": "27",
+                "drag": "85",
                 "combo": "253",
                 "charter": "阿爽"
             },
             "HD": {
                 "level": "9",
                 "difficulty": "9.4",
+                "tap": "312",
+                "hold": "3",
+                "flick": "16",
+                "drag": "160",
                 "combo": "491",
                 "charter": "阿爽"
             },
             "IN": {
                 "level": "13",
                 "difficulty": "13.6",
+                "tap": "396",
+                "hold": "17",
+                "flick": "39",
+                "drag": "93",
                 "combo": "545",
                 "charter": "阿爽 vs JKy"
             },
             "AT": {
                 "level": "15",
                 "difficulty": "15.4",
+                "tap": "704",
+                "hold": "58",
+                "flick": "39",
+                "drag": "164",
                 "combo": "965",
                 "charter": "Journey's End"
             }
@@ -284,6 +348,10 @@
             "EZ": {
                 "level": "1",
                 "difficulty": "1",
+                "tap": "9",
+                "hold": "14",
+                "flick": "10",
+                "drag": "60",
                 "combo": "93",
                 "charter": "Catcats"
             }
