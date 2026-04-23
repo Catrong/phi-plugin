@@ -382,6 +382,7 @@
     },
     "Aleph0.LeaF": {
         "bpm": "35~400",
+        "bpmList": [35, 140, 250, 400],
         "length": "2:20",
         "chapter": "单曲精选集",
         "spinfo": "本曲目存在Legacy谱面，长按难度标识即可进入",
@@ -550,6 +551,7 @@
     },
     "EndMe.ZxNXasDelaina": {
         "bpm": "100~120",
+        "bpmList": [100, 120],
         "length": "2:10",
         "chapter": "单曲精选集"
     },
@@ -580,6 +582,7 @@
     },
     "Aventyr.GrandThawRigelTheatre": {
         "bpm": "114~132",
+        "bpmList": [114, 132],
         "length": "2:40",
         "chapter": "单曲精选集"
     },
@@ -649,6 +652,7 @@
     },
     "volcanic.DETROakaルゼ": {
         "bpm": "191~382",
+        "bpmList": [191, 382],
         "length": "2:16",
         "chapter": "Chapter EX-WAVEAT 精选集"
     },
@@ -1378,6 +1382,7 @@
     },
     "ATHAZA.LeaF": {
         "bpm": "240~280",
+        "bpmList": [240, 280],
         "length": "2:42",
         "chapter": "Side Story 4 无相乡"
     },
@@ -1493,7 +1498,8 @@
         "chapter": "Chapter EX-Immaculée Sekai 精选集"
     },
     "DevIAtiOnshortver.polysha": {
-        "bpm": "140-155",
+        "bpm": "100~155",
+        "bpmList": [100, 110, 120, 130, 135, 140, 155],
         "length": "2:52",
         "chapter": "Chapter EX-Immaculée Sekai 精选集"
     },
@@ -1503,7 +1509,8 @@
         "chapter": "Chapter EX-Immaculée Sekai 精选集"
     },
     "Aliceinaxxxxxxxx.Nagiha": {
-        "bpm": "144",
+        "bpm": "108~144",
+        "bpmList": [108, 144],
         "length": "2:35",
         "chapter": "单曲精选集"
     },
