@@ -19,6 +19,7 @@ import logger from '../components/Logger.js';
 import LevelRecordInfo from '../model/class/LevelRecordInfo.js';
 import SongsInfo from '../model/class/SongsInfo.js';
 import Version from '../components/Version.js';
+import { canUseApi } from '../model/apiPermission.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -92,7 +93,7 @@ export class phib19 extends phiPluginBase {
         let askOtherId = msg.match(/-id\s+([0-9]+)/i)
         msg = msg.replace(askOtherId?.[0] || '', '')
 
-        if (askOtherId && Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (askOtherId && await canUseApi(e)) {
             let otherId = /** @type {apiUserId} */ (askOtherId[1]);
 
             try {
@@ -145,7 +146,7 @@ export class phib19 extends phiPluginBase {
         }
 
 
-        let save_b19 = await save.getB19(nnum, { avgType: plugin_data.b30AvgKind, color: plugin_data.b30AvgColor })
+        let save_b19 = await save.getB19(e, nnum, { avgType: plugin_data.b30AvgKind, color: plugin_data.b30AvgColor })
         let stats = await save.getStats()
 
         const spInfo = [];
@@ -372,7 +373,7 @@ export class phib19 extends phiPluginBase {
         nnum = Math.max(nnum, 30)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
-        let save_b19 = await save.getB19(nnum)
+        let save_b19 = await save.getB19(e, nnum)
 
         let money = save.gameProgress.money
         let gameuser = {
@@ -515,7 +516,7 @@ export class phib19 extends phiPluginBase {
         if (!num)
             num = 19 //未指定默认b19
 
-        const { b19_list, phi } = await save.getB19(num)
+        const { b19_list, phi } = await save.getB19(e, num)
 
 
         let Remsg = []
@@ -650,7 +651,7 @@ export class phib19 extends phiPluginBase {
 
         let info = getInfo.ori_info
 
-        const { com_rks, phi } = await save.getB19(1000, { avgType: "none" });
+        const { com_rks, phi } = await save.getB19(e, 1000, { avgType: "none" });
 
         /**@type {Record<idString, Record<levelKind, number>>} */
         const allTaskList = {};
@@ -659,7 +660,7 @@ export class phib19 extends phiPluginBase {
          */
         const phiTaskList = [];
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
 
             try {
                 const res = await makeRequest.getAllSongAccAvgB30({
@@ -1085,7 +1086,7 @@ async function getScore(songId, e, args = {}) {
      * @type {songRecordHistory | undefined}
      */
     let HistoryData = undefined;
-    if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+    if (await canUseApi(e)) {
         try {
             HistoryData = await getSaveFromApi.getSongHistory(e, songId)
         } catch (err) {
@@ -1187,7 +1188,7 @@ async function getScore(songId, e, args = {}) {
 
     data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
 
-    if (Config.getUserCfg('config', 'openPhiPluginApi') && !args?.unRank) {
+    if (!args?.unRank && await canUseApi(e)) {
         try {
             const scoreRanklist = await makeRequest.getScoreRanklistByUser({
                 ...makeRequestFnc.makePlatform(e),

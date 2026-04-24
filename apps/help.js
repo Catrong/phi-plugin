@@ -8,6 +8,7 @@ import getBanGroup from '../model/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
 import getNotes from '../model/getNotes.js'
 import getInfo from '../model/getInfo.js'
+import { getApiAccessState } from '../model/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -92,8 +93,9 @@ export class phihelp extends phiPluginBase {
         //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
         //     return false
         // }
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, `这里没有连接查分平台哦！`)
+        const apiAccess = await getApiAccessState(e)
+        if (!apiAccess.enabled) {
+            send.send_with_At(e, apiAccess.globalEnabled ? '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。' : `这里没有连接查分平台哦！`)
             return false
         }
 

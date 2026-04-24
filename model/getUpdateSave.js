@@ -11,6 +11,7 @@ import getSaveFromApi from "./getSaveFromApi.js";
 import makeRequest from "./makeRequest.js";
 import makeRequestFnc from "./makeRequestFnc.js";
 import send from "./send.js";
+import { canUseApi } from './apiPermission.js';
 
 /**@import {botEvent} from "../components/baseClass.js" */
 
@@ -184,7 +185,7 @@ export default class getUpdateSave {
     static async getHistoryFromApi(e, field = []) {
         const sessionToken = await getSave.get_user_token(e.user_id);
         if (!sessionToken) {
-            if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+                if (!await canUseApi(e)) {
                 send.send_with_At(e, "请先绑定sessionToken哦！")
                 return null;
             }

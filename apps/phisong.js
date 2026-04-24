@@ -18,6 +18,7 @@ import logger from '../components/Logger.js'
 import SongsInfo from '../model/class/SongsInfo.js'
 import Chart from "../model/class/Chart.js"
 import getNotes from "../model/getNotes.js"
+import { canUseApi } from '../model/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -924,7 +925,7 @@ export class phisong extends phiPluginBase {
 
         let songId = songInfo.id;
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi') && save.apiId) {
+        if (save.apiId && await canUseApi(e)) {
             try {
                 /**@type {import("../model/makeRequest.js").APIUpdateCommentObject} */
                 let cmtobj = {
@@ -942,7 +943,7 @@ export class phisong extends phiPluginBase {
                 let songRecord = save.getSongsRecord(songId);
                 const record = songRecord?.[rankNum];
                 if (!songInfo.sp_vis && record?.score) {
-                    let { phi, b19_list } = await save.getB19(27)
+                    let { phi, b19_list } = await save.getB19(e, 27)
                     let spInfo = '';
 
                     for (let i = 0; i < phi.length; ++i) {
@@ -997,7 +998,7 @@ export class phisong extends phiPluginBase {
         let songRecord = save.getSongsRecord(songId);
         const record = songRecord?.[rankNum];
         if (!songInfo.sp_vis && record?.score) {
-            let { phi, b19_list } = await save.getB19(27)
+            let { phi, b19_list } = await save.getB19(e, 27)
             let spInfo = '';
 
             for (let i = 0; i < phi.length; ++i) {
@@ -1067,7 +1068,7 @@ export class phisong extends phiPluginBase {
 
         let comment = getComment.getByCommentId(commentId)
         if (!comment) {
-            if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            if (await canUseApi(e)) {
                 try {
                     await makeRequest.delComment({ token: sessionToken, comment_id: commentId });
                     send.send_with_At(e, `删除在线评论成功！φ(゜▽゜*)♪`);
@@ -1107,7 +1108,7 @@ export class phisong extends phiPluginBase {
             return true
         }
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi') && (save.session || save.apiId)) {
+        if ((save.session || save.apiId) && await canUseApi(e)) {
             try {
                 const comments = await makeRequest.getCommentsByUserId(makeRequestFnc.makePlatform(e));
 
@@ -1150,7 +1151,7 @@ async function songInfo(page, addComment, id, e) {
     }
     if (await Config.getUserCfg('config', 'allowComment') && (addComment || page)) {
         let commentData;
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
             commentData = await makeRequest.getCommentsBySongId({ song_id: infoData.id });
             for (const item of commentData) {
                 item.PlayerId = (item.PlayerId && item.PlayerId.length > 15) ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;

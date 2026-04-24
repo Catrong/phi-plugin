@@ -6,6 +6,7 @@ import getSave from "./getSave.js";
 import Save from "./class/Save.js";
 import getUpdateSave from "./getUpdateSave.js";
 import logger from "../components/Logger.js";
+import { canUseApi } from './apiPermission.js';
 
 class send {
 
@@ -41,9 +42,11 @@ class send {
 
         let user_save = null
         let sessionToken = null
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        const allowApi = await canUseApi(e)
+        if (allowApi) {
             try {
                 user_save = await getUpdateSave.getNewSaveFromApi(e)
+                user_save.save.allowApiUsage = allowApi
                 return user_save.save
             } catch (/**@type {any} */ err) {
                 /**如果是没有绑定过就执行绑定 */
@@ -58,6 +61,7 @@ class send {
                         }
 
                         user_save = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
+                        user_save.save.allowApiUsage = allowApi
                         return user_save.save
                     } catch (err) {
                         logger.warn(`[phi-plugin] API ERR`, err)
@@ -83,6 +87,10 @@ class send {
                 this.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
             }
             return false
+        }
+
+        if (user_save) {
+            user_save.allowApiUsage = allowApi
         }
 
         return user_save

@@ -60,5 +60,8 @@ export default class PluginData {
       case "green":
         this.b30AvgColor = data.b30AvgColor
     }
+
+    /**@type {boolean} 是否允许使用在线API功能 */
+    this.allowApiUsage = data?.allowApiUsage !== false
   }
 }

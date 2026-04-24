@@ -11,6 +11,7 @@ import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 import saveHistory from '../model/class/saveHistory.js'
 import phiPluginBase from '../components/baseClass.js'
+import { canUseApi } from '../model/apiPermission.js';
 import logger from '../components/Logger.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
@@ -55,7 +56,7 @@ export class phiRankList extends phiPluginBase {
 
 
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
             try {
                 let data = {
                     Title: "RankingScore排行榜",
@@ -78,7 +79,7 @@ export class phiRankList extends phiPluginBase {
                 for (let item of api_ranklist.users) {
                     data.users.push({ ...await makeSmallLine(item), index: item.index, me: item.me })
                 }
-                data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history))
+                data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history), e)
                 send.send_with_At(e, [await picmodle.common(e, 'rankingList', data), `总数据量：${data.totDataNum}\n`])
                 return true
             } catch (err) {
@@ -137,7 +138,7 @@ export class phiRankList extends phiPluginBase {
                 data.users.push({ ...await makeSmallLine(save), index: Math.max(index + rankNum - 1, index + 1), me: myTk === save.getSessionToken() })
                 if (myTk === sessionToken) {
                     let history = await getSave.getHistoryBySessionToken(save.getSessionToken())
-                    data.me = await makeLargeLine(save, history)
+                    data.me = await makeLargeLine(save, history, e)
                 }
             }
         }
@@ -162,7 +163,7 @@ export class phiRankList extends phiPluginBase {
             return false
         }
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
             try {
                 makeRequest.getRanklistRks({ request_rks: rks }).then((res) => {
                     send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)
@@ -232,8 +233,9 @@ export class phiRankList extends phiPluginBase {
  * 创建一个详细对象
  * @param {Save} save 
  * @param {saveHistory} history
+ * @param {botEvent} e
  */
-async function makeLargeLine(save, history) {
+async function makeLargeLine(save, history, e) {
     if (!save) {
         return {
             playerId: "无效用户"
@@ -260,7 +262,7 @@ async function makeLargeLine(save, history) {
             })
         }
     })
-    let b30Data = await save.getB19(33)
+    let b30Data = await save.getB19(e, 33)
     let b30list = {
         P3: {
             title: 'Perfect 3',

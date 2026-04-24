@@ -16,6 +16,7 @@ import { Level, LevelNum, redisPath } from '../model/constNum.js'
 import PluginData, { themeList } from '../model/class/pluginData.js'
 import makeRequest from '../model/makeRequest.js'
 import logger from '../components/Logger.js'
+import { canUseApi } from '../model/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -123,7 +124,7 @@ export class phimoney extends phiPluginBase {
             let last_task = new Date(data.task_time)
             if (last_task < request_time) {
                 data.task_time = now_time.toISOString()
-                data.task = await randtask(save, [])
+                data.task = await randtask(e, save, [])
                 getNotes.putNotesData(e.user_id, data)
             }
         }
@@ -183,7 +184,7 @@ export class phimoney extends phiPluginBase {
         }
 
         data.task_time = now_time.toISOString();
-        data.task = await randtask(save, oldtask)
+        data.task = await randtask(e, save, oldtask)
 
         let vis = false
         for (let i in data.task) {
@@ -391,11 +392,12 @@ export class phimoney extends phiPluginBase {
 
 /**
  * 
+ * @param {botEvent} e
  * @param {Save} save 
  * @param {import('../model/class/pluginData.js').taskObj[]} task 
  * @returns 
  */
-async function randtask(save, task = []) {
+async function randtask(e, save, task = []) {
     let rks = save.saveInfo.summary.rankingScore
     let gameRecord = save.gameRecord
     for (let id of fCompute.objectKeys(gameRecord)) {
@@ -404,7 +406,7 @@ async function randtask(save, task = []) {
 
     let info = getInfo.ori_info
 
-    const { com_rks } = await save.getB19(1000, { avgType: "none" });
+    const { com_rks } = await save.getB19(e, 1000, { avgType: "none" });
 
     /**
      * @typedef {{ id: idString; level: allLevelKind; type: string; value: number; diff: number; oldAcc: number; }} taskObj
@@ -412,7 +414,7 @@ async function randtask(save, task = []) {
      */
     let allTaskList = [];
 
-    if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+    if (await canUseApi(e)) {
 
         try {
             const res = await makeRequest.getAllSongAccAvgB30({

@@ -243,7 +243,11 @@ import { APIBASEURL } from './constNum.js';
 
 /**
  * @typedef {Object} userSetting
- * @property {boolean} allowDataCollection 是否允许数据收集
+ * @property {boolean} [allowDataCollection] 是否允许数据收集
+ * @property {boolean} [allowLeaderboard] 是否允许排行榜展示
+ * @property {boolean} [allowDataAggregation] 是否允许数据聚合
+ * @property {boolean} [allowPlayerIdSearch] 是否允许按PlayerId搜索
+ * @property {boolean} [allowUserIdSearch] 是否允许按UserId搜索
  */
 
 /**

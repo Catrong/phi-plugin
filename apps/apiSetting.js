@@ -4,17 +4,99 @@ import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 import getSave from '../model/getSave.js'
 import ProgressBar from "../model/progress-bar.js";
-import { redisPath } from '../model/constNum.js'
+import { redisPath, USER_API_SETTING_META, USER_API_SETTING_OPTIONS } from '../model/constNum.js'
+import picmodle from '../model/picmodle.js'
+import getInfo from '../model/getInfo.js'
 import getBanGroup from '../model/getBanGroup.js'
 import getComment from '../model/getComment.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
 import getSaveFromApi from '../model/getSaveFromApi.js'
+import { getApiAccessState } from '../model/apiPermission.js'
+import fCompute from '../model/fCompute.js'
 
 
 /**@import {botEvent} from '../components/baseClass.js' */
 /** @type {Record<string, any>} */
 const tokenManageData = {}
+
+/** @typedef {'allowDataCollection'|'allowLeaderboard'|'allowDataAggregation'|'allowPlayerIdSearch'|'allowUserIdSearch'} apiSettingKey */
+
+/** @type {Record<apiSettingKey, {title: string, description: string}>} */
+const API_USER_SETTING_META = {
+    allowDataCollection: {
+        title: '允许数据收集',
+        description: '是否允许平台收集你的成绩数据用于分析。'
+    },
+    allowLeaderboard: {
+        title: '允许排行榜展示',
+        description: '是否允许你的数据出现在排行榜相关展示中。'
+    },
+    allowDataAggregation: {
+        title: '允许数据聚合',
+        description: '是否允许平台将你的数据用于群体统计聚合。'
+    },
+    allowPlayerIdSearch: {
+        title: '允许按 PlayerId 搜索',
+        description: '是否允许他人通过 PlayerId 检索到你的相关信息。'
+    },
+    allowUserIdSearch: {
+        title: '允许按 UserId 搜索',
+        description: '是否允许他人通过用户 ID 检索到你的相关信息。'
+    }
+}
+
+/** @type {Record<string, apiSettingKey>} */
+const API_USER_SETTING_KEY_ALIAS = {
+    allowdatacollection: 'allowDataCollection',
+    datacollection: 'allowDataCollection',
+    collection: 'allowDataCollection',
+    数据收集: 'allowDataCollection',
+    收集: 'allowDataCollection',
+
+    allowleaderboard: 'allowLeaderboard',
+    leaderboard: 'allowLeaderboard',
+    榜单: 'allowLeaderboard',
+    排行榜: 'allowLeaderboard',
+
+    allowdataaggregation: 'allowDataAggregation',
+    dataaggregation: 'allowDataAggregation',
+    aggregation: 'allowDataAggregation',
+    数据聚合: 'allowDataAggregation',
+    聚合: 'allowDataAggregation',
+
+    allowplayeridsearch: 'allowPlayerIdSearch',
+    playeridsearch: 'allowPlayerIdSearch',
+    playerid: 'allowPlayerIdSearch',
+    玩家id搜索: 'allowPlayerIdSearch',
+    玩家id: 'allowPlayerIdSearch',
+
+    allowuseridsearch: 'allowUserIdSearch',
+    useridsearch: 'allowUserIdSearch',
+    userid: 'allowUserIdSearch',
+    用户id搜索: 'allowUserIdSearch',
+    用户id: 'allowUserIdSearch'
+}
+
+/** @type {Record<string, boolean>} */
+const API_USER_SETTING_BOOL_ALIAS = {
+    true: true,
+    false: false,
+    on: true,
+    off: false,
+    yes: true,
+    no: false,
+    开: true,
+    关: false,
+    开启: true,
+    关闭: false,
+    允许: true,
+    禁止: false,
+    是: true,
+    否: false,
+    1: true,
+    0: false
+}
 
 export class phihelp extends phiPluginBase {
     constructor() {
@@ -57,12 +139,29 @@ export class phihelp extends phiPluginBase {
                     fnc: 'updateComment'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*(NOAPI|noapi)$`,
-                    fnc: 'noapi'
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*(apiset)(\\s+.*)?$`,
+                    fnc: 'apiset'
                 },
             ]
         })
 
+    }
+
+    /**
+     * @param {botEvent} e
+     * @returns {Promise<boolean>}
+     */
+    async checkApiEnabled(e) {
+        const access = await getApiAccessState(e)
+        if (!access.globalEnabled) {
+            send.send_with_At(e, '这里没有连接查分平台哦！')
+            return false
+        }
+        if (!access.userEnabled) {
+            send.send_with_At(e, '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。')
+            return false
+        }
+        return true
     }
     /**
      * 
@@ -76,8 +175,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
+        if (!await this.checkApiEnabled(e)) {
             return false
         }
 
@@ -120,8 +218,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
+        if (!await this.checkApiEnabled(e)) {
             return false
         }
 
@@ -169,8 +266,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
+        if (!await this.checkApiEnabled(e)) {
             return false
         }
 
@@ -295,8 +391,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
+        if (!await this.checkApiEnabled(e)) {
             return false
         }
 
@@ -337,8 +432,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
+        if (!await this.checkApiEnabled(e)) {
             return false
         }
 
@@ -370,8 +464,7 @@ export class phihelp extends phiPluginBase {
             return false;
         }
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
+        if (!await this.checkApiEnabled(e)) {
             return false
         }
 
@@ -445,8 +538,7 @@ export class phihelp extends phiPluginBase {
             return false;
         }
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
+        if (!await this.checkApiEnabled(e)) {
             return false
         }
 
@@ -473,10 +565,9 @@ export class phihelp extends phiPluginBase {
      * @param {botEvent} e 
      * @returns 
      */
-    async noapi(e) {
+    async apiset(e) {
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '这里没有连接查分平台哦！')
+        if (!await this.checkApiEnabled(e)) {
             return false
         }
 
@@ -488,7 +579,7 @@ export class phihelp extends phiPluginBase {
         const token = await getSave.get_user_token(e.user_id)
         if (!token) {
             send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
-            return;
+            return true;
         }
 
         let userSetting
@@ -498,22 +589,112 @@ export class phihelp extends phiPluginBase {
             send.send_with_At(e, '获取用户设置失败: ' + error);
             return true;
         }
-        if (!userSetting.allowDataCollection) {
-            try {
-                await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), token, setting: { allowDataCollection: true } });
-            } catch (error) {
-                send.send_with_At(e, '设置失败: ' + error);
-                return true;
-            }
-            send.send_with_At(e, '感谢您参与数据统计！');
-        } else {
-            try {
-                await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), token, setting: { allowDataCollection: false } });
-            } catch (error) {
-                send.send_with_At(e, '设置失败: ' + error);
-                return true;
-            }
-            send.send_with_At(e, '退出数据统计计划成功！');
+
+        const usage = [
+            '用法：',
+            `/${Config.getUserCfg('config', 'cmdhead')} apiset`,
+            `/${Config.getUserCfg('config', 'cmdhead')} apiset 数据收集 开`,
+            `/${Config.getUserCfg('config', 'cmdhead')} apiset allowLeaderboard false`,
+            '可设置项：allowDataCollection / allowLeaderboard / allowDataAggregation / allowPlayerIdSearch / allowUserIdSearch',
+            '可选值：true/false、on/off、开/关、允许/禁止'
+        ].join('\n')
+
+        const rawArgs = e.msg.replace(new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*(NOAPI|noapi|apiset)`, 'i'), '').trim()
+
+        if (!rawArgs) {
+            await this.renderApiUserSetting(e, userSetting)
+            return true
         }
+
+        const normalized = rawArgs.replace(/[：:=]/g, ' ').replace(/\s+/g, ' ').trim()
+        const args = normalized.split(' ')
+        if (args.length < 2) {
+            send.send_with_At(e, `参数不足，请提供“设置项 + 目标值”。\n${usage}`)
+            return true
+        }
+
+        const keyInput = args[0].toLowerCase()
+        const valueInput = args.slice(1).join('').toLowerCase()
+
+        const settingKey = API_USER_SETTING_KEY_ALIAS[keyInput]
+        if (!settingKey) {
+            send.send_with_At(e, `未知设置项：${args[0]}\n${usage}`)
+            return true
+        }
+
+        const settingValue = API_USER_SETTING_BOOL_ALIAS[valueInput]
+        if (settingValue === undefined) {
+            send.send_with_At(e, `无效值：${args.slice(1).join(' ')}\n${usage}`)
+            return true
+        }
+
+        const patchSetting = {
+            [settingKey]: settingValue
+        }
+
+        try {
+            await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), token, setting: patchSetting });
+            send.send_with_At(e, `设置成功：${API_USER_SETTING_META[settingKey].title} -> ${settingValue ? '开启' : '关闭'}`)
+        } catch (error) {
+            send.send_with_At(e, '设置失败: ' + error);
+            return true;
+        }
+
+        try {
+            userSetting = await makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e), token });
+        } catch (error) {
+            send.send_with_At(e, '获取最新用户设置失败: ' + error);
+            return true;
+        }
+
+        await this.renderApiUserSetting(e, userSetting)
+        return true
+    }
+
+    /**
+     * 兼容旧命令入口
+     * @param {botEvent} e
+     */
+    async noapi(e) {
+        return this.apiset(e)
+    }
+
+    /**
+     * @param {botEvent} e
+        * @param {Partial<Record<apiSettingKey, boolean>>} userSetting
+     */
+    async renderApiUserSetting(e, userSetting) {
+        /**
+         * @param {keyof typeof USER_API_SETTING_OPTIONS} key
+         * @param {string} current
+         */
+        const buildItem = (key, current) => {
+            const options = /** @type {Record<string, { title: string, description: string }>} */ (USER_API_SETTING_OPTIONS[key])
+            return {
+                key,
+                title: USER_API_SETTING_META[key].title,
+                description: USER_API_SETTING_META[key].description,
+                currentTitle: options[current]?.title || current,
+                options: Object.keys(options).map((value) => ({
+                    value,
+                    title: options[value].title,
+                    description: options[value].description,
+                    selected: value === current
+                }))
+            }
+        }
+        const keys = fCompute.objectKeys(USER_API_SETTING_OPTIONS)
+
+        const items = keys.map(key => {
+            return buildItem(key, String(userSetting[key]))
+        })
+
+        send.send_with_At(e, await picmodle.common(e, 'setting', {
+            pageTitle: 'Phi-Plugin API 用户设置',
+            pageDescription: '以下设置会同步到查分平台账户权限。',
+            items: items,
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
+            theme: 'default'
+        }, 'userSetting'))
     }
 }

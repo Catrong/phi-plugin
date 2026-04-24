@@ -14,6 +14,7 @@ import getNotes from '../model/getNotes.js'
 import getUpdateSave from '../model/getUpdateSave.js'
 import analyzeSaveHistory from '../model/analyzeSaveHistory.js'
 import ScoreHistory from '../model/class/scoreHistory.js'
+import { canUseApi } from '../model/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -137,7 +138,7 @@ export class phiuser extends phiPluginBase {
 
         let user_data;
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
             try {
                 user_data = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory']);
             } catch (error) {

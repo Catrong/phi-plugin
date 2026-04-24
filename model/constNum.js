@@ -47,6 +47,10 @@ export const USER_SETTING_META = {
     b30AvgColor: {
         title: 'B30均值条配色',
         description: '使用/myset avgcolor <序号>修改，控制 B30 均值条的主色，用于快速区分你的展示偏好。'
+    },
+    allowApiUsage: {
+        title: 'API功能开关',
+        description: '使用/myset api <序号>修改，关闭后将不再使用在线查分平台相关功能。'
     }
 }
 
@@ -106,6 +110,92 @@ export const USER_SETTING_OPTIONS = {
         green: {
             title: '[3]绿',
             description: '中性偏亮配色，整体观感更清新。'
+        }
+    },
+    allowApiUsage: {
+        true: {
+            title: '[0]启用',
+            description: '允许插件使用在线查分平台相关能力。'
+        },
+        false: {
+            title: '[1]禁用',
+            description: '禁用在线查分平台能力，仅使用本地数据。'
+        }
+    }
+}
+
+export const USER_API_SETTING_META = {
+    allowDataCollection: {
+        title: '数据收集同意',
+        description: '控制是否同意插件收集你的游戏数据（如成绩、游玩时间等）用于统计分析和功能优化，帮助我们改进插件性能和用户体验。关闭后将同步禁用下方所有选项。'
+    },
+    allowLeaderboard: {
+        title: '排行榜展示',
+        description: '同意将你的成绩展示在在线排行榜中，供其他玩家查看和比较。'
+    },
+    allowDataAggregation: {
+        title: '数据聚合',
+        description: '同意将你的成绩数据匿名化后用于整体统计分析，分析结果将用于推分建议以及谱面分析、定位等功能。'
+    },
+    allowPlayerIdSearch: {
+        title: '玩家ID搜索',
+        description: '同意其他玩家通过你游戏中的的玩家ID搜索到你的成绩信息，便于社交互动和成绩比较。'
+    },
+    allowUserIdSearch: {
+        title: '用户ID搜索',
+        description: '控制是否同意使用用户ID进行绑定，其他玩家可以通过用户id获取到你的成绩信息'
+    }
+}
+
+export const USER_API_SETTING_OPTIONS = {
+    allowDataCollection: {
+        true: {
+            title: '[0]同意',
+            description: ''
+        },
+        false: {
+            title: '[1]拒绝',
+            description: '插件将仅使用本地数据，不会上传任何信息。'
+        }
+    },
+    allowLeaderboard: {
+        true: {
+            title: '[0]同意',
+            description: ''
+        },
+        false: {
+            title: '[1]拒绝',
+            description: '你的成绩将不会在排行榜中展示。'
+        }
+    },
+    allowDataAggregation: {
+        true: {
+            title: '[0]同意',
+            description: ''
+        },
+        false: {
+            title: '[1]拒绝',
+            description: '拒绝将你的成绩数据用于统计分析，插件将不会使用你的数据进行任何形式的分析或报告。'
+        }
+    },
+    allowPlayerIdSearch: {
+        true: {
+            title: '[0]同意',
+            description: ''
+        },
+        false: {
+            title: '[1]拒绝',
+            description: '其他人将无法通过你的游戏ID搜索到你的成绩信息。'
+        }
+    },
+    allowUserIdSearch: {
+        true: {
+            title: '[0]同意',
+            description: ''
+        },
+        false: {    
+            title: '[1]拒绝',
+            description: '禁止使用用户ID获取存档，将禁用用户ID绑定功能。'
         }
     }
 }

@@ -5,6 +5,7 @@ import getSave from "./getSave.js";
 import makeRequest from "./makeRequest.js";
 import makeRequestFnc from "./makeRequestFnc.js";
 import send from "./send.js";
+import { canUseApi } from './apiPermission.js';
 
 /**@import {botEvent} from "../components/baseClass.js" */
 
@@ -29,7 +30,7 @@ export default class getBanGroup {
     static async get(e, fnc) {
         const { group_id } = e;
         let sessionToken = await getSave.get_user_token(e.user_id)
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
             let result = false
             try {
                 result = await makeRequest.getUserBan(makeRequestFnc.makePlatform(e))

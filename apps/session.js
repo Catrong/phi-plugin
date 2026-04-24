@@ -20,6 +20,7 @@ import logger from '../components/Logger.js'
 import segment from '../components/segment.js'
 import getInfo from '../model/getInfo.js'
 import picmodle from '../model/picmodle.js'
+import { canUseApi } from '../model/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -80,7 +81,7 @@ export class phisstk extends phiPluginBase {
 
         if (!sessionToken) {
             let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]+/g)?.[0]
-            if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+            if (await canUseApi(e)) {
                 try {
                     let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId })
                     if (result?.data?.internal_id) {
@@ -212,7 +213,7 @@ export class phisstk extends phiPluginBase {
             // return true
         }
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
 
             try {
                 let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken, isGlobal })
@@ -269,7 +270,7 @@ export class phisstk extends phiPluginBase {
         }
         let updateData;
         let history;
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
             try {
 
                 if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
@@ -353,7 +354,7 @@ export class phisstk extends phiPluginBase {
             let flag = true
             try {
                 await getSave.delSave(e.user_id)
-                if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+                if (await canUseApi(e)) {
                     await getSaveFromApi.delSave(e)
                 }
             } catch (err) {

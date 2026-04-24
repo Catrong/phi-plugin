@@ -2,6 +2,7 @@ import Config from '../../components/Config.js'
 import logger from '../../components/Logger.js'
 import Version from '../../components/Version.js'
 import PhigrosUser from '../../lib/PhigrosUser.js'
+import { canUseApi } from '../apiPermission.js'
 import { Level, LevelNum, MAX_DIFFICULTY } from '../constNum.js'
 import fCompute from '../fCompute.js'
 import getInfo from '../getInfo.js'
@@ -332,7 +333,7 @@ export default class Save {
     }
 
     /**
-     * 
+     * @param {import('../../components/baseClass.js').botEvent} e
      * @param {number} num B几
      * @param {object} option
      * @param {"all" | "b30" | "top" | "none"} [option.avgType]
@@ -340,7 +341,7 @@ export default class Save {
      * @param {boolean} [option.avgValue] 平均值是否直接返回
      * @returns phi, b19_list
      */
-    async getB19(num, option = { avgType: "all", color: "blue", avgValue: false }) {
+    async getB19(e, num, option = { avgType: "all", color: "blue", avgValue: false }) {
 
         /**计算得到的rks，仅作为测试使用 */
         let sum_rks = 0
@@ -446,9 +447,9 @@ export default class Save {
 
         let com_rks = sum_rks / 30
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e) !== false && Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
-                
+
                 if (!option.avgType || option.avgType === "all") {
                     const res = await makeRequest.getAllSongAccAvg({
                         songIds: b19Ids,
@@ -752,8 +753,6 @@ export default class Save {
      * @returns 
      */
     async getStats() {
-
-        let getInfo = (await import('../getInfo.js')).default
         /**'EZ', 'HD', 'IN', 'AT' */
         let tot = [0, 0, 0, 0]
 
@@ -776,8 +775,9 @@ export default class Save {
 
         let stats = [{ ...stats_ }, { ...stats_ }, { ...stats_ }, { ...stats_ }]
 
-        const ids = fCompute.objectKeys(Record)
-        for (let id of ids) {
+        const idsFromRecord = fCompute.objectKeys(Record)
+        const idsFromInfo = fCompute.objectKeys(getInfo.ori_info)
+        for (let id of idsFromInfo) {
             let info = getInfo.ori_info[id]
             if (!info?.chart) continue
             if (info.chart['AT'] && Number(info.chart['AT'].difficulty)) {
@@ -806,13 +806,13 @@ export default class Save {
         stats[3].tot = tot[3]
         stats[3].title = Level[3]
 
-        for (let id of ids) {
+        for (let id of idsFromRecord) {
             if (!getInfo.info(id)) {
                 continue
             }
             let record = Record[id]
-            for (let lv in [0, 1, 2, 3]) {
-                if (record[lv] === undefined) continue
+            for (let lv of [0, 1, 2, 3]) {
+                if (record.length <= lv || record[lv] === undefined) continue
 
                 ++stats[lv].unlock
 
@@ -837,7 +837,7 @@ export default class Save {
             }
         }
 
-        for (let lv in [0, 1, 2, 3]) {
+        for (let lv of [0, 1, 2, 3]) {
             stats[lv].Rating = fCompute.rate(stats[lv].real_score, stats[lv].fc == stats[lv].unlock, stats[lv].tot_score)
             if (stats[lv].lowest == 18) {
                 stats[lv].lowest = 0

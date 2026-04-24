@@ -10,6 +10,7 @@ import makeRequestFnc from '../model/makeRequestFnc.js';
 import fCompute from '../model/fCompute.js';
 import getSave from '../model/getSave.js';
 import { APII18NCN } from '../model/constNum.js'
+import { canUseApi, getApiAccessState } from '../model/apiPermission.js'
 
 
 /**@import {botEvent} from '../components/baseClass.js' */
@@ -68,8 +69,9 @@ export class phihelp extends phiPluginBase {
       return false
     }
 
-    if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-      send.send_with_At(e, '这里没有连接查分平台哦！')
+    const apiAccess = await getApiAccessState(e)
+    if (!apiAccess.enabled) {
+      send.send_with_At(e, apiAccess.globalEnabled ? '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。' : '这里没有连接查分平台哦！')
       return false
     }
 
@@ -90,8 +92,9 @@ export class phihelp extends phiPluginBase {
       return false
     }
 
-    if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-      send.send_with_At(e, '这里没有连接查分平台哦！')
+    const apiAccess = await getApiAccessState(e)
+    if (!apiAccess.enabled) {
+      send.send_with_At(e, apiAccess.globalEnabled ? '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。' : '这里没有连接查分平台哦！')
       return false
     }
 
@@ -152,7 +155,7 @@ async function getChartImg(e, id, options) {
   const words = []
   let wordsMaxValue = 0
 
-  if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+  if (await canUseApi(e)) {
     const apiChartTag = await makeRequest.getChartsTagbySongRank({ song_id: info.id, rank })
     for (const tag of fCompute.objectKeys(apiChartTag)) {
       words.push({ name: tag, value: apiChartTag[tag] })
