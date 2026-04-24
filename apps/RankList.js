@@ -57,24 +57,29 @@ export class phiRankList extends phiPluginBase {
 
 
         if (await canUseApi(e)) {
-            try {
-                let data = {
-                    Title: "RankingScore排行榜",
-                    totDataNum: 0,
-                    // @ts-ignore
-                    BotNick: Bot.nickname,
-                    /** @type {rankingListObject[]} */
-                    users: [],
-                    me: {},
-                }
-                /**请求的排名 */
-                let msg = e.msg.match(/\d+/)
-                let api_ranklist = null
-                if (msg) {
-                    api_ranklist = await makeRequest.getRanklistRank({ request_rank: Number(msg[0]) })
-                } else {
-                    api_ranklist = await makeRequest.getRanklistUser(makeRequestFnc.makePlatform(e))
-                }
+            let data = {
+                Title: "RankingScore排行榜",
+                totDataNum: 0,
+                // @ts-ignore
+                BotNick: Bot.nickname,
+                /** @type {rankingListObject[]} */
+                users: [],
+                me: {},
+            }
+            /**请求的排名 */
+            let msg = e.msg.match(/\d+/)
+            const api_ranklist = msg
+                ? await makeRequestFnc.requestApi(
+                    e,
+                    () => makeRequest.getRanklistRank({ request_rank: Number(msg[0]) }),
+                    { logTag: 'API ERR getRanklistRank', loggerLevel: 'warn' }
+                )
+                : await makeRequestFnc.requestApi(
+                    e,
+                    () => makeRequest.getRanklistUser(makeRequestFnc.makePlatform(e)),
+                    { logTag: 'API ERR getRanklistUser', loggerLevel: 'warn' }
+                )
+            if (api_ranklist) {
                 data.totDataNum = api_ranklist.totDataNum;
                 for (let item of api_ranklist.users) {
                     data.users.push({ ...await makeSmallLine(item), index: item.index, me: item.me })
@@ -82,8 +87,6 @@ export class phiRankList extends phiPluginBase {
                 data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history), e)
                 send.send_with_At(e, [await picmodle.common(e, 'rankingList', data), `总数据量：${data.totDataNum}\n`])
                 return true
-            } catch (err) {
-                logger.warn(`[phi-plugin] API ERR`, err)
             }
         }
         let data = {
@@ -164,13 +167,14 @@ export class phiRankList extends phiPluginBase {
         }
 
         if (await canUseApi(e)) {
-            try {
-                makeRequest.getRanklistRks({ request_rks: rks }).then((res) => {
-                    send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)
-                })
+            const res = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getRanklistRks({ request_rks: rks }),
+                { logTag: 'API ERR getRanklistRks', loggerLevel: 'warn' }
+            )
+            if (res) {
+                send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)
                 return true
-            } catch (err) {
-                logger.warn(`[phi-plugin] API ERR`, err)
             }
         }
 

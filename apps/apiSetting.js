@@ -195,10 +195,12 @@ export class phihelp extends phiPluginBase {
             send.send_with_At(e, 'API Token 包含非法字符，请检查后重试！\n格式：\n/setApiToken <新Token>')
             return false
         }
-        try {
-            await makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, token_new: apiToken })
-        } catch (err) {
-            send.send_with_At(e, ['设置 API Token 失败: ', err])
+        const setTokenResult = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, token_new: apiToken }),
+            { errorPrefix: '设置 API Token 失败', notifyUser: true }
+        )
+        if (!setTokenResult) {
             return false
         }
         send.send_with_At(e, 'API Token 已设置为: \n' + apiToken)
@@ -227,11 +229,12 @@ export class phihelp extends phiPluginBase {
             send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
             return;
         }
-        let tokenList = null
-        try {
-            tokenList = await makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
-        } catch (err) {
-            send.send_with_At(e, ['获取 Token 列表失败: ', err])
+        const tokenList = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken }),
+            { errorPrefix: '获取 Token 列表失败', notifyUser: true }
+        )
+        if (!tokenList) {
             return false
         }
 
@@ -286,11 +289,12 @@ export class phihelp extends phiPluginBase {
             return;
         }
 
-        let tokenList = null
-        try {
-            tokenList = await makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken });
-        } catch (err) {
-            send.send_with_At(e, ['获取 Token 列表失败: ', err])
+        const tokenList = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken }),
+            { errorPrefix: '获取 Token 列表失败', notifyUser: true }
+        )
+        if (!tokenList) {
             return false
         }
 
@@ -306,17 +310,19 @@ export class phihelp extends phiPluginBase {
             let index = choseNum - 1;
             let tarPlatform = tokenList.platform_data[index];
             if (force) {
-                try {
-                    await makeRequest.tokenManage({
+                const tokenManageResult = await makeRequestFnc.requestApi(
+                    e,
+                    () => makeRequest.tokenManage({
                         ...makeRequestFnc.makePlatform(e), token: sessionToken, data: {
                             platform: tarPlatform.platform_name,
                             platform_id: tarPlatform.platform_id,
                             operation
                         }
-                    });
+                    }),
+                    { errorPrefix: '操作失败', notifyUser: true }
+                )
+                if (tokenManageResult) {
                     send.send_with_At(e, `操作成功`);
-                } catch (err) {
-                    send.send_with_At(e, `操作失败！\n${err}`);
                 }
             } else {
                 let vis = Date.now()
@@ -357,17 +363,19 @@ export class phihelp extends phiPluginBase {
                 return;
             }
 
-            try {
-                await makeRequest.tokenManage({
+            const tokenManageResult = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.tokenManage({
                     ...makeRequestFnc.makePlatform(e), token: sessionToken, data: {
                         platform: tarPlatform.platform_name,
                         platform_id: tarPlatform.platform_id,
                         operation
                     }
-                });
+                }),
+                { errorPrefix: '操作失败', notifyUser: true }
+            )
+            if (tokenManageResult) {
                 send.send_with_At(e, `操作成功`);
-            } catch (err) {
-                send.send_with_At(e, `操作失败！\n${err}`);
             }
         } else {
             send.send_with_At(e, `已取消`);
@@ -406,11 +414,12 @@ export class phihelp extends phiPluginBase {
             send.send_with_At(e, `本地没有您的apiId记录嗷！请尝试重新绑定呐！`)
             return;
         }
-        let sessionToken = null
-        try {
-            sessionToken = await makeRequest.getPgrToken({ ...makeRequestFnc.makePlatform(e), api_token: apiToken })
-        } catch (err) {
-            send.send_with_At(e, ['API Token 验证失败: ', err])
+        const sessionToken = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getPgrToken({ ...makeRequestFnc.makePlatform(e), api_token: apiToken }),
+            { errorPrefix: 'API Token 验证失败', notifyUser: true }
+        )
+        if (!sessionToken) {
             return false
         }
 
@@ -442,10 +451,12 @@ export class phihelp extends phiPluginBase {
             return;
         }
 
-        try {
-            await makeRequest.clear({ ...makeRequestFnc.makePlatform(e), token: sessionToken })
-        } catch (err) {
-            send.send_with_At(e, ['清除数据失败: ', err])
+        const clearResult = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.clear({ ...makeRequestFnc.makePlatform(e), token: sessionToken }),
+            { errorPrefix: '清除数据失败', notifyUser: true }
+        )
+        if (!clearResult) {
             return false
         }
 
@@ -506,24 +517,33 @@ export class phihelp extends phiPluginBase {
                 }
             }
         } while (cursor != 0);
-        try {
-            if (user_token.length > 1000) {
-                send.send_with_At(e, `数据量过大，开始分批上传，预计${Math.ceil(user_token.length / 1000) * 5}秒...`);
-                for (let i = 0; i < user_token.length; i += 1000) {
-                    let batch = user_token.slice(i, i + 1000);
-                    await makeRequest.setUsersToken({ data: batch });
-                    logger.info(`[phi-plugin] 已上传 ${Math.floor(i / 1000) + 1} / ${Math.ceil(user_token.length / 1000)} 批次`);
-                    await new Promise(resolve => setTimeout(resolve, 5000)); // 等待1秒
+        if (user_token.length > 1000) {
+            send.send_with_At(e, `数据量过大，开始分批上传，预计${Math.ceil(user_token.length / 1000) * 5}秒...`);
+            for (let i = 0; i < user_token.length; i += 1000) {
+                let batch = user_token.slice(i, i + 1000);
+                const uploadResult = await makeRequestFnc.requestApi(
+                    e,
+                    () => makeRequest.setUsersToken({ data: batch }),
+                    { errorPrefix: '上传用户Token失败', notifyUser: true }
+                )
+                if (!uploadResult) {
+                    return false
                 }
-            } else {
-                await makeRequest.setUsersToken({ data: user_token });
+                logger.info(`[phi-plugin] 已上传 ${Math.floor(i / 1000) + 1} / ${Math.ceil(user_token.length / 1000)} 批次`);
+                await new Promise(resolve => setTimeout(resolve, 5000)); // 等待1秒
             }
-            send.send_with_At(e, '上传用户Token成功')
-
-        } catch (err) {
-            send.send_with_At(e, ['上传用户Token失败: ', err])
-            return false
+        } else {
+            const uploadResult = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.setUsersToken({ data: user_token }),
+                { errorPrefix: '上传用户Token失败', notifyUser: true }
+            )
+            if (!uploadResult) {
+                return false
+            }
         }
+
+        send.send_with_At(e, '上传用户Token成功')
 
     }
 
@@ -557,7 +577,15 @@ export class phihelp extends phiPluginBase {
             }
         }
 
-        logger.info(await makeRequest.updateComments({ data: updateData }));
+        const updateResult = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.updateComments({ data: updateData }),
+            { errorPrefix: '上传评论数据失败', notifyUser: true }
+        )
+        if (!updateResult) {
+            return false
+        }
+        logger.info(updateResult);
     }
 
     /**
@@ -582,11 +610,12 @@ export class phihelp extends phiPluginBase {
             return true;
         }
 
-        let userSetting
-        try {
-            userSetting = await makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e), token });
-        } catch (error) {
-            send.send_with_At(e, '获取用户设置失败: ' + error);
+        let userSetting = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e), token }),
+            { errorPrefix: '获取用户设置失败', notifyUser: true }
+        )
+        if (!userSetting) {
             return true;
         }
 
@@ -632,18 +661,22 @@ export class phihelp extends phiPluginBase {
             [settingKey]: settingValue
         }
 
-        try {
-            await makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), token, setting: patchSetting });
-            send.send_with_At(e, `设置成功：${API_USER_SETTING_META[settingKey].title} -> ${settingValue ? '开启' : '关闭'}`)
-        } catch (error) {
-            send.send_with_At(e, '设置失败: ' + error);
+        const setResult = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), token, setting: patchSetting }),
+            { errorPrefix: '设置失败', notifyUser: true }
+        )
+        if (!setResult) {
             return true;
         }
+        send.send_with_At(e, `设置成功：${API_USER_SETTING_META[settingKey].title} -> ${settingValue ? '开启' : '关闭'}`)
 
-        try {
-            userSetting = await makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e), token });
-        } catch (error) {
-            send.send_with_At(e, '获取最新用户设置失败: ' + error);
+        userSetting = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e), token }),
+            { errorPrefix: '获取最新用户设置失败', notifyUser: true }
+        )
+        if (!userSetting) {
             return true;
         }
 

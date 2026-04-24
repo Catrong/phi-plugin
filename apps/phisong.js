@@ -738,10 +738,16 @@ export class phisong extends phiPluginBase {
             return false
         }
         let ans = '直播速递：\n'
-        try {
-            let info = await makeRequest.liveInfo();
+        const info = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.liveInfo(),
+            { logTag: 'liveInfo', loggerLevel: 'warn' }
+        )
+        if (info) {
             ans += info;
-        } catch (e) { ans += '发生错误，请稍后再试。' }
+        } else {
+            ans += '发生错误，请稍后再试。'
+        }
 
         send.send_with_At(e, ans)
     }
@@ -933,12 +939,15 @@ export class phisong extends phiPluginBase {
         let songId = songInfo.id;
 
         if (save.apiId && await canUseApi(e)) {
-            try {
+            const apiUserId = save.apiId
+            const apiAddResult = await makeRequestFnc.requestApi(
+                e,
+                async () => {
                 /**@type {import("../model/makeRequest.js").APIUpdateCommentObject} */
                 let cmtobj = {
                     songId: songInfo.id,
                     rank: rankKind,
-                    apiUserId: save.apiId,
+                    apiUserId,
                     rks: save.saveInfo.summary.rankingScore,
                     score: 0,
                     acc: 0,
@@ -982,10 +991,13 @@ export class phisong extends phiPluginBase {
                     token: sessionToken,
                     data: { comment: cmtobj }
                 });
+                return true
+                },
+                { logTag: 'API评论失败 addComment', loggerLevel: 'warn' }
+            )
+            if (apiAddResult) {
                 send.send_with_At(e, `在线评论成功！φ(゜▽゜*)♪`);
                 return true;
-            } catch (error) {
-                logger.warn(`[phi-plugin] API评论失败`, error)
             }
         }
         /**@type {import("../model/getComment.js").commentObject} */
@@ -1076,12 +1088,14 @@ export class phisong extends phiPluginBase {
         let comment = getComment.getByCommentId(commentId)
         if (!comment) {
             if (await canUseApi(e)) {
-                try {
-                    await makeRequest.delComment({ token: sessionToken, comment_id: commentId });
+                const delResult = await makeRequestFnc.requestApi(
+                    e,
+                    () => makeRequest.delComment({ token: sessionToken, comment_id: commentId }),
+                    { logTag: 'API删除评论失败 delComment', loggerLevel: 'warn' }
+                )
+                if (delResult) {
                     send.send_with_At(e, `删除在线评论成功！φ(゜▽゜*)♪`);
                     return true;
-                } catch (error) {
-                    logger.warn(`[phi-plugin] API删除评论失败`, error)
                 }
             }
             send.send_with_At(e, `没有找到ID为${commentId}的评论QAQ！`);
@@ -1116,8 +1130,12 @@ export class phisong extends phiPluginBase {
         }
 
         if ((save.session || save.apiId) && await canUseApi(e)) {
-            try {
-                const comments = await makeRequest.getCommentsByUserId(makeRequestFnc.makePlatform(e));
+            const comments = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getCommentsByUserId(makeRequestFnc.makePlatform(e)),
+                { logTag: '获取用户评论失败 getCommentsByUserId', loggerLevel: 'warn' }
+            )
+            if (comments) {
 
                 if (comments && comments.length > 0) {
                     let msg = `您的评论列表：\nID | 曲目 | 难度 | 内容 | 时间\n`;
@@ -1129,8 +1147,6 @@ export class phisong extends phiPluginBase {
                     send.send_with_At(e, `您还没有评论哦！`);
                 }
                 return true;
-            } catch (error) {
-                logger.warn(`[phi-plugin] 获取用户评论失败`, error)
             }
         }
         return false;
@@ -1157,9 +1173,14 @@ async function songInfo(page, addComment, id, e) {
         return `发生未知错误QAQ！请回报管理员！`;
     }
     if (await Config.getUserCfg('config', 'allowComment') && (addComment || page)) {
-        let commentData;
+        /** @type {any[]} */
+        let commentData = [];
         if (await canUseApi(e)) {
-            commentData = await makeRequest.getCommentsBySongId({ song_id: infoData.id });
+            commentData = (await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getCommentsBySongId({ song_id: infoData.id }),
+                { logTag: '获取歌曲评论失败 getCommentsBySongId', loggerLevel: 'warn' }
+            )) || [];
             for (const item of commentData) {
                 item.PlayerId = (item.PlayerId && item.PlayerId.length > 15) ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;
                 item.avatar = getInfo.idgetavatar(item.avatar || '');

@@ -88,7 +88,15 @@ export default class getSaveFromApi {
      * @returns 
      */
     static async getSaveFromApi(e) {
-        let result = new Save(await makeRequest.getCloudSaves(makeRequestFnc.makePlatform(e)))
+        const cloudSave = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getCloudSaves(makeRequestFnc.makePlatform(e)),
+            { logTag: 'getCloudSaves', loggerLevel: 'warn' }
+        )
+        if (!cloudSave) {
+            throw new Error('getCloudSaves failed')
+        }
+        let result = new Save(cloudSave)
         await result.init()
         return result
     }
@@ -119,7 +127,14 @@ export default class getSaveFromApi {
         if (!apiId) {
             throw new Error('apiId is undefined')
         }
-        let result = await makeRequest.getHistory({ ...makeRequestFnc.makePlatform(e), request })
+        const result = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getHistory({ ...makeRequestFnc.makePlatform(e), request }),
+            { logTag: 'getHistory', loggerLevel: 'warn' }
+        )
+        if (!result) {
+            throw new Error('getHistory failed')
+        }
         return /**@type {any} */(new saveHistory(result))
     }
 
@@ -155,11 +170,26 @@ export default class getSaveFromApi {
         }
         let result;
         if (song_id && difficulty) {
-            result = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id, difficulty })
+            result = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id, difficulty }),
+                { logTag: 'getHistoryRecord by song_id+difficulty', loggerLevel: 'warn' }
+            )
         } else if (song_id) {
-            result = await makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id })
+            result = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getHistoryRecord({ ...makeRequestFnc.makePlatform(e), song_id }),
+                { logTag: 'getHistoryRecord by song_id', loggerLevel: 'warn' }
+            )
         } else {
-            result = await makeRequest.getHistoryRecord(makeRequestFnc.makePlatform(e))
+            result = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getHistoryRecord(makeRequestFnc.makePlatform(e)),
+                { logTag: 'getHistoryRecord', loggerLevel: 'warn' }
+            )
+        }
+        if (!result) {
+            throw new Error('getHistoryRecord failed')
         }
         return result
     }
@@ -175,7 +205,14 @@ export default class getSaveFromApi {
         await readFile.DelFile(path.join(fPath, 'save.json'))
         fs.rmSync(path.join(apiSavePath, apiId), { recursive: true, force: true });
         this.del_user_apiId(e.user_id)
-        await makeRequest.unbind({ ...makeRequestFnc.makePlatform(e) })
+        const unbindResult = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.unbind({ ...makeRequestFnc.makePlatform(e) }),
+            { logTag: 'unbind', loggerLevel: 'warn' }
+        )
+        if (!unbindResult) {
+            throw new Error('unbind failed')
+        }
         return true
     }
 

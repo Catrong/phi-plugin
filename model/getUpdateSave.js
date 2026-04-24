@@ -24,9 +24,23 @@ export default class getUpdateSave {
     static async getNewSaveFromApi(e, token) {
         let old = await getSaveFromApi.getSave(e.user_id)
 
-        let newSaveInfo = await makeRequest.getCloudSaveInfo({ token: token, ...makeRequestFnc.makePlatform(e) })
+        const newSaveInfo = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getCloudSaveInfo({ token: token, ...makeRequestFnc.makePlatform(e) }),
+            { logTag: 'getCloudSaveInfo', loggerLevel: 'warn' }
+        )
+        if (!newSaveInfo) {
+            throw new Error('getCloudSaveInfo failed')
+        }
         if (newSaveInfo.modifiedAt.iso != old?.saveInfo?.modifiedAt?.iso?.toISOString()) {
-            let newSave = await makeRequest.getCloudSaves({ token: token, ...makeRequestFnc.makePlatform(e) })
+            const newSave = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getCloudSaves({ token: token, ...makeRequestFnc.makePlatform(e) }),
+                { logTag: 'getCloudSaves', loggerLevel: 'warn' }
+            )
+            if (!newSave) {
+                throw new Error('getCloudSaves failed')
+            }
             getSaveFromApi.putSave(e.user_id, newSave)
             let result = new Save(newSave)
             await result.init()
@@ -42,12 +56,19 @@ export default class getUpdateSave {
     }
 
     /**
-     * 
+     * @param {botEvent} e 
      * @param {apiUserId} uid 
      * @returns {Promise<Save>}
      */
-    static async getUIDSaveFromApi(uid) {
-        let newSave = await makeRequest.getCloudSaves({ api_user_id: uid });
+    static async getUIDSaveFromApi(e, uid) {
+        const newSave = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getCloudSaves({ api_user_id: uid }),
+            { logTag: 'getCloudSaves by api_user_id', loggerLevel: 'warn' }
+        )
+        if (!newSave) {
+            throw new Error('getCloudSaves by api_user_id failed')
+        }
         let result = new Save(newSave)
         await result.init()
         return result
@@ -199,11 +220,11 @@ export default class getUpdateSave {
         }
         let oldHistory = await getSave.getHistory(e.user_id);
         if (oldHistory) {
-            try {
-                await makeRequest.setHistory({ ...makeRequestFnc.makePlatform(e), token: sessionToken, data: oldHistory });
-            } catch (err) {
-                logger.warn('[phi-plugin]上传历史记录失败', err)
-            }
+            await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.setHistory({ ...makeRequestFnc.makePlatform(e), token: sessionToken, data: oldHistory }),
+                { logTag: '上传历史记录失败', loggerLevel: 'warn' }
+            );
         }
         try {
             return await getSaveFromApi.getHistory(e, field)

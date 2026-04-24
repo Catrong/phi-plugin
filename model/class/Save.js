@@ -8,6 +8,7 @@ import fCompute from '../fCompute.js'
 import getInfo from '../getInfo.js'
 import getRksRank from '../getRksRank.js'
 import makeRequest from '../makeRequest.js'
+import makeRequestFnc from '../makeRequestFnc.js'
 import LevelRecordInfo from './LevelRecordInfo.js'
 
 export default class Save {
@@ -400,7 +401,9 @@ export default class Save {
             minuprks += 0.01
         }
 
+        /** @type {idString[]} */
         const b19Ids = []
+        /** @type {{songId: idString, rank: levelKind, acc: number}[]} */
         const b19Dual = []
 
         /**bestN 列表 */
@@ -451,11 +454,18 @@ export default class Save {
             try {
 
                 if (!option.avgType || option.avgType === "all") {
-                    const res = await makeRequest.getAllSongAccAvg({
-                        songIds: b19Ids,
-                        minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                        maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                    })
+                    const res = await makeRequestFnc.requestApi(
+                        e,
+                        () => makeRequest.getAllSongAccAvg({
+                            songIds: b19Ids,
+                            minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                            maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                        }),
+                        { logTag: 'avg-getAllSongAccAvg', loggerLevel: 'warn' }
+                    )
+                    if (!res) {
+                        throw new Error('avg-getAllSongAccAvg failed')
+                    }
                     let allhiger = true
                     for (let i = 0; i < b19_list.length; ++i) {
                         if (i >= 27 && allhiger) {
@@ -475,7 +485,14 @@ export default class Save {
                         }
                     }
                     if (allhiger) {
-                        const res = await makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: (Math.floor((com_rks - 0.05) / 0.05) + 2) * 0.05, maxRks: (Math.ceil((com_rks + 0.05) / 0.05) + 2) * 0.05 })
+                        const res = await makeRequestFnc.requestApi(
+                            e,
+                            () => makeRequest.getAllSongAccAvg({ songIds: b19Ids, minRks: (Math.floor((com_rks - 0.05) / 0.05) + 2) * 0.05, maxRks: (Math.ceil((com_rks + 0.05) / 0.05) + 2) * 0.05 }),
+                            { logTag: 'avg-getAllSongAccAvg-up', loggerLevel: 'warn' }
+                        )
+                        if (!res) {
+                            throw new Error('avg-getAllSongAccAvg-up failed')
+                        }
                         for (let i = 0; i < b19_list.length; ++i) {
                             const x = b19_list[i];
                             if (x.rank == 'LEGACY') continue;
@@ -492,11 +509,18 @@ export default class Save {
                         }
                     }
                 } else if (option.avgType === "b30") {
-                    const res = await makeRequest.getAllSongAccAvgB30({
-                        songIds: b19Ids,
-                        minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                        maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                    })
+                    const res = await makeRequestFnc.requestApi(
+                        e,
+                        () => makeRequest.getAllSongAccAvgB30({
+                            songIds: b19Ids,
+                            minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                            maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                        }),
+                        { logTag: 'avg-getAllSongAccAvgB30', loggerLevel: 'warn' }
+                    )
+                    if (!res) {
+                        throw new Error('avg-getAllSongAccAvgB30 failed')
+                    }
                     const kind = option.color === "red" || option.color === "gold";
                     const low = kind ? "Lower" : "Hyper"
                     const high = kind ? "Higher" : "Finished"
@@ -514,12 +538,19 @@ export default class Save {
                         }
                     }
                 } else if (option.avgType === "top") {
-                    const res = await makeRequest.getAllSongAccRank({
-                        queries: b19Dual,
-                        dimension: ["all", "b30"],
-                        minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                        maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                    })
+                    const res = await makeRequestFnc.requestApi(
+                        e,
+                        () => makeRequest.getAllSongAccRank({
+                            queries: b19Dual,
+                            dimension: ["all", "b30"],
+                            minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                            maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                        }),
+                        { logTag: 'avg-getAllSongAccRank', loggerLevel: 'warn' }
+                    )
+                    if (!res) {
+                        throw new Error('avg-getAllSongAccRank failed')
+                    }
                     let kind = "Finished"
                     switch (option.color) {
                         case "red":

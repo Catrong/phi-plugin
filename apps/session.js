@@ -82,29 +82,29 @@ export class phisstk extends phiPluginBase {
         if (!sessionToken) {
             let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]+/g)?.[0]
             if (await canUseApi(e)) {
-                try {
-                    let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId })
-                    if (result?.data?.internal_id) {
-                        let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
-                        if (!result.data.have_api_token) {
-                            resMsg += apiMsg
-                        }
-                        send.send_with_At(e, resMsg)
-                        await getSave.del_user_token(e.user_id); //删除本地token，避免冲突
-                        let updateData = await getUpdateSave.getNewSaveFromApi(e)
-                        let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
-                        await build(e, updateData, history)
+                const result = await makeRequestFnc.requestApi(
+                    e,
+                    () => makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId }),
+                    {
+                        logTag: 'API错误 bind by api_user_id',
+                        loggerLevel: 'error',
+                        ignoreMessages: [APII18NCN.userNotFound]
                     }
+                )
+                if (result?.data?.internal_id) {
+                    let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
+                    if (!result.data.have_api_token) {
+                        resMsg += apiMsg
+                    }
+                    send.send_with_At(e, resMsg)
+                    await getSave.del_user_token(e.user_id); //删除本地token，避免冲突
+                    let updateData = await getUpdateSave.getNewSaveFromApi(e)
+                    let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                    await build(e, updateData, history)
                     return true
-                } catch (/**@type {any} */ err) {
-                    // console.log(err)
-                    if (err?.message == APII18NCN.userNotFound) {
-                        send.send_with_At(e, `没有找到${apiId || ''}对应的用户哦，请尝试输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
-                    } else {
-                        send.send_with_At(e, err.message)
-                        logger.error(`[phi-plugin] API错误`)
-                        logger.error(err)
-                    }
+                }
+                if (!result) {
+                    send.send_with_At(e, `没有找到${apiId || ''}对应的用户哦，请尝试输入sessionToken呐！\n扫码绑定：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
                     return false
                 }
             } else {
@@ -214,29 +214,38 @@ export class phisstk extends phiPluginBase {
         }
 
         if (await canUseApi(e)) {
-
-            try {
-                let result = await makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken, isGlobal })
-                if (result?.data?.internal_id) {
-                    let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
-                    if (!result.data.have_api_token) {
-                        resMsg += apiMsg
-                    }
-                    send.send_with_At(e, resMsg)
-                    await getSave.add_user_token(e.user_id, sessionToken);
-                    let oldHistory = await getSave.getHistory(e.user_id);
-                    if (oldHistory) {
-                        await makeRequest.setHistory({ token: sessionToken, data: oldHistory });
-                    }
-                    let updateData = await getUpdateSave.getNewSaveFromApi(e)
-                    let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
-                    await build(e, updateData, history)
+            let result = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken, isGlobal }),
+                {
+                    errorPrefix: '从API获取存档失败，本次绑定将不上传至查分平台QAQ！',
+                    notifyUser: true,
+                    logTag: 'API错误 bind by token',
+                    loggerLevel: 'error'
                 }
+            )
+            if (result?.data?.internal_id) {
+                let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
+                if (!result.data.have_api_token) {
+                    resMsg += apiMsg
+                }
+                send.send_with_At(e, resMsg)
+                await getSave.add_user_token(e.user_id, sessionToken);
+                let oldHistory = await getSave.getHistory(e.user_id);
+                if (oldHistory) {
+                    await makeRequestFnc.requestApi(
+                        e,
+                        () => makeRequest.setHistory({ token: sessionToken, data: oldHistory }),
+                        { logTag: 'API错误 setHistory', loggerLevel: 'warn' }
+                    );
+                }
+                let updateData = await getUpdateSave.getNewSaveFromApi(e)
+                let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                await build(e, updateData, history)
                 return true
-            } catch (err) {
-                send.send_with_At(e, `${err}\n从API获取存档失败，本次绑定将不上传至查分平台QAQ！`)
-                logger.error(`[phi-plugin] API错误`)
-                logger.error(err)
+            }
+            if (result) {
+                return true
             }
         }
 
@@ -281,9 +290,12 @@ export class phisstk extends phiPluginBase {
                 history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
             } catch (/**@type {any} */ err) {
                 if (err?.message != APII18NCN.userNotFound) {
-                    send.send_with_At(e, `${err}\n从API获取存档失败，本次更新将使用本地数据QAQ！`)
-                    logger.warn(`[phi-plugin] API错误`)
-                    logger.warn(err)
+                    makeRequestFnc.handleApiError(e, err, {
+                        errorPrefix: '从API获取存档失败，本次更新将使用本地数据QAQ！',
+                        notifyUser: true,
+                        logTag: 'API错误 update from api',
+                        loggerLevel: 'warn'
+                    })
                 }
             }
         }

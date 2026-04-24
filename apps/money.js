@@ -15,6 +15,7 @@ import Save from '../model/class/Save.js'
 import { Level, LevelNum, redisPath } from '../model/constNum.js'
 import PluginData, { themeList } from '../model/class/pluginData.js'
 import makeRequest from '../model/makeRequest.js'
+import makeRequestFnc from '../model/makeRequestFnc.js'
 import logger from '../components/Logger.js'
 import { canUseApi } from '../model/apiPermission.js'
 
@@ -416,12 +417,16 @@ async function randtask(e, save, task = []) {
 
     if (await canUseApi(e)) {
 
-        try {
-            const res = await makeRequest.getAllSongAccAvgB30({
+        const res = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getAllSongAccAvgB30({
                 songIds: getInfo.idList,
                 minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                 maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-            })
+            }),
+            { logTag: 'api-getAllSongAccAvgB30', loggerLevel: 'error' }
+        )
+        if (res) {
             const ids = fCompute.objectKeys(res)
             ids.forEach(id => {
                 if (!getInfo.ori_info[id]) {
@@ -444,8 +449,6 @@ async function randtask(e, save, task = []) {
                     }
                 })
             })
-        } catch (err) {
-            logger.error(`[phi-plugin][api-getAllSongAccAvgB30]`, err);
         }
     }
 

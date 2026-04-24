@@ -112,7 +112,14 @@ export class phihelp extends phiPluginBase {
 
     const msg = e.msg.replace(/[#/](.*?)(settag)(\s*)/, '');
 
-    const chartsTagList = await makeRequest.getChartsTagsName();
+    const chartsTagList = await makeRequestFnc.requestApi(
+      e,
+      () => makeRequest.getChartsTagsName(),
+      { errorPrefix: '获取标签列表失败', notifyUser: true, logTag: 'getChartsTagsName', loggerLevel: 'warn' }
+    );
+    if (!chartsTagList) {
+      return true;
+    }
     /**@type {chartsTagString[]} */
     const selectedTags = [];
     chartsTagList.forEach((tag, index) => {
@@ -156,10 +163,16 @@ async function getChartImg(e, id, options) {
   let wordsMaxValue = 0
 
   if (await canUseApi(e)) {
-    const apiChartTag = await makeRequest.getChartsTagbySongRank({ song_id: info.id, rank })
-    for (const tag of fCompute.objectKeys(apiChartTag)) {
-      words.push({ name: tag, value: apiChartTag[tag] })
-      wordsMaxValue = Math.max(wordsMaxValue, apiChartTag[tag])
+    const apiChartTag = await makeRequestFnc.requestApi(
+      e,
+      () => makeRequest.getChartsTagbySongRank({ song_id: info.id, rank }),
+      { logTag: 'getChartsTagbySongRank', loggerLevel: 'warn' }
+    )
+    if (apiChartTag) {
+      for (const tag of fCompute.objectKeys(apiChartTag)) {
+        words.push({ name: tag, value: apiChartTag[tag] })
+        wordsMaxValue = Math.max(wordsMaxValue, apiChartTag[tag])
+      }
     }
   }
 
@@ -213,15 +226,27 @@ async function getChartTags(e, id, options) {
   const words = []
   let wordsMaxValue = 0
 
-  const apiChartTag = await makeRequest.getChartsTagbySongRank({ song_id: info.id, rank })
-  let usersVote;
-  try {
-    usersVote = await makeRequest.getChartsUsersVote({ ...makeRequestFnc.makePlatform(e), data: [{ song_id: info.id, rank: [rank] }] })
-
-  } catch (/**@type {any}*/ err) {
-    if (err.message != APII18NCN.userNotFound) {
-      logger.error(`获取用户投票信息失败，ERROR:\n${err.message}`);
+  const apiChartTag = await makeRequestFnc.requestApi(
+    e,
+    () => makeRequest.getChartsTagbySongRank({ song_id: info.id, rank }),
+    { errorPrefix: '获取谱面标签失败', notifyUser: true, logTag: 'getChartsTagbySongRank', loggerLevel: 'warn' }
+  )
+  if (!apiChartTag) {
+    return
+  }
+  /** @type {import('../model/makeRequest.js').chartsTagResponseData[] | null} */
+  let usersVote = null;
+  usersVote = await makeRequestFnc.requestApi(
+    e,
+    () => makeRequest.getChartsUsersVote({ ...makeRequestFnc.makePlatform(e), data: [{ song_id: info.id, rank: [rank] }] }),
+    {
+      logTag: 'getChartsUsersVote',
+      loggerLevel: 'error',
+      ignoreMessages: [APII18NCN.userNotFound]
     }
+  )
+  if (!usersVote) {
+    usersVote = []
   }
   for (const tag of fCompute.objectKeys(apiChartTag)) {
     words.push({ name: tag, value: apiChartTag[tag], vis: usersVote?.[0]?.tags?.includes(tag) ?? false })
@@ -257,11 +282,13 @@ async function setChartTags(e, id, options) {
     return;
   }
 
-  try {
-    await makeRequest.setChartsTag({ ...makeRequestFnc.makePlatform(e), token: sessionToken, song_id: id, rank, content: selectedTags });
-  } catch (/**@type {any}*/ err) {
-    send.send_with_At(e, `投票失败QAQ！ERROR:\n${err.message}`);
-    logger.error(`投票失败，token：${sessionToken}\nERROR:\n${err.message} `);
+  const setResult = await makeRequestFnc.requestApi(
+    e,
+    () => makeRequest.setChartsTag({ ...makeRequestFnc.makePlatform(e), token: sessionToken, song_id: id, rank, content: selectedTags }),
+    { errorPrefix: '投票失败QAQ！ERROR', notifyUser: true, logTag: 'setChartsTag', loggerLevel: 'error' }
+  )
+  if (!setResult) {
+    return
   }
 
   getChartTags(e, id, { rank });

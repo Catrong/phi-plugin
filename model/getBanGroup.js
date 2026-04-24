@@ -31,18 +31,21 @@ export default class getBanGroup {
         const { group_id } = e;
         let sessionToken = await getSave.get_user_token(e.user_id)
         if (await canUseApi(e)) {
-            let result = false
-            try {
-                result = await makeRequest.getUserBan(makeRequestFnc.makePlatform(e))
-                if (result) {
-                    send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员(1)。")
-                    if (sessionToken) {
-                        await getSave.banSessionToken(sessionToken)
-                    }
-                    return true;
+            const result = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getUserBan(makeRequestFnc.makePlatform(e)),
+                {
+                    logTag: 'API获取用户禁用状态失败',
+                    loggerLevel: 'warn',
+                    ignoreMessages: [APII18NCN.userNotFound]
                 }
-            } catch (/** @type {any} */ e) {
-                if (e.message != APII18NCN.userNotFound) { logger.warn('[phi-plugin]API获取用户禁用状态失败', e) }
+            )
+            if (result) {
+                send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员(1)。")
+                if (sessionToken) {
+                    await getSave.banSessionToken(sessionToken)
+                }
+                return true;
             }
         }
         if (sessionToken) {

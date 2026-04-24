@@ -1,5 +1,6 @@
 import Config from '../components/Config.js'
 import getNotes from './getNotes.js'
+import send from './send.js'
 
 /**
  * @param {string | number | undefined} userId

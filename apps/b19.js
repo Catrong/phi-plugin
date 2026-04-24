@@ -97,7 +97,7 @@ export class phib19 extends phiPluginBase {
             let otherId = /** @type {apiUserId} */ (askOtherId[1]);
 
             try {
-                save = await getUpdateSave.getUIDSaveFromApi(otherId);
+                save = await getUpdateSave.getUIDSaveFromApi(e, otherId);
             } catch (err) {
                 send.send_with_At(e, `获取用户 ${otherId} 的存档失败！请确认该用户公开了存档且ID正确喵！\n错误信息：${err}`);
                 return true;
@@ -662,12 +662,16 @@ export class phib19 extends phiPluginBase {
 
         if (await canUseApi(e)) {
 
-            try {
-                const res = await makeRequest.getAllSongAccAvgB30({
+            const res = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getAllSongAccAvgB30({
                     songIds: getInfo.idList,
                     minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                     maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                })
+                }),
+                { logTag: 'api-getAllSongAccAvgB30', loggerLevel: 'error' }
+            )
+            if (res) {
                 const ids = fCompute.objectKeys(res)
                 ids.forEach(id => {
                     if (!info[id]) {
@@ -686,19 +690,21 @@ export class phib19 extends phiPluginBase {
                         }
                     })
                 })
-            } catch (err) {
-                logger.error(`[phi-plugin][api-getAllSongAccAvgB30]`, err);
             }
-            try {
-                const res = await makeRequest.getSongsApFcCount({
+            const apfcRes = await makeRequestFnc.requestApi(
+                e,
+                () => makeRequest.getSongsApFcCount({
                     songId: getInfo.idList || [],
                     rank: Level,
                     rksRange: {
                         min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                         max: Math.floor((com_rks + 0.05) / 0.05) * 0.05
                     }
-                })
-                const ids = fCompute.objectKeys(res);
+                }),
+                { logTag: 'api-getSongsApFcCount', loggerLevel: 'error' }
+            )
+            if (apfcRes) {
+                const ids = fCompute.objectKeys(apfcRes);
                 ids.forEach(id => {
                     if (!info[id]) {
                         return;
@@ -715,21 +721,19 @@ export class phib19 extends phiPluginBase {
                         if ((save.gameRecord?.[id]?.[LevelNum[lv]]?.score || 0) >= 1e6) {
                             return;
                         }
-                        if (res[id][lv].apCount > 0) {
+                        if (apfcRes[id][lv].apCount > 0) {
                             phiTaskList.push({
                                 id,
                                 level: lv,
-                                total: res[id][lv].total || 0,
+                                total: apfcRes[id][lv].total || 0,
                                 // diff: diff,
-                                apCount: res[id][lv].apCount || 0,
+                                apCount: apfcRes[id][lv].apCount || 0,
                                 ...songInfo,
                                 illustration: getInfo.getill(id, 'low') ?? '',
                             });
                         }
                     })
                 })
-            } catch (err) {
-                logger.error(`[phi-plugin][api-getSongsApFcCount]`, err);
             }
         }
 
@@ -1189,13 +1193,21 @@ async function getScore(songId, e, args = {}) {
     data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
 
     if (!args?.unRank && await canUseApi(e)) {
-        try {
-            const scoreRanklist = await makeRequest.getScoreRanklistByUser({
+        const scoreRanklist = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getScoreRanklistByUser({
                 ...makeRequestFnc.makePlatform(e),
                 songId,
                 rank: maxRank || 'IN',
                 orderBy: args?.orderBy || 'acc'
-            });
+            }),
+            {
+                logTag: 'API错误 getScoreRanklistByUser',
+                loggerLevel: 'warn',
+                ignoreMessages: [APII18NCN.userNotFound]
+            }
+        )
+        if (scoreRanklist) {
             scoreRanklist.users.forEach(item => {
                 // @ts-ignore
                 item.gameuser.challengeMode = Math.floor(item.gameuser.challengeModeRank / 100);
@@ -1214,32 +1226,25 @@ async function getScore(songId, e, args = {}) {
             data.ranklist = scoreRanklist;
             // @ts-ignore
             data.ranklist.selected = maxRank;
-        } catch (err) {
-            // @ts-ignore
-            if (err?.message != APII18NCN.userNotFound) {
-                logger.warn(`[phi-plugin] API错误 getScoreRanklistByUser`)
-                logger.warn(err)
-            }
         }
-        try {
-            const apFcCount = await makeRequest.getSongApFcCount({ songId });
-            if (apFcCount) {
+        const apFcCount = await makeRequestFnc.requestApi(
+            e,
+            () => makeRequest.getSongApFcCount({ songId }),
+            { logTag: 'API错误 getSongApFcCount', loggerLevel: 'warn' }
+        )
+        if (apFcCount) {
 
-                for (let level of Level) {
-                    if (!info.chart[level]) break;
-                    const count = apFcCount[level];
-                    if (!count || !count.total) continue;
-                    data.scoreData[level].apFcCount = {
-                        ap: count.apCount / count.total,
-                        fc: count.fcCount / count.total,
-                        total: count.total
-                    };
-                }
-
+            for (let level of Level) {
+                if (!info.chart[level]) break;
+                const count = apFcCount[level];
+                if (!count || !count.total) continue;
+                data.scoreData[level].apFcCount = {
+                    ap: count.apCount / count.total,
+                    fc: count.fcCount / count.total,
+                    total: count.total
+                };
             }
-        } catch (err) {
-            logger.warn(`[phi-plugin] API错误 getSongApFcCount`)
-            logger.warn(err)
+
         }
     }
 
