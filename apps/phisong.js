@@ -172,7 +172,14 @@ export class phisong extends phiPluginBase {
         const patterns = {
             'bpm': {
                 'regex': /bpm([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
-                'predicate': (item, bottom, top) => (item?.['bpm'] ? bottom <= item['bpm'] && item['bpm'] <= top : false)
+                'predicate': (item, bottom, top) => {
+                    // 优先使用 bpmList（变速曲目）
+                    if (item?.['bpmList'] && Array.isArray(item['bpmList']) && item['bpmList'].length) {
+                        return item['bpmList'].some(bpm => bottom <= bpm && bpm <= top);
+                    }
+                    // 回退到原来的单值 bpm
+                    return item?.['bpm'] ? bottom <= item['bpm'] && item['bpm'] <= top : false;
+                }
             },
             'difficulty': {
                 'regex': /(difficulty|dif|定数|难度|定级)([\s:：,，/|~是为]*)([0-9.]+(\s*-\s*[0-9.]+)?)/,
