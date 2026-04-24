@@ -150,51 +150,51 @@ export const USER_API_SETTING_META = {
 export const USER_API_SETTING_OPTIONS = {
     allowDataCollection: {
         true: {
-            title: '[0]同意',
+            title: '[1]同意',
             description: ''
         },
         false: {
-            title: '[1]拒绝',
+            title: '[0]拒绝',
             description: '插件将仅使用本地数据，不会上传任何信息。'
         }
     },
     allowLeaderboard: {
         true: {
-            title: '[0]同意',
+            title: '[1]同意',
             description: ''
         },
         false: {
-            title: '[1]拒绝',
+            title: '[0]拒绝',
             description: '你的成绩将不会在排行榜中展示。'
         }
     },
     allowDataAggregation: {
         true: {
-            title: '[0]同意',
+            title: '[1]同意',
             description: ''
         },
         false: {
-            title: '[1]拒绝',
+            title: '[0]拒绝',
             description: '拒绝将你的成绩数据用于统计分析，插件将不会使用你的数据进行任何形式的分析或报告。'
         }
     },
     allowPlayerIdSearch: {
         true: {
-            title: '[0]同意',
+            title: '[1]同意',
             description: ''
         },
         false: {
-            title: '[1]拒绝',
+            title: '[0]拒绝',
             description: '其他人将无法通过你的游戏ID搜索到你的成绩信息。'
         }
     },
     allowUserIdSearch: {
         true: {
-            title: '[0]同意',
+            title: '[1]同意',
             description: ''
         },
         false: {    
-            title: '[1]拒绝',
+            title: '[0]拒绝',
             description: '禁止使用用户ID获取存档，将禁用用户ID绑定功能。'
         }
     }
