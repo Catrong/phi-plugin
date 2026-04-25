@@ -232,42 +232,10 @@ export class phimoney extends phiPluginBase {
         const Remsg = helloMsg(now_time, 1)
 
         let data = await getNotes.getNotesData(e.user_id)
-        let task_time = new Date(data.task_time)
-
-        /**添加曲绘 */
-        if (data.task) {
-            for (let i in data.task) {
-                // @ts-ignore
-                data.task[i].illustration = getInfo.getill(data.task[i].song)
-                // @ts-ignore
-                data.task[i].song = getInfo.idgetsong(data.task[i].song) || data.task[i].song
-            }
-        }
 
         const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
-        let picdata = {
-            PlayerId: save.saveInfo.PlayerId,
-            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
-            Date: fCompute.formatDate(task_time),
-            ChallengeMode: (save.saveInfo.summary.challengeModeRank - (save.saveInfo.summary.challengeModeRank % 100)) / 100,
-            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            background: getInfo.getill(illlist[Math.floor(Math.random() * (illlist.length - 1))]),
-            task: data.task,
-            task_ans: Remsg[0],
-            task_ans1: Remsg[1],
-            Notes: data.money,
-            tips: getInfo.tips[Math.floor((Math.random() * (getInfo.tips.length - 1)) + 1)],
-            // dan: await get.getDan(e.user_id),
-            theme: data?.theme || 'star',
-        }
 
-        const spDateIndex = checkSpDateIndex(now_time);
-        if (spDateIndex !== -1) {
-            picdata.tips = spData[spDateIndex].sp_date_tips[randint(spData[spDateIndex].sp_date_tips.length - 1)]
-        }
-
-
-        send.send_with_At(e, await picmodle.tasks(e, picdata))
+        send.send_with_At(e, img)
 
         return true
     }
@@ -641,16 +609,12 @@ async function picData(save, plugin_data, user_id) {
     let dailyTasks = []
     if (save && Array.isArray(plugin_data.task)) {
         for (let i = 0; i < Math.min(5, plugin_data.task.length); i++) {
-            // @ts-ignore
             let t = plugin_data.task[i]
             if (!t) continue
             const songInfo = getInfo.ori_info?.[t.song];
-            // @ts-ignore
             let ill = getInfo.getill(t.song)
-            // @ts-ignore
             let songName = songInfo?.song || t.song
-            // @ts-ignore
-            let meta = `${t.request?.rank || ''} ${songInfo?.chart[t.request.rank]?.difficulty || ''} · ${(t.request?.type || '').toUpperCase()} ${t.request?.value ?? ''} · +${t.reward || 0} Notes`
+            let meta = `${t.request?.rank || ''} ${songInfo?.chart?.[t.request.rank]?.difficulty || ''} · ${(t.request?.type || '').toUpperCase()} ${t.request?.value ?? ''} · +${t.reward || 0} Notes`
             dailyTasks.push({
                 index: fCompute.ped(i + 1, 2),
                 song: songName,
