@@ -205,12 +205,20 @@ export function supportGuoba() {
                         optionType: "button",
                         options: [
                             {
+                                label: 'GitHub raw',
+                                value: 1
+                            },
+                            {
+                                label: 'r-0semi',
+                                value: 2
+                            },
+                            {
                                 label: 'gitee',
                                 value: "https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main"
                             },
                             {
                                 label: 'github',
-                                value: "https://github.com/Catrong/phi-plugin-ill/blob/main"
+                                value: "https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
                             },
                             {
                                 label: 'github代理(gh-proxy)',
@@ -224,9 +232,19 @@ export function supportGuoba() {
                     }
                 },
                 {
+                    field: 'githubProxy',
+                    label: 'GitHub代理',
+                    bottomHelpMessage: '仅在在线曲绘来源为 GitHub raw 或下载曲绘源为 GitHub 时生效。填 false 为不使用代理，也可填写代理地址，如 https://gh-proxy.com',
+                    component: 'Input',
+                    required: false,
+                    componentProps: {
+                        placeholder: 'false 或 https://gh-proxy.com',
+                    },
+                },
+                {
                     field: 'downIllUrl',
                     label: '下载曲绘源',
-                    bottomHelpMessage: '下载曲绘的源，实时生效',
+                    bottomHelpMessage: '下载曲绘的源，实时生效。选择 GitHub 时会使用上面的 GitHub代理配置',
                     component: "RadioGroup",
                     componentProps: {
                         buttonStyle: "solid",

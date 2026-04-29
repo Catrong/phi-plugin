@@ -47,10 +47,16 @@ allowComment: true
 allowChartTag: false
 
 #  在线曲绘地址
-onLinePhiIllUrl: "https://gh-proxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+onLinePhiIllUrl: 1
+#  1: GitHub raw
+#  2: 弦塔资源站
 
 #  下载曲绘地址
-downIllUrl: "https://gh-proxy.com/https://github.com/Catrong/phi-plugin-ill.git"
+downIllUrl: "https://github.com/Catrong/phi-plugin-ill.git"
+
+#  GitHub代理地址，仅在在线曲绘地址使用 GitHub raw 或下载曲绘地址使用 GitHub 时生效
+#  填 false 为不使用代理，也可直接填写代理地址，如 "https://gh-proxy.com"
+githubProxy: "https://gh-proxy.com"
 
 #  是否在更新插件时自动拉取最新曲绘
 autoPullPhiIll: false
