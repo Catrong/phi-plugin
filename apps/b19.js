@@ -45,7 +45,7 @@ export class phib19 extends phiPluginBase {
                     fnc: 'p30'
                 },
                 {
-                    reg: `^[#/杠刚钢纲](${Config.getUserCfg('config', 'cmdhead')})(\\s*)[a(arc)啊阿批屁劈]\\s*((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
+                    reg: `^[#/杠刚钢纲](${Config.getUserCfg('config', 'cmdhead')})(\\s*)[a啊阿批屁劈]\\s*((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
                     fnc: 'arcgrosB19'
                 },
                 {

@@ -723,7 +723,7 @@ export class phisong extends phiPluginBase {
             ans,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur')
         });
-        send.send_with_At(e, newSongImg);
+        send.send_with_At(e, [newSongImg, msg]);
     }
 
     /**
@@ -943,55 +943,55 @@ export class phisong extends phiPluginBase {
             const apiAddResult = await makeRequestFnc.requestApi(
                 e,
                 async () => {
-                /**@type {import("../model/makeRequest.js").APIUpdateCommentObject} */
-                let cmtobj = {
-                    songId: songInfo.id,
-                    rank: rankKind,
-                    apiUserId,
-                    rks: save.saveInfo.summary.rankingScore,
-                    score: 0,
-                    acc: 0,
-                    fc: false,
-                    challenge: save.saveInfo.summary.challengeModeRank,
-                    time: new Date().toISOString(),
-                    comment: comment
-                };
-                let songRecord = save.getSongsRecord(songId);
-                const record = songRecord?.[rankNum];
-                if (!songInfo.sp_vis && record?.score) {
-                    let { phi, b19_list } = await save.getB19(e, 27)
-                    let spInfo = '';
+                    /**@type {import("../model/makeRequest.js").APIUpdateCommentObject} */
+                    let cmtobj = {
+                        songId: songInfo.id,
+                        rank: rankKind,
+                        apiUserId,
+                        rks: save.saveInfo.summary.rankingScore,
+                        score: 0,
+                        acc: 0,
+                        fc: false,
+                        challenge: save.saveInfo.summary.challengeModeRank,
+                        time: new Date().toISOString(),
+                        comment: comment
+                    };
+                    let songRecord = save.getSongsRecord(songId);
+                    const record = songRecord?.[rankNum];
+                    if (!songInfo.sp_vis && record?.score) {
+                        let { phi, b19_list } = await save.getB19(e, 27)
+                        let spInfo = '';
 
-                    for (let i = 0; i < phi.length; ++i) {
-                        const x = phi[i];
-                        if (!x) continue;
-                        if (x.id == songId && x.rank == rankKind) {
-                            spInfo = `Perfect ${i + 1}`;
-                            break;
+                        for (let i = 0; i < phi.length; ++i) {
+                            const x = phi[i];
+                            if (!x) continue;
+                            if (x.id == songId && x.rank == rankKind) {
+                                spInfo = `Perfect ${i + 1}`;
+                                break;
+                            }
                         }
-                    }
-                    if (!spInfo && record.score == 1000000) {
-                        spInfo = 'All Perfect';
-                    }
-                    for (let i = 0; i < b19_list.length; ++i) {
-                        if (b19_list[i].id == songId && b19_list[i].rank == rankKind) {
-                            spInfo = spInfo ? spInfo + ` & Best ${i + 1}` : `Best ${i + 1}`;
-                            break;
+                        if (!spInfo && record.score == 1000000) {
+                            spInfo = 'All Perfect';
                         }
-                    }
-                    cmtobj = {
-                        ...cmtobj,
-                        score: record.score,
-                        acc: record.acc,
-                        fc: record.fc,
-                        spInfo,
-                    }
-                };
-                await makeRequest.addComment({
-                    token: sessionToken,
-                    data: { comment: cmtobj }
-                });
-                return true
+                        for (let i = 0; i < b19_list.length; ++i) {
+                            if (b19_list[i].id == songId && b19_list[i].rank == rankKind) {
+                                spInfo = spInfo ? spInfo + ` & Best ${i + 1}` : `Best ${i + 1}`;
+                                break;
+                            }
+                        }
+                        cmtobj = {
+                            ...cmtobj,
+                            score: record.score,
+                            acc: record.acc,
+                            fc: record.fc,
+                            spInfo,
+                        }
+                    };
+                    await makeRequest.addComment({
+                        token: sessionToken,
+                        data: { comment: cmtobj }
+                    });
+                    return true
                 },
                 { logTag: 'API评论失败 addComment', loggerLevel: 'warn' }
             )
