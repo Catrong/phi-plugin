@@ -9,7 +9,6 @@ import chokidar from 'chokidar'
 import fCompute from './fCompute.js'
 import logger from '../components/Logger.js'
 import Chart from './class/Chart.js'
-import { get } from 'lodash'
 
 
 export default new class getInfo {
