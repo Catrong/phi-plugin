@@ -819,7 +819,7 @@ export default new class getInfo {
     getOnlinePhiIllUrl(type, ...paths) {
         const cfg = Config.getUserCfg('config', 'onLinePhiIllUrl')
         const sourceKey = Number(cfg)
-        const source = sourceKey === 1 || sourceKey === 2 ? getInfo.onlinePhiIllSources[sourceKey] : undefined
+        const source = getInfo.onlinePhiIllSources[sourceKey]
         const baseSource = source || {
             baseUrl: String(cfg || getInfo.defaultOnlinePhiIllSource.baseUrl),
             dirs: getInfo.defaultOnlinePhiIllSource.dirs
