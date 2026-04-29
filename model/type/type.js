@@ -303,3 +303,18 @@
  * @property {BaseHistoryObject<number>[]} [challengeModeRank] - 课题模式排名记录
  * @property {number} [version] - 数据版本号
  */
+
+/**
+ * @typedef {Object} TapTapUpdateItem
+ * @property {string} version_label
+ * @property {number} update_date
+ * @property {{ text: string }} whatsnew
+ * @property {number} version_code
+ */
+
+/**
+ * @typedef {Object} TapTapUpdateResponse
+ * @property {{ list: TapTapUpdateItem[] }} data
+ * @property {number} now
+ * @property {boolean} success
+ */
