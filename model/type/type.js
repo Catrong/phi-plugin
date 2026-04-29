@@ -99,7 +99,6 @@
  * @typedef {'WordB19Img'} WordB19Img 文字版B19曲绘图片
  * @typedef {'WordSuggImg'} WordSuggImg Suggest曲绘图片
  * @typedef {'cmdhead'} cmdhead 命令头
- * @typedef {'phigrousUpdateUrl'} phigrousUpdateUrl Phigrous更新日志API
  * @typedef {'openPhiPluginApi'} openPhiPluginApi 是否启用Phigros联合查分API地址
  * @typedef {'autoOpenApi'} autoOpenApi 检测API状态成功后，是否自动开启API
  * @typedef {'debug'} debug 输出测试日志
@@ -148,7 +147,6 @@
  * |WordB19Img
  * |WordSuggImg
  * |cmdhead
- * |phigrousUpdateUrl
  * |openPhiPluginApi
  * |autoOpenApi
  * |debug

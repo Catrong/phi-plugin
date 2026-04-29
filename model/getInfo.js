@@ -754,7 +754,7 @@ export default new class getInfo {
     static onlinePhiIllSources = {
         1: getInfo.defaultOnlinePhiIllSource,
         2: {
-            baseUrl: 'https://r-0semi.xtower.site',
+            baseUrl: 'https://cnb.cool/r-0semi/asset-xtower/-/git/raw/master',
             dirs: {
                 ill: 'illustration',
                 illBlur: 'illustrationBlur',
