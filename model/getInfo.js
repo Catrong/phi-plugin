@@ -9,6 +9,7 @@ import chokidar from 'chokidar'
 import fCompute from './fCompute.js'
 import logger from '../components/Logger.js'
 import Chart from './class/Chart.js'
+import { get } from 'lodash'
 
 
 export default new class getInfo {
@@ -750,10 +751,31 @@ export default new class getInfo {
         'raw.githubusercontent.com'
     ]
 
-    /** @type {Record<1 | 2, onlinePhiIllSource>} */
+    /** @type {Record<1 | 2 | 3 | 4, onlinePhiIllSource>} */
     static onlinePhiIllSources = {
         1: getInfo.defaultOnlinePhiIllSource,
         2: {
+            baseUrl: 'https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main',
+            dirs: {
+                ill: 'ill',
+                illBlur: 'illBlur',
+                illLow: 'illLow',
+                SP: 'SP',
+                chartimg: 'chartimg',
+                table: 'table',
+                chap: 'chap'
+            }
+        },
+        3: {
+            baseUrl: 'https://r-0semi.xtower.site',
+            dirs: {
+                ill: 'illustration',
+                illBlur: 'illustrationBlur',
+                illLow: 'illustrationLowRes',
+                chap: 'chap'
+            }
+        },
+        4: {
             baseUrl: 'https://cnb.cool/r-0semi/asset-xtower/-/git/raw/master',
             dirs: {
                 ill: 'illustration',
