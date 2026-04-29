@@ -270,7 +270,7 @@ export class phiupdate extends phiPluginBase {
     }
 
     async ill_clone() {
-        let command = `git clone ${Config.getUserCfg('config', 'downIllUrl')} ./plugins/phi-plugin/resources/original_ill/ --depth=1`;
+        let command = `git clone ${this.getDownIllUrl()} ./plugins/phi-plugin/resources/original_ill/ --depth=1`;
 
         this.e.reply("开始下载曲绘文件");
 
@@ -313,7 +313,7 @@ export class phiupdate extends phiPluginBase {
 
             // console.info(gitCfg)
 
-            gitCfg = gitCfg.replace(/url\s*=\s*(.*)/, `url = ${Config.getUserCfg('config', 'downIllUrl')}`)
+            gitCfg = gitCfg.replace(/url\s*=\s*(.*)/, `url = ${this.getDownIllUrl()}`)
             // console.info(gitCfg)
 
             fs.writeFileSync(`${originalIllPath}/.git/config`, gitCfg, "utf8")
@@ -358,6 +358,28 @@ export class phiupdate extends phiPluginBase {
         logger.mark(`${this.e.logFnc} 最后更新时间：${time}`);
 
         return true;
+    }
+
+    getDownIllUrl() {
+        const downIllUrl = String(Config.getUserCfg('config', 'downIllUrl') || '').trim()
+        let url
+        try {
+            url = new URL(downIllUrl)
+        } catch (err) {
+            return downIllUrl
+        }
+        if (url.hostname !== 'github.com') {
+            return downIllUrl
+        }
+
+        const githubProxy = Config.getUserCfg('config', 'githubProxy')
+        if (githubProxy === false || githubProxy === 'false' || githubProxy === '') {
+            return downIllUrl
+        }
+        if (!githubProxy) {
+            return downIllUrl
+        }
+        return `${String(githubProxy).replace(/\/$/, '')}/${downIllUrl}`
     }
 
     /**

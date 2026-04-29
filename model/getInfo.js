@@ -727,6 +727,87 @@ export default new class getInfo {
         }
     }
 
+    /**
+     * @typedef {'ill'|'illBlur'|'illLow'|'SP'|'chartimg'|'table'|'chap'} onlinePhiIllType
+     * @typedef {{baseUrl: string, dirs: Partial<Record<onlinePhiIllType, string>>}} onlinePhiIllSource
+     */
+
+    /** @type {onlinePhiIllSource & {dirs: Record<onlinePhiIllType, string>}} */
+    static defaultOnlinePhiIllSource = {
+        baseUrl: 'https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main',
+        dirs: {
+            ill: 'ill',
+            illBlur: 'illBlur',
+            illLow: 'illLow',
+            SP: 'SP',
+            chartimg: 'chartimg',
+            table: 'table',
+            chap: 'chap'
+        }
+    }
+
+    static githubRawHosts = [
+        'raw.githubusercontent.com'
+    ]
+
+    /** @type {Record<1 | 2, onlinePhiIllSource>} */
+    static onlinePhiIllSources = {
+        1: getInfo.defaultOnlinePhiIllSource,
+        2: {
+            baseUrl: 'https://r-0semi.xtower.site',
+            dirs: {
+                ill: 'illustration',
+                illBlur: 'illustrationBlur',
+                illLow: 'illustrationLowRes',
+                chap: 'chap'
+            }
+        }
+    }
+
+    /**
+     * @param {unknown} baseUrl
+     * @returns {string}
+     */
+    getOnlinePhiIllBaseUrl(baseUrl) {
+        const rawBaseUrl = String(baseUrl || getInfo.defaultOnlinePhiIllSource.baseUrl).replace(/\/$/, '')
+        let url
+        try {
+            url = new URL(rawBaseUrl)
+        } catch (err) {
+            return rawBaseUrl
+        }
+        if (!getInfo.githubRawHosts.includes(url.hostname)) {
+            return rawBaseUrl
+        }
+
+        const githubProxy = Config.getUserCfg('config', 'githubProxy')
+        if (githubProxy === false || githubProxy === 'false' || githubProxy === '') {
+            return rawBaseUrl
+        }
+        if (!githubProxy) {
+            return rawBaseUrl
+        }
+        return `${String(githubProxy).replace(/\/$/, '')}/${rawBaseUrl}`
+    }
+
+    /**
+     * @param {onlinePhiIllType} type
+     * @param {...string} paths
+     * @returns {string}
+     */
+    getOnlinePhiIllUrl(type, ...paths) {
+        const cfg = Config.getUserCfg('config', 'onLinePhiIllUrl')
+        const sourceKey = Number(cfg)
+        const source = sourceKey === 1 || sourceKey === 2 ? getInfo.onlinePhiIllSources[sourceKey] : undefined
+        const baseSource = source || {
+            baseUrl: String(cfg || getInfo.defaultOnlinePhiIllSource.baseUrl),
+            dirs: getInfo.defaultOnlinePhiIllSource.dirs
+        }
+        const dir = baseSource.dirs[type] || getInfo.defaultOnlinePhiIllSource.dirs[type]
+        const baseUrl = this.getOnlinePhiIllBaseUrl(baseSource.dirs[type] ? baseSource.baseUrl : getInfo.defaultOnlinePhiIllSource.baseUrl)
+        return [baseUrl, dir, ...paths.map(i => encodeURIComponent(i))].join('/')
+    }
+
 
     /**
      * 获取曲绘，返回地址，曲目id
@@ -754,18 +835,18 @@ export default new class getInfo {
                     }
                 } else {
                     if (kind == 'common') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/ill/${id.replace(/.0$/, '.png')}`
+                        ans = this.getOnlinePhiIllUrl('ill', id.replace(/.0$/, '.png'))
                     } else if (kind == 'blur') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illBlur/${id.replace(/.0$/, '.png')}`
+                        ans = this.getOnlinePhiIllUrl('illBlur', id.replace(/.0$/, '.png'))
                     } else if (kind == 'low') {
-                        ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/illLow/${id.replace(/.0$/, '.png')}`
+                        ans = this.getOnlinePhiIllUrl('illLow', id.replace(/.0$/, '.png'))
                     }
                 }
             } else {
                 if (fs.existsSync(path.join(originalIllPath, "SP", songsinfo.id.replace(/.0$/, '.png')))) {
                     ans = path.join(originalIllPath, "SP", songsinfo.id.replace(/.0$/, '.png'))
                 } else {
-                    ans = `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/SP/${songsinfo.id.replace(/.0$/, '.png')}`
+                    ans = this.getOnlinePhiIllUrl('SP', songsinfo.id.replace(/.0$/, '.png'))
                 }
             }
         } else if (ans) {
@@ -788,7 +869,7 @@ export default new class getInfo {
         if (fs.existsSync(path.join(originalIllPath, "chartimg", dif, `${id}.png`))) {
             return path.join(originalIllPath, "chartimg", dif, `${id}.png`)
         } else {
-            return `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/chartimg/${dif}/${id}.png`
+            return this.getOnlinePhiIllUrl('chartimg', dif, `${id}.png`)
         }
     }
 
@@ -800,7 +881,7 @@ export default new class getInfo {
         if (fs.existsSync(path.join(originalIllPath, "table", `${dif}.png`))) {
             return path.join(originalIllPath, "table", `${dif}.png`)
         } else {
-            return `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/table/${dif}.png`
+            return this.getOnlinePhiIllUrl('table', `${dif}.png`)
         }
     }
 
@@ -812,7 +893,7 @@ export default new class getInfo {
         if (fs.existsSync(path.join(originalIllPath, "chap", `${name}.png`))) {
             return path.join(originalIllPath, "chap", `${name}.png`)
         } else {
-            return `${Config.getUserCfg('config', 'onLinePhiIllUrl')}/chap/${name}.png`
+            return this.getOnlinePhiIllUrl('chap', `${name}.png`)
         }
     }
 

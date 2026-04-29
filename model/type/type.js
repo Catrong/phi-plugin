@@ -75,6 +75,7 @@
 /**
  * 渲染设置
  * @typedef {'onLinePhiIllUrl'} onLinePhiIllUrl 在线曲绘来源
+ * @typedef {'githubProxy'} githubProxy GitHub代理
  * @typedef {'downIllUrl'} downIllUrl 下载曲绘来源
  * @typedef {'renderScale'} renderScale 渲染精度
  * @typedef {'randerQuality'} randerQuality 渲染质量
@@ -124,6 +125,7 @@
  * @typedef {'VikaToken'} VikaToken VikaToken
  * 
  * @typedef {onLinePhiIllUrl
+ * |githubProxy
  * |downIllUrl
  * |renderScale
  * |randerQuality
