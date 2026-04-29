@@ -19,6 +19,7 @@ import SongsInfo from '../model/class/SongsInfo.js'
 import Chart from "../model/class/Chart.js"
 import getNotes from "../model/getNotes.js"
 import { canUseApi } from '../model/apiPermission.js'
+import TapInfo from "../model/getInfoFromTap.js"
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -655,9 +656,8 @@ export class phisong extends phiPluginBase {
         const ans = []
         let msg = ''
         try {
-            /**@type {any} */
-            let info = await (await fetch(Config.getUserCfg('config', 'phigrousUpdateUrl'))).json()
-            msg += `最新版本：${info?.data?.list?.[0]?.version_label}\n更新信息：\n${info?.data?.list?.[0]?.whatsnew?.text?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
+            let info = await TapInfo.PgrUpdateInfo();
+            msg += `最新版本：${info?.[0]?.version}\n更新信息：\n${info?.[0]?.rawHtml?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
         } catch (e) { }
         msg += `信息文件版本：${Version.phigros}\n`
         ans.push([{ cnt: '新曲速递', col: 4 }]);
