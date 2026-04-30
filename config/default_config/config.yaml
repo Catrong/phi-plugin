@@ -49,7 +49,9 @@ allowChartTag: false
 #  在线曲绘地址
 onLinePhiIllUrl: 1
 #  1: GitHub raw
-#  2: 弦塔资源站
+#  2: Gitee raw
+#  3: 弦塔资源站
+#  4: cnb.cool
 
 #  下载曲绘地址
 downIllUrl: "https://github.com/Catrong/phi-plugin-ill.git"
@@ -75,9 +77,6 @@ TapTapLoginQRcode: true
 
 #  命令头
 cmdhead: "phi"
-
-#  Phigros更新信息API地址
-phigrousUpdateUrl: "https://phiupdateinfo.pmya.xyz/"
 
 #  是否启用Phigros联合查分API
 openPhiPluginApi: true

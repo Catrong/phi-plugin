@@ -209,24 +209,16 @@ export function supportGuoba() {
                                 value: 1
                             },
                             {
-                                label: 'r-0semi',
+                                label: 'Gitee raw',
                                 value: 2
                             },
                             {
-                                label: 'gitee',
-                                value: "https://gitee.com/Steveeee-e/phi-plugin-ill/raw/main"
+                                label: '弦塔资源站',
+                                value: 3
                             },
                             {
-                                label: 'github',
-                                value: "https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
-                            },
-                            {
-                                label: 'github代理(gh-proxy)',
-                                value: "https://gh-proxy.org/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/refs/heads/main"
-                            },
-                            {
-                                label: 'github代理(gitproxy.click)',
-                                value: "https://gitproxy.click/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/refs/heads/main"
+                                label: 'cnb.cool',
+                                value: 4
                             }
                         ]
                     }
@@ -257,14 +249,6 @@ export function supportGuoba() {
                             {
                                 label: 'github',
                                 value: "https://github.com/Catrong/phi-plugin-ill.git"
-                            },
-                            {
-                                label: 'github代理(gh-proxy)',
-                                value: "https://gh-proxy.com/https://github.com/Catrong/phi-plugin-ill.git"
-                            },
-                            {
-                                label: 'github代理(gitproxy.click)',
-                                value: "https://gitproxy.click/https://github.com/Catrong/phi-plugin-ill.git"
                             }
                         ]
                     }
@@ -313,16 +297,6 @@ export function supportGuoba() {
                     required: false,
                     componentProps: {
                         placeholder: '请输入命令头',
-                    },
-                },
-                {
-                    field: 'phigrousUpdateUrl',
-                    label: '更新信息API',
-                    bottomHelpMessage: 'Phigros更新信息API地址',
-                    component: 'Input',
-                    required: false,
-                    componentProps: {
-                        placeholder: '请输入API地址',
                     },
                 },
                 {
