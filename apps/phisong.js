@@ -81,7 +81,7 @@ export class phisong extends phiPluginBase {
                     fnc: 'tips'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)new$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)newlog$`,
                     fnc: 'newSong'
                 },
                 {
@@ -111,6 +111,10 @@ export class phisong extends phiPluginBase {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(addtag|subtag|retag).*$`,
                     fnc: 'addtag'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)newnotice$`,
+                    fnc: 'newNotice'
                 }
             ]
         })
@@ -1150,6 +1154,18 @@ export class phisong extends phiPluginBase {
             }
         }
         return false;
+    }
+
+    /**
+     * 获取Phigros最新公告
+     * @param {*} e BotEvent
+     */
+    async newNotice(e) {
+        const info = await TapInfo.PgrTapNotice(1);
+        if (info) {
+            const img = await picmodle.common(e, 'newnotice', info);
+            send.send_with_At(e, img);
+        }
     }
 }
 
