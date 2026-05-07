@@ -127,7 +127,7 @@ export default class phiPluginBase extends plugin {
         case 'rank': {
           let rank = /** @type {levelKind} */((msg.match(/\b(EZ|HD|IN|AT)\b/i)?.[1] || 'IN').toUpperCase())
           optObj[opt] = rank;
-          msg = msg.replace(/\b(EZ|HD|IN|AT)\b/i, '')
+          msg = msg.replace(/\b(EZ|HD|IN|AT)\b/i, '').trim()
           break;
         }
       }
