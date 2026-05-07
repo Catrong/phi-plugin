@@ -462,6 +462,8 @@ export default class fCompute {
      * @returns {number} 相似度 0-1
      */
     static jaroWinklerDistance(s1, s2) {
+        s1 = s1.trim();
+        s2 = s2.trim();
         if (s1 == s2) {
             return 1
         }
