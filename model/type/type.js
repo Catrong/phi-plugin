@@ -318,3 +318,70 @@
  * @property {number} now
  * @property {boolean} success
  */
+
+/** 
+ * @typedef {Object} TapTapNoticeItem
+ * @property {'moment'} type
+ * @property {string} identification
+ * @property {TapTapNoticeMoment} moment
+ */
+
+/**
+ * @typedef {Object} TapTapNoticeMoment
+ * @property {string} id_str
+ * @property {number} created_time
+ * @property {number} edited_time
+ * @property {number} publish_time
+ * @property {boolean} is_official
+ * @property {TapTapNoticeAuthor} author
+ * @property {TapTapNoticeTopic} topic
+ * @property {TapTapNoticeStat} stat
+ * @property {TapTapNoticeSharing} sharing
+ */
+
+/**
+ * @typedef {Object} TapTapNoticeAuthor
+ * @property {{ id: number, title: string }} app
+ * @property {{ id: number, name: string, avatar: string }} user
+ */
+
+/**
+ * @typedef {Object} TapTapNoticeTopic
+ * @property {string} id_str
+ * @property {string} title
+ * @property {string} summary
+ * @property {TapTapNoticeImage[]} images
+ */
+
+/**
+ * @typedef {Object} TapTapNoticeImage
+ * @property {string} url
+ * @property {string} medium_url
+ * @property {string} small_url
+ * @property {string} original_url
+ * @property {number} width
+ * @property {number} height
+ */
+
+/**
+ * @typedef {Object} TapTapNoticeStat
+ * @property {number} pv_total
+ * @property {number} ups
+ * @property {number} comments
+ * @property {number} favorites
+ */
+
+/**
+ * @typedef {Object} TapTapNoticeSharing
+ * @property {string} url
+ * @property {string} title
+ * @property {string} description
+ * @property {TapTapNoticeImage} [image]
+ */
+
+/**
+ * @typedef {Object} TapTapNoticeResponse
+ * @property {{ list: TapTapNoticeItem[], total: number, next_page: string }} data
+ * @property {number} now
+ * @property {boolean} success
+ */

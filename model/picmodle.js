@@ -267,7 +267,7 @@ export default await new class picmodle {
     }
 
     /** 
-     * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'setting'|'analyzeSaveHistory'|'historyB30'|'table'} picKind
+     * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'} picKind
      */
 
     /**
