@@ -67,16 +67,17 @@ export class phiuser extends phiPluginBase {
             return false
         }
 
-        let User = await getSave.getSave(e.user_id);
-        if (User) {
-            if (User.gameProgress) {
-                let data = User.gameProgress.money
-                send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PB ` : ''}${data[3] ? `${data[3]}TB ` : ''}${data[2] ? `${data[2]}GB ` : ''}${data[1] ? `${data[1]}MB ` : ''}${data[0] ? `${data[0]}KB ` : ''}`)
-            } else {
-                send.send_with_At(e, `请先更新数据哦！\n/${Config.getUserCfg('config', 'cmdhead')} update`)
-            }
+
+        let save = await send.getsave_result(e)
+
+        if (!save) {
+            return true
+        }
+        if (save.gameProgress) {
+            let data = save.gameProgress.money
+            send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PB ` : ''}${data[3] ? `${data[3]}TB ` : ''}${data[2] ? `${data[2]}GB ` : ''}${data[1] ? `${data[1]}MB ` : ''}${data[0] ? `${data[0]}KB ` : ''}`)
         } else {
-            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>\n如果不知道自己的Token可以通过扫码绑定哦！\n如果不知道命令可以用/phihelp查看哦！`)
+            send.send_with_At(e, `请先更新数据哦！\n/${Config.getUserCfg('config', 'cmdhead')} update`)
         }
         return true
     }
