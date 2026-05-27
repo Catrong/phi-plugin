@@ -109,13 +109,13 @@ let timeCount = {}
  * @import {GameList} from '../guessGame.js'
  */
 
-export default new class guessLetter {
+export default class guessLetter {
     /**
      * 发起出字母猜歌
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async start(e, gameList) {
+    static async start(e, gameList) {
         const { group_id } = e // 使用对象解构提取group_id
 
         if (letterGameData[group_id]) {
@@ -236,7 +236,7 @@ export default new class guessLetter {
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async reveal(e, gameList) {
+    static async reveal(e, gameList) {
         const { group_id, msg } = e
         timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
@@ -339,7 +339,7 @@ export default new class guessLetter {
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async guess(e, gameList) {
+    static async guess(e, gameList) {
         const { group_id, msg, user_id, sender } = e //使用对象解构提取group_id,msg,user_id和sender
         const currentGame = letterGameData[group_id];
         //必须已经开始了一局
@@ -392,10 +392,12 @@ export default new class guessLetter {
 
         const content = result[2]
 
-        if (num > Config.getUserCfg('config', 'LetterNum')) {
+        if (num > Config.getUserCfg('config', 'LetterNum') || num <= 0) {
             e.reply(`没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
             return true
         }
+
+        --num;
 
         const ids = getInfo.fuzzysongsnick(content, 0.95)
         const standard_id = currentGame.ansIdList[num] // 标准答案
@@ -468,7 +470,7 @@ export default new class guessLetter {
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async ans(e, gameList) {
+    static async ans(e, gameList) {
         const { group_id } = e//使用对象解构提取group_id
 
         const currentGame = letterGameData[group_id];
@@ -491,7 +493,7 @@ export default new class guessLetter {
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async getTip(e, gameList) {
+    static async getTip(e, gameList) {
         const { group_id } = e
 
 
@@ -592,7 +594,7 @@ export default new class guessLetter {
      * 洗牌
      * @param {any} e 事件对象
      */
-    async mix(e) {
+    static async mix(e) {
         const { group_id } = e
 
         const currentGame = letterGameData[group_id];
@@ -607,7 +609,7 @@ export default new class guessLetter {
         await e.reply(`洗牌成功了www`, true)
         return true
     }
-}()
+}
 
 
 /**
@@ -754,11 +756,10 @@ function gameover(group_id, gameList) {
     const output = []
 
 
-    t.forEach((value, i) => {
-        let index = i + 1;
+    t.forEach((value, index) => {
         const correct_name = value
         const winner_card = winner[index]
-        output.push(`${index}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
+        output.push(`${index + 1}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
     });
     return output.join('\n');
 }
@@ -780,13 +781,12 @@ function getPuzzle(currentGame) {
     /**@type {string[]} */
     const output = [];
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}`);
-    currentGame.ansList.forEach((song, i) => {
-        let index = i + 1;
+    currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
-            output.push(`${index}. <qqbot-cmd-input text="/n${index}. " show="${currentGame.blurlist[index]}" reference="false" />`)
+            output.push(`${index + 1}. <qqbot-cmd-input text="/n${index + 1}. " show="${currentGame.blurlist[index]}" reference="false" />`)
             // output.push(`${index}. ${currentGame.blurlist[index]}`)
         } else {
-            output.push(`${index}. ${song}`)
+            output.push(`${index + 1}. ${song}`)
             if (currentGame.winnerlist[index]) {
                 output.push(` @${currentGame.winnerlist[index]}`)
             }
