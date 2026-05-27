@@ -761,6 +761,11 @@ function gameover(group_id, gameList) {
         const winner_card = winner[index]
         output.push(`${index + 1}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
     });
+    output.push(`\n***\n\n` +
+        // '| - | - | - |\n' +
+        `| ${cmdInpt('/letter ', '再来一局')} | ${cmdInpt('/guess', '猜个曲绘')} | ${cmdInpt('/tipgame', '提示猜歌')} |` +
+        '\n| :---: | :---: | :---: |\n');
+
     return output.join('\n');
 }
 
@@ -783,10 +788,10 @@ function getPuzzle(currentGame) {
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
-            output.push(`${index + 1}. <qqbot-cmd-input text="/n${index + 1}. " show="${currentGame.blurlist[index].replace(/\*/g, '\\*')}" reference="false" />`)
+            output.push(`[${index + 1}] <qqbot-cmd-input text="/n${index + 1}. " show="${currentGame.blurlist[index].replace(/\*/g, '\\*')}" reference="false" />`)
             // output.push(`${index}. ${currentGame.blurlist[index]}`)
         } else {
-            output.push(`${index + 1}. ${song}`)
+            output.push(`✅ ${song}`)
             if (currentGame.winnerlist[index]) {
                 output.push(` @${currentGame.winnerlist[index]}`)
             }
@@ -794,8 +799,9 @@ function getPuzzle(currentGame) {
     })
     output.push(`\n***\n\n` +
         // '| - | - | - |\n' +
-        `| ${cmdInpt('/开 ', '开个字母')} | ${cmdInpt('/tip', '看看提示')} | ${cmdInpt('/ans', '公布答案')} |`) +
-        '\n| :---: | :---: | :---: |\n';
+        `| ${cmdInpt('/开 ', '开个字母')} | ${cmdInpt('/tip', '看看提示')} | ${cmdInpt('/ans', '公布答案')} |` +
+        '\n| :---: | :---: | :---: |\n');
+    output.push('\n点击蓝色字体可以快速填写指令哦~')
     return output.join('\n');
 }
 
