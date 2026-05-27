@@ -417,7 +417,7 @@ export default class guessLetter {
 
                 currentGame.blurlist[num] = null //移除模糊曲目
 
-                send.send_with_At(e, `恭喜你ww，答对啦喵，第${num}首答案是[${standard_name}]!ヾ(≧▽≦*)o `, true)
+                send.send_with_At(e, `恭喜你ww，答对啦喵，第${num + 1}首答案是[${standard_name}]!ヾ(≧▽≦*)o `, true)
 
                 /**发送曲绘 */
                 const info = getInfo.info(standard_id)
@@ -456,9 +456,9 @@ export default class guessLetter {
         }
 
         if (ids[1]) {
-            e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
+            e.reply(`第${num + 1}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
         } else {
-            e.reply(`第${num}首不是[${getInfo.info(ids[0])?.song ?? ids[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
+            e.reply(`第${num + 1}首不是[${getInfo.info(ids[0])?.song ?? ids[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
         }
 
         return false
