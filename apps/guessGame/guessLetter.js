@@ -793,7 +793,7 @@ function getPuzzle(currentGame) {
         }
     })
     output.push(`\n***\n\n` +
-        `| ${cmdInpt('/开 ', '开个字母')} | ${cmdInpt('/tip', '看看提示')} | ${cmdInpt('/ans', '公布答案')} |` +
+        `| ${cmdInpt('/开 ', '开个字母')} | ${cmdInpt('/tip', '看看提示')} | ${cmdInpt('/ans', '公布答案')} |\n` +
         '| --- | --- | --- |\n'
     );
     return output.join('\n');
