@@ -333,21 +333,40 @@ export default class Save {
         return this.gameRecord[id] ? [...(this.gameRecord[id])] : undefined
     }
 
+    /**@import {botEvent} from '../../components/baseClass.js' */
+
     /**
-     * @param {import('../../components/baseClass.js').botEvent} e
+     * @param {botEvent} e
      * @param {number} num B几
      * @param {object} option
      * @param {"all" | "b30" | "top" | "none"} [option.avgType]
      * @param {"red" | "gold" | "blue" | "green"} [option.color]
      * @param {boolean} [option.avgValue] 平均值是否直接返回
+     * @param {boolean} [option.allPhi] 是否计算所有phi成绩而非仅限p3
      * @returns phi, b19_list
      */
-    async getB19(e, num, option = { avgType: "all", color: "blue", avgValue: false }) {
+    async getB19(e, num, option = { avgType: "all", color: "blue", avgValue: false, allPhi: false }) {
 
         /**计算得到的rks，仅作为测试使用 */
         let sum_rks = 0
         /**满分且 rks 最高的成绩数组 */
-        let philist = this.findAccRecord(100)
+        let philist = this.findAccRecord(100);
+
+        for (let i = 0, j = 0; i < philist.length; ++i) {
+            if (philist[i].rks < philist[j].rks) {
+                if (i < 3) {
+                    j = i;
+                    continue;
+                }
+                if (j < 3) {
+                    const tem = philist.slice(j, i - 1);
+                    philist.splice(j);
+                    fCompute.randArray(tem);
+                    philist.push(...tem);
+                }
+                break;
+            }
+        }
 
         /**
          * @typedef {object} otherLevelRecordInfo
@@ -365,21 +384,21 @@ export default class Save {
         /**
          * @type {((LevelRecordInfo & Partial<otherLevelRecordInfo>) | undefined)[]}
          */
-        let phi = philist.splice(0, Math.min(philist.length, 3))
+        let phi = [];
 
 
         // console.info(phi)
         /**处理数据 */
-
-        for (let i = 0; i < 3; ++i) {
-            if (!phi[i]) {
+        const phiNum = Math.max((option.allPhi ? philist.length : 3), 3)
+        for (let i = 0; i < phiNum; ++i) {
+            if (!philist[i]) {
                 phi[i] = undefined;
                 continue;
             }
-            const x = phi[i];
+            const x = philist[i];
             if (x?.rks) {
-                const tem = { ...x }
-                phi[i] = tem
+                const tem = { ...x };
+                phi[i] = tem;
                 const y = phi[i];
                 if (!y) continue;
                 sum_rks += Number(y.rks) //计算rks
@@ -450,7 +469,7 @@ export default class Save {
 
         let com_rks = sum_rks / 30
 
-        if (await canUseApi(e) !== false && Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (option.avgType !== 'none' && await canUseApi(e) !== false && Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
 
                 if (!option.avgType || option.avgType === "all") {

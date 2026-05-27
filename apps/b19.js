@@ -1140,8 +1140,6 @@ async function getScore(songId, e, args = {}) {
         data.scoreData[level] = {};
         data.scoreData[level].difficulty = info.chart[level].difficulty
     }
-
-
     data.illustration = getInfo.getill(songId)
     // console.info(ans)
     /**
@@ -1187,6 +1185,22 @@ async function getScore(songId, e, args = {}) {
             }
         }
     })
+
+    // 处理每个难度的P/B位
+    const { phi, b19_list } = await save.getB19(e, 27, { avgType: 'none', allPhi: true })
+
+    phi.forEach((item, index) => {
+        if (item?.id == songId) {
+            data.scoreData[item.rank].phiN = Math.min(3, index + 1);
+        }
+    });
+
+    b19_list.forEach((item, index) => {
+        if (item.id == songId) {
+            data.scoreData[item.rank].b19N = Math.min(27, index + 1);
+        }
+    });
+
 
     maxRank = args?.dif || maxRank
 

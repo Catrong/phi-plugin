@@ -122,6 +122,16 @@
                         <img src="{{_res_path}}html/otherimg/{{rank.Rating}}.png" alt="{{rank.Rating}}">
                     </div>
                     {{if rank.Rating != 'NEW'}}
+                    <div class="data_bnpn">
+                        <div class="phiN {{rank.phiN ? 'active' : ''}}">
+                        <span>Phi</span>
+                        <span class="phiN-num">{{rank.phiN ? rank.phiN : '0'}}</span>
+                        </div>
+                        <div class="bestN {{rank.b19N ? 'active' : ''}}">
+                        <span>Best</span>
+                        <span class="bestN-num">{{rank.b19N ? rank.b19N : '0'}}</span>
+                        </div>
+                    </div>
                     <div class="data_score">
                         <p>{{rank.score}}</p>
                     </div>
