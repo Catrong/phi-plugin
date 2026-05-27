@@ -13,6 +13,7 @@ import getPic from '../../model/getPic.js'
 import fCompute from '../../model/fCompute.js'
 import picmodle from '../../model/picmodle.js'
 import logger from '../../components/Logger.js'
+import segment from '../../components/segment.js'
 
 /**
  * @type {idString[]}
@@ -210,7 +211,7 @@ export default new class guessLetter {
 
         let output = '开字母进行中：\n'
         output += getPuzzle(currentGame);
-        await e.reply(output, true)
+        await e.reply(segment.markdown(output), true)
 
         /**如果过长时间没人回答则结束 */
         while (timeCount[group_id]?.startTime == nowTime && Date.now() < timeCount[group_id].newTime) {
@@ -757,7 +758,7 @@ function gameover(group_id, gameList) {
     t.forEach((value, index) => {
         const correct_name = value
         const winner_card = winner[index]
-        output.push(`【${index}】${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
+        output.push(`${index}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
     });
     return output.join('\n');
 }
@@ -781,9 +782,10 @@ function getPuzzle(currentGame) {
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
-            output.push(`【${index}】${currentGame.blurlist[index]}`)
+            output.push(`${index}. <qqbot-cmd-input text="/n${index}. " show="${currentGame.blurlist[index]}" reference="false" />`)
+            // output.push(`${index}. ${currentGame.blurlist[index]}`)
         } else {
-            output.push(`【${index}】${song}`)
+            output.push(`${index}. ${song}`)
             if (currentGame.winnerlist[index]) {
                 output.push(` @${currentGame.winnerlist[index]}`)
             }
