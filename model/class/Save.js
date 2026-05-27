@@ -358,10 +358,10 @@ export default class Save {
                     j = i;
                     continue;
                 }
-                if (j < 3) {
-                    const tem = philist.slice(j, i - 1);
+                if (j < 3 && i > 4) {
+                    let tem = philist.slice(j, i - 1);
                     philist.splice(j);
-                    fCompute.randArray(tem);
+                    tem = fCompute.randArray(tem);
                     philist.push(...tem);
                 }
                 break;
