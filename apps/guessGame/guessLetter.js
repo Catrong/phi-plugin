@@ -764,7 +764,7 @@ function gameover(group_id, gameList) {
     output.push(`\n***\n\n` +
         // '| - | - | - |\n' +
         `| ${cmdInpt('/letter ', '再来一局')} | ${cmdInpt('/guess', '猜个曲绘')} | ${cmdInpt('/tipgame', '提示猜歌')} |` +
-        '\n| :---: | :---: | :---: |\n');
+        '\n| --- | --- | --- |\n');
 
     return output.join('\n');
 }
@@ -800,7 +800,7 @@ function getPuzzle(currentGame) {
     output.push(`\n***\n\n` +
         // '| - | - | - |\n' +
         `| ${cmdInpt('/开 ', '开个字母')} | ${cmdInpt('/tip', '看看提示')} | ${cmdInpt('/ans', '公布答案')} |` +
-        '\n| :---: | :---: | :---: |\n');
+        '\n| --- | --- | --- |\n');
     output.push('\n点击蓝色字体可以快速填写指令哦~')
     return output.join('\n');
 }
