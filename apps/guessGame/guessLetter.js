@@ -327,7 +327,7 @@ export default new class guessLetter {
                 output.unshift('所有字母已翻开，答案如下：');
                 output.push(gameover(group_id, gameList));
             }
-            e.reply(output.join('\n'), true)
+            e.reply(segment.markdown(output.join('\n')), true)
 
             return true
         }
@@ -442,12 +442,11 @@ export default new class guessLetter {
 
                     output.push(getPuzzle(currentGame));
 
-                    e.reply(output.join('\n'), true)
+                    e.reply(segment.markdown(output.join('\n')), true)
                     return true
                 } else {
-
                     output.push('所有曲目均已被猜出，答案如下：');
-                    output.push(gameover(group_id, gameList));
+                    output.push(segment.markdown(gameover(group_id, gameList)));
                     e.reply(output.join('\n'), true)
                     return true
                 }
@@ -585,7 +584,7 @@ export default new class guessLetter {
             output.unshift('所有字母已翻开，答案如下：');
             output.push(gameover(group_id, gameList));
         }
-        e.reply(output.join('\n'), true)
+        e.reply(segment.markdown(output.join('\n')), true)
         return true
     }
 
@@ -755,7 +754,8 @@ function gameover(group_id, gameList) {
     const output = []
 
 
-    t.forEach((value, index) => {
+    t.forEach((value, i) => {
+        let index = i + 1;
         const correct_name = value
         const winner_card = winner[index]
         output.push(`${index}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
@@ -780,7 +780,8 @@ function getPuzzle(currentGame) {
     /**@type {string[]} */
     const output = [];
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}`);
-    currentGame.ansList.forEach((song, index) => {
+    currentGame.ansList.forEach((song, i) => {
+        let index = i + 1;
         if (currentGame.blurlist[index]) {
             output.push(`${index}. <qqbot-cmd-input text="/n${index}. " show="${currentGame.blurlist[index]}" reference="false" />`)
             // output.push(`${index}. ${currentGame.blurlist[index]}`)
