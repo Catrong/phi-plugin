@@ -779,7 +779,7 @@ function allGuessed(currentGame) {
  */
 function getPuzzle(currentGame) {
     /**@type {string[]} */
-    const output = ['***\n'];
+    const output = ['\n***\n'];
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
@@ -792,7 +792,9 @@ function getPuzzle(currentGame) {
             }
         }
     })
-    output.push(`***\n|${cmdInpt('/开 ', '开个字母')}|${cmdInpt('/tip', '看看提示')}|${cmdInpt('/ans', '公布答案')}|`);
+    output.push(`\n***\n\n` +
+        '|---|---|---|' +
+        `|${cmdInpt('/开 ', '开个字母')}|${cmdInpt('/tip', '看看提示')}|${cmdInpt('/ans', '公布答案')}|`);
     return output.join('\n');
 }
 
