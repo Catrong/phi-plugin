@@ -358,7 +358,7 @@ export default class Save {
                     j = i;
                     continue;
                 }
-                if (j < 3 && i > 4) {
+                if (j < 3 && i > 3) {
                     let tem = philist.slice(j, i - 1);
                     philist.splice(j);
                     tem = fCompute.randArray(tem);
