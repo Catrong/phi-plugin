@@ -5,6 +5,8 @@
 * sign改版
 * 公告系统
 * suggest更新
+* /apiset
+* score增加PhiN和BestN显示
 
 ## 1.0.1
 
