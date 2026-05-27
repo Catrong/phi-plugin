@@ -484,7 +484,7 @@ export default class guessLetter {
 
         await e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
 
-        e.reply(gameover(group_id, gameList))
+        e.reply(segment.markdown(gameover(group_id, gameList)))
         return true
     }
 
@@ -780,7 +780,7 @@ function allGuessed(currentGame) {
 function getPuzzle(currentGame) {
     /**@type {string[]} */
     const output = ['***\n'];
-    output.push(`曲库范围：${currentGame.gameSelectList.join('、')}`);
+    output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
             output.push(`${index + 1}. <qqbot-cmd-input text="/n${index + 1}. " show="${currentGame.blurlist[index].replace(/\*/g, '\\*')}" reference="false" />`)
@@ -792,5 +792,15 @@ function getPuzzle(currentGame) {
             }
         }
     })
+    output.push(`***\n|${cmdInpt('/开 ', '开个字母')}|${cmdInpt('/tip', '看看提示')}|${cmdInpt('/ans', '公布答案')}|`);
     return output.join('\n');
+}
+
+/**
+ * @param {string} text 指令内容
+ * @param {string} show
+ * @param {boolean} reference
+ */
+function cmdInpt(text, show, reference = false) {
+    return `<qqbot-cmd-input text="${text}" show="${show}" reference="${reference}" />`
 }
