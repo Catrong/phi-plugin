@@ -161,10 +161,10 @@ export default new class guessIll {
                         res.push([0, Math.floor((1 - (data.width * data.height) / (1080 * 2048)) * 100)]);
                         break;
                     case 1:
-                        res.push([1, Math.floor((data.blur / 16) * 50)]);
+                        res.push([1, Math.floor((data.blur / 16) * 30)]);
                         break;
                     case 2:
-                        res.push([2, 50]);
+                        res.push([2, Math.floor(remain_info.length / 6 * 50)]);
                         break;
                     case 3:
                         res.push([3, fCompute.randInt(10, 50)]);
