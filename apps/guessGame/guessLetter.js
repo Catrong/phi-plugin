@@ -761,9 +761,10 @@ function gameover(group_id, gameList) {
         const winner_card = winner[index]
         output.push(`${index + 1}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
     });
+    const cmdhead = Config.getUserCfg('config', 'cmdhead')
     output.push(`\n***\n\n` +
         // '| - | - | - |\n' +
-        `| ${cmdInpt('/letter ', '再来一局')} | ${cmdInpt('/guess', '猜个曲绘')} | ${cmdInpt('/tipgame', '提示猜歌')} |` +
+        `| ${cmdInpt(`/${cmdhead} letter `, '再来一局')} | ${cmdInpt(`/${cmdhead} guess`, '猜个曲绘')} | ${cmdInpt(`/${cmdhead} tipgame`, '提示猜歌')} |` +
         '\n| :---: | :---: | :---: |\n');
 
     return output.join('\n');
@@ -797,9 +798,10 @@ function getPuzzle(currentGame) {
             }
         }
     })
-    output.push(`***\n` +
+    const cmdhead = Config.getUserCfg('config', 'cmdhead')
+    output.push(`\n***\n` +
         // '| - | - | - |\n' +
-        `| ${cmdInpt('/开 ', '开个字母')} | ${cmdInpt('/tip', '看看提示')} | ${cmdInpt('/ans', '公布答案')} |` +
+        `| ${cmdInpt(`/开 `, '开个字母')} | ${cmdInpt(`/${cmdhead} tip`, '看看提示')} | ${cmdInpt(`/${cmdhead} ans`, '公布答案')} |` +
         '\n| :---: | :---: | :---: |\n');
     output.push('\n*点击蓝色字体可以快速填写指令哦~')
     return output.join('\n');
