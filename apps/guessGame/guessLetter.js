@@ -784,7 +784,7 @@ function allGuessed(currentGame) {
  */
 function getPuzzle(currentGame) {
     /**@type {string[]} */
-    const output = ['\n***\n'];
+    const output = ['***'];
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
@@ -797,12 +797,12 @@ function getPuzzle(currentGame) {
             }
         }
     })
-    output.push(`\n***\n\n` +
+    output.push(`***\n` +
         // '| - | - | - |\n' +
         `| ${cmdInpt('/开 ', '开个字母')} | ${cmdInpt('/tip', '看看提示')} | ${cmdInpt('/ans', '公布答案')} |` +
         '\n| :---: | :---: | :---: |\n');
     output.push('\n*点击蓝色字体可以快速填写指令哦~')
-    return output.join('\n\n');
+    return output.join('\n');
 }
 
 /**
