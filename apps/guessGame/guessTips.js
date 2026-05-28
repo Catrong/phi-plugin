@@ -93,7 +93,7 @@ export default new class guessTips {
             return false
         }
         /**选中的歌曲id */
-        let songId = hasIllIdList[fCompute.randBetween(0, hasIllIdList.length - 1)]
+        let songId = hasIllIdList[fCompute.randInt(0, hasIllIdList.length - 1)]
         let info = getInfo.info(songId)
         if (!info) {
             send.send_with_At(e, '获取曲目信息发生未知错误QAQ！')
@@ -118,11 +118,11 @@ export default new class guessTips {
         tips = tips.splice(0, Config.getUserCfg('config', 'GuessTipsTipNum'))
         /**曲绘区域 */
         /**width */
-        let width = fCompute.randBetween(100, 150)
+        let width = fCompute.randInt(100, 150)
         /**height */
-        let height = fCompute.randBetween(100, 150)
-        let x = fCompute.randBetween(0, 2048 - width)
-        let y = fCompute.randBetween(0, 1080 - height)
+        let height = fCompute.randInt(100, 150)
+        let x = fCompute.randInt(0, 2048 - width)
+        let y = fCompute.randInt(0, 1080 - height)
         gameList[group_id] = { gameType: 'guessTips' }
         tipsGameData[group_id] = new GuessTipsGameData(songId, tips, width, height, x, y,)
         const currentGame = tipsGameData[group_id]

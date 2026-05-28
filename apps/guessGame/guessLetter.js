@@ -523,7 +523,7 @@ export default class guessLetter {
 
         let randsymbol
         while (typeof randsymbol === 'undefined' || randsymbol === '*') {
-            const key = commonKeys[fCompute.randBetween(0, commonKeys.length - 1)]
+            const key = commonKeys[fCompute.randInt(0, commonKeys.length - 1)]
             const songname = currentGame.ansList[key]
             if (!currentGame.blurlist[key]) continue;
             randsymbol = getRandCharacter(songname, currentGame.blurlist[key])
@@ -637,9 +637,9 @@ function getRandomSong(e, allSelectSongId) {
 
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
     if (allSelectSongId) {
-        return allSelectSongId[fCompute.randBetween(0, allSelectSongId.length - 1)]
+        return allSelectSongId[fCompute.randInt(0, allSelectSongId.length - 1)]
     }
-    return songIdList[fCompute.randBetween(0, songIdList.length - 1)]
+    return songIdList[fCompute.randInt(0, songIdList.length - 1)]
 }
 
 /**
@@ -661,9 +661,9 @@ function timeout(ms) {
 function encrypt_song_name(name) {
     const num = 0
     const numset = Array.from({ length: num }, () => {
-        let numToShow = fCompute.randBetween(0, name.length - 1)
+        let numToShow = fCompute.randInt(0, name.length - 1)
         while (name[numToShow] == ' ') {
-            numToShow = fCompute.randBetween(0, name.length - 1)
+            numToShow = fCompute.randInt(0, name.length - 1)
         }
         return numToShow
     })
@@ -727,7 +727,7 @@ function getRandCharacter(str, blur) {
     }
 
     // 生成随机索引
-    const randomIndex = fCompute.randBetween(0, temlist.length - 1)
+    const randomIndex = fCompute.randInt(0, temlist.length - 1)
 
     // 返回随机字符
     return str.charAt(temlist[randomIndex]);

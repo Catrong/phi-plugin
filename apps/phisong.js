@@ -544,7 +544,7 @@ export class phisong extends phiPluginBase {
             return false
         }
 
-        send.send_with_At(e, getInfo.tips[fCompute.randBetween(0, getInfo.tips.length - 1)])
+        send.send_with_At(e, getInfo.tips[fCompute.randInt(0, getInfo.tips.length - 1)])
     }
 
     /**
@@ -1302,7 +1302,7 @@ function randClg(clgNum, chartList) {
         if (!chartList[difList[i]]) {
             logger.error(difList[i], chartList)
         }
-        let tem = chartList[difList[i]].splice(fCompute.randBetween(0, chartList[difList[i]].length - 1), 1)[0]
+        let tem = chartList[difList[i]].splice(fCompute.randInt(0, chartList[difList[i]].length - 1), 1)[0]
         ans.push(tem)
     }
     // console.info(clgNum, ans)

@@ -805,7 +805,7 @@ export class phib19 extends phiPluginBase {
             head_title: "推分建议",
             song: data,
             phisong: phidata,
-            background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
+            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
             theme: plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),

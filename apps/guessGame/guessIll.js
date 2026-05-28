@@ -102,10 +102,10 @@ export default new class guessIll {
         gameList[group_id] = { gameType: "guessIll" }
         eList[group_id] = e
 
-        let w_ = fCompute.randBetween(100, 140)
-        let h_ = fCompute.randBetween(100, 140)
-        let x_ = fCompute.randBetween(0, 2048 - w_)
-        let y_ = fCompute.randBetween(0, 1080 - h_)
+        let w_ = fCompute.randInt(100, 140)
+        let h_ = fCompute.randInt(100, 140)
+        let x_ = fCompute.randInt(0, 2048 - w_)
+        let y_ = fCompute.randInt(0, 1080 - h_)
 
         // 根据难度等级生成干扰组合
         const level = fCompute.randFromArray([[1, 5], [2, 3], [3, 2]]);
@@ -144,6 +144,38 @@ export default new class guessIll {
          * 4: 干扰减弱(非模糊类干扰减弱)
          */
         let fnc = [0, 1, 2, 3]
+
+        /**
+         * 返回带有权重的随机干扰操作列表
+         * @param {number[]} fnc 
+         * @param {guessIllData} data 
+         */
+        function genRandFncArr(fnc, data) {
+            /**
+             * @type {[number, number][]}
+             */
+            const res = []
+            fnc.forEach(f => {
+                switch (f) {
+                    case 0:
+                        res.push([0, Math.floor((1 - (data.width * data.height) / (1080 * 2048)) * 100)]);
+                        break;
+                    case 1:
+                        res.push([1, Math.floor((data.blur / 16) * 50)]);
+                        break;
+                    case 2:
+                        res.push([2, 50]);
+                        break;
+                    case 3:
+                        res.push([3, fCompute.randInt(10, 50)]);
+                        break;
+                    case 4:
+                        res.push([4, 50]);
+                }
+            })
+            return res;
+        }
+
         // 如果初始没有模糊干扰，移除类型1
         if (!interference.blur && fnc.indexOf(1) !== -1) {
             fnc.splice(fnc.indexOf(1), 1)
@@ -183,9 +215,9 @@ export default new class guessIll {
             }
             let remsg = [] //回复内容
             let tipmsg = '' //这次干了什么
-            const index = fCompute.randBetween(0, fnc.length - 1)
+            const select = fCompute.randFromArray(genRandFncArr(fnc, data));
 
-            switch (fnc[index]) {
+            switch (select) {
                 case 0: {
                     area_increase(100, data, fnc)
                     tipmsg = `[区域扩增!]`
@@ -457,11 +489,11 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
              */
             let charts = /**@type {levelKind[]} */(Object.keys(songs_info.chart))
 
-            let t1 = charts[fCompute.randBetween(0, charts.length - 1)]
+            let t1 = charts[fCompute.randInt(0, charts.length - 1)]
 
             known_info[aim] = `\n该曲目的 ${t1} 谱面的`
 
-            switch (fCompute.randBetween(0, 2)) {
+            switch (fCompute.randInt(0, 2)) {
                 case 0: {
                     /**定数 */
                     known_info[aim] += `定数为 ${songs_info[aim][t1]?.['difficulty']}`
@@ -525,7 +557,7 @@ function generateInterference(level) {
     const allTypes = ['blur', 'saturate', 'invert', 'hueRotate', 'lineMode']
 
     const commonTypes = ['blur', 'saturate', 'invert', 'hueRotate']
-    
+
     const chineseMap = {
         'blur': '模糊',
         'saturate': '饱和',
@@ -539,14 +571,14 @@ function generateInterference(level) {
 
     switch (level) {
         case 1: {
-            // 单一干扰：从所有类型中随机选1个
-            chosen = [commonTypes[fCompute.randBetween(0, commonTypes.length - 1)]]
+            // 单一干扰：从除线稿类型中随机选1个
+            chosen = [commonTypes[fCompute.randInt(0, commonTypes.length - 1)]]
             break
         }
         case 2: {
             // blur + 任一颜色干扰 或 仅线稿（线稿本身就很有干扰性，所以有一定概率单独出现）
             if (Math.random() < 0.6) {
-                chosen = ['blur', colorTypes[fCompute.randBetween(0, colorTypes.length - 1)]]
+                chosen = ['blur', colorTypes[fCompute.randInt(0, colorTypes.length - 1)]]
             } else {
                 chosen = ['lineMode']
             }
@@ -586,7 +618,7 @@ function generateInterference(level) {
     for (const type of chosen) {
         switch (type) {
             case 'blur':
-                result.blur = fCompute.randBetween(8, 16)
+                result.blur = fCompute.randInt(8, 16)
                 break
             case 'saturate':
                 // 0(灰度) ~ 0.3(低饱和) 或 2.5~4(过饱和)，避免接近正常值1
@@ -598,7 +630,7 @@ function generateInterference(level) {
                 result.invert = fCompute.randFloatBetween(0.3, 1, 2)
                 break
             case 'hueRotate':
-                result.hueRotate = fCompute.randBetween(60, 300)
+                result.hueRotate = fCompute.randInt(60, 300)
                 // 避开接近0/360的区域（太接近原色）
                 if (result.hueRotate > 330 && result.hueRotate <= 360) result.hueRotate = 330
                 break
@@ -620,26 +652,29 @@ function generateInterference(level) {
  * @returns {string} 被减弱的干扰名称
  */
 function interference_reduce(data, fnc) {
-    /** 当前可减弱的非模糊、非线稿干扰 */
+    /**
+     * 当前可减弱的非模糊干扰
+     * @type {[string, number][]}
+     */
     const reducible = []
-    if (data.saturate !== 1 && !data.lineMode) reducible.push('saturate')
-    if (data.invert > 0 && !data.lineMode) reducible.push('invert')
-    if (data.hueRotate !== 0 && !data.lineMode) reducible.push('hueRotate')
-    if (data.lineMode) reducible.push('lineMode')
+    if (data.saturate !== 1) reducible.push(['saturate', 30])
+    if (data.invert > 0) reducible.push(['invert', 25])
+    if (data.hueRotate !== 0) reducible.push(['hueRotate', 50])
+    if (data.lineMode) reducible.push(['lineMode', 5])
 
     if (reducible.length === 0) {
         fnc.splice(fnc.indexOf(4), 1)
         return ''
     }
 
-    const target = reducible[fCompute.randBetween(0, reducible.length - 1)]
+    const target = fCompute.randFromArray(reducible)
     /** @type {Record<string, string>} */
     const nameMap = { saturate: '饱和度', invert: '反相', hueRotate: '色相', lineMode: '线稿' }
 
     switch (target) {
         case 'saturate': {
             // 向正常值1靠近
-            const step = 0.5
+            const step = fCompute.randFloatBetween(0.2, 0.5, 2)
             if (data.saturate < 1) {
                 data.saturate = Math.min(1, data.saturate + step)
             } else {
@@ -651,7 +686,8 @@ function interference_reduce(data, fnc) {
             break
         }
         case 'invert': {
-            data.invert = Math.max(0, data.invert - 0.25)
+            const step = fCompute.randFloatBetween(0.1, 0.25, 2)
+            data.invert = Math.max(0, data.invert - step)
             if (data.invert === 0) {
                 checkRemainingInterferences(data, fnc)
             }
@@ -659,11 +695,12 @@ function interference_reduce(data, fnc) {
         }
         case 'hueRotate': {
             // 向0靠近
+            const step = fCompute.randInt(20, 40)
             if (data.hueRotate > 180) {
-                data.hueRotate = Math.min(360, data.hueRotate + 40)
+                data.hueRotate = Math.min(360, data.hueRotate + step)
                 if (data.hueRotate >= 360) data.hueRotate = 0
             } else {
-                data.hueRotate = Math.max(0, data.hueRotate - 40)
+                data.hueRotate = Math.max(0, data.hueRotate - step)
             }
             if (data.hueRotate === 0) {
                 checkRemainingInterferences(data, fnc)
@@ -724,5 +761,5 @@ function getRandomSong(e) {
     }
 
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
-    return songIdList[fCompute.randBetween(0, songIdList.length - 1)]
+    return songIdList[fCompute.randInt(0, songIdList.length - 1)]
 }

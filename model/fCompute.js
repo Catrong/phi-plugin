@@ -165,7 +165,7 @@ export default class fCompute {
      * @param {number} max 最大值
      * @returns 随机数
      */
-    static randBetween(min, max) {
+    static randInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min)
     }
 
