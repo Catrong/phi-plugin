@@ -788,7 +788,7 @@ function getPuzzle(currentGame) {
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
-            output.push(`[${index + 1}] <qqbot-cmd-input text="/n${index + 1}. " show="${currentGame.blurlist[index].replace(/\*/g, '\\*')}" reference="false" />`)
+            output.push(`[${index + 1}] <qqbot-cmd-input text="/n${index + 1}. " show="\`${currentGame.blurlist[index]}\`" reference="false" />`)
             // output.push(`${index}. ${currentGame.blurlist[index]}`)
         } else {
             output.push(`✅ ${song}`)

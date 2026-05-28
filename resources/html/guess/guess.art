@@ -2,27 +2,50 @@
     <link rel="stylesheet" href="{{_res_path}}html/guess/guess.css">
     <meta charset="utf-8">
 </head>
-{{if style}}
 
-<body style="width: 2048px;height: 1080px;">
+<body style="width: {{style ? 2048 : width}}px; height: {{style ? 1080 : height}}px;">
+    <svg width="0" height="0" style="position:absolute">
+        
+        <filter id="phiLineArt">
+            <!-- 转灰度 -->
+            <feColorMatrix type="saturate" values="0" in="SourceGraphic" result="gray" />
+
+            <!-- 反相 -->
+            <feComponentTransfer in="gray">
+                <feFuncR type="linear" slope="-1" intercept="1" />
+                <feFuncG type="linear" slope="-1" intercept="1" />
+                <feFuncB type="linear" slope="-1" intercept="1" />
+            </feComponentTransfer>
+            <feGaussianBlur stdDeviation="1" result="blur" />
+
+            <!-- 颜色减淡混合 (类似 Photoshop 的“颜色减淡”) -->
+            <feBlend mode="color-dodge" in="blur" in2="gray" result="sketch" />
+
+            <!-- 增强线条对比度 -->
+            <feComponentTransfer in="sketch">
+                <feFuncR type="linear" slope="3" intercept="-2" />
+                <feFuncG type="linear" slope="3" intercept="-2" />
+                <feFuncB type="linear" slope="3" intercept="-2" />
+            </feComponentTransfer>
+        </filter>
+    </svg>
     {{if ans}}
     <div class="ans">
         <img src="{{ans}}" alt="答案">
     </div>
     {{/if}}
+    
+    {{if style}}
     <div class="img"
         style="width: {{width}}px;height: {{height}}px;margin-left: {{x}}px;margin-top: {{y}}px;border: 1px solid #888;filter: drop-shadow(0 0 5px #fff);">
         <img src="{{illustration}}" alt="曲绘"
-            style="margin-left: -{{x}}px;margin-top: -{{y}}px;filter: blur({{blur}}px);">
+            style="margin-left: -{{x}}px;margin-top: -{{y}}px;{{@filterStyle}}">
     </div>
-</body>
-
-{{else}}
-
-<body style="width: {{width}}px;height: {{height}}px;">
+    {{else}}
     <div class="img" style="width: {{width}}px;height: {{height}}px;">
         <img src="{{illustration}}" alt="曲绘"
-            style="margin-left: -{{x}}px;margin-top: -{{y}}px;filter: blur({{blur}}px);">
+            style="margin-left: -{{x}}px;margin-top: -{{y}}px;{{@filterStyle}}">
     </div>
+    {{/if}}
+
 </body>
-{{/if}}

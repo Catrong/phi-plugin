@@ -7,6 +7,7 @@
 * suggest更新
 * /apiset
 * score增加PhiN和BestN显示
+* 新增猜曲绘多种干扰类型和难度等级。
 
 ## 1.0.1
 

@@ -9,16 +9,6 @@ import segment from '../components/segment.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
-/**
- * @typedef {Object} guessIllData
- * @property {string} illustration 曲绘路径
- * @property {number} width 展示的宽度
- * @property {number} height 展示的高度
- * @property {number} x 展示的X位置
- * @property {number} y 展示的Y位置
- * @property {number} blur 模糊度
- * @property {number} style (0|1)是否全局视野
- */
 export default await new class picmodle {
 
     constructor() {
@@ -219,7 +209,7 @@ export default await new class picmodle {
     /**
      * 
      * @param {any} e 
-     * @param {guessIllData} data 
+     * @param {import('../apps/guessGame/guessIll.js').guessIllData} data 
      * @returns 
      */
     async guess(e, data) {
