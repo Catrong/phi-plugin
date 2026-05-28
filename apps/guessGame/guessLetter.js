@@ -788,7 +788,7 @@ function getPuzzle(currentGame) {
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
-            output.push(`[${index + 1}] <qqbot-cmd-input text="/n${index + 1}. " show="\`${currentGame.blurlist[index]}\`" reference="false" />`)
+            output.push(`[${index + 1}] ${cmdInpt(`/n${index + 1}. `, currentGame.blurlist[index].replace(/\*/g, '\\*'), true)}`)
             // output.push(`${index}. ${currentGame.blurlist[index]}`)
         } else {
             output.push(`✅ ${song}`)
@@ -802,7 +802,7 @@ function getPuzzle(currentGame) {
         `| ${cmdInpt('/开 ', '开个字母')} | ${cmdInpt('/tip', '看看提示')} | ${cmdInpt('/ans', '公布答案')} |` +
         '\n| :---: | :---: | :---: |\n');
     output.push('\n*点击蓝色字体可以快速填写指令哦~')
-    return output.join('\n');
+    return output.join('\n\n');
 }
 
 /**
