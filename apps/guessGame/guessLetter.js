@@ -788,7 +788,7 @@ function getPuzzle(currentGame) {
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
-            output.push(`[${index + 1}] ${cmdInpt(`/n${index + 1}. `, currentGame.blurlist[index].replace(/\*/g, '\\*'), true)}`)
+            output.push(`\[${index + 1}\] ${cmdInpt(`/n${index + 1}. `, currentGame.blurlist[index].replace(/\*/g, '\\*'), true)}`)
             // output.push(`${index}. ${currentGame.blurlist[index]}`)
         } else {
             output.push(`✅ ${song}`)
