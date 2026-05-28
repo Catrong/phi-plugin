@@ -354,16 +354,17 @@ export default class Save {
 
         for (let i = 0, j = 0; i < philist.length; ++i) {
             if (philist[i].rks < philist[j].rks) {
-                if (i < 3) {
+                if (i <= 3) {
                     j = i;
                     continue;
                 }
-                if (j < 3 && i > 3) {
+                if (j < 3) {
                     let tem = philist.slice(j, i - 1);
                     philist.splice(j);
                     tem = fCompute.randArray(tem);
                     philist.push(...tem);
                 }
+                philist.splice(i);
                 break;
             }
         }
