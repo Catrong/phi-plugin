@@ -7,6 +7,18 @@ import picmodle from "../../model/picmodle.js"
 import getPic from "../../model/getPic.js"
 import logger from "../../components/Logger.js"
 
+
+
+/**
+ * @typedef {Object} guessIllDataLite
+ * @property {string} illustration 曲绘路径
+ * @property {number} width 展示的宽度
+ * @property {number} height 展示的高度
+ * @property {number} x 展示的X位置
+ * @property {number} y 展示的Y位置
+ * @property {number|boolean} style 是否全局视野 (0/1 or false/true)
+ * @property {string} [ans] 答案图片路径(游戏结束时)
+ */
 class GuessTipsGameData {
     /**
      * @param {idString} songId 

@@ -110,6 +110,7 @@
  * @typedef {'GuessTipRecall'} GuessTipRecall 猜曲绘撤回
  * 开字母设置
  * @typedef {'LetterNum'} LetterNum 字母条数
+ * @typedef {'LetterMarkdown'} LetterMarkdown Markdown格式
  * @typedef {'LetterIllustration'} LetterIllustration 发送曲绘
  * @typedef {'LetterRevealCd'} LetterRevealCd 字母提示间隔
  * @typedef {'LetterGuessCd'} LetterGuessCd 字母开启间隔
@@ -156,6 +157,7 @@
  * |GuessTipCd
  * |GuessTipRecall
  * |LetterNum
+ * |LetterMarkdown
  * |LetterIllustration
  * |LetterRevealCd
  * |LetterGuessCd

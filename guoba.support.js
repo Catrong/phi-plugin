@@ -387,6 +387,12 @@ export function supportGuoba() {
                     },
                 },
                 {
+                    field: 'letterMarkdown',
+                    label: '开字母是否发送Markdown消息',
+                    bottomHelpMessage: '登录TapTap绑定是否发送二维码，开启仅发送二维码，关闭直接发送链接',
+                    component: 'Switch',
+                },
+                {
                     field: 'LetterIllustration',
                     label: '发送曲绘',
                     bottomHelpMessage: '猜对后是否发送以及发送什么曲绘，水印版需要占用渲染资源，不发图片更快',
@@ -538,11 +544,13 @@ export function supportGuoba() {
                 /**@type {Record<configName, any> | {}} */
                 let config = {}
                 for (var i in defset) {
+                    // @ts-ignore
                     config[i] = Config.getUserCfg('config', i)
                 }
                 return config
             },
             // 设置配置的方法（前端点确定后调用的方法）
+            // @ts-ignore
             setConfigData(data, { Result }) {
                 if (data.isGuild) {
                     data.WordB19Img = false
@@ -554,6 +562,7 @@ export function supportGuoba() {
                 //     vis = true
                 // }
                 for (let [keyPath, value] of Object.entries(data)) {
+                    // @ts-ignore
                     Config.modify('config', keyPath, value)
                 }
                 // if (vis) {

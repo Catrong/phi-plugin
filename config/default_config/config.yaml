@@ -101,6 +101,9 @@ otherinfo: 0
 #  猜字母条数
 LetterNum: 8
 
+#  是否使用markdown格式发送猜字母结果，开启后可以点击指令快速填写
+LetterMarkdown: true
+
 #  猜对后是否发送以及发送什么曲绘 原版 水印版 不发送
 LetterIllustration: "水印版"
 

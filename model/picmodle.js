@@ -209,7 +209,7 @@ export default await new class picmodle {
     /**
      * 
      * @param {any} e 
-     * @param {import('../apps/guessGame/guessIll.js').guessIllData} data 
+     * @param {import('../apps/guessGame/guessIll.js').guessIllData | import('../apps/guessGame/guessTips.js').guessIllDataLite} data 
      * @returns 
      */
     async guess(e, data) {

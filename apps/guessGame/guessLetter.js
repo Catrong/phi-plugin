@@ -209,9 +209,7 @@ export default class guessLetter {
         // 延时1s
         await timeout(1 * 1000)
 
-        let output = '开字母进行中：\n'
-        output += getPuzzle(currentGame);
-        await e.reply(segment.markdown(output), true)
+        tryToSendMd(e, (t) => ['开字母进行中：', getPuzzle(currentGame, t)].join('\n'));
 
         /**如果过长时间没人回答则结束 */
         while (timeCount[group_id]?.startTime == nowTime && Date.now() < timeCount[group_id].newTime) {
@@ -224,8 +222,8 @@ export default class guessLetter {
 
         if (letterGameData[group_id]) {
             await e.reply('呜，怎么还没有人答对啊QAQ！只能说答案了喵……')
+            tryToSendMd(e, (t) => gameover(group_id, gameList, t));
 
-            e.reply(gameover(group_id, gameList))
             return true
         }
         return true
@@ -321,11 +319,9 @@ export default class guessLetter {
 
             const isEmpty = allGuessed(currentGame);
             if (!isEmpty) {
-                output.push('开字母进行中：');
-                output.push(getPuzzle(currentGame));
+                tryToSendMd(e, (t) => [...output, '开字母进行中：', getPuzzle(currentGame, t)].join('\n'));
             } else {
-                output.unshift('所有字母已翻开，答案如下：');
-                output.push(gameover(group_id, gameList));
+                tryToSendMd(e, (t) => ['所有字母已翻开，答案如下：', ...output, gameover(group_id, gameList, t)].join('\n'));
             }
             e.reply(segment.markdown(output.join('\n')), true)
 
@@ -381,6 +377,9 @@ export default class guessLetter {
             return false
         }
 
+        /**
+         * @type {string[]}
+         */
         const output = []
         let num = 0
 
@@ -441,15 +440,11 @@ export default class guessLetter {
                 if (!isEmpty) {
                     output.push('开字母进行中：')
                     output.push(opened)
-
-                    output.push(getPuzzle(currentGame));
-
-                    e.reply(segment.markdown(output.join('\n')), true)
+                    tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
                     return true
                 } else {
                     output.push('所有曲目均已被猜出，答案如下：');
-                    output.push(segment.markdown(gameover(group_id, gameList)));
-                    e.reply(output.join('\n'), true)
+                    tryToSendMd(e, (t) => [...output, gameover(group_id, gameList, t)].join('\n'));
                     return true
                 }
             }
@@ -483,8 +478,7 @@ export default class guessLetter {
 
 
         await e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
-
-        e.reply(segment.markdown(gameover(group_id, gameList)))
+        tryToSendMd(e, (t) => gameover(group_id, gameList, t));
         return true
     }
 
@@ -535,6 +529,9 @@ export default class guessLetter {
             randsymbol = getRandCharacter(songname, currentGame.blurlist[key])
         }
 
+        /**
+         * @type {string[]}
+         */
         const output = []
 
         currentGame.ansList.forEach((value, index) => {
@@ -581,12 +578,11 @@ export default class guessLetter {
         const isEmpty = allGuessed(currentGame)
         if (!isEmpty) {
             output.push('开字母进行中：')
-            output.push(getPuzzle(currentGame));
+            tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
         } else {
             output.unshift('所有字母已翻开，答案如下：');
-            output.push(gameover(group_id, gameList));
+            tryToSendMd(e, (t) => [...output, gameover(group_id, gameList, t)].join('\n'));
         }
-        e.reply(segment.markdown(output.join('\n')), true)
         return true
     }
 
@@ -741,8 +737,9 @@ function getRandCharacter(str, blur) {
  * 结束本群游戏，返回答案
  * @param {string} group_id 
  * @param {GameList} gameList
+ * @param {boolean} letterMarkdown
  */
-function gameover(group_id, gameList) {
+function gameover(group_id, gameList, letterMarkdown) {
 
     const currentGame = letterGameData[group_id]
     const t = [...currentGame.ansList]
@@ -761,11 +758,13 @@ function gameover(group_id, gameList) {
         const winner_card = winner[index]
         output.push(`${index + 1}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
     });
-    const cmdhead = Config.getUserCfg('config', 'cmdhead')
-    output.push(`\n***\n\n` +
-        // '| - | - | - |\n' +
-        `| ${cmdInpt(`/${cmdhead} letter `, '再来一局')} | ${cmdInpt(`/${cmdhead} guess`, '猜个曲绘')} | ${cmdInpt(`/${cmdhead} tipgame`, '提示猜歌')} |` +
-        '\n| :---: | :---: | :---: |\n');
+    if (letterMarkdown) {
+        const cmdhead = Config.getUserCfg('config', 'cmdhead')
+        output.push(`\n***\n\n` +
+            // '| - | - | - |\n' +
+            `| ${cmdInpt(`/${cmdhead} letter `, '再来一局')} | ${cmdInpt(`/${cmdhead} guess`, '猜个曲绘')} | ${cmdInpt(`/${cmdhead} tipgame`, '提示猜歌')} |` +
+            '\n| :---: | :---: | :---: |\n');
+    }
 
     return output.join('\n');
 }
@@ -782,15 +781,19 @@ function allGuessed(currentGame) {
 /**
  * 生成谜面
  * @param {letterGameDataObject} currentGame 
+ * @param {boolean} letterMarkdown 是否使用markdown格式的字母谜面
  */
-function getPuzzle(currentGame) {
+function getPuzzle(currentGame, letterMarkdown) {
     /**@type {string[]} */
-    const output = ['***'];
+    const output = [];
+    letterMarkdown && output.push('***');
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
-            output.push(`${index + 1}. ${cmdInpt(`/n${index + 1}. `, currentGame.blurlist[index].replace(/\*/g, '\\*'))}`)
-            // output.push(`${index}. ${currentGame.blurlist[index]}`)
+            const str = letterMarkdown
+                ? cmdInpt(`/n${index + 1}. `, currentGame.blurlist[index].replace(/\*/g, '\\*'))
+                : currentGame.blurlist[index]
+            output.push(`${index + 1}. ${str}`);
         } else {
             output.push(`${index + 1}. ${song} ✅`)
             if (currentGame.winnerlist[index]) {
@@ -798,12 +801,14 @@ function getPuzzle(currentGame) {
             }
         }
     })
-    const cmdhead = Config.getUserCfg('config', 'cmdhead')
-    output.push(`\n***\n` +
-        // '| - | - | - |\n' +
-        `| ${cmdInpt(`/开 `, '开个字母')} | ${cmdInpt(`/${cmdhead} tip`, '看看提示')} | ${cmdInpt(`/${cmdhead} ans`, '公布答案')} |` +
-        '\n| :---: | :---: | :---: |\n');
-    output.push('\n*点击蓝色字体可以快速填写指令哦~')
+    if (letterMarkdown) {
+        const cmdhead = Config.getUserCfg('config', 'cmdhead')
+        output.push(`\n***\n` +
+            // '| - | - | - |\n' +
+            `| ${cmdInpt(`/开 `, '开个字母')} | ${cmdInpt(`/${cmdhead} tip`, '看看提示')} | ${cmdInpt(`/${cmdhead} ans`, '公布答案')} |` +
+            '\n| :---: | :---: | :---: |\n');
+        output.push('\n*点击蓝色字体可以快速填写指令哦~')
+    }
     return output.join('\n');
 }
 
@@ -814,4 +819,22 @@ function getPuzzle(currentGame) {
  */
 function cmdInpt(text, show, reference = false) {
     return `<qqbot-cmd-input text="${text}" show="${show}" reference="${reference}" />`
+}
+
+/**@import {botEvent} from '../../components/baseClass.js' */
+
+/**
+ * @param {botEvent} e
+ * @param {(arg0: boolean) => string} fnc
+ */
+function tryToSendMd(e, fnc) {
+    const letterMarkdown = Config.getUserCfg('config', 'LetterMarkdown')
+    if (!letterMarkdown) {
+        e.reply(fnc(false))
+    }
+    try {
+        e.reply(segment.markdown(fnc(true)));
+    } catch {
+        e.reply(fnc(false))
+    }
 }
