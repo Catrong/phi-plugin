@@ -390,12 +390,6 @@ export default new class guessIll {
  * @param {any} data
  */
 async function gameover(e, data) {
-    // 清除所有干扰效果
-    data.blur = 0
-    data.saturate = 1
-    data.invert = 0
-    data.hueRotate = 0
-    data.lineMode = false
     data.filterStyle = buildFilterStyle(data)
     data.ans = data.illustration
     data.style = 1
