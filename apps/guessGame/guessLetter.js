@@ -323,7 +323,6 @@ export default class guessLetter {
             } else {
                 tryToSendMd(e, (t) => ['所有字母已翻开，答案如下：', ...output, gameover(group_id, gameList, t)].join('\n'));
             }
-            e.reply(segment.markdown(output.join('\n')), true)
 
             return true
         }
