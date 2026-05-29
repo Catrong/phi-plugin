@@ -38,7 +38,7 @@ const eList = {}
  * @property {number} y 展示的Y位置
  * @property {number} blur 模糊度
  * @property {number} saturate 饱和度 (0=灰度, 1=正常, >1=过饱和)
- * @property {number} invert 反相度 (0=正常, 1=完全反相)
+ * @property {boolean} invert 反相度 (0=正常, 1=完全反相)
  * @property {number} hueRotate 色相旋转角度 (deg)
  * @property {boolean} lineMode 是否线稿模式
  * @property {number|boolean} style 是否全局视野 (0/1 or false/true)
@@ -170,7 +170,12 @@ export default new class guessIll {
                         res.push([3, fCompute.randInt(10, 50)]);
                         break;
                     case 4:
-                        res.push([4, 50]);
+                        let interferenceCount = 0
+                        if (data.saturate !== 1) interferenceCount += 15
+                        if (data.invert) interferenceCount += 5
+                        if (data.hueRotate !== 0) interferenceCount += 20
+                        if (data.lineMode) interferenceCount += 5
+                        res.push([4, interferenceCount]);
                 }
             })
             return res;
@@ -181,7 +186,7 @@ export default new class guessIll {
             fnc.splice(fnc.indexOf(1), 1)
         }
         // 如果存在非模糊类干扰，加入类型4
-        if (interference.lineMode || interference.saturate !== 1 || interference.invert > 0 || interference.hueRotate !== 0) {
+        if (interference.lineMode || interference.saturate !== 1 || interference.invert !== false || interference.hueRotate !== 0) {
             fnc.push(4)
         }
         logger.info(data)
@@ -527,7 +532,7 @@ function buildFilterStyle(data) {
     } else {
         // 非线稿模式下才应用颜色类干扰
         if (data.saturate !== 1 && typeof data.saturate === 'number') filters.push(`saturate(${data.saturate})`)
-        if (data.invert > 0) filters.push(`invert(${data.invert})`)
+        if (data.invert !== false) filters.push(`invert(${data.invert ? 1 : 0})`)
         if (data.hueRotate !== 0) filters.push(`hue-rotate(${data.hueRotate}deg)`)
     }
     if (data.blur > 0) filters.push(`blur(${data.blur}px)`)
@@ -601,7 +606,7 @@ function generateInterference(level) {
         y: 0,
         blur: 0,
         saturate: 1,
-        invert: 0,
+        invert: false,
         hueRotate: 0,
         lineMode: false,
         style: 0,
@@ -621,7 +626,7 @@ function generateInterference(level) {
                     : fCompute.randFloatBetween(2.5, 4, 2)
                 break
             case 'invert':
-                result.invert = fCompute.randFloatBetween(0.3, 1, 2)
+                result.invert = true;
                 break
             case 'hueRotate':
                 result.hueRotate = fCompute.randInt(60, 300)
@@ -652,7 +657,7 @@ function interference_reduce(data, fnc) {
      */
     const reducible = []
     if (data.saturate !== 1) reducible.push(['saturate', 30])
-    if (data.invert > 0) reducible.push(['invert', 25])
+    if (data.invert) reducible.push(['invert', 25])
     if (data.hueRotate !== 0) reducible.push(['hueRotate', 50])
     if (data.lineMode) reducible.push(['lineMode', 5])
 
@@ -680,11 +685,8 @@ function interference_reduce(data, fnc) {
             break
         }
         case 'invert': {
-            const step = fCompute.randFloatBetween(0.1, 0.25, 2)
-            data.invert = Math.max(0, data.invert - step)
-            if (data.invert === 0) {
-                checkRemainingInterferences(data, fnc)
-            }
+            data.invert = false
+            checkRemainingInterferences(data, fnc)
             break
         }
         case 'hueRotate': {
@@ -719,9 +721,9 @@ function interference_reduce(data, fnc) {
  */
 function checkRemainingInterferences(data, fnc) {
     const hasOtherInterference = data.lineMode
-        || (data.saturate !== 1 && !data.lineMode)
-        || (data.invert > 0 && !data.lineMode)
-        || (data.hueRotate !== 0 && !data.lineMode)
+        || (data.saturate !== 1)
+        || (data.invert)
+        || (data.hueRotate !== 0)
     if (!hasOtherInterference) {
         const idx = fnc.indexOf(4)
         if (idx !== -1) fnc.splice(idx, 1)
