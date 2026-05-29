@@ -13,6 +13,7 @@ import getPic from '../../model/getPic.js'
 import fCompute from '../../model/fCompute.js'
 import picmodle from '../../model/picmodle.js'
 import logger from '../../components/Logger.js'
+import segment from '../../components/segment.js'
 
 /**
  * @type {idString[]}
@@ -108,13 +109,13 @@ let timeCount = {}
  * @import {GameList} from '../guessGame.js'
  */
 
-export default new class guessLetter {
+export default class guessLetter {
     /**
      * 发起出字母猜歌
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async start(e, gameList) {
+    static async start(e, gameList) {
         const { group_id } = e // 使用对象解构提取group_id
 
         if (letterGameData[group_id]) {
@@ -208,9 +209,7 @@ export default new class guessLetter {
         // 延时1s
         await timeout(1 * 1000)
 
-        let output = '开字母进行中：\n'
-        output += getPuzzle(currentGame);
-        await e.reply(output, true)
+        tryToSendMd(e, (t) => ['开字母进行中：', getPuzzle(currentGame, t)].join('\n'));
 
         /**如果过长时间没人回答则结束 */
         while (timeCount[group_id]?.startTime == nowTime && Date.now() < timeCount[group_id].newTime) {
@@ -223,8 +222,8 @@ export default new class guessLetter {
 
         if (letterGameData[group_id]) {
             await e.reply('呜，怎么还没有人答对啊QAQ！只能说答案了喵……')
+            tryToSendMd(e, (t) => gameover(group_id, gameList, t));
 
-            e.reply(gameover(group_id, gameList))
             return true
         }
         return true
@@ -235,7 +234,7 @@ export default new class guessLetter {
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async reveal(e, gameList) {
+    static async reveal(e, gameList) {
         const { group_id, msg } = e
         timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
@@ -320,13 +319,11 @@ export default new class guessLetter {
 
             const isEmpty = allGuessed(currentGame);
             if (!isEmpty) {
-                output.push('开字母进行中：');
-                output.push(getPuzzle(currentGame));
+                tryToSendMd(e, (t) => [...output, '开字母进行中：', getPuzzle(currentGame, t)].join('\n'));
             } else {
-                output.unshift('所有字母已翻开，答案如下：');
-                output.push(gameover(group_id, gameList));
+                tryToSendMd(e, (t) => ['所有字母已翻开，答案如下：', ...output, gameover(group_id, gameList, t)].join('\n'));
             }
-            e.reply(output.join('\n'), true)
+            e.reply(segment.markdown(output.join('\n')), true)
 
             return true
         }
@@ -338,7 +335,7 @@ export default new class guessLetter {
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async guess(e, gameList) {
+    static async guess(e, gameList) {
         const { group_id, msg, user_id, sender } = e //使用对象解构提取group_id,msg,user_id和sender
         const currentGame = letterGameData[group_id];
         //必须已经开始了一局
@@ -380,6 +377,9 @@ export default new class guessLetter {
             return false
         }
 
+        /**
+         * @type {string[]}
+         */
         const output = []
         let num = 0
 
@@ -391,10 +391,12 @@ export default new class guessLetter {
 
         const content = result[2]
 
-        if (num > Config.getUserCfg('config', 'LetterNum')) {
+        if (num > Config.getUserCfg('config', 'LetterNum') || num <= 0) {
             e.reply(`没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
             return true
         }
+
+        --num;
 
         const ids = getInfo.fuzzysongsnick(content, 0.95)
         const standard_id = currentGame.ansIdList[num] // 标准答案
@@ -414,7 +416,7 @@ export default new class guessLetter {
 
                 currentGame.blurlist[num] = null //移除模糊曲目
 
-                send.send_with_At(e, `恭喜你ww，答对啦喵，第${num}首答案是[${standard_name}]!ヾ(≧▽≦*)o `, true)
+                send.send_with_At(e, `恭喜你ww，答对啦喵，第${num + 1}首答案是[${standard_name}]!ヾ(≧▽≦*)o `, true)
 
                 /**发送曲绘 */
                 const info = getInfo.info(standard_id)
@@ -438,25 +440,20 @@ export default new class guessLetter {
                 if (!isEmpty) {
                     output.push('开字母进行中：')
                     output.push(opened)
-
-                    output.push(getPuzzle(currentGame));
-
-                    e.reply(output.join('\n'), true)
+                    tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
                     return true
                 } else {
-
                     output.push('所有曲目均已被猜出，答案如下：');
-                    output.push(gameover(group_id, gameList));
-                    e.reply(output.join('\n'), true)
+                    tryToSendMd(e, (t) => [...output, gameover(group_id, gameList, t)].join('\n'));
                     return true
                 }
             }
         }
 
         if (ids[1]) {
-            e.reply(`第${num}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
+            e.reply(`第${num + 1}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
         } else {
-            e.reply(`第${num}首不是[${getInfo.info(ids[0])?.song ?? ids[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
+            e.reply(`第${num + 1}首不是[${getInfo.info(ids[0])?.song ?? ids[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
         }
 
         return false
@@ -468,7 +465,7 @@ export default new class guessLetter {
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async ans(e, gameList) {
+    static async ans(e, gameList) {
         const { group_id } = e//使用对象解构提取group_id
 
         const currentGame = letterGameData[group_id];
@@ -481,8 +478,7 @@ export default new class guessLetter {
 
 
         await e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
-
-        e.reply(gameover(group_id, gameList))
+        tryToSendMd(e, (t) => gameover(group_id, gameList, t));
         return true
     }
 
@@ -491,7 +487,7 @@ export default new class guessLetter {
      * @param {any} e 事件对象
      * @param {GameList} gameList 进行中的游戏列表
      */
-    async getTip(e, gameList) {
+    static async getTip(e, gameList) {
         const { group_id } = e
 
 
@@ -527,12 +523,15 @@ export default new class guessLetter {
 
         let randsymbol
         while (typeof randsymbol === 'undefined' || randsymbol === '*') {
-            const key = commonKeys[fCompute.randBetween(0, commonKeys.length - 1)]
+            const key = commonKeys[fCompute.randInt(0, commonKeys.length - 1)]
             const songname = currentGame.ansList[key]
             if (!currentGame.blurlist[key]) continue;
             randsymbol = getRandCharacter(songname, currentGame.blurlist[key])
         }
 
+        /**
+         * @type {string[]}
+         */
         const output = []
 
         currentGame.ansList.forEach((value, index) => {
@@ -579,12 +578,11 @@ export default new class guessLetter {
         const isEmpty = allGuessed(currentGame)
         if (!isEmpty) {
             output.push('开字母进行中：')
-            output.push(getPuzzle(currentGame));
+            tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
         } else {
             output.unshift('所有字母已翻开，答案如下：');
-            output.push(gameover(group_id, gameList));
+            tryToSendMd(e, (t) => [...output, gameover(group_id, gameList, t)].join('\n'));
         }
-        e.reply(output.join('\n'), true)
         return true
     }
 
@@ -592,7 +590,7 @@ export default new class guessLetter {
      * 洗牌
      * @param {any} e 事件对象
      */
-    async mix(e) {
+    static async mix(e) {
         const { group_id } = e
 
         const currentGame = letterGameData[group_id];
@@ -607,7 +605,7 @@ export default new class guessLetter {
         await e.reply(`洗牌成功了www`, true)
         return true
     }
-}()
+}
 
 
 /**
@@ -639,9 +637,9 @@ function getRandomSong(e, allSelectSongId) {
 
     //如果由于浮点数精度问题未能正确选择歌曲，则随机返回一首
     if (allSelectSongId) {
-        return allSelectSongId[fCompute.randBetween(0, allSelectSongId.length - 1)]
+        return allSelectSongId[fCompute.randInt(0, allSelectSongId.length - 1)]
     }
-    return songIdList[fCompute.randBetween(0, songIdList.length - 1)]
+    return songIdList[fCompute.randInt(0, songIdList.length - 1)]
 }
 
 /**
@@ -663,9 +661,9 @@ function timeout(ms) {
 function encrypt_song_name(name) {
     const num = 0
     const numset = Array.from({ length: num }, () => {
-        let numToShow = fCompute.randBetween(0, name.length - 1)
+        let numToShow = fCompute.randInt(0, name.length - 1)
         while (name[numToShow] == ' ') {
-            numToShow = fCompute.randBetween(0, name.length - 1)
+            numToShow = fCompute.randInt(0, name.length - 1)
         }
         return numToShow
     })
@@ -729,7 +727,7 @@ function getRandCharacter(str, blur) {
     }
 
     // 生成随机索引
-    const randomIndex = fCompute.randBetween(0, temlist.length - 1)
+    const randomIndex = fCompute.randInt(0, temlist.length - 1)
 
     // 返回随机字符
     return str.charAt(temlist[randomIndex]);
@@ -739,8 +737,9 @@ function getRandCharacter(str, blur) {
  * 结束本群游戏，返回答案
  * @param {string} group_id 
  * @param {GameList} gameList
+ * @param {boolean} letterMarkdown
  */
-function gameover(group_id, gameList) {
+function gameover(group_id, gameList, letterMarkdown) {
 
     const currentGame = letterGameData[group_id]
     const t = [...currentGame.ansList]
@@ -751,14 +750,22 @@ function gameover(group_id, gameList) {
     delete timeCount[group_id]
 
     /**@type {string[]} */
-    const output = []
+    const output = ['***\n']
 
 
     t.forEach((value, index) => {
         const correct_name = value
         const winner_card = winner[index]
-        output.push(`【${index}】${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
+        output.push(`${index + 1}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
     });
+    if (letterMarkdown) {
+        const cmdhead = Config.getUserCfg('config', 'cmdhead')
+        output.push(`\n***\n\n` +
+            // '| - | - | - |\n' +
+            `| ${cmdInpt(`/${cmdhead} letter `, '再来一局')} | ${cmdInpt(`/${cmdhead} guess`, '猜个曲绘')} | ${cmdInpt(`/${cmdhead} tipgame`, '提示猜歌')} |` +
+            '\n| :---: | :---: | :---: |\n');
+    }
+
     return output.join('\n');
 }
 
@@ -774,20 +781,60 @@ function allGuessed(currentGame) {
 /**
  * 生成谜面
  * @param {letterGameDataObject} currentGame 
+ * @param {boolean} letterMarkdown 是否使用markdown格式的字母谜面
  */
-function getPuzzle(currentGame) {
+function getPuzzle(currentGame, letterMarkdown) {
     /**@type {string[]} */
     const output = [];
-    output.push(`曲库范围：${currentGame.gameSelectList.join('、')}`);
+    letterMarkdown && output.push('***');
+    output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
-            output.push(`【${index}】${currentGame.blurlist[index]}`)
+            const str = letterMarkdown
+                ? cmdInpt(`/n${index + 1}. `, currentGame.blurlist[index].replace(/\*/g, '\\*'))
+                : currentGame.blurlist[index]
+            output.push(`${index + 1}. ${str}`);
         } else {
-            output.push(`【${index}】${song}`)
+            output.push(`${index + 1}. ${song} ✅`)
             if (currentGame.winnerlist[index]) {
                 output.push(` @${currentGame.winnerlist[index]}`)
             }
         }
     })
+    if (letterMarkdown) {
+        const cmdhead = Config.getUserCfg('config', 'cmdhead')
+        output.push(`\n***\n` +
+            // '| - | - | - |\n' +
+            `| ${cmdInpt(`/开 `, '开个字母')} | ${cmdInpt(`/${cmdhead} tip`, '看看提示')} | ${cmdInpt(`/${cmdhead} ans`, '公布答案')} |` +
+            '\n| :---: | :---: | :---: |\n');
+        output.push('\n*点击蓝色字体可以快速填写指令哦~')
+    }
     return output.join('\n');
+}
+
+/**
+ * @param {string} text 指令内容
+ * @param {string} show
+ * @param {boolean} reference
+ */
+function cmdInpt(text, show, reference = false) {
+    return `<qqbot-cmd-input text="${text}" show="${show}" reference="${reference}" />`
+}
+
+/**@import {botEvent} from '../../components/baseClass.js' */
+
+/**
+ * @param {botEvent} e
+ * @param {(arg0: boolean) => string} fnc
+ */
+function tryToSendMd(e, fnc) {
+    const letterMarkdown = Config.getUserCfg('config', 'LetterMarkdown')
+    if (!letterMarkdown) {
+        e.reply(fnc(false))
+    }
+    try {
+        e.reply(segment.markdown(fnc(true)));
+    } catch {
+        e.reply(fnc(false))
+    }
 }

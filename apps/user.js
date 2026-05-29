@@ -103,7 +103,7 @@ export class phiuser extends phiPluginBase {
             }
         }
         if (!bksong) {
-            bksong = getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)], 'blur')
+            bksong = getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)], 'blur')
         }
 
         let save = await send.getsave_result(e, 1.0)
@@ -475,7 +475,7 @@ export class phiuser extends phiPluginBase {
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)], 'blur'),
+            background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)], 'blur'),
         }
 
         // let remsg = ''
@@ -619,7 +619,7 @@ export class phiuser extends phiPluginBase {
         send.send_with_At(e, await picmodle.list(e, {
             head_title: "成绩筛选",
             song: data,
-            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)]),
+            background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
             theme: plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
@@ -661,7 +661,7 @@ export class phiuser extends phiPluginBase {
 
         send.send_with_At(e, await picmodle.analyzeSaveHistory(e, {
             stats,
-            background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
+            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
         }));
     }
 
@@ -912,7 +912,7 @@ export class phiuser extends phiPluginBase {
         send.send_with_At(e, await picmodle.common(e, 'historyB30', {
             gameuser,
             rows,
-            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)]),
+            background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
             theme: pluginData?.theme || 'star',
         }))
 

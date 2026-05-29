@@ -165,7 +165,7 @@ export default class fCompute {
      * @param {number} max 最大值
      * @returns 随机数
      */
-    static randBetween(min, max) {
+    static randInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min)
     }
 
@@ -685,6 +685,25 @@ export default class fCompute {
         /**@type {ratingKind[]} */
         const rankOrder = ['NEW', 'F', 'C', 'B', 'A', 'S', 'V', 'FC', 'phi']
         return rankOrder.indexOf(a) - rankOrder.indexOf(b);
+    }
+
+    /**
+     * 从数组中随机选择一个元素，数组元素为[值,权重]，权重越大被选中的概率越大
+     * @template T
+     * @param {[T,number][]} arr 
+     * @return {T} 选中的元素
+     */
+    static randFromArray(arr) {
+        let sum = arr.reduce((acc, cur) => acc + cur[1], 0);
+        let rand = Math.random() * sum;
+        for (let i = 0; i < arr.length; i++) {
+            if (rand < arr[i][1]) {
+                return arr[i][0];
+            }
+            rand -= arr[i][1];
+        }
+        // 如果没有找到，返回最后一个元素
+        return arr[arr.length - 1][0];
     }
 
 }
