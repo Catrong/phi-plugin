@@ -827,14 +827,13 @@ function cmdInpt(text, show, reference = false) {
  * @param {botEvent} e
  * @param {(arg0: boolean) => string} fnc
  */
-function tryToSendMd(e, fnc) {
+async function tryToSendMd(e, fnc) {
     const letterMarkdown = Config.getUserCfg('config', 'LetterMarkdown')
     if (!letterMarkdown) {
         e.reply(fnc(false))
     }
-    try {
-        e.reply(segment.markdown(fnc(true)));
-    } catch {
+    let sent = await e.reply(segment.markdown(fnc(true)))
+    if (sent.error && sent.error.length) {
         e.reply(fnc(false))
     }
 }
