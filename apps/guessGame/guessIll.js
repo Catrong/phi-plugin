@@ -208,13 +208,17 @@ export default new class guessIll {
 
             for (let j = 0; j < time; ++j) {
                 await common.sleep(1000)
+
+                e = eList[group_id]
                 if (ansList[group_id]) {
                     if (ansList[group_id] != songs_info.id) {
                         await gameover(e, data)
+                        delete eList[group_id]
                         return true
                     }
                 } else {
                     await gameover(e, data)
+                    delete eList[group_id]
                     return true
                 }
             }
@@ -265,10 +269,12 @@ export default new class guessIll {
             if (ansList[group_id]) {
                 if (ansList[group_id] != songs_info.id) {
                     await gameover(e, data)
+                    delete eList[group_id]
                     return true
                 }
             } else {
                 await gameover(e, data)
+                delete eList[group_id]
                 return true
             }
 
@@ -281,13 +287,18 @@ export default new class guessIll {
 
         for (let j = 0; j < time; ++j) {
             await common.sleep(1000)
+
+            e = eList[group_id]
+
             if (ansList[group_id]) {
                 if (ansList[group_id] != songs_info.id) {
                     await gameover(e, data)
+                    delete eList[group_id]
                     return true
                 }
             } else {
                 await gameover(e, data)
+                delete eList[group_id]
                 return true
             }
         }
