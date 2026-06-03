@@ -830,6 +830,7 @@ async function tryToSendMd(e, fnc) {
     const letterMarkdown = Config.getUserCfg('config', 'LetterMarkdown')
     if (!letterMarkdown) {
         e.reply(fnc(false))
+        return;
     }
     let sent = await e.reply(segment.markdown(fnc(true)))
     if (sent.error && sent.error.length) {
