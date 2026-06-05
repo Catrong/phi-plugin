@@ -434,6 +434,16 @@ export default class fCompute {
     }
 
     /**
+     * 根据百分比和区间获取对应的值
+     * @param {number} percent 
+     * @param {number[]} range 
+     * @returns 
+     */
+    static getValueFromRange(percent, range) {
+        return Math.round((range[range.length - 1] - range[0]) * percent / 100 + range[0])
+    }
+
+    /**
      * 模糊搜索，返回相似度大于0.8的结果
      * @param {string} str 搜索字符串
      * @param {Object<string, string[]>} data 搜索数组

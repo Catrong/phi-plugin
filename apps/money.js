@@ -24,19 +24,45 @@ import { canUseApi } from '../model/apiPermission.js'
 const illlist = getInfo.illlist
 const theme = themeList
 
-// const sp_date = 'Apr 01 2025'
-// const sp_date_num = [41]
-// const sp_date_tips = ["渲...渲染失败QAQ！啊...什么！这里不是B30吗？！不...不管了！愚人节快乐！"]
+const commonSP = {
+    note_num: [750],
+    tips: ["高考加油喵，祝26届考生金榜题名w！"],
+    jrrp: {
+        lucky: [100, 100],
+        good: undefined,
+        bad: undefined,
+        common: undefined,
+        sentence: [{
+            hitokoto: "愿你合上笔盖的那一刻，有侠客收剑入鞘的从容，无论江湖多远，此刻已是英雄。",
+            from: "phi-plugin全体维护成员"
+        }]
+    }
+}
 
 const spData = [{
-    sp_month: '04',
-    sp_date: '01',
-    sp_date_num: [41],
-    sp_date_tips: ["签到成功！恭喜您差一点就与失去获得-2147483648个Note的机会失之交臂！"]
+    month: '06',
+    date: '05',
+    ...commonSP,
+}, {
+    month: '06',
+    date: '07',
+    ...commonSP,
+}, {
+    month: '06',
+    date: '08',
+    ...commonSP,
+}, {
+    month: '06',
+    date: '09',
+    ...commonSP,
 }]
 
-/**@type {any[] | null} */
-let sentenceCache = null
+
+/**
+ * 一言
+ * @type {Record<"hitokoto" | "from", string>[]}
+ */
+let sentence = await readFile.FileReader(path.join(infoPath, 'sentences.json'))
 
 export class phimoney extends phiPluginBase {
     constructor() {
@@ -65,6 +91,10 @@ export class phimoney extends phiPluginBase {
                 {
                     reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(theme)(\\s*)[0-3]$`,
                     fnc: 'theme'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(jrrp|今日人品)$`,
+                    fnc: 'jrrp'
                 },
             ]
         })
@@ -98,7 +128,7 @@ export class phimoney extends phiPluginBase {
             signedJustNow = true
             getnum = randint(20, 5)
             if (spDateIndex !== -1) {
-                getnum = spData[spDateIndex].sp_date_num[randint(spData[spDateIndex].sp_date_num.length - 1)]
+                getnum = spData[spDateIndex].note_num[randint(spData[spDateIndex].note_num.length - 1)]
             }
 
             data.money += getnum
@@ -134,7 +164,7 @@ export class phimoney extends phiPluginBase {
         const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
         if (signedJustNow) {
             const tips = spDateIndex !== -1
-                ? spData[spDateIndex].sp_date_tips[randint(spData[spDateIndex].sp_date_tips.length - 1)]
+                ? spData[spDateIndex].tips[randint(spData[spDateIndex].tips.length - 1)]
                 : `签到成功！${helloMsg(now_time, 0)}`
             send.send_with_At(e, [img, `${tips}\n恭喜您获得了${getnum}个Note！当前 Note：${data.money}`])
         } else {
@@ -356,6 +386,34 @@ export class phimoney extends phiPluginBase {
         send.send_with_At(e, `设置成功！\n你当前的主题是：${theme[aim].src}`)
         return true
     }
+
+
+    /** 
+     * 今日人品
+     * @param {botEvent} e 
+     * @returns 
+     */
+    async jrrp(e) {
+
+        if (await getBanGroup.get(e, 'jrrp')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let jrrp = (await createJrrp(e)).oriData;
+        let data = {
+            bkg: getInfo.getill(/**@type {any} */("ShineAfter.ADeanJocularACE.0")),
+            lucky: jrrp[0],
+            luckRank: jrrp[0] == 100 ? 5 : (jrrp[0] >= 80 ? 4 : (jrrp[0] >= 60 ? 3 : (jrrp[0] >= 40 ? 2 : (jrrp[0] >= 20 ? 1 : 0)))),
+            year: new Date().getFullYear(),
+            month: fCompute.ped(new Date().getMonth() + 1, 2),
+            day: fCompute.ped(new Date().getDate(), 2),
+            sentence: Number(jrrp[1]) ? sentence[jrrp[1]] : jrrp[1],
+            good: jrrp.slice(2, 6),
+            bad: jrrp.slice(6, 10),
+        }
+        send.send_with_At(e, await picmodle.common(e, 'jrrp', data))
+    }
 }
 
 
@@ -555,14 +613,14 @@ async function randtask(e, save, task = []) {
  * 
  * @param {Save | false} save 
  * @param {PluginData} plugin_data 
- * @param {any} user_id 
+ * @param {botEvent} e 
  */
-async function picData(save, plugin_data, user_id) {
+async function picData(save, plugin_data, e) {
     let now_time = new Date()
     let todayKey = formatDateKey(now_time)
 
     /** 今日人品（复用 jrrp 的 redis 数据，保证一致） */
-    let fortune = await getOrCreateFortune(user_id)
+    let fortune = await createJrrp(e)
 
     /** 进度条（解锁/FC/PHI 三层叠加） */
     let edgeRate = {
@@ -601,7 +659,7 @@ async function picData(save, plugin_data, user_id) {
     if (plugin_data.noticeCode < getInfo.noticeJson.code) {
         notice = getInfo.noticeJson
         plugin_data.noticeCode = getInfo.noticeJson.code
-        getNotes.putNotesData(user_id, plugin_data)
+        getNotes.putNotesData(e.user_id, plugin_data)
     }
 
     /** 任务列表（展示前 5 条） */
@@ -758,7 +816,7 @@ function checkSpDateIndex(now_time) {
     // 特殊日期处理
     let spDateIndex = -1;
     for (let i = 0; i < spData.length; i++) {
-        const spDate = new Date(`${now_time.getFullYear()}/${spData[i].sp_month}/${spData[i].sp_date}`);
+        const spDate = new Date(`${now_time.getFullYear()}/${spData[i].month}/${spData[i].date}`);
         if (now_time.getMonth() === spDate.getMonth() && now_time.getDate() === spDate.getDate()) {
             spDateIndex = i;
             break;
@@ -835,75 +893,97 @@ function buildCalendar(year, month, signHistory, todayKey) {
 
 /**
  * 复用 jrrp 的 redis 数据，保证同一用户同一天 fortune 一致
- * @param {string|number} userId
+ * @param {botEvent} e 
  */
-async function getOrCreateFortune(userId) {
+async function createJrrp(e) {
     try {
         // @ts-ignore
-        let jrrp = await redis.get(`${redisPath}:jrrp:${userId}`)
-        if (jrrp) {
+        let data = await redis.get(`${redisPath}:jrrp:${e.user_id}`)
+        if (data) {
             try {
-                const arr = JSON.parse(jrrp)
+                const arr = JSON.parse(data)
                 const quote = await pickSentenceText(arr?.[1])
                 return {
                     lucky: Number(arr?.[0]) || 0,
                     good: Array.isArray(arr) ? arr.slice(2, 6) : [],
                     bad: Array.isArray(arr) ? arr.slice(6, 10) : [],
                     quote,
+                    oriData: arr,
                 }
             } catch { }
         }
 
         if (!getInfo.word) {
-            return { lucky: 0, good: [], bad: [], quote: '' }
+            send.send_with_At(e, '发生未知错误QAQ，请联系管理员处理！');
+            logger.error('jrrp获取词库失败，getInfo.word未定义！');
+            throw new Error('jrrp word undefined');
         }
-
-        const sentenceList = await getSentenceList()
-        const lucky = Math.round(easeOutCubic(Math.random()) * 100)
-        const sentenceIndex = sentenceList.length ? Math.floor(Math.random() * sentenceList.length) : 0
-
+        let luckyRange = [0, 100]
         let good = [...getInfo.word.good]
         let bad = [...getInfo.word.bad]
         let common = [...getInfo.word.common]
+        let local_sentence = sentence;
 
-        /**@type {any[]} */
-        const data = [lucky, sentenceIndex]
-
-        for (let i = 0; i < 4; i++) {
-            let id = Math.floor(Math.random() * (good.length + common.length))
-            if (id < good.length) {
-                data.push(good[id])
-                good.splice(id, 1)
-            } else {
-                data.push(common[id - good.length])
-                common.splice(id - good.length, 1)
-            }
+        let now_time = new Date()
+        // 特殊日期处理
+        let spDateIndex = checkSpDateIndex(now_time);
+        if (spDateIndex !== -1 && spData[spDateIndex].jrrp) {
+            luckyRange = spData[spDateIndex].jrrp.lucky ?? luckyRange
+            good = spData[spDateIndex].jrrp.good ?? good
+            bad = spData[spDateIndex].jrrp.bad ?? bad
+            common = spData[spDateIndex].jrrp.common ?? common
+            local_sentence = spData[spDateIndex].jrrp.sentence ?? local_sentence
         }
-        for (let i = 0; i < 4; i++) {
-            let id = Math.floor(Math.random() * (bad.length + common.length))
-            if (id < bad.length) {
-                data.push(bad[id])
-                bad.splice(id, 1)
-            } else {
-                data.push(common[id - bad.length])
-                common.splice(id - bad.length, 1)
+        const luckyNum = Math.round(fCompute.getValueFromRange(easeOutCubic(Math.random()), luckyRange));
+        /**@type {any} */
+        let sentenceIndex = Math.floor(Math.random() * local_sentence.length);
+        if (local_sentence.length !== sentence?.length) {
+            sentenceIndex = local_sentence[sentenceIndex];
+        }
+        data = [luckyNum, sentenceIndex];
+        if (luckyNum == 100) {
+            data.push(..."诸事皆宜诸事皆宜".split(""));
+        } else if (luckyNum == 0) {
+            data.push(..."诸事不宜诸事不宜".split(""));
+        } else {
+            for (let i = 0; i < 4; i++) {
+                let id = Math.floor(Math.random() * (good.length + common.length))
+                if (id < good.length) {
+                    data.push(good[id])
+                    good.splice(id, 1)
+                } else {
+                    data.push(common[id - good.length])
+                    common.splice(id - good.length, 1)
+                }
+            }
+            for (let i = 0; i < 4; i++) {
+                let id = Math.floor(Math.random() * (bad.length + common.length))
+                if (id < bad.length) {
+                    data.push(bad[id])
+                    bad.splice(id, 1)
+                } else {
+                    data.push(common[id - bad.length])
+                    common.splice(id - bad.length, 1)
+                }
             }
         }
 
         // @ts-ignore 有效期到第二天 8 点
-        redis.set(`${redisPath}:jrrp:${userId}`, JSON.stringify(data), {
+        redis.set(`${redisPath}:jrrp:${e.user_id}`, JSON.stringify(data), {
             PX: 86400000 - ((new Date().valueOf() + 28800000) % 86400000)
         })
 
         const quote = await pickSentenceText(sentenceIndex)
         return {
-            lucky,
+            lucky: data[0],
             good: data.slice(2, 6),
             bad: data.slice(6, 10),
             quote,
+            oriData: data,
         }
-    } catch {
-        return { lucky: 0, good: [], bad: [], quote: '' }
+    } catch (e) {
+        console.error('createJrrp error:', e)
+        return { lucky: 0, good: [], bad: [], quote: '', oriData: [] }
     }
 }
 
@@ -914,22 +994,18 @@ function easeOutCubic(x) {
     return 1 - Math.pow(1 - x, 3)
 }
 
-async function getSentenceList() {
-    if (Array.isArray(sentenceCache)) return sentenceCache
-    const list = await readFile.FileReader(path.join(infoPath, 'sentences.json'))
-    sentenceCache = Array.isArray(list) ? list : []
-    return sentenceCache
-}
-
 /**
- * @param {number} idx
+ * @param {number | Record<"hitokoto", string>} idx
  */
 async function pickSentenceText(idx) {
-    const list = await getSentenceList()
+    if (typeof idx === 'object') {
+        return idx.hitokoto || ''
+    }
+    const list = sentence ?? []
     const item = list?.[idx]
     if (!item) return ''
     if (typeof item === 'string') return item
-    return item.hitokoto || item.text || ''
+    return item.hitokoto || ''
 }
 
 /**
