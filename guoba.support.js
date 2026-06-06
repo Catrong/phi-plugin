@@ -389,7 +389,7 @@ export function supportGuoba() {
                 {
                     field: 'letterMarkdown',
                     label: '开字母发送MD消息',
-                    bottomHelpMessage: '开字母是否发送Markdown消息，开启发送Markdown消息，关闭直接发送文字',
+                    bottomHelpMessage: '开字母是否发送Markdown消息，开启发送Markdown消息，关闭直接发送文字版',
                     component: 'Switch',
                 },
                 {
