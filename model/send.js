@@ -1,6 +1,5 @@
 import { segment } from "oicq";
 import Config from '../components/Config.js'
-import get from "./getdata.js";
 import common from "../../../lib/common/common.js";
 import getSave from "./getSave.js";
 import Save from "./class/Save.js";

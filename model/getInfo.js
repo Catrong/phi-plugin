@@ -1,5 +1,5 @@
 import readFile from './getFile.js'
-import { DlcInfoPath, configPath, imgPath, infoPath, originalIllPath, ortherIllPath, oldInfoPath } from './path.js'
+import { DlcInfoPath, configPath, imgPath, infoPath, originalIllPath, ortherIllPath, oldInfoPath, pluginResources } from './path.js'
 import path from 'path'
 import Config from '../components/Config.js'
 import SongsInfo from './class/SongsInfo.js'
@@ -9,6 +9,7 @@ import chokidar from 'chokidar'
 import fCompute from './fCompute.js'
 import logger from '../components/Logger.js'
 import Chart from './class/Chart.js'
+import Save from './class/Save.js'
 
 
 export default new class getInfo {
@@ -148,6 +149,9 @@ export default new class getInfo {
 
         /**@type {{title: string, code: number, content: string[]}} */
         this.noticeJson = { title: '', code: 0, content: [] }
+
+        /**@type {Save | null} */
+        this.badSave = null;
         
 
         this.kongYouData = {
@@ -193,6 +197,7 @@ export default new class getInfo {
         this.historyDifficultyByVersion = {};
         this.historyDifficultyBySongId = {};
         this.noticeJson = readFile.FileReader(path.join(infoPath, 'notice.json'));
+        this.badSave = await readFile.FileReader(path.join(pluginResources, '0608badSave', 'save.json'));
 
 
         /**

@@ -214,38 +214,43 @@ export class phisstk extends phiPluginBase {
         }
 
         if (await canUseApi(e)) {
-            let result = await makeRequestFnc.requestApi(
-                e,
-                () => makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken, isGlobal }),
-                {
-                    errorPrefix: '从API获取存档失败，本次绑定将不上传至查分平台QAQ！',
-                    notifyUser: true,
-                    logTag: 'API错误 bind by token',
-                    loggerLevel: 'error'
+            try {
+
+                let result = await makeRequestFnc.requestApi(
+                    e,
+                    () => makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken, isGlobal }),
+                    {
+                        errorPrefix: '从API获取存档失败，本次绑定将不上传至查分平台QAQ！',
+                        notifyUser: true,
+                        logTag: 'API错误 bind by token',
+                        loggerLevel: 'error'
+                    }
+                )
+                if (result?.data?.internal_id) {
+                    let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
+                    if (!result.data.have_api_token) {
+                        resMsg += apiMsg
+                    }
+                    send.send_with_At(e, resMsg)
+                    await getSave.add_user_token(e.user_id, sessionToken);
+                    let oldHistory = await getSave.getHistory(e.user_id);
+                    if (oldHistory) {
+                        await makeRequestFnc.requestApi(
+                            e,
+                            () => makeRequest.setHistory({ token: sessionToken, data: oldHistory }),
+                            { logTag: 'API错误 setHistory', loggerLevel: 'warn' }
+                        );
+                    }
+                    let updateData = await getUpdateSave.getNewSaveFromApi(e)
+                    let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                    await build(e, updateData, history)
+                    return true
                 }
-            )
-            if (result?.data?.internal_id) {
-                let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
-                if (!result.data.have_api_token) {
-                    resMsg += apiMsg
+                if (result) {
+                    return true
                 }
-                send.send_with_At(e, resMsg)
-                await getSave.add_user_token(e.user_id, sessionToken);
-                let oldHistory = await getSave.getHistory(e.user_id);
-                if (oldHistory) {
-                    await makeRequestFnc.requestApi(
-                        e,
-                        () => makeRequest.setHistory({ token: sessionToken, data: oldHistory }),
-                        { logTag: 'API错误 setHistory', loggerLevel: 'warn' }
-                    );
-                }
-                let updateData = await getUpdateSave.getNewSaveFromApi(e)
-                let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
-                await build(e, updateData, history)
-                return true
-            }
-            if (result) {
-                return true
+            } catch (err) {
+                
             }
         }
 

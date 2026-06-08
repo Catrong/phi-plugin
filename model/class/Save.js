@@ -922,6 +922,34 @@ export default class Save {
             date: fCompute.formatDate(this.saveInfo.summary.updatedAt)
         }
     }
+
+    /**
+     * @param {Save} save
+     */
+    equalRecord(save) {
+        const record1 = this.gameRecord
+        const record2 = save.gameRecord
+        const ids = fCompute.objectKeys(record1)
+        const ids2 = fCompute.objectKeys(record2)
+        if (ids.length != ids2.length) return false
+        for (let id of ids) {
+            if (!record2[id]) return false
+            const levels = record1[id]?.length
+            const levels2 = record1[id]?.length
+            if (levels != levels2) return false
+            for (let level = 0; level < levels; level++) {
+                const r1 = record1[id][level]
+                const r2 = record2[id][level]
+                if (!r1 && !r2) continue
+                if (!r1) return false
+                if (!r2) return false
+                if (r1.acc != r2.acc) return false
+                if (r1.score != r2.score) return false
+                if (r1.fc != r2.fc) return false
+            }
+        }
+        return true
+    }
 }
 
 /**

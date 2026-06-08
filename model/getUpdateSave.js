@@ -12,6 +12,7 @@ import makeRequest from "./makeRequest.js";
 import makeRequestFnc from "./makeRequestFnc.js";
 import send from "./send.js";
 import { canUseApi } from './apiPermission.js';
+import getInfo from "./getInfo.js";
 
 /**@import {botEvent} from "../components/baseClass.js" */
 
@@ -91,6 +92,11 @@ export default class getUpdateSave {
                 // return { save: old, added_rks_notes: [0, 0] }
             }
             await User.buildRecord()
+
+            if (getInfo.badSave && new Save(User).equalRecord(getInfo.badSave)) {
+                send.send_with_At(e, "请注意，TapTap目前的云存档API疑似存在问题，已阻止本次更新，请在确保游戏内数据正常的情况下，覆盖云存档并尝试更新，如若依旧失败请耐心等待恢复。")
+                return old ? { save: old, added_rks_notes: [0, 0] } : undefined
+            }
         } catch (err) {
             if (e.bot?.adapter?.name !== 'QQBot') {
                 send.send_with_At(e, "更新失败！QAQ\n" + err)
@@ -206,7 +212,7 @@ export default class getUpdateSave {
     static async getHistoryFromApi(e, field = []) {
         const sessionToken = await getSave.get_user_token(e.user_id);
         if (!sessionToken) {
-                if (!await canUseApi(e)) {
+            if (!await canUseApi(e)) {
                 send.send_with_At(e, "请先绑定sessionToken哦！")
                 return null;
             }
