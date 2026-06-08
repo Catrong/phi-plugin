@@ -388,8 +388,8 @@ export function supportGuoba() {
                 },
                 {
                     field: 'letterMarkdown',
-                    label: '开字母是否发送Markdown消息',
-                    bottomHelpMessage: '登录TapTap绑定是否发送二维码，开启仅发送二维码，关闭直接发送链接',
+                    label: '开字母发送MD消息',
+                    bottomHelpMessage: '开字母是否发送Markdown消息，开启发送Markdown消息，关闭直接发送文字版',
                     component: 'Switch',
                 },
                 {
