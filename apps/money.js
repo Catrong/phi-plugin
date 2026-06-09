@@ -934,7 +934,7 @@ async function createJrrp(e) {
             common = spData[spDateIndex].jrrp.common ?? common
             local_sentence = spData[spDateIndex].jrrp.sentence ?? local_sentence
         }
-        const luckyNum = Math.round(fCompute.getValueFromRange(easeOutCubic(Math.random()), luckyRange));
+        const luckyNum = Math.round(fCompute.getValueFromRange(easeOutCubic(Math.random()) * 100, luckyRange));
         /**@type {any} */
         let sentenceIndex = Math.floor(Math.random() * local_sentence.length);
         if (local_sentence.length !== sentence?.length) {
