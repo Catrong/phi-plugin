@@ -436,11 +436,14 @@ export default class fCompute {
     /**
      * 根据百分比和区间获取对应的值
      * @param {number} percent 
-     * @param {number[]} range 
+     * @param {[number,number]} range 
      * @returns 
      */
     static getValueFromRange(percent, range) {
-        return Math.round((range[range.length - 1] - range[0]) * percent / 100 + range[0])
+        if (range[0] == range[1]) {
+            return range[0]
+        }
+        return Math.round((range[1] - range[0]) * percent / 100 + range[0])
     }
 
     /**

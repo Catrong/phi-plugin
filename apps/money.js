@@ -28,6 +28,7 @@ const commonSP = {
     note_num: [750],
     tips: ["高考加油喵，祝26届考生金榜题名w！"],
     jrrp: {
+        /**@type {[number, number]} */
         lucky: [100, 100],
         good: undefined,
         bad: undefined,
@@ -54,6 +55,10 @@ const spData = [{
 }, {
     month: '06',
     date: '09',
+    ...commonSP,
+}, {
+    month: '06',
+    date: '10',
     ...commonSP,
 }]
 
@@ -918,7 +923,8 @@ async function createJrrp(e) {
             logger.error('jrrp获取词库失败，getInfo.word未定义！');
             throw new Error('jrrp word undefined');
         }
-        let luckyRange = [0, 100]
+        /**@type {[number, number]} */
+        let luckyRange = [0, 100];
         let good = [...getInfo.word.good]
         let bad = [...getInfo.word.bad]
         let common = [...getInfo.word.common]
