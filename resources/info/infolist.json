@@ -111,7 +111,7 @@
         "chart": {
             "LY": {
                 "rgba": "183,0,253,1",
-                "difficulty": "14",
+                "difficulty": "14.8",
                 "tap": "450",
                 "hold": "13",
                 "flick": "14",
@@ -389,7 +389,7 @@
         "chart": {
             "LY": {
                 "rgba": "183,0,253,1",
-                "difficulty": "15",
+                "difficulty": "15.6",
                 "tap": "604",
                 "hold": "32",
                 "flick": "31",
@@ -445,7 +445,7 @@
         "chart": {
             "LY": {
                 "rgba": "183,0,253,1",
-                "difficulty": "15",
+                "difficulty": "15.1",
                 "tap": "577",
                 "hold": "67",
                 "flick": "54",
@@ -1142,7 +1142,7 @@
         "chart": {
             "LY": {
                 "rgba": "183,0,253,1",
-                "difficulty": "15",
+                "difficulty": "15.9",
                 "tap": "726",
                 "hold": "39",
                 "flick": "84",
@@ -1151,7 +1151,7 @@
                 "charter": "Arenn Saki as \"lAβyrinS\""
             }
         }
-    },
+    }，
     "Demiurge.Rabpit": {
         "bpm": "111",
         "length": "2:49",
