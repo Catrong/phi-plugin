@@ -265,6 +265,92 @@ export default class saveHistory {
     }
 
     /**
+     * 根据给定日期还原该日期前最新的存档状态
+     * @param {Date|string} date 目标日期
+     * @returns {{ gameRecord: Record<idString, (LevelRecordInfo | null)[]>, money: number[], rks: number, challengeModeRank: number, version: number }}
+     */
+    restoreToDate(date) {
+        const targetDate = new Date(date)
+
+        /** @type {Record<idString, (LevelRecordInfo | null)[]>} */
+        const gameRecord = {}
+        const ids = fCompute.objectKeys(this.scoreHistory)
+
+        // 1. 还原每首歌每个难度在目标日期前最新的成绩
+        for (const id of ids) {
+            const songHistory = this.scoreHistory[id]
+            gameRecord[id] = []
+
+            for (let levelIdx = 0; levelIdx < allLevel.length; levelIdx++) {
+                const level = allLevel[levelIdx]
+                const records = songHistory[level]
+                if (!records || !records.length) {
+                    gameRecord[id][levelIdx] = null
+                    continue
+                }
+
+                // 二分查找最后一个 <= targetDate 的记录（records 按日期升序）
+                let selected = null
+                for (const record of records) {
+                    const recordDate = new Date(record[2])
+                    if (recordDate <= targetDate) {
+                        selected = record
+                    } else {
+                        break
+                    }
+                }
+
+                if (selected) {
+                    const opened = openHistory(selected)
+                    gameRecord[id][levelIdx] = new LevelRecordInfo(
+                        { acc: opened.acc, score: opened.score, fc: opened.fc },
+                        id,
+                        levelIdx
+                    )
+                } else {
+                    gameRecord[id][levelIdx] = null
+                }
+            }
+        }
+
+        // 2. 还原 data 货币数量
+        let money = null
+        for (let i = this.data.length - 1; i >= 0; i--) {
+            if (this.data[i].date <= targetDate) {
+                money = this.data[i].value
+                break
+            }
+        }
+        if (!money) money = [0, 0, 0, 0, 0]
+
+        // 3. 还原 rks
+        let rks = 0
+        for (let i = this.rks.length - 1; i >= 0; i--) {
+            if (this.rks[i].date <= targetDate) {
+                rks = this.rks[i].value
+                break
+            }
+        }
+
+        // 4. 还原 challengeModeRank
+        let challengeModeRank = 0
+        for (let i = this.challengeModeRank.length - 1; i >= 0; i--) {
+            if (this.challengeModeRank[i].date <= targetDate) {
+                challengeModeRank = this.challengeModeRank[i].value
+                break
+            }
+        }
+
+        return {
+            gameRecord,
+            money,
+            rks,
+            challengeModeRank,
+            version: this.version
+        }
+    }
+
+    /**
      * 获取歌曲最新的历史记录
      * @param {idString} id 曲目id
      * @returns 
