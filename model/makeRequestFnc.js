@@ -20,7 +20,7 @@ export default class makeRequestFnc {
      * @returns {string}
      */
     static getErrorMessage(err) {
-        return err?.message || String(err)
+        return err?.message || err?.cause || String(err) || '未知错误'
     }
 
     /**

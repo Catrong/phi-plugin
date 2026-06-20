@@ -40,18 +40,16 @@ class send {
     async getsave_result(e, ver = undefined, send = true) {
 
         let user_save = null
-        let sessionToken = null
+        let sessionToken = await getSave.get_user_token(e.user_id)
         const allowApi = await canUseApi(e)
         if (allowApi) {
             try {
                 user_save = await getUpdateSave.getNewSaveFromApi(e)
-                user_save.save.allowApiUsage = allowApi
                 return user_save.save
             } catch (/**@type {any} */ err) {
                 /**如果是没有绑定过就执行绑定 */
                 if (err.message == '缺少 phigrosToken 参数') {
                     try {
-                        sessionToken = await getSave.get_user_token(e.user_id)
                         if (!sessionToken) {
                             if (send) {
                                 this.send_with_At(e, `请先绑定sessionToken哦！\n如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
@@ -60,7 +58,6 @@ class send {
                         }
 
                         user_save = await getUpdateSave.getNewSaveFromApi(e, sessionToken)
-                        user_save.save.allowApiUsage = allowApi
                         return user_save.save
                     } catch (err) {
                         logger.warn(`[phi-plugin] API ERR`, err)
@@ -68,8 +65,6 @@ class send {
                 }
             }
         }
-
-        sessionToken = await getSave.get_user_token(e.user_id)
 
         if (!sessionToken) {
             if (send) {
@@ -86,10 +81,6 @@ class send {
                 this.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
             }
             return false
-        }
-
-        if (user_save) {
-            user_save.allowApiUsage = allowApi
         }
 
         return user_save

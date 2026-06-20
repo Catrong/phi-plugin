@@ -30,7 +30,7 @@ export class phiGames extends phiPluginBase {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)${games}$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)${games}((-[lL]\s*\d+))$`,
                     fnc: 'start'
                 },
                 {

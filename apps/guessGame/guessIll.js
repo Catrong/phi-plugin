@@ -57,10 +57,24 @@ const eList = {}
  * @typedef {['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']} remainInfoType
  */
 
+/**
+ * @import { botEvent } from '../../components/baseClass.js'
+ */
+
+
+
+const ifeCNMap = {
+    'blur': '模糊',
+    'saturate': '饱和',
+    'invert': '反相',
+    'hueRotate': '色相',
+    'lineMode': '线稿'
+}
+
 export default new class guessIll {
     /**
      * 猜曲绘
-     * @param {any} e
+     * @param {botEvent} e
      * @param {GameList} gameList
      */
     async start(e, gameList) {
@@ -107,8 +121,10 @@ export default new class guessIll {
         let x_ = fCompute.randInt(0, 2048 - w_)
         let y_ = fCompute.randInt(0, 1080 - h_)
 
+        let lvMsg = e.msg.match(/-[lL]\s*(\d+)/)?.[0]?.match(/(\d+)/)?.[0]
+
         // 根据难度等级生成干扰组合
-        const level = fCompute.randFromArray([[1, 5], [2, 3], [3, 2]]);
+        const level = lvMsg ? Number(lvMsg) : fCompute.randFromArray([[0, 2], [1, 5], [2, 2], [3, 1]]);
         const interference = generateInterference(level);
 
         let data = {
@@ -194,7 +210,7 @@ export default new class guessIll {
         e.reply(
             [`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getUserCfg('config', 'GuessTipCd')}秒后将会给出进一步提示。`,
             `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 结束游戏`,
-            `本局难度：${level}，当前干扰类型：${data.chosenInterferences.join('、')}`].join('\n')
+            `本局难度：${level}，当前干扰类型：${data.chosenInterferences.length ? data.chosenInterferences.join('、') : '无干扰'}`].join('\n')
         )
         if (Config.getUserCfg('config', 'GuessTipRecall'))
             await e.reply(await picmodle.guess(e, data), false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') })
@@ -213,12 +229,10 @@ export default new class guessIll {
                 if (ansList[group_id]) {
                     if (ansList[group_id] != songs_info.id) {
                         await gameover(e, data)
-                        delete eList[group_id]
                         return true
                     }
                 } else {
                     await gameover(e, data)
-                    delete eList[group_id]
                     return true
                 }
             }
@@ -254,6 +268,16 @@ export default new class guessIll {
                     break
                 }
             }
+            if (data.blur || data.saturate !== 1 || data.invert || data.hueRotate !== 0 || data.lineMode) {
+                tipmsg += `\n当前干扰类型：`
+                if (data.blur) tipmsg += `模糊 `
+                if (data.saturate !== 1) tipmsg += `饱和 `
+                if (data.invert) tipmsg += `反相 `
+                if (data.hueRotate !== 0) tipmsg += `色相 `
+                if (data.lineMode) tipmsg += `线稿 `
+            } else {
+                tipmsg += `\n当前没有任何干扰了哦！`
+            }
             if (known_info.chapter) tipmsg += `\n该曲目隶属于 ${known_info.chapter}`
             if (known_info.bpm) tipmsg += `\n该曲目的 BPM 值为 ${known_info.bpm}`
             if (known_info.composer) tipmsg += `\n该曲目的作者为 ${known_info.composer}`
@@ -269,12 +293,10 @@ export default new class guessIll {
             if (ansList[group_id]) {
                 if (ansList[group_id] != songs_info.id) {
                     await gameover(e, data)
-                    delete eList[group_id]
                     return true
                 }
             } else {
                 await gameover(e, data)
-                delete eList[group_id]
                 return true
             }
 
@@ -293,12 +315,10 @@ export default new class guessIll {
             if (ansList[group_id]) {
                 if (ansList[group_id] != songs_info.id) {
                     await gameover(e, data)
-                    delete eList[group_id]
                     return true
                 }
             } else {
                 await gameover(e, data)
-                delete eList[group_id]
                 return true
             }
         }
@@ -306,7 +326,6 @@ export default new class guessIll {
         e = eList[group_id]
 
         const t = ansList[group_id]
-        delete eList[group_id]
         delete ansList[group_id]
         delete gameList[group_id]
         await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
@@ -402,7 +421,7 @@ export default new class guessIll {
 
 /**
  * 游戏结束，发送相应位置
- * @param {any} e 
+ * @param {import('../../components/baseClass.js').botEvent} e 
  * @param {any} data
  */
 async function gameover(e, data) {
@@ -410,6 +429,7 @@ async function gameover(e, data) {
     data.ans = data.illustration
     data.style = 1
     await e.reply(await picmodle.guess(e, data))
+    delete eList[e.group_id]
 }
 
 /**
@@ -561,25 +581,30 @@ function buildFilterStyle(data) {
  * @returns {guessIllData} 干扰数据
  */
 function generateInterference(level) {
-    /** 颜色类干扰 */
+    /** 
+     * 颜色类干扰
+     * @type {(keyof ifeCNMap)[]}
+     */
     const colorTypes = ['saturate', 'invert', 'hueRotate']
-    /** 所有干扰类型 */
+
+    /** 
+     * 所有干扰类型 
+     * @type {(keyof ifeCNMap)[]}
+     */
     const allTypes = ['blur', 'saturate', 'invert', 'hueRotate', 'lineMode']
 
+    /** @type {(keyof ifeCNMap)[]} */
     const commonTypes = ['blur', 'saturate', 'invert', 'hueRotate']
 
-    const chineseMap = {
-        'blur': '模糊',
-        'saturate': '饱和',
-        'invert': '反相',
-        'hueRotate': '色相',
-        'lineMode': '线稿'
-    }
-
-    /** @type {string[]} */
+    /** @type {(keyof ifeCNMap)[]} */
     let chosen = []
 
     switch (level) {
+        case 0: {
+            // 无干扰
+            chosen = []
+            break
+        }
         case 1: {
             // 单一干扰：从除线稿类型中随机选1个
             chosen = [commonTypes[fCompute.randInt(0, commonTypes.length - 1)]]
@@ -648,8 +673,7 @@ function generateInterference(level) {
                 result.lineMode = true
                 break
         }
-        // @ts-ignore
-        result.chosenInterferences.push(chineseMap[type] || type)
+        result.chosenInterferences.push(ifeCNMap[type] || type)
     }
 
     return result

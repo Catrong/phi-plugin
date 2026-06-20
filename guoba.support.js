@@ -549,27 +549,45 @@ export function supportGuoba() {
                 }
                 return config
             },
-            // 设置配置的方法（前端点确定后调用的方法）
-            // @ts-ignore
+            /**
+             * 设置配置的方法（前端点确定后调用的方法）
+             * @param {Partial<Record<configName, any>>} data 
+             * @param {any} param1 
+             * @returns 
+             */
             setConfigData(data, { Result }) {
                 if (data.isGuild) {
                     data.WordB19Img = false
                     data.WordSuggImg = false
                 }
-                var vis = false
+                /**@type {Partial<Record<configName, boolean>>} */
+                let flag = {
+                    autoOpenApi: false,
+                }
                 // if (data.VikaToken && data.VikaToken.length != 23) {
                 //     data.VikaToken = ''
                 //     vis = true
                 // }
-                for (let [keyPath, value] of Object.entries(data)) {
+
+                /**@type {Partial<configName>[]} */
+                const keys = /**@type {any[]} */ (Object.keys(data))
+                for (let keyPath of keys) {
+                    let value = data[keyPath]
+                    // @ts-ignore
+                    if (flag[keyPath] !== undefined) {
+                        let oldValue = Config.getUserCfg('config', keyPath)
+                        if (oldValue != value) {
+                            flag[keyPath] = true
+                        }
+                    }
                     // @ts-ignore
                     Config.modify('config', keyPath, value)
                 }
-                // if (vis) {
-                //     return Result.ok({}, 'VikaToken非法')
-                // } else {
-                return Result.ok({}, '保存成功~')
-                // }
+                if (flag.autoOpenApi) {
+                    return Result.wann({}, '自动检测API设置需要重启生效。')
+                } else {
+                    return Result.ok({}, '保存成功~')
+                }
             },
         },
     }

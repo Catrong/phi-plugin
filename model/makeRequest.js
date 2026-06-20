@@ -651,6 +651,8 @@ export default class makeRequest {
     }
 }
 
+const TIMEOUT = 5000; // 5秒超时
+
 /**
  * 
  * @param {string} url 
@@ -667,10 +669,10 @@ async function makeFetch(url, params, method = 'POST') {
         params = params || {}
         switch (method.toUpperCase()) {
             case 'GET':
-                result = await axios.get(url, { params: params, timeout: 10000 });
+                result = await axios.get(url, { params: params, timeout: TIMEOUT });
                 break;
             case 'POST':
-                result = await axios.post(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' }, timeout: 10000 });
+                result = await axios.post(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' }, timeout: TIMEOUT });
                 break;
             default:
                 throw new Error(`不支持的请求方法: ${method}`);

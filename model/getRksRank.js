@@ -57,7 +57,7 @@ export default new class getRksRank {
     }
 
     /**
-     * 获取指定rks的排名
+     * 获取指定rks的排名（倒序）
      * @param {number} rks 
      * @returns {Promise<number>}
      */
