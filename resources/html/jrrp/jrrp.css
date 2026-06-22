@@ -134,6 +134,7 @@ body p {
 
 .left p {
     font-size: 70px;
+    white-space: nowrap;
 }
 
 .right {
