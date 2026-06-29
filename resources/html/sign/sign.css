@@ -62,6 +62,11 @@ body {
   background: var(--bkg-color);
 }
 
+.playerInfo .playerId {
+    width: 51%;
+    right: 4%;
+}
+
 /* 左侧四彩条：竖向并列靠边 */
 .edgeProgress {
   --top: calc(var(--dashTop) + 450px);
@@ -229,6 +234,7 @@ body {
   color: #d8f1ff;
   font-size: 28px;
   transform: translate(-50%, 0px);
+  white-space: nowrap;
 }
 
 .wordsBox p:nth-child(1) {
@@ -284,10 +290,13 @@ body {
 }
 
 .quoteText {
-  --top: 55px;
-  width: 95%;
+  --top: 41px;
+  display: flex;
+  width: 94%;
+  height: 69px;
   color: #edf6ff;
   font-size: 28px;
+  align-items: center;
 }
 
 .panelHeader {

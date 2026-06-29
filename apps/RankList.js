@@ -182,7 +182,7 @@ export class phiRankList extends phiPluginBase {
 
         let rank = await getRksRank.getRankByRks(rks)
 
-        send.send_with_At(e, `当前服务器记录中一共有 ${rank}/${totDataNum} 位玩家的 rks 大于 ${rks}！`)
+        send.send_with_At(e, `当前服务器记录中一共有 ${totDataNum - rank + 1}/${totDataNum} 位玩家的 rks 大于等于 ${rks}！`)
 
         return true
     }

@@ -1,4 +1,3 @@
-import common from '../../../lib/common/common.js'
 import puppeteer from './puppeteer.js'
 import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../components/index.js'
 import { _path, pluginResources, imgPath, tempPath } from './path.js'
@@ -13,23 +12,23 @@ export default await new class picmodle {
 
     constructor() {
         /**
-         * 待使用puppeteer
+         * 空闲渲染器下标
          * @type {number[]}
          */
-        this.queue = []
+        this.idle = []
         /**
-         * 即将渲染id
-         * @type {number[]}
+         * 等待空闲渲染器的请求队列（事件驱动，无需轮询）
+         * @type {{settled: boolean, done: (idx: number) => void, timer: any}[]}
          */
-        this.torender = []
+        this.waiters = []
         /**
-         * 渲染中id
-         * @type {number[]}
+         * 渲染中的请求 id（仅用于诊断日志）
+         * @type {Set<number>}
          */
-        this.rendering = []
+        this.rendering = new Set()
         /**
-         * puppeteer队列
-         * @type {puppeteer[]}
+         * puppeteer实例池
+         * @type {import('./puppeteer.js').PhiRenderer[]}
          */
         this.puppeteer = []
         this.tot = 0
@@ -50,9 +49,55 @@ export default await new class picmodle {
                 puppeteerTimeout: Config.getUserCfg('config', 'timeout')
             }, `${i}`))
             this.puppeteer[i].browserInit()
-            this.queue.push(i)
+            this.idle.push(i)
         }
         return this;
+    }
+
+    /**
+     * 获取一个空闲渲染器下标；超时返回 -1
+     * 事件驱动，替代原本每 100ms 轮询一次的忙等
+     * @param {number} timeout 等待超时时间 ms
+     * @returns {Promise<number>}
+     */
+    acquire(timeout) {
+        if (this.idle.length) return Promise.resolve(/** @type {number} */(this.idle.shift()))
+        /** @type {Promise<number>} */
+        const p = new Promise(resolve => {
+            /** @type {{ settled: boolean, timer: any, done: (idx: number) => void }} */
+            const waiter = {
+                settled: false,
+                timer: null,
+                done: (idx) => {
+                    if (waiter.settled) return
+                    waiter.settled = true
+                    clearTimeout(waiter.timer)
+                    resolve(idx)
+                },
+            }
+            waiter.timer = setTimeout(() => {
+                const i = this.waiters.indexOf(waiter)
+                if (i >= 0) this.waiters.splice(i, 1)
+                waiter.done(-1)
+            }, timeout)
+            waiter.timer.unref?.()
+            this.waiters.push(waiter)
+        })
+        return p
+    }
+
+    /**
+     * 归还渲染器：优先直接移交给等待队列中的下一个请求，否则放回空闲池
+     * @param {number} idx
+     */
+    release(idx) {
+        while (this.waiters.length) {
+            const waiter = this.waiters.shift()
+            if (!waiter || waiter.settled) continue
+            waiter.done(idx)
+            return
+        }
+        this.idle.push(idx)
     }
 
     /**
@@ -285,78 +330,65 @@ export default await new class picmodle {
      * @returns 
      */
     async render(path, params, cfg) {
-        // return await puppeteer.render(path, params, cfg)
+        const id = this.tot++
+        const waitingTimeout = Config.getUserCfg('config', 'waitingTimeout')
 
-        let id = this.tot++
-        this.torender.push(id)
-        let ans = null
-        let puppeteerNum
-        for (let i = 0; i < Config.getUserCfg('config', 'waitingTimeout') / 100; i++) {
-            if (this.torender[0] == id && this.queue.length != 0) {
-                puppeteerNum = this.queue.shift() || 0
-                this.torender.shift()
-                try {
-
-                    let [app, tpl] = path.split('/')
-                    let layoutPath = pluginResources.replace(/\\/g, '/') + `/html/common/layout/`
-                    let resPath = pluginResources.replace(/\\/g, '/') + `/`
-
-
-                    Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
-                    let data = {
-                        ...params,
-                        saveId: (params.saveId || params.save_id || tpl),
-                        tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.art`,
-                        pluResPath: resPath,
-                        _res_path: resPath,
-                        _imgPath: imgPath + '/',
-                        _layout_path: layoutPath,
-                        defaultLayout: layoutPath + 'default.art',
-                        elemLayout: layoutPath + 'elem.art',
-                        pageGotoParams: {
-                            timeout: Config.getUserCfg('config', 'timeout'),
-                        },
-                        sys: {
-                            scale: `style="transform:scale(${cfg.scale || 1})"`,
-                            copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
-                        },
-                        Version: { ...Version },
-                        _plugin: Display_Plugin_Name,
-                        Math,
-                        fCompute,
-                    }
-
-                    /**返回图片信息 */
-                    this.rendering.push(id)
-                    ans = segment.image(await this.puppeteer[puppeteerNum].screenshot(`${Plugin_Name}/${app}/${tpl}`, data))
-
-                } catch (err) {
-                    logger.error(`[Phi-Plugin][渲染失败]`, id)
-                    logger.error(err)
-                    logger.warn(`[Phi-Plugin][渲染器]`, puppeteerNum)
-                    logger.warn(`[Phi-Plugin][空闲渲染器队列]`, this.queue)
-                    logger.warn(`[Phi-Plugin][渲染队列] `, this.rendering)
-                    logger.warn(`[Phi-Plugin][等待队列] `, this.torender)
-                    ans = '渲染失败QAQ！\n' + err
-                }
-                this.rendering.splice(this.rendering.indexOf(id), 1)
-                this.queue.push(puppeteerNum)
-                break
-            }
-            await common.sleep(100)
-        }
-
-        if (!ans) {
-            ans = '等待超时，请稍后重试QAQ！'
+        /** 事件驱动地等待一个空闲渲染器，替代原本每 100ms 轮询一次的忙等 */
+        const puppeteerNum = await this.acquire(waitingTimeout)
+        if (puppeteerNum < 0) {
             logger.error(`[Phi-Plugin][等待超时]`, id)
-            logger.warn(`[Phi-Plugin][空闲渲染器队列]`, this.queue)
-            logger.warn(`[Phi-Plugin][渲染队列] `, this.rendering)
-            logger.warn(`[Phi-Plugin][等待队列] `, this.torender)
-            this.torender.splice(this.torender.indexOf(id), 1)
+            logger.warn(`[Phi-Plugin][空闲渲染器]`, this.idle)
+            logger.warn(`[Phi-Plugin][渲染中] `, [...this.rendering])
+            logger.warn(`[Phi-Plugin][等待数量] `, this.waiters.length)
+            return '等待超时，请稍后重试QAQ！'
         }
 
-        return ans
+        this.rendering.add(id)
+        try {
+            let [app, tpl] = path.split('/')
+            let layoutPath = pluginResources.replace(/\\/g, '/') + `/html/common/layout/`
+            let resPath = pluginResources.replace(/\\/g, '/') + `/`
 
+            Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
+            let data = {
+                ...params,
+                saveId: (params.saveId || params.save_id || tpl),
+                tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.art`,
+                pluResPath: resPath,
+                _res_path: resPath,
+                _imgPath: imgPath + '/',
+                _layout_path: layoutPath,
+                defaultLayout: layoutPath + 'default.art',
+                elemLayout: layoutPath + 'elem.art',
+                pageGotoParams: {
+                    timeout: Config.getUserCfg('config', 'timeout'),
+                },
+                sys: {
+                    scale: `style="transform:scale(${cfg.scale || 1})"`,
+                    copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
+                },
+                Version: { ...Version },
+                _plugin: Display_Plugin_Name,
+                Math,
+                fCompute,
+            }
+
+            /** 返回图片信息 */
+            const img = await this.puppeteer[puppeteerNum].screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
+            if (!img) throw new Error('截图返回为空')
+            return segment.image(img)
+        } catch (err) {
+            logger.error(`[Phi-Plugin][渲染失败]`, id)
+            logger.error(err)
+            logger.warn(`[Phi-Plugin][渲染器]`, puppeteerNum)
+            logger.warn(`[Phi-Plugin][空闲渲染器]`, this.idle)
+            logger.warn(`[Phi-Plugin][渲染中] `, [...this.rendering])
+            logger.warn(`[Phi-Plugin][等待数量] `, this.waiters.length)
+            return '渲染失败QAQ！\n' + err
+        } finally {
+            this.rendering.delete(id)
+            this.release(puppeteerNum)
+        }
     }
 
     async restart() {

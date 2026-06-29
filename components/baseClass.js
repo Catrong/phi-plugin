@@ -5,7 +5,27 @@ import fCompute from '../model/fCompute.js'
 import getInfo from '../model/getInfo.js';
 import logger from './Logger.js';
 
-/**@typedef {{msg: string} & Object.<string, any>} botEvent */
+
+/**
+ * @typedef {object} botEventObj
+ * @property {string} msg 消息内容
+ * @property {string} user_id 发送者ID
+ * @property {boolean} isGroup 是否群消息
+ * @property {boolean} isPrivate 是否私聊消息 
+ */
+
+/**
+ * @typedef {object} botEventGroup
+ * @property {true} isGroup 是否群消息
+ * @property {string} group_id 群ID
+ */
+
+/**
+ * @typedef {object} botEventPrivate
+ * @property {true} isPrivate 是否私聊消息
+ */
+
+/**@typedef {botEventObj & (botEventGroup | botEventPrivate) & Object.<string, any>} botEvent */
 
 /** 
  * @template {any} T
@@ -70,7 +90,7 @@ export default class phiPluginBase extends plugin {
     });
 
     /** @type {botEvent} */
-    this.e = { msg: '' } // 占位用;
+    this.e = { msg: '', user_id: '', isGroup: false, isPrivate: true } // 占位用;
 
   }
 

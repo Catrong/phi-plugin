@@ -166,7 +166,7 @@ export class phimoney extends phiPluginBase {
         }
 
 
-        const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
+        const img = await picmodle.common(e, 'sign', await picData(save, data, e));
         if (signedJustNow) {
             const tips = spDateIndex !== -1
                 ? spData[spDateIndex].tips[randint(spData[spDateIndex].tips.length - 1)]
@@ -237,7 +237,7 @@ export class phimoney extends phiPluginBase {
 
         getNotes.putNotesData(e.user_id, data)
 
-        const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
+        const img = await picmodle.common(e, 'sign', await picData(save, data, e));
         send.send_with_At(e, img);
 
         return true
@@ -268,7 +268,7 @@ export class phimoney extends phiPluginBase {
 
         let data = await getNotes.getNotesData(e.user_id)
 
-        const img = await picmodle.common(e, 'sign', await picData(save, data, e.user_id));
+        const img = await picmodle.common(e, 'sign', await picData(save, data, e));
 
         send.send_with_At(e, img)
 
@@ -441,7 +441,7 @@ async function randtask(e, save, task = []) {
     const { com_rks } = await save.getB19(e, 1000, { avgType: "none" });
 
     /**
-     * @typedef {{ id: idString; level: allLevelKind; type: string; value: number; diff: number; oldAcc: number; }} taskObj
+     * @typedef {{ id: idString; level: levelKind; type: string; value: number; diff: number; oldAcc: number; }} taskObj
      * @type {taskObj[]}
      */
     let allTaskList = [];
@@ -507,7 +507,7 @@ async function randtask(e, save, task = []) {
     }
 
 
-    /**@type {{song: idString, level: number}[][]} */
+    /**@type {{song: idString, level: levelKind}[][]} */
     let ranked_songs = [[], [], [], [], []] //任务难度分级后的曲目列表
 
     if (allTaskList.length < 5) {
@@ -540,7 +540,7 @@ async function randtask(e, save, task = []) {
                         let dif = info[id].chart[level].difficulty
                         for (let i in rank_line) {
                             if (dif < rank_line[i]) {
-                                ranked_songs[i].push({ song: id, level: LevelNum[level] })
+                                ranked_songs[i].push({ song: id, level })
                                 break
                             }
                         }
@@ -570,7 +570,6 @@ async function randtask(e, save, task = []) {
                 reward: comReward(com_rks, aim.diff, aim.value, aim.oldAcc),
                 finished: false,
                 request: {
-                    // @ts-ignore
                     rank: aim.level,
                     type: aim.type,
                     value: Number(aim.value.toFixed(2)),
@@ -583,14 +582,14 @@ async function randtask(e, save, task = []) {
                 continue
             }
             let id = aim.song
-            let level = aim.level
-            let diff = info?.[id]?.chart?.[Level[level]]?.difficulty || 0
+            let levelN = LevelNum[aim.level]
+            let diff = info?.[id]?.chart?.[aim.level]?.difficulty || 0
             let value
             let old_acc = 0
             let old_score = 0
-            if (gameRecord[id] && gameRecord[id][level]) {
-                old_acc = gameRecord[id][level].acc
-                old_score = gameRecord[id][level].score
+            if (gameRecord[id] && gameRecord[id][levelN]) {
+                old_acc = gameRecord[id][levelN].acc
+                old_score = gameRecord[id][levelN].score
             }
             value = Math.min(Number(easeInSine(Math.random(), Math.min(old_acc + 0.01, 100), 100 - Math.min(old_acc + 0.01, 100), 1).toFixed(2)), 100)
 
@@ -599,7 +598,6 @@ async function randtask(e, save, task = []) {
                 reward: comReward(com_rks, diff, value, old_acc),
                 finished: false,
                 request: {
-                    // @ts-ignore
                     rank: aim.level,
                     type: 'acc',
                     value,
@@ -626,6 +624,7 @@ async function picData(save, plugin_data, e) {
 
     /** 今日人品（复用 jrrp 的 redis 数据，保证一致） */
     let fortune = await createJrrp(e)
+    console.info('fortune:', fortune)
 
     /** 进度条（解锁/FC/PHI 三层叠加） */
     let edgeRate = {
@@ -908,6 +907,7 @@ async function createJrrp(e) {
             try {
                 const arr = JSON.parse(data)
                 const quote = await pickSentenceText(arr?.[1])
+                console.log('jrrp redis data loaded:', arr)
                 return {
                     lucky: Number(arr?.[0]) || 0,
                     good: Array.isArray(arr) ? arr.slice(2, 6) : [],
@@ -980,6 +980,7 @@ async function createJrrp(e) {
         })
 
         const quote = await pickSentenceText(sentenceIndex)
+        console.log('jrrp generated:', data)
         return {
             lucky: data[0],
             good: data.slice(2, 6),

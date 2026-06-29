@@ -55,7 +55,8 @@ for (let i in files) {
 
 export { apps }
 
-if (Config.getUserCfg('config', 'autoOpenApi')) {
+function testApi() {
+
     logger.mark(chalk.yellow(`正在测试API链接...`))
     let url = `${APIBASEURL}/status`
     try {
@@ -79,6 +80,10 @@ if (Config.getUserCfg('config', 'autoOpenApi')) {
         logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
         Config.modify('config', 'openPhiPluginApi', false)
     }
+}
+
+if (Config.getUserCfg('config', 'autoOpenApi')) {
+    setInterval(testApi, 1000 * 60 * 5)
 }
 
 if (!errvis) {

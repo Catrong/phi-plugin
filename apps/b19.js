@@ -243,9 +243,8 @@ export class phib19 extends phiPluginBase {
         }
 
 
-        let numMsg = e.msg.match(/^.*?(p|x|fc)[0-9]+/i)?.[0]
-
-        let nnum = Number(numMsg?.replace(/^.*?(p|x|fc)/i, '') || 33)
+        let match = e.msg.match(/^.*?(p|x|fc)\s*([0-9]+)/i)
+        let nnum = Number(match?.[2] || 33)
         if (!nnum) {
             nnum = 33
         }
@@ -253,7 +252,7 @@ export class phib19 extends phiPluginBase {
         nnum = Math.max(nnum, 33)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
-        let bksong = e.msg.replace(/^.*?(p|x|fc)[0-9]+\s*/i, '')
+        let bksong = e.msg.replace(/^.*?(p|x|fc)\s*[0-9]+\s*/i, '')
 
         if (bksong) {
             let songId = getInfo.fuzzysongsnick(bksong)[0]
@@ -274,7 +273,7 @@ export class phib19 extends phiPluginBase {
         let save_b19;
         let spInfo = [];
 
-        const type = e.msg.match(/^.*?(p|x|fc)([0-9]+)/i)?.[1].toLowerCase();
+        const type = e.msg.match(/^.*?(p|x|fc)\s*([0-9]+)/i)?.[1].toLowerCase();
         switch (type) {
             case 'p': {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])

@@ -30,7 +30,7 @@ export class phiGames extends phiPluginBase {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)${games}$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)${games}\\s*((\\-[lL]\\s*\\d+))?$`,
                     fnc: 'start'
                 },
                 {
@@ -115,6 +115,10 @@ export class phiGames extends phiPluginBase {
      * @returns 
      */
     async reveal(e) {
+        if (!e.isGroup) {
+            send.send_with_At(e, '请在群聊中使用这个功能嗷！')
+            return false
+        }
         switch (gameList[e.group_id]?.gameType) {
             case "guessLetter": {
                 return await guessLetter.reveal(e, gameList)
