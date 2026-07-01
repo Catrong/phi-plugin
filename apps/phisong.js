@@ -93,7 +93,7 @@ export class phisong extends phiPluginBase {
                     fnc: 'table'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(difHis|历史定数).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(dif[Hh]is(tory)?|历史定数).*$`,
                     fnc: 'difHis'
                 },
                 {
