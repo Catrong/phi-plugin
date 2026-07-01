@@ -151,6 +151,7 @@ pnpm install -P
 | `#phi recmt <评论ID>` | 查看并确认是否删评，仅发送者和主人权限，需要二次确认
 | `#phi mycmt` | 查看自己的云端评论
 | `#phi (table\|定数表) <定数>` | 查询phigros定数表
+| `#phi (difHis\|历史定数)` | 查询曲目历史定数
 | `#phi new` | 查询更新的曲目
 | `#phi tips` | 随机tips
 | `#phi jrrp` | 今日人品

@@ -173,7 +173,7 @@ export class phimoney extends phiPluginBase {
                 : `签到成功！${helloMsg(now_time, 0)}`
             send.send_with_At(e, [img, `${tips}\n恭喜您获得了${getnum}个Note！当前 Note：${data.money}`])
         } else {
-            send.send_with_At(e, [img, `你在今天${fCompute.formatDate(last_sign, false)}的时候已经签过到了哦！\n你现在的Note数量: ${data.money}`])
+            send.send_with_At(e, [img, `你在今天${fCompute.formatDate(last_sign, 'hh:mm:ss')}的时候已经签过到了哦！\n你现在的Note数量: ${data.money}`])
         }
         return true
     }
@@ -792,7 +792,7 @@ function helloMsg(now_time, type = 0) {
 
     const now_time_ms = new Date().getTime()
 
-    const h_m_s = fCompute.formatDate(now_time, false)
+    const h_m_s = fCompute.formatDate(now_time, 'hh:mm:ss')
     let ans = []
     if (now_time_ms < time1) {
         ans = [`现在是${h_m_s}，夜深了，注意休息哦！`, `(∪.∪ )...zzz`]

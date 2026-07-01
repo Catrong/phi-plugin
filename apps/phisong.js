@@ -93,6 +93,10 @@ export class phisong extends phiPluginBase {
                     fnc: 'table'
                 },
                 {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(difHis|历史定数).*$`,
+                    fnc: 'difHis'
+                },
+                {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(comment|cmt|评论|评价)[\\s\\S]*$`,
                     fnc: 'comment'
                 },
@@ -843,6 +847,91 @@ export class phisong extends phiPluginBase {
 
         send.send_with_At(e, await picmodle.common(e, 'table', data));
 
+    }
+
+    /**
+     * /difhis(tory) <song>
+     * @param {botEvent} e 
+     * @returns 
+     */
+    async difHis(e) {
+        if (await getBanGroup.get(e, 'table')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+        const songstr = e.msg.replace(fCompute.getRexWithCmdHead('difhis(tory)?'), '')
+        this.choseMutiNick(e, getInfo.fuzzysongsnick(songstr), {}, async (e, id) => {
+            const difhistory = getInfo.historyDifficultyBySongId[id];
+            const verinfo = getInfo.versionInfoByCode;
+            if (!difhistory) {
+                send.send_with_At(e, `未找到 ${songstr} 的相关历史定数信息QAQ！`)
+                return
+            }
+
+            let minDateNum = Infinity;
+            let minDateInfo = null;
+
+            /**@type {Record<levelKind, {version: string, date: string, dateNum: number, difficulty: number }[]>} */
+            const hisData = { AT: [], IN: [], HD: [], EZ: [] };
+
+            for (let v of fCompute.objectKeys(difhistory)) {
+                const vinfo = verinfo[v];
+                const vdata = difhistory[v];
+                if (!vinfo || !vdata) continue;
+                for (let l of fCompute.objectKeys(vdata)) {
+                    hisData[l].push({
+                        version: vinfo.version_label,
+                        date: fCompute.formatDate(vinfo.update_date * 1000, 'YYYY-MM-DD'),
+                        dateNum: vinfo.update_date,
+                        difficulty: vdata[l],
+                    })
+                    if (vinfo.update_date < minDateNum) {
+                        minDateNum = vinfo.update_date;
+                        minDateInfo = vinfo;
+                    }
+                }
+            }
+            /**
+             * 折线图数据
+             * @type {{color: string, data: {x: number, y: number}[]}[]}
+             */
+            const lineData = []
+
+            for (let l of Level) {
+                if (!hisData[l].length) continue;
+                hisData[l] = hisData[l].sort((a, b) => b.dateNum - a.dateNum);
+
+                for (let i = hisData[l].length - 1; i > 0; --i) {
+                    if (i < hisData[l].length - 1 && hisData[l][i].difficulty === hisData[l][i + 1].difficulty) {
+                        hisData[l].splice(i, 1);
+                        ++i;
+                    }
+                }
+                lineData.push({
+                    color: levelColor(l).replace('33', ''),
+                    data: hisData[l].map(d => ({
+                        x: d.dateNum,
+                        y: d.difficulty,
+                        xLabel: 'v' + d.version,
+                        yLabel: d.difficulty.toFixed(1),
+                        visX: true,
+                        visY: true,
+                    }))
+                })
+            }
+
+            const picData = {
+                illustration: getInfo.getill(id),
+                song: getInfo.info(id)?.song || id,
+                updateDate: fCompute.formatDate(minDateNum * 1000, 'YYYY-MM-DD'),
+                updateLable: minDateInfo?.version_label || '',
+                hisData,
+                lineData: JSON.stringify(lineData),
+                theme: (await getNotes.getNotesData(e.user_id))?.theme || 'star',
+            }
+
+            send.send_with_At(e, await picmodle.common(e, 'difficultyHistory', picData));
+        })
     }
 
     /**

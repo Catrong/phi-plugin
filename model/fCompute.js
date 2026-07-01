@@ -194,10 +194,10 @@ export default class fCompute {
     /**
      * 转换时间格式
      * @param {Date|string|number} [date] 时间
-     * @param {boolean} [withDate=true] 是否包含日期
+     * @param {string} [formater='YYYY/MM/DD hh:mm:ss'] 格式
      * @returns 2020/10/08 10:08:08
      */
-    static formatDate(date, withDate = true) {
+    static formatDate(date, formater = 'YYYY/MM/DD hh:mm:ss') {
         if (!date) {
             date = new Date()
         }
@@ -209,7 +209,12 @@ export default class fCompute {
         const minutes = date.getMinutes().toString().padStart(2, '0')
         const seconds = date.getSeconds().toString().padStart(2, '0')
 
-        return (withDate ? `${date.getFullYear()}/${month}/${day} ` : '') + `${hours}:${minutes}:${seconds}`
+        return formater.replace('YYYY', `${date.getFullYear()}`)
+            .replace('MM', month)
+            .replace('DD', day)
+            .replace('hh', hours)
+            .replace('mm', minutes)
+            .replace('ss', seconds)
     }
 
     /**
@@ -717,6 +722,15 @@ export default class fCompute {
         }
         // 如果没有找到，返回最后一个元素
         return arr[arr.length - 1][0];
+    }
+
+    /**
+     * 
+     * @param {string} content 
+     */
+    static getRexWithCmdHead(content) {
+        let rex = new RegExp(`^[#/]\\s*${Config.getUserCfg('config', 'cmdhead')}\\s*(${content})\\s*`, 'i')
+        return rex;
     }
 
 }

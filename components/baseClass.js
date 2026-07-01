@@ -102,6 +102,14 @@ export default class phiPluginBase extends plugin {
    * @param {mutiNickCallback<T>} callback 
    */
   choseMutiNick(e, idList, options, callback) {
+    if (idList.length === 0) {
+      send.send_with_At(e, `未找到相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+      return;
+    }
+    if (idList.length === 1) {
+      callback(e, idList[0], options);
+      return;
+    }
     send.send_with_At(e, fCompute.mutiNick(idList));
     wait_to_chose_song[e.user_id] = {
       ids: idList,

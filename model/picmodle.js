@@ -120,7 +120,7 @@ export default await new class picmodle {
      * @returns 
      */
     async b19(e, data) {
-        if(data.theme == 'dss2') {
+        if (data.theme == 'dss2') {
             return await this.common(e, 'b19', data, 'dss2');
         }
         return await this.common(e, 'b19', data)
@@ -302,7 +302,10 @@ export default await new class picmodle {
     }
 
     /** 
-     * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'} picKind
+     * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|
+     * 'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|
+     * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'
+     * } picKind
      */
 
     /**

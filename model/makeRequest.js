@@ -677,8 +677,9 @@ async function makeFetch(url, params, method = 'POST') {
             default:
                 throw new Error(`不支持的请求方法: ${method}`);
         }
-    } catch (e) {
-        logger.error(`请求失败: ${url}`, e);
+    } catch (err) {
+        // @ts-ignore
+        logger.error(`请求失败: ${url}`, err?.message || err?.cause || String(err) || '未知错误');
         throw new Error('API离线');
     }
     if (!result) {

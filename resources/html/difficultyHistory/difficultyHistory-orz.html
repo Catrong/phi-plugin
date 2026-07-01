@@ -1,96 +1,136 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
+<!doctype html>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" href="#" />
-    <link rel="stylesheet" type="text/css" href="{{_res_path}}html/common/common.css" />
-    
-    {{if theme == "snow"}}
-    <link rel="stylesheet" href="{{_res_path}}html/common/theme/snow/snow.css">
-    {{else if theme == "topText" || theme == "foolsDay"}}
-    <link rel="stylesheet" href="{{_res_path}}html/common/theme/topText/topText.css">
-    {{/if}}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./difficultyHistory.css" />
+  </head>
 
-    {{block 'css'}}
-    {{/block}}
-    <title>phi-plugin</title>
-</head>
+  <html>
+    <body>
+      <div class="background">
+        <img src="../../original_ill/illBlur/996.李化禹.png" alt="曲绘-模糊" />
+      </div>
 
-<body class="elem-{{element || elem || `hydro`}} {{displayMode || mode || `default`}}-mode  {{bodyClass}}" {{@sys.scale}}>
+      <div class="header">
+        <div class="ill-box">
+          <img src="../../original_ill/ill/996.李化禹.png" alt="曲绘" />
+        </div>
+        <div class="title-box">
+          <div class="white-bar"></div>
+          <div class="title-content">
+            <div class="title">
+              <p>上线版本&日期</p>
+            </div>
+            <div class="content">
+              <p>版本: v0.0.00.0</p>
+              <p>日期: 0000-00-00</p>
+            </div>
+            <div class="title">
+              <p>定数变化折线图</p>
+            </div>
+            <div class="content">
+              <div class="chart-container">
+                <svg id="difficultyChart" width="800" height="250"></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="difficulty">
+        <div class="AT-box a-box">
+          <div class="dif-box clip-box">
+            <p>AT</p>
+          </div>
+          <div class="data-box">
+            <div class="a-num">
+              <div class="num-box clip-box">
+                <p>15.0</p>
+              </div>
+              <div class="ver-box clip-box">
+                <div class="update-ver">
+                  <p>v0.0.00.0</p>
+                </div>
+                <div class="update-date">
+                  <p>0000-00-00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="IN-box a-box">
+          <div class="dif-box clip-box">
+            <p>IN</p>
+          </div>
+          <div class="data-box">
+            <div class="a-num">
+              <div class="num-box clip-box">
+                <p>15.0</p>
+              </div>
+              <div class="ver-box clip-box">
+                <div class="update-ver">
+                  <p>v0.0.00.0</p>
+                </div>
+                <div class="update-date">
+                  <p>0000-00-00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="HD-box a-box">
+          <div class="dif-box clip-box">
+            <p>HD</p>
+          </div>
+          <div class="data-box">
+            <div class="a-num">
+              <div class="num-box clip-box">
+                <p>15.0</p>
+              </div>
+              <div class="ver-box clip-box">
+                <div class="update-ver">
+                  <p>v0.0.00.0</p>
+                </div>
+                <div class="update-date">
+                  <p>0000-00-00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="EZ-box a-box">
+          <div class="dif-box clip-box">
+            <p>EZ</p>
+          </div>
+          <div class="data-box">
+            <div class="a-num">
+              <div class="num-box clip-box">
+                <p>15.0</p>
+              </div>
+              <div class="ver-box clip-box">
+                <div class="update-ver">
+                  <p>v0.0.00.0</p>
+                </div>
+                <div class="update-date">
+                  <p>0000-00-00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="background">
-        {{if theme == "star"}}
-        <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
-        <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
-            style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
-        {{else}}
-        {{if background}}
-        <img src="{{background}}" alt="曲绘-模糊">
-        {{else}}
-        <img src="{{_res_path}}html/otherimg/phigros.png" alt="曲绘-模糊">
-        {{/if}}
-        {{/if}}
-    </div>
-
-    <script>
-        var _res_path = "{{_res_path}}";
-    </script>
-
-    {{if theme == "snow"}}
-    <script src="{{_res_path}}html/common/theme/snow/snow.js"></script>
-    {{else if theme == "topText" || theme == "foolsDay"}}
-    <script src="{{_res_path}}html/common/theme/topText/topText.js"></script>
-    {{else if theme == "star"}}
-    <script src="{{_res_path}}html/common/theme/star/star.js"></script>
-    {{/if}}
-
-    <!-- <div class="container" id="container"> -->
-    {{block 'main'}}{{/block}}
-    <!-- <div class="copyright">{{@sys.copyright}}</div> -->
-    <!-- </div> -->
-    <!-- 曲目名称自适应name-box的宽度 -->
-
-    <script>
-        function isBiggerThanParent(songName, parentElement) {
-            console.log(songName, parentElement)
-            console.log(songName.scrollWidth, parentElement.offsetWidth, songName.scrollHeight, parentElement.offsetHeight)
-            return songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight
-        }
-        function adjustFontSize() {
-            //获取p元素
-            let a = document.getElementsByName('pvis')
-            for (let i = 0; i < a.length; ++i) {
-
-                let songName = a[i]
-
-                if (!songName) continue
-
-
-                /*调整曲目名称字体大小*/
-                let parentElement = songName.parentElement
-
-                if (!isBiggerThanParent(songName, parentElement)) continue
-
-                let fontSize = Number(window.getComputedStyle(songName, null).getPropertyValue('font-size').replace("px", ""));
-
-                let l = 0, r = fontSize;
-                while (l < r) {
-                    let mid = Math.floor((l + r + 1) / 2);
-                    songName.style.fontSize = mid + "px";
-                    if (isBiggerThanParent(songName, parentElement)) {
-                        r = mid - 1;
-                    } else {
-                        l = mid;
-                    }
-                }
-                songName.style.fontSize = l + "px";
-            }
-
-        }
-        
+      <div class="createdbox">
+        <div class="phi-plugin">
+          <p>{{_plugin}}</p>
+        </div>
+        <div class="ver">
+          <p>{{Version.ver}}</p>
+        </div>
+      </div>
+      <script>
         // 将颜色转为半透明（用于虚线）
         function lightenColor(hex, alpha = 0.4) {
           // 支持 #RRGGBB 格式
@@ -286,9 +326,36 @@
             })
           })
         }
-        window.addEventListener("DOMContentLoaded", adjustFontSize);
-        window.addEventListener("resize", adjustFontSize);
-    </script>
-</body>
 
+        // 测试示例数据 - 多条折线
+        const sampleLines = [
+          {
+            color: "#64B5F6",
+            data: [
+              { x: 1, xLable: "v1.0", visX: true, y: 14, yLable: "14.0", visY: true },
+              { x: 2, xLable: "v1.1", visX: false, y: 15, yLable: "15.0", visY: false },
+              { x: 3, xLable: "v2.0", visX: true, y: 14.5, yLable: "14.5", visY: true },
+              { x: 4, xLable: "v2.1", visX: false, y: 13.9, yLable: "13.9", visY: true },
+              { x: 5, xLable: "v3.0", visX: true, y: 15.5, yLable: "15.5", visY: false },
+            ],
+          },
+          {
+            color: "#FF6B6B",
+            data: [
+              { x: 1, xLable: "v1.0", visX: false, y: 12, yLable: "12.0", visY: true },
+              { x: 2, xLable: "v1.1", visX: true, y: 13, yLable: "13.0", visY: false },
+              { x: 3, xLable: "v2.0", visX: false, y: 12.8, yLable: "12.8", visY: false },
+              { x: 4, xLable: "v2.1", visX: true, y: 14, yLable: "14.0", visY: true },
+              { x: 5, xLable: "v3.0", visX: false, y: 13.5, yLable: "13.5", visY: false },
+            ],
+          },
+        ]
+
+        // 页面加载后绘制图表
+        window.addEventListener("DOMContentLoaded", () => {
+          drawDifficultyChart("difficultyChart", sampleLines)
+        })
+      </script>
+    </body>
+  </html>
 </html>

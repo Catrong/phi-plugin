@@ -83,7 +83,8 @@ function testApi() {
 }
 
 if (Config.getUserCfg('config', 'autoOpenApi')) {
-    setInterval(testApi, 1000 * 60 * 5)
+    setInterval(testApi, 1000 * 60 * 5);
+    testApi()
 }
 
 if (!errvis) {

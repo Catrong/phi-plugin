@@ -39,7 +39,7 @@ export default new class getInfo {
     /**
      * @typedef {object} versionInfoObject
      * @property {string} version_label 版本号
-     * @property {number} update_date 版本更新时间戳
+     * @property {number} update_date 版本更新时间戳(秒)
      * @property {string} whatsnew 版本更新内容
      * @property {number} version_code 版本号（整数）
      * @property {string} version 版本号（整数）字符版
@@ -47,11 +47,11 @@ export default new class getInfo {
      */
 
     /**
-     * @typedef {Record<string, Record<idString, csvDifObject>>} historyDifficultyByVersionObject
+     * @typedef {{[versionCode: string]: Record<idString, csvDifObject>}} historyDifficultyByVersionObject
      */
 
     /**
-     * @typedef {Record<idString, Record<string, Record<levelKind, number>>>} historyDifficultyBySongIdObject
+     * @typedef {Record<idString, {[versionCode: string]: Record<levelKind, number>}>} historyDifficultyBySongIdObject
      */
 
     /**
@@ -132,10 +132,10 @@ export default new class getInfo {
          */
         this.updatedChart = {}
 
-        /** @type {Record<string, versionInfoObject>} */
+        /** @type {{[versionLabel: string]: versionInfoObject}} */
         this.versionInfoByLabel = {}
 
-        /** @type {Record<string, versionInfoObject>} */
+        /** @type {{[versionCode: string]: versionInfoObject}} */
         this.versionInfoByCode = {}
 
         /** @type {historyDifficultyByVersionObject} */
@@ -152,7 +152,7 @@ export default new class getInfo {
 
         /**@type {Save | null} */
         this.badSave = null;
-        
+
 
         this.kongYouData = {
             timeStamp: 0,
@@ -823,7 +823,12 @@ export default new class getInfo {
      */
     getOnlinePhiIllUrl(type, ...paths) {
         const cfg = Config.getUserCfg('config', 'onLinePhiIllUrl')
-        const sourceKey = Number(cfg)
+
+        let sourceKey = /**@type {1|2|3|4} */(Number(cfg))
+        if (![1, 2, 3, 4].includes(sourceKey)) {
+            logger.warn(`[phi-plugin] 无效的在线曲绘源配置：${cfg}，将使用默认源`)
+            sourceKey = 1;
+        }
         const source = getInfo.onlinePhiIllSources[sourceKey]
         const baseSource = source || {
             baseUrl: String(cfg || getInfo.defaultOnlinePhiIllSource.baseUrl),
