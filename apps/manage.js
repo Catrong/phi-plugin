@@ -160,7 +160,6 @@ export class phiset extends phiPluginBase {
             return false
         }
         let token = await getRksRank.getRankUser(msg - 1, msg)
-        console.info(token)
         send.send_with_At(e, token)
     }
 
@@ -202,7 +201,6 @@ export class phiset extends phiPluginBase {
         /**@type {phigrosToken} */
         const sessionToken = /** @type {any} */ (msg);
         await getSave.allowSessionToken(sessionToken)
-        console.info(await getSave.isBanSessionToken(sessionToken))
         send.send_with_At(e, '成功')
     }
 

@@ -6,6 +6,7 @@
  * @typedef {string & { readonly brand: unique symbol }} phigrosToken phigrosToken
  * @typedef {string & { readonly brand: unique symbol }} apiToken apiToken
  * @typedef {string & { readonly brand: unique symbol }} apiUserId apiId
+ * @typedef {string & { readonly brand: unique symbol }} phigrosObjectId phigrosObjectId
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT'} levelKind 有效难度分级
  * @typedef {'EZ' | 'HD' | 'IN' | 'AT' | 'LEGACY'} allLevelKind 全部难度分级
  * @typedef {'tap' | 'drag' | 'hold' | 'flick'} noteKind note分类
@@ -180,51 +181,68 @@
  */
 
 /**
- * @typedef {object} gameFile
- * @property {string} __type
- * @property {string} bucket
- * @property {string} createdAt
- * @property {string} key
- * @property {object} metaData
- * @property {string} mime_type
- * @property {string} name
- * @property {string} objectId
- * @property {string} provider
+ * @typedef {object} playerInfo
+ * @property {{ '*': {write: boolean, read: boolean} }} ACL
+ * @property {object} authData
+ * @property {object} authData.taptap
+ * @property {string} authData.taptap.access_token
+ * @property {string} authData.taptap.avatar taptap头像
+ * @property {string} authData.taptap.gender
+ * @property {string} authData.taptap.kid
+ * @property {string} authData.taptap.mac_algorithm
+ * @property {string} authData.taptap.mac_key
+ * @property {string} authData.taptap.name
+ * @property {string} authData.taptap.openid
+ * @property {string} authData.taptap.scope
+ * @property {string} authData.taptap.token_type
+ * @property {string} authData.taptap.unionid
+ * @property {string} avatar taptap头像
+ * @property {string} createdAt '2022-09-03T10:21:42.783Z'
+ * @property {boolean} emailVerified
+ * @property {boolean} mobilePhoneVerified
+ * @property {string} nickname 游戏昵称
+ * @property {phigrosObjectId} objectId
+ * @property {phigrosToken} sessionToken
+ * @property {string} shortId
  * @property {string} updatedAt
- * @property {string} url
+ * @property {string} username
+ * 
+ * @typedef {object} gameFile
+ * @property {string} __type 文件类型
+ * @property {string} bucket 存档bucket
+ * @property {string} createdAt 存档创建时间 2023-10-05T07:41:24.503Z
+ * @property {string} key gamesaves/{32}/.save
+ * @property {object} metaData metaData
+ * @property {string} mime_type mime_type
+ * @property {string} name ".save"
+ * @property {string} objectId 存档id {24}
+ * @property {string} provider provider
+ * @property {string} updatedAt 存档更新时间 2023-10-05T07:41:24.503Z
+ * @property {string} url https://rak3ffdi.tds1.tapfiles.cn/gamesaves/{32}/.save
  * 
  * @typedef {object} modifiedAt
  * @property {string} __type
- * @property {string} iso
+ * @property {Date} iso
  * 
  * @typedef {object} summary
- * @property {string} updatedAt
- * @property {number} saveVersion
- * @property {number} challengeModeRank
- * @property {number} rankingScore
- * @property {number} gameVersion
- * @property {string} avatar
- * @property {number[]} cleared
- * @property {number[]} fullCombo
- * @property {number[]} phi
+ * @property {string} updatedAt 插件获取存档时间 2023 Oct.06 11:46:33
+ * @property {number} saveVersion 存档版本
+ * @property {number} challengeModeRank 课题分
+ * @property {number} rankingScore rks
+ * @property {number} gameVersion 客户端版本号
+ * @property {string} avatar 头像
+ * @property {number[]} cleared 完成曲目数量
+ * @property {number[]} fullCombo FC曲目数量
+ * @property {number[]} phi AP曲目数量
  * 
  * @typedef {object} saveInfo
- * @property {string} createdAt
+ * @property {Date} createdAt 账户创建时间 2022-09-03T10:21:48.613Z
  * @property {gameFile} gameFile
- * @property {modifiedAt} modifiedAt
+ * @property {modifiedAt} modifiedAt 存档上传时间 {__type："Date", "iso": "2023-10-06T03:46:33.000Z"}
  * @property {string} name
- * @property {string} objectId
+ * @property {string} objectId 存档id {24}
  * @property {summary} summary
- * @property {{ '*': object }} ACL
- * @property {{ 'taptap': object }} authData
- * @property {string} avatar
- * @property {boolean} emailVerified
- * @property {boolean} mobilePhoneVerified
- * @property {string} nickname
- * @property {phigrosToken} sessionToken
- * @property {string} shortId
- * @property {string} username
- * @property {string} updatedAt
+ * @property {Date} updatedAt 存档更新时间 2023-10-06T03:46:33.000Z
  * @property {{'__type': "Pointer", 'className': "_User", 'objectId': string}} user
  * @property {string} PlayerId
  * 
@@ -263,7 +281,7 @@
  * @property {apiUserId} [apiId]
  * @property {boolean} global
  * @property {saveInfo} saveInfo
- * @property {string} saveUrl
+ * @property {playerInfo} playerInfo
  * @property {number} Recordver
  * @property {gameProgress} gameProgress
  * @property {gameuser} gameuser

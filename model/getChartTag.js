@@ -47,8 +47,6 @@ export default new class getChartTag {
                 value: obj.agree.length - obj.disagree.length,
             });
         }
-        console.info(keys)
-        console.info(arr)
 
         return arr;
     }

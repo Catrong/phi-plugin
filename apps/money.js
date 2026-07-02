@@ -624,7 +624,6 @@ async function picData(save, plugin_data, e) {
 
     /** 今日人品（复用 jrrp 的 redis 数据，保证一致） */
     let fortune = await createJrrp(e)
-    console.info('fortune:', fortune)
 
     /** 进度条（解锁/FC/PHI 三层叠加） */
     let edgeRate = {
@@ -907,7 +906,6 @@ async function createJrrp(e) {
             try {
                 const arr = JSON.parse(data)
                 const quote = await pickSentenceText(arr?.[1])
-                console.log('jrrp redis data loaded:', arr)
                 return {
                     lucky: Number(arr?.[0]) || 0,
                     good: Array.isArray(arr) ? arr.slice(2, 6) : [],
@@ -980,7 +978,6 @@ async function createJrrp(e) {
         })
 
         const quote = await pickSentenceText(sentenceIndex)
-        console.log('jrrp generated:', data)
         return {
             lucky: data[0],
             good: data.slice(2, 6),
@@ -989,7 +986,6 @@ async function createJrrp(e) {
             oriData: data,
         }
     } catch (e) {
-        console.error('createJrrp error:', e)
         return { lucky: 0, good: [], bad: [], quote: '', oriData: [] }
     }
 }

@@ -26,87 +26,11 @@ export default class Save {
         } else {
             this.apiId = undefined
         }
-        this.saveInfo = {
-            /**账户创建时间 2022-09-03T10:21:48.613Z */
-            createdAt: data.saveInfo.createdAt,
-            gameFile: {
-                /**文件类型 */
-                __type: data.saveInfo.gameFile.__type,
-                /**存档bucket */
-                bucket: data.saveInfo.gameFile.bucket,
-                /**存档创建时间 2023-10-05T07:41:24.503Z */
-                createdAt: data.saveInfo.gameFile.createdAt,
-                /**gamesaves/{32}/.save */
-                key: data.saveInfo.gameFile.key,
-                /**metaData */
-                metaData: data.saveInfo.gameFile.metaData,
-                /**mime_type */
-                mime_type: data.saveInfo.gameFile.mime_type,
-                /**.save */
-                name: data.saveInfo.gameFile.name,
-                /**存档id {24} */
-                objectId: data.saveInfo.gameFile.objectId,
-                /**provider */
-                provider: data.saveInfo.gameFile.provider,
-                /**存档更新时间 2023-10-05T07:41:24.503Z */
-                updatedAt: data.saveInfo.gameFile.updatedAt,
-                /**https://rak3ffdi.tds1.tapfiles.cn/gamesaves/{32}/.save */
-                url: data.saveInfo.gameFile.url
-            },
-            /**存档上传时间 {__type："Date", "iso": "2023-10-06T03:46:33.000Z"} */
-            modifiedAt: {
-                __type: "Date",
-                /**存档上传时间 "2023-10-06T03:46:33.000Z" */
-                iso: new Date(data.saveInfo.modifiedAt.iso)
-            },
-            /**用户id {24} 与 gameFile 中的不同 */
-            objectId: data.saveInfo.objectId,
-            summary: {
-                /**插件获取存档时间 2023 Oct.06 11:46:33 */
-                updatedAt: data.saveInfo.summary.updatedAt,
-                /**存档版本 */
-                saveVersion: data.saveInfo.summary.saveVersion,
-                /**课题分 */
-                challengeModeRank: data.saveInfo.summary.challengeModeRank,
-                /**rks */
-                rankingScore: Number(data.saveInfo.summary.rankingScore),
-                /**客户端版本号 */
-                gameVersion: data.saveInfo.summary.gameVersion,
-                /**头像 */
-                avatar: data.saveInfo.summary.avatar,
-                /**完成曲目数量 */
-                cleared: data.saveInfo.summary.cleared,
-                /**FC曲目数量 */
-                fullCombo: data.saveInfo.summary.fullCombo,
-                /**AP曲目数量 */
-                phi: data.saveInfo.summary.phi
-            },
-            /**ACL */
-            ACL: data.saveInfo.ACL,
-            /**authData */
-            authData: data.saveInfo.authData,
-            /**头像 */
-            avatar: data.saveInfo.avatar,
-            /**邮箱验证 */
-            emailVerified: data.saveInfo.emailVerified,
-            /**手机验证 */
-            mobilePhoneVerified: data.saveInfo.mobilePhoneVerified,
-            /**昵称 */
-            nickname: data.saveInfo.nickname,
-            /**sessionToken */
-            sessionToken: data.saveInfo.sessionToken,
-            /**短id */
-            shortId: data.saveInfo.shortId,
-            /**用户名 */
-            username: data.saveInfo.username,
-            /**存档上传时间 2023 Oct.06 11:46:33 */
-            updatedAt: data.saveInfo.updatedAt,
-            /**用户信息 */
-            user: data.saveInfo.user,
-            /**用户名 */
-            PlayerId: data.saveInfo.PlayerId
-        }
-        this.saveUrl = data.saveUrl
+        /**@type {playerInfo} */
+        this.playerInfo = data.playerInfo
+        /**@type {saveInfo} */
+        this.saveInfo = data.saveInfo
+        this.saveInfo.modifiedAt.iso = new Date(this.saveInfo.modifiedAt.iso)
         /**官方存档版本号 */
         this.Recordver = data.Recordver
         this.gameProgress = data.gameProgress ? {
