@@ -211,25 +211,16 @@ export default new class getInfo {
         }
 
         /**
-         * @type {{id: string, name:string}[]}
+         * @type {string[]}
          * @description 头像id
          */
-        let csv_avatar = await readFile.FileReader(path.join(infoPath, 'avatar.csv'))
-
-        /**
-         * @type {string[]}
-         */
-        this.avatarid = []
-
-        for (let i in csv_avatar) {
-            this.avatarid.push(csv_avatar[i].id)
-        }
+        this.avatarid = readFile.FileReader(path.join(infoPath, 'avatar.txt')).replace(/\r/g, '').split('\n')
 
         /**
          * @type {string[]}
          * @description Tips
          */
-        this.tips = await readFile.FileReader(path.join(infoPath, 'tips.yaml'))
+        this.tips = await readFile.FileReader(path.join(infoPath, 'tips.txt')).replace(/\r/g, '').split('\n')
 
         /**自定义信息 */
         let user_song = Config.getUserCfg('config', 'otherinfo')
@@ -359,17 +350,20 @@ export default new class getInfo {
          * @property {songString} song 曲目名称
          * @property {string} composer 作曲
          * @property {string} illustrator 插画师
-         * @property {string} EZ EZ难度谱师
-         * @property {string} HD HD难度谱师
-         * @property {string} IN IN难度谱师
-         * @property {string|undefined} AT AT难度谱师
+         * @property {string} EZ EZ难度定数
+         * @property {string} HD HD难度定数
+         * @property {string} IN IN难度定数
+         * @property {string|undefined} AT AT难度定数
+         * @property {string} EZC EZ难度谱师
+         * @property {string} HDC HD难度谱师
+         * @property {string} INC IN难度谱师
+         * @property {string|undefined} ATC AT难度谱师
          */
         /**
          * 信息文件
          * @type {csvInfoObject[]}
          */
         let CsvInfo = await readFile.FileReader(path.join(infoPath, 'info.csv'))
-        let Csvdif = await readFile.FileReader(path.join(infoPath, 'difficulty.csv'))
         let Jsoninfo = await readFile.FileReader(path.join(infoPath, 'infolist.json'))
 
         /**
@@ -435,9 +429,27 @@ export default new class getInfo {
 
                 if (CsvInfo[i][level]) {
 
+                    if (!this.ori_info[id].chart) {
+                        this.ori_info[id].chart = {}
+                    }
+
+                    this.ori_info[id].chart[level] = {
+                        id: id,
+                        rank: level,
+                        charter: CsvInfo[i][/**@type {levelKind} */(level + "C")] || '',
+                        difficulty: Number(CsvInfo[i][level]),
+                        tap: notesInfo[idWithout0][level].t[0],
+                        drag: notesInfo[idWithout0][level].t[1],
+                        hold: notesInfo[idWithout0][level].t[2],
+                        flick: notesInfo[idWithout0][level].t[3],
+                        combo: notesInfo[idWithout0][level].t[0] + notesInfo[idWithout0][level].t[1] + notesInfo[idWithout0][level].t[2] + notesInfo[idWithout0][level].t[3],
+                        maxTime: notesInfo[idWithout0][level].m,
+                        distribution: notesInfo[idWithout0][level].d
+                    }
+
                     /**比较新曲部分 */
                     if (OldDifList[idWithout0]) {
-                        if (!OldDifList[idWithout0][level] || OldDifList[idWithout0][level] != Csvdif[i][level] || JSON.stringify(oldNotes[idWithout0][level].t) != JSON.stringify(notesInfo[idWithout0][level].t)) {
+                        if (!OldDifList[idWithout0][level] || OldDifList[idWithout0][level] != this.ori_info[id].chart[level].difficulty || JSON.stringify(oldNotes[idWithout0][level].t) != JSON.stringify(notesInfo[idWithout0][level].t)) {
                             /**
                              * @type {updatedChartObject}
                              */
@@ -456,13 +468,13 @@ export default new class getInfo {
                                     drag: notesInfo[idWithout0][level].t[1],
                                     hold: notesInfo[idWithout0][level].t[2],
                                     flick: notesInfo[idWithout0][level].t[3],
-                                    difficulty: Csvdif[i][level],
+                                    difficulty: this.ori_info[id].chart[level].difficulty,
                                     combo: notesInfo[idWithout0][level].t[0] + notesInfo[idWithout0][level].t[1] + notesInfo[idWithout0][level].t[2] + notesInfo[idWithout0][level].t[3],
                                     isNew: true
                                 })
                             } else {
-                                if (OldDifList[idWithout0][level] != Csvdif[i][level]) {
-                                    Object.assign(tem, { difficulty: [OldDifList[idWithout0][level], Csvdif[i][level]] })
+                                if (OldDifList[idWithout0][level] != this.ori_info[id].chart[level].difficulty) {
+                                    Object.assign(tem, { difficulty: [OldDifList[idWithout0][level], this.ori_info[id].chart[level].difficulty] })
                                 }
                                 if (oldNotes[idWithout0][level].t[0] != notesInfo[idWithout0][level].t[0]) {
                                     Object.assign(tem, { tap: [oldNotes[idWithout0][level].t[0], notesInfo[idWithout0][level].t[0]] })
@@ -489,26 +501,9 @@ export default new class getInfo {
                         }
                     }
 
-                    if (!this.ori_info[id].chart) {
-                        this.ori_info[id].chart = {}
-                    }
-
-                    this.ori_info[id].chart[level] = {
-                        id: id,
-                        rank: level,
-                        charter: CsvInfo[i][level] || '',
-                        difficulty: Number(Csvdif[i][level]),
-                        tap: notesInfo[idWithout0][level].t[0],
-                        drag: notesInfo[idWithout0][level].t[1],
-                        hold: notesInfo[idWithout0][level].t[2],
-                        flick: notesInfo[idWithout0][level].t[3],
-                        combo: notesInfo[idWithout0][level].t[0] + notesInfo[idWithout0][level].t[1] + notesInfo[idWithout0][level].t[2] + notesInfo[idWithout0][level].t[3],
-                        maxTime: notesInfo[idWithout0][level].m,
-                        distribution: notesInfo[idWithout0][level].d
-                    }
 
                     /**最高定数 */
-                    this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, Number(Csvdif[i][level]))
+                    this.MAX_DIFFICULTY = Math.max(this.MAX_DIFFICULTY, this.ori_info[id].chart[level].difficulty)
                 }
             }
             if (Jsoninfo[idWithout0]?.chart) {

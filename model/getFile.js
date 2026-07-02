@@ -13,7 +13,7 @@ export default class readFile {
     /**
      * 读取文件
      * @param {string} filePath 完整路径
-     * @param {'JSON'|'YAML'|'CSV'|'TXT'} [style=undefined] 强制设置文件格式
+     * @param {'JSON'|'YAML'|'CSV'|'TSV'|'TXT'} [style=undefined] 强制设置文件格式
      * @returns {Promise<any>|any}
      */
     static FileReader(filePath, style = undefined) {
@@ -30,8 +30,24 @@ export default class readFile {
                 case 'YAML': {
                     return YAML.parse(fs.readFileSync(filePath, 'utf8'))
                 }
-                case 'CSV': {
-                    return (csv().fromString(fs.readFileSync(filePath, 'utf8')))
+                case 'CSV':
+                case 'TSV': {
+                    const csvData = fs.readFileSync(filePath, 'utf8').replace(/\r/g, '');
+                    const lines = csvData.split('\n');
+                    /**@type {any[]} */
+                    const result = [];
+                    const headers = lines[0].split('\t');
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i]) continue;
+                        /**@type {any} */
+                        const obj = {};
+                        const currentline = lines[i].split('\t');
+                        for (let j = 0; j < headers.length; j++) {
+                            obj[headers[j]] = currentline[j];
+                        }
+                        result.push(obj);
+                    }
+                    return result;
                 }
                 case 'TXT': {
                     return fs.readFileSync(filePath, 'utf8')
