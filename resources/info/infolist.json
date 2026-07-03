@@ -1730,17 +1730,20 @@
     "GungnirFracture.Kryexe":{
         "bpm": "240",
         "length": "2:30",
-        "chapter": "Single-单曲 精选集"
+        "chapter": "Single-单曲 精选集",
+        "isOriginal": true
     },
     "夢の降る日に.seatrus":{
         "bpm": "260",
         "length": "2:12",
-        "chapter": "Single-单曲 精选集"
+        "chapter": "Single-单曲 精选集",
+        "isOriginal": true
     },
     "DerSchneid.Ωμεγα":{
         "bpm": "222",
         "length": "2:33",
-        "chapter": "Single-单曲 精选集"
+        "chapter": "Single-单曲 精选集",
+        "isOriginal": true
     }
 }
 
