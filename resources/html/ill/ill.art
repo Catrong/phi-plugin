@@ -5,14 +5,15 @@
 
 {{block 'main'}}
     <img src="{{illustration}}" alt="{{illustration}}">
+    <div class="shadow"></div>
     <div class="info-box">
         <div class="phi">
-            <img src="{{_res_path}}html/otherimg/title.png" alt="Phigros">
+            <p>Phigros</p>
         </div>
         <div class="line"></div>
         <div class="info">
             <div class="up">
-                <p>Illustrator</p>
+                <p>Illustration</p>
             </div>
             <div class="down">
                 <p>{{illustrator}}</p>

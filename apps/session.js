@@ -4,7 +4,7 @@ import Save from '../model/class/Save.js'
 import ScoreHistory from '../model/class/scoreHistory.js'
 import getSave from '../model/getSave.js'
 import getQRcode from '../lib/getQRcode.js'
-import common from '../../../lib/common/common.js'
+import common from '../components/common.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
 import { allLevel, redisPath } from "../model/constNum.js"
@@ -21,6 +21,7 @@ import segment from '../components/segment.js'
 import getInfo from '../model/getInfo.js'
 import picmodle from '../model/picmodle.js'
 import { canUseApi } from '../model/apiPermission.js'
+import platform, { redis } from '../components/platform/index.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -174,11 +175,7 @@ export class phisstk extends phiPluginBase {
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
                         send.send_with_At(e, `二维码已扫描，请确认登录`, false, { recallMsg: 10 });
-                        if (e.group?.recallMsg) {
-                            e.group.recallMsg(qrCodeMsg.message_id)
-                        } else if (e.friend?.recallMsg) {
-                            e.friend.recallMsg(qrCodeMsg.message_id)
-                        }
+                        platform.recall(e, qrCodeMsg)
                         flag = true;
                     }
                 } else {
@@ -209,7 +206,7 @@ export class phisstk extends phiPluginBase {
 
         if (!Config.getUserCfg('config', 'isGuild')) {
 
-            e.reply("正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
+            send.reply(e, "正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
             // return true
         }
 
@@ -288,7 +285,7 @@ export class phisstk extends phiPluginBase {
             try {
 
                 if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
-                    e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
+                    send.reply(e, "正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
                 }
 
                 updateData = await getUpdateSave.getNewSaveFromApi(e)
@@ -308,12 +305,12 @@ export class phisstk extends phiPluginBase {
 
             let session = await getSave.get_user_token(e.user_id)
             if (!session) {
-                e.reply(`没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
+                send.reply(e, `没有找到你的存档哦！请先绑定sessionToken！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n格式：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
                 return true
             }
 
             if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
-                e.reply("正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
+                send.reply(e, "正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
             }
 
             try {

@@ -10,6 +10,7 @@ import fCompute from './fCompute.js'
 import send from "./send.js";
 import logger from "../components/Logger.js";
 import Save from "./class/Save.js";
+import { redis } from "../components/platform/index.js";
 
 const MaxNum = 1e4
 
@@ -92,7 +93,7 @@ export default class getBackup {
                 // @ts-ignore
                 let tokenValues = await Promise.all(keys.map((/** @type {any} */ key) => redis.get(key)));
                 userIds.forEach((user_id, idx) => {
-                    user_token[user_id] = tokenValues[idx];
+                    user_token[user_id] = tokenValues[idx] || '';
                 });
                 cnt += keys.length;
                 if (Math.floor(cnt / 1000) > vis) {

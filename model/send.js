@@ -1,13 +1,24 @@
-import { segment } from "oicq";
 import Config from '../components/Config.js'
-import common from "../../../lib/common/common.js";
 import getSave from "./getSave.js";
 import Save from "./class/Save.js";
 import getUpdateSave from "./getUpdateSave.js";
 import logger from "../components/Logger.js";
 import { canUseApi } from './apiPermission.js';
+import platform from "../components/platform/index.js";
 
 class send {
+
+    /**
+     * 普通回复，统一经过平台接口。
+     * @param {*} e
+     * @param {*} msg
+     * @param {boolean} [quote=false]
+     * @param {{}} [data={}]
+     */
+    async reply(e, msg, quote = false, data = {}) {
+        e = platform.wrapEvent(e)
+        return platform.reply(e, msg, { quote, ...data })
+    }
 
     /**
      * 私聊省略@
@@ -17,17 +28,8 @@ class send {
      * @param {{}} [data={}] recallMsg等
      */
     async send_with_At(e, msg, quote = false, data = {}) {
-        if (e.isGroup) {
-            if (typeof msg == 'string') {
-                return e.reply([segment.at(e.user_id), ` ${msg}`], quote, data)
-            } else if (Object.prototype.toString.call(msg) == '[object Array]') {
-                return e.reply([segment.at(e.user_id), ...msg], quote, data)
-            } else {
-                return e.reply([segment.at(e.user_id), msg], quote, data)
-            }
-        } else {
-            return e.reply(msg, quote, data)
-        }
+        e = platform.wrapEvent(e)
+        return platform.sendWithAt(e, msg, quote, data)
     }
 
     /**
@@ -93,9 +95,9 @@ class send {
      */
     async pick_send(e, msg) {
         try {
-            // @ts-ignore
-            await Bot.pickMember(e.group_id, e.user_id).sendMsg(msg)
-            await common.sleep(500)
+            e = platform.wrapEvent(e)
+            await platform.sendPrivate(e, msg)
+            await platform.sleep(500)
         } catch (err) {
             logger.error(err)
             this.send_with_At(e, `转发失败QAQ！请尝试在私聊触发命令！`)

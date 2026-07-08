@@ -15,8 +15,7 @@ lain.support.js# 忽略数据文件
 resources/original_ill/
 /resources/splited_music/
 /resources/info/songsurl.yaml
-/resources/otherill/chu.png
-/resources/otherill/wen.png
+/resources/otherill/
 
 # 忽略特定文件
 /package-lock.json

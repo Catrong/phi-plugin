@@ -3,6 +3,7 @@ import logger from '../components/Logger.js'
 import LevelRecordInfo from './class/LevelRecordInfo.js'
 import { MAX_DIFFICULTY } from './constNum.js'
 import getInfo from './getInfo.js'
+import platform from '../components/platform/index.js'
 
 export default class fCompute {
     /**
@@ -71,30 +72,14 @@ export default class fCompute {
      */
     static async sendFile(e, file, filename) {
         try {
-            let res
-            if (e.isGroup) {
-                if (e.group.sendFile)
-                    res = await e.group.sendFile(file, undefined, filename)
-                else
-                    res = await e.group.fs.upload(file, undefined, filename)
-            } else {
-                res = await e.friend.sendFile(file, filename)
-            }
-
-            if (res) {
-                let fileUrl
-                if (e.group?.getFileUrl)
-                    fileUrl = await e.group.getFileUrl(res.fid)
-                else if (e.friend?.getFileUrl)
-                    fileUrl = await e.friend.getFileUrl(res)
-            }
+            await platform.uploadFile(e, file, filename)
 
         } catch (err) {
             // @ts-ignore
             logger.error(`文件上传错误：${logger.red(err.stack)}`)
             console.error(err)
             // @ts-ignore
-            await e.reply(`文件上传错误：${err.stack}`)
+            await platform.reply(e, `文件上传错误：${err.stack}`)
         }
     }
 
@@ -565,7 +550,7 @@ export default class fCompute {
      * @returns 
      */
     static getAdapterName(e) {
-        return e.bot?.adapter?.name || e.bot?.adapter
+        return platform.getAdapterName(e)
     }
 
     /**

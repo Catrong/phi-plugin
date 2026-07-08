@@ -394,7 +394,7 @@ export default class Save {
 
         let com_rks = sum_rks / 30
 
-        if (option.avgType !== 'none' && await canUseApi(e) !== false && Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (option.avgType !== 'none' && await canUseApi(e) !== false) {
             try {
 
                 if (!option.avgType || option.avgType === "all") {

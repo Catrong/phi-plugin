@@ -171,7 +171,7 @@ export default new class getInfo {
     static initIng = false
 
     async init() {
-        if (!fs.existsSync('./plugins/phi-plugin/resources/original_ill/.git')) {
+        if (!fs.existsSync(path.join(originalIllPath, '.git'))) {
             logger.error(`[phi-plugin] 未下载曲绘文件，建议使用 /phi downill 命令进行下载`)
         }
 

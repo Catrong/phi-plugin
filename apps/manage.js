@@ -1,4 +1,3 @@
-import plugin from '../../../lib/plugins/plugin.js';
 import Config from '../components/Config.js';
 import send from '../model/send.js';
 import picmodle from '../model/picmodle.js';
@@ -12,6 +11,7 @@ import getSave from '../model/getSave.js';
 import { redisPath } from '../model/constNum.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
+import { redis } from '../components/platform/index.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 

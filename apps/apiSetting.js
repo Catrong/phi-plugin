@@ -14,6 +14,7 @@ import logger from '../components/Logger.js'
 import getSaveFromApi from '../model/getSaveFromApi.js'
 import { getApiAccessState } from '../model/apiPermission.js'
 import fCompute from '../model/fCompute.js'
+import platform, { redis } from '../components/platform/index.js'
 
 
 /**@import {botEvent} from '../components/baseClass.js' */
@@ -241,7 +242,7 @@ export class phihelp extends phiPluginBase {
         let resMsg = `已绑定${tokenList.platform_data.length}个平台\n`
 
         tokenList.platform_data.forEach((item, index) => {
-            if (e.bot?.adapter?.name == item.platform_name && e.user_id == item.platform_id) {
+            if (platform.getAdapterName(e) == item.platform_name && e.user_id == item.platform_id) {
                 resMsg += `${index + 1}.（当前）\n`
             } else {
                 resMsg += `${index + 1}.\n`
@@ -471,7 +472,7 @@ export class phihelp extends phiPluginBase {
      */
     async updateUserToken(e) {
         if (!e.isMaster) {
-            e.reply("无权限");
+            send.reply(e, "无权限");
             return false;
         }
 
@@ -503,11 +504,12 @@ export class phihelp extends phiPluginBase {
             if (keys.length > 0) {
                 // 并发获取本批次所有user_token
                 let userIds = keys.map(key => key.replace(`${redisPath}:userToken:`, ''));
+                /**@type {(any | null)[]} */
                 let tokenValues = await Promise.all(keys.map(key =>
-                    // @ts-ignore
                     redis.get(key)
                 ));
                 userIds.forEach((user_id, idx) => {
+                    if (!tokenValues[idx]) return;
                     user_token.push(tokenValues[idx]);
                 });
                 cnt += keys.length;
@@ -554,7 +556,7 @@ export class phihelp extends phiPluginBase {
      */
     async updateComment(e) {
         if (!e.isMaster) {
-            e.reply("无权限");
+            send.reply(e, "无权限");
             return false;
         }
 

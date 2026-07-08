@@ -178,7 +178,7 @@ export class phihelp extends phiPluginBase {
         }
         // console.info(data)
         let plugin_data = await getNotes.getNotesData(e.user_id)
-        e.reply(await picmodle.common(e, 'setting', {
+        send.reply(e, await picmodle.common(e, 'setting', {
             data,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
             theme: plugin_data?.theme || 'star'

@@ -1,4 +1,4 @@
-import common from '../../../lib/common/common.js'
+import common from '../components/common.js'
 import Config from '../components/Config.js';
 import send from '../model/send.js';
 import picmodle from '../model/picmodle.js'
@@ -142,7 +142,7 @@ export class phib19 extends phiPluginBase {
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
         if (!Config.getUserCfg('config', 'isGuild')) {
-            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
         }
 
 
@@ -268,7 +268,7 @@ export class phib19 extends phiPluginBase {
 
 
         if (!Config.getUserCfg('config', 'isGuild'))
-            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
         let save_b19;
         let spInfo = [];
@@ -443,7 +443,7 @@ export class phib19 extends phiPluginBase {
 
 
         if (!Config.getUserCfg('config', 'isGuild'))
-            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
         let save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [acc, 100] }])
         let stats = await save.getStats()
@@ -506,7 +506,7 @@ export class phib19 extends phiPluginBase {
         let numMsg = e.msg.replace(/[#/](.*?)(best)(\s*)/g, '')
 
         if (Number(numMsg) % 1 != 0) {
-            await e.reply(`${numMsg}不是个数字吧！`, true)
+            await send.reply(e, `${numMsg}不是个数字吧！`, true)
             return true
         }
 
@@ -549,7 +549,7 @@ export class phib19 extends phiPluginBase {
             send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
             send.pick_send(e, await common.makeForwardMsg(e, Remsg, undefined))
         } else {
-            e.reply(await common.makeForwardMsg(e, Remsg, undefined))
+            send.reply(e, await common.makeForwardMsg(e, Remsg, undefined))
         }
     }
 

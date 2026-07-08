@@ -3,15 +3,19 @@ import YAML from 'yaml'
 import chokidar from 'chokidar'
 import fs from 'node:fs'
 import YamlReader from './YamlReader.js'
+import { pluginRoot } from '../model/path.js'
+import logger from './Logger.js'
+import platform from './platform/index.js'
 
-const Path = process.cwd()
 const Plugin_Name = 'phi-plugin'
-const Plugin_Path = `${Path}/plugins/${Plugin_Name}`
+const Plugin_Path = pluginRoot
 class Config {
     constructor() {
+        /** @type {Record<string, any>} */
         this.config = {}
 
         /** 监听文件 */
+        /** @type {Record<string, any>} */
         this.watcher = { config: {}, defSet: {} }
 
         this.initCfg()
@@ -93,19 +97,28 @@ class Config {
     }
 
     /** 默认配置 */
+    /**
+     * @param {string} name
+     * @returns {Record<string, any>}
+     */
     getdefSet(name) {
         return this.getYaml('default_config', name)
     }
 
     /** 用户配置 */
+    /**
+     * @param {string} name
+     * @returns {Record<string, any>}
+     */
     getConfig(name) {
         return this.getYaml('config', name)
     }
 
     /**
      * 获取配置yaml
-     * @param type 默认配置-defSet，用户配置-config
-     * @param name 名称
+     * @param {'config'|'default_config'} type 默认配置-defSet，用户配置-config
+     * @param {string} name 名称
+     * @returns {Record<string, any>}
      */
     getYaml(type, name) {
         let file = `${Plugin_Path}/config/${type}/${name}.yaml`
@@ -123,6 +136,11 @@ class Config {
     }
 
     /** 监听配置文件 */
+    /**
+     * @param {string} file
+     * @param {string} name
+     * @param {'config'|'default_config'} [type]
+     */
     watch(file, name, type = 'default_config') {
         let key = `${type}.${name}`
 
@@ -131,10 +149,11 @@ class Config {
         const watcher = chokidar.watch(file)
         watcher.on('change', path => {
             delete this.config[key]
-            if (typeof Bot == 'undefined') return
+            if (!platform.isBotReady()) return
             logger.mark(`[phi修改配置文件][${type}][${name}]`)
-            if (this[`change_${name}`]) {
-                this[`change_${name}`]()
+            const changeHandler = /** @type {Record<string, any>} */ (this)[`change_${name}`]
+            if (typeof changeHandler === 'function') {
+                changeHandler.call(this)
             }
         })
 
@@ -173,7 +192,7 @@ class Config {
     /**
      * @description: 修改配置数组
      * @param {'config'|'nickconfig'} name 文件名
-     * @param {String|Number} key key值
+     * @param {string | number} key key值
      * @param {String|Number} value value
      * @param {'add'|'del'} category 类别 add or del
      * @param {'config'|'default_config'} type 配置文件或默认
@@ -181,11 +200,12 @@ class Config {
     modifyarr(name, key, value, category = 'add', type = 'config') {
         let path = `${Plugin_Path}/config/${type}/${name}.yaml`
         let yaml = new YamlReader(path)
+        const keyPath = String(key)
         if (category == 'add') {
-            yaml.addIn(key, value)
+            yaml.addIn(keyPath, value)
         } else {
-            let index = yaml.jsonData[key].indexOf(value)
-            yaml.delete(`${key}.${index}`)
+            let index = yaml.jsonData[keyPath].indexOf(value)
+            yaml.delete(`${keyPath}.${index}`)
         }
     }
 }

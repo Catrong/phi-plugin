@@ -81,9 +81,6 @@ cmdhead: "phi"
 #  是否启用Phigros联合查分API
 openPhiPluginApi: true
 
-#  检测API状态成功后，是否自动开启API
-autoOpenApi: true
-
 #  输出测试日志
 debug: 0
 

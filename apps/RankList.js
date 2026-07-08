@@ -13,6 +13,7 @@ import saveHistory from '../model/class/saveHistory.js'
 import phiPluginBase from '../components/baseClass.js'
 import { canUseApi } from '../model/apiPermission.js';
 import logger from '../components/Logger.js'
+import platform from '../components/platform/index.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -60,8 +61,7 @@ export class phiRankList extends phiPluginBase {
             let data = {
                 Title: "RankingScore排行榜",
                 totDataNum: 0,
-                // @ts-ignore
-                BotNick: Bot.nickname,
+                BotNick: platform.getBotNickname(e),
                 /** @type {rankingListObject[]} */
                 users: [],
                 me: {},
@@ -92,8 +92,7 @@ export class phiRankList extends phiPluginBase {
         let data = {
             Title: "RankingScore排行榜",
             totDataNum: 0,
-            // @ts-ignore
-            BotNick: Bot.nickname,
+            BotNick: platform.getBotNickname(e),
             /** @type {rankingListObject[]} */
             users: [],
             me: {},

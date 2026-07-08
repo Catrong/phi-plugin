@@ -16,10 +16,10 @@ import { LevelNum } from '../constNum.js';
  */
 
 /**
- * @typedef {object} LevelRecordInfoWithInfo 曲目成绩信息
- * @extends LevelRecordInfoWithoutInfo
- * @property {songString} song 曲名
- * @property {string} illustration 曲绘链接
+ * @typedef {LevelRecordInfoWithoutInfo & {
+ *   song: songString,
+ *   illustration: string
+ * }} LevelRecordInfoWithInfo 曲目成绩信息
  */
 
 /**@type {LevelRecordInfoWithoutInfo | LevelRecordInfoWithInfo} */

@@ -1,4 +1,5 @@
 import Config from '../components/Config.js'
+import autoSeekApi from './autoSeekApi.js'
 import getNotes from './getNotes.js'
 import send from './send.js'
 
@@ -21,7 +22,7 @@ export async function isUserApiEnabled(userId) {
  * @param {import('../components/baseClass.js').botEvent} e
  */
 export async function getApiAccessState(e) {
-    const globalEnabled = !!Config.getUserCfg('config', 'openPhiPluginApi')
+    const globalEnabled = !!autoSeekApi.openPhiPluginApi;
     const userEnabled = await isUserApiEnabled(e?.user_id)
     return {
         globalEnabled,

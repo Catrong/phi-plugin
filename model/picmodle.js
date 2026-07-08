@@ -5,6 +5,8 @@ import fCompute from './fCompute.js'
 import fs from 'node:fs'
 import logger from '../components/Logger.js'
 import segment from '../components/segment.js'
+import path from 'node:path'
+import platform from '../components/platform/index.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -48,7 +50,10 @@ export default await new class picmodle {
             this.puppeteer.push(new puppeteer({
                 puppeteerTimeout: Config.getUserCfg('config', 'timeout')
             }, `${i}`))
-            this.puppeteer[i].browserInit()
+            this.puppeteer[i].browserInit().catch(err => {
+                logger.error(`[Phi-Plugin][渲染器预热失败]`, i)
+                logger.error(err)
+            })
             this.idle.push(i)
         }
         return this;
@@ -327,12 +332,12 @@ export default await new class picmodle {
 
     /**
      * 
-     * @param {string} path 
+     * @param {string} renderPath 
      * @param {any} params 
      * @param {any} cfg 
      * @returns 
      */
-    async render(path, params, cfg) {
+    async render(renderPath, params, cfg) {
         const id = this.tot++
         const waitingTimeout = Config.getUserCfg('config', 'waitingTimeout')
 
@@ -348,7 +353,7 @@ export default await new class picmodle {
 
         this.rendering.add(id)
         try {
-            let [app, tpl] = path.split('/')
+            let [app, tpl] = renderPath.split('/')
             let layoutPath = pluginResources.replace(/\\/g, '/') + `/html/common/layout/`
             let resPath = pluginResources.replace(/\\/g, '/') + `/`
 
@@ -356,7 +361,7 @@ export default await new class picmodle {
             let data = {
                 ...params,
                 saveId: (params.saveId || params.save_id || tpl),
-                tplFile: `./plugins/${Plugin_Name}/resources/html/${app}/${tpl}.art`,
+                tplFile: path.join(pluginResources, 'html', app, `${tpl}.art`).replace(/\\/g, '/'),
                 pluResPath: resPath,
                 _res_path: resPath,
                 _imgPath: imgPath + '/',
@@ -368,7 +373,7 @@ export default await new class picmodle {
                 },
                 sys: {
                     scale: `style="transform:scale(${cfg.scale || 1})"`,
-                    copyright: `Created By Yunzai-Bot<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
+                    copyright: `Created By ${platform.name}<span class="version">${Version.yunzai}</span> & phi-Plugin<span class="version">${Version.ver}</span>`
                 },
                 Version: { ...Version },
                 _plugin: Display_Plugin_Name,
@@ -396,9 +401,11 @@ export default await new class picmodle {
 
     async restart() {
         let num = Config.getUserCfg('config', 'renderNum')
+        const tasks = []
         for (let i = 0; i < num; i++) {
-            this.puppeteer[i].restart(true)
+            if (this.puppeteer[i]) tasks.push(this.puppeteer[i].restart(true))
         }
+        await Promise.allSettled(tasks)
     }
 
 }().init()

@@ -1,5 +1,4 @@
-import common from '../../../lib/common/common.js'
-import plugin from '../../../lib/plugins/plugin.js'
+import common from '../components/common.js'
 import path from 'path'
 import Config from '../components/Config.js'
 import send from '../model/send.js'
@@ -18,6 +17,7 @@ import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 import logger from '../components/Logger.js'
 import { canUseApi } from '../model/apiPermission.js'
+import platform, { redis } from '../components/platform/index.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -312,8 +312,7 @@ export class phimoney extends phiPluginBase {
         }
 
         try {
-            // @ts-ignore
-            const tar = await Bot.pickMember(e.group_id, target);
+            const tar = await platform.pickMember(e, target);
             if (!tar) throw new Error("not found");
         } catch (err) {
             send.send_with_At(e, `这个QQ号……好像没有见过呢……`);
@@ -359,9 +358,9 @@ export class phimoney extends phiPluginBase {
         getNotes.putNotesData(e.user_id, sender_data)
 
         getNotes.putNotesData(target, target_data)
-        // @ts-ignore
-        let target_card = await Bot.pickMember(e.group_id, target)
-        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.money}\n${target_card.nickname || target_card.card}的Note: ${target_old} + ${Math.ceil(num * 0.8)} = ${target_data.money}`)
+        let target_card = await platform.pickMember(e, target)
+        const targetName = target_card?.nickname || target_card?.card || target
+        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.money}\n${targetName}的Note: ${target_old} + ${Math.ceil(num * 0.8)} = ${target_data.money}`)
     }
 
     /**
@@ -901,10 +900,10 @@ function buildCalendar(year, month, signHistory, todayKey) {
 async function createJrrp(e) {
     try {
         // @ts-ignore
-        let data = await redis.get(`${redisPath}:jrrp:${e.user_id}`)
-        if (data) {
+        let cacheText = await redis.get(`${redisPath}:jrrp:${e.user_id}`)
+        if (cacheText) {
             try {
-                const arr = JSON.parse(data)
+                const arr = JSON.parse(cacheText)
                 const quote = await pickSentenceText(arr?.[1])
                 return {
                     lucky: Number(arr?.[0]) || 0,
@@ -944,7 +943,8 @@ async function createJrrp(e) {
         if (local_sentence.length !== sentence?.length) {
             sentenceIndex = local_sentence[sentenceIndex];
         }
-        data = [luckyNum, sentenceIndex];
+        /** @type {any[]} */
+        const data = [luckyNum, sentenceIndex];
         if (luckyNum == 100) {
             data.push(..."诸事皆宜诸事皆宜".split(""));
         } else if (luckyNum == 0) {

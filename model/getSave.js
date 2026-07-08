@@ -7,7 +7,7 @@ import saveHistory from './class/saveHistory.js'
 import { redisPath } from './constNum.js'
 import getRksRank from './getRksRank.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
-// import { redis } from 'yunzai'
+import { redis } from '../components/platform/index.js'
 
 export default class getSave {
 

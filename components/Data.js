@@ -1,17 +1,30 @@
 import lodash from 'lodash'
 import fs from 'fs'
+import { pluginRoot } from '../model/path.js'
+import logger from './Logger.js'
+import { redis } from './platform/index.js'
 
-const _path = process.cwd()
-const plugin = 'phi-plugin'
+/**
+ * @param {string} [root]
+ * @returns {string}
+ */
 const getRoot = (root = '') => {
     if (root === 'root' || root === 'yunzai') {
-        root = `${_path}/`
+        root = `${process.cwd()}/`
     } else if (!root) {
-        root = `${_path}/plugins/${plugin}/`
+        root = `${pluginRoot}/`
     }
     return root
 }
 
+/**
+ * @typedef {object} DataPickOptions
+ * @property {Record<string, any>} [defaultData]
+ * @property {boolean} [lowerFirstKey]
+ * @property {string} [keyPrefix]
+ */
+
+/** @type {Record<string, any>} */
 let Data = {
 
     /*
@@ -48,6 +61,12 @@ let Data = {
     },
 
     /** 写JSON */
+    /**
+     * @param {string} file
+     * @param {unknown} data
+     * @param {string} [root]
+     * @param {string | number} [space]
+     */
     writeJSON(file, data, root = '', space = '\t') {
         // 检查并创建目录
         Data.createDir(file, root, true)
@@ -62,6 +81,9 @@ let Data = {
         }
     },
 
+    /**
+     * @param {string} key
+     */
     async getCacheJSON(key) {
         try {
             let txt = await redis.get(key)
@@ -74,10 +96,19 @@ let Data = {
         return {}
     },
 
+    /**
+     * @param {string} key
+     * @param {unknown} data
+     * @param {number} [EX]
+     */
     async setCacheJSON(key, data, EX = 3600 * 24 * 90) {
         await redis.set(key, JSON.stringify(data), { EX })
     },
 
+    /**
+     * @param {string} file
+     * @param {string} [root]
+     */
     async importModule(file, root = '') {
         root = getRoot(root)
         if (!/\.js$/.test(file)) {
@@ -85,7 +116,7 @@ let Data = {
         }
         if (fs.existsSync(`${root}/${file}`)) {
             try {
-                let data = await import(`file://${root}/${file}?t=${new Date() * 1}`)
+                let data = await import(`file://${root}/${file}?t=${Date.now()}`)
                 return data || {}
             } catch (e) {
                 logger.error(e)
@@ -94,15 +125,25 @@ let Data = {
         return {}
     },
 
+    /**
+     * @param {string} file
+     * @param {string} [root]
+     */
     async importDefault(file, root) {
         let ret = await Data.importModule(file, root)
         return ret.default || {}
     },
 
+    /**
+     * @param {string} name
+     */
     async import(name) {
         return await Data.importModule(`components/optional-lib/${name}.js`)
     },
 
+    /**
+     * @param {string} key
+     */
     async importCfg(key) {
         let sysCfg = await Data.importModule(`config/system/${key}_system.js`)
         let diyCfg = await Data.importModule(`config/${key}.js`)
@@ -128,9 +169,15 @@ let Data = {
     *
     * */
 
+    /**
+     * @param {Record<string, any>} target
+     * @param {string | string[]} [keyList]
+     * @param {DataPickOptions} [cfg]
+     */
     getData(target, keyList = '', cfg = {}) {
         target = target || {}
         let defaultData = cfg.defaultData || {}
+        /** @type {Record<string, any>} */
         let ret = {}
         // 分割逗号
         if (typeof (keyList) === 'string') {
@@ -155,13 +202,27 @@ let Data = {
         return ret
     },
 
+    /**
+     * @param {Record<string, any>} target
+     * @param {string} keyFrom
+     * @param {unknown} defaultValue
+     */
     getVal(target, keyFrom, defaultValue) {
         return lodash.get(target, keyFrom, defaultValue)
     },
 
     // 异步池，聚合请求
+    /**
+     * @template T, R
+     * @param {number} poolLimit
+     * @param {T[]} array
+     * @param {(item: T, array: T[]) => R | Promise<R>} iteratorFn
+     * @returns {Promise<R[]>}
+     */
     async asyncPool(poolLimit, array, iteratorFn) {
+        /** @type {Promise<R>[]} */
         const ret = [] // 存储所有的异步任务
+        /** @type {Promise<void>[]} */
         const executing = [] // 存储正在执行的异步任务
         for (const item of array) {
             // 调用iteratorFn函数创建异步任务
@@ -172,8 +233,12 @@ let Data = {
             // 当poolLimit值小于或等于总任务个数时，进行并发控制
             if (poolLimit <= array.length) {
                 // 当任务完成后，从正在执行的任务数组中移除已完成的任务
-                const e = p.then(() => executing.splice(executing.indexOf(e), 1))
+                const e = p.then(() => undefined)
                 executing.push(e) // 保存正在执行的异步任务
+                void e.then(() => {
+                    const index = executing.indexOf(e)
+                    if (index >= 0) executing.splice(index, 1)
+                })
                 if (executing.length >= poolLimit) {
                     // 等待较快的任务执行完成
                     await Promise.race(executing)
@@ -184,6 +249,9 @@ let Data = {
     },
 
     // sleep
+    /**
+     * @param {number} ms
+     */
     sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms))
     },
@@ -198,6 +266,10 @@ let Data = {
     },
 
     // 循环字符串回调
+    /**
+     * @param {string | number | Array<string | number>} arr
+     * @param {(value: string | number, index: number | string) => void} fn
+     */
     eachStr: (arr, fn) => {
         if (lodash.isString(arr)) {
             arr = arr.replace(/\s*(;|；|、|，)\s*/, ',')
@@ -207,11 +279,17 @@ let Data = {
         }
         lodash.forEach(arr, (str, idx) => {
             if (!lodash.isUndefined(str)) {
-                fn(str.trim ? str.trim() : str, idx)
+                const value = typeof str === 'string' ? str.trim() : str
+                fn(value, idx)
             }
         })
     },
 
+    /**
+     * @param {RegExp} reg
+     * @param {string} txt
+     * @param {number} idx
+     */
     regRet(reg, txt, idx) {
         if (reg && txt) {
             let ret = reg.exec(txt)

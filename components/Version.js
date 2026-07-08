@@ -1,11 +1,11 @@
 
 import fs from 'fs'
-import cfg from '../../../lib/config/config.js'
 import { pluginRoot } from '../model/path.js'
 import logger from './Logger.js'
 import chokidar from 'chokidar'
+import platform from './platform/index.js'
 const README_path = `${pluginRoot}/README.md`
-const yunzai_ver = `v${cfg.package.version}`
+const yunzai_ver = `v${platform.getPackageVersion()}`
 
 let currentVersion = ''
 let phigrosVer = ''

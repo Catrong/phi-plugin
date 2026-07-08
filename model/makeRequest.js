@@ -1,9 +1,9 @@
 import axios from 'axios';
-import https from 'node:https';
 import { Config } from '../components/index.js';
 import saveHistory from './class/saveHistory.js';
 import logger from '../components/Logger.js';
 import { APIBASEURL } from './constNum.js';
+import autoSeekApi from './autoSeekApi.js';
 
 
 /**
@@ -183,7 +183,7 @@ import { APIBASEURL } from './constNum.js';
  * @property {boolean} record.fc 是否FC
  * @property {number} record.updated_at 成绩更新时间
  */
-/** 
+/**
  * scoreList响应数据主体
  * @typedef {Object} ScoreListResponseData
  * @property {number} totDataNum 数据总数
@@ -251,9 +251,41 @@ import { APIBASEURL } from './constNum.js';
  */
 
 /**
+ * 谱面标签有效票数映射。分类标签的计数为其下细分标签数量/票数聚合，细分标签为实际投票项。
+ * @typedef {Record<chartsTagString, number>} chartsTagVoteCountMap
+ */
+
+/**
  * @typedef {object} chartsTagRequestData
  * @property {idString} song_id 曲目ID
  * @property {levelKind[]} [rank] 难度
+ */
+
+/**
+ * 谱面标签树节点。
+ * parentId 为空时为分类标签；有 parentId 时通常为细分标签。
+ * @typedef {object} ChartTagTreeNode
+ * @property {number} [id] 标签ID
+ * @property {chartsTagString} name 标签名
+ * @property {number | null} [parentId] 父标签ID，分类标签为空
+ * @property {'category' | 'detail'} [kind] 标签节点类型
+ * @property {string | null} [description] 标签描述
+ * @property {string | null} [icon] 标签图标
+ * @property {number} [sortOrder] 排序权重
+ * @property {number} [status] 状态
+ * @property {number} voteCount 展示用有效票数
+ * @property {number} [primaryVoteCount] 主要票数量
+ * @property {number} [secondaryVoteCount] 次要票数量
+ * @property {ChartTagTreeNode[]} children 子标签
+ */
+
+/**
+ * 谱面标签统计响应，data 为平铺有效票数，tree 为分类/细分树。
+ * @typedef {object} ChartTagSongRankResponse
+ * @property {chartsTagVoteCountMap} data 平铺有效票数
+ * @property {chartsTagVoteCountMap} [primary] 主要票统计
+ * @property {chartsTagVoteCountMap} [secondary] 次要票统计
+ * @property {ChartTagTreeNode[]} tree 标签树
  */
 
 /**
@@ -262,16 +294,28 @@ import { APIBASEURL } from './constNum.js';
  * @property {idString} songId 曲目ID
  * @property {levelKind} rank 难度
  * @property {string} time 时间
- * @property {chartsTagString[]} tags 标签内容
+ * @property {chartsTagString[]} tags 标签内容，旧字段；没有区分主要/次要时使用
+ * @property {chartsTagString[]} [primaryTags] 主要票标签
+ * @property {chartsTagString[]} [secondaryTags] 次要票标签
  */
 
-const agent = new https.Agent({ rejectUnauthorized: false });
+/**
+ * 设置谱面标签投票请求。
+ * content 为旧字段；新版后端优先读取 primaryTags / secondaryTags。
+ * @typedef {highAu & {
+ *   song_id: idString,
+ *   rank: levelKind,
+ *   content?: chartsTagString[],
+ *   primaryTags?: chartsTagString[],
+ *   secondaryTags?: chartsTagString[]
+ * }} setChartsTagParams
+ */
 
 export default class makeRequest {
 
     /**
      * 绑定平台账号与用户Token/getPgrToken
-     * @param {baseAu & {isGlobal?: boolean}} params 
+     * @param {baseAu & {isGlobal?: boolean}} params
      * @returns {Promise<BindSuccessResponse>}
      */
     static async bind(params) {
@@ -280,7 +324,7 @@ export default class makeRequest {
 
     /**
      * 解绑用户的某个平台账号
-     * @param {object} params 
+     * @param {object} params
      * @param {string} params.platform 平台名称
      * @param {string} params.platform_id 用户平台内id
      * @returns {Promise<{message: string}>}
@@ -291,7 +335,7 @@ export default class makeRequest {
 
     /**
      * 清空用户数据
-     * @param {highAu} params 
+     * @param {highAu} params
      * @returns {Promise<{message: string}>}
      */
     static async clear(params) {
@@ -300,7 +344,7 @@ export default class makeRequest {
 
     /**
      * 设置或更新用户的 API Token
-     * @param {highAu & {token_new: string}} params 
+     * @param {highAu & {token_new: string}} params
      * @returns {Promise<{message: string}>}
      */
     static async setApiToken(params) {
@@ -309,7 +353,7 @@ export default class makeRequest {
 
     /**
      * 获取用户的 PgrToken
-     * @param {highAu} params 
+     * @param {highAu} params
      * @returns {Promise<{apiId: apiUserId, token: phigrosToken}>}
      */
     static async getPgrToken(params) {
@@ -318,7 +362,7 @@ export default class makeRequest {
 
     /**
      * 获取用户已绑定的所有平台账号
-     * @param {highAu} params 
+     * @param {highAu} params
      * @returns {Promise<UserResponse>}
      */
     static async tokenList(params) {
@@ -326,8 +370,8 @@ export default class makeRequest {
     }
 
     /**
-     * 
-     * @param {highAu & {data: tokenManageParams}} params 
+     *
+     * @param {highAu & {data: tokenManageParams}} params
      * @returns {Promise<{message: string}>}
      */
     static async tokenManage(params) {
@@ -345,7 +389,7 @@ export default class makeRequest {
 
     /**
      * 获取用户云存档数据
-     * @param {baseAu} params 
+     * @param {baseAu} params
      * @returns {Promise<oriSave>}
      */
     static async getCloudSaves(params) {
@@ -354,7 +398,7 @@ export default class makeRequest {
 
     /**
      * 获取用户云存档saveInfo数据
-     * @param {baseAu} params 
+     * @param {baseAu} params
      * @returns {Promise<saveInfo>}
      */
     static async getCloudSaveInfo(params) {
@@ -363,7 +407,7 @@ export default class makeRequest {
 
     /**
      * 根据用户获取排行榜相关信息
-     * @param {baseAu} params 
+     * @param {baseAu} params
      * @returns {Promise<ranklistResponseData>}
      */
     static async getRanklistUser(params) {
@@ -372,7 +416,7 @@ export default class makeRequest {
 
     /**
      * 根据名次获取排行榜相关信息
-     * @param {object} params 
+     * @param {object} params
      * @param {number} params.request_rank 请求的排名
      * @returns {Promise<ranklistResponseData>}
      */
@@ -463,7 +507,7 @@ export default class makeRequest {
 
     /**
      * 获取所有谱面acc排行列表
-     * @param {{queries: {songId: idString, rank: levelKind, acc: number}[], dimension:("all" | "b30")[], minRks?: number, maxRks?: number}} params 
+     * @param {{queries: {songId: idString, rank: levelKind, acc: number}[], dimension:("all" | "b30")[], minRks?: number, maxRks?: number}} params
      * @returns {Promise<Record<"all" | "b30", {songId: idString, rank: levelKind, acc: number, topPercent: number, betterCount: number, totalCount: number}[]>>}
      */
     static async getAllSongAccRank(params) {
@@ -472,19 +516,19 @@ export default class makeRequest {
 
     /**
      * @overload
-     * @param {baseAu} params 
+     * @param {baseAu} params
      * @returns {Promise<saveHistoryObject>}
      */
     /**
      * @template {keyof saveHistoryObject} K
      * @overload
-     * @param {baseAu & {request: K[]}} params 
+     * @param {baseAu & {request: K[]}} params
      * @returns {Promise<Pick<saveHistoryObject, K>>}
      */
     /**
      * 获取用户data历史记录
      * @template {keyof saveHistoryObject} K
-     * @param {baseAu & {request?: K[]}} params 
+     * @param {baseAu & {request?: K[]}} params
      * @returns {Promise<Partial<saveHistoryObject>>}
      */
     static async getHistory(params) {
@@ -493,7 +537,7 @@ export default class makeRequest {
 
     /**
      * @overload
-     * @param {baseAu} params 
+     * @param {baseAu} params
      * @returns {Promise<{data: scoreHistoryObject}>}
      */
     /**
@@ -508,7 +552,7 @@ export default class makeRequest {
      */
     /**
      * 获取用户成绩历史记录
-     * @param {baseAu & Partial<songInfoRequest>} params 
+     * @param {baseAu & Partial<songInfoRequest>} params
      * @returns {Promise<{
      *   data: ScoreDetail[] | songRecordHistory | scoreHistoryObject
      * }>}
@@ -519,7 +563,7 @@ export default class makeRequest {
 
     /**
      * 上传用户的历史记录
-     * @param {baseAu & {data: saveHistory}} params 
+     * @param {baseAu & {data: saveHistory}} params
      * @returns {Promise<{message: string}>}
      */
     static async setHistory(params) {
@@ -528,7 +572,7 @@ export default class makeRequest {
 
     /**
      * 上传用户tk
-     * @param {{data: phigrosToken[]}} params 
+     * @param {{data: phigrosToken[]}} params
      * @returns {Promise<{message: string}>}
      */
     static async setUsersToken(params) {
@@ -537,7 +581,7 @@ export default class makeRequest {
 
     /**
      * 查询用户是否被禁用
-     * @param {baseAu} params 
+     * @param {baseAu} params
      * @returns {Promise<boolean>}
      */
     static async getUserBan(params) {
@@ -546,7 +590,7 @@ export default class makeRequest {
 
     /**
      * 获取歌曲评论
-     * @param {{song_id: idString}} params 
+     * @param {{song_id: idString}} params
      * @returns {Promise<APICommentObject[]>}
      */
     static async getCommentsBySongId(params) {
@@ -555,7 +599,7 @@ export default class makeRequest {
 
     /**
      * 获取歌曲评论
-     * @param {baseAu} params 
+     * @param {baseAu} params
      * @returns {Promise<APICommentObject[]>}
      */
     static async getCommentsByUserId(params) {
@@ -564,7 +608,7 @@ export default class makeRequest {
 
     /**
      * 添加单条评论
-     * @param {highAu & {data: {comment: APIUpdateCommentObject}}} params 
+     * @param {highAu & {data: {comment: APIUpdateCommentObject}}} params
      * @returns {Promise<{message: string}>}
      */
     static async addComment(params) {
@@ -573,7 +617,7 @@ export default class makeRequest {
 
     /**
      * 删除单条评论
-     * @param {highAu & {comment_id: string}} params 
+     * @param {highAu & {comment_id: string}} params
      * @returns {Promise<{message: string}>}
      */
     static async delComment(params) {
@@ -582,7 +626,7 @@ export default class makeRequest {
 
     /**
      * 批量添加评论
-     * @param {{data: import('./getComment.js').commentObject[]}} params 
+     * @param {{data: import('./getComment.js').commentObject[]}} params
      * @returns {Promise<{message: string}>}
      */
     static async updateComments(params) {
@@ -598,17 +642,35 @@ export default class makeRequest {
     }
 
     /**
+     * 获取谱面标签树
+     * @returns {Promise<ChartTagTreeNode[]>}
+     */
+    static async getChartsTagsTree() {
+        return (await makeFetch(burl('/chartsTag/get/tagTree'), {}, 'GET')).data
+    }
+
+    /**
      * 获取谱面标签信息
-     * @param {{song_id: idString, rank: levelKind}} params 
-     * @returns {Promise<{[tag: chartsTagString]: number}>}
+     * @param {{song_id: idString, rank: levelKind}} params
+     * @returns {Promise<chartsTagVoteCountMap>}
      */
     static async getChartsTagbySongRank(params) {
         return (await makeFetch(burl('/chartsTag/get/bySongRank'), params)).data
     }
 
     /**
-     * 
-     * @param {baseAu & {data: chartsTagRequestData[]}} params 
+     * 获取谱面标签信息，包含分类计数树
+     * @param {{song_id: idString, rank: levelKind}} params
+     * @returns {Promise<ChartTagSongRankResponse>}
+     */
+    static async getChartsTagbySongRankWithTree(params) {
+        return await makeFetch(burl('/chartsTag/get/bySongRank'), params)
+    }
+
+
+    /**
+     * 获取用户对谱面标签的投票记录
+     * @param {baseAu & {data: chartsTagRequestData[]}} params
      * @returns {Promise<chartsTagResponseData[]>}
      */
     static async getChartsUsersVote(params) {
@@ -617,7 +679,7 @@ export default class makeRequest {
 
     /**
      * 用户设置谱面标签
-     * @param {highAu & {song_id: idString, rank: levelKind, content: chartsTagString[]}} params 
+     * @param {setChartsTagParams} params
      * @returns {Promise<{message: string}>}
      */
     static async setChartsTag(params) {
@@ -626,7 +688,7 @@ export default class makeRequest {
 
     /**
      * 获取用户设置
-     * @param {highAu} params 
+     * @param {highAu} params
      * @returns {Promise<userSetting>}
      */
     static async getUserSetting(params) {
@@ -635,7 +697,7 @@ export default class makeRequest {
 
     /**
      * 设置用户设置
-     * @param {highAu & {setting: userSetting}} params 
+     * @param {highAu & {setting: userSetting}} params
      * @returns {Promise<userSetting>}
      */
     static async setUserSetting(params) {
@@ -654,11 +716,11 @@ export default class makeRequest {
 const TIMEOUT = 5000; // 5秒超时
 
 /**
- * 
- * @param {string} url 
- * @param {any} [params] 
- * @param {'POST'|'GET'} [method='POST'] 
- * @returns 
+ *
+ * @param {string} url
+ * @param {any} [params]
+ * @param {'POST'|'GET'} [method='POST']
+ * @returns
  */
 async function makeFetch(url, params, method = 'POST') {
     if (Config.getUserCfg('config', 'debug') > 3) {
@@ -680,6 +742,7 @@ async function makeFetch(url, params, method = 'POST') {
     } catch (err) {
         // @ts-ignore
         logger.error(`请求失败: ${url}`, err?.message || err?.cause || String(err) || '未知错误');
+        autoSeekApi.seekApi();
         throw new Error('API离线');
     }
     if (!result) {
@@ -697,8 +760,8 @@ async function makeFetch(url, params, method = 'POST') {
 
 /**
  * 拼接基础URL
- * @param {string} path 
- * @returns 
+ * @param {string} path
+ * @returns
  */
 function burl(path) {
     return `${APIBASEURL}${path}`

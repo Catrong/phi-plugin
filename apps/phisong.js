@@ -1,5 +1,5 @@
 // import get from '../model/getdata.js'
-import common from "../../../lib/common/common.js"
+import common from "../components/common.js"
 import Config from '../components/Config.js'
 import send from '../model/send.js'
 import getInfo from '../model/getInfo.js'
@@ -268,7 +268,7 @@ export class phisong extends phiPluginBase {
                 send.pick_send(e, await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
 
             } else {
-                e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
+                send.reply(e, await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
             }
         } else {
             let Resmsg = [`当前筛选：${filters.bpm ? `\nBPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `\n定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? `\n物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`]
@@ -281,7 +281,7 @@ export class phisong extends phiPluginBase {
                 }
                 Resmsg.push(msg)
             }
-            e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目喵！`))
+            send.reply(e, await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目喵！`))
         }
 
     }
@@ -293,7 +293,7 @@ export class phisong extends phiPluginBase {
      */
     async setnick(e) {
         if (!(e.is_admin || e.isMaster)) {
-            e.reply("只有管理员可以设置别名哦！")
+            send.reply(e, "只有管理员可以设置别名哦！")
             return true
         }
         let msg = e.msg.replace(/[#/](.*?)(设置别名|setnic(k?))(\s*)/g, "")
@@ -311,19 +311,19 @@ export class phisong extends phiPluginBase {
             if (P0Ids[0]) {
                 P0Id = P0Ids[0]
             } else {
-                e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
+                send.reply(e, `输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
                 return true
             }
             if (P0Id in getInfo.fuzzysongsnick(parts[1], 1)) {
                 /**已经添加过该别名 */
-                e.reply(`${P0Id} 已经有 ${parts[1]} 这个别名了哦！`)
+                send.reply(e, `${P0Id} 已经有 ${parts[1]} 这个别名了哦！`)
                 return true
             } else {
                 getInfo.setnick(P0Id, parts[1])
-                e.reply("设置完成！")
+                send.reply(e, "设置完成！")
             }
         } else {
-            e.reply(`输入有误哦！请按照\n原名（或已有别名） ---> 别名\n的格式发送哦！`)
+            send.reply(e, `输入有误哦！请按照\n原名（或已有别名） ---> 别名\n的格式发送哦！`)
         }
         return true
     }

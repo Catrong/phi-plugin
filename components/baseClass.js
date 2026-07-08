@@ -1,15 +1,20 @@
-import plugin from '../../../lib/plugins/plugin.js'
 import Config from './Config.js'
 import send from "../model/send.js";
 import fCompute from '../model/fCompute.js'
 import getInfo from '../model/getInfo.js';
 import logger from './Logger.js';
+import platform from './platform/index.js';
+
+/** @import {PlatformEvent, PlatformMessageInput, PlatformPluginConfig, PlatformUserId} from './platform/types.js' */
+
+const HostPlugin = platform.PluginBase
+const wrappedHandlerSymbol = Symbol('phi.wrappedHandler')
 
 
 /**
  * @typedef {object} botEventObj
  * @property {string} msg 消息内容
- * @property {string} user_id 发送者ID
+ * @property {PlatformUserId} user_id 发送者ID
  * @property {boolean} isGroup 是否群消息
  * @property {boolean} isPrivate 是否私聊消息 
  */
@@ -17,7 +22,7 @@ import logger from './Logger.js';
 /**
  * @typedef {object} botEventGroup
  * @property {true} isGroup 是否群消息
- * @property {string} group_id 群ID
+ * @property {PlatformUserId} group_id 群ID
  */
 
 /**
@@ -25,7 +30,7 @@ import logger from './Logger.js';
  * @property {true} isPrivate 是否私聊消息
  */
 
-/**@typedef {botEventObj & (botEventGroup | botEventPrivate) & Object.<string, any>} botEvent */
+/**@typedef {PlatformEvent & botEventObj & (botEventGroup | botEventPrivate) & Object.<string, any>} botEvent */
 
 /** 
  * @template {any} T
@@ -49,29 +54,13 @@ const wait_to_chose_song = {}
  */
 
 
-export default class phiPluginBase extends plugin {
+export default class phiPluginBase extends HostPlugin {
+  /** @type {botEvent} */
+  e
+
 
   /**
-   * @param {object} config 配置项
-   * @param {string} [config.name="your-plugin"] 插件名称
-   * @param {string} [config.dsc="无"] 插件描述
-   * @param {object} [config.handler] handler配置
-   * @param {string} [config.handler.key] handler支持的事件key
-   * @param {function} [config.handler.fn] handler的处理func
-   * @param {string} [config.namespace] namespace，设置handler时建议设置
-   * @param {string} [config.event="message"] 执行事件，默认message
-   * @param {number} [config.priority=5000] 优先级，数字越小优先级越高
-   * @param {object[]} [config.rule=[]] 命令配置
-   * @param {string} config.rule[].reg 命令正则
-   * @param {string} config.rule[].fnc 命令执行方法
-   * @param {string} [config.rule[].event] 执行事件，默认message
-   * @param {boolean} [config.rule[].log] false时不显示执行日志
-   * @param {string} [config.rule[].permission] 权限 master,owner,admin,all
-   * @param {object} [config.task] 定时任务配置
-   * @param {string} config.task.name 定时任务名称
-   * @param {string} config.task.cron 定时任务cron表达式
-   * @param {string} config.task.fnc 定时任务方法名
-   * @param {boolean} config.task.log false时不显示执行日志
+   * @param {PlatformPluginConfig} config 配置项
    */
   constructor({
     name = "your-plugin",
@@ -90,8 +79,71 @@ export default class phiPluginBase extends plugin {
     });
 
     /** @type {botEvent} */
-    this.e = { msg: '', user_id: '', isGroup: false, isPrivate: true } // 占位用;
+    this.e = platform.wrapEvent({ msg: '', user_id: '', isGroup: false, isPrivate: true }) // 占位用;
+    this.wrapPlatformHandlers()
 
+  }
+
+  /** @returns {void} */
+  wrapPlatformHandlers() {
+    for (const item of this.rule || []) {
+      if (item?.fnc) this.wrapPlatformHandler(item.fnc)
+    }
+  }
+
+  /**
+   * @param {string} key
+   * @returns {void}
+   */
+  wrapPlatformHandler(key) {
+    const fn = this[key]
+    if (typeof fn !== 'function') return
+    const typedFn = /** @type {Function & Record<symbol, unknown>} */ (fn)
+    if (typedFn[wrappedHandlerSymbol]) return
+    const wrapped = (/** @type {any[]} */ ...args) => {
+      if (args[0] && typeof args[0] === 'object') {
+        args[0] = this.wrapPlatformEvent(args[0])
+      } else if (this.e) {
+        this.e = this.wrapPlatformEvent(this.e)
+      }
+      return typedFn.apply(this, args)
+    }
+    wrapped[wrappedHandlerSymbol] = true
+    this[key] = wrapped
+  }
+
+  /**
+   * @param {botEvent} e
+   * @returns {botEvent}
+   */
+  wrapPlatformEvent(e) {
+    this.e = platform.wrapEvent(e)
+    return this.e
+  }
+
+  /**
+   * @param {PlatformMessageInput} [msg]
+   * @param {boolean} [quote]
+   * @param {Record<string, unknown>} [data]
+   */
+  reply(msg = '', quote = false, data = {}) {
+    return platform.reply(this.e, msg, { quote, ...data })
+  }
+
+  /**
+   * @param {...any} args
+   */
+  setContext(...args) {
+    if (this.e) this.e = platform.wrapEvent(this.e)
+    if (typeof args[0] === 'string') this.wrapPlatformHandler(args[0])
+    return super.setContext?.(...args)
+  }
+
+  /**
+   * @param {...any} args
+   */
+  finish(...args) {
+    return super.finish?.(...args)
   }
 
   /**
@@ -102,6 +154,7 @@ export default class phiPluginBase extends plugin {
    * @param {mutiNickCallback<T>} callback 
    */
   choseMutiNick(e, idList, options, callback) {
+    e = this.wrapPlatformEvent(e)
     if (idList.length === 0) {
       send.send_with_At(e, `未找到相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
       return;
@@ -121,6 +174,7 @@ export default class phiPluginBase extends plugin {
   }
 
   async mutiNick() {
+    this.e = this.wrapPlatformEvent(this.e)
     const { msg } = this.e;
     const num = Number(msg.match(/([0-9]+)/)?.[0]);
     const ids = wait_to_chose_song[this.e.user_id]?.ids || [];

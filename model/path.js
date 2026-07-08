@@ -1,13 +1,16 @@
 import path from 'path'
+import { fileURLToPath } from 'url'
 
-/**Yunzai-Bot 根目录 */
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+/**宿主进程根目录 */
 export const _path = process.cwd()
-// export const _path = process.cwd().replace(/\\/g, '/')
 
 /**插件名 */
-export const pluginName = path.basename(path.join(import.meta.url, '../../'))
+export const pluginName = path.basename(path.resolve(__dirname, '..'))
 /**插件根目录 */
-export const pluginRoot = path.join(_path, 'plugins', pluginName)
+export const pluginRoot = path.resolve(__dirname, '..')
 /**插件临时文件目录 */
 export const tempPath = path.join(pluginRoot, 'temp')
 /**插件资源目录 */

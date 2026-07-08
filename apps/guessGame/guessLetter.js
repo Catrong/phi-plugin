@@ -119,7 +119,7 @@ export default class guessLetter {
         const { group_id } = e // 使用对象解构提取group_id
 
         if (letterGameData[group_id]) {
-            e.reply(`喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'/第X个XXXX'来猜曲名或者'/出X'来揭开字母吧！结束请发 /${Config.getUserCfg('config', 'cmdhead')} ans 嗷！`, true)
+            send.reply(e, `喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'/第X个XXXX'来猜曲名或者'/出X'来揭开字母吧！结束请发 /${Config.getUserCfg('config', 'cmdhead')} ans 嗷！`, true)
             return true
         }
 
@@ -151,7 +151,7 @@ export default class guessLetter {
         }
 
         if (allSelectSongId.length < Config.getUserCfg('config', 'LetterNum')) {
-            e.reply("曲库中曲目的数量小于开字母的条数哦！更改曲库后需要重启哦！")
+            send.reply(e, "曲库中曲目的数量小于开字母的条数哦！更改曲库后需要重启哦！")
             return true
         }
 
@@ -182,7 +182,7 @@ export default class guessLetter {
                 ++cnnt
                 if (cnnt >= 50) {
                     logger.error(`[phi-plugin][letter]抽取曲目失败，请检查曲库设置`)
-                    e.reply(`抽取曲目失败，请检查曲库设置`)
+                    send.reply(e, `抽取曲目失败，请检查曲库设置`)
                     return
                 }
                 randId = getRandomSong(e, allSelectSongId)
@@ -204,7 +204,7 @@ export default class guessLetter {
         }
 
         // 输出提示信息
-        e.reply(`开字母开启成功！回复'/nX. XXXX'命令猜歌，例如：/n1. Reimei;发送'/open X'来揭开字母(不区分大小写，不需要指令头)，如'/open A';发送'/${Config.getUserCfg('config', 'cmdhead')} ans'结束并查看答案哦！`)
+        send.reply(e, `开字母开启成功！回复'/nX. XXXX'命令猜歌，例如：/n1. Reimei;发送'/open X'来揭开字母(不区分大小写，不需要指令头)，如'/open A';发送'/${Config.getUserCfg('config', 'cmdhead')} ans'结束并查看答案哦！`)
 
         // 延时1s
         await timeout(1 * 1000)
@@ -221,7 +221,7 @@ export default class guessLetter {
         }
 
         if (letterGameData[group_id]) {
-            await e.reply('呜，怎么还没有人答对啊QAQ！只能说答案了喵……')
+            await send.reply(e, '呜，怎么还没有人答对啊QAQ！只能说答案了喵……')
             tryToSendMd(e, (t) => gameover(group_id, gameList, t));
 
             return true
@@ -239,7 +239,7 @@ export default class guessLetter {
         timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
         if (!letterGameData[group_id]) {
-            e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} ltr'开始新的一局吧！`, true)
+            send.reply(e, `现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} ltr'开始新的一局吧！`, true)
             return false
         }
 
@@ -251,7 +251,7 @@ export default class guessLetter {
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
 
         if (timetik < 1000 * time) {
-            e.reply(`翻字符的全局冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
+            send.reply(e, `翻字符的全局冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
             return true
         }
 
@@ -265,7 +265,7 @@ export default class guessLetter {
             let included = false
 
             if (currentGame.alphalist.includes(letter.toUpperCase())) {
-                e.reply(`字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！`, true)
+                send.reply(e, `字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！`, true)
                 return true
             }
 
@@ -352,7 +352,7 @@ export default class guessLetter {
 
         //上一轮猜测的Cd还没过
         if (timetik < 1000 * time) {
-            e.reply(`猜测的冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
+            send.reply(e, `猜测的冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
             return true
         }
 
@@ -391,7 +391,7 @@ export default class guessLetter {
         const content = result[2]
 
         if (num > Config.getUserCfg('config', 'LetterNum') || num <= 0) {
-            e.reply(`没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
+            send.reply(e, `没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
             return true
         }
 
@@ -402,14 +402,14 @@ export default class guessLetter {
         const standard_name = currentGame.ansList[num] // 标准答案名称
 
         if (!ids[0]) {
-            e.reply(`没有找到[${content}]的曲目信息呐QAQ`, true)
+            send.reply(e, `没有找到[${content}]的曲目信息呐QAQ`, true)
             return true
         }
         for (const id of ids) {
             if (standard_id === id) {
                 //已经猜完移除掉的曲目不能再猜
                 if (!currentGame.blurlist[num]) {
-                    e.reply(`曲目[${standard_name}]已经猜过了，要不咱们换一个吧uwu`)
+                    send.reply(e, `曲目[${standard_name}]已经猜过了，要不咱们换一个吧uwu`)
                     return true
                 }
 
@@ -422,11 +422,11 @@ export default class guessLetter {
                 if (info?.illustration) { //如果有曲绘文件
                     switch (Config.getUserCfg('config', 'LetterIllustration')) {
                         case "水印版": {
-                            e.reply(await picmodle.ill(e, { illustration: info.illustration, illustrator: info.illustrator }))
+                            send.reply(e, await picmodle.ill(e, { illustration: info.illustration, illustrator: info.illustrator }))
                             break;
                         }
                         case "原版": {
-                            e.reply(getPic.getIll(standard_id))
+                            send.reply(e, getPic.getIll(standard_id))
                         }
                         default:
                             break;
@@ -450,9 +450,9 @@ export default class guessLetter {
         }
 
         if (ids[1]) {
-            e.reply(`第${num + 1}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
+            send.reply(e, `第${num + 1}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
         } else {
-            e.reply(`第${num + 1}首不是[${getInfo.info(ids[0])?.song ?? ids[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
+            send.reply(e, `第${num + 1}首不是[${getInfo.info(ids[0])?.song ?? ids[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
         }
 
         return false
@@ -471,12 +471,12 @@ export default class guessLetter {
         //必须已经开始了一局
         if (!currentGame) {
             /**未进行游戏放过命令 */
-            e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
+            send.reply(e, `现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
             return false
         }
 
 
-        await e.reply('好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
+        await send.reply(e, '好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
         tryToSendMd(e, (t) => gameover(group_id, gameList, t));
         return true
     }
@@ -493,7 +493,7 @@ export default class guessLetter {
         const currentGame = letterGameData[group_id];
 
         if (!currentGame) {
-            e.reply(`现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
+            send.reply(e, `现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
             return false
         }
 
@@ -505,7 +505,7 @@ export default class guessLetter {
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
 
         if (timetik < 1000 * time) {
-            e.reply(`使用提示的全局冷却时间还有${timeleft}s呐，还请先耐心等下哇QAQ`, true)
+            send.reply(e, `使用提示的全局冷却时间还有${timeleft}s呐，还请先耐心等下哇QAQ`, true)
             return false
         }
 
@@ -595,13 +595,13 @@ export default class guessLetter {
         const currentGame = letterGameData[group_id];
 
         if (currentGame) {
-            await e.reply(`当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
+            await send.reply(e, `当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
             return false
         }
 
         songweights[group_id] = {}
 
-        await e.reply(`洗牌成功了www`, true)
+        await send.reply(e, `洗牌成功了www`, true)
         return true
     }
 }
@@ -829,11 +829,11 @@ function cmdInpt(text, show, reference = false) {
 async function tryToSendMd(e, fnc) {
     const letterMarkdown = Config.getUserCfg('config', 'LetterMarkdown')
     if (!letterMarkdown) {
-        e.reply(fnc(false))
+        send.reply(e, fnc(false))
         return;
     }
-    let sent = await e.reply(segment.markdown(fnc(true)))
+    let sent = /** @type {{error?: unknown[]}} */ (await send.reply(e, segment.markdown(fnc(true))))
     if (sent.error && sent.error.length) {
-        e.reply(fnc(false))
+        send.reply(e, fnc(false))
     }
 }

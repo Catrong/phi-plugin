@@ -1,4 +1,4 @@
-import common from '../../../../lib/common/common.js'
+import common from '../../components/common.js'
 import Config from '../../components/Config.js'
 import logger from '../../components/Logger.js'
 import getInfo from '../../model/getInfo.js'
@@ -71,6 +71,14 @@ const ifeCNMap = {
     'lineMode': '线稿'
 }
 
+/**
+ * @param {botEvent} e
+ * @returns {string}
+ */
+function groupKey(e) {
+    return String(e.group_id || e.chatId || e.user_id)
+}
+
 export default new class guessIll {
     /**
      * 猜曲绘
@@ -78,13 +86,13 @@ export default new class guessIll {
      * @param {GameList} gameList
      */
     async start(e, gameList) {
-        const { group_id } = e
+        const group_id = groupKey(e)
         if (ansList[group_id]) {
-            e.reply("请不要重复发起哦！", true)
+            send.reply(e, "请不要重复发起哦！", true)
             return true
         }
         if (songIdList.length == 0) {
-            e.reply('当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
+            send.reply(e, '当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
             return true
         }
 
@@ -105,7 +113,7 @@ export default new class guessIll {
             ++cnnt
             if (cnnt >= 50) {
                 logger.error(`[phi guess]抽取曲目失败，请检查曲库设置`)
-                e.reply(`[phi guess]抽取曲目失败，请检查曲库设置`)
+                send.reply(e, `[phi guess]抽取曲目失败，请检查曲库设置`)
                 return
             }
             songId = getRandomSong(e)
@@ -147,9 +155,7 @@ export default new class guessIll {
          * @type {Record<string, string>}
          */
         const known_info = {}
-        /**
-         * @type {Partial<remainInfoType>}
-         */
+        /** @type {remainInfoType} */
         const remain_info = ['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']
         /**
          * 随机给出提示
@@ -207,15 +213,15 @@ export default new class guessIll {
         }
         logger.info(data)
 
-        e.reply(
+        send.reply(e, 
             [`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getUserCfg('config', 'GuessTipCd')}秒后将会给出进一步提示。`,
             `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 结束游戏`,
             `本局难度：${level}，当前干扰类型：${data.chosenInterferences.length ? data.chosenInterferences.join('、') : '无干扰'}`].join('\n')
         )
         if (Config.getUserCfg('config', 'GuessTipRecall'))
-            await e.reply(await picmodle.guess(e, data), false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') })
+            await send.reply(e, await picmodle.guess(e, data), false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') })
         else
-            await e.reply(await picmodle.guess(e, data))
+            await send.reply(e, await picmodle.guess(e, data))
 
         /**单局时间不超过4分半 */
         const time = Config.getUserCfg('config', 'GuessTipCd')
@@ -301,9 +307,9 @@ export default new class guessIll {
             }
 
             if (Config.getUserCfg('config', 'GuessTipRecall'))
-                e.reply(remsg, false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') + 1 })
+                send.reply(e, remsg, false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') + 1 })
             else
-                e.reply(remsg)
+                send.reply(e, remsg)
 
         }
 
@@ -328,9 +334,9 @@ export default new class guessIll {
         const t = ansList[group_id]
         delete ansList[group_id]
         delete gameList[group_id]
-        await e.reply("呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
+        await send.reply(e, "呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
 
-        await e.reply(await getPic.GetSongsInfoAtlas(e, t))
+        await send.reply(e, await getPic.GetSongsInfoAtlas(e, t))
         await gameover(e, data)
 
         return true
@@ -342,7 +348,8 @@ export default new class guessIll {
      * @param {GameList} gameList
      */
     async guess(e, gameList) {
-        const { group_id, msg, user_id } = e
+        const group_id = groupKey(e)
+        const { msg } = e
         if (ansList[group_id]) {
             eList[group_id] = e
             if (typeof msg === 'string') {
@@ -355,7 +362,7 @@ export default new class guessIll {
                             delete ansList[group_id]
                             delete gameList[group_id]
                             send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
-                            await e.reply(await getPic.GetSongsInfoAtlas(e, t))
+                            await send.reply(e, await getPic.GetSongsInfoAtlas(e, t))
                             return true
                         }
                     }
@@ -378,13 +385,13 @@ export default new class guessIll {
      * @returns 
      */
     async ans(e, gameList) {
-        const { group_id } = e
+        const group_id = groupKey(e)
         if (ansList[group_id]) {
             const t = ansList[group_id]
             delete ansList[group_id]
             delete gameList[group_id]
-            await e.reply('好吧，下面开始公布答案。', true)
-            await e.reply(await getPic.GetSongsInfoAtlas(e, t))
+            await send.reply(e, '好吧，下面开始公布答案。', true)
+            await send.reply(e, await getPic.GetSongsInfoAtlas(e, t))
             return true
         }
         return false
@@ -395,10 +402,10 @@ export default new class guessIll {
      * @param {any} e
      */
     async mix(e) {
-        const { group_id } = e
+        const group_id = groupKey(e)
 
         if (ansList[group_id]) {
-            await e.reply(`当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
+            await send.reply(e, `当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
             return false
         }
 
@@ -412,7 +419,7 @@ export default new class guessIll {
             songweights[group_id][song] = 1
         })
 
-        await e.reply(`洗牌成功了www`, true)
+        await send.reply(e, `洗牌成功了www`, true)
         return true
     }
 }()
@@ -428,8 +435,8 @@ async function gameover(e, data) {
     data.filterStyle = buildFilterStyle(data)
     data.ans = data.illustration
     data.style = 1
-    await e.reply(await picmodle.guess(e, data))
-    delete eList[e.group_id]
+    await send.reply(e, await picmodle.guess(e, data))
+    delete eList[groupKey(e)]
 }
 
 /**
@@ -497,7 +504,7 @@ function blur_down(size, data, fnc) {
 /**
  * 获得一个歌曲信息的提示
  * @param {Record<string, string>} known_info 
- * @param {Partial<remainInfoType>} remain_info 
+ * @param {remainInfoType} remain_info 
  * @param {SongsInfo} songs_info 
  * @param {number[]} fnc
  */
@@ -686,9 +693,11 @@ function generateInterference(level) {
  * @returns {string} 被减弱的干扰名称
  */
 function interference_reduce(data, fnc) {
+    /** @type {Record<'saturate' | 'invert' | 'hueRotate' | 'lineMode', string>} */
+    const nameMap = { saturate: '饱和度', invert: '反相', hueRotate: '色相', lineMode: '线稿' }
     /**
      * 当前可减弱的非模糊干扰
-     * @type {[string, number][]}
+     * @type {[keyof typeof nameMap, number][]}
      */
     const reducible = []
     if (data.saturate !== 1) reducible.push(['saturate', 30])
@@ -702,8 +711,6 @@ function interference_reduce(data, fnc) {
     }
 
     const target = fCompute.randFromArray(reducible)
-    /** @type {Record<string, string>} */
-    const nameMap = { saturate: '饱和度', invert: '反相', hueRotate: '色相', lineMode: '线稿' }
 
     switch (target) {
         case 'saturate': {
@@ -767,12 +774,12 @@ function checkRemainingInterferences(data, fnc) {
 
 /**
  * 定义随机抽取曲目的函数
- * @param {any} e 
- * @returns 
+ * @param {botEvent} e
+ * @returns {idString}
  */
 function getRandomSong(e) {
     //对象解构提取groupid
-    const { group_id } = e
+    const group_id = groupKey(e)
 
     //计算曲目的总权重
     const totalWeight = Object.values(songweights[group_id]).reduce((total, weight) => total + weight, 0)

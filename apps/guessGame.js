@@ -115,7 +115,7 @@ export class phiGames extends phiPluginBase {
      * @returns 
      */
     async reveal(e) {
-        if (!e.isGroup) {
+        if (!e.isGroup || !e.group_id) {
             send.send_with_At(e, '请在群聊中使用这个功能嗷！')
             return false
         }
@@ -139,6 +139,9 @@ export class phiGames extends phiPluginBase {
         /**过滤特殊消息 */
         if (!e.msg) {
             return false;
+        }
+        if (!e.group_id) {
+            return false
         }
         switch (gameList[e.group_id]?.gameType) {
             case "guessTips": {
@@ -166,6 +169,9 @@ export class phiGames extends phiPluginBase {
      * @returns 
      */
     async getTip(e) {
+        if (!e.group_id) {
+            return false
+        }
         switch (gameList[e.group_id]?.gameType) {
             case "guessTips": {
                 return await guessTips.getTip(e, gameList)
@@ -186,6 +192,9 @@ export class phiGames extends phiPluginBase {
      * @returns 
      */
     async ans(e) {
+        if (!e.group_id) {
+            return false
+        }
         switch (gameList[e.group_id]?.gameType) {
             case "guessTips": {
                 return await guessTips.ans(e, gameList)
@@ -197,7 +206,7 @@ export class phiGames extends phiPluginBase {
                 return await guessIll.ans(e, gameList)
             }
             default: {
-                e.reply(`当前没有进行中的游戏嗷！`)
+                send.reply(e, `当前没有进行中的游戏嗷！`)
                 return false
             }
         }

@@ -8,7 +8,7 @@ import { redisPath } from './constNum.js'
 import makeRequest from './makeRequest.js'
 import makeRequestFnc from './makeRequestFnc.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
-// import { redis } from 'yunzai'
+import { redis } from '../components/platform/index.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 export default class getSaveFromApi {

@@ -57,7 +57,7 @@ export class phihelp extends phiPluginBase {
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await getNotes.getNotesData(e.user_id)
-        e.reply(await picmodle.help(e, {
+        send.reply(e, await picmodle.help(e, {
             helpGroup: helpGroup,
             cmdHead: head || null,
             isMaster: e.isMaster,
@@ -102,7 +102,7 @@ export class phihelp extends phiPluginBase {
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await getNotes.getNotesData(e.user_id)
-        e.reply(await picmodle.help(e, {
+        send.reply(e, await picmodle.help(e, {
             helpGroup: apiHelp,
             cmdHead: head || null,
             isMaster: e.isMaster,

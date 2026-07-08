@@ -6,6 +6,7 @@ import makeRequest from "./makeRequest.js";
 import makeRequestFnc from "./makeRequestFnc.js";
 import send from "./send.js";
 import { canUseApi } from './apiPermission.js';
+import { redis } from "../components/platform/index.js";
 
 /**@import {botEvent} from "../components/baseClass.js" */
 

@@ -1,19 +1,26 @@
 import { createRequire } from "module";
 import lodash from "lodash";
-import { Restart } from '../../other/restart.js'
 import Config from "../components/Config.js";
-import common from "../../../lib/common/common.js";
+import common from "../components/common.js";
 import getInfo from "../model/getInfo.js";
-import { originalIllPath } from "../model/path.js";
+import { originalIllPath, pluginRoot } from "../model/path.js";
 import fs from 'node:fs';
 import phiPluginBase from "../components/baseClass.js";
 import logger from "../components/Logger.js";
+import platform from "../components/platform/index.js";
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
 
 // 是否在更新中
 let uping = false;
+
+/**
+ * @param {string} filePath
+ */
+function shellPath(filePath) {
+    return `"${filePath.replace(/\\/g, '/').replace(/"/g, '\\"')}"`
+}
 
 /**
  * 处理插件更新
@@ -64,7 +71,7 @@ export class phiupdate extends phiPluginBase {
         try {
             ifrestart = await this.runUpdate(isForce);
         } catch (err) {
-            this.e.reply("phi-plugin更新失败QAQ!" + err)
+            this.reply("phi-plugin更新失败QAQ!" + err)
             console.error(err)
         }
 
@@ -72,7 +79,7 @@ export class phiupdate extends phiPluginBase {
             try {
                 await this.ill_update()
             } catch (err) {
-                this.e.reply("曲绘文件更新失败QAQ!" + err)
+                this.reply("曲绘文件更新失败QAQ!" + err)
                 console.error(err)
             }
         }
@@ -91,7 +98,7 @@ export class phiupdate extends phiPluginBase {
     }
 
     restart() {
-        new Restart(this.e).restart()
+        platform.restartBot(this.e)
     }
 
     /**
@@ -100,17 +107,17 @@ export class phiupdate extends phiPluginBase {
      * @returns
      */
     async runUpdate(isForce) {
-        let command = "git -C ./plugins/phi-plugin/ pull --no-rebase";
+        const repoPath = shellPath(pluginRoot);
+        let command = `git -C ${repoPath} pull --no-rebase`;
         if (isForce) {
-            let repoPath = "./plugins/phi-plugin/";
             command = [
                 `git -C ${repoPath} fetch --all --prune`,
                 `git -C ${repoPath} reset --hard origin/main`,
                 `git -C ${repoPath} clean -fd`
             ].join(" && ");
-            this.e.reply("开始执行强制更新操作，请稍等");
+            this.reply("开始执行强制更新操作，请稍等");
         } else {
-            this.e.reply("开始执行更新操作，请稍等");
+            this.reply("开始执行更新操作，请稍等");
         }
         /** 获取上次提交的commitId，用于获取日志时判断新增的更新日志 */
         this.oldCommitId = await this.getcommitId("phi-plugin");
@@ -149,7 +156,7 @@ export class phiupdate extends phiPluginBase {
      * @returns
      */
     async getLog(plugin = "") {
-        let cm = `cd ./plugins/${plugin}/ && git log  -20 --oneline --pretty=format:"%h||[%cd]  %s" --date=format:"%m-%d %H:%M"`;
+        let cm = `cd ${shellPath(pluginRoot)} && git log  -20 --oneline --pretty=format:"%h||[%cd]  %s" --date=format:"%m-%d %H:%M"`;
 
         let logAll;
         try {
@@ -203,7 +210,7 @@ export class phiupdate extends phiPluginBase {
      * @returns
      */
     async getcommitId(plugin = "") {
-        let cm = `git -C ./plugins/${plugin}/ rev-parse --short HEAD`;
+        let cm = `git -C ${shellPath(pluginRoot)} rev-parse --short HEAD`;
 
         let commitId = await execSync(cm, { encoding: "utf-8" });
         commitId = lodash.trim(commitId);
@@ -217,7 +224,7 @@ export class phiupdate extends phiPluginBase {
      * @returns
      */
     async getTime(plugin = "") {
-        let cm = `cd ./plugins/${plugin}/ && git log -1 --oneline --pretty=format:"%cd" --date=format:"%m-%d %H:%M"`;
+        let cm = `cd ${shellPath(pluginRoot)} && git log -1 --oneline --pretty=format:"%cd" --date=format:"%m-%d %H:%M"`;
 
         let time = "";
         try {
@@ -254,7 +261,7 @@ export class phiupdate extends phiPluginBase {
         const isForce = 1
 
 
-        if (!fs.existsSync('./plugins/phi-plugin/resources/original_ill/.git')) {
+        if (!fs.existsSync(`${originalIllPath}/.git`)) {
             /**执行安装 */
             await this.ill_clone()
         } else {
@@ -270,9 +277,9 @@ export class phiupdate extends phiPluginBase {
     }
 
     async ill_clone() {
-        let command = `git clone ${this.getDownIllUrl()} ./plugins/phi-plugin/resources/original_ill/ --depth=1`;
+        let command = `git clone ${this.getDownIllUrl()} ${shellPath(originalIllPath)} --depth=1`;
 
-        this.e.reply("开始下载曲绘文件");
+        this.reply("开始下载曲绘文件");
 
         uping = true;
         let ret = await this.execSync(command);
@@ -322,13 +329,13 @@ export class phiupdate extends phiPluginBase {
         }
 
 
-        let repoPath = "./plugins/phi-plugin/resources/original_ill/";
+        let repoPath = shellPath(originalIllPath);
         let command = [
             `git -C ${repoPath} fetch --all --prune`,
             `git -C ${repoPath} reset --hard origin/main`,
             `git -C ${repoPath} clean -fd`
         ].join(" && ");
-        this.e.reply("开始更新曲绘文件，请稍等");
+        this.reply("开始更新曲绘文件，请稍等");
 
         /** 获取上次提交的commitId，用于获取日志时判断新增的更新日志 */
         this.oldCommitId = await this.ill_getcommitId();
@@ -387,7 +394,7 @@ export class phiupdate extends phiPluginBase {
      * @returns
      */
     async ill_getLog() {
-        let cm = `cd ./plugins/phi-plugin/resources/original_ill/ && git log  -20 --oneline --pretty=format:"%h||[%cd]  %s" --date=format:"%m-%d %H:%M"`;
+        let cm = `cd ${shellPath(originalIllPath)} && git log  -20 --oneline --pretty=format:"%h||[%cd]  %s" --date=format:"%m-%d %H:%M"`;
 
         let logAll;
         try {
@@ -429,7 +436,7 @@ export class phiupdate extends phiPluginBase {
      * @returns
      */
     async ill_getcommitId() {
-        let cm = `git -C ./plugins/phi-plugin/resources/original_ill/ rev-parse --short HEAD`;
+        let cm = `git -C ${shellPath(originalIllPath)} rev-parse --short HEAD`;
 
         let commitId = await execSync(cm, { encoding: "utf-8" });
         commitId = lodash.trim(commitId);
@@ -442,7 +449,7 @@ export class phiupdate extends phiPluginBase {
      * @returns
      */
     async ill_getTime() {
-        let cm = `cd ./plugins/phi-plugin/resources/original_ill/ && git log -1 --oneline --pretty=format:"%cd" --date=format:"%m-%d %H:%M"`;
+        let cm = `cd ${shellPath(originalIllPath)} && git log -1 --oneline --pretty=format:"%cd" --date=format:"%m-%d %H:%M"`;
 
         let time = "";
         try {

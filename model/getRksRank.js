@@ -1,6 +1,5 @@
-// import { redis } from 'yunzai'
-
 import { redisPath } from "./constNum.js"
+import { redis } from "../components/platform/index.js"
 
 
 export default new class getRksRank {

@@ -306,12 +306,6 @@ export function supportGuoba() {
                     component: 'Switch',
                 },
                 {
-                    field: 'autoOpenApi',
-                    label: '自动开启API',
-                    bottomHelpMessage: '检测API状态成功后，是否自动开启API',
-                    component: 'Switch',
-                },
-                {
                     field: 'mutiNickWaitTimeOut',
                     label: '多个曲目回复序号等待时长',
                     bottomHelpMessage: '别名重复触发多个曲目选择时，等待回复序号的时长，单位：秒',
@@ -560,10 +554,6 @@ export function supportGuoba() {
                     data.WordB19Img = false
                     data.WordSuggImg = false
                 }
-                /**@type {Partial<Record<configName, boolean>>} */
-                let flag = {
-                    autoOpenApi: false,
-                }
                 // if (data.VikaToken && data.VikaToken.length != 23) {
                 //     data.VikaToken = ''
                 //     vis = true
@@ -574,19 +564,14 @@ export function supportGuoba() {
                 for (let keyPath of keys) {
                     let value = data[keyPath]
                     // @ts-ignore
-                    if (flag[keyPath] !== undefined) {
-                        let oldValue = Config.getUserCfg('config', keyPath)
-                        if (oldValue != value) {
-                            flag[keyPath] = true
-                        }
-                    }
+                    // if (flag[keyPath] !== undefined) {
+                    //     let oldValue = Config.getUserCfg('config', keyPath)
+                    //     if (oldValue != value) {
+                    //         flag[keyPath] = true
+                    //     }
+                    // }
                     // @ts-ignore
                     Config.modify('config', keyPath, value)
-                }
-                if (flag.autoOpenApi) {
-                    return Result.wann({}, '自动检测API设置需要重启生效。')
-                } else {
-                    return Result.ok({}, '保存成功~')
                 }
             },
         },

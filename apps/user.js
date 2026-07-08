@@ -118,7 +118,7 @@ export class phiuser extends phiPluginBase {
         let userbackground = await fCompute.getBackground(save.gameuser.background)
 
         if (!userbackground) {
-            e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
+            send.reply(e, `ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
             logger.error(`未找到${save.gameuser.background}对应的曲绘！`)
         }
 
@@ -427,7 +427,7 @@ export class phiuser extends phiPluginBase {
         let illustration = await fCompute.getBackground(save.gameuser.background)
 
         if (!illustration) {
-            e.reply(`ERROR: 未找到[${save.gameuser.background}]背景的有关信息！`)
+            send.reply(e, `ERROR: 未找到[${save.gameuser.background}]背景的有关信息！`)
             logger.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
