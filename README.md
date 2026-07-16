@@ -218,6 +218,12 @@ pnpm install -P
 | `#phi tokenList` | 获取当前绑定的平台列表
 | `#phi tokenManage (delete) <平台序号> (-f)?` | 删除绑定的平台，-f 跳过确认
 | `#phi auth <api Token>` | 通过API Token 获取 sessionToken
+| `#phi alias submit 曲目 \| 别名 \| 备注` | 私聊提交曲目别名提案 |
+| `#phi alias mine` | 查询自己的别名提案 |
+| `#phi alias appeal 提案ID \| 理由` | 私聊申请公开评审 |
+| `#phi alias public` | 查询正在公开投票的提案 |
+| `#phi alias vote 提案ID 赞成/反对` | 参与公开投票或改票 |
+| `#phi alias unvote 提案ID` | 撤回公开投票 |
 | `#phi clearApiData` | 清除API数据
 | `#phi updateHistory` | 将BOT端的历史成绩更新到API端
 | `#phi updateUserToken` | **主人命令** 上传当前BOT端的用户Token到API端

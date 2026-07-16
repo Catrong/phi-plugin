@@ -22,6 +22,7 @@ import getInfo from '../model/getInfo.js'
 import picmodle from '../model/picmodle.js'
 import { canUseApi } from '../model/apiPermission.js'
 import platform, { redis } from '../components/platform/index.js'
+import aliasProposalService from '../model/aliasProposalService.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -230,6 +231,8 @@ export class phisstk extends phiPluginBase {
                     }
                     send.send_with_At(e, resMsg)
                     await getSave.add_user_token(e.user_id, sessionToken);
+                    void aliasProposalService.ensureBotSession(e.user_id, sessionToken, e.self_id)
+                        .catch(() => logger.warn('[phi-plugin] alias notification key registration failed'))
                     let oldHistory = await getSave.getHistory(e.user_id);
                     if (oldHistory) {
                         await makeRequestFnc.requestApi(

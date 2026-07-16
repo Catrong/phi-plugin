@@ -1,5 +1,5 @@
 import readFile from './getFile.js'
-import { DlcInfoPath, configPath, imgPath, infoPath, originalIllPath, ortherIllPath, oldInfoPath, pluginResources } from './path.js'
+import { DlcInfoPath, configPath, dataPath, imgPath, infoPath, originalIllPath, ortherIllPath, oldInfoPath, pluginResources } from './path.js'
 import path from 'path'
 import Config from '../components/Config.js'
 import SongsInfo from './class/SongsInfo.js'
@@ -523,7 +523,11 @@ export default new class getInfo {
          * 曲目别名列表 (id不带.0)
          * @type {Record<idStringWithout0, string[]>}
          */
-        let nicklistTemp = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml'))
+        let nicklistTemp = await readFile.FileReader(path.join(infoPath, 'nicklist.yaml')) || {}
+        this.baseNicklist = /** @type {Record<idStringWithout0, string[]>} */ (structuredClone(nicklistTemp))
+        this.approvedNicklist = /** @type {Record<idStringWithout0, string[]>} */ (
+            await readFile.FileReader(path.join(dataPath, 'alias', 'approved-nicklist.yaml')) || {}
+        )
         /** 
          * 默认别名，以id为key
          * @type {Record<idString, string[]>} 
@@ -536,18 +540,7 @@ export default new class getInfo {
         this.songnick = {}
 
 
-        for (let idWithout0 of fCompute.objectKeys(nicklistTemp)) {
-            const id = idWithout0ToIdWith0(idWithout0);
-            this.nicklist[id] = nicklistTemp[idWithout0]
-
-            for (let item of nicklistTemp[idWithout0]) {
-                if (!this.songnick[item]) {
-                    this.songnick[item] = [id]
-                } else {
-                    this.songnick[item].push(id)
-                }
-            }
-        }
+        this.rebuildAliasIndex()
 
         /**
          * @type {{[key:string]: string[]}}
@@ -592,6 +585,45 @@ export default new class getInfo {
 
         this.initIng = false
         logger.info(`[phi-plugin]初始化曲目信息完成`)
+    }
+
+    /**
+     * 以“内置别名 + Approved 快照”的顺序重建运行时索引。
+     * 同一曲目的重复别名按不区分大小写去重，远端快照删除后不会残留。
+     * @returns {void}
+     */
+    rebuildAliasIndex() {
+        this.nicklist = {}
+        this.songnick = {}
+        /** @type {Array<Record<idStringWithout0, string[]>>} */
+        const layers = [this.baseNicklist || {}, this.approvedNicklist || {}]
+        for (const layer of layers) {
+            for (const rawId of Object.keys(layer)) {
+                const idWithout0 = /** @type {idStringWithout0} */ (rawId)
+                const id = idWithout0ToIdWith0(idWithout0)
+                const aliases = Array.isArray(layer[idWithout0]) ? layer[idWithout0] : []
+                this.nicklist[id] ||= []
+                for (const rawAlias of aliases) {
+                    const alias = String(rawAlias).trim()
+                    if (!alias) continue
+                    if (!this.nicklist[id].some(item => item.toLowerCase() === alias.toLowerCase())) {
+                        this.nicklist[id].push(alias)
+                    }
+                    this.songnick[alias] ||= []
+                    if (!this.songnick[alias].includes(id)) this.songnick[alias].push(id)
+                }
+            }
+        }
+    }
+
+    /**
+     * 原子快照落盘成功后替换 Approved 内存层并立即重建索引。
+     * @param {Record<string, string[]>} snapshot 已严格校验的公开 YAML 数据
+     * @returns {void}
+     */
+    setApprovedAliasSnapshot(snapshot) {
+        this.approvedNicklist = /** @type {Record<idStringWithout0, string[]>} */ (structuredClone(snapshot || {}))
+        this.rebuildAliasIndex()
     }
 
     /**

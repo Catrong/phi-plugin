@@ -9,6 +9,9 @@ import getRksRank from './getRksRank.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
 import { redis } from '../components/platform/index.js'
 
+/** @import {PlatformUserId} from '../components/platform/types.js' */
+/** @import {AliasNotificationBinding, AliasNotificationBindingWithUser} from './type/aliasProposal.js' */
+
 export default class getSave {
 
     /**
@@ -38,7 +41,51 @@ export default class getSave {
      */
     static async del_user_token(user_id) {
         // @ts-ignore
-        return await redis.del(`${redisPath}:userToken:${user_id}`)
+        return await redis.del(
+            `${redisPath}:userToken:${user_id}`,
+            `${redisPath}:aliasBinding:${user_id}`,
+        )
+    }
+
+    /**
+     * 读取用户 token 旁的别名通知绑定元数据。
+     * @param {PlatformUserId} user_id Bot 平台用户 ID
+     * @returns {Promise<AliasNotificationBinding | null>} 有效绑定；不存在或损坏时返回 null
+     */
+    static async get_alias_binding(user_id) {
+        const value = await redis.get(`${redisPath}:aliasBinding:${user_id}`)
+        if (!value) return null
+        try {
+            return /** @type {AliasNotificationBinding} */ (typeof value === 'string' ? JSON.parse(value) : value)
+        } catch {
+            return null
+        }
+    }
+
+    /**
+     * 保存用户的 Bot clientId 和通知密钥，不复制 sessionToken。
+     * @param {PlatformUserId} user_id Bot 平台用户 ID
+     * @param {AliasNotificationBinding} binding 通知绑定元数据
+     * @returns {Promise<unknown>} Redis 写入结果
+     */
+    static async set_alias_binding(user_id, binding) {
+        return redis.set(`${redisPath}:aliasBinding:${user_id}`, JSON.stringify(binding))
+    }
+
+    /**
+     * 列出需要参加五分钟通知轮询的所有本地绑定。
+     * @returns {Promise<AliasNotificationBindingWithUser[]>} 带平台用户 ID 的通知绑定
+     */
+    static async list_alias_bindings() {
+        const keys = await redis.keys(`${redisPath}:aliasBinding:*`)
+        const prefix = `${redisPath}:aliasBinding:`
+        /** @type {AliasNotificationBindingWithUser[]} */
+        const rows = []
+        for (const key of keys) {
+            const binding = await this.get_alias_binding(key.slice(prefix.length))
+            if (binding) rows.push({ userId: key.slice(prefix.length), ...binding })
+        }
+        return rows
     }
 
     /**
