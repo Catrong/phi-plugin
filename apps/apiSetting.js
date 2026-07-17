@@ -448,20 +448,49 @@ export class phihelp extends phiPluginBase {
 
         const sessionToken = await getSave.get_user_token(e.user_id);
         if (!sessionToken) {
-            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
-            return;
+            send.send_with_At(e, '注销 phi-api 账号需要 Phigros SSTK 权限，请先使用 SSTK 绑定。')
+            return false;
+        }
+
+        this.setContext('confirmClearApiData', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
+        send.send_with_At(e, '注销 phi-api 账号将永久清除云端账号及全部数据，且无法恢复！真的要这么做吗？（确认/取消）')
+
+        return true
+    }
+
+    async confirmClearApiData() {
+        const e = this.e
+        if (e.msg.replace(/\s/g, '') !== '确认') {
+            send.send_with_At(e, '已取消')
+            this.finish('confirmClearApiData', false)
+            return true
+        }
+
+        const sessionToken = await getSave.get_user_token(e.user_id)
+        if (!sessionToken) {
+            send.send_with_At(e, '注销 phi-api 账号需要 Phigros SSTK 权限，请先使用 SSTK 绑定。')
+            this.finish('confirmClearApiData', false)
+            return false
         }
 
         const clearResult = await makeRequestFnc.requestApi(
             e,
             () => makeRequest.clear({ ...makeRequestFnc.makePlatform(e), token: sessionToken }),
-            { errorPrefix: '清除数据失败', notifyUser: true }
+            { errorPrefix: '注销 phi-api 账号失败', notifyUser: true }
         )
         if (!clearResult) {
+            this.finish('confirmClearApiData', false)
             return false
         }
 
-        send.send_with_At(e, '数据已清除')
+        try {
+            await getSaveFromApi.delLocalSave(e.user_id)
+        } catch (err) {
+            logger.warn('[phi-plugin] phi-api 账号已注销，但本地 API 缓存清理失败', err)
+        }
+
+        send.send_with_At(e, 'phi-api 账号已注销，云端数据已清除')
+        this.finish('confirmClearApiData', false)
 
         return true
     }

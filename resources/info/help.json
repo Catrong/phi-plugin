@@ -195,6 +195,86 @@
         ]
     },
     {
+        "group": "别名提案",
+        "list": [
+            {
+                "title": "/alias submit<br>/别名 提案",
+                "eg": "/alias submit <曲目> | <别名> | [私密备注]",
+                "desc": "提交曲目别名提案，仅限私聊并需要绑定 sessionToken<br>eg: /alias submit Glaciaxion | 冰川 | 常用简称"
+            },
+            {
+                "title": "/alias mine<br>/别名 我的",
+                "eg": "/alias mine",
+                "desc": "查询自己提交的别名提案及当前审核状态"
+            },
+            {
+                "title": "/alias public<br>/别名 公审",
+                "eg": "/alias public",
+                "desc": "查询正在公开投票的别名提案、申请理由和当前票数"
+            },
+            {
+                "title": "/alias appeal<br>/别名 申诉",
+                "eg": "/alias appeal <提案ID> | <理由>",
+                "desc": "为被私密拒绝的提案申请公开评审，仅限私聊，理由需要 10-500 字"
+            },
+            {
+                "title": "/alias vote<br>/别名 投票",
+                "eg": "/alias vote <提案ID> <赞成|反对>",
+                "desc": "参与别名提案公开投票，也可用 yes/no、1/-1 表示意见"
+            },
+            {
+                "title": "/alias unvote<br>/别名 撤票",
+                "eg": "/alias unvote <提案ID>",
+                "desc": "撤回自己对指定别名提案的公开投票"
+            }
+        ]
+    },
+    {
+        "group": "API 操作",
+        "list": [
+            {
+                "title": "/apihelp",
+                "eg": "/apihelp",
+                "desc": "查看 phi-api 绑定、权限与账号管理的详细帮助"
+            },
+            {
+                "title": "/bind <查分ID>",
+                "eg": "/bind <查分ID>",
+                "desc": "将当前 Bot 平台账号绑定到已有 phi-api 查分账号<br>eg: /bind 123456"
+            },
+            {
+                "title": "/setApiToken",
+                "eg": "/setApiToken <新Token>",
+                "desc": "设置或更新 phi-api 的 API Token，需要本地已绑定 Phigros SSTK"
+            },
+            {
+                "title": "/tkls<br>/lstk",
+                "eg": "/tkls",
+                "desc": "查看 phi-api 账号当前绑定的全部平台账号，需要 Phigros SSTK 权限"
+            },
+            {
+                "title": "/tokenManage<br>/tkManage",
+                "eg": "/tokenManage delete <平台序号> [-f]",
+                "desc": "解除指定平台账号绑定；默认需要二次确认，-f 可跳过确认"
+            },
+            {
+                "title": "/auth",
+                "eg": "/auth <API Token>",
+                "desc": "使用 API Token 验证账号并获取、保存对应的 Phigros SSTK，请注意保护返回的凭据"
+            },
+            {
+                "title": "/apiset",
+                "eg": "/apiset [设置项] [开|关]",
+                "desc": "查看或修改数据收集、排行榜、数据聚合、PlayerId 搜索和 UserId 搜索权限<br>eg: /apiset 排行榜 关"
+            },
+            {
+                "title": "/clearApiData",
+                "eg": "/clearApiData",
+                "desc": "永久注销 phi-api 账号并清除云端数据，需要 Phigros SSTK 权限及二次确认"
+            }
+        ]
+    },
+    {
         "group": "娱乐 & 设定",
         "list": [
             {
@@ -340,6 +420,16 @@
                 "title": "/unban",
                 "eg": "/unban <功能>",
                 "desc": "恢复使用某一类功能\n可选参数: all help bind b19 wb19 song ranklist fnc tipgame guessgame ltrgame sign setting dan"
+            },
+            {
+                "title": "/updateUserToken",
+                "eg": "/updateUserToken",
+                "desc": "将当前 Bot 保存的用户 sessionToken 批量同步到 phi-api"
+            },
+            {
+                "title": "/updateComment",
+                "eg": "/updateComment",
+                "desc": "将当前 Bot 保存的本地评论批量同步到 phi-api"
             }
         ]
     }

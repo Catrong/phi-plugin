@@ -186,7 +186,7 @@ API features can be manually enabled/disabled in settings. When enabled, it auto
 | `#phi tokenList` | Get list of currently bound platforms
 | `#phi tokenManage (delete) <platform number> (-f)?` | Delete bound platform, -f to skip confirmation
 | `#phi auth <api Token>` | Get sessionToken via API Token
-| `#phi clearApiData` | Clear API data
+| `#phi clearApiData` | Permanently delete the phi-api account and cloud data; requires Phigros SSTK permission and confirmation
 | `#phi updateHistory` | Update historical scores from BOT to API server
 | `#phi updateUserToken` | **Owner command** Upload current BOT user tokens to API server
 

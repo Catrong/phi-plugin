@@ -1,8 +1,10 @@
 {
-  "title": "重要通知",
-  "code": 2,
+  "title": "更新日志",
+  "code": 3,
   "important": true,
   "content": [
-    "查分问题已修复"
+    "Phi-Plugin 网页端上线啦！链接：https://www.phib19.top",
+    "新版谱面标签征集开始！前往网页端进行投票哦~",
+    "别名提案、公审投票功能开放啦！bot端和网页端均可以使用哦~"
   ]
 }

@@ -224,7 +224,7 @@ pnpm install -P
 | `#phi alias public` | 查询正在公开投票的提案 |
 | `#phi alias vote 提案ID 赞成/反对` | 参与公开投票或改票 |
 | `#phi alias unvote 提案ID` | 撤回公开投票 |
-| `#phi clearApiData` | 清除API数据
+| `#phi clearApiData` | 永久注销 phi-api 账号并清除云端数据，需要 Phigros SSTK 权限及二次确认
 | `#phi updateHistory` | 将BOT端的历史成绩更新到API端
 | `#phi updateUserToken` | **主人命令** 上传当前BOT端的用户Token到API端
 

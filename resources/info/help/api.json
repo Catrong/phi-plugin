@@ -60,7 +60,7 @@
             {
                 "title": "/clearApiData",
                 "eg": "/clearApiData",
-                "desc": "清除API数据"
+                "desc": "永久注销 phi-api 账号并清除云端数据，需要 Phigros SSTK 权限及二次确认"
             },
             {
                 "title": "/noapi",

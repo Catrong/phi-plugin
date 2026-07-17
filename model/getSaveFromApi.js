@@ -195,16 +195,23 @@ export default class getSaveFromApi {
     }
 
     /**
+     * 删除 user_id 对应的本地 API 存档缓存，不请求 API
+     * @param {string} user_id user_id
+     */
+    static async delLocalSave(user_id) {
+        const apiId = await this.get_user_apiId(user_id)
+        if (!apiId) return false
+        fs.rmSync(path.join(apiSavePath, apiId), { recursive: true, force: true })
+        await this.del_user_apiId(user_id)
+        return true
+    }
+
+    /**
      * 删除 user_id 对应的存档文件
      * @param {*} e e
      */
     static async delSave(e) {
-        let apiId = await this.get_user_apiId(e.user_id)
-        if (!apiId) return false
-        let fPath = path.join(apiSavePath, apiId)
-        await readFile.DelFile(path.join(fPath, 'save.json'))
-        fs.rmSync(path.join(apiSavePath, apiId), { recursive: true, force: true });
-        this.del_user_apiId(e.user_id)
+        if (!await this.delLocalSave(e.user_id)) return false
         const unbindResult = await makeRequestFnc.requestApi(
             e,
             () => makeRequest.unbind({ ...makeRequestFnc.makePlatform(e) }),

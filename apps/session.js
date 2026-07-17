@@ -27,6 +27,7 @@ import aliasProposalService from '../model/aliasProposalService.js'
 /**@import {botEvent} from '../components/baseClass.js' */
 
 const apiMsg = `\n请注意，您尚未设置API Token！\n指令格式：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
+const deleteApiAccountCommand = `/${Config.getUserCfg('config', 'cmdhead')} clearApiData`
 
 export class phisstk extends phiPluginBase {
     constructor() {
@@ -349,14 +350,18 @@ export class phisstk extends phiPluginBase {
         }
 
 
-        if (!await getSave.get_user_token(e.user_id) && !await getSaveFromApi.get_user_apiId(e.user_id)) {
+        const apiId = await getSaveFromApi.get_user_apiId(e.user_id)
+        if (!await getSave.get_user_token(e.user_id) && !apiId) {
             send.send_with_At(e, '没有找到你的存档信息嗷！')
             return false
         }
 
         this.setContext('doUnbind', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
 
-        send.send_with_At(e, '解绑会导致历史数据全部清空呐QAQ！真的要这么做吗？（确认/取消）')
+        const apiNotice = apiId
+            ? `\n仅清除bot本地数据，云端数据不受影响，清除api数据请发送[${deleteApiAccountCommand}]`
+            : ''
+        send.send_with_At(e, `解绑会导致历史数据全部清空呐QAQ！真的要这么做吗？（确认/取消）${apiNotice}`)
 
         return true
     }
