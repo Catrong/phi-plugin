@@ -813,6 +813,399 @@ body p {
   font-family: "Aldrich", "PHI";
 }
 
+.b30-analysis-heading {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 28px;
+}
+
+.b30-analysis-heading p {
+  --height: 42px;
+  box-sizing: border-box;
+  font-size: 28px;
+  font-family: "Aldrich", "PHI";
+  white-space: nowrap;
+  padding: 5px 30px;
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.68);
+}
+
+.analysis-heading-line {
+  --height: 15px;
+  width: 38%;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.b30-analysis-row {
+  width: 95%;
+  margin: 20px auto 24px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 22px;
+  position: relative;
+  z-index: 5;
+}
+
+.analysis-panel {
+  --height: 310px;
+  width: calc(50% - 11px);
+  box-sizing: border-box;
+  padding: 25px 108px 22px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.62);
+  border-top: 2px solid rgba(255, 255, 255, 0.9);
+  border-bottom: 2px solid rgba(0, 183, 240, 0.75);
+  backdrop-filter: blur(7px);
+}
+
+.histogram-wide .histogram-panel {
+  width: 100%;
+}
+
+.analysis-panel-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-height: 58px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 11px;
+}
+
+.analysis-kicker {
+  color: #00b7f0;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.analysis-title {
+  color: #fff;
+  font-size: 27px;
+  line-height: 1.3;
+  font-family: "Aldrich", "PHI";
+}
+
+.analysis-meta {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+}
+
+.tag-analysis-body {
+  height: 178px;
+  position: relative;
+  padding-top: 10px;
+}
+
+.tag-analysis-content {
+  height: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.tag-analysis-body.is-insufficient .tag-analysis-content {
+  filter: blur(7px);
+  opacity: 0.48;
+}
+
+.tag-radar-column {
+  width: 55%;
+  min-width: 0;
+}
+
+.tag-ranking-column {
+  flex: 1;
+  min-width: 0;
+}
+
+.tag-radar-title,
+.tag-column-title {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.tag-radar-title span,
+.tag-column-title span {
+  width: 4px;
+  height: 13px;
+  background: #fff;
+  transform: skew(-16deg);
+}
+
+.weak-tags .tag-column-title span {
+  background: #00b7f0;
+}
+
+.tag-radar-title p,
+.tag-column-title p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.tag-radar {
+  width: 100%;
+  height: 156px;
+  display: block;
+  overflow: visible;
+}
+
+.tag-radar-grid {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 0.8;
+}
+
+.tag-radar-axis {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 0.8;
+}
+
+.tag-radar-shape {
+  fill: rgba(0, 183, 240, 0.3);
+  stroke: #00b7f0;
+  stroke-width: 1.8;
+}
+
+.tag-radar-point {
+  fill: #fff;
+  stroke: #00b7f0;
+  stroke-width: 1;
+}
+
+.tag-radar-label {
+  fill: rgba(255, 255, 255, 0.82);
+  font-size: 10px;
+  font-family: "PHI";
+}
+
+.tag-radar-score {
+  fill: #00b7f0;
+  font-size: 8px;
+}
+
+.tag-ranking-group + .tag-ranking-group {
+  margin-top: 4px;
+}
+
+.tag-result-row {
+  height: 20px;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) 37px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.tag-rank {
+  color: #fff;
+  font-size: 10px;
+}
+
+.weak-tags .tag-rank {
+  color: #00b7f0;
+}
+
+.tag-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #fff;
+  font-size: 12px;
+}
+
+.tag-rks {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  text-align: right;
+}
+
+.tag-insufficient-message {
+  position: absolute;
+  inset: 15px 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 26px;
+  background: rgba(0, 0, 0, 0.38);
+}
+
+.tag-insufficient-message p {
+  font-size: 18px;
+  line-height: 1.55;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 8px #000;
+}
+
+.histogram-summary {
+  text-align: right;
+}
+
+.histogram-summary p:first-child {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+}
+
+.histogram-summary p:last-child {
+  color: #fff;
+  font-size: 24px;
+  font-family: "Aldrich", "PHI";
+}
+
+.histogram-chart {
+  height: 178px;
+  display: flex;
+  padding-top: 12px;
+  width: 118%;
+  margin-left: -14%;
+}
+
+.histogram-y-label {
+  width: 18px;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 10px;
+  writing-mode: vertical-rl;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.histogram-plot {
+  height: 160px;
+  flex: 1;
+  position: relative;
+  border-left: 1px solid rgba(255, 255, 255, 0.32);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.32);
+}
+
+.histogram-scale {
+  position: absolute;
+  inset: 0 0 24px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.histogram-grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.histogram-grid-line p {
+  position: absolute;
+  left: 2px;
+  top: -7px;
+  padding-right: 3px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 8px;
+  line-height: 12px;
+}
+
+.histogram-bars {
+  position: absolute;
+  inset: 0 3px 0 29px;
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+}
+
+.histogram-slot {
+  height: 100%;
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.histogram-bar-area {
+  width: 100%;
+  height: calc(100% - 24px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.histogram-bar {
+  width: 72%;
+  min-height: 2px;
+  box-shadow: 0 0 10px rgba(0, 183, 240, 0.2);
+}
+
+.best-bar {
+  background: linear-gradient(90deg, #007ea8, #00b7f0);
+}
+
+.phi-bar {
+  background: linear-gradient(90deg, #c6c6c6, #fff);
+}
+
+.histogram-slot-label {
+  width: 100%;
+  height: 24px;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 7px;
+  line-height: 7px;
+  padding-top: 3px;
+  box-sizing: border-box;
+  writing-mode: vertical-rl;
+  text-align: left;
+}
+
+.average-marker {
+  position: absolute;
+  z-index: 4;
+  left: 29px;
+  right: 0;
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 8px #00b7f0;
+}
+
+.average-marker p {
+  position: absolute;
+  top: -14px;
+  right: 2px;
+  color: #fff;
+  font-size: 8px;
+  text-shadow: 0 1px 4px #000;
+}
+
+.histogram-legend {
+  height: 22px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}
+
+.histogram-legend p {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+}
+
+.phi-dot { background: #fff; }
+.best-dot { background: #00b7f0; }
+
 .createdbox {
   width: 100%;
   display: flex;

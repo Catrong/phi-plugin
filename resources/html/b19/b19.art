@@ -318,6 +318,136 @@
     {{/each}}
 
 </div>
+{{if b30Analysis}}
+<div class="over_flow">
+    <div class="flow_line_box_l">
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+    </div>
+    <p><i>B30 数据分析</i></p>
+    <div class="flow_line_box_r">
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+        <div class="flow_line"></div>
+    </div>
+</div>
+
+<div class="b30-analysis-row {{if b30Analysis.histogramWide}}histogram-wide{{/if}}">
+    {{if b30Analysis.showTags}}
+    <section class="analysis-panel tag-analysis-panel clip-box">
+        <div class="analysis-panel-head">
+            <div>
+                <p class="analysis-kicker">CHART PROFILE</p>
+                <p class="analysis-title">谱面标签能力</p>
+            </div>
+            <p class="analysis-meta">有效票 {{b30Analysis.tagAnalysis ? b30Analysis.tagAnalysis.totalVotes : 0}}</p>
+        </div>
+        <div class="tag-analysis-body {{if !b30Analysis.tagAnalysis || b30Analysis.tagAnalysis.insufficient}}is-insufficient{{/if}}">
+            <div class="tag-analysis-content">
+                <div class="tag-radar-column">
+                    <div class="tag-radar-title"><span></span><p>分类汇总</p></div>
+                    {{if b30Analysis.tagAnalysis && b30Analysis.tagAnalysis.radar.categories.length}}
+                    <svg class="tag-radar" viewBox="0 0 200 184" aria-label="分类标签能力雷达图">
+                        {{each b30Analysis.tagAnalysis.radar.grids grid}}
+                        <polygon class="tag-radar-grid" points="{{grid}}"></polygon>
+                        {{/each}}
+                        {{each b30Analysis.tagAnalysis.radar.axes axis}}
+                        <line class="tag-radar-axis" x1="100" y1="92" x2="{{axis.x}}" y2="{{axis.y}}"></line>
+                        {{/each}}
+                        <polygon class="tag-radar-shape" points="{{b30Analysis.tagAnalysis.radar.points}}"></polygon>
+                        {{each b30Analysis.tagAnalysis.radar.categories category}}
+                        <circle class="tag-radar-point" cx="{{category.pointX}}" cy="{{category.pointY}}" r="2.3"></circle>
+                        <text class="tag-radar-label" x="{{category.labelX}}" y="{{category.labelY}}" text-anchor="{{category.anchor}}">
+                            <tspan x="{{category.labelX}}">{{category.name}}</tspan>
+                            <tspan class="tag-radar-score" x="{{category.labelX}}" dy="10">{{category.displayRks}}</tspan>
+                        </text>
+                        {{/each}}
+                    </svg>
+                    {{/if}}
+                </div>
+                <div class="tag-ranking-column">
+                    <div class="tag-ranking-group strong-tags">
+                        <div class="tag-column-title"><span></span><p>擅长词条</p></div>
+                        {{if b30Analysis.tagAnalysis}}
+                        {{each b30Analysis.tagAnalysis.strong tag}}
+                        <div class="tag-result-row">
+                            <p class="tag-rank">{{$index + 1}}</p>
+                            <p class="tag-name">{{tag.name}}</p>
+                            <p class="tag-rks">{{tag.rks.toFixed(2)}}</p>
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                    <div class="tag-ranking-group weak-tags">
+                        <div class="tag-column-title"><span></span><p>薄弱词条</p></div>
+                        {{if b30Analysis.tagAnalysis}}
+                        {{each b30Analysis.tagAnalysis.weak tag}}
+                        <div class="tag-result-row">
+                            <p class="tag-rank">{{$index + 1}}</p>
+                            <p class="tag-name">{{tag.name}}</p>
+                            <p class="tag-rks">{{tag.rks.toFixed(2)}}</p>
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            {{if !b30Analysis.tagAnalysis || b30Analysis.tagAnalysis.insufficient}}
+            <div class="tag-insufficient-message">
+                <p>可用谱面标签统计量不足，请前往 https://www.phib19.top 或使用 /settag 进行谱面标签投票</p>
+            </div>
+            {{/if}}
+        </div>
+    </section>
+    {{/if}}
+
+    <section class="analysis-panel histogram-panel clip-box">
+        <div class="analysis-panel-head">
+            <div>
+                <p class="analysis-kicker">RKS DISTRIBUTION</p>
+                <p class="analysis-title">等效 RKS 直方图</p>
+            </div>
+            <div class="histogram-summary">
+                <p>平均 RKS</p>
+                <p>{{b30Analysis.histogram.average.toFixed(4)}}</p>
+            </div>
+        </div>
+        <div class="histogram-chart">
+            <div class="histogram-y-label">等效单曲 RKS</div>
+            <div class="histogram-plot">
+                <div class="histogram-scale">
+                    {{each b30Analysis.histogram.ticks tick}}
+                    <div class="histogram-grid-line" style="bottom: {{tick.position}}%;"><p>{{tick.label}}</p></div>
+                    {{/each}}
+                    <div class="average-marker" style="bottom: {{b30Analysis.histogram.averagePosition}}%;"><p>AVG {{b30Analysis.histogram.average.toFixed(4)}}</p></div>
+                </div>
+                <div class="histogram-bars">
+                    {{each b30Analysis.histogram.slots slot}}
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar {{slot.kind == 'phi' ? 'phi-bar' : 'best-bar'}}" style="height: {{slot.height}}%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">{{slot.label}}</p>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        <div class="histogram-legend">
+            <p><span class="legend-dot phi-dot"></span>P1-P3</p>
+            <p><span class="legend-dot best-dot"></span>B1-B27</p>
+            <p>{{b30Analysis.histogram.count}} 个有效槽位</p>
+        </div>
+    </section>
+</div>
+{{/if}}
 <div class="createdbox">
     <div class="phi-plugin">
         <p>{{_plugin}}</p>

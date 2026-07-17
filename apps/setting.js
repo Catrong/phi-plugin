@@ -196,15 +196,16 @@ export class phihelp extends phiPluginBase {
         }
         const pluginData = await getNotes.getNotesData(e.user_id)
 
-        /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage', string[]>} */
+        /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis', string[]>} */
         const settingKeyAlias = {
             theme: ['theme', '主题', '主题风格'],
             b30AvgKind: ['b30avgkind', 'b30kind', 'avgkind', '均值范围', '统计范围', '均值类型'],
             b30AvgColor: ['b30avgcolor', 'avgcolor', '颜色', '配色', '均值颜色'],
-            allowApiUsage: ['api', 'allowapiusage', 'api开关', 'api功能', 'api功能开关', '在线api', '是否允许使用api']
+            allowApiUsage: ['api', 'allowapiusage', 'api开关', 'api功能', 'api功能开关', '在线api', '是否允许使用api'],
+            showB30Analysis: ['showb30analysis', 'b30analysis', 'b30分析', '统计分析', 'b30统计分析', '分析区域']
         }
 
-        /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage', Record<string, string>>} */
+        /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis', Record<string, string>>} */
         const settingValueAlias = {
             theme: {
                 default: 'default',
@@ -261,6 +262,22 @@ export class phihelp extends phiPluginBase {
                 否: 'false',
                 1: 'true',
                 0: 'false'
+            },
+            showB30Analysis: {
+                true: 'true',
+                false: 'false',
+                on: 'true',
+                off: 'false',
+                开: 'true',
+                关: 'false',
+                开启: 'true',
+                关闭: 'false',
+                显示: 'true',
+                隐藏: 'false',
+                是: 'true',
+                否: 'false',
+                1: 'true',
+                0: 'false'
             }
         }
 
@@ -271,7 +288,8 @@ export class phihelp extends phiPluginBase {
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 主题 3`,
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 均值范围 b30`,
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 配色 gold`,
-            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 API开关 关闭`
+            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 API开关 关闭`,
+            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 B30分析 关闭`
         ].join('\n')
 
         const rawArgs = e.msg.replace(new RegExp(`^[#/](pgr|PGR|屁股肉|phi|Phi|(${Config.getUserCfg('config', 'cmdhead')}))(\\s*)(用户设置|个人设置|mysetting|myset)`), '').trim()
@@ -289,9 +307,9 @@ export class phihelp extends phiPluginBase {
             const valueInputRaw = args.slice(1).join('')
             const valueInput = valueInputRaw.toLowerCase()
 
-            /**@type {'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | null} */
+            /**@type {'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis' | null} */
             let settingKey = null
-            for (const key of /**@type {('theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage')[]} */ (Object.keys(settingKeyAlias))) {
+            for (const key of /**@type {('theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis')[]} */ (Object.keys(settingKeyAlias))) {
                 if (settingKeyAlias[key].map(i => i.toLowerCase()).includes(keyInput)) {
                     settingKey = key
                     break
@@ -299,7 +317,7 @@ export class phihelp extends phiPluginBase {
             }
 
             if (!settingKey) {
-                send.send_with_At(e, `未知设置项：${args[0]}\n支持：主题 / 均值范围 / 配色 / API开关\n${usage}`)
+                send.send_with_At(e, `未知设置项：${args[0]}\n支持：主题 / 均值范围 / 配色 / API开关 / B30分析\n${usage}`)
                 return true
             }
 
@@ -323,8 +341,8 @@ export class phihelp extends phiPluginBase {
                 return true
             }
 
-            if (settingKey === 'allowApiUsage') {
-                pluginData.allowApiUsage = canonicalValue === 'true'
+            if (settingKey === 'allowApiUsage' || settingKey === 'showB30Analysis') {
+                pluginData[settingKey] = canonicalValue === 'true'
             } else {
                 // @ts-ignore
                 pluginData[settingKey] = canonicalValue
@@ -335,7 +353,7 @@ export class phihelp extends phiPluginBase {
         }
 
         /**
-         * @param {'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage'} key
+         * @param {'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis'} key
          * @param {string} current
          */
         const buildItem = (key, current) => {
@@ -361,7 +379,8 @@ export class phihelp extends phiPluginBase {
                 buildItem('theme', pluginData?.theme || 'default'),
                 buildItem('b30AvgKind', pluginData?.b30AvgKind || 'all'),
                 buildItem('b30AvgColor', pluginData?.b30AvgColor || 'red'),
-                buildItem('allowApiUsage', String(pluginData?.allowApiUsage !== false))
+                buildItem('allowApiUsage', String(pluginData?.allowApiUsage !== false)),
+                buildItem('showB30Analysis', String(pluginData?.showB30Analysis !== false))
             ]
         }
 

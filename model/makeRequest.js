@@ -667,6 +667,20 @@ export default class makeRequest {
         return await makeFetch(burl('/chartsTag/get/bySongRank'), params)
     }
 
+    /**
+     * 批量获取谱面标签信息，按曲目和难度分别返回。
+     * @param {{data: {song_id: idString, rank?: levelKind[]}[], total?: boolean}} params
+     * @returns {Promise<{
+     *  data: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
+     *  primary: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
+     *  secondary: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
+     *  tree: Record<idString, Record<levelKind, ChartTagTreeNode[]>>
+     * }>}
+     */
+    static async getChartsTagsBatch(params) {
+        return await makeFetch(burl('/chartsTag/get/chartsTags'), params)
+    }
+
 
     /**
      * 获取用户对谱面标签的投票记录

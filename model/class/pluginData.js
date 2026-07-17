@@ -63,5 +63,8 @@ export default class PluginData {
 
     /**@type {boolean} 是否允许使用在线API功能 */
     this.allowApiUsage = data?.allowApiUsage !== false
+
+    /**@type {boolean} 是否展示 B30 统计分析 */
+    this.showB30Analysis = data?.showB30Analysis !== false
   }
 }

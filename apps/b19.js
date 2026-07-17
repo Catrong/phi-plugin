@@ -20,6 +20,12 @@ import LevelRecordInfo from '../model/class/LevelRecordInfo.js';
 import SongsInfo from '../model/class/SongsInfo.js';
 import Version from '../components/Version.js';
 import { canUseApi } from '../model/apiPermission.js';
+import {
+    buildB30TagAnalysis,
+    buildChartTagBatchRequest,
+    buildRksHistogram,
+    getB30AnalysisRecords,
+} from '../model/b30Analysis.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -149,6 +155,28 @@ export class phib19 extends phiPluginBase {
         let save_b19 = await save.getB19(e, nnum, { avgType: plugin_data.b30AvgKind, color: plugin_data.b30AvgColor })
         let stats = await save.getStats()
 
+        let b30Analysis = null
+        if (plugin_data.showB30Analysis !== false && nnum == 33) {
+            const records = getB30AnalysisRecords(save_b19)
+            const histogram = buildRksHistogram(records)
+            const apiEnabled = await canUseApi(e)
+            let tagAnalysis = null
+            if (apiEnabled && records.length) {
+                const tagResponse = await makeRequestFnc.requestApi(
+                    e,
+                    () => makeRequest.getChartsTagsBatch({ data: buildChartTagBatchRequest(records) }),
+                    { logTag: 'b30-getChartsTagsBatch', loggerLevel: 'warn' }
+                )
+                tagAnalysis = buildB30TagAnalysis(records, tagResponse)
+            }
+            b30Analysis = {
+                histogram,
+                tagAnalysis,
+                showTags: apiEnabled,
+                histogramWide: !apiEnabled,
+            }
+        }
+
         const spInfo = [];
 
         /**
@@ -211,7 +239,8 @@ export class phib19 extends phiPluginBase {
             gameuser,
             nnum,
             stats,
-            spInfo
+            spInfo,
+            b30Analysis,
         }
         const isAp1st = Date.now() > 1774972800000 && Date.now() < 1775059200000
         const img = (isAp1st && nnum == 33 && save_b19.b19_list.length == 33) ? (await picmodle.common(e, 'b19', { ...data, theme: 'default' }, 'b19666')) : await picmodle.common(e, 'b19', data)

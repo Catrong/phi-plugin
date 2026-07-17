@@ -51,6 +51,10 @@ export const USER_SETTING_META = {
     allowApiUsage: {
         title: 'API功能开关',
         description: '使用/myset api <序号>修改，关闭后将不再使用在线查分平台相关功能。'
+    },
+    showB30Analysis: {
+        title: 'B30统计分析',
+        description: '使用/myset B30分析 <序号>修改，控制 B30 图片末尾的谱面标签能力与等效 RKS 直方图。'
     }
 }
 
@@ -120,6 +124,16 @@ export const USER_SETTING_OPTIONS = {
         false: {
             title: '[1]禁用',
             description: '禁用在线查分平台能力，仅使用本地数据。'
+        }
+    },
+    showB30Analysis: {
+        true: {
+            title: '[0]显示',
+            description: '在 B30 图片末尾显示谱面标签能力和等效 RKS 直方图。'
+        },
+        false: {
+            title: '[1]隐藏',
+            description: '隐藏完整的 B30 统计分析区域。'
         }
     }
 }
