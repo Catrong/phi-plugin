@@ -855,7 +855,7 @@ body p {
   --height: 310px;
   width: calc(50% - 11px);
   box-sizing: border-box;
-  padding: 25px 108px 22px;
+  padding: 15px 100px 22px;
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.62);
@@ -875,6 +875,7 @@ body p {
   min-height: 58px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   padding-bottom: 11px;
+  width: 110%;
 }
 
 .analysis-kicker {
@@ -910,6 +911,19 @@ body p {
 .tag-analysis-body.is-insufficient .tag-analysis-content {
   filter: blur(7px);
   opacity: 0.48;
+}
+
+.tag-analysis-tip {
+  position: absolute;
+  width: 80%;
+  height: min-content;
+  bottom: 5px;
+  left: 15px;
+  z-index: 2;
+}
+
+.tag-analysis-tip p {
+  font-size: 10px;
 }
 
 .tag-radar-column {
@@ -1063,8 +1077,8 @@ body p {
   height: 178px;
   display: flex;
   padding-top: 12px;
-  width: 118%;
-  margin-left: -14%;
+  width: 115%;
+  margin-left: -12%;
 }
 
 .histogram-y-label {

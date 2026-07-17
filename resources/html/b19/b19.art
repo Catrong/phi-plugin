@@ -405,6 +405,11 @@
             </div>
             {{/if}}
         </div>
+        {{if b30Analysis.tagAnalysis && !b30Analysis.tagAnalysis.insufficient}}
+        <div class="tag-analysis-tip">
+            <p>当前谱面标签统计量较小，可以前往 https://www.b19.top 或使用 /settap 指令进行投票哦！</p>
+        </div>
+        {{/if}}
     </section>
     {{/if}}
 
