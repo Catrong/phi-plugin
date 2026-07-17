@@ -2,7 +2,7 @@
 import fs from 'fs'
 import { pluginRoot } from '../model/path.js'
 import logger from './Logger.js'
-import chokidar from 'chokidar'
+import fileWatcherRegistry from './FileWatcherRegistry.js'
 import platform from './platform/index.js'
 const README_path = `${pluginRoot}/README.md`
 const yunzai_ver = `v${platform.getPackageVersion()}`
@@ -30,7 +30,7 @@ let Version = {
     yunzai: yunzai_ver,
 };
 
-chokidar.watch(README_path).on('change', () => {
+const versionWatcher = fileWatcherRegistry.watch('version:readme', README_path, () => {
     try {
         const logs = fs.readFileSync(README_path, 'utf8')
         currentVersion = 'v' + (/插件版本\-([0-9\.]+)/.exec(logs)?.[1] ?? '')
@@ -42,6 +42,11 @@ chokidar.watch(README_path).on('change', () => {
     } catch (e) {
         logger.error(e)
     }
+})
+
+Object.defineProperty(Version, 'close', {
+    value: () => versionWatcher.close(),
+    enumerable: false,
 })
 
 export default Version

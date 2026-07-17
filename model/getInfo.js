@@ -5,9 +5,9 @@ import Config from '../components/Config.js'
 import SongsInfo from './class/SongsInfo.js'
 import fs from 'fs'
 import { allLevel, Level, MAX_DIFFICULTY } from './constNum.js'
-import chokidar from 'chokidar'
 import fCompute from './fCompute.js'
 import logger from '../components/Logger.js'
+import fileWatcherRegistry from '../components/FileWatcherRegistry.js'
 import Chart from './class/Chart.js'
 import Save from './class/Save.js'
 
@@ -161,24 +161,32 @@ export default new class getInfo {
             tagsTop: {},
         }
 
+        this.initIng = false
+        this.reinitRequested = false
+
         if (Config.getUserCfg('config', 'watchInfoPath')) {
-            chokidar.watch(infoPath).on('change', () => {
-                this.init()
+            this.infoWatcher = fileWatcherRegistry.watch('info:directory', infoPath, () => {
+                void this.init().catch(err => logger.error('[phi-plugin]热更新曲目信息失败', err))
             });
+        } else {
+            void fileWatcherRegistry.close('info:directory')
         }
     }
-
-    static initIng = false
 
     async init() {
         if (!fs.existsSync(path.join(originalIllPath, '.git'))) {
             logger.error(`[phi-plugin] 未下载曲绘文件，建议使用 /phi downill 命令进行下载`)
         }
 
-        if (this.initIng) return
+        if (this.initIng) {
+            this.reinitRequested = true
+            return
+        }
         this.initIng = true
+        this.reinitRequested = false
 
-        logger.info(`[phi-plugin]初始化曲目信息`)
+        try {
+            logger.info(`[phi-plugin]初始化曲目信息`)
 
 
         this.allLevel = allLevel;
@@ -583,8 +591,23 @@ export default new class getInfo {
 
 
 
-        this.initIng = false
-        logger.info(`[phi-plugin]初始化曲目信息完成`)
+            logger.info(`[phi-plugin]初始化曲目信息完成`)
+        } finally {
+            this.initIng = false
+            if (this.reinitRequested) {
+                this.reinitRequested = false
+                queueMicrotask(() => {
+                    void this.init().catch(err => logger.error('[phi-plugin]补跑曲目信息初始化失败', err))
+                })
+            }
+        }
+    }
+
+    /** 关闭曲库目录监听器。 */
+    async close() {
+        const watcherLease = this.infoWatcher
+        this.infoWatcher = undefined
+        if (watcherLease) await watcherLease.close()
     }
 
     /**

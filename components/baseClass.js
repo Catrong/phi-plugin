@@ -38,10 +38,18 @@ const wrappedHandlerSymbol = Symbol('phi.wrappedHandler')
  * @property {idString[]} ids 待选择的曲目列表
  * @property {T} options 其他选项
  * @property {mutiNickCallback<T>} callback 选择后的回调函数
+ * @property {NodeJS.Timeout | undefined} timer 超时清理定时器
  **/
 
 /** @type {Record<string, waitToChoseSong<any>>} */
 const wait_to_chose_song = {}
+
+/** @param {string} userId */
+function clearMutiNickState(userId) {
+  const state = wait_to_chose_song[userId]
+  if (state?.timer) clearTimeout(state.timer)
+  delete wait_to_chose_song[userId]
+}
 
 /**
  * @template {any} T
@@ -164,12 +172,22 @@ export default class phiPluginBase extends HostPlugin {
       return;
     }
     send.send_with_At(e, fCompute.mutiNick(idList));
-    wait_to_chose_song[e.user_id] = {
+    const userId = String(e.user_id)
+    const timeoutSeconds = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
+    clearMutiNickState(userId)
+    const state = wait_to_chose_song[userId] = {
       ids: idList,
       options,
-      callback
+      callback,
+      timer: /** @type {NodeJS.Timeout | undefined} */ (undefined),
     };
-    this.setContext('mutiNick', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'), '操作超时已取消，请注意@BOT进行回复呐！')
+    if (timeoutSeconds > 0) {
+      state.timer = setTimeout(() => {
+        if (wait_to_chose_song[userId] === state) clearMutiNickState(userId)
+      }, timeoutSeconds * 1000)
+      state.timer?.unref?.()
+    }
+    this.setContext('mutiNick', false, timeoutSeconds, '操作超时已取消，请注意@BOT进行回复呐！')
 
   }
 
@@ -177,15 +195,17 @@ export default class phiPluginBase extends HostPlugin {
     this.e = this.wrapPlatformEvent(this.e)
     const { msg } = this.e;
     const num = Number(msg.match(/([0-9]+)/)?.[0]);
-    const ids = wait_to_chose_song[this.e.user_id]?.ids || [];
+    const userId = String(this.e.user_id)
+    const state = wait_to_chose_song[userId]
+    const ids = state?.ids || [];
     if (!num) {
       send.send_with_At(this.e, `请输入正确的序号哦！`);
     } else if (!ids[num - 1]) {
       send.send_with_At(this.e, `未找到${num}所对应的曲目哦！`);
     } else {
-      wait_to_chose_song[this.e.user_id]?.callback(this.e, ids[num - 1], wait_to_chose_song[this.e.user_id]?.options);
-      delete wait_to_chose_song[this.e.user_id];
+      clearMutiNickState(userId)
       this.finish('mutiNick', false)
+      state?.callback(this.e, ids[num - 1], state.options);
       return true;
     }
   }

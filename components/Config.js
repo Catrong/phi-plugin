@@ -1,8 +1,8 @@
 
 import YAML from 'yaml'
-import chokidar from 'chokidar'
 import fs from 'node:fs'
 import YamlReader from './YamlReader.js'
+import fileWatcherRegistry from './FileWatcherRegistry.js'
 import { pluginRoot } from '../model/path.js'
 import logger from './Logger.js'
 import platform from './platform/index.js'
@@ -16,7 +16,7 @@ class Config {
 
         /** 监听文件 */
         /** @type {Record<string, any>} */
-        this.watcher = { config: {}, defSet: {} }
+        this.watcher = {}
 
         this.initCfg()
     }
@@ -146,8 +146,8 @@ class Config {
 
         if (this.watcher[key]) return
 
-        const watcher = chokidar.watch(file)
-        watcher.on('change', path => {
+        const watcherKey = `config:${key}`
+        const watcher = fileWatcherRegistry.watch(watcherKey, file, path => {
             delete this.config[key]
             if (!platform.isBotReady()) return
             logger.mark(`[phi修改配置文件][${type}][${name}]`)
@@ -158,6 +158,13 @@ class Config {
         })
 
         this.watcher[key] = watcher
+    }
+
+    /** 关闭当前配置实例创建的全部监听器。 */
+    async close() {
+        const entries = Object.entries(this.watcher)
+        this.watcher = {}
+        await Promise.allSettled(entries.map(([, lease]) => lease.close()))
     }
 
     /**

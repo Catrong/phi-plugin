@@ -15,6 +15,20 @@ let songIdList = getInfo.illlist || [] //所有有曲绘的曲目列表
  */
 let songweights = {} //存储每首歌曲被抽取的权重
 
+/** @type {Record<string, NodeJS.Timeout>} */
+const songweightCleanupTimers = {}
+const SONGWEIGHT_IDLE_TTL = 60 * 60 * 1000
+
+/** @param {string} groupId */
+function scheduleSongweightCleanup(groupId) {
+    if (songweightCleanupTimers[groupId]) clearTimeout(songweightCleanupTimers[groupId])
+    songweightCleanupTimers[groupId] = setTimeout(() => {
+        delete songweights[groupId]
+        delete songweightCleanupTimers[groupId]
+    }, SONGWEIGHT_IDLE_TTL)
+    songweightCleanupTimers[groupId].unref?.()
+}
+
 //曲目初始洗牌
 songIdList = fCompute.randArray(songIdList)
 
@@ -104,6 +118,7 @@ export default new class guessIll {
                 songweights[group_id][song] = 1
             })
         }
+        scheduleSongweightCleanup(group_id)
 
         let songId = getRandomSong(e)
         let songs_info = getInfo.info(songId)
@@ -361,6 +376,7 @@ export default new class guessIll {
                             const t = ansList[group_id]
                             delete ansList[group_id]
                             delete gameList[group_id]
+                            delete eList[group_id]
                             send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
                             await send.reply(e, await getPic.GetSongsInfoAtlas(e, t))
                             return true
@@ -390,6 +406,7 @@ export default new class guessIll {
             const t = ansList[group_id]
             delete ansList[group_id]
             delete gameList[group_id]
+            delete eList[group_id]
             await send.reply(e, '好吧，下面开始公布答案。', true)
             await send.reply(e, await getPic.GetSongsInfoAtlas(e, t))
             return true
@@ -413,6 +430,7 @@ export default new class guessIll {
         songIdList = fCompute.randArray(songIdList)
 
         songweights[group_id] = songweights[group_id] || {}
+        scheduleSongweightCleanup(group_id)
 
         // 将权重归1
         songIdList.forEach(song => {

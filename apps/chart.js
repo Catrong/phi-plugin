@@ -48,6 +48,7 @@ import platform from '../components/platform/index.js'
  * @property {phigrosToken} sessionToken 用户 Session Token
  * @property {ChartTagTreeNode[]} [tagTree] 标签树
  * @property {ChartTagTreeNode} [category] 已选分类
+ * @property {NodeJS.Timeout} [timer] 超时清理定时器
  */
 
 /**
@@ -91,6 +92,31 @@ import platform from '../components/platform/index.js'
 
 /** @type {Record<string, SetTagWaitState>} */
 const wait_to_settag = {}
+
+/** @param {string} userId */
+function clearSetTagState(userId) {
+  const state = wait_to_settag[userId]
+  if (state?.timer) clearTimeout(state.timer)
+  delete wait_to_settag[userId]
+}
+
+/**
+ * @param {string} userId
+ * @param {SetTagWaitState} value
+ * @param {number} timeoutSeconds
+ */
+function setSetTagState(userId, value, timeoutSeconds) {
+  clearSetTagState(userId)
+  const { timer: _oldTimer, ...data } = value
+  const state = wait_to_settag[userId] = /** @type {SetTagWaitState} */ (data)
+  if (timeoutSeconds > 0) {
+    state.timer = setTimeout(() => {
+      if (wait_to_settag[userId] === state) clearSetTagState(userId)
+    }, timeoutSeconds * 1000)
+    state.timer.unref?.()
+  }
+  return state
+}
 
 /**
  * @param {string} value
@@ -394,9 +420,10 @@ export class phihelp extends phiPluginBase {
     const categorySelection = findCategorySelection(msg, tagTree)
     if (!categorySelection) {
       this.getMicInfoFromMsg(e, /[#/](.*?)(settag)(\s*)/, ['rank'], { sessionToken, tagTree }, async (e, id, optObj) => {
-        wait_to_settag[e.user_id] = { id, rank: optObj.rank, sessionToken, tagTree }
+        const timeout = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
+        setSetTagState(String(e.user_id), { id, rank: optObj.rank, sessionToken, tagTree }, timeout)
         send.send_with_At(e, formatTagCategoryMenu(tagTree), true);
-        setContext(this, 'settagCategory', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'), '操作超时已取消，请重新使用 /settag。')
+        setContext(this, 'settagCategory', false, timeout, '操作超时已取消，请重新使用 /settag。')
       })
       return true;
     }
@@ -406,9 +433,10 @@ export class phihelp extends phiPluginBase {
     if (!childSelections.length) {
       const cleanEvent = platform.cloneEvent(e, { msg: removeSelectedTagTokens(e.msg, categorySelection, []) })
       this.getMicInfoFromMsg(cleanEvent, /[#/](.*?)(settag)(\s*)/, ['rank'], { sessionToken }, async (e, id, optObj) => {
-        wait_to_settag[e.user_id] = { id, rank: optObj.rank, sessionToken, category: categorySelection.category }
+        const timeout = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
+        setSetTagState(String(e.user_id), { id, rank: optObj.rank, sessionToken, category: categorySelection.category }, timeout)
         send.send_with_At(e, formatTagChildMenu(categorySelection.category), true);
-        setContext(this, 'settagChild', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'), '操作超时已取消，请重新使用 /settag。')
+        setContext(this, 'settagChild', false, timeout, '操作超时已取消，请重新使用 /settag。')
       })
       return true;
     }
@@ -427,7 +455,8 @@ export class phihelp extends phiPluginBase {
    * @returns {Promise<boolean>}
    */
   async settagCategory() {
-    const state = wait_to_settag[this.e.user_id]
+    const userId = String(this.e.user_id)
+    const state = wait_to_settag[userId]
     if (!state) {
       finishContext(this, 'settagCategory', false)
       return true
@@ -442,7 +471,9 @@ export class phihelp extends phiPluginBase {
     state.category = categorySelection.category
     send.send_with_At(this.e, formatTagChildMenu(categorySelection.category), true)
     finishContext(this, 'settagCategory', false)
-    setContext(this, 'settagChild', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'), '操作超时已取消，请重新使用 /settag。')
+    const timeout = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
+    setSetTagState(userId, state, timeout)
+    setContext(this, 'settagChild', false, timeout, '操作超时已取消，请重新使用 /settag。')
     return true
   }
 
@@ -451,9 +482,10 @@ export class phihelp extends phiPluginBase {
    * @returns {Promise<boolean>}
    */
   async settagChild() {
-    const state = wait_to_settag[this.e.user_id]
+    const userId = String(this.e.user_id)
+    const state = wait_to_settag[userId]
     if (!state?.category) {
-      delete wait_to_settag[this.e.user_id]
+      clearSetTagState(userId)
       finishContext(this, 'settagChild', false)
       return true
     }
@@ -466,7 +498,7 @@ export class phihelp extends phiPluginBase {
 
     /** @type {chartsTagString[]} */
     const selectedTags = childSelections.map(selection => /** @type {chartsTagString} */ (selection.tag.name))
-    delete wait_to_settag[this.e.user_id]
+    clearSetTagState(userId)
     finishContext(this, 'settagChild', false)
     await setChartTags(this.e, state.id, { rank: state.rank, selectedTags, sessionToken: state.sessionToken })
     return true

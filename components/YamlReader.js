@@ -147,4 +147,11 @@ export default class YamlReader {
         let yaml = this.document?.toString() ?? ''
         fs.writeFileSync(this.yamlPath, yaml, 'utf8')
     }
+
+    /** 关闭可选的文件监听器。 */
+    async close() {
+        const watcher = this.watcher
+        this.watcher = undefined
+        if (watcher) await watcher.close()
+    }
 }

@@ -25,6 +25,30 @@ let songIdList = getInfo.idList || []
  */
 let songweights = {}
 
+/** @type {Record<string, NodeJS.Timeout>} */
+const songweightCleanupTimers = {}
+const SONGWEIGHT_IDLE_TTL = 60 * 60 * 1000
+
+/** @param {string} groupId */
+function scheduleSongweightCleanup(groupId) {
+    if (songweightCleanupTimers[groupId]) clearTimeout(songweightCleanupTimers[groupId])
+    songweightCleanupTimers[groupId] = setTimeout(() => {
+        delete songweights[groupId]
+        delete songweightCleanupTimers[groupId]
+    }, SONGWEIGHT_IDLE_TTL)
+    songweightCleanupTimers[groupId].unref?.()
+}
+
+/**
+ * @param {string} groupId
+ * @param {GameList} gameList
+ */
+function cleanupGameState(groupId, gameList) {
+    delete letterGameData[groupId]
+    delete gameList[groupId]
+    delete timeCount[groupId]
+}
+
 // let gamelist = {}//存储标准答案曲名
 // let blurlist = {}//存储模糊后的曲名
 // let alphalist = {}//存储翻开的字母
@@ -152,6 +176,7 @@ export default class guessLetter {
 
         if (allSelectSongId.length < Config.getUserCfg('config', 'LetterNum')) {
             send.reply(e, "曲库中曲目的数量小于开字母的条数哦！更改曲库后需要重启哦！")
+            cleanupGameState(group_id, gameList)
             return true
         }
 
@@ -169,6 +194,7 @@ export default class guessLetter {
                 songweights[group_id][id] = Math.min(songweights[group_id][id], 5) // 权重上限5
             }
         })
+        scheduleSongweightCleanup(group_id)
 
         let nowTime = Date.now()
 
@@ -183,6 +209,7 @@ export default class guessLetter {
                 if (cnnt >= 50) {
                     logger.error(`[phi-plugin][letter]抽取曲目失败，请检查曲库设置`)
                     send.reply(e, `抽取曲目失败，请检查曲库设置`)
+                    cleanupGameState(group_id, gameList)
                     return
                 }
                 randId = getRandomSong(e, allSelectSongId)
@@ -600,6 +627,7 @@ export default class guessLetter {
         }
 
         songweights[group_id] = {}
+        scheduleSongweightCleanup(group_id)
 
         await send.reply(e, `洗牌成功了www`, true)
         return true
@@ -744,9 +772,7 @@ function gameover(group_id, gameList, letterMarkdown) {
     const t = [...currentGame.ansList]
     const winner = [...currentGame.winnerlist]
 
-    delete letterGameData[group_id]
-    delete gameList[group_id]
-    delete timeCount[group_id]
+    cleanupGameState(group_id, gameList)
 
     /**@type {string[]} */
     const output = ['***\n']
