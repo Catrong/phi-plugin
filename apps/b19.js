@@ -21,8 +21,6 @@ import SongsInfo from '../model/class/SongsInfo.js';
 import Version from '../components/Version.js';
 import { canUseApi } from '../model/apiPermission.js';
 import {
-    buildB30TagAnalysis,
-    buildChartTagBatchRequest,
     buildRksHistogram,
     getB30AnalysisRecords,
 } from '../model/b30Analysis.js';
@@ -162,12 +160,16 @@ export class phib19 extends phiPluginBase {
             const apiEnabled = await canUseApi(e)
             let tagAnalysis = null
             if (apiEnabled && records.length) {
-                const tagResponse = await makeRequestFnc.requestApi(
+                const analysisAuth = askOtherId
+                    ? { api_user_id: /** @type {apiUserId} */ (askOtherId[1]) }
+                    : save.session
+                        ? { token: save.session }
+                        : makeRequestFnc.makePlatform(e)
+                tagAnalysis = await makeRequestFnc.requestApi(
                     e,
-                    () => makeRequest.getChartsTagsBatch({ data: buildChartTagBatchRequest(records) }),
-                    { logTag: 'b30-getChartsTagsBatch', loggerLevel: 'warn' }
+                    () => makeRequest.getB30TagAnalysis(analysisAuth),
+                    { logTag: 'b30-getTagAnalysis', loggerLevel: 'warn' }
                 )
-                tagAnalysis = buildB30TagAnalysis(records, tagResponse)
             }
             b30Analysis = {
                 histogram,

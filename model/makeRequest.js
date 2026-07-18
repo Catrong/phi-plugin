@@ -263,11 +263,12 @@ import autoSeekApi from './autoSeekApi.js';
 
 /**
  * 谱面标签树节点。
- * parentId 为空时为分类标签；有 parentId 时通常为细分标签。
+ * parentId 为空时为分类标签；细分标签可通过 parentIds 同时归属多个分类。
  * @typedef {object} ChartTagTreeNode
  * @property {number} [id] 标签ID
  * @property {chartsTagString} name 标签名
  * @property {number | null} [parentId] 父标签ID，分类标签为空
+ * @property {number[]} [parentIds] 原始父标签ID列表，可包含多个分类
  * @property {'category' | 'detail'} [kind] 标签节点类型
  * @property {string | null} [description] 标签描述
  * @property {string | null} [icon] 标签图标
@@ -679,6 +680,24 @@ export default class makeRequest {
      */
     static async getChartsTagsBatch(params) {
         return await makeFetch(burl('/chartsTag/get/chartsTags'), params)
+    }
+
+    /**
+     * 获取用户 B30 谱面标签分析（雷达图、擅长 tag 与薄弱 tag）。
+     * @param {baseAu} params
+     * @returns {Promise<{
+     *  totalVotes: number,
+     *  minimumVotes: number,
+     *  averageRks: number,
+     *  categories: {name: string, rks: number, votes: number, hasVotes: boolean}[],
+     *  radar: {grids: string[], axes: {x: number, y: number}[], points: string, categories: object[]},
+     *  strong: {name: string, rks: number, votes: number}[],
+     *  weak: {name: string, rks: number, votes: number}[],
+     *  insufficient: boolean
+     * }>}
+     */
+    static async getB30TagAnalysis(params) {
+        return (await makeFetch(burl('/chartsTag/get/b30Analysis'), params)).data
     }
 
 

@@ -224,6 +224,16 @@ function findChildSelections(text, category) {
 }
 
 /**
+ * Keeps a vote payload unique by tag name when the API exposes the same leaf
+ * under more than one category.
+ * @param {chartsTagString[]} tags
+ * @returns {chartsTagString[]}
+ */
+function uniqueTagNames(tags) {
+  return [...new Set(tags)]
+}
+
+/**
  * @param {string} message
  * @param {SetTagCategorySelection} categorySelection
  * @param {SetTagChildSelection[]} childSelections
@@ -271,6 +281,29 @@ function formatTagChildMenu(category) {
 }
 
 /**
+ * 汇总一个分类下的全部叶标签票数。
+ * 同名标签在其它分类中仍会重新计入该分类的统计。
+ * @param {ChartTagTreeNode} category
+ * @returns {number}
+ */
+function getCategoryVoteCount(category) {
+  /** @type {Set<chartsTagString>} */
+  const seen = new Set()
+
+  /** @param {ChartTagTreeNode} node @returns {number} */
+  const collect = (node) => {
+    if (node.children?.length) {
+      return node.children.reduce((sum, child) => sum + collect(child), 0)
+    }
+    if (seen.has(node.name)) return 0
+    seen.add(node.name)
+    return Number(node.voteCount || 0)
+  }
+
+  return collect(category)
+}
+
+/**
  * @param {ChartTagTreeNode[]} tagTree
  * @returns {{words: ChartTagWord[], wordsMaxValue: number}}
  */
@@ -280,7 +313,7 @@ function makeCategoryWords(tagTree) {
   let wordsMaxValue = 0
 
   for (const category of tagTree || []) {
-    const value = Number(category.voteCount || 0)
+    const value = getCategoryVoteCount(category)
     words.push({ name: category.name, value })
     wordsMaxValue = Math.max(wordsMaxValue, value)
   }
@@ -442,7 +475,7 @@ export class phihelp extends phiPluginBase {
     }
 
     /** @type {chartsTagString[]} */
-    const selectedTags = childSelections.map(selection => /** @type {chartsTagString} */ (selection.tag.name));
+    const selectedTags = uniqueTagNames(childSelections.map(selection => /** @type {chartsTagString} */ (selection.tag.name)));
     const cleanEvent = platform.cloneEvent(e, { msg: removeSelectedTagTokens(e.msg, categorySelection, childSelections) })
 
     this.getMicInfoFromMsg(cleanEvent, /[#/](.*?)(settag)(\s*)/, ['rank'], { selectedTags, sessionToken }, async (e, id, optObj) => {
@@ -497,7 +530,7 @@ export class phihelp extends phiPluginBase {
     }
 
     /** @type {chartsTagString[]} */
-    const selectedTags = childSelections.map(selection => /** @type {chartsTagString} */ (selection.tag.name))
+    const selectedTags = uniqueTagNames(childSelections.map(selection => /** @type {chartsTagString} */ (selection.tag.name)))
     clearSetTagState(userId)
     finishContext(this, 'settagChild', false)
     await setChartTags(this.e, state.id, { rank: state.rank, selectedTags, sessionToken: state.sessionToken })
@@ -615,8 +648,9 @@ async function getChartTags(e, id, options) {
     usersVote = []
   }
   for (const category of apiChartTag.tree || []) {
-    words.push({ name: category.name, value: category.voteCount, children: category.children || [] })
-    wordsMaxValue = Math.max(wordsMaxValue, category.voteCount)
+    const value = getCategoryVoteCount(category)
+    words.push({ name: category.name, value, children: category.children || [] })
+    wordsMaxValue = Math.max(wordsMaxValue, value)
   }
 
   /** @type {string[]} */
@@ -645,6 +679,7 @@ async function getChartTags(e, id, options) {
  */
 async function setChartTags(e, id, options) {
   const { rank, selectedTags, sessionToken } = options;
+  const uniqueSelectedTags = uniqueTagNames(selectedTags);
   const info = getInfo.info(id, true)
   if (!info || !info.chart[rank]) {
     return;
@@ -652,7 +687,7 @@ async function setChartTags(e, id, options) {
 
   const setResult = await makeRequestFnc.requestApi(
     e,
-    () => makeRequest.setChartsTag({ ...makeRequestFnc.makePlatform(e), token: sessionToken, song_id: id, rank, content: selectedTags }),
+    () => makeRequest.setChartsTag({ ...makeRequestFnc.makePlatform(e), token: sessionToken, song_id: id, rank, content: uniqueSelectedTags }),
     { errorPrefix: '投票失败QAQ！ERROR', notifyUser: true, logTag: 'setChartsTag', loggerLevel: 'error' }
   )
   if (!setResult) {
