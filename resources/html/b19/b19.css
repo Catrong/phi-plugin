@@ -875,7 +875,7 @@ body p {
   min-height: 58px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   padding-bottom: 11px;
-  width: 110%;
+  width: calc(100% + 50px);
 }
 
 .analysis-kicker {
@@ -1169,11 +1169,12 @@ body p {
   height: 24px;
   color: rgba(255, 255, 255, 0.56);
   font-size: 7px;
-  line-height: 7px;
+  /* line-height: 7px; */
   padding-top: 3px;
   box-sizing: border-box;
   writing-mode: vertical-rl;
   text-align: left;
+  transform: translate(4px, -2px) rotate(315deg);
 }
 
 .average-marker {
