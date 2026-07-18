@@ -19,6 +19,8 @@ const botConfig = platform.getBotConfig()
  * @property {(name: string, data?: any) => Promise<any>} screenshot 截图，返回 Buffer / Buffer[] / false
  * @property {() => Promise<any>} browserInit 初始化 / 启动浏览器
  * @property {(force?: boolean) => Promise<any>} restart 重启浏览器
+ * @property {() => Promise<void>} shutdown 永久关闭实例
+ * @property {() => void} forceShutdown 退出阶段同步结束进程树
  */
 
 /**
@@ -45,6 +47,8 @@ class Puppeteer extends Renderer {
         this.browserPid = null
         this.initPromise = null
         this.closing = false
+        this.closingPid = null
+        this.shutdownRequested = false
         this.shoting = []
         /** 截图数达到时重启浏览器 避免生成速度越来越慢 */
         this.restartNum = config.restartNum || 100
@@ -60,6 +64,9 @@ class Puppeteer extends Renderer {
             userDataDir: path.resolve(tempPath, "puppeteer", browserId),
             headless: config.headless || "new",
             args: config.args || ["--disable-gpu", "--disable-setuid-sandbox", "--no-sandbox", "--no-zygote"],
+            handleSIGINT: false,
+            handleSIGTERM: false,
+            handleSIGHUP: false,
         }
         if (config.chromiumPath || botConfig?.chromium_path) {
             this.config.executablePath = config.chromiumPath || botConfig?.chromium_path
@@ -76,6 +83,7 @@ class Puppeteer extends Renderer {
      * 初始化chromium。并发调用会等待同一个启动 Promise，避免首帧撞上启动锁直接失败。
      */
     async browserInit() {
+        if (this.shutdownRequested) return false
         if (this.browser) return this.browser
         if (this.initPromise) return this.initPromise
 
@@ -108,6 +116,11 @@ class Puppeteer extends Renderer {
 
         if (!browser) {
             logger.error(`[phi-plugin] puppeteer Chromium(${this.browserId}) 启动失败`)
+            return false
+        }
+
+        if (this.shutdownRequested) {
+            await this.stop(browser, browser.process()?.pid)
             return false
         }
 
@@ -291,12 +304,14 @@ class Puppeteer extends Renderer {
 
     /** 重启 */
     async restart(force = false) {
+        if (this.shutdownRequested) return false
         if (!this.browser?.close) return false
         if (!force && (this.renderNum % this.restartNum !== 0 || this.shoting.length > 0)) return false
 
         logger.info(`[phi-plugin] puppeteer Chromium(${this.browserId}) ${force ? "强制" : ""}关闭重启...`)
         const browser = this.browser
         const pid = this.browserPid
+        this.closingPid = pid
         this.browser = false
         this.browserPid = null
         this.clearIdleTimer()
@@ -304,6 +319,7 @@ class Puppeteer extends Renderer {
         try {
             await this.stop(browser, pid)
         } finally {
+            this.closingPid = null
             this.closing = false
         }
         return this.browserInit()
@@ -312,7 +328,7 @@ class Puppeteer extends Renderer {
     /** 空闲定时器：长时间无渲染时关闭浏览器释放资源 */
     resetIdleTimer() {
         this.clearIdleTimer()
-        if (!(this.idleTimeout > 0)) return
+        if (this.shutdownRequested || !(this.idleTimeout > 0)) return
         this.idleTimer = setTimeout(() => {
             if (this.shoting.length > 0 || !this.browser) return
             logger.info(`[phi-plugin] puppeteer Chromium(${this.browserId}) 空闲超过 ${this.idleTimeout / 1000}s，自动关闭释放资源`)
@@ -334,14 +350,37 @@ class Puppeteer extends Renderer {
         this.clearIdleTimer()
         const browser = this.browser
         const pid = this.browserPid
+        this.closingPid = pid
         this.browser = false
         this.browserPid = null
         this.closing = true
         try {
             await this.stop(browser, pid)
         } finally {
+            this.closingPid = null
             this.closing = false
         }
+    }
+
+    /** 永久关闭实例；退出清理后不允许再次拉起 Chromium。 */
+    async shutdown() {
+        this.shutdownRequested = true
+        this.clearIdleTimer()
+        if (this.initPromise) {
+            await this.initPromise.catch(() => false)
+        }
+        await this.closeBrowser()
+    }
+
+    /** 退出事件中只能做同步操作，按最后记录的 PID 强制结束进程树。 */
+    forceShutdown() {
+        this.shutdownRequested = true
+        this.clearIdleTimer()
+        const pid = this.browserPid || this.closingPid || this.browser?.process?.()?.pid
+        this.browser = false
+        this.browserPid = null
+        this.closingPid = null
+        this.killProcess(pid)
     }
 
     /**

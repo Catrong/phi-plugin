@@ -1077,8 +1077,8 @@ body p {
   height: 178px;
   display: flex;
   padding-top: 12px;
-  width: 115%;
-  margin-left: -12%;
+  width: calc(100% + 50px);
+  margin-left: -40px;
 }
 
 .histogram-y-label {

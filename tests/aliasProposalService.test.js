@@ -4,6 +4,26 @@ import aliasProposalService, { formatAliasNotification, validateApprovedAliasSna
 import getInfo from '../model/getInfo.js'
 import getSave from '../model/getSave.js'
 import { setPlatformAdapter } from '../components/platform/index.js'
+import { aliasProposal } from '../apps/aliasProposal.js'
+
+test('provides a callable scheduled-task handler for the Yunzai loader', async () => {
+    const originalInitialize = aliasProposalService.initialize
+    const originalScheduledTask = aliasProposalService.scheduledTask
+    let calls = 0
+    aliasProposalService.initialize = async () => {}
+    aliasProposalService.scheduledTask = async () => { calls++ }
+    try {
+        const plugin = new aliasProposal()
+        const task = /** @type {import('../components/platform/types.js').PlatformTask} */ (plugin.task)
+        assert.equal(task.cron, '0 */5 * * * ?')
+        assert.equal(typeof task.fnc, 'function')
+        await /** @type {() => Promise<unknown>} */ (task.fnc)()
+        assert.equal(calls, 1)
+    } finally {
+        aliasProposalService.initialize = originalInitialize
+        aliasProposalService.scheduledTask = originalScheduledTask
+    }
+})
 
 test('validates the public YAML shape and rejects malformed values', () => {
     assert.deepEqual(validateApprovedAliasSnapshot({ song: ['nick', 'other'] }), { song: ['nick', 'other'] })

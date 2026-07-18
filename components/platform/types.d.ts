@@ -177,7 +177,7 @@ export interface PlatformRule {
 
 export interface PlatformTask {
     name?: string
-    fnc?: string
+    fnc?: string | (() => MaybePromise<unknown>)
     cron?: string
     log?: boolean
     [key: string]: unknown

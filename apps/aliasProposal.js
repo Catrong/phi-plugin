@@ -10,6 +10,15 @@ import aliasProposalService from '../model/aliasProposalService.js'
 const head = Config.getUserCfg('config', 'cmdhead')
 const prefix = `^[#/](${head})(\\s*)(别名|alias)(\\s*)`
 
+/** @returns {import('../components/platform/types.js').PlatformTask} */
+export function createAliasProposalTask() {
+    return {
+        name: 'phi-别名通知与正式别名同步',
+        fnc: () => aliasProposalService.scheduledTask(),
+        cron: '0 */5 * * * ?',
+    }
+}
+
 /** @type {Record<AliasProposalStatus, string>} */
 const statusName = {
     submitted: '等待初审',
@@ -58,11 +67,7 @@ export class aliasProposal extends phiPluginBase {
             dsc: 'Token 驱动的曲目别名提案与公投',
             event: 'message',
             priority: 1000,
-            task: {
-                name: 'phi-别名通知与正式别名同步',
-                fnc: 'aliasScheduledTask',
-                cron: '0 */5 * * * ?',
-            },
+            task: createAliasProposalTask(),
             rule: [
                 { reg: `${prefix}(提案|submit)(\\s*).*$`, fnc: 'propose' },
                 { reg: `${prefix}(我的|mine)$`, fnc: 'mine' },

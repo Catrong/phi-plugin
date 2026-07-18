@@ -7,6 +7,7 @@ import logger from '../components/Logger.js'
 import segment from '../components/segment.js'
 import path from 'node:path'
 import platform from '../components/platform/index.js'
+import { registerProcessCleanup } from '../components/ProcessCleanup.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -34,6 +35,9 @@ export default await new class picmodle {
          */
         this.puppeteer = []
         this.tot = 0
+        this.shuttingDown = false
+        this.closePromise = null
+        registerProcessCleanup(() => this.close(), () => this.forceClose())
     }
 
     async init() {
@@ -66,6 +70,7 @@ export default await new class picmodle {
      * @returns {Promise<number>}
      */
     acquire(timeout) {
+        if (this.shuttingDown) return Promise.resolve(-1)
         if (this.idle.length) return Promise.resolve(/** @type {number} */(this.idle.shift()))
         /** @type {Promise<number>} */
         const p = new Promise(resolve => {
@@ -96,6 +101,7 @@ export default await new class picmodle {
      * @param {number} idx
      */
     release(idx) {
+        if (this.shuttingDown) return
         while (this.waiters.length) {
             const waiter = this.waiters.shift()
             if (!waiter || waiter.settled) continue
@@ -400,12 +406,31 @@ export default await new class picmodle {
     }
 
     async restart() {
+        if (this.shuttingDown) return
         let num = Config.getUserCfg('config', 'renderNum')
         const tasks = []
         for (let i = 0; i < num; i++) {
             if (this.puppeteer[i]) tasks.push(this.puppeteer[i].restart(true))
         }
         await Promise.allSettled(tasks)
+    }
+
+    /** 停止接单、清空等待队列并关闭全部 Chromium 实例。 */
+    async close() {
+        if (this.closePromise) return this.closePromise
+        this.shuttingDown = true
+        this.idle = []
+        while (this.waiters.length) this.waiters.shift()?.done(-1)
+        this.closePromise = Promise.allSettled(this.puppeteer.map(renderer => renderer.shutdown()))
+            .then(() => undefined)
+        return this.closePromise
+    }
+
+    /** 进程 exit 阶段的同步兜底。 */
+    forceClose() {
+        this.shuttingDown = true
+        this.idle = []
+        for (const renderer of this.puppeteer) renderer.forceShutdown()
     }
 
 }().init()
