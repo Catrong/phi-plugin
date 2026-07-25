@@ -14,6 +14,14 @@ import fCompute from '../../model/fCompute.js'
 import picmodle from '../../model/picmodle.js'
 import logger from '../../components/Logger.js'
 import segment from '../../components/segment.js'
+import {
+    LETTER_HIDDEN_CHAR,
+    allGuessed,
+    encryptSongName,
+    getRevealCandidates,
+    hasHiddenCharacters,
+    revealCharacter
+} from './letterGameUtils.js'
 
 /**
  * @type {idString[]}
@@ -48,6 +56,10 @@ function cleanupGameState(groupId, gameList) {
     delete gameList[groupId]
     delete timeCount[groupId]
 }
+
+/**
+ * @typedef {{ansList: string[], winnerlist: string[]}} LetterGameResult
+ */
 
 // let gamelist = {}//存储标准答案曲名
 // let blurlist = {}//存储模糊后的曲名
@@ -221,7 +233,7 @@ export default class guessLetter {
 
             currentGame.ansIdList[i] = randId
             currentGame.ansList[i] = song_name
-            currentGame.blurlist[i] = encrypt_song_name(song_name)
+            currentGame.blurlist[i] = encryptSongName(song_name)
             gameList[group_id] = { gameType: "guessLetter" }
             timeCount[group_id] = {
                 startTime: nowTime,
@@ -236,20 +248,23 @@ export default class guessLetter {
         // 延时1s
         await timeout(1 * 1000)
 
-        tryToSendMd(e, (t) => ['开字母进行中：', getPuzzle(currentGame, t)].join('\n'));
+        await tryToSendMd(e, (t) => ['开字母进行中：', getPuzzle(currentGame, t)].join('\n'));
 
         /**如果过长时间没人回答则结束 */
         while (timeCount[group_id]?.startTime == nowTime && Date.now() < timeCount[group_id].newTime) {
             await timeout(1000)
         }
 
-        if (!letterGameData[group_id] || nowTime != timeCount[group_id].startTime) {
+        if (!letterGameData[group_id] || nowTime !== timeCount[group_id]?.startTime) {
             return false
         }
 
         if (letterGameData[group_id]) {
             await send.reply(e, '呜，怎么还没有人答对啊QAQ！只能说答案了喵……')
-            tryToSendMd(e, (t) => gameover(group_id, gameList, t));
+            const result = finishGame(group_id, gameList)
+            if (result) {
+                await tryToSendMd(e, (t) => formatGameover(result, t));
+            }
 
             return true
         }
@@ -263,14 +278,16 @@ export default class guessLetter {
      */
     static async reveal(e, gameList) {
         const { group_id, msg } = e
-        timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
 
-        if (!letterGameData[group_id]) {
+        const currentGame = letterGameData[group_id];
+        if (!currentGame) {
             send.reply(e, `现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} ltr'开始新的一局吧！`, true)
             return false
         }
 
-        const currentGame = letterGameData[group_id];
+        if (timeCount[group_id]) {
+            timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        }
 
         const time = Config.getUserCfg('config', 'LetterRevealCd')
         const currentTime = Date.now()
@@ -317,17 +334,11 @@ export default class guessLetter {
                     continue
                 }
 
-                let newBlurname = [...songname].map((char, index) => {
-                    if (/^[\u4E00-\u9FFF]$/.test(char)) {
-                        return pinyin(char, { pattern: 'first', toneType: 'none', type: 'string' }) === letter ? char : blurname[index]
-                    }
-
-                    return char.toLowerCase() === letter ? char : blurname[index]
-                }).join('');
+                const newBlurname = revealCharacter(songname, blurname, letter)
 
                 currentGame.blurlist[i] = newBlurname
 
-                if (!newBlurname.includes('*')) {
+                if (!hasHiddenCharacters(newBlurname)) {
                     currentGame.blurlist[i] = null;
                 }
             }
@@ -346,9 +357,12 @@ export default class guessLetter {
 
             const isEmpty = allGuessed(currentGame);
             if (!isEmpty) {
-                tryToSendMd(e, (t) => [...output, '开字母进行中：', getPuzzle(currentGame, t)].join('\n'));
+                await tryToSendMd(e, (t) => [...output, '开字母进行中：', getPuzzle(currentGame, t)].join('\n'));
             } else {
-                tryToSendMd(e, (t) => ['所有字母已翻开，答案如下：', ...output, gameover(group_id, gameList, t)].join('\n'));
+                const result = finishGame(group_id, gameList)
+                if (result) {
+                    await tryToSendMd(e, (t) => ['所有字母已翻开，答案如下：', ...output, formatGameover(result, t)].join('\n'));
+                }
             }
 
             return true
@@ -370,7 +384,9 @@ export default class guessLetter {
             return false
         }
 
-        timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        if (timeCount[group_id]) {
+            timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        }
 
         const time = Config.getUserCfg('config', 'LetterGuessCd')
         const currentTime = Date.now()
@@ -466,11 +482,14 @@ export default class guessLetter {
                 if (!isEmpty) {
                     output.push('开字母进行中：')
                     output.push(opened)
-                    tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
+                    await tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
                     return true
                 } else {
                     output.push('所有曲目均已被猜出，答案如下：');
-                    tryToSendMd(e, (t) => [...output, gameover(group_id, gameList, t)].join('\n'));
+                    const result = finishGame(group_id, gameList)
+                    if (result) {
+                        await tryToSendMd(e, (t) => [...output, formatGameover(result, t)].join('\n'));
+                    }
                     return true
                 }
             }
@@ -504,7 +523,10 @@ export default class guessLetter {
 
 
         await send.reply(e, '好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
-        tryToSendMd(e, (t) => gameover(group_id, gameList, t));
+        const result = finishGame(group_id, gameList)
+        if (result) {
+            await tryToSendMd(e, (t) => formatGameover(result, t));
+        }
         return true
     }
 
@@ -524,7 +546,9 @@ export default class guessLetter {
             return false
         }
 
-        timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        if (timeCount[group_id]) {
+            timeCount[group_id].newTime = Date.now() + (1000 * Config.getUserCfg('config', 'LetterTimeLength'))
+        }
 
         const time = Config.getUserCfg('config', 'LetterTipCd')
         const currentTime = Date.now()
@@ -538,22 +562,13 @@ export default class guessLetter {
 
         currentGame.lastTipTime = currentTime
 
-        /**@type {number[]} */
-        const commonKeys = []
-
-        currentGame.blurlist.forEach((value, index) => {
-            if (value) {
-                commonKeys.push(index)
-            }
-        })
-
-        let randsymbol
-        while (typeof randsymbol === 'undefined' || randsymbol === '*') {
-            const key = commonKeys[fCompute.randInt(0, commonKeys.length - 1)]
-            const songname = currentGame.ansList[key]
-            if (!currentGame.blurlist[key]) continue;
-            randsymbol = getRandCharacter(songname, currentGame.blurlist[key])
+        const candidates = getRevealCandidates(currentGame)
+        if (candidates.length === 0) {
+            logger.warn(`[phi-plugin][letter]群${group_id}的提示没有可翻开的字符`)
+            send.reply(e, '当前没有可以继续翻开的字符，请结束本局后重新开始。', true)
+            return true
         }
+        const randsymbol = candidates[fCompute.randInt(0, candidates.length - 1)]
 
         /**
          * @type {string[]}
@@ -568,23 +583,11 @@ export default class guessLetter {
                 return;
             }
 
-            let newBlurname = ''
-            for (let i = 0; i < songname.length; i++) {
-                if (/^[\u4E00-\u9FFF]$/.test(songname[i]) && pinyin(songname[i], { pattern: 'first', toneType: 'none', type: 'string' }) == randsymbol.toLowerCase()) {
-                    newBlurname += songname[i]
-                    continue
-                }
-
-                if (songname[i].toLowerCase() == randsymbol.toLowerCase()) {
-                    newBlurname += songname[i]
-                } else {
-                    newBlurname += blurname[i]
-                }
-            }
+            const newBlurname = revealCharacter(songname, blurname, randsymbol)
 
             currentGame.blurlist[index] = newBlurname
-            if (!newBlurname.includes('*')) {
-                delete currentGame.blurlist[index]
+            if (!hasHiddenCharacters(newBlurname)) {
+                currentGame.blurlist[index] = null
             }
         })
 
@@ -604,10 +607,13 @@ export default class guessLetter {
         const isEmpty = allGuessed(currentGame)
         if (!isEmpty) {
             output.push('开字母进行中：')
-            tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
+            await tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
         } else {
             output.unshift('所有字母已翻开，答案如下：');
-            tryToSendMd(e, (t) => [...output, gameover(group_id, gameList, t)].join('\n'));
+            const result = finishGame(group_id, gameList)
+            if (result) {
+                await tryToSendMd(e, (t) => [...output, formatGameover(result, t)].join('\n'));
+            }
         }
         return true
     }
@@ -681,34 +687,6 @@ function timeout(ms) {
 }
 
 /**
- * 定义加密曲目名称滴函数
- * @param {string} name 
- * @returns 
- */
-function encrypt_song_name(name) {
-    const num = 0
-    const numset = Array.from({ length: num }, () => {
-        let numToShow = fCompute.randInt(0, name.length - 1)
-        while (name[numToShow] == ' ') {
-            numToShow = fCompute.randInt(0, name.length - 1)
-        }
-        return numToShow
-    })
-
-    let encryptedName = Array.from(name, (char, index) => {
-        if (numset.includes(index)) {
-            return char
-        } else if (char === ' ' || char === ' ') {
-            return ' '
-        } else {
-            return '*'
-        }
-    }).join('')
-
-    return encryptedName
-}
-
-/**
  * 将中文数字转为阿拉伯数字
  * @param {string} digit 
  * @returns 
@@ -739,48 +717,35 @@ function NumberToArabic(digit) {
 }
 
 /**
- * 随机取字符
- * @param {string} str 
- * @param {string} blur 
- * @returns 
+ * 结束本群游戏并返回结算快照。重复调用不会再次结算。
+ * @param {string} group_id
+ * @param {GameList} gameList
+ * @returns {LetterGameResult|null}
  */
-function getRandCharacter(str, blur) {
-    // 寻找未打开的位置
-    const temlist = [] // 存放*的下标
-    for (let i = 0; i < blur.length; i++) {
-        if (blur[i] === '*') {
-            temlist.push(i)
-        }
+function finishGame(group_id, gameList) {
+    const currentGame = letterGameData[group_id]
+    if (!currentGame) return null
+
+    const result = {
+        ansList: [...currentGame.ansList],
+        winnerlist: [...currentGame.winnerlist]
     }
 
-    // 生成随机索引
-    const randomIndex = fCompute.randInt(0, temlist.length - 1)
-
-    // 返回随机字符
-    return str.charAt(temlist[randomIndex]);
+    cleanupGameState(group_id, gameList)
+    return result
 }
 
 /**
- * 结束本群游戏，返回答案
- * @param {string} group_id 
- * @param {GameList} gameList
+ * @param {LetterGameResult} result
  * @param {boolean} letterMarkdown
  */
-function gameover(group_id, gameList, letterMarkdown) {
-
-    const currentGame = letterGameData[group_id]
-    const t = [...currentGame.ansList]
-    const winner = [...currentGame.winnerlist]
-
-    cleanupGameState(group_id, gameList)
-
+function formatGameover(result, letterMarkdown) {
     /**@type {string[]} */
     const output = ['***\n']
 
-
-    t.forEach((value, index) => {
+    result.ansList.forEach((value, index) => {
         const correct_name = value
-        const winner_card = winner[index]
+        const winner_card = result.winnerlist[index]
         output.push(`${index + 1}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
     });
     if (letterMarkdown) {
@@ -795,15 +760,6 @@ function gameover(group_id, gameList, letterMarkdown) {
 }
 
 /**
- * 
- * @param {letterGameDataObject} currentGame 
- * @returns {boolean}
- */
-function allGuessed(currentGame) {
-    return currentGame.blurlist.reduce((acc, cur) => acc && (cur === null), true) //是否全部猜完
-}
-
-/**
  * 生成谜面
  * @param {letterGameDataObject} currentGame 
  * @param {boolean} letterMarkdown 是否使用markdown格式的字母谜面
@@ -815,9 +771,10 @@ function getPuzzle(currentGame, letterMarkdown) {
     output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
+            const visibleBlurName = currentGame.blurlist[index].replaceAll(LETTER_HIDDEN_CHAR, '*')
             const str = letterMarkdown
-                ? cmdInpt(`/n${index + 1}. `, currentGame.blurlist[index].replace(/\*/g, '\\*'))
-                : currentGame.blurlist[index]
+                ? cmdInpt(`/n${index + 1}. `, visibleBlurName.replace(/\*/g, '\\*'))
+                : visibleBlurName
             output.push(`${index + 1}. ${str}`);
         } else {
             output.push(`${index + 1}. ${song} ✅`)
@@ -855,11 +812,20 @@ function cmdInpt(text, show, reference = false) {
 async function tryToSendMd(e, fnc) {
     const letterMarkdown = Config.getUserCfg('config', 'LetterMarkdown')
     if (!letterMarkdown) {
-        send.reply(e, fnc(false))
+        await send.reply(e, fnc(false))
         return;
     }
-    let sent = /** @type {{error?: unknown[]}} */ (await send.reply(e, segment.markdown(fnc(true))))
-    if (sent.error && sent.error.length) {
-        send.reply(e, fnc(false))
+
+    let sent
+    try {
+        sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(fnc(true))))
+    } catch (error) {
+        logger.warn(`[phi-plugin][letter]Markdown发送失败，改用普通消息`, error)
+        await send.reply(e, fnc(false))
+        return
+    }
+
+    if (sent?.error?.length) {
+        await send.reply(e, fnc(false))
     }
 }
