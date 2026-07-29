@@ -183,6 +183,8 @@ pnpm install -P
 | `#phi allow <sessionToken>` | 恢复某一sessionToken
 | `#phi (set\|设置)<功能><值>` | 修改设置，建议先/phi set查看功能名称，没有空格
 | `#phi ban <功能>` | 禁用某一类功能，详见 [功能参数说明](#phi-ban-%E5%8A%9F%E8%83%BD%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E)
+| `#phi 获取Bot认领链接` | **主人命令** 获取 15 分钟内有效的 Bot 平台认领链接，建议私聊发送
+| `#phi 重置API Bot身份` | **主人命令** 重新申请一套 API Bot 身份，仅用于凭据丢失、被撤销或主动更换身份
 
 <details open>  
 <summary>功能参数说明</summary>
@@ -227,6 +229,22 @@ pnpm install -P
 | `#phi clearApiData` | 永久注销 phi-api 账号并清除云端数据，需要 Phigros SSTK 权限及二次确认
 | `#phi updateHistory` | 将BOT端的历史成绩更新到API端
 | `#phi updateUserToken` | **主人命令** 上传当前BOT端的用户Token到API端
+
+#### Bot 平台认领（Bot 主人）
+
+认领用于把当前 phi-plugin 部署关联到已登录的网页账号，以便在网页控制台查看 Bot 状态、绑定统计和进行管理。Bot 在 API 注册成功后已经可以正常工作，未认领不会影响 Bot 激活或用户查分。
+
+认领步骤：
+
+1. 将 phi-plugin 更新到支持 Bot 平台认证的版本，并确认配置项 `openPhiPluginApi` 已开启。
+2. 启动或重启一次 Bot。插件缺少 API Bot 身份时会自动向 API 注册，并将凭据写入本地配置；请勿公开或手工发送 `apiBotClientSecret`。
+3. Bot 主人在**私聊**中发送 `#phi 获取Bot认领链接`（也可使用 `#phi botClaimLink`）。
+4. 在 15 分钟内打开 Bot 返回的认领链接。若网页尚未登录，请先完成登录，随后继续原认领页面。
+5. 核对页面显示的 Bot 名称和 `clientId`，确认认领。完成后可在网页控制台的 Bot 管理页面查看和管理该 Bot。
+
+认领链接为一次性链接，过期或使用后需重新发送命令获取。在群聊中执行时，插件不会把链接发到群内，而会将链接输出到 Bot 控制台；建议改为私聊执行。
+
+`#phi 重置API Bot身份`（别名 `#phi resetApiBot`）会申请全新的 `clientId` 和 secret，并替换当前 Bot 身份。该命令不是正常认领步骤，只应在本地凭据丢失、身份被 API 撤销或确定要更换 Bot 身份时使用；重置后需要重新认领。为避免敏感信息泄露，在群聊中执行时，新的身份信息和认领链接只会输出到 Bot 控制台。
 
 #### 关于权限的详细说明：
 

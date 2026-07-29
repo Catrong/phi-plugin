@@ -55,6 +55,14 @@ import botApiAuth, { PhiApiError } from './botApiAuth.js';
  * @property {string} create_at
  * @property {string} update_at
  * @property {number} authentication - 认证状态
+ * @property {'bot'|'legacy'} [binding_type] 绑定来源
+ * @property {string} [binding_id] Bot独立绑定ID
+ * @property {string} [bot_client_id] Bot clientId
+ * @property {string} [bot_display_name] Bot展示名（含四位编号）
+ * @property {boolean} [bot_claimed] Bot是否已被认领
+ * @property {'active'|'revoked'} [bot_status] Bot状态
+ * @property {string} [authentication_label] 面向用户的认证状态
+ * @property {string|null} [migration_notice] 旧绑定更新提示
  */
 
 /**

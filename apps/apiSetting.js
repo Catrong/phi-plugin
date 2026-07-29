@@ -239,10 +239,11 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        let resMsg = `已绑定${tokenList.platform_data.length}个平台\n`
+        let resMsg = `已绑定${tokenList.platform_data.length}个平台账号\n`
+        const currentPlatform = makeRequestFnc.makePlatform(e)
 
         tokenList.platform_data.forEach((item, index) => {
-            if (platform.getAdapterName(e) == item.platform_name && e.user_id == item.platform_id) {
+            if (currentPlatform.platform == item.platform_name && currentPlatform.platform_id == item.platform_id) {
                 resMsg += `${index + 1}.（当前）\n`
             } else {
                 resMsg += `${index + 1}.\n`
@@ -251,7 +252,15 @@ export class phihelp extends phiPluginBase {
             resMsg += `平台ID: ${item.platform_id}\n`
             resMsg += `创建时间: ${item.create_at}\n`
             resMsg += `更新时间: ${item.update_at}\n`
-            resMsg += `权限: ${item.authentication}\n`
+            if (item.binding_type === 'bot') {
+                resMsg += `认证状态: ${item.authentication_label || (item.authentication >= 2 ? '已认证' : '未认证')}\n`
+                if (item.bot_display_name) resMsg += `Bot: ${item.bot_display_name}\n`
+            } else if (item.binding_type === 'legacy') {
+                resMsg += `认证状态: 旧绑定\n`
+                resMsg += `提示: ${item.migration_notice || '请及时使用新版插件更新绑定状态。'}\n`
+            } else {
+                resMsg += `权限: ${item.authentication}\n`
+            }
         })
 
         send.send_with_At(e, resMsg)
@@ -310,6 +319,10 @@ export class phihelp extends phiPluginBase {
             }
             let index = choseNum - 1;
             let tarPlatform = tokenList.platform_data[index];
+            if (tarPlatform.binding_type === 'bot') {
+                send.send_with_At(e, `该账号由 ${tarPlatform.bot_display_name || '新版 Bot'} 独立管理，请在对应 Bot 中执行解绑。`)
+                return false
+            }
             if (force) {
                 const tokenManageResult = await makeRequestFnc.requestApi(
                     e,

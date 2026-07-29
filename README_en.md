@@ -151,6 +151,8 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi allow <token>` | Unban sessionToken |
 | `#phi (set\|set)<feature><value>` | Modify settings |
 | `#phi ban <feature>` | Disable features |
+| `#phi botClaimLink` | **Owner command** Get a Bot platform claim link that is valid for 15 minutes; private chat is recommended |
+| `#phi resetApiBot` | **Owner command** Issue a new API Bot identity; only use this if the credentials are lost or revoked, or when intentionally replacing the identity |
 
 <details open>  
 <summary>Ban Parameters</summary>
@@ -189,6 +191,22 @@ API features can be manually enabled/disabled in settings. When enabled, it auto
 | `#phi clearApiData` | Permanently delete the phi-api account and cloud data; requires Phigros SSTK permission and confirmation
 | `#phi updateHistory` | Update historical scores from BOT to API server
 | `#phi updateUserToken` | **Owner command** Upload current BOT user tokens to API server
+
+#### Claiming the Bot Platform Identity (Bot Owner)
+
+Claiming associates this phi-plugin deployment with your signed-in web account so that you can view its status and binding statistics and manage it from the web dashboard. The Bot is already active after it successfully registers with the API; leaving it unclaimed does not disable the Bot or user score queries.
+
+Claim procedure:
+
+1. Update phi-plugin to a version that supports Bot platform authentication and make sure `openPhiPluginApi` is enabled.
+2. Start or restart the Bot once. If the plugin has no API Bot identity, it automatically registers with the API and writes the credentials to the local configuration. Never disclose or manually send `apiBotClientSecret`.
+3. As the Bot owner, send `#phi botClaimLink` (or `#phi 获取Bot认领链接`) in a **private chat** with the Bot.
+4. Open the returned claim link within 15 minutes. If you are not signed in on the website, sign in first and then continue from the original claim page.
+5. Verify the Bot name and `clientId` shown on the page, then confirm the claim. You can then view and manage the Bot from the Bot management page in the web dashboard.
+
+A claim link is single-use. If it expires or has already been used, send the command again to obtain a new one. When the command is sent in a group chat, the plugin does not post the link in the group; it writes the link to the Bot console instead. Using a private chat is recommended.
+
+`#phi resetApiBot` (or `#phi 重置API Bot身份`) issues a completely new `clientId` and secret and replaces the current Bot identity. This is not part of the normal claim procedure. Only use it if the local credentials are lost, the identity has been revoked by the API, or you intentionally want to replace the Bot identity. The new identity must be claimed again. To prevent sensitive information from leaking, when this command is used in a group chat, the new identity details and claim link are written only to the Bot console.
 
 #### Detailed Permission Explanation:
 
