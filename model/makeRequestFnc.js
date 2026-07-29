@@ -12,6 +12,7 @@ export default class makeRequestFnc {
         return {
             platform: fCompute.getAdapterName(e),
             platform_id: typeof e.user_id == 'string' ? e.user_id.replace('', ':') : `${e.user_id}`,
+            _local_user_id: `${e.user_id}`,
         }
     }
 
@@ -66,10 +67,13 @@ export default class makeRequestFnc {
 
         let issusMsg = null;
 
-        if (err && err.code !== undefined) {
-            if (err.code === 403) {
+        const status = err?.status ?? (typeof err?.code === 'number' ? err.code : undefined)
+        if (status !== undefined) {
+            if (status === 403) {
                 issusMsg = `API访问被拒绝。${errMsg ? `${errMsg}` : '请检查你的设置是否正确启用了API访问权限。'}`;
-            } else if (err.code === 500) {
+            } else if (status === 409 && err?.code === 'binding_conflict_requires_sstk') {
+                issusMsg = '当前平台已绑定其他查分ID，请使用sessionToken重新绑定。';
+            } else if (status === 500) {
                 issusMsg = `API访问发生服务器错误。${errMsg ? `${errMsg}` : '请稍后再试，或联系管理员。'}`;
             }
         }

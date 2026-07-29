@@ -211,7 +211,6 @@ export default class getSaveFromApi {
      * @param {*} e e
      */
     static async delSave(e) {
-        if (!await this.delLocalSave(e.user_id)) return false
         const unbindResult = await makeRequestFnc.requestApi(
             e,
             () => makeRequest.unbind({ ...makeRequestFnc.makePlatform(e) }),
@@ -220,6 +219,8 @@ export default class getSaveFromApi {
         if (!unbindResult) {
             throw new Error('unbind failed')
         }
+        // Platform unbinding must not delete the API-ID shared cache directory.
+        await this.del_user_apiId(e.user_id)
         return true
     }
 

@@ -4,12 +4,14 @@ import saveHistory from './class/saveHistory.js';
 import logger from '../components/Logger.js';
 import { APIBASEURL } from './constNum.js';
 import autoSeekApi from './autoSeekApi.js';
+import botApiAuth, { PhiApiError } from './botApiAuth.js';
 
 
 /**
  * @typedef {Object} platformAuth
  * @property {string} platform 平台名称
  * @property {string} platform_id 用户平台内id
+ * @property {string} [_local_user_id] Bot本地Redis用户键（API忽略）
  */
 
 /**
@@ -43,6 +45,7 @@ import autoSeekApi from './autoSeekApi.js';
  * @property {Object} data - Response data
  * @property {number} data.internal_id - 用户内部ID
  * @property {boolean} data.have_api_token - 是否拥有API Token
+ * @property {boolean} [data.binding_cache_warning] - API绑定成功但本地凭据缓存需重试
  */
 
 /**
@@ -320,7 +323,15 @@ export default class makeRequest {
      * @returns {Promise<BindSuccessResponse>}
      */
     static async bind(params) {
-        return makeFetch(burl('/bind'), params)
+        const binding = await botApiAuth.bind(params)
+        return {
+            message: '绑定成功',
+            data: {
+                internal_id: Number(binding.apiUserId),
+                have_api_token: true,
+                binding_cache_warning: 'cacheWarning' in binding && binding.cacheWarning === true,
+            },
+        }
     }
 
     /**
@@ -331,7 +342,7 @@ export default class makeRequest {
      * @returns {Promise<{message: string}>}
      */
     static async unbind(params) {
-        return await makeFetch(burl('/unbind'), params)
+        return await botApiAuth.unbind(params)
     }
 
     /**
@@ -756,39 +767,43 @@ const TIMEOUT = 5000; // 5秒超时
  * @returns
  */
 async function makeFetch(url, params, method = 'POST') {
-    if (Config.getUserCfg('config', 'debug') > 3) {
-        logger.info(`[phi-plugin] 请求API: ${url}`, JSON.stringify(params));
-    }
-    let result
-    try {
-        params = params || {}
-        switch (method.toUpperCase()) {
-            case 'GET':
-                result = await axios.get(url, { params: params, timeout: TIMEOUT });
-                break;
-            case 'POST':
-                result = await axios.post(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' }, timeout: TIMEOUT });
-                break;
-            default:
-                throw new Error(`不支持的请求方法: ${method}`);
+    params = params || {}
+    const upperMethod = method.toUpperCase()
+    for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+            const authHeaders = await botApiAuth.requestHeaders(url, params, upperMethod)
+            const result = upperMethod === 'GET'
+                ? await axios.get(url, { params, headers: authHeaders, timeout: TIMEOUT, validateStatus: () => true })
+                : await axios.post(url, JSON.stringify(params), {
+                    headers: { 'Content-Type': 'application/json', ...authHeaders },
+                    timeout: TIMEOUT,
+                    validateStatus: () => true,
+                })
+            const json = result.data
+            if (result.status < 200 || result.status >= 300 || json?.error) {
+                const error = new PhiApiError(json?.error || `API请求失败 (${result.status})`, result.status, json?.code || 'api_request_failed', json)
+                if (attempt === 0 && error.code === 'binding_credential_invalid') {
+                    await botApiAuth.invalidateBinding(params)
+                    continue
+                }
+                throw error
+            }
+            if (Config.getUserCfg('config', 'debug') > 3) {
+                logger.info(`[phi-plugin] API请求成功: ${new URL(url).pathname}`)
+            }
+            return json
+        } catch (/** @type {any} */ err) {
+            if (err instanceof PhiApiError) {
+                logger.warn(`[phi-plugin] API请求失败 ${new URL(url).pathname}: ${err.code} (${err.status})`)
+                if (err.code === 'api_offline') autoSeekApi.seekApi()
+                throw err
+            }
+            logger.error(`[phi-plugin] API网络错误 ${new URL(url).pathname}: ${err?.message || String(err)}`)
+            autoSeekApi.seekApi()
+            throw new PhiApiError('API离线', 0, 'api_offline')
         }
-    } catch (err) {
-        // @ts-ignore
-        logger.error(`请求失败: ${url}`, err?.message || err?.cause || String(err) || '未知错误');
-        autoSeekApi.seekApi();
-        throw new Error('API离线');
     }
-    if (!result) {
-        throw new Error('请求失败')
-    }
-    let json = result.data
-    if (json.error) {
-        throw new Error(json.error)
-    }
-    if (Config.getUserCfg('config', 'debug') > 3) {
-        logger.info(`[phi-plugin] API响应: ${url}`, JSON.stringify(json));
-    }
-    return json
+    throw new PhiApiError('绑定凭据恢复失败', 401, 'binding_credential_invalid')
 }
 
 /**

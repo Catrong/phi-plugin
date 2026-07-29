@@ -11,6 +11,7 @@ import logger from './components/Logger.js';
 import { APIBASEURL } from './model/constNum.js';
 import chalk from 'chalk';
 import autoSeekApi from './model/autoSeekApi.js';
+import botApiAuth from './model/botApiAuth.js';
 
 await getInfo.init();
 
@@ -58,6 +59,11 @@ for (let i in files) {
 export { apps }
 
 if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+    try {
+        await botApiAuth.initialize(Version.ver)
+    } catch (/** @type {any} */ error) {
+        logger.error(`[phi-plugin] API Bot身份初始化失败：${error?.code || error?.message || error}`)
+    }
     autoSeekApi.testStatus();
 }
 

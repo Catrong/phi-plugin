@@ -125,6 +125,9 @@
  * @typedef {'GuessTipsAnsTime'} GuessTipsAnsTime 额外时间
  * 其他设置
  * @typedef {'VikaToken'} VikaToken VikaToken
+ * @typedef {'apiBotClientId'} apiBotClientId API签发的Bot clientId
+ * @typedef {'apiBotClientSecret'} apiBotClientSecret API签发的Bot HMAC secret
+ * @typedef {'apiBotSecretVersion'} apiBotSecretVersion Bot HMAC secret版本
  * 
  * @typedef {onLinePhiIllUrl
  * |githubProxy
@@ -169,6 +172,9 @@
  * |GuessTipsTimeout
  * |GuessTipsAnsTime
  * |VikaToken
+ * |apiBotClientId
+ * |apiBotClientSecret
+ * |apiBotSecretVersion
 * } configName 全部设置
 */
 

@@ -81,6 +81,11 @@ cmdhead: "phi"
 #  是否启用Phigros联合查分API
 openPhiPluginApi: true
 
+# 由查分 API 首次启动时签发，请勿手工填写任意 UUID。
+apiBotClientId: ""
+apiBotClientSecret: ""
+apiBotSecretVersion: 0
+
 #  输出测试日志
 debug: 0
 

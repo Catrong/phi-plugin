@@ -96,6 +96,9 @@ export class phisstk extends phiPluginBase {
                 )
                 if (result?.data?.internal_id) {
                     let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
+                    if (result.data.binding_cache_warning) {
+                        resMsg += '\nAPI绑定已成功，但本地凭据缓存失败，请稍后执行更新重试。'
+                    }
                     if (!result.data.have_api_token) {
                         resMsg += apiMsg
                     }
@@ -219,7 +222,7 @@ export class phisstk extends phiPluginBase {
                     e,
                     () => makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken, isGlobal }),
                     {
-                        errorPrefix: '从API获取存档失败，本次绑定将不上传至查分平台QAQ！',
+                        errorPrefix: 'API绑定未完成，已保留原有绑定状态。',
                         notifyUser: true,
                         logTag: 'API错误 bind by token',
                         loggerLevel: 'error'
@@ -227,6 +230,9 @@ export class phisstk extends phiPluginBase {
                 )
                 if (result?.data?.internal_id) {
                     let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
+                    if (result.data.binding_cache_warning) {
+                        resMsg += '\nAPI绑定已成功，但本地凭据缓存失败，请稍后执行更新重试。'
+                    }
                     if (!result.data.have_api_token) {
                         resMsg += apiMsg
                     }
@@ -250,8 +256,11 @@ export class phisstk extends phiPluginBase {
                 if (result) {
                     return true
                 }
+                // 新绑定必须以 API 提交成功为准，失败时保留原有本地状态。
+                return true
             } catch (err) {
-                
+                logger.warn('[phi-plugin] API绑定异常，已保留原有本地状态', err)
+                return true
             }
         }
 
@@ -261,6 +270,7 @@ export class phisstk extends phiPluginBase {
             await getSaveFromApi.del_user_apiId(e.user_id); //删除apiId，避免冲突
             let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken, isGlobal)
             if (!updateData) return true;
+            await getSave.add_user_token(e.user_id, sessionToken)
             send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
             let history = await getSave.getHistory(e.user_id)
             await build(e, updateData, history)
@@ -375,16 +385,16 @@ export class phisstk extends phiPluginBase {
         if (msg == '确认') {
             let flag = true
             try {
-                await getSave.delSave(e.user_id)
                 if (await canUseApi(e)) {
                     await getSaveFromApi.delSave(e)
                 }
+                await getSave.delSave(e.user_id)
             } catch (err) {
                 send.send_with_At(e, err)
                 logger.error(err)
                 flag = false
             }
-            try {
+            if (flag) try {
                 let pluginData = await getNotes.getNotesData(e.user_id)
 
                 if (pluginData) {
