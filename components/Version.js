@@ -24,9 +24,13 @@ try {
 }
 
 let Version = {
+    /** @type {string} 插件版本 v1.0.0 */
     ver: currentVersion,
+    /** @type {string} Phigros版本 1.0.0 */
     phigros: phigrosVer,
+    /** @type {number} Phigros版本号 */
     phigrosVerNum: phigrosVerNum,
+    /** @type {string} 云崽版本 */
     yunzai: yunzai_ver,
 };
 

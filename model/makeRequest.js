@@ -11,7 +11,7 @@ import botApiAuth, { PhiApiError } from './botApiAuth.js';
  * @typedef {Object} platformAuth
  * @property {string} platform 平台名称
  * @property {string} platform_id 用户平台内id
- * @property {string} [_local_user_id] Bot本地Redis用户键（API忽略）
+ * @property {string} _local_user_id Bot本地Redis用户键（API忽略）
  */
 
 /**
