@@ -39,7 +39,7 @@
                         <div class="rankbkg">
                             <div class="sqr"></div>
                             {{each chart}}
-                            <div class="sqr rank-{{$index}}" style="background-color: rgba({{$value.rgba}});"></div>
+                            <div class="sqr rank-{{$index}}" style="background: {{fCompute.rgbaToGradient($value.rgba)}};"></div>
                             {{/each}}
                         </div>
                         <div class="rank">
