@@ -679,10 +679,25 @@ export default class fCompute {
     }
 
     /**
-     * 
-     * @param {ratingKind} a 
-     * @param {ratingKind} b 
-     * @returns 
+     * 将 rgba 字符串转换为难度条渐变 CSS 值，与 atlas.css 中常规难度渐变模式一致
+     * @param {string} [rgba] - 逗号分隔的 R,G,B,A 字符串，如 "183,0,253,1"
+     * @returns {string|undefined} linear-gradient CSS 值，rgba 无效时返回 undefined
+     */
+    static rgbaToGradient(rgba) {
+        if (!rgba) return undefined;
+        const parts = rgba.split(',');
+        if (parts.length < 3) return undefined;
+        const r = parts[0].trim();
+        const g = parts[1].trim();
+        const b = parts[2].trim();
+        return `linear-gradient(90deg, rgb(${r},${g},${b}) 95px, transparent 95px, rgba(${r},${g},${b},0.53) 105px, rgba(${r},${g},${b},0.53) 50%, transparent 100%)`;
+    }
+
+    /**
+     *
+     * @param {ratingKind} a
+     * @param {ratingKind} b
+     * @returns
      */
     static cmpRat(a, b) {
         /**@type {ratingKind[]} */
