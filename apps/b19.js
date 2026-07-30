@@ -5,12 +5,10 @@ import picmodle from '../model/picmodle.js'
 import ScoreHistory from '../model/class/scoreHistory.js';
 import fCompute from '../model/fCompute.js';
 import getInfo from '../model/getInfo.js';
-import getSave from '../model/getSave.js';
 import { allLevel, APII18NCN, LevelNum } from '../model/constNum.js';
 import getNotes from '../model/getNotes.js';
 import getPic from '../model/getPic.js';
 import getBanGroup from '../model/getBanGroup.js';
-import getSaveFromApi from '../model/getSaveFromApi.js';
 import makeRequest from '../model/makeRequest.js';
 import makeRequestFnc from '../model/makeRequestFnc.js';
 import getUpdateSave from '../model/getUpdateSave.js';
@@ -20,6 +18,7 @@ import LevelRecordInfo from '../model/class/LevelRecordInfo.js';
 import SongsInfo from '../model/class/SongsInfo.js';
 import Version from '../components/Version.js';
 import { canUseApi } from '../model/apiPermission.js';
+import { UserCredentials } from '../model/userCredentials.js';
 import {
     buildRksHistogram,
     getB30AnalysisRecords,
@@ -1090,6 +1089,7 @@ export class phib19 extends phiPluginBase {
  */
 async function getScore(songId, e, args = {}) {
 
+    const credentials = UserCredentials.fromEvent(e)
 
     const save = await send.getsave_result(e)
 
@@ -1122,13 +1122,13 @@ async function getScore(songId, e, args = {}) {
     let HistoryData = undefined;
     if (await canUseApi(e)) {
         try {
-            HistoryData = await getSaveFromApi.getSongHistory(e, songId)
+            HistoryData = await credentials.getCloudSongHistory(songId)
         } catch (err) {
             logger.warn(`[phi-plugin] API ERR`, err)
-            HistoryData = (await getSave.getHistory(e.user_id))?.scoreHistory[songId]
+            HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
         }
     } else {
-        HistoryData = (await getSave.getHistory(e.user_id))?.scoreHistory[songId]
+        HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
     }
 
     /** @type {(import('../model/class/scoreHistory.js').extendedScoreHistoryDetail | {date_new: string})[]} */

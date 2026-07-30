@@ -68,7 +68,6 @@
  * | 'danupdate'
  * | 'setApiToken'
  * | 'tokenList'
- * | 'tokenManage'
  * | 'auth'
  * | 'clearApiData'
  * | 'updateHistory'

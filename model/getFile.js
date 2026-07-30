@@ -220,13 +220,14 @@ export default class readFile {
 
             await this.SetFile("user_token.json", user_token)
 
+            const { default: userCredentialStore } = await import('./userCredentialStore.js')
             let getSave = (await import("./getSave.js")).default
             already = 0
             tot = Object.keys(user_token).length
             for (let id in user_token) {
                 try {
                     logger.mark('[phi-plugin][数据转移，请勿中断进程]', `${already}/${tot}`)
-                    await getSave.add_user_token(id, user_token[id])
+                    await userCredentialStore.setSessionToken(id, user_token[id])
                     let save = await getSave.getSave(id)
                     if (!save) continue
                     if (isNaN(save.getRks())) {

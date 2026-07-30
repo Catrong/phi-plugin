@@ -1,10 +1,6 @@
-import axios from 'axios';
-import { Config } from '../components/index.js';
 import saveHistory from './class/saveHistory.js';
-import logger from '../components/Logger.js';
-import { APIBASEURL } from './constNum.js';
-import autoSeekApi from './autoSeekApi.js';
-import botApiAuth, { classifyApiConnectionError, isApiConnectionError, PhiApiError } from './botApiAuth.js';
+import { requestPhiApi } from './phiApiClient.js';
+import botApiAuth from './botApiAuth.js';
 
 
 /**
@@ -84,13 +80,6 @@ import botApiAuth, { classifyApiConnectionError, isApiConnectionError, PhiApiErr
  * @property {string} create_at
  * @property {string} update_at
  * @property {PlatformDataItem[]} platform_data - Reference to definition 169006958
- */
-
-/**
- * @typedef {Object} tokenManageParams
- * @property {'delete' | 'rmau'} operation
- * @property {string} platform
- * @property {string} platform_id
  */
 
 /**
@@ -343,23 +332,12 @@ export default class makeRequest {
     }
 
     /**
-     * 解绑用户的某个平台账号
-     * @param {object} params
-     * @param {string} params.platform 平台名称
-     * @param {string} params.platform_id 用户平台内id
-     * @returns {Promise<{message: string}>}
-     */
-    static async unbind(params) {
-        return await botApiAuth.unbind(params)
-    }
-
-    /**
      * 清空用户数据
      * @param {highAu} params
      * @returns {Promise<{message: string}>}
      */
     static async clear(params) {
-        return await makeFetch(burl('/clear'), params)
+        return requestPhiApi('/clear', params)
     }
 
     /**
@@ -368,7 +346,7 @@ export default class makeRequest {
      * @returns {Promise<{message: string}>}
      */
     static async setApiToken(params) {
-        return await makeFetch(burl('/setApiToken'), params)
+        return requestPhiApi('/setApiToken', params)
     }
 
     /**
@@ -377,7 +355,7 @@ export default class makeRequest {
      * @returns {Promise<{apiId: apiUserId, token: phigrosToken}>}
      */
     static async getPgrToken(params) {
-        return (await makeFetch(burl('/getPgrToken'), params)).data
+        return (await requestPhiApi('/getPgrToken', params)).data
     }
 
     /**
@@ -386,16 +364,7 @@ export default class makeRequest {
      * @returns {Promise<UserResponse>}
      */
     static async tokenList(params) {
-        return (await makeFetch(burl('/token/list'), params)).data
-    }
-
-    /**
-     *
-     * @param {highAu & {data: tokenManageParams}} params
-     * @returns {Promise<{message: string}>}
-     */
-    static async tokenManage(params) {
-        return await makeFetch(burl('/token/manage'), params)
+        return (await requestPhiApi('/token/list', params)).data
     }
 
     /**
@@ -596,7 +565,7 @@ export default class makeRequest {
      * @returns {Promise<{message: string}>}
      */
     static async setUsersToken(params) {
-        return await makeFetch(burl('/set/usersToken'), params)
+        return requestPhiApi('/set/usersToken', params)
     }
 
     /**
@@ -765,53 +734,14 @@ export default class makeRequest {
     }
 }
 
-const TIMEOUT = 5000; // 5秒超时
-
 /**
- *
- * @param {string} url
+ * @param {string} originalPath
  * @param {any} [params]
  * @param {'POST'|'GET'} [method='POST']
  * @returns
  */
-async function makeFetch(url, params, method = 'POST') {
-    params = params || {}
-    const upperMethod = method.toUpperCase()
-    for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-            const authHeaders = await botApiAuth.requestHeaders(url, params, upperMethod)
-            const result = upperMethod === 'GET'
-                ? await axios.get(url, { params, headers: authHeaders, timeout: TIMEOUT, validateStatus: () => true })
-                : await axios.post(url, JSON.stringify(params), {
-                    headers: { 'Content-Type': 'application/json', ...authHeaders },
-                    timeout: TIMEOUT,
-                    validateStatus: () => true,
-                })
-            const json = result.data
-            if (result.status < 200 || result.status >= 300 || json?.error) {
-                const error = new PhiApiError(json?.message || json?.error || `API请求失败 (${result.status})`, result.status, json?.code || json?.errorCode || 'api_request_failed', json)
-                if (attempt === 0 && error.code === 'binding_credential_invalid') {
-                    await botApiAuth.invalidateBinding(params)
-                    continue
-                }
-                throw error
-            }
-            if (Config.getUserCfg('config', 'debug') > 3) {
-                logger.info(`[phi-plugin] API请求成功: ${new URL(url).pathname}`)
-            }
-            return json
-        } catch (/** @type {any} */ err) {
-            if (err instanceof PhiApiError) {
-                logger.warn(`[phi-plugin] API请求失败 ${new URL(url).pathname}: ${err.code} (${err.status})`)
-                if (isApiConnectionError(err)) autoSeekApi.seekApi()
-                throw err
-            }
-            logger.error(`[phi-plugin] API网络错误 ${new URL(url).pathname}: ${err?.message || String(err)}`)
-            autoSeekApi.seekApi()
-            throw classifyApiConnectionError(err)
-        }
-    }
-    throw new PhiApiError('绑定凭据恢复失败', 401, 'binding_credential_invalid')
+async function makeFetch(originalPath, params, method = 'POST') {
+    return requestPhiApi(originalPath, params, method)
 }
 
 /**
@@ -820,5 +750,5 @@ async function makeFetch(url, params, method = 'POST') {
  * @returns
  */
 function burl(path) {
-    return `${APIBASEURL}${path}`
+    return path
 }

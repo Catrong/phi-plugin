@@ -1,14 +1,11 @@
-// @ts-nocheck
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { phihelp } from '../apps/apiSetting.js'
 import { phisstk } from '../apps/session.js'
 import getBanGroup from '../model/getBanGroup.js'
-import getSave from '../model/getSave.js'
-import getSaveFromApi from '../model/getSaveFromApi.js'
-import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
 import send from '../model/send.js'
+import { UserCredentials } from '../model/userCredentials.js'
 
 const event = (msg = '') => ({
     msg,
@@ -21,28 +18,28 @@ const event = (msg = '') => ({
 test('clearApiData requires confirmation and authenticates deletion with SSTK', async () => {
     const originals = {
         getBan: getBanGroup.get,
-        getToken: getSave.get_user_token,
-        deleteLocalSave: getSaveFromApi.delLocalSave,
+        getToken: UserCredentials.prototype.getSessionToken,
+        deleteLocalSave: UserCredentials.prototype.deleteApiCachedSave,
         requestApi: makeRequestFnc.requestApi,
         makePlatform: makeRequestFnc.makePlatform,
-        clear: makeRequest.clear,
+        clear: UserCredentials.prototype.deleteApiAccount,
         send: send.send_with_At,
     }
-    const messages = []
-    const contexts = []
-    const finished = []
-    const clearRequests = []
+    /** @type {any[]} */ const messages = []
+    /** @type {any[]} */ const contexts = []
+    /** @type {any[]} */ const finished = []
+    /** @type {any[]} */ const clearRequests = []
 
     getBanGroup.get = async () => false
-    getSave.get_user_token = async () => 'sstk-value'
-    getSaveFromApi.delLocalSave = async () => true
-    makeRequestFnc.makePlatform = () => ({ platform: 'test', platform_id: 'test-user' })
-    makeRequest.clear = async params => {
-        clearRequests.push(params)
+    UserCredentials.prototype.getSessionToken = /** @type {any} */ (async () => 'sstk-value')
+    UserCredentials.prototype.deleteApiCachedSave = async () => true
+    makeRequestFnc.makePlatform = /** @type {any} */ (() => ({ platform: 'test', platform_id: 'test-user', _local_user_id: 'test-user' }))
+    UserCredentials.prototype.deleteApiAccount = /** @type {any} */ (async function () {
+        clearRequests.push({ ...this.platformParams(), token: await this.getSessionToken() })
         return { message: 'ok' }
-    }
+    })
     makeRequestFnc.requestApi = async (_e, request) => request()
-    send.send_with_At = (_e, message) => messages.push(message)
+    send.send_with_At = /** @type {any} */ ((/** @type {any} */ _e, /** @type {any} */ message) => messages.push(message))
 
     try {
         const command = new phihelp()
@@ -50,27 +47,28 @@ test('clearApiData requires confirmation and authenticates deletion with SSTK', 
         command.setContext = (...args) => contexts.push(args)
         command.finish = (...args) => finished.push(args)
 
-        assert.equal(await command.clearApiData(event('/phi clearApiData')), true)
+        assert.equal(await command.clearApiData(/** @type {any} */ (event('/phi clearApiData'))), true)
         assert.equal(clearRequests.length, 0)
         assert.equal(contexts[0][0], 'confirmClearApiData')
         assert.match(messages[0], /永久清除云端账号及全部数据/)
 
-        command.e = event('确认')
+        command.e = /** @type {any} */ (event('确认'))
         assert.equal(await command.confirmClearApiData(), true)
         assert.deepEqual(clearRequests, [{
             platform: 'test',
             platform_id: 'test-user',
+            _local_user_id: 'test-user',
             token: 'sstk-value',
         }])
         assert.equal(finished[0][0], 'confirmClearApiData')
         assert.match(messages.at(-1), /账号已注销/)
     } finally {
         getBanGroup.get = originals.getBan
-        getSave.get_user_token = originals.getToken
-        getSaveFromApi.delLocalSave = originals.deleteLocalSave
+        UserCredentials.prototype.getSessionToken = originals.getToken
+        UserCredentials.prototype.deleteApiCachedSave = originals.deleteLocalSave
         makeRequestFnc.requestApi = originals.requestApi
         makeRequestFnc.makePlatform = originals.makePlatform
-        makeRequest.clear = originals.clear
+        UserCredentials.prototype.deleteApiAccount = originals.clear
         send.send_with_At = originals.send
     }
 })
@@ -84,11 +82,11 @@ test('clearApiData cancellation does not call the API', async () => {
         requested = true
         return null
     }
-    send.send_with_At = () => undefined
+    send.send_with_At = /** @type {any} */ (async () => undefined)
 
     try {
         const command = new phihelp()
-        command.e = event('取消')
+        command.e = /** @type {any} */ (event('取消'))
         command.finish = () => undefined
 
         assert.equal(await command.confirmClearApiData(), true)
@@ -99,35 +97,32 @@ test('clearApiData cancellation does not call the API', async () => {
     }
 })
 
-test('unbind shows the cloud-data notice only for API bindings', async () => {
+test('unbind always describes a local-only operation', async () => {
     const originals = {
         getBan: getBanGroup.get,
-        getToken: getSave.get_user_token,
-        getApiId: getSaveFromApi.get_user_apiId,
+        getCredentials: UserCredentials.prototype.getLocalCredentials,
         send: send.send_with_At,
     }
-    const messages = []
+    /** @type {any[]} */ const messages = []
 
     getBanGroup.get = async () => false
-    getSave.get_user_token = async () => 'sstk-value'
-    send.send_with_At = (_e, message) => messages.push(message)
+    send.send_with_At = /** @type {any} */ ((/** @type {any} */ _e, /** @type {any} */ message) => messages.push(message))
 
     try {
         const command = new phisstk()
         command.setContext = () => undefined
 
-        getSaveFromApi.get_user_apiId = async () => '123'
-        assert.equal(await command.unbind(event('/phi unbind')), true)
-        assert.match(messages.at(-1), /仅清除bot本地数据，云端数据不受影响/)
-        assert.match(messages.at(-1), /clearApiData/)
+        UserCredentials.prototype.getLocalCredentials = /** @type {any} */ (async () => ({ sessionToken: 'sstk-value', apiId: '123' }))
+        assert.equal(await command.unbind(/** @type {any} */ (event('/phi unbind'))), true)
+        assert.match(messages.at(-1), /只会清除当前 Bot 本地保存的绑定、存档和历史/)
+        assert.match(messages.at(-1), /不会修改 API 数据/)
 
-        getSaveFromApi.get_user_apiId = async () => null
-        assert.equal(await command.unbind(event('/phi unbind')), true)
-        assert.doesNotMatch(messages.at(-1), /云端数据不受影响/)
+        UserCredentials.prototype.getLocalCredentials = /** @type {any} */ (async () => ({ sessionToken: 'sstk-value', apiId: null }))
+        assert.equal(await command.unbind(/** @type {any} */ (event('/phi unbind'))), true)
+        assert.match(messages.at(-1), /不会修改 API 数据/)
     } finally {
         getBanGroup.get = originals.getBan
-        getSave.get_user_token = originals.getToken
-        getSaveFromApi.get_user_apiId = originals.getApiId
+        UserCredentials.prototype.getLocalCredentials = originals.getCredentials
         send.send_with_At = originals.send
     }
 })

@@ -30,7 +30,7 @@
             {
                 "title": "/unbind",
                 "eg": "/unbind",
-                "desc": "在 Bot 上删除储存的你的存档以及成绩记录并且解除云端账号对该平台的绑定"
+                "desc": "仅清除当前 Bot 本地保存的 sessionToken、API ID、存档和历史，不修改 API 平台绑定"
             }
         ]
     },
@@ -46,11 +46,6 @@
                 "title": "/tkls",
                 "eg": "/tkls",
                 "desc": "获取当前绑定的平台列表"
-            },
-            {
-                "title": "/tokenManage",
-                "eg": "/tokenManage (delete|rmau) <平台序号> (-f)?",
-                "desc": "删除绑定的平台，-f 跳过确认<br>eg: /tokenManage delete 1 -f"
             },
             {
                 "title": "/auth",

@@ -20,11 +20,12 @@ import platform from "../components/platform/index.js";
 export default class getUpdateSave {
     /**
      * 
-     * @param {*} e 
+     * @param {*} e
      * @param {phigrosToken} [token] sessionToken
+     * @param {import('./userCredentials.js').UserCredentials} [credentials]
      */
-    static async getNewSaveFromApi(e, token) {
-        let old = await getSaveFromApi.getSave(e.user_id)
+    static async getNewSaveFromApi(e, token, credentials = undefined) {
+        let old = credentials ? await credentials.getApiCachedSave() : await getSaveFromApi.getSave(e.user_id)
 
         const newSaveInfo = await makeRequestFnc.requestApi(
             e,
@@ -43,12 +44,15 @@ export default class getUpdateSave {
             if (!newSave) {
                 throw new Error('getCloudSaves failed')
             }
-            getSaveFromApi.putSave(e.user_id, newSave)
+            if (credentials) await credentials.putApiCachedSave(newSave)
+            else await getSaveFromApi.putSave(e.user_id, newSave)
             let result = new Save(newSave)
             await result.init()
-            await getSaveFromApi.putSave(e.user_id, result);
+            if (credentials) await credentials.putApiCachedSave(result)
+            else await getSaveFromApi.putSave(e.user_id, result)
             if (token) {
-                getSave.add_user_token(e.user_id, token)
+                if (credentials) await credentials.setSessionToken(token)
+                else await getSave.add_user_token(e.user_id, token)
             }
             let added_rks_notes = await this.buildingRecord(old, newSave, e)
             return { save: result, added_rks_notes }
@@ -79,13 +83,15 @@ export default class getUpdateSave {
     /**
      * 
      * @param {*} e e
-     * @param {phigrosToken} token 
+     * @param {phigrosToken} [token]
      * @param {boolean} [global] 是否是国际服
+     * @param {import('./userCredentials.js').UserCredentials} [credentials]
      * @returns 
      */
-    static async getNewSaveFromLocal(e, token, global = undefined) {
-        let old = await getSave.getSave(e.user_id)
+    static async getNewSaveFromLocal(e, token, global = undefined, credentials = undefined) {
+        let old = credentials ? await credentials.getLocalSave() : await getSave.getSave(e.user_id)
         token = token ?? old?.session
+        if (!token) throw new Error('缺少 sessionToken 参数')
         let User = new PhigrosUser(token, global || old?.global);
         try {
             let save_info = await User.getSaveInfo()
@@ -109,7 +115,8 @@ export default class getUpdateSave {
         }
 
         try {
-            await getSave.putSave(e.user_id, User)
+            if (credentials) await credentials.putLocalSave(User)
+            else await getSave.putSave(e.user_id, User)
         } catch (err) {
             send.send_with_At(e, `保存存档失败！` + err)
             logger.error(err)
@@ -122,10 +129,11 @@ export default class getUpdateSave {
                 if (old.session == User.session) {
                     // send.send_with_At(e, `你已经绑定了该sessionToken哦！将自动执行update...\n如果需要删除统计记录请 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
                 } else {
-                    send.send_with_At(e, `检测到新的sessionToken，将自动更换绑定。如果需要删除统计记录请 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋ 进行解绑哦！`)
+                    send.send_with_At(e, `检测到新的sessionToken，将自动更换本地绑定。如果需要删除当前 Bot 本地保存的存档和历史，请使用 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋。`)
 
-                    await getSave.add_user_token(e.user_id, User.session)
-                    old = await getSave.getSave(e.user_id)
+                    if (credentials) await credentials.setSessionToken(User.session)
+                    else await getSave.add_user_token(e.user_id, User.session)
+                    old = credentials ? await credentials.getLocalSave() : await getSave.getSave(e.user_id)
 
                 }
             }
@@ -134,9 +142,10 @@ export default class getUpdateSave {
 
         // await now.init()
         /**更新 */
-        let history = await getSave.getHistory(e.user_id)
+        let history = credentials ? await credentials.getLocalHistory() : await getSave.getHistory(e.user_id)
         history.update(now)
-        getSave.putHistory(e.user_id, history)
+        if (credentials) await credentials.putLocalHistory(history)
+        else await getSave.putHistory(e.user_id, history)
 
         let added_rks_notes = await this.buildingRecord(old, now, e)
         return { save: now, added_rks_notes }
@@ -206,26 +215,27 @@ export default class getUpdateSave {
     /**
      * 
      * @template {keyof saveHistoryObject} K1
-     * @param {botEvent} e 
-     * @param {K1[]} [field] 
+     * @param {botEvent} e
+     * @param {K1[]} [field]
+     * @param {import('./userCredentials.js').UserCredentials} [credentials]
      * @returns {Promise<saveHistory | null>}
      */
-    static async getHistoryFromApi(e, field = []) {
-        const sessionToken = await getSave.get_user_token(e.user_id);
+    static async getHistoryFromApi(e, field = [], credentials = undefined) {
+        const sessionToken = credentials ? await credentials.getSessionToken() : await getSave.get_user_token(e.user_id)
         if (!sessionToken) {
             if (!await canUseApi(e)) {
                 send.send_with_At(e, "请先绑定sessionToken哦！")
                 return null;
             }
             try {
-                return await getSaveFromApi.getHistory(e, field)
+                return await getSaveFromApi.getHistory(e, field, credentials)
             } catch (err) {
                 logger.warn('[phi-plugin]获取历史记录失败', err)
                 send.send_with_At(e, "从API获取历史记录失败，请稍后重试或绑定sessionToken后重试哦");
                 return null;
             }
         }
-        let oldHistory = await getSave.getHistory(e.user_id);
+        let oldHistory = credentials ? await credentials.getLocalHistory() : await getSave.getHistory(e.user_id)
         if (oldHistory) {
             await makeRequestFnc.requestApi(
                 e,
@@ -234,7 +244,7 @@ export default class getUpdateSave {
             );
         }
         try {
-            return await getSaveFromApi.getHistory(e, field)
+            return await getSaveFromApi.getHistory(e, field, credentials)
         } catch (err) {
             logger.warn('[phi-plugin]获取历史记录失败', err)
             send.send_with_At(e, "从API获取历史记录失败，将使用本地存档的历史记录哦");

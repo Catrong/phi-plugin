@@ -7,7 +7,7 @@ import phiPluginBase from '../components/baseClass.js';
 import makeRequest from '../model/makeRequest.js';
 import logger from '../components/Logger.js';
 import makeRequestFnc from '../model/makeRequestFnc.js';
-import getSave from '../model/getSave.js';
+import { UserCredentials } from '../model/userCredentials.js';
 import { APII18NCN } from '../model/constNum.js'
 import { canUseApi, getApiAccessState } from '../model/apiPermission.js'
 import platform from '../components/platform/index.js'
@@ -415,6 +415,7 @@ export class phihelp extends phiPluginBase {
    * @returns {Promise<boolean | undefined>}
    */
   async settag(e) {
+    const credentials = UserCredentials.fromEvent(e)
     if (await getBanGroup.get(e, 'tag')) {
       send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
       return false
@@ -432,7 +433,7 @@ export class phihelp extends phiPluginBase {
       return true;
     }
 
-    const sessionToken = await getSave.get_user_token(e.user_id);
+    const sessionToken = await credentials.getSessionToken()
     if (!sessionToken) {
       send.send_with_At(e, '权限不足，请尝试扫码登录或使用sessionToken进行绑定哦~', true);
       return false;

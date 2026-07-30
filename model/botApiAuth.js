@@ -1,4 +1,3 @@
-// @ts-nocheck -- Runtime module consumed by multiple Yunzai adapters with untyped Redis clients.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,13 +5,14 @@ import axios from 'axios';
 import YAML from 'yaml';
 import Config from '../components/Config.js';
 import logger from '../components/Logger.js';
-import { redis } from '../components/platform/index.js';
 import { pluginRoot } from './path.js';
-import { APIBASEURL, redisPath } from './constNum.js';
+import { APIBASEURL } from './constNum.js';
+import userCredentialStore from './userCredentialStore.js';
 
 const TIMEOUT = 5000;
 
 export class PhiApiError extends Error {
+    /** @param {string} message @param {number} [status] @param {string} [code] @param {any} [data] */
     constructor(message, status = 0, code = 'api_request_failed', data = undefined) {
         super(message);
         this.name = 'PhiApiError';
@@ -38,6 +38,15 @@ const CONNECTION_ERROR_CODES = new Set([
     'api_offline',
 ]);
 
+/** @param {any} params */
+function localCredentialFingerprint(params) {
+    const token = params?.token;
+    const apiUserId = params?.api_user_id ?? params?.apiUserId;
+    const identity = token ? `sstk:${token}` : apiUserId ? `api-id:${apiUserId}` : '';
+    return identity ? crypto.createHash('sha256').update(identity).digest('hex') : '';
+}
+
+/** @type {Record<string, string | (() => string)>} */
 const USER_ERROR_MESSAGES = {
     api_timeout: 'API请求超时，请稍后重试。',
     api_dns_error: '无法解析API地址，请Bot主人检查网络或API地址配置。',
@@ -129,6 +138,7 @@ function configIdentity() {
     };
 }
 
+/** @param {{clientId: string, secret: string, secretVersion: number}} identity */
 function writeIdentityAtomic(identity) {
     const target = path.join(pluginRoot, 'config', 'config', 'config.yaml');
     const current = YAML.parse(fs.readFileSync(target, 'utf8')) || {};
@@ -141,11 +151,7 @@ function writeIdentityAtomic(identity) {
     delete Config.config['config.config'];
 }
 
-function bindingKey(clientId, platform, platformId) {
-    const digest = crypto.createHash('sha256').update(`${platform}\n${platformId}`).digest('hex');
-    return `${redisPath}:apiBotBinding:${clientId}:${digest}`;
-}
-
+/** @param {any} response */
 function parseResponse(response) {
     const data = response.data;
     if (response.status < 200 || response.status >= 300 || data?.error) {
@@ -181,6 +187,7 @@ export class BotApiAuth {
         return this.initializing;
     }
 
+    /** @param {string} pluginVersion */
     async initializeOnce(pluginVersion) {
         const identity = configIdentity();
         if (!identity.clientId || !identity.secret || !Number.isSafeInteger(identity.secretVersion) || identity.secretVersion < 1) {
@@ -191,7 +198,7 @@ export class BotApiAuth {
             this.ready = true;
             this.fatalError = null;
             return identity;
-        } catch (error) {
+        } catch (/** @type {any} */ error) {
             this.ready = false;
             if (isFatalBotIdentityError(error)) {
                 this.fatalError = error;
@@ -252,6 +259,7 @@ export class BotApiAuth {
         return this.signedRequest('/bot-clients/self/claim-code', {}, 'POST');
     }
 
+    /** @param {string} method @param {string} originalPath @param {string} rawBody @param {{clientId:string, secret:string, secretVersion:number}} [identity] @returns {Record<string, string>} */
     sign(method, originalPath, rawBody, identity = configIdentity()) {
         if (!identity.clientId || !identity.secret || identity.secretVersion < 1) {
             throw new PhiApiError('API Bot身份尚未初始化', 0, 'bot_identity_missing');
@@ -270,6 +278,7 @@ export class BotApiAuth {
         };
     }
 
+    /** @param {string} originalPath @param {any} body @param {string} [method] @param {{clientId:string, secret:string, secretVersion:number}} [identity] @param {Record<string,string>} [extraHeaders] */
     async signedRequest(originalPath, body, method = 'POST', identity = configIdentity(), extraHeaders = {}) {
         const upperMethod = method.toUpperCase();
         const rawBody = upperMethod === 'GET' ? '' : JSON.stringify(body ?? {});
@@ -291,65 +300,55 @@ export class BotApiAuth {
         return parseResponse(response);
     }
 
-    async readCachedBinding(platform, platformId) {
+    /** @param {string} platform @param {string | number} platformId @param {any} params */
+    async readCachedBinding(platform, platformId, params) {
         const identity = configIdentity();
-        const raw = await redis.get(bindingKey(identity.clientId, platform, platformId));
-        if (!raw) return null;
-        try {
-            const value = JSON.parse(raw);
-            if (value?.bindingCredential && value?.apiUserId && value?.bindingId) return value;
-        } catch { /* discard malformed cache */ }
-        await this.invalidateBinding({ platform, platform_id: platformId });
+        const cached = await userCredentialStore.getBotBinding(identity.clientId, platform, platformId);
+        const fingerprint = localCredentialFingerprint(params);
+        if (!cached || (fingerprint && cached.credentialFingerprint === fingerprint)) return cached;
+        await userCredentialStore.deleteBotBinding(identity.clientId, platform, platformId);
         return null;
     }
 
-    async saveBinding(platform, platformId, value) {
+    /** @param {string} platform @param {string | number} platformId @param {any} value @param {any} params */
+    async saveBinding(platform, platformId, value, params) {
         const identity = configIdentity();
-        const stored = {
-            bindingId: value.bindingId,
-            apiUserId: String(value.apiUserId),
-            bindingCredential: value.bindingCredential,
-            credentialVersion: Number(value.credentialVersion),
-            updatedAt: new Date().toISOString(),
-        };
-        await redis.set(bindingKey(identity.clientId, platform, platformId), JSON.stringify(stored));
-        return stored;
+        return userCredentialStore.setBotBinding(identity.clientId, platform, platformId, {
+            ...value,
+            credentialFingerprint: localCredentialFingerprint(params),
+        });
     }
 
+    /** @param {any} params */
     async invalidateBinding(params) {
         const platform = params?.platform;
         const platformId = String(params?.platform_id ?? params?.platformId ?? '');
         if (!platform || !platformId) return;
         const identity = configIdentity();
-        await redis.del(bindingKey(identity.clientId, platform, platformId));
+        await userCredentialStore.deleteBotBinding(identity.clientId, platform, platformId);
     }
 
+    /** @param {any} params @param {boolean} [allowMigration] */
     async ensureBinding(params, allowMigration = true) {
         await this.initialize();
         const platform = params?.platform;
         const platformId = String(params?.platform_id ?? params?.platformId ?? '');
         if (!platform || !platformId) return null;
-        const cached = await this.readCachedBinding(platform, platformId);
-        if (cached) return cached;
-        try {
-            const resolved = await this.signedRequest('/bot/bindings/resolve', { platform, platformId });
-            return this.saveBinding(platform, platformId, resolved);
-        } catch (error) {
-            if (!(error instanceof PhiApiError) || error.code !== 'binding_not_found' || !allowMigration) throw error;
+        const token = params?.token;
+        const apiUserId = params?.api_user_id ?? params?.apiUserId;
+        if (!token && !apiUserId) {
+            throw new PhiApiError('当前 Bot 本地尚未绑定用户', 404, 'binding_not_found');
         }
-
-        const [{ default: getSave }, { default: getSaveFromApi }] = await Promise.all([
-            import('./getSave.js'),
-            import('./getSaveFromApi.js'),
-        ]);
-        const localUserId = String(params?._local_user_id ?? platformId);
-        const token = await getSave.get_user_token(localUserId);
+        const cached = await this.readCachedBinding(platform, platformId, params);
+        if (cached) return cached;
+        if (!allowMigration) {
+            throw new PhiApiError('当前 Bot 本地绑定凭据尚未建立', 404, 'binding_not_found');
+        }
         if (token) return this.bind({ platform, platform_id: platformId, token });
-        const apiUserId = await getSaveFromApi.get_user_apiId(localUserId);
-        if (apiUserId) return this.bind({ platform, platform_id: platformId, api_user_id: apiUserId });
-        throw new PhiApiError('当前平台尚未绑定，请使用SSTK绑定', 404, 'binding_not_found');
+        return this.bind({ platform, platform_id: platformId, api_user_id: apiUserId });
     }
 
+    /** @param {any} params */
     async bind(params) {
         await this.initialize();
         const platform = params?.platform;
@@ -361,7 +360,7 @@ export class BotApiAuth {
             ...(params?.isGlobal === true ? { isGlobal: true } : {}),
         });
         try {
-            return await this.saveBinding(platform, platformId, data);
+            return await this.saveBinding(platform, platformId, data, params);
         } catch (error) {
             logger.warn('[phi-plugin] API绑定已成功，但本地绑定凭据缓存写入失败，可执行更新重试');
             return {
@@ -375,15 +374,7 @@ export class BotApiAuth {
         }
     }
 
-    async unbind(params) {
-        await this.initialize();
-        const platform = params?.platform;
-        const platformId = String(params?.platform_id ?? params?.platformId ?? '');
-        const data = await this.signedRequest('/bot/bindings/unbind', { platform, platformId });
-        await this.invalidateBinding({ platform, platform_id: platformId });
-        return data;
-    }
-
+    /** @param {string} url @param {any} params @param {string} [method] @returns {Promise<Record<string,string>>} */
     async requestHeaders(url, params, method = 'POST') {
         await this.initialize();
         const parsed = new URL(url);
@@ -392,6 +383,7 @@ export class BotApiAuth {
         const headers = this.sign(method, originalPath, rawBody);
         if (params?.platform && (params?.platform_id ?? params?.platformId)) {
             const binding = await this.ensureBinding(params);
+            if (!binding) throw new PhiApiError('当前平台尚未绑定', 404, 'binding_not_found');
             headers['X-Phi-Binding-Credential'] = binding.bindingCredential;
         }
         return headers;

@@ -2,25 +2,22 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
-import getSave from '../model/getSave.js'
 import ProgressBar from "../model/progress-bar.js";
-import { redisPath, USER_API_SETTING_META, USER_API_SETTING_OPTIONS } from '../model/constNum.js'
+import { USER_API_SETTING_META, USER_API_SETTING_OPTIONS } from '../model/constNum.js'
 import picmodle from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
 import getBanGroup from '../model/getBanGroup.js'
 import getComment from '../model/getComment.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
-import getSaveFromApi from '../model/getSaveFromApi.js'
+import { UserCredentials } from '../model/userCredentials.js'
+import userCredentialStore from '../model/userCredentialStore.js'
 import { getApiAccessState } from '../model/apiPermission.js'
 import fCompute from '../model/fCompute.js'
-import platform, { redis } from '../components/platform/index.js'
+import platform from '../components/platform/index.js'
 
 
 /**@import {botEvent} from '../components/baseClass.js' */
-/** @type {Record<string, any>} */
-const tokenManageData = {}
-
 /** @typedef {'allowDataCollection'|'allowLeaderboard'|'allowDataAggregation'|'allowPlayerIdSearch'|'allowUserIdSearch'} apiSettingKey */
 
 /** @type {Record<apiSettingKey, {title: string, description: string}>} */
@@ -116,10 +113,6 @@ export class phihelp extends phiPluginBase {
                     fnc: 'tokenList'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*(token|tk)(Manage|mng|manage).*$`,
-                    fnc: 'tokenManage'
-                },
-                {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*auth.*$`,
                     fnc: 'auth'
                 },
@@ -171,6 +164,8 @@ export class phihelp extends phiPluginBase {
      */
     async setApiToken(e) {
 
+        const credentials = UserCredentials.fromEvent(e)
+
         if (await getBanGroup.get(e, 'setApiToken')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -180,7 +175,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        const sessionToken = await getSave.get_user_token(e.user_id);
+        const sessionToken = await credentials.getSessionToken()
 
         if (!sessionToken) {
             send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
@@ -196,11 +191,7 @@ export class phihelp extends phiPluginBase {
             send.send_with_At(e, 'API Token 包含非法字符，请检查后重试！\n格式：\n/setApiToken <新Token>')
             return false
         }
-        const setTokenResult = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.setApiToken({ ...makeRequestFnc.makePlatform(e), token: sessionToken, token_new: apiToken }),
-            { errorPrefix: '设置 API Token 失败', notifyUser: true }
-        )
+        const setTokenResult = await credentials.setApiToken(apiToken)
         if (!setTokenResult) {
             return false
         }
@@ -216,6 +207,7 @@ export class phihelp extends phiPluginBase {
      * @returns 
      */
     async tokenList(e) {
+        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'tokenList')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -225,16 +217,12 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        const sessionToken = await getSave.get_user_token(e.user_id);
+        const sessionToken = await credentials.getSessionToken()
         if (!sessionToken) {
             send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
             return;
         }
-        const tokenList = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken }),
-            { errorPrefix: '获取 Token 列表失败', notifyUser: true }
-        )
+        const tokenList = await credentials.listPlatformBindings()
         if (!tokenList) {
             return false
         }
@@ -242,7 +230,7 @@ export class phihelp extends phiPluginBase {
         let resMsg = `已绑定${tokenList.platform_data.length}个平台账号\n`
         const currentPlatform = makeRequestFnc.makePlatform(e)
 
-        tokenList.platform_data.forEach((item, index) => {
+        tokenList.platform_data.forEach((/** @type {any} */ item, /** @type {number} */ index) => {
             if (currentPlatform.platform == item.platform_name && currentPlatform.platform_id == item.platform_id) {
                 resMsg += `${index + 1}.（当前）\n`
             } else {
@@ -273,140 +261,9 @@ export class phihelp extends phiPluginBase {
      * @param {botEvent} e 
      * @returns 
      */
-    async tokenManage(e) {
-        if (await getBanGroup.get(e, 'tokenManage')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-            return false
-        }
-
-        if (!await this.checkApiEnabled(e)) {
-            return false
-        }
-
-        /** @type {string} */
-        let msg = e.msg.replace(/^[#/].*?tokenManage\s*/, '');
-        /** @type {'delete'|'rmau'|undefined} */
-        let operation = /**@type {any} */ (msg.match(/(delete|rmau)/i)?.[1]);
-
-        if (!operation) {
-            send.send_with_At(e, `请指定操作类型！\n类型：\ndelete - 解绑对应编号平台`);
-            return false;
-        }
-
-        const sessionToken = await getSave.get_user_token(e.user_id);
-        if (!sessionToken) {
-            send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
-            return;
-        }
-
-        const tokenList = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.tokenList({ ...makeRequestFnc.makePlatform(e), token: sessionToken }),
-            { errorPrefix: '获取 Token 列表失败', notifyUser: true }
-        )
-        if (!tokenList) {
-            return false
-        }
-
-        let force = msg.match('-f')?.[0] ? true : false;
-
-        let choseNum = Number(msg.match(/[0-9]+/)?.[0]);
-
-        if (choseNum) {
-            if (choseNum > tokenList.platform_data.length) {
-                send.send_with_At(e, `只找到了${tokenList.platform_data.length}个绑定平台呐QAQ！`);
-                return false;
-            }
-            let index = choseNum - 1;
-            let tarPlatform = tokenList.platform_data[index];
-            if (tarPlatform.binding_type === 'bot') {
-                send.send_with_At(e, `该账号由 ${tarPlatform.bot_display_name || '新版 Bot'} 独立管理，请在对应 Bot 中执行解绑。`)
-                return false
-            }
-            if (force) {
-                const tokenManageResult = await makeRequestFnc.requestApi(
-                    e,
-                    () => makeRequest.tokenManage({
-                        ...makeRequestFnc.makePlatform(e), token: sessionToken, data: {
-                            platform: tarPlatform.platform_name,
-                            platform_id: tarPlatform.platform_id,
-                            operation
-                        }
-                    }),
-                    { errorPrefix: '操作失败', notifyUser: true }
-                )
-                if (tokenManageResult) {
-                    send.send_with_At(e, `操作成功`);
-                }
-            } else {
-                let vis = Date.now()
-                tokenManageData[e.user_id] = {
-                    vis,
-                    tarPlatform,
-                    operation
-                }
-                setTimeout(() => {
-                    if (tokenManageData[e.user_id]?.vis == vis) {
-                        delete tokenManageData[e.user_id];
-                    }
-                }, 30000)
-                this.setContext('tokenManageChose', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
-                send.send_with_At(e, `请确认操作：\n平台: ${tarPlatform.platform_name}\n平台ID: ${tarPlatform.platform_id}\n操作: ${operation}\n（确认/取消）`);
-            }
-        } else {
-            send.send_with_At(e, '请输入需要操作的平台编号呐QAQ！');
-        }
-        return true
-    }
-
-    /**
-     * 
-     * @returns 
-     */
-    async tokenManageChose() {
-        let e = this.e;
-        /** @type {string} */
-        let msg = this.e.msg;
-
-        if (msg.replace(/\s/g, '') == '确认') {
-            let { tarPlatform, operation } = tokenManageData[e.user_id];
-
-            const sessionToken = await getSave.get_user_token(e.user_id);
-            if (!sessionToken) {
-                send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
-                return;
-            }
-
-            const tokenManageResult = await makeRequestFnc.requestApi(
-                e,
-                () => makeRequest.tokenManage({
-                    ...makeRequestFnc.makePlatform(e), token: sessionToken, data: {
-                        platform: tarPlatform.platform_name,
-                        platform_id: tarPlatform.platform_id,
-                        operation
-                    }
-                }),
-                { errorPrefix: '操作失败', notifyUser: true }
-            )
-            if (tokenManageResult) {
-                send.send_with_At(e, `操作成功`);
-            }
-        } else {
-            send.send_with_At(e, `已取消`);
-        }
-
-        delete tokenManageData[e.user_id];
-
-        this.finish('tokenManageChose', false)
-
-    }
-
-    /**
-     * 
-     * @param {botEvent} e 
-     * @returns 
-     */
     async auth(e) {
+
+        const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'auth')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -423,23 +280,17 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        const apiId = await getSaveFromApi.get_user_apiId(e.user_id);
+        const apiId = await credentials.getApiId()
         if (!apiId) {
             send.send_with_At(e, `本地没有您的apiId记录嗷！请尝试重新绑定呐！`)
             return;
         }
-        const sessionToken = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.getPgrToken({ ...makeRequestFnc.makePlatform(e), api_token: apiToken }),
-            { errorPrefix: 'API Token 验证失败', notifyUser: true }
-        )
+        const sessionToken = await credentials.authenticateApiToken(apiToken)
         if (!sessionToken) {
             return false
         }
 
         send.send_with_At(e, `验证成功！\n您的用户Token为：\n${sessionToken.token}\n请妥善保管您的Token哦~`);
-
-        getSave.add_user_token(e.user_id, sessionToken.token);
 
         return true
     }
@@ -450,6 +301,7 @@ export class phihelp extends phiPluginBase {
      * @returns 
      */
     async clearApiData(e) {
+        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'clearApiData')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -459,7 +311,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        const sessionToken = await getSave.get_user_token(e.user_id);
+        const sessionToken = await credentials.getSessionToken()
         if (!sessionToken) {
             send.send_with_At(e, '注销 phi-api 账号需要 Phigros SSTK 权限，请先使用 SSTK 绑定。')
             return false;
@@ -473,31 +325,28 @@ export class phihelp extends phiPluginBase {
 
     async confirmClearApiData() {
         const e = this.e
+        const credentials = UserCredentials.fromEvent(e)
         if (e.msg.replace(/\s/g, '') !== '确认') {
             send.send_with_At(e, '已取消')
             this.finish('confirmClearApiData', false)
             return true
         }
 
-        const sessionToken = await getSave.get_user_token(e.user_id)
+        const sessionToken = await credentials.getSessionToken()
         if (!sessionToken) {
             send.send_with_At(e, '注销 phi-api 账号需要 Phigros SSTK 权限，请先使用 SSTK 绑定。')
             this.finish('confirmClearApiData', false)
             return false
         }
 
-        const clearResult = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.clear({ ...makeRequestFnc.makePlatform(e), token: sessionToken }),
-            { errorPrefix: '注销 phi-api 账号失败', notifyUser: true }
-        )
+        const clearResult = await credentials.deleteApiAccount()
         if (!clearResult) {
             this.finish('confirmClearApiData', false)
             return false
         }
 
         try {
-            await getSaveFromApi.delLocalSave(e.user_id)
+            await credentials.deleteApiCachedSave()
         } catch (err) {
             logger.warn('[phi-plugin] phi-api 账号已注销，但本地 API 缓存清理失败', err)
         }
@@ -532,35 +381,9 @@ export class phihelp extends phiPluginBase {
          */
         let user_token = []
         console.info('[phi-plugin] 获取user_token列表...')
-        // 使用SCAN非阻塞遍历所有userToken键
-        let cursor = 0;
-        let cnt = 0;
-        let vis = 0;
-        do {
-            /** @type {{cursor:number,keys:string[]}} */
-            let info =
-                // @ts-ignore
-                (await redis.scan(cursor, { MATCH: `${redisPath}:userToken:*`, COUNT: 100 }));
-            cursor = info.cursor; // 更新游标
-            let keys = info.keys; // 获取当前批次的键
-            if (keys.length > 0) {
-                // 并发获取本批次所有user_token
-                let userIds = keys.map(key => key.replace(`${redisPath}:userToken:`, ''));
-                /**@type {(any | null)[]} */
-                let tokenValues = await Promise.all(keys.map(key =>
-                    redis.get(key)
-                ));
-                userIds.forEach((user_id, idx) => {
-                    if (!tokenValues[idx]) return;
-                    user_token.push(tokenValues[idx]);
-                });
-                cnt += keys.length;
-                if (Math.floor(cnt / 1000) > vis) {
-                    vis = Math.floor(cnt / 1000);
-                    logger.info(`[phi-plugin] 已获取 ${vis}k 个 user_token`);
-                }
-            }
-        } while (cursor != 0);
+        const credentialEntries = await userCredentialStore.listSessionCredentials()
+        user_token.push(...credentialEntries.values())
+        logger.info(`[phi-plugin] 已获取 ${user_token.length} 个 user_token`)
         if (user_token.length > 1000) {
             send.send_with_At(e, `数据量过大，开始分批上传，预计${Math.ceil(user_token.length / 1000) * 5}秒...`);
             for (let i = 0; i < user_token.length; i += 1000) {
@@ -639,6 +462,8 @@ export class phihelp extends phiPluginBase {
      */
     async apiset(e) {
 
+        const credentials = UserCredentials.fromEvent(e)
+
         if (!await this.checkApiEnabled(e)) {
             return false
         }
@@ -648,7 +473,7 @@ export class phihelp extends phiPluginBase {
             return true
         }
 
-        const token = await getSave.get_user_token(e.user_id)
+        const token = await credentials.getSessionToken()
         if (!token) {
             send.send_with_At(e, `本地没有您的tk记录嗷！请先尝试使用tk绑定呐！`)
             return true;

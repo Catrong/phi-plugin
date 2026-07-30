@@ -1,4 +1,3 @@
-// @ts-nocheck
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
@@ -6,6 +5,7 @@ import {
     getB30AnalysisRecords,
 } from '../model/b30Analysis.js'
 
+/** @param {string} id @param {string} rank @param {number} rks @returns {any} */
 const record = (id, rank, rks) => ({ id, rank, rks })
 
 test('uses P3 and B27 for the local RKS histogram', () => {
@@ -20,9 +20,9 @@ test('uses P3 and B27 for the local RKS histogram', () => {
 
 test('builds a slot-based histogram with a horizontal average marker', () => {
     const records = [
-        { ...record('a', 'IN', 15), kind: 'phi' },
-        { ...record('b', 'IN', 15.5), kind: 'best' },
-        { ...record('c', 'IN', 16), kind: 'best' },
+        { ...record('a', 'IN', 15), kind: 'phi', slot: 'P1' },
+        { ...record('b', 'IN', 15.5), kind: 'best', slot: 'B1' },
+        { ...record('c', 'IN', 16), kind: 'best', slot: 'B2' },
     ]
 
     const histogram = buildRksHistogram(records)
@@ -33,6 +33,6 @@ test('builds a slot-based histogram with a horizontal average marker', () => {
     assert.deepEqual(histogram.slots.map(slot => slot.rks), [15, 15.5, 16])
     assert.ok(histogram.ticks.length >= 3)
 
-    const singleValue = buildRksHistogram([{ ...record('only', 'LEGACY', 15.5), kind: 'best' }])
+    const singleValue = buildRksHistogram([{ ...record('only', 'LEGACY', 15.5), kind: 'best', slot: 'B1' }])
     assert.ok(Math.abs(singleValue.averagePosition - 50) < 1e-9)
 })

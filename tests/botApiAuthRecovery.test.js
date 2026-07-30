@@ -1,4 +1,3 @@
-// @ts-nocheck
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import Config from '../components/Config.js'
@@ -43,11 +42,11 @@ test('user-facing API errors explain the actual failure and next action', () => 
 
 test('temporary identity verification failures are retried instead of cached forever', async () => {
     const originalGetUserCfg = Config.getUserCfg
-    Config.getUserCfg = (_name, style) => ({
+    Config.getUserCfg = /** @type {any} */ ((/** @type {any} */ _name, /** @type {string} */ style) => /** @type {Record<string, any>} */ ({
         apiBotClientId: 'issued-client-id',
         apiBotClientSecret: 'issued-secret',
         apiBotSecretVersion: 1,
-    })[style]
+    })[style])
 
     const auth = new BotApiAuth()
     let requests = 0
@@ -58,7 +57,7 @@ test('temporary identity verification failures are retried instead of cached for
     }
 
     try {
-        await assert.rejects(auth.initialize(), error => error.code === 'api_timeout')
+        await assert.rejects(auth.initialize(), (/** @type {any} */ error) => error.code === 'api_timeout')
         const identity = await auth.initialize()
         assert.equal(identity.clientId, 'issued-client-id')
         assert.equal(requests, 2)
@@ -69,11 +68,11 @@ test('temporary identity verification failures are retried instead of cached for
 
 test('invalid issued credentials remain stopped until the identity changes', async () => {
     const originalGetUserCfg = Config.getUserCfg
-    Config.getUserCfg = (_name, style) => ({
+    Config.getUserCfg = /** @type {any} */ ((/** @type {any} */ _name, /** @type {string} */ style) => /** @type {Record<string, any>} */ ({
         apiBotClientId: 'revoked-client-id',
         apiBotClientSecret: 'revoked-secret',
         apiBotSecretVersion: 1,
-    })[style]
+    })[style])
 
     const auth = new BotApiAuth()
     let requests = 0
@@ -83,8 +82,8 @@ test('invalid issued credentials remain stopped until the identity changes', asy
     }
 
     try {
-        await assert.rejects(auth.initialize(), error => isFatalBotIdentityError(error))
-        await assert.rejects(auth.initialize(), error => error.code === 'bot_client_revoked')
+        await assert.rejects(auth.initialize(), (/** @type {any} */ error) => isFatalBotIdentityError(error))
+        await assert.rejects(auth.initialize(), (/** @type {any} */ error) => error.code === 'bot_client_revoked')
         assert.equal(requests, 1)
     } finally {
         Config.getUserCfg = originalGetUserCfg
@@ -93,11 +92,11 @@ test('invalid issued credentials remain stopped until the identity changes', asy
 
 test('a missing Bot identity is registered on reconnect and concurrent recovery is single-flight', async () => {
     const originalGetUserCfg = Config.getUserCfg
-    Config.getUserCfg = (_name, style) => ({
+    Config.getUserCfg = /** @type {any} */ ((/** @type {any} */ _name, /** @type {string} */ style) => /** @type {Record<string, any>} */ ({
         apiBotClientId: '',
         apiBotClientSecret: '',
         apiBotSecretVersion: 0,
-    })[style]
+    })[style])
 
     const auth = new BotApiAuth()
     let registrations = 0
@@ -105,7 +104,7 @@ test('a missing Bot identity is registered on reconnect and concurrent recovery 
         registrations += 1
         await new Promise(resolve => setTimeout(resolve, 5))
         auth.ready = true
-        return { clientId: 'new-client-id', secret: 'secret', secretVersion: 1 }
+        return { clientId: 'new-client-id', secret: 'secret', secretVersion: 1, claimUrl: undefined, claimExpiresAt: undefined }
     }
 
     try {
@@ -116,6 +115,43 @@ test('a missing Bot identity is registered on reconnect and concurrent recovery 
         assert.equal(first.clientId, 'new-client-id')
         assert.equal(second.clientId, 'new-client-id')
         assert.equal(registrations, 1)
+    } finally {
+        Config.getUserCfg = originalGetUserCfg
+    }
+})
+
+test('missing local credentials cannot restore a stale API platform binding', async () => {
+    const originalGetUserCfg = Config.getUserCfg
+    Config.getUserCfg = /** @type {any} */ ((/** @type {any} */ _name, /** @type {string} */ style) => /** @type {Record<string, any>} */ ({
+        apiBotClientId: 'issued-client-id',
+        apiBotClientSecret: 'issued-secret',
+        apiBotSecretVersion: 1,
+    })[style])
+
+    const auth = new BotApiAuth()
+    auth.ready = true
+    let cacheReads = 0
+    auth.readCachedBinding = async () => {
+        cacheReads += 1
+        return {
+            bindingId: 'stale-binding',
+            apiUserId: '123',
+            bindingCredential: 'stale-credential',
+            credentialVersion: 1,
+            credentialFingerprint: 'stale-fingerprint',
+            updatedAt: new Date().toISOString(),
+        }
+    }
+    let remoteRequests = 0
+    auth.signedRequest = async () => { remoteRequests += 1; return {} }
+
+    try {
+        await assert.rejects(
+            auth.ensureBinding({ platform: 'yunzai', platform_id: 'local-user' }, false),
+            (/** @type {any} */ error) => error.code === 'binding_not_found',
+        )
+        assert.equal(cacheReads, 0)
+        assert.equal(remoteRequests, 0)
     } finally {
         Config.getUserCfg = originalGetUserCfg
     }

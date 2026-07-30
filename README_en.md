@@ -88,7 +88,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | :- | :- |
 | `#phi help` | Show help |
 | `#phi (gb\|cn)?bind <token>` | Bind sessionToken (supports CN/Global, default is CN) |
-| `#phi unbind` | Remove sessionToken & records |
+| `#phi unbind` | Clear the current Bot's local sessionToken, API ID, save, and history only; API platform bindings are unchanged |
 | `#phi clean` | Delete all records |
 | `#phi update` | Update save data |
 | `#phi (rks\|pgr\|b30)` | Query Rks (provides b30 results) |
@@ -186,7 +186,6 @@ API features can be manually enabled/disabled in settings. When enabled, it auto
 | `#phi bind <userId>` | Enable score query API, bind API account
 | `#phi setApiToken <token>` | Set API Token
 | `#phi tokenList` | Get list of currently bound platforms
-| `#phi tokenManage (delete) <platform number> (-f)?` | Delete bound platform, -f to skip confirmation
 | `#phi auth <api Token>` | Get sessionToken via API Token
 | `#phi clearApiData` | Permanently delete the phi-api account and cloud data; requires Phigros SSTK permission and confirmation
 | `#phi updateHistory` | Update historical scores from BOT to API server

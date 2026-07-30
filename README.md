@@ -120,7 +120,7 @@ pnpm install -P
 | :- | :-
 | `#phi帮助` | 获取帮助
 | `#phi (cn\|gb)?(bind\|绑定)xxx` | 绑定sessionToken，支持国服/国际服，默认为国服
-| `#phi (unbind\|解绑)` | 删除sessionToken和存档记录
+| `#phi (unbind\|解绑)` | 仅清除当前 Bot 本地保存的 sessionToken、API ID、存档和历史，不修改 API 平台绑定
 | `#phi clean` | 删除所有记录
 | `#phi (update\|更新存档)` | 更新存档
 | `#phi (rks\|pgr\|b30)` | 查询rks，会提供得出的b30结果
@@ -218,7 +218,6 @@ pnpm install -P
 | `#phi (bind\|绑定) <userId>` | 开启查分API可用，绑定API账号
 | `#phi setApiToken <token>` | 设置API Token
 | `#phi tokenList` | 获取当前绑定的平台列表
-| `#phi tokenManage (delete) <平台序号> (-f)?` | 删除绑定的平台，-f 跳过确认
 | `#phi auth <api Token>` | 通过API Token 获取 sessionToken
 | `#phi alias submit 曲目 \| 别名 \| 备注` | 私聊提交曲目别名提案 |
 | `#phi alias mine` | 查询自己的别名提案 |

@@ -1,7 +1,8 @@
 import Config from "../components/Config.js";
 import logger from "../components/Logger.js";
 import { APII18NCN, redisPath } from "./constNum.js"
-import getSave from "./getSave.js";
+import { UserCredentials } from './userCredentials.js';
+import userCredentialStore from './userCredentialStore.js';
 import makeRequest from "./makeRequest.js";
 import makeRequestFnc from "./makeRequestFnc.js";
 import send from "./send.js";
@@ -30,7 +31,8 @@ export default class getBanGroup {
      */
     static async get(e, fnc) {
         const { group_id } = e;
-        let sessionToken = await getSave.get_user_token(e.user_id)
+        const credentials = UserCredentials.fromEvent(e)
+        let sessionToken = await credentials.getSessionToken()
         if (await canUseApi(e)) {
             const result = await makeRequestFnc.requestApi(
                 e,
@@ -44,13 +46,13 @@ export default class getBanGroup {
             if (result) {
                 send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员(1)。")
                 if (sessionToken) {
-                    await getSave.banSessionToken(sessionToken)
+                    await userCredentialStore.banSessionToken(sessionToken)
                 }
                 return true;
             }
         }
         if (sessionToken) {
-            if (await getSave.isBanSessionToken(sessionToken)) {
+            if (await userCredentialStore.isSessionTokenBanned(sessionToken)) {
                 send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员(2)。")
                 return true;
             }
@@ -127,7 +129,6 @@ export default class getBanGroup {
             case 'updateHistory':
             case 'setApiToken':
             case 'tokenList':
-            case 'tokenManage':
                 return await this.redis(group_id, 'apiSetting')
             default:
                 return false;

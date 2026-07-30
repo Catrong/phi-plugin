@@ -2,16 +2,14 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import picmodle from '../model/picmodle.js'
 import getInfo from '../model/getInfo.js'
-import getSave from '../model/getSave.js'
 import fCompute from '../model/fCompute.js'
 import getBanGroup from '../model/getBanGroup.js';
 import LevelRecordInfo from '../model/class/LevelRecordInfo.js'
-import getSaveFromApi from '../model/getSaveFromApi.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
 import { Level, MAX_DIFFICULTY } from '../model/constNum.js'
 import getNotes from '../model/getNotes.js'
-import getUpdateSave from '../model/getUpdateSave.js'
+import { UserCredentials } from '../model/userCredentials.js'
 import analyzeSaveHistory from '../model/analyzeSaveHistory.js'
 import ScoreHistory from '../model/class/scoreHistory.js'
 import { canUseApi } from '../model/apiPermission.js'
@@ -87,6 +85,7 @@ export class phiuser extends phiPluginBase {
      * @param {botEvent} e
      */
     async info(e) {
+        const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'info')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -141,13 +140,13 @@ export class phiuser extends phiPluginBase {
 
         if (await canUseApi(e)) {
             try {
-                user_data = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory']);
+                user_data = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
             } catch (error) {
                 logger.info('通过phi-plugin API获取历史记录失败，改为本地存储获取')
-                user_data = await getSave.getHistory(e.user_id);
+                user_data = await credentials.getLocalHistory()
             }
         } else {
-            user_data = await getSave.getHistory(e.user_id);
+            user_data = await credentials.getLocalHistory()
         }
 
         let { rks_history, data_history, rks_range, data_range, rks_date, data_date } = user_data.getRksAndDataLine()
@@ -638,6 +637,8 @@ export class phiuser extends phiPluginBase {
      */
     async analyze2025SaveHistory(e) {
 
+        const credentials = UserCredentials.fromEvent(e)
+
 
         if (await getBanGroup.get(e, 'analyze2025SaveHistory')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -651,7 +652,7 @@ export class phiuser extends phiPluginBase {
             return true
         }
 
-        const history = await getUpdateSave.getHistoryFromApi(e, ['challengeModeRank', 'data', 'rks', 'scoreHistory']);
+        const history = await credentials.getHistoryFromApi(['challengeModeRank', 'data', 'rks', 'scoreHistory'])
 
         if (!history) {
             return true;
@@ -671,6 +672,7 @@ export class phiuser extends phiPluginBase {
      * @returns 
      */
     async hisb30(e) {
+        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'hisb30')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -682,7 +684,7 @@ export class phiuser extends phiPluginBase {
             return true
         }
 
-        const history = await getUpdateSave.getHistoryFromApi(e, ['scoreHistory']);
+        const history = await credentials.getHistoryFromApi(['scoreHistory'])
 
         if (!history) {
             return true;

@@ -4,11 +4,9 @@ import readFile from "./getFile.js"
 import Save from './class/Save.js'
 import fs from 'fs'
 import saveHistory from './class/saveHistory.js'
-import { redisPath } from './constNum.js'
 import makeRequest from './makeRequest.js'
 import makeRequestFnc from './makeRequestFnc.js'
-import PhigrosUser from '../lib/PhigrosUser.js'
-import { redis } from '../components/platform/index.js'
+import userCredentialStore from './userCredentialStore.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 export default class getSaveFromApi {
@@ -19,8 +17,7 @@ export default class getSaveFromApi {
      * @param {apiUserId} apiId apiId
      */
     static async add_user_apiId(user_id, apiId) {
-        //@ts-ignore
-        return await redis.set(`${redisPath}:userApiId:${user_id}`, apiId)
+        return userCredentialStore.setApiId(user_id, apiId)
     }
 
     /**
@@ -28,8 +25,7 @@ export default class getSaveFromApi {
      * @param {string} user_id user_id
      */
     static async get_user_apiId(user_id) {
-        //@ts-ignore
-        return await redis.get(`${redisPath}:userApiId:${user_id}`)
+        return userCredentialStore.getApiId(user_id)
     }
 
     /**
@@ -37,8 +33,7 @@ export default class getSaveFromApi {
      * @param {string} user_id user_id
      */
     static async del_user_apiId(user_id) {
-        //@ts-ignore
-        return await redis.del(`${redisPath}:userApiId:${user_id}`)
+        return userCredentialStore.deleteApiId(user_id)
     }
 
     /**
@@ -120,10 +115,11 @@ export default class getSaveFromApi {
      * @template {keyof saveHistoryObject} K
      * @param {botEvent} e 
      * @param {K[]} [request]
+     * @param {import('./userCredentials.js').UserCredentials} [credentials]
      * @returns {Promise<saveHistory>}
      */
-    static async getHistory(e, request = []) {
-        let apiId = await this.get_user_apiId(e.user_id)
+    static async getHistory(e, request = [], credentials = undefined) {
+        let apiId = credentials ? await credentials.getApiId() : await this.get_user_apiId(e.user_id)
         if (!apiId) {
             throw new Error('apiId is undefined')
         }
@@ -143,17 +139,23 @@ export default class getSaveFromApi {
      * @param {botEvent} e
      * @param {idString} song_id
      * @param {levelKind} difficulty
+     * @param {import('./userCredentials.js').UserCredentials} [credentials]
      * @returns {Promise<ScoreDetail[]>}
      */
     /**
      * @overload
      * @param {botEvent} e
      * @param {idString} song_id
+     * @param {undefined} [difficulty]
+     * @param {import('./userCredentials.js').UserCredentials} [credentials]
      * @returns {Promise<songRecordHistory>}
      */
     /**
      * @overload
      * @param {botEvent} e
+     * @param {undefined} [song_id]
+     * @param {undefined} [difficulty]
+     * @param {import('./userCredentials.js').UserCredentials} [credentials]
      * @returns {Promise<scoreHistoryObject>}
      */
     /**
@@ -161,10 +163,11 @@ export default class getSaveFromApi {
      * @param {botEvent} e
      * @param {idString} [song_id]
      * @param {levelKind} [difficulty]
+     * @param {import('./userCredentials.js').UserCredentials} [credentials]
      * @returns {Promise< ScoreDetail[] | songRecordHistory | scoreHistoryObject >}
      */
-    static async getSongHistory(e, song_id, difficulty) {
-        let apiId = await this.get_user_apiId(e.user_id)
+    static async getSongHistory(e, song_id, difficulty, credentials = undefined) {
+        let apiId = credentials ? await credentials.getApiId() : await this.get_user_apiId(e.user_id)
         if (!apiId) {
             throw new Error('apiId is undefined')
         }
@@ -203,24 +206,6 @@ export default class getSaveFromApi {
         if (!apiId) return false
         fs.rmSync(path.join(apiSavePath, apiId), { recursive: true, force: true })
         await this.del_user_apiId(user_id)
-        return true
-    }
-
-    /**
-     * 删除 user_id 对应的存档文件
-     * @param {*} e e
-     */
-    static async delSave(e) {
-        const unbindResult = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.unbind({ ...makeRequestFnc.makePlatform(e) }),
-            { logTag: 'unbind', loggerLevel: 'warn' }
-        )
-        if (!unbindResult) {
-            throw new Error('unbind failed')
-        }
-        // Platform unbinding must not delete the API-ID shared cache directory.
-        await this.del_user_apiId(e.user_id)
         return true
     }
 

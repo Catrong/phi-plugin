@@ -10,6 +10,7 @@ import getBanGroup from '../model/getBanGroup.js';
 import { allLevel, Level, LevelNum } from '../model/constNum.js'
 import getComment from '../model/getComment.js'
 import getSave from '../model/getSave.js'
+import { UserCredentials } from '../model/userCredentials.js'
 import Version from '../components/Version.js'
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
@@ -941,6 +942,8 @@ export class phisong extends phiPluginBase {
      */
     async comment(e) {
 
+        const credentials = UserCredentials.fromEvent(e)
+
         if (await getBanGroup.get(e, 'comment') || !(await Config.getUserCfg('config', 'allowComment'))) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -952,7 +955,7 @@ export class phisong extends phiPluginBase {
             return true
         }
 
-        const sessionToken = await getSave.get_user_token(e.user_id);
+        const sessionToken = await credentials.getSessionToken()
 
         if (!sessionToken) {
             send.send_with_At(e, `请先绑定sessionToken哦！`)
@@ -1153,12 +1156,13 @@ export class phisong extends phiPluginBase {
      * @returns 
      */
     async recallComment(e) {
+        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'recallComment') || !(await Config.getUserCfg('config', 'allowComment'))) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
         let save;
-        const sessionToken = await getSave.get_user_token(e.user_id);
+        const sessionToken = await credentials.getSessionToken()
         if (!e.isMaster) {
             save = await send.getsave_result(e);
             if (!save) {

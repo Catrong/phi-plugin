@@ -2,7 +2,6 @@ import Config from '../components/Config.js'
 import send from '../model/send.js'
 import Save from '../model/class/Save.js'
 import ScoreHistory from '../model/class/scoreHistory.js'
-import getSave from '../model/getSave.js'
 import getQRcode from '../lib/getQRcode.js'
 import common from '../components/common.js'
 import fCompute from '../model/fCompute.js'
@@ -10,8 +9,6 @@ import getBanGroup from '../model/getBanGroup.js';
 import { allLevel, redisPath } from "../model/constNum.js"
 import makeRequest from '../model/makeRequest.js'
 import makeRequestFnc from '../model/makeRequestFnc.js'
-import getUpdateSave from '../model/getUpdateSave.js'
-import getSaveFromApi from '../model/getSaveFromApi.js'
 import saveHistory from '../model/class/saveHistory.js'
 import getNotes from '../model/getNotes.js'
 import { APII18NCN } from '../model/constNum.js'
@@ -23,11 +20,9 @@ import picmodle from '../model/picmodle.js'
 import { canUseApi } from '../model/apiPermission.js'
 import platform, { redis } from '../components/platform/index.js'
 import aliasProposalService from '../model/aliasProposalService.js'
+import { UserCredentials } from '../model/userCredentials.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
-
-const apiMsg = `\n请注意，您尚未设置API Token！\n指令格式：\n/${Config.getUserCfg('config', 'cmdhead')} setApiToken <apiToken>\n更多帮助：/${Config.getUserCfg('config', 'cmdhead')} apihelp`
-const deleteApiAccountCommand = `/${Config.getUserCfg('config', 'cmdhead')} clearApiData`
 
 export class phisstk extends phiPluginBase {
     constructor() {
@@ -69,6 +64,8 @@ export class phisstk extends phiPluginBase {
      */
     async bind(e) {
 
+        const credentials = UserCredentials.fromEvent(e)
+
         if (await getBanGroup.get(e, 'bind')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -79,33 +76,23 @@ export class phisstk extends phiPluginBase {
 
         /** @type {boolean} */
         let isGlobal = useWhich ? useWhich === 'gb' : Config.getUserCfg('config', 'defaultGlobal');
+        const allowApi = await canUseApi(e)
+        let apiBindingSucceeded = false
 
-        let localPhigrosToken = await getSave.get_user_token(e.user_id)
+        let localPhigrosToken = await credentials.getSessionToken()
 
         if (!sessionToken) {
             let apiId = e.msg.replace(/[#/](.*?)(绑定|bind)(\s*)/, "").match(/[0-9]+/g)?.[0]
-            if (await canUseApi(e)) {
-                const result = await makeRequestFnc.requestApi(
-                    e,
-                    () => makeRequest.bind({ ...makeRequestFnc.makePlatform(e), api_user_id: apiId }),
-                    {
-                        logTag: 'API错误 bind by api_user_id',
-                        loggerLevel: 'error',
-                        ignoreMessages: [APII18NCN.userNotFound]
-                    }
-                )
-                if (result?.data?.internal_id) {
-                    let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
-                    if (result.data.binding_cache_warning) {
+            if (apiId && allowApi) {
+                const result = await credentials.bindWithApiId(apiId)
+                if (result?.apiUserId) {
+                    let resMsg = `绑定成功！您的查分ID为：${result.apiUserId}，请妥善保管嗷！`
+                    if (('cacheWarning' in result && result.cacheWarning) || result.localCredentialWarning) {
                         resMsg += '\nAPI绑定已成功，但本地凭据缓存失败，请稍后执行更新重试。'
                     }
-                    if (!result.data.have_api_token) {
-                        resMsg += apiMsg
-                    }
                     send.send_with_At(e, resMsg)
-                    await getSave.del_user_token(e.user_id); //删除本地token，避免冲突
-                    let updateData = await getUpdateSave.getNewSaveFromApi(e)
-                    let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                    let updateData = await credentials.getUpdatedSaveFromApi()
+                    let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
                     await build(e, updateData, history)
                     return true
                 }
@@ -130,10 +117,8 @@ export class phisstk extends phiPluginBase {
             /**用户若已经触发且未绑定，则发送原来的二维码 */
             let key = `${redisPath}:qrcode:${e.user_id}`
             let timeOutKey = `${redisPath}:qrcodeTimeOut:${e.user_id}`
-            // @ts-ignore
             let qrcode = await redis.get(key)
             if (qrcode) {
-                // @ts-ignore
                 let qrcodeTimeOut = await redis.ttl(timeOutKey)
                 let recallTime = qrcodeTimeOut
                 if (qrcodeTimeOut >= 60) recallTime = 60
@@ -167,14 +152,12 @@ export class phisstk extends phiPluginBase {
             let QRCodetimeout = request.data.expires_in
             if (fCompute.getAdapterName(e) === 'QQBot' && request.data.expires_in > 270) QRCodetimeout = 270
             /**利用redis的超时机制，设置一个生命与超时时间一致的键值作为倒计时器，不存储值仅提供倒计时 */
-            // @ts-ignore
             await redis.set(timeOutKey, '1', { EX: QRCodetimeout })
 
             while (new Date().getTime() - t1 < QRCodetimeout * 1000) {
                 result = await getQRcode.checkQRCodeResult(request, isGlobal);
                 if (!flag) {
                     /**存储二维码链接，生命为3秒，以便在代码意外被终止再次触发时不会阻塞正常绑定 */
-                    // @ts-ignore
                     await redis.set(key, request.data.qrcode_url, { EX: 3 })
                 }
                 if (!result.success) {
@@ -189,9 +172,7 @@ export class phisstk extends phiPluginBase {
                 await common.sleep(2000)
             }
 
-            // @ts-ignore
             redis.del(key) //绑定完成、超时后删除键值
-            // @ts-ignore
             redis.del(timeOutKey)
 
             if (!result.success) {
@@ -215,32 +196,20 @@ export class phisstk extends phiPluginBase {
             // return true
         }
 
-        if (await canUseApi(e)) {
+        if (allowApi) {
             try {
 
-                let result = await makeRequestFnc.requestApi(
-                    e,
-                    () => makeRequest.bind({ ...makeRequestFnc.makePlatform(e), token: sessionToken, isGlobal }),
-                    {
-                        errorPrefix: 'API绑定未完成，已保留原有绑定状态。',
-                        notifyUser: true,
-                        logTag: 'API错误 bind by token',
-                        loggerLevel: 'error'
-                    }
-                )
-                if (result?.data?.internal_id) {
-                    let resMsg = `绑定成功！您的查分ID为：${result.data.internal_id}，请妥善保管嗷！`
-                    if (result.data.binding_cache_warning) {
+                let result = await credentials.bindWithSessionToken(sessionToken, isGlobal)
+                if (result?.apiUserId) {
+                    apiBindingSucceeded = true
+                    let resMsg = `绑定成功！您的查分ID为：${result.apiUserId}，请妥善保管嗷！`
+                    if (('cacheWarning' in result && result.cacheWarning) || result.localCredentialWarning) {
                         resMsg += '\nAPI绑定已成功，但本地凭据缓存失败，请稍后执行更新重试。'
                     }
-                    if (!result.data.have_api_token) {
-                        resMsg += apiMsg
-                    }
                     send.send_with_At(e, resMsg)
-                    await getSave.add_user_token(e.user_id, sessionToken);
                     void aliasProposalService.ensureBotSession(e.user_id, sessionToken, e.self_id)
                         .catch(() => logger.warn('[phi-plugin] alias notification key registration failed'))
-                    let oldHistory = await getSave.getHistory(e.user_id);
+                    let oldHistory = await credentials.getLocalHistory()
                     if (oldHistory) {
                         await makeRequestFnc.requestApi(
                             e,
@@ -248,31 +217,26 @@ export class phisstk extends phiPluginBase {
                             { logTag: 'API错误 setHistory', loggerLevel: 'warn' }
                         );
                     }
-                    let updateData = await getUpdateSave.getNewSaveFromApi(e)
-                    let history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                    let updateData = await credentials.getUpdatedSaveFromApi()
+                    let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
                     await build(e, updateData, history)
                     return true
                 }
-                if (result) {
-                    return true
-                }
-                // 新绑定必须以 API 提交成功为准，失败时保留原有本地状态。
-                return true
+                logger.warn('[phi-plugin] API绑定未完成，将改用当前 Bot 本地绑定')
             } catch (err) {
-                logger.warn('[phi-plugin] API绑定异常，已保留原有本地状态', err)
-                return true
+                logger.warn('[phi-plugin] API绑定异常，将仅更改本地绑定状态', err)
             }
         }
 
 
 
         try {
-            await getSaveFromApi.del_user_apiId(e.user_id); //删除apiId，避免冲突
-            let updateData = await getUpdateSave.getNewSaveFromLocal(e, sessionToken, isGlobal)
+            let updateData = apiBindingSucceeded
+                ? await credentials.getUpdatedSaveFromLocal(sessionToken, isGlobal)
+                : await credentials.bindLocallyWithSessionToken(sessionToken, isGlobal)
             if (!updateData) return true;
-            await getSave.add_user_token(e.user_id, sessionToken)
-            send.send_with_At(e, `请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
-            let history = await getSave.getHistory(e.user_id)
+            send.send_with_At(e, `${apiBindingSucceeded ? '' : 'API绑定不可用，已按当前 Bot 本地状态完成绑定。\n'}请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
+            let history = await credentials.getLocalHistory()
             await build(e, updateData, history)
         } catch (error) {
             logger.error(error)
@@ -289,6 +253,8 @@ export class phisstk extends phiPluginBase {
      */
     async update(e) {
 
+        const credentials = UserCredentials.fromEvent(e)
+
         if (await getBanGroup.get(e, 'update')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -302,8 +268,8 @@ export class phisstk extends phiPluginBase {
                     send.reply(e, "正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
                 }
 
-                updateData = await getUpdateSave.getNewSaveFromApi(e)
-                history = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory'])
+                updateData = await credentials.getUpdatedSaveFromApi()
+                history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
             } catch (/**@type {any} */ err) {
                 if (err?.message != APII18NCN.userNotFound) {
                     makeRequestFnc.handleApiError(e, err, {
@@ -317,7 +283,7 @@ export class phisstk extends phiPluginBase {
         }
         if (!updateData || !history) {
 
-            let session = await getSave.get_user_token(e.user_id)
+            let session = await credentials.getSessionToken()
             if (!session) {
                 send.reply(e, `没有找到你的存档，请先绑定sessionToken哦！如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
                 return true
@@ -328,9 +294,9 @@ export class phisstk extends phiPluginBase {
             }
 
             try {
-                updateData = await getUpdateSave.getNewSaveFromLocal(e, session)
+                updateData = await credentials.getUpdatedSaveFromLocal(session)
                 if (!updateData) return true;
-                history = await getSave.getHistory(e.user_id)
+                history = await credentials.getLocalHistory()
             } catch (error) {
                 logger.error(error)
                 send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确QAQ！\n错误信息：${error}`)
@@ -354,24 +320,23 @@ export class phisstk extends phiPluginBase {
      */
     async unbind(e) {
 
+        const credentials = UserCredentials.fromEvent(e)
+
         if (await getBanGroup.get(e, 'unbind')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
 
 
-        const apiId = await getSaveFromApi.get_user_apiId(e.user_id)
-        if (!await getSave.get_user_token(e.user_id) && !apiId) {
+        const { sessionToken, apiId } = await credentials.getLocalCredentials()
+        if (!sessionToken && !apiId) {
             send.send_with_At(e, '没有找到你的存档信息嗷！')
             return false
         }
 
         this.setContext('doUnbind', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
 
-        const apiNotice = apiId
-            ? `\n仅清除bot本地数据，云端数据不受影响，清除api数据请发送[${deleteApiAccountCommand}]`
-            : ''
-        send.send_with_At(e, `解绑会导致历史数据全部清空呐QAQ！真的要这么做吗？（确认/取消）${apiNotice}`)
+        send.send_with_At(e, '解绑只会清除当前 Bot 本地保存的绑定、存档和历史，不会修改 API 数据。真的要这么做吗？（确认/取消）')
 
         return true
     }
@@ -379,16 +344,14 @@ export class phisstk extends phiPluginBase {
     async doUnbind() {
 
         let e = this.e
+        const credentials = UserCredentials.fromEvent(e)
 
         let msg = e.msg.replace(' ', '')
 
         if (msg == '确认') {
             let flag = true
             try {
-                if (await canUseApi(e)) {
-                    await getSaveFromApi.delSave(e)
-                }
-                await getSave.delSave(e.user_id)
+                await credentials.unbindLocal()
             } catch (err) {
                 send.send_with_At(e, err)
                 logger.error(err)
@@ -409,7 +372,7 @@ export class phisstk extends phiPluginBase {
                 flag = false
             }
             if (flag) {
-                send.send_with_At(e, '解绑成功')
+                send.send_with_At(e, '当前 Bot 本地解绑成功')
             } else {
                 send.send_with_At(e, '没有找到你的存档哦！')
             }
@@ -435,13 +398,14 @@ export class phisstk extends phiPluginBase {
     async doClean() {
 
         let e = this.e
+        const credentials = UserCredentials.fromEvent(e)
 
         let msg = e.msg.replace(' ', '')
 
         if (msg == '确认') {
             let flag = true
             try {
-                await getSave.delSave(e.user_id)
+                await credentials.deleteLocalSave()
             } catch (err) {
                 send.send_with_At(e, err)
                 flag = false
@@ -467,6 +431,7 @@ export class phisstk extends phiPluginBase {
      * @returns 
      */
     async getSstk(e) {
+        const credentialManager = UserCredentials.fromEvent(e)
         if (e.isGroup) {
             send.send_with_At(e, `请私聊使用嗷`)
             return false
@@ -478,7 +443,8 @@ export class phisstk extends phiPluginBase {
             return true
         }
 
-        send.send_with_At(e, `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)}\nsessionToken: ${await getSave.get_user_token(e.user_id)}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}\nAPIId: ${await getSaveFromApi.get_user_apiId(e.user_id) || '未绑定'}`)
+        const credentials = await credentialManager.getLocalCredentials()
+        send.send_with_At(e, `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)}\nsessionToken: ${credentials.sessionToken}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}\nAPIId: ${credentials.apiId || '未绑定'}`)
 
     }
 

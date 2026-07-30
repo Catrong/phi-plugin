@@ -4,13 +4,12 @@ import path from "node:path";
 import getFile from "./getFile.js";
 import { backupPath, pluginDataPath, savePath, dataPath } from "./path.js";
 import saveHistory from "./class/saveHistory.js";
-import { redisPath } from "./constNum.js";
 import ProgressBar from "./progress-bar.js";
 import fCompute from './fCompute.js'
 import send from "./send.js";
 import logger from "../components/Logger.js";
 import Save from "./class/Save.js";
-import { redis } from "../components/platform/index.js";
+import userCredentialStore from './userCredentialStore.js';
 
 const MaxNum = 1e4
 
@@ -77,31 +76,9 @@ export default class getBackup {
          */
         let user_token = {}
         console.info('[phi-plugin] 获取user_token列表...')
-        // 使用SCAN非阻塞遍历所有userToken键
-        let cursor = 0;
-        let cnt = 0;
-        let vis = 0;
-        do {
-            // @ts-ignore
-            let info = await redis.scan(cursor, { MATCH: `${redisPath}:userToken:*`, COUNT: 100 });
-            cursor = info.cursor; // 更新游标
-            let keys = info.keys; // 获取当前批次的键
-            if (keys.length > 0) {
-                // 并发获取本批次所有user_token
-                /**@type {string[]} */
-                let userIds = keys.map((/** @type {string} */ key) => key.replace(`${redisPath}:userToken:`, ''));
-                // @ts-ignore
-                let tokenValues = await Promise.all(keys.map((/** @type {any} */ key) => redis.get(key)));
-                userIds.forEach((user_id, idx) => {
-                    user_token[user_id] = tokenValues[idx] || '';
-                });
-                cnt += keys.length;
-                if (Math.floor(cnt / 1000) > vis) {
-                    vis = Math.floor(cnt / 1000);
-                    logger.info(`[phi-plugin] 已获取 ${vis}k 个 user_token`);
-                }
-            }
-        } while (cursor != 0);
+        const credentialEntries = await userCredentialStore.listSessionCredentials()
+        for (const [userId, sessionToken] of credentialEntries) user_token[userId] = sessionToken
+        logger.info(`[phi-plugin] 已获取 ${credentialEntries.size} 个 user_token`)
         zip.file('user_token.json', JSON.stringify(user_token))
         /**压缩 */
         let zipName = `${(new Date()).toISOString().replace(/[\:\.]/g, '-')}.zip`
@@ -176,8 +153,7 @@ export default class getBackup {
                 let now = JSON.parse(data)
                 for (let user_id in now) {
                     try {
-                        // @ts-ignore
-                        redis.set(`${redisPath}:userToken:${user_id}`, now[user_id])
+                        userCredentialStore.setSessionToken(user_id, now[user_id])
                     } catch (e) {
                         logger.error(`恢复 user_token 对照 [${user_id}]:${now[user_id]} 错误：` + e);
                     }

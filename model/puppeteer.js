@@ -1,4 +1,3 @@
-// @ts-nocheck
 import childProcess from "node:child_process"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
@@ -11,6 +10,10 @@ import platform from "../components/platform/index.js"
 
 const Renderer = platform.RendererBase
 const botConfig = platform.getBotConfig()
+
+/** @typedef {import('puppeteer').Browser} Browser */
+/** @typedef {import('puppeteer').Page} Page */
+/** @typedef {Record<string, any> & {tplFile?: string, saveId?: string, imgType?: 'jpeg'|'png'|'webp', quality?: number, omitBackground?: boolean, path?: string, multiPage?: boolean, multiPageHeight?: number, pageGotoParams?: Record<string, any>, isRenderTimeout?: boolean}} ScreenshotData */
 
 /**
  * 渲染器实例对外暴露的公共接口（供 picmodle 等消费方做类型推断）
@@ -43,12 +46,13 @@ class Puppeteer extends Renderer {
             render: "screenshot",
         })
         this.browserId = browserId
-        this.browser = false
+        this.browser = /** @type {Browser | false} */ (false)
         this.browserPid = null
-        this.initPromise = null
+        this.initPromise = /** @type {Promise<Browser | false> | null} */ (null)
         this.closing = false
         this.closingPid = null
         this.shutdownRequested = false
+        /** @type {string[]} */
         this.shoting = []
         /** 截图数达到时重启浏览器 避免生成速度越来越慢 */
         this.restartNum = config.restartNum || 100
@@ -57,9 +61,10 @@ class Puppeteer extends Renderer {
         /** 空闲多久(ms)后自动关闭浏览器释放资源，0 为不关闭 */
         this.idleTimeout = config.idleTimeout ?? botConfig?.puppeteer_idle ?? 1800000
         /** 空闲定时器 */
-        this.idleTimer = null
+        this.idleTimer = /** @type {NodeJS.Timeout | null} */ (null)
         /** 关闭浏览器的超时时间(ms)，超时则强制结束进程 */
         this.closeTimeout = config.closeTimeout || 8000
+        /** @type {any} */
         this.config = {
             userDataDir: path.resolve(tempPath, "puppeteer", browserId),
             headless: config.headless || "new",
@@ -81,6 +86,7 @@ class Puppeteer extends Renderer {
 
     /**
      * 初始化chromium。并发调用会等待同一个启动 Promise，避免首帧撞上启动锁直接失败。
+     * @returns {Promise<Browser | false>}
      */
     async browserInit() {
         if (this.shutdownRequested) return false
@@ -93,12 +99,13 @@ class Puppeteer extends Renderer {
         return this.initPromise
     }
 
+    /** @returns {Promise<Browser | false>} */
     async launchBrowser() {
         logger.info(`[phi-plugin] puppeteer Chromium(${this.browserId}) 启动中...`)
 
-        let browser = await puppeteer.launch(this.config).catch(async (err, trace) => {
-            const errMsg = err.toString() + (trace ? trace.toString() : "")
-            logger.error(err, trace)
+        const launched = await puppeteer.launch(this.config).catch(async (/** @type {any} */ err) => {
+            const errMsg = String(err)
+            logger.error(err)
             if (errMsg.includes("Could not find Chromium")) {
                 logger.error("没有正确安装 Chromium，可以尝试执行安装命令：node node_modules/puppeteer/install.js")
             } else if (errMsg.includes("cannot open shared object file")) {
@@ -113,6 +120,7 @@ class Puppeteer extends Renderer {
             }
             return false
         })
+        const browser = /** @type {Browser | false} */ (launched)
 
         if (!browser) {
             logger.error(`[phi-plugin] puppeteer Chromium(${this.browserId}) 启动失败`)
@@ -133,6 +141,7 @@ class Puppeteer extends Renderer {
     }
 
     /** 浏览器意外断开处理，主动关闭时不做任何动作 */
+    /** @param {Browser} browser */
     onDisconnected(browser) {
         if (this.closing || this.browser !== browser) return
         logger.warn(`[phi-plugin] puppeteer Chromium(${this.browserId}) 连接已断开，将在下次渲染时重新启动`)
@@ -143,17 +152,8 @@ class Puppeteer extends Renderer {
 
     /**
      * `chromium` 截图
-     * @param name
-     * @param data 模板参数
-     * @param data.tplFile 模板路径，必传
-     * @param data.saveId  生成html名称，为空name代替
-     * @param data.imgType  screenshot参数，生成图片类型：jpeg，png
-     * @param data.quality  screenshot参数，图片质量 0-100，jpeg是可传，默认90
-     * @param data.omitBackground  screenshot参数，隐藏默认的白色背景，背景透明。默认不透明
-     * @param data.path   screenshot参数，截图图片类型将从文件扩展名推断出来。如果是相对路径，则从当前路径解析。
-     * @param data.multiPage 是否分页截图，默认false
-     * @param data.multiPageHeight 分页状态下页面高度，默认4000
-     * @param data.pageGotoParams 页面goto时的参数
+     * @param {string} name
+     * @param {ScreenshotData} data 模板参数
      * @return img 不做segment包裹
      */
     async screenshot(name, data = {}) {
@@ -161,17 +161,21 @@ class Puppeteer extends Renderer {
         if (!(await this.browserInit())) return false
 
         data.saveId = `${data.saveId || name.split("/").pop()}_${this.browserId}`
-        const savePath = this.dealTpl(name, data)
-        if (!savePath) return false
+        const resolvedPath = (/** @type {any} */ (this.dealTpl))(name, data)
+        if (!resolvedPath) return false
+        const savePath = String(resolvedPath)
 
         const jobName = `${name}#${Date.now()}`
         this.shoting.push(jobName)
         const start = Date.now()
+        /** @type {Page | undefined} */
         let page
 
         try {
             const renderPromise = (async () => {
-                page = await this.browser.newPage()
+                const browser = this.browser
+                if (!browser) throw new Error('浏览器未启动')
+                page = await browser.newPage()
                 return this.renderPage(page, name, savePath, data, start)
             })()
             const ret = await this.withTimeout(renderPromise, this.puppeteerTimeout, async () => {
@@ -189,23 +193,25 @@ class Puppeteer extends Renderer {
             await this.restart()
             this.resetIdleTimer()
             return data.multiPage ? ret : ret[0]
-        } catch (err) {
+        } catch (/** @type {any} */ err) {
             logger.error(`[图片生成][${name}] 图片生成失败`, err)
             if (!err?.isRenderTimeout) await this.restart(true)
             return false
         } finally {
             this.removeJob(jobName)
             if (page && !page.isClosed()) {
-                await page.close().catch(err => logger.error(err))
+                await page.close().catch((/** @type {any} */ err) => logger.error(err))
             }
         }
     }
 
+    /** @param {string} jobName */
     removeJob(jobName) {
         const idx = this.shoting.indexOf(jobName)
         if (idx >= 0) this.shoting.splice(idx, 1)
     }
 
+    /** @param {Page} page @param {string} name @param {string} savePath @param {ScreenshotData} data @param {number} start */
     async renderPage(page, name, savePath, data, start) {
         const pageHeight = Math.max(1, Number(data.multiPageHeight) || 4000)
         const pageGotoParams = { ...this.pageGotoParams, ...(data.pageGotoParams || {}) }
@@ -219,6 +225,7 @@ class Puppeteer extends Renderer {
             throw new Error("页面尺寸为空，无法截图")
         }
 
+        /** @type {any} */
         const screenshotOptions = {
             type: data.imgType || "jpeg",
             omitBackground: data.omitBackground || false,
@@ -256,7 +263,7 @@ class Puppeteer extends Renderer {
                     width: viewportWidth,
                     height: currentHeight + (i === num - 1 ? 0 : 100),
                 })
-                await page.evaluate(y => window.scrollTo(0, y), pageHeight * i)
+                await page.evaluate(`window.scrollTo(0, ${pageHeight * i})`)
             }
 
             const buff = await this.toBuffer(num === 1 ? body.screenshot(screenshotOptions) : page.screenshot(screenshotOptions))
@@ -272,11 +279,13 @@ class Puppeteer extends Renderer {
         return ret
     }
 
+    /** @param {Promise<Uint8Array | Buffer | string>} promise */
     async toBuffer(promise) {
         const buff = await promise
         return Buffer.isBuffer(buff) ? buff : Buffer.from(buff)
     }
 
+    /** @template T @param {Promise<T>} promise @param {number} timeout @param {() => Promise<void>} onTimeout @returns {Promise<T>} */
     async withTimeout(promise, timeout, onTimeout) {
         if (!(timeout > 0)) return promise
 
@@ -288,8 +297,7 @@ class Puppeteer extends Renderer {
                 } catch (err) {
                     logger.error(err)
                 }
-                const err = new Error(`截图超时(${timeout}ms)`)
-                err.isRenderTimeout = true
+                const err = Object.assign(new Error(`截图超时(${timeout}ms)`), { isRenderTimeout: true })
                 reject(err)
             }, timeout)
             timeoutId.unref?.()
@@ -305,7 +313,7 @@ class Puppeteer extends Renderer {
     /** 重启 */
     async restart(force = false) {
         if (this.shutdownRequested) return false
-        if (!this.browser?.close) return false
+        if (!this.browser) return false
         if (!force && (this.renderNum % this.restartNum !== 0 || this.shoting.length > 0)) return false
 
         logger.info(`[phi-plugin] puppeteer Chromium(${this.browserId}) ${force ? "强制" : ""}关闭重启...`)
@@ -376,7 +384,7 @@ class Puppeteer extends Renderer {
     forceShutdown() {
         this.shutdownRequested = true
         this.clearIdleTimer()
-        const pid = this.browserPid || this.closingPid || this.browser?.process?.()?.pid
+        const pid = this.browserPid || this.closingPid || (this.browser ? this.browser.process()?.pid : undefined)
         this.browser = false
         this.browserPid = null
         this.closingPid = null
@@ -388,6 +396,7 @@ class Puppeteer extends Renderer {
      * @param browser 浏览器实例
      * @param pid 浏览器主进程 PID，缺省时取 browser.process()
      */
+    /** @param {Browser} browser @param {number | null | undefined} pid */
     async stop(browser, pid) {
         if (!browser) return
         pid = pid ?? browser.process()?.pid
@@ -403,6 +412,7 @@ class Puppeteer extends Renderer {
     }
 
     /** 按 PID 强杀进程树（含子渲染进程） */
+    /** @param {number | null | undefined} pid */
     killProcess(pid) {
         if (!pid) return
         try {
@@ -412,7 +422,7 @@ class Puppeteer extends Renderer {
                 process.kill(pid, "SIGKILL")
             }
             logger.mark(`[phi-plugin] puppeteer Chromium(${this.browserId}) 进程 ${pid} 已强制结束`)
-        } catch (err) {
+        } catch (/** @type {any} */ err) {
             logger.debug(`[phi-plugin] puppeteer Chromium(${this.browserId}) 进程 ${pid} 结束失败（可能已退出）：${err.message || err}`)
         }
     }

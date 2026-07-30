@@ -10,7 +10,7 @@
             {
                 "title": "/unbind",
                 "eg": "/unbind",
-                "desc": "在 Bot 上删除储存的你的存档以及成绩记录，需要二次确认<br>eg: /unbind"
+                "desc": "仅清除当前 Bot 本地保存的 sessionToken、API ID、存档和历史，不修改 API 平台绑定；需要二次确认<br>eg: /unbind"
             },
             {
                 "title": "/tk help",
@@ -251,11 +251,6 @@
                 "title": "/tkls<br>/lstk",
                 "eg": "/tkls",
                 "desc": "查看 phi-api 账号当前绑定的全部平台账号，需要 Phigros SSTK 权限"
-            },
-            {
-                "title": "/tokenManage<br>/tkManage",
-                "eg": "/tokenManage delete <平台序号> [-f]",
-                "desc": "解除指定平台账号绑定；默认需要二次确认，-f 可跳过确认"
             },
             {
                 "title": "/auth",

@@ -8,6 +8,7 @@ import { redisPath } from './constNum.js'
 import getRksRank from './getRksRank.js'
 import PhigrosUser from '../lib/PhigrosUser.js'
 import { redis } from '../components/platform/index.js'
+import userCredentialStore from './userCredentialStore.js'
 
 /** @import {PlatformUserId} from '../components/platform/types.js' */
 /** @import {AliasNotificationBinding, AliasNotificationBindingWithUser} from './type/aliasProposal.js' */
@@ -20,8 +21,7 @@ export default class getSave {
      * @param {phigrosToken} session Token
      */
     static async add_user_token(user_id, session) {
-        // @ts-ignore
-        return await redis.set(`${redisPath}:userToken:${user_id}`, session)
+        return userCredentialStore.setSessionToken(user_id, session)
     }
 
     /**
@@ -30,8 +30,7 @@ export default class getSave {
      * @returns {Promise<phigrosToken>} Token
      */
     static async get_user_token(user_id) {
-        // @ts-ignore
-        return await redis.get(`${redisPath}:userToken:${user_id}`)
+        return userCredentialStore.getSessionToken(user_id)
     }
 
     /**
@@ -40,11 +39,7 @@ export default class getSave {
      * @returns {Promise<number>} 删除数量
      */
     static async del_user_token(user_id) {
-        // @ts-ignore
-        return await redis.del(
-            `${redisPath}:userToken:${user_id}`,
-            `${redisPath}:aliasBinding:${user_id}`,
-        )
+        return userCredentialStore.deleteSessionToken(user_id)
     }
 
     /**
@@ -241,8 +236,7 @@ export default class getSave {
      * @returns 
      */
     static async banSessionToken(token) {
-        // @ts-ignore
-        return await redis.set(`${redisPath}:banSessionToken:${token}`, 1)
+        return userCredentialStore.banSessionToken(token)
     }
 
     /**
@@ -251,8 +245,7 @@ export default class getSave {
      * @returns 
      */
     static async allowSessionToken(token) {
-        // @ts-ignore
-        return await redis.del(`${redisPath}:banSessionToken:${token}`)
+        return userCredentialStore.allowSessionToken(token)
     }
 
     /**
@@ -261,8 +254,7 @@ export default class getSave {
      * @returns 
      */
     static async isBanSessionToken(token) {
-        // @ts-ignore
-        return await redis.get(`${redisPath}:banSessionToken:${token}`)
+        return userCredentialStore.isSessionTokenBanned(token)
     }
 
     /**
@@ -270,8 +262,7 @@ export default class getSave {
      * @returns 
      */
     static async getGod() {
-        // @ts-ignore
-        return await redis.keys(`${redisPath}:banSessionToken:*`)
+        return userCredentialStore.listBannedSessionTokenKeys()
     }
 
 }

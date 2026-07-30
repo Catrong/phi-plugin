@@ -5,6 +5,7 @@ import YAML from 'yaml'
 import { APIBASEURL, redisPath } from './constNum.js'
 import { dataPath } from './path.js'
 import getSave from './getSave.js'
+import { UserCredentials } from './userCredentials.js'
 import getInfo from './getInfo.js'
 import platform, { redis } from '../components/platform/index.js'
 import logger from '../components/Logger.js'
@@ -142,7 +143,7 @@ class AliasProposalService {
      * @returns {Promise<{token: phigrosToken, binding: AliasNotificationBinding}>}
      */
     async bindingForEvent(e) {
-        const token = await getSave.get_user_token(e.user_id)
+        const token = await UserCredentials.fromEvent(e).getSessionToken()
         if (!token) throw new Error('请先绑定 sessionToken。')
         const binding = await this.ensureBotSession(e.user_id, token, e.self_id)
         return { token, binding }
