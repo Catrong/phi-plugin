@@ -4,10 +4,12 @@ import { APIBASEURL } from "./constNum.js"
 import https from 'node:https';
 import axios from "axios";
 import { Config } from "../components/index.js";
+import Version from "../components/Version.js";
+import botApiAuth, { classifyApiConnectionError, getPhiApiUserMessage, isFatalBotIdentityError } from "./botApiAuth.js";
 
 
 
-export default new class AutoSeekApi {
+export class AutoSeekApi {
 
   constructor() {
     //是否在等待API状态测试结果
@@ -37,20 +39,33 @@ export default new class AutoSeekApi {
       const agent = new https.Agent({ rejectUnauthorized: false })
       const res = await axios.get(url, { httpsAgent: agent, timeout: 5000 })
       if (res.status != 200) {
-        logger.error(res)
-        logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
+        logger.error(`[phi-plugin] API状态接口返回 HTTP ${res.status}`)
+        logger.mark(chalk.red(`API状态接口异常（HTTP ${res.status}），插件将在30秒后重试`))
         this.openPhiPluginApi = false
         this.seekApi()
       } else {
         const resdata = res.data
         logger.mark(chalk.green(`API地址测试成功！${resdata.id} ${resdata.version}`))
         this.openPhiPluginApi = true
-        this.seekingApi = false
+        try {
+          const identity = await botApiAuth.recoverAfterReconnect(Version.ver)
+          logger.mark(chalk.green(`API Bot身份已就绪：${identity.clientId}`))
+          this.seekingApi = false
+        } catch (/** @type {any} */ error) {
+          logger[isFatalBotIdentityError(error) ? 'error' : 'warn'](
+            `[phi-plugin] API已恢复，但Bot身份恢复失败：${error?.code || getPhiApiUserMessage(error)}`
+          )
+          if (isFatalBotIdentityError(error)) {
+            this.seekingApi = false
+          } else {
+            this.seekApi()
+          }
+        }
       }
     } catch (e) {
-      // @ts-ignore
-      logger.error(e.cause)
-      logger.mark(chalk.red('API地址测试失败！已自动关闭API功能'))
+      const error = classifyApiConnectionError(e)
+      logger.error(`[phi-plugin] API连接检测失败：${error.code}`)
+      logger.mark(chalk.red(`${getPhiApiUserMessage(error)} 插件将在30秒后重试`))
       this.openPhiPluginApi = false
       this.seekApi()
     }
@@ -73,4 +88,6 @@ export default new class AutoSeekApi {
       await this.testStatus()
     }
   }
-}();
+}
+
+export default new AutoSeekApi();

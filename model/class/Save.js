@@ -522,7 +522,7 @@ export default class Save {
                     }
                 }
             } catch (e) {
-                logger.warn(`[phi-plugin][avg]API离线`)
+                logger.warn(`[phi-plugin][avg]均值数据获取失败，已跳过均值显示`)
             }
         }
 

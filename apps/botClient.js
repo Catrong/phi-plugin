@@ -3,7 +3,7 @@ import Version from '../components/Version.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
 import send from '../model/send.js';
-import botApiAuth from '../model/botApiAuth.js';
+import botApiAuth, { getPhiApiUserMessage } from '../model/botApiAuth.js';
 
 export class phiBotClient extends phiPluginBase {
     constructor() {
@@ -39,7 +39,7 @@ export class phiBotClient extends phiPluginBase {
                 send.send_with_At(e, message);
             }
         } catch (/** @type {any} */ error) {
-            send.send_with_At(e, `重置失败：${error?.code || error?.message || error}`);
+            send.send_with_At(e, `重置失败：${getPhiApiUserMessage(error)}`);
         }
         return true;
     }
@@ -56,7 +56,7 @@ export class phiBotClient extends phiPluginBase {
                 send.send_with_At(e, `Bot认领链接（15分钟有效）：\n${claim.claimUrl}`);
             }
         } catch (/** @type {any} */ error) {
-            send.send_with_At(e, `获取失败：${error?.code || error?.message || error}`);
+            send.send_with_At(e, `获取失败：${getPhiApiUserMessage(error)}`);
         }
         return true;
     }

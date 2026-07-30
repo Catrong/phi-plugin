@@ -4,7 +4,7 @@ import saveHistory from './class/saveHistory.js';
 import logger from '../components/Logger.js';
 import { APIBASEURL } from './constNum.js';
 import autoSeekApi from './autoSeekApi.js';
-import botApiAuth, { PhiApiError } from './botApiAuth.js';
+import botApiAuth, { classifyApiConnectionError, isApiConnectionError, PhiApiError } from './botApiAuth.js';
 
 
 /**
@@ -789,7 +789,7 @@ async function makeFetch(url, params, method = 'POST') {
                 })
             const json = result.data
             if (result.status < 200 || result.status >= 300 || json?.error) {
-                const error = new PhiApiError(json?.error || `API请求失败 (${result.status})`, result.status, json?.code || 'api_request_failed', json)
+                const error = new PhiApiError(json?.message || json?.error || `API请求失败 (${result.status})`, result.status, json?.code || json?.errorCode || 'api_request_failed', json)
                 if (attempt === 0 && error.code === 'binding_credential_invalid') {
                     await botApiAuth.invalidateBinding(params)
                     continue
@@ -803,12 +803,12 @@ async function makeFetch(url, params, method = 'POST') {
         } catch (/** @type {any} */ err) {
             if (err instanceof PhiApiError) {
                 logger.warn(`[phi-plugin] API请求失败 ${new URL(url).pathname}: ${err.code} (${err.status})`)
-                if (err.code === 'api_offline') autoSeekApi.seekApi()
+                if (isApiConnectionError(err)) autoSeekApi.seekApi()
                 throw err
             }
             logger.error(`[phi-plugin] API网络错误 ${new URL(url).pathname}: ${err?.message || String(err)}`)
             autoSeekApi.seekApi()
-            throw new PhiApiError('API离线', 0, 'api_offline')
+            throw classifyApiConnectionError(err)
         }
     }
     throw new PhiApiError('绑定凭据恢复失败', 401, 'binding_credential_invalid')
