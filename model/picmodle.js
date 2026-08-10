@@ -2,6 +2,7 @@ import puppeteer from './puppeteer.js'
 import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../components/index.js'
 import { _path, pluginResources, imgPath, tempPath } from './path.js'
 import fCompute from './fCompute.js'
+import themeManager from './themeManager.js'
 import fs from 'node:fs'
 import logger from '../components/Logger.js'
 import segment from '../components/segment.js'
@@ -131,9 +132,6 @@ export default await new class picmodle {
      * @returns 
      */
     async b19(e, data) {
-        if (data.theme == 'dss2') {
-            return await this.common(e, 'b19', data, 'dss2');
-        }
         return await this.common(e, 'b19', data)
     }
 
@@ -364,10 +362,22 @@ export default await new class picmodle {
             let resPath = pluginResources.replace(/\\/g, '/') + `/`
 
             Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
+
+            /** 主题解析：自定义主题的模板仅作用于 b19，themeInfo 注入布局与模板（内置主题为 null，行为与现状一致） */
+            let tplFile = path.join(pluginResources, 'html', app, `${tpl}.art`).replace(/\\/g, '/')
+            let themeInfo = null
+            const themeId = params.theme
+            if (themeId) {
+                const t = themeManager.getRenderInfo(themeId, resPath)
+                if (t?.tplFile && app === 'b19') tplFile = t.tplFile
+                if (t?.themeInfo) themeInfo = t.themeInfo
+            }
+
             let data = {
                 ...params,
+                themeInfo,
                 saveId: (params.saveId || params.save_id || tpl),
-                tplFile: path.join(pluginResources, 'html', app, `${tpl}.art`).replace(/\\/g, '/'),
+                tplFile,
                 pluResPath: resPath,
                 _res_path: resPath,
                 _imgPath: imgPath + '/',

@@ -1,7 +1,11 @@
 {{extend defaultLayout}}
 
 {{block 'css'}}
+{{if themeInfo && themeInfo.cssUrl}}
+<link rel="stylesheet" href="{{themeInfo.cssUrl}}">
+{{else}}
 <link rel="stylesheet" href="{{_res_path}}html/b19/b19.css">
+{{/if}}
 {{/block}}
 
 {{block 'main'}}
@@ -118,7 +122,7 @@
             </div>
             <div class="songinfo">
                 <div class="Rating">
-                    <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                    <img src="{{themeInfo && themeInfo.icons[song.Rating] ? themeInfo.icons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}">
                 </div>
                 <div class="chengji">
                     <div class="score">
@@ -252,7 +256,7 @@
             </div>
             <div class="songinfo">
                 <div class="Rating">
-                    <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                    <img src="{{themeInfo && themeInfo.icons[song.Rating] ? themeInfo.icons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}">
                 </div>
                 <div class="chengji">
                     <div class="score">
