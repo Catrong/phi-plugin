@@ -1,0 +1,31 @@
+# 主题包名称
+name: "Milthm"
+# 主题包id，用于内部标识
+id: "milthm"
+# 作者
+Author: "Temmie"
+# 描述，用于#myset中显示
+description: "所有词语，都是雨的旋律"
+# 自定义字体，放在主题包目录中，未定义或者没有则回退默认
+font: "font.ttf"
+# 自定义背景，放在主题包目录中，未定义或者没有则回退默认
+background: "bg.png"
+# 自定义评级图标，放在主题包目录中，未定义或者没有则回退默认
+icon:
+  phi: "phi.png"
+  FC: "FC.png"
+  V: "V.png"
+  S: "S.png"
+  A: "A.png"
+  B: "B.png"
+  C: "C.png"
+  F: "F.png"
+# 自定义四难度标签基础色，放在主题包目录中，未定义或者没有则回退默认
+color:
+  AT: "#555555"
+  IN: "#7b5ea7"
+  HD: "#5b9bd5"
+  EZ: "#7ecb8a"
+# 自定义模板文件，放在主题包目录。
+template: "b19.art"
+css: "b19.css"

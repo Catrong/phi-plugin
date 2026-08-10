@@ -15,6 +15,21 @@
 
     {{block 'css'}}
     {{/block}}
+
+    {{if themeInfo}}
+    <!-- 主题样式置于 css 之后：主题 css 可能 @import common.css，若提前注入会被 common.css 的同优先级 :root/body 规则覆盖 -->
+    <style>
+        {{if themeInfo.fontUrl}}
+        @font-face { font-family: "phi-theme"; src: url("{{themeInfo.fontUrl}}") format("truetype"); }
+        {{/if}}
+        {{if themeInfo.colors}}
+        :root { --AT: {{themeInfo.colors.AT}}; --IN: {{themeInfo.colors.IN}}; --HD: {{themeInfo.colors.HD}}; --EZ: {{themeInfo.colors.EZ}}; }
+        {{/if}}
+        {{if themeInfo.fontUrl}}
+        body { font-family: "phi-theme", "PHI", "NOTO", "NotoSansJP", "HIMALAYA", "NotoSansMath-Regular"; }
+        {{/if}}
+    </style>
+    {{/if}}
     <title>phi-plugin</title>
 </head>
 
@@ -22,7 +37,10 @@
 
 
     <div class="background">
-        {{if theme == "star"}}
+        {{if themeInfo && themeInfo.backgroundUrl}}
+        <img src="{{themeInfo.backgroundUrl}}" alt="主题背景"
+            style="object-fit: cover; min-width: 100%;">
+        {{else if theme == "star"}}
         <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
         <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
             style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
