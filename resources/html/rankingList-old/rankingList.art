@@ -53,7 +53,7 @@
                     <div class="aSong">
                         <div class="difficulty">{{song.difficulty}}</div>
                         <div class="acc">{{song.acc.toFixed(2)}}</div>
-                        <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                        <img src="{{ratingIcons && ratingIcons[song.Rating] ? ratingIcons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}" style="{{ratingIconStyles && ratingIconStyles[song.Rating] ? ratingIconStyles[song.Rating] : ''}}">
                     </div>
                     {{/if}}
                     {{/each}}

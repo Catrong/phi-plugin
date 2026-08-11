@@ -40,6 +40,10 @@ export const USER_SETTING_META = {
         title: '主题风格',
         description: '使用/myset theme <序号>修改，控制图片页面的整体视觉风格，仅影响你的个人渲染结果。'
     },
+    ratingIcon: {
+        title: '评级图标',
+        description: '使用/myset ratingIcon <序号>修改，选择成绩图片中使用的评级图标。'
+    },
     b30AvgKind: {
         title: 'B30统计数据展示',
         description: '使用/myset avgkind <序号>修改，控制 B30 均值条展示的数据，可按全部平均数、仅 B30平均数 或 百分比绝对位置。'
@@ -78,6 +82,12 @@ export const USER_SETTING_OPTIONS = {
         dss2: {
             title: '[3]大师赛2',
             description: 'Phigros 大师赛第二赛季主题配色'
+        }
+    },
+    ratingIcon: {
+        default: {
+            title: '[0]默认',
+            description: '优先使用当前主题自带图标，未提供时回退到插件内置图标。'
         }
     },
     b30AvgKind: {

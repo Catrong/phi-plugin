@@ -117,7 +117,7 @@
             </div>
             <div class="songinfo">
                 <div class="Rating">
-                    <img src="{{themeInfo.icons[song.Rating] || (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}">
+                    <img src="{{ratingIcons && ratingIcons[song.Rating] ? ratingIcons[song.Rating] : (themeInfo && themeInfo.icons && themeInfo.icons[song.Rating] ? themeInfo.icons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png'))}}" alt="{{song.Rating}}" style="{{ratingIconStyles && ratingIconStyles[song.Rating] ? ratingIconStyles[song.Rating] : ''}}">
                 </div>
                 <div class="chengji">
                     <div class="score">
@@ -251,7 +251,7 @@
             </div>
             <div class="songinfo">
                 <div class="Rating">
-                    <img src="{{themeInfo.icons[song.Rating] || (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}">
+                    <img src="{{ratingIcons && ratingIcons[song.Rating] ? ratingIcons[song.Rating] : (themeInfo && themeInfo.icons && themeInfo.icons[song.Rating] ? themeInfo.icons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png'))}}" alt="{{song.Rating}}" style="{{ratingIconStyles && ratingIconStyles[song.Rating] ? ratingIconStyles[song.Rating] : ''}}">
                 </div>
                 <div class="chengji">
                     <div class="score">

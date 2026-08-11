@@ -11,6 +11,7 @@
  */
 
 import themeManager from '../themeManager.js'
+import ratingIconManager from '../ratingIconManager.js'
 
 /**
  * 内置主题列表（兼容旧版 /theme；新代码请使用 themeManager.getThemeList()）
@@ -50,6 +51,9 @@ export default class PluginData {
     if (this.theme === "default" && themeManager.isCustomTheme(data?.theme)) {
       this.theme = data.theme
     }
+
+    /**@type {string} 评级图标包标识（内置或已注册的自定义图标包） */
+    this.ratingIcon = ratingIconManager.getRatingIcon(data?.ratingIcon)?.id || "default"
 
     /**@type {"all" | "b30" | "top"} */
     this.b30AvgKind = "all"

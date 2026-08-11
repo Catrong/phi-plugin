@@ -39,10 +39,10 @@
                     <div class="rank-AT">
                         {{if AT}}
                         {{if AT.Rating == 'NEW'}}
-                        <img src="{{_res_path}}html/otherimg/{{AT.Rating}}.png" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        <img src="{{ratingIcons && ratingIcons[AT.Rating] ? ratingIcons[AT.Rating] : (_res_path + 'html/otherimg/' + AT.Rating + '.png')}}" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);{{ratingIconStyles && ratingIconStyles[AT.Rating] ? ratingIconStyles[AT.Rating] : ''}}">
                         {{else}}
                         <div class="Rating">
-                            <img src="{{_res_path}}html/otherimg/{{AT.Rating}}.png" alt="{{AT.Rating}}">
+                            <img src="{{ratingIcons && ratingIcons[AT.Rating] ? ratingIcons[AT.Rating] : (_res_path + 'html/otherimg/' + AT.Rating + '.png')}}" alt="{{AT.Rating}}" style="{{ratingIconStyles && ratingIconStyles[AT.Rating] ? ratingIconStyles[AT.Rating] : ''}}">
                         </div>
                         {{/if}}
                         <div class="rank">
@@ -76,10 +76,10 @@
                     <div class="rank-IN">
                         {{if IN}}
                         {{if IN.Rating == 'NEW'}}
-                        <img src="{{_res_path}}html/otherimg/{{IN.Rating}}.png" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        <img src="{{ratingIcons && ratingIcons[IN.Rating] ? ratingIcons[IN.Rating] : (_res_path + 'html/otherimg/' + IN.Rating + '.png')}}" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);{{ratingIconStyles && ratingIconStyles[IN.Rating] ? ratingIconStyles[IN.Rating] : ''}}">
                         {{else}}
                         <div class="Rating">
-                            <img src="{{_res_path}}html/otherimg/{{IN.Rating}}.png" alt="{{IN.Rating}}">
+                            <img src="{{ratingIcons && ratingIcons[IN.Rating] ? ratingIcons[IN.Rating] : (_res_path + 'html/otherimg/' + IN.Rating + '.png')}}" alt="{{IN.Rating}}" style="{{ratingIconStyles && ratingIconStyles[IN.Rating] ? ratingIconStyles[IN.Rating] : ''}}">
                         </div>
                         {{/if}}
                         <div class="rank">
@@ -115,10 +115,10 @@
                     <div class="rank-HD">
                         {{if HD}}
                         {{if HD.Rating == 'NEW'}}
-                        <img src="{{_res_path}}html/otherimg/{{HD.Rating}}.png" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        <img src="{{ratingIcons && ratingIcons[HD.Rating] ? ratingIcons[HD.Rating] : (_res_path + 'html/otherimg/' + HD.Rating + '.png')}}" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);{{ratingIconStyles && ratingIconStyles[HD.Rating] ? ratingIconStyles[HD.Rating] : ''}}">
                         {{else}}
                         <div class="Rating">
-                            <img src="{{_res_path}}html/otherimg/{{HD.Rating}}.png" alt="{{HD.Rating}}">
+                            <img src="{{ratingIcons && ratingIcons[HD.Rating] ? ratingIcons[HD.Rating] : (_res_path + 'html/otherimg/' + HD.Rating + '.png')}}" alt="{{HD.Rating}}" style="{{ratingIconStyles && ratingIconStyles[HD.Rating] ? ratingIconStyles[HD.Rating] : ''}}">
                         </div>
                         {{/if}}
                         <div class="rank">
@@ -152,10 +152,10 @@
                     <div class="rank-EZ">
                         {{if EZ}}
                         {{if EZ.Rating == 'NEW'}}
-                        <img src="{{_res_path}}html/otherimg/{{EZ.Rating}}.png" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);">
+                        <img src="{{ratingIcons && ratingIcons[EZ.Rating] ? ratingIcons[EZ.Rating] : (_res_path + 'html/otherimg/' + EZ.Rating + '.png')}}" alt="Rating" style="margin-left: -35%;height: 100%;filter: blur(5px);{{ratingIconStyles && ratingIconStyles[EZ.Rating] ? ratingIconStyles[EZ.Rating] : ''}}">
                         {{else}}
                         <div class="Rating">
-                            <img src="{{_res_path}}html/otherimg/{{EZ.Rating}}.png" alt="{{EZ.Rating}}">
+                            <img src="{{ratingIcons && ratingIcons[EZ.Rating] ? ratingIcons[EZ.Rating] : (_res_path + 'html/otherimg/' + EZ.Rating + '.png')}}" alt="{{EZ.Rating}}" style="{{ratingIconStyles && ratingIconStyles[EZ.Rating] ? ratingIconStyles[EZ.Rating] : ''}}">
                         </div>
                         {{/if}}
                         <div class="rank">

@@ -106,7 +106,7 @@
           </div>
           <div class="line"></div>
           <div class="Rating">
-            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+            <img src="{{ratingIcons && ratingIcons[song.Rating] ? ratingIcons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}" style="{{ratingIconStyles && ratingIconStyles[song.Rating] ? ratingIconStyles[song.Rating] : ''}}">
           </div>
         </div>
       </div>
@@ -191,7 +191,7 @@
           </div>
           <div class="line"></div>
           <div class="Rating">
-            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+            <img src="{{ratingIcons && ratingIcons[song.Rating] ? ratingIcons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}" style="{{ratingIconStyles && ratingIconStyles[song.Rating] ? ratingIconStyles[song.Rating] : ''}}">
           </div>
         </div>
       </div>
@@ -255,7 +255,7 @@
           </div>
           <div class="line"></div>
           <div class="Rating">
-            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+            <img src="{{ratingIcons && ratingIcons[song.Rating] ? ratingIcons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}" style="{{ratingIconStyles && ratingIconStyles[song.Rating] ? ratingIconStyles[song.Rating] : ''}}">
           </div>
         </div>
       </div>

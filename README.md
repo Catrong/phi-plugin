@@ -160,12 +160,59 @@ pnpm install -P
 | `#phi randclg [课题总值] [难度] ([曲目定数范围])` | 随机课题 eg: /rand 40 (IN 13-15)
 | `#phi (曲绘\|ill\|Ill) xxx` | 查询phigros中某一曲目的曲绘
 | `#phi (search\|查询\|检索) <条件 值>` | 检索曲库中的曲目，支持BPM 定数 物量，条件 bpm dif cmb，值可以为区间，以 - 间隔
-| `#phi (theme\|主题) [0-2]` | 切换绘图主题，仅对 b30, update, randclg, sign, task 生效
+| `#phi (theme\|主题) <序号>` | 切换绘图主题，仅对 b30, update, randclg, sign, task 生效
 | `#phi (myset\|个人设置)` | 查看和修改用户设置，参数为设置项名称，值支持使用序号选择，建议先查看设置项列表
 | `sign/签到` | 签到获取Notes
 | `task/我的任务` | 查看自己的任务
 | `retask/刷新任务` | 刷新任务，需要花费20Notes
 | `#phi (send\|送\|转) <目标> <数量>` | 送给目标Note，支持@或QQ号
+
+#### 自定义主题包
+
+将主题包放入 `resources/html/b19/themes/<id>/`，目录中包含 `info.yaml` 和配置引用的资源文件即可。目录名应与 `info.yaml` 中的 `id` 保持一致。主题包会自动热加载，并可在 `/myset 主题 <序号或ID>` 中选择：
+
+```yaml
+name: "我的主题"
+id: "my-theme"
+Author: "作者"
+description: "主题包说明"
+font: "font.ttf"
+background: "bg.png"
+icon:
+  phi: "phi.png"
+  FC: "FC.png"
+color:
+  AT: "#555555"
+  IN: "#7b5ea7"
+  HD: "#5b9bd5"
+  EZ: "#7ecb8a"
+template: "b19.art"
+css: "b19.css"
+```
+
+资源字段均可按需省略，未配置或不存在的文件会回退到插件默认资源。`icon` 使用评级值作为键，`color` 支持 `AT`、`IN`、`HD`、`EZ`；自定义 `template` 仅用于 B19 渲染。仓库内置的 `milthm` 目录可作为完整示例，可通过 `/myset 主题 milthm` 选择。
+
+#### 自定义评级图标
+
+将图标包放入 `resources/html/otherimg/rating/<id>/`，目录中包含 `info.yaml` 和图标文件即可。包会自动热加载，并可在 `/myset 评级图标 <序号或ID>` 中选择。`icon` 使用评级值作为键（`NEW`、`F`、`C`、`B`、`A`、`S`、`V`、`FC`、`phi`）：
+
+```yaml
+name: "我的图标"
+id: "my-icons"
+description: "图标包说明"
+icon:
+  phi: "phi.png"
+  FC:
+    file: "FC.png"
+    offset: { x: 2, y: -1 }
+  S: "S.png"
+offset:
+  S: { x: -1, y: 0 }
+```
+
+偏移量默认单位为 px，正 `x` 向右、正 `y` 向下；缺少的评级图标自动回退到当前主题或插件内置图标。
+
+仓库内置了 `phira` 示例包，可通过 `/myset 评级图标 phira` 选择。
 
 #### **以下为管理功能**
 

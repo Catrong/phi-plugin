@@ -16,7 +16,7 @@
             {{if index == 'tot'}}
             <p>tot: {{value}}</p>
             {{else}}
-            <img src="{{_imgPath}}/{{index}}.png" alt="{{index}}">
+            <img src="{{ratingIcons && ratingIcons[index] ? ratingIcons[index] : (_imgPath + '/' + index + '.png')}}" alt="{{index}}" style="{{ratingIconStyles && ratingIconStyles[index] ? ratingIconStyles[index] : ''}}">
             <p>{{value}}</p>
             {{/if}}
             {{/each}}
@@ -41,7 +41,7 @@
                     {{each song.chart chart rank}}
                     <div class="rank {{rank}}" style="height: {{song.chart.AT ? 23 : 30}}%;">
                         <div class="rating">
-                            <img src="{{_imgPath}}/{{chart.Rating}}.png" alt="{{chart.Rating}}">
+                            <img src="{{ratingIcons && ratingIcons[chart.Rating] ? ratingIcons[chart.Rating] : (_imgPath + '/' + chart.Rating + '.png')}}" alt="{{chart.Rating}}" style="{{ratingIconStyles && ratingIconStyles[chart.Rating] ? ratingIconStyles[chart.Rating] : ''}}">
                         </div>
                         <div class="dif">{{chart.difficulty}}</div>
                         {{if chart.acc && num <= 10}}

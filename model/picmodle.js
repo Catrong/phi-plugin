@@ -3,6 +3,8 @@ import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../comp
 import { _path, pluginResources, imgPath, tempPath } from './path.js'
 import fCompute from './fCompute.js'
 import themeManager from './themeManager.js'
+import ratingIconManager from './ratingIconManager.js'
+import getNotes from './getNotes.js'
 import fs from 'node:fs'
 import logger from '../components/Logger.js'
 import segment from '../components/segment.js'
@@ -373,9 +375,37 @@ export default await new class picmodle {
                 if (t?.themeInfo) themeInfo = t.themeInfo
             }
 
+            /** 用户自选图标优先，其次使用主题图标，缺失项回退插件默认图标。 */
+            let ratingIconId = params.ratingIcon
+            const userId = cfg.e?.user_id ?? cfg.e?.userId
+            if (!ratingIconId && userId !== undefined && userId !== null) {
+                try {
+                    ratingIconId = (await getNotes.getNotesData(String(userId))).ratingIcon
+                } catch (err) {
+                    logger.warn(`[Phi-Plugin][读取评级图标设置失败] ${userId}`)
+                    logger.warn(err)
+                }
+            }
+            const ratingIconInfo = ratingIconManager.getRenderInfo(ratingIconId || 'default', resPath)
+            const ratingIcons = {
+                ...ratingIconManager.getDefaultIcons(resPath),
+                ...(themeInfo?.icons || {}),
+                ...(ratingIconInfo?.id === 'default' ? {} : ratingIconInfo?.icons || {}),
+            }
+            const ratingIconStyles = {
+                ...(themeInfo?.styles || {}),
+                ...(ratingIconInfo?.id === 'default' ? {} : ratingIconInfo?.styles || {}),
+            }
+            if (themeInfo) {
+                themeInfo = { ...themeInfo, icons: ratingIcons, styles: ratingIconStyles }
+            }
+
             let data = {
                 ...params,
                 themeInfo,
+                ratingIconInfo,
+                ratingIcons,
+                ratingIconStyles,
                 saveId: (params.saveId || params.save_id || tpl),
                 tplFile,
                 pluResPath: resPath,
