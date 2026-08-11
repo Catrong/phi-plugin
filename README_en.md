@@ -128,12 +128,57 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi randclg [total] [difficulty] ([rating range])` | Random challenge (e.g., /rand 40 (IN 13-15)) |
 | `#phi ill xxx` | View song illustration |
 | `#phi search <criteria>` | Search songs by BPM/rating/notes |
-| `#phi theme [0-2]` | Switch themes (affects b30/update/randclg/sign/task) |
+| `#phi theme <index>` | Switch themes (affects b30/update/randclg/sign/task) |
 | `#phi myset <field> <value>` | View/modify user settings, value supports selection by number (e.g., /myset theme 1) |
 | `sign/sign` | Daily check-in |
 | `task/mytasks` | View tasks |
 | `retask/refresh` | Refresh tasks (20 Notes) |
 | `#phi (send\|give) <target> <amount>` | Send Notes |
+
+#### Custom Theme Packs
+
+Place each theme pack in `resources/html/b19/themes/<id>/`. The directory must contain an `info.yaml` file and any referenced assets, and its name should match the `id` in `info.yaml`. Theme packs are hot-reloaded and can be selected with `/myset theme <number or ID>`:
+
+```yaml
+name: "My Theme"
+id: "my-theme"
+Author: "Your Name"
+description: "Theme description"
+font: "font.ttf"
+background: "bg.png"
+icon:
+  phi: "phi.png"
+  FC: "FC.png"
+color:
+  AT: "#555555"
+  IN: "#7b5ea7"
+  HD: "#5b9bd5"
+  EZ: "#7ecb8a"
+template: "b19.art"
+css: "b19.css"
+```
+
+Asset fields are optional. Missing files fall back to the plugin defaults. `icon` uses rating values as keys, while `color` supports `AT`, `IN`, `HD`, and `EZ`. A custom `template` applies only to B19 rendering. The bundled `milthm` directory is a complete example and can be selected with `/myset theme milthm`.
+
+#### Custom Rating Icon Packs
+
+Place each icon pack in `resources/html/otherimg/rating/<id>/`. The directory must contain an `info.yaml` file and its icon files. Icon packs are hot-reloaded and can be selected with `/myset ratingIcon <number or ID>`. The `icon` keys are rating values (`NEW`, `F`, `C`, `B`, `A`, `S`, `V`, `FC`, and `phi`):
+
+```yaml
+name: "My Icons"
+id: "my-icons"
+description: "Icon pack description"
+icon:
+  phi: "phi.png"
+  FC:
+    file: "FC.png"
+    offset: { x: 2, y: -1 }
+  S: "S.png"
+offset:
+  S: { x: -1, y: 0 }
+```
+
+Offsets use pixels by default: positive `x` moves right and positive `y` moves down. Missing icons fall back to the current theme or the plugin defaults. The bundled `phira` directory is an example and can be selected with `/myset ratingIcon phira`.
 
 #### **Admin Features**
 

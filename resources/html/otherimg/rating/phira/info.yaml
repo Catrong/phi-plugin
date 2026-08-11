@@ -1,0 +1,15 @@
+name: "Phira Rank"
+id: "phira"
+description: "Phira rank icons"
+icon:
+  # NEW is omitted so it falls back to the current theme or built-in icon.
+  F: "F.png"
+  C: "C.png"
+  B: "B.png"
+  A: "A.png"
+  S: "S.png"
+  V: "V.png"
+  FC: "FC.png"
+  phi: "phi.png"
+# Optional per-icon offset: positive x moves right, positive y moves down.
+# offset: { FC: { x: 2, y: -1 } }

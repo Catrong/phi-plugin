@@ -70,7 +70,7 @@
         <div class="tag-box">
           {{if song.newPhi}}
           <div class="changeTag phiTag clip-box">
-            <img src="{{_res_path}}html/otherimg/phi.png" alt="phi">
+            <img src="{{ratingIcons && ratingIcons.phi ? ratingIcons.phi : (_res_path + 'html/otherimg/phi.png')}}" alt="phi" style="{{ratingIconStyles && ratingIconStyles.phi ? ratingIconStyles.phi : ''}}">
             <p>{{song.newPhi}}</p>
             <div class="changeTagLine clip-box"></div>
           </div>
@@ -90,7 +90,7 @@
           {{/if}}
           {{if song.exitPhi}}
           <div class="changeTag exitTag clip-box">
-            <img src="{{_res_path}}html/otherimg/phi.png" alt="phi">
+            <img src="{{ratingIcons && ratingIcons.phi ? ratingIcons.phi : (_res_path + 'html/otherimg/phi.png')}}" alt="phi" style="{{ratingIconStyles && ratingIconStyles.phi ? ratingIconStyles.phi : ''}}">
             <div class="changeTagLine clip-box"></div>
           </div>
           {{/if}}

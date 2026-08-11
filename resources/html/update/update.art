@@ -171,7 +171,7 @@
                     <div class="namebox">
                         {{if song.Rating}}
                         <div class="new-box">
-                            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                            <img src="{{ratingIcons && ratingIcons[song.Rating] ? ratingIcons[song.Rating] : (_res_path + 'html/otherimg/' + song.Rating + '.png')}}" alt="{{song.Rating}}" style="{{ratingIconStyles && ratingIconStyles[song.Rating] ? ratingIconStyles[song.Rating] : ''}}">
                         </div>
                         {{/if}}
                         <div class="songsname">

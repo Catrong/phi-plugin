@@ -5,6 +5,7 @@ import getNotes from '../model/getNotes.js'
 import phiPluginBase from '../components/baseClass.js'
 import { USER_SETTING_META, USER_SETTING_OPTIONS } from '../model/constNum.js'
 import themeManager from '../model/themeManager.js'
+import ratingIconManager from '../model/ratingIconManager.js'
 import getBanGroup from '../model/getBanGroup.js'
 import send from '../model/send.js'
 
@@ -197,16 +198,17 @@ export class phihelp extends phiPluginBase {
         }
         const pluginData = await getNotes.getNotesData(e.user_id)
 
-        /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis', string[]>} */
+        /**@type {Record<'theme' | 'ratingIcon' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis', string[]>} */
         const settingKeyAlias = {
             theme: ['theme', '主题', '主题风格'],
+            ratingIcon: ['ratingicon', 'rating', '评级图标', '评级', '图标', '评级图标风格'],
             b30AvgKind: ['b30avgkind', 'b30kind', 'avgkind', '均值范围', '统计范围', '均值类型'],
             b30AvgColor: ['b30avgcolor', 'avgcolor', '颜色', '配色', '均值颜色'],
             allowApiUsage: ['api', 'allowapiusage', 'api开关', 'api功能', 'api功能开关', '在线api', '是否允许使用api'],
             showB30Analysis: ['showb30analysis', 'b30analysis', 'b30分析', '统计分析', 'b30统计分析', '分析区域']
         }
 
-        /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis', Record<string, string>>} */
+        /**@type {Record<'theme' | 'ratingIcon' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis', Record<string, string>>} */
         const settingValueAlias = {
             theme: {
                 default: 'default',
@@ -218,6 +220,11 @@ export class phihelp extends phiPluginBase {
                 星空: 'star',
                 使一颗心免于哀伤: 'star',
                 大师赛2: 'dss2'
+            },
+            ratingIcon: {
+                default: 'default',
+                默认: 'default',
+                跟随主题: 'default'
             },
             b30AvgKind: {
                 all: 'all',
@@ -287,6 +294,7 @@ export class phihelp extends phiPluginBase {
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置`,
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 主题 star`,
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 主题 3`,
+            `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 评级图标 0`,
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 均值范围 b30`,
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 配色 gold`,
             `/${Config.getUserCfg('config', 'cmdhead')} 用户设置 API开关 关闭`,
@@ -308,9 +316,9 @@ export class phihelp extends phiPluginBase {
             const valueInputRaw = args.slice(1).join('')
             const valueInput = valueInputRaw.toLowerCase()
 
-            /**@type {'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis' | null} */
+            /**@type {'theme' | 'ratingIcon' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis' | null} */
             let settingKey = null
-            for (const key of /**@type {('theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis')[]} */ (Object.keys(settingKeyAlias))) {
+            for (const key of /**@type {('theme' | 'ratingIcon' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis')[]} */ (Object.keys(settingKeyAlias))) {
                 if (settingKeyAlias[key].map(i => i.toLowerCase()).includes(keyInput)) {
                     settingKey = key
                     break
@@ -318,13 +326,17 @@ export class phihelp extends phiPluginBase {
             }
 
             if (!settingKey) {
-                send.send_with_At(e, `未知设置项：${args[0]}\n支持：主题 / 均值范围 / 配色 / API开关 / B30分析\n${usage}`)
+                send.send_with_At(e, `未知设置项：${args[0]}\n支持：主题 / 评级图标 / 均值范围 / 配色 / API开关 / B30分析\n${usage}`)
                 return true
             }
 
-            /** 主题选项动态合并内置 + 自定义主题，其余设置项保持静态数据源 */
+            /** 主题和评级图标选项动态合并自定义包，其余设置项保持静态数据源 */
             /** @param {string} key */
-            const getOptions = (key) => key === 'theme' ? themeManager.getThemeOptions() : /** @type {any} */ (USER_SETTING_OPTIONS)[key]
+            const getOptions = (key) => key === 'theme'
+                ? themeManager.getThemeOptions()
+                : key === 'ratingIcon'
+                    ? ratingIconManager.getRatingIconOptions()
+                    : /** @type {any} */ (USER_SETTING_OPTIONS)[key]
             const optionMap = /** @type {Record<string, { title: string, description: string }>} */ (getOptions(settingKey))
             const optionKeys = Object.keys(optionMap)
             const valueAliasMap = settingValueAlias[settingKey]
@@ -339,9 +351,13 @@ export class phihelp extends phiPluginBase {
                 }
             }
 
-            // 主题别名兜底：未命中选项表时尝试按 id 直接解析自定义主题（大小写不敏感）
+            // 主题/评级图标别名兜底：按 id 直接解析自定义包（大小写不敏感）
             if (settingKey === 'theme' && !optionMap[canonicalValue]) {
                 const custom = themeManager.getTheme(valueInput) || themeManager.getTheme(valueInputRaw)
+                if (custom) canonicalValue = custom.id
+            }
+            if (settingKey === 'ratingIcon' && !optionMap[canonicalValue]) {
+                const custom = ratingIconManager.getRatingIcon(valueInput) || ratingIconManager.getRatingIcon(valueInputRaw)
                 if (custom) canonicalValue = custom.id
             }
 
@@ -363,11 +379,15 @@ export class phihelp extends phiPluginBase {
         }
 
         /**
-         * @param {'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis'} key
+         * @param {'theme' | 'ratingIcon' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis'} key
          * @param {string} current
          */
         const buildItem = (key, current) => {
-            const options = /** @type {Record<string, { title: string, description: string }>} */ (key === 'theme' ? themeManager.getThemeOptions() : USER_SETTING_OPTIONS[key])
+            const options = /** @type {Record<string, { title: string, description: string }>} */ (key === 'theme'
+                ? themeManager.getThemeOptions()
+                : key === 'ratingIcon'
+                    ? ratingIconManager.getRatingIconOptions()
+                    : USER_SETTING_OPTIONS[key])
             return {
                 key,
                 title: USER_SETTING_META[key].title,
@@ -387,6 +407,7 @@ export class phihelp extends phiPluginBase {
             pageDescription: '以下选项为你的个人偏好展示，选择结果将用于对应图片渲染。',
             items: [
                 buildItem('theme', pluginData?.theme || 'default'),
+                buildItem('ratingIcon', pluginData?.ratingIcon || 'default'),
                 buildItem('b30AvgKind', pluginData?.b30AvgKind || 'all'),
                 buildItem('b30AvgColor', pluginData?.b30AvgColor || 'red'),
                 buildItem('allowApiUsage', String(pluginData?.allowApiUsage !== false)),
