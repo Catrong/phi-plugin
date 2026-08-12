@@ -54,7 +54,7 @@ export class phihelp extends phiPluginBase {
 
             const field = /**@type {configName} */(schema.field)
             if (msg.match(schema.label)) {
-                let value = msg.replace(schema.label, '')
+                let value = msg.replace(schema.label, '').trim()
                 switch (schema.component) {
                     case 'Select':
                         let options = schema.componentProps?.options
