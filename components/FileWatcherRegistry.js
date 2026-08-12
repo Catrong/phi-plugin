@@ -21,9 +21,11 @@ export class FileWatcherRegistry {
      * @param {string} key
      * @param {string} file
      * @param {(...args: any[]) => void} onChange
+     * @param {string[]} [events=['change']] 需要监听的 chokidar 事件（change/add/unlink/addDir/unlinkDir…）
+     * @param {import('chokidar').ChokidarOptions} [watchOptions]
      * @returns {FileWatcherLease}
      */
-    watch(key, file, onChange) {
+    watch(key, file, onChange, events = ['change'], watchOptions = {}) {
         const normalizedFile = path.resolve(file)
         const current = this.entries.get(key)
         if (current?.file === normalizedFile) {
@@ -44,8 +46,12 @@ export class FileWatcherRegistry {
             onChange,
             lease: /** @type {any} */ (null),
         }
-        entry.watcher = chokidar.watch(normalizedFile)
-        entry.watcher.on('change', (...args) => entry.onChange(...args))
+        entry.watcher = chokidar.watch(normalizedFile, watchOptions)
+        const watcher = /** @type {any} */ (entry.watcher)
+        for (const event of events) {
+            watcher.on(event, /** @type {(...args: any[]) => void} */ ((...args) => entry.onChange(...args)))
+
+        }
         entry.lease = this.createLease(key, entry.watcher)
         this.entries.set(key, entry)
         return entry.lease

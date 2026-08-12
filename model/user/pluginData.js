@@ -10,6 +10,12 @@
  * @property {number} request.value 任务要求数值
  */
 
+import themeManager from '../themeManager.js'
+
+/**
+ * 内置主题列表（兼容旧版 /theme；新代码请使用 themeManager.getThemeList()）
+ * @type {{id: string, src: string}[]}
+ */
 export const themeList = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }, { id: "dss2", src: "大师赛2" }]
 
 export default class PluginData {
@@ -31,7 +37,7 @@ export default class PluginData {
     /**@type {number} */
     this.noticeCode = isNaN(data?.noticeCode) ? 0 : data.noticeCode
 
-    /**@type {"default" | "snow" | "star" | "dss2"} */
+    /**@type {string} 主题标识（内置或已注册的自定义主题） */
     this.theme = "default"
     switch (data?.theme) {
       case "default":
@@ -39,6 +45,10 @@ export default class PluginData {
       case "star":
       case "dss2":
         this.theme = data.theme
+    }
+    // 自定义主题放行（未知 id → 保持 default，与现状一致）
+    if (this.theme === "default" && themeManager.isCustomTheme(data?.theme)) {
+      this.theme = data.theme
     }
 
     /**@type {"all" | "b30" | "top"} */

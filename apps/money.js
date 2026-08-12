@@ -13,6 +13,7 @@ import picmodle from '../model/render/picmodle.js'
 import Save from '../model/save/Save.js'
 import { Level, LevelNum, redisPath } from '../model/game/constNum.js'
 import PluginData, { themeList } from '../model/user/pluginData.js'
+import themeManager from '../model/themeManager.js'
 import makeRequest from '../model/api/makeRequest.js'
 import logger from '../components/Logger.js'
 import { canUseApi } from '../model/user/apiPermission.js'
@@ -21,7 +22,8 @@ import platform, { redis } from '../components/platform/index.js'
 /**@import {botEvent} from '../components/baseClass.js' */
 
 const illlist = getInfo.illlist
-const theme = themeList
+/** 主题列表（内置 + 自定义，实时获取以支持热更新） */
+const getThemeList = () => themeManager.getThemeList()
 
 const commonSP = {
     note_num: [750],
@@ -93,7 +95,7 @@ export class phimoney extends phiPluginBase {
                     fnc: 'send'
                 },
                 {
-                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(theme)(\\s*)[0-3]$`,
+                    reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(theme)(\\s*)[0-9]+$`,
                     fnc: 'theme'
                 },
                 {
@@ -373,20 +375,21 @@ export class phimoney extends phiPluginBase {
             return false
         }
 
+        const themeList = getThemeList()
         let msg = e.msg.replace(/.*?theme\s*/g, '')
         let aim = Number(msg)
-        if (typeof aim != 'number' || aim < 0 || aim > theme.length - 1) {
-            send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getUserCfg('config', 'cmdhead')} theme 0-${theme.length - 1}`)
+        if (typeof aim != 'number' || aim < 0 || aim > themeList.length - 1) {
+            send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getUserCfg('config', 'cmdhead')} theme 0-${themeList.length - 1}`)
             return false
         }
 
         const plugin_data = await getNotes.getNotesData(e.user_id)
         // @ts-ignore
-        plugin_data.theme = theme[aim].id
+        plugin_data.theme = themeList[aim].id
 
         getNotes.putNotesData(e.user_id, plugin_data)
 
-        send.send_with_At(e, `设置成功！\n你当前的主题是：${theme[aim].src}`)
+        send.send_with_At(e, `设置成功！\n你当前的主题是：${themeList[aim].src}`)
         return true
     }
 
