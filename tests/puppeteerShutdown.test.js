@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import Puppeteer from '../model/puppeteer.js'
+import Puppeteer from '../model/render/puppeteer.js'
 
 test('force shutdown kills the tracked browser and prevents relaunch', async () => {
     const renderer = new Puppeteer({ idleTimeout: 0 }, 'shutdown-test')

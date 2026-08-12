@@ -1,8 +1,8 @@
 import Config from '../components/Config.js'
 import phiPluginBase from '../components/baseClass.js'
-import send from '../model/send.js'
-import getInfo from '../model/getInfo.js'
-import aliasProposalService from '../model/aliasProposalService.js'
+import send from '../model/render/send.js'
+import getInfo from '../model/game/getInfo.js'
+import aliasProposalService from '../model/api/aliasProposalService.js'
 
 /** @import {PlatformEvent} from '../components/platform/types.js' */
 /** @import {AliasProposalRecord, AliasProposalStatus} from '../model/type/aliasProposal.js' */

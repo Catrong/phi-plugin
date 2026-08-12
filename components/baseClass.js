@@ -1,7 +1,7 @@
 import Config from './Config.js'
-import send from "../model/send.js";
-import fCompute from '../model/fCompute.js'
-import getInfo from '../model/getInfo.js';
+import send from "../model/render/send.js";
+import fCompute from '../model/game/fCompute.js'
+import getInfo from '../model/game/getInfo.js';
 import logger from './Logger.js';
 import platform from './platform/index.js';
 

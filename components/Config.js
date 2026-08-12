@@ -3,7 +3,7 @@ import YAML from 'yaml'
 import fs from 'node:fs'
 import YamlReader from './YamlReader.js'
 import fileWatcherRegistry from './FileWatcherRegistry.js'
-import { pluginRoot } from '../model/path.js'
+import { pluginRoot } from '../model/filesystem/path.js'
 import logger from './Logger.js'
 import platform from './platform/index.js'
 

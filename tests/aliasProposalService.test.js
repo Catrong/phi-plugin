@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import aliasProposalService, { formatAliasNotification, validateApprovedAliasSnapshot } from '../model/aliasProposalService.js'
-import getInfo from '../model/getInfo.js'
-import getSave from '../model/getSave.js'
+import aliasProposalService, { formatAliasNotification, validateApprovedAliasSnapshot } from '../model/api/aliasProposalService.js'
+import getInfo from '../model/game/getInfo.js'
+import makeRequest from '../model/api/makeRequest.js'
+import userCredentialStore from '../model/user/userCredentialStore.js'
 import { setPlatformAdapter } from '../components/platform/index.js'
 import { aliasProposal } from '../apps/aliasProposal.js'
 
@@ -44,52 +45,69 @@ test('rebuilds separate bundled and approved alias layers', () => {
     assert.deepEqual(getInfo.nicklist?.[songWith0], ['base', 'shared'])
 })
 
-test('keeps alias notification metadata adjacent to the existing token binding', async () => {
-    await getSave.add_user_token('user', /** @type {phigrosToken} */ ('token-value'))
-    await getSave.set_alias_binding('user', {
-        clientId: 'client', aliasNotificationKey: 'key', aliasNotificationKeyUpdatedAt: 'now', botId: 'bot',
-    })
-    const binding = await getSave.get_alias_binding('user')
-    assert.ok(binding)
-    assert.equal(binding.aliasNotificationKey, 'key')
-    await getSave.del_user_token('user')
-    assert.equal(await getSave.get_user_token('user'), null)
-    assert.equal(await getSave.get_alias_binding('user'), null)
+test('uses the stored sessionToken through the concrete makeRequest proposal method', async () => {
+    await userCredentialStore.setSessionToken('proposal-user', /** @type {phigrosToken} */ ('proposal-session-token'))
+    const originalCreate = makeRequest.createAliasProposal
+    /** @type {any} */ let received
+    makeRequest.createAliasProposal = async params => {
+        received = params
+        return /** @type {any} */ ({ id: 'proposal', alias: params.alias, songId: params.songId })
+    }
+    try {
+        const proposal = await aliasProposalService.create(/** @type {any} */ ({ userId: 'proposal-user' }), {
+            songId: 'song.0', alias: 'nick', note: 'note',
+        })
+        assert.ok(proposal)
+        assert.equal(proposal.id, 'proposal')
+        assert.deepEqual(received, {
+            token: 'proposal-session-token',
+            alias: 'nick',
+            songId: 'song.0',
+            note: 'note',
+            source: 'bot',
+        })
+    } finally {
+        makeRequest.createAliasProposal = originalCreate
+        await userCredentialStore.deleteSessionToken('proposal-user')
+    }
 })
 
 test('confirms notifications only after a successful private message', async () => {
-    const clientId = '00000000-0000-4000-8000-000000000001'
-    await getSave.set_alias_binding('notify-user', {
-        clientId,
-        aliasNotificationKey: 'ank_test_key_123456789',
-        aliasNotificationKeyUpdatedAt: 'now',
-        botId: 'bot',
-    })
-    /** @type {Array<{url: string, body: any}>} */
+    await userCredentialStore.setSessionToken('notify-user', /** @type {phigrosToken} */ ('notify-session-token'))
+    /** @type {Array<{type: string, body: any}>} */
     const calls = []
-    const originalFetch = globalThis.fetch
-    globalThis.fetch = /** @type {typeof fetch} */ (async (url, options = {}) => {
-        calls.push({ url: String(url), body: JSON.parse(String(options.body || '{}')) })
-        if (String(url).endsWith('/poll')) {
-            return new Response(JSON.stringify({ clients: [{
-                clientId,
+    const originalPoll = makeRequest.pollAliasNotifications
+    const originalConfirm = makeRequest.confirmAliasNotifications
+    makeRequest.pollAliasNotifications = async body => {
+        calls.push({ type: 'poll', body })
+        return {
+            sessions: [{
+                requestId: body.sessions[0].requestId,
                 items: [{
                     id: '00000000-0000-4000-8000-000000000002',
                     proposalId: 'proposal',
                     type: 'final_approved',
                     payload: { alias: 'nick', songId: 'song.0', status: 'approved' },
                 }],
-            }] }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+            }],
         }
-        return new Response(JSON.stringify({ confirmed: 1 }), { status: 200, headers: { 'Content-Type': 'application/json' } })
-    })
+    }
+    makeRequest.confirmAliasNotifications = async body => {
+        calls.push({ type: 'confirm', body })
+        return { confirmed: 1 }
+    }
     setPlatformAdapter({ relpyPrivate: async () => ({ message_id: 'sent' }) })
     try {
         await aliasProposalService.pollNotifications()
         assert.equal(calls.length, 2)
-        assert.equal(calls[1].body.clients[0].notificationIds.length, 1)
+        assert.equal(calls[0].body.sessions[0].token, 'notify-session-token')
+        assert.match(calls[0].body.sessions[0].requestId, /^[0-9a-f-]{36}$/)
+        assert.equal(calls[1].body.sessions[0].token, 'notify-session-token')
+        assert.equal(calls[1].body.sessions[0].notificationIds.length, 1)
         assert.match(formatAliasNotification({ id: 'notification', proposalId: 'proposal', type: 'final_approved', payload: {} }), /正式通过/)
     } finally {
-        globalThis.fetch = originalFetch
+        makeRequest.pollAliasNotifications = originalPoll
+        makeRequest.confirmAliasNotifications = originalConfirm
+        await userCredentialStore.deleteSessionToken('notify-user')
     }
 })

@@ -1,26 +1,25 @@
 // import get from '../model/getdata.js'
 import common from "../components/common.js"
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import getInfo from '../model/getInfo.js'
-import getPic from '../model/getPic.js'
-import picmodle from '../model/picmodle.js'
-import fCompute from '../model/fCompute.js'
-import getBanGroup from '../model/getBanGroup.js';
-import { allLevel, Level, LevelNum } from '../model/constNum.js'
-import getComment from '../model/getComment.js'
-import getSave from '../model/getSave.js'
-import { UserCredentials } from '../model/userCredentials.js'
+import send from '../model/render/send.js'
+import getInfo from '../model/game/getInfo.js'
+import getPic from '../model/render/getPic.js'
+import picmodle from '../model/render/picmodle.js'
+import fCompute from '../model/game/fCompute.js'
+import getBanGroup from '../model/user/getBanGroup.js';
+import { allLevel, Level, LevelNum } from '../model/game/constNum.js'
+import getComment from '../model/game/getComment.js'
+import getSave from '../model/save/getSave.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
 import Version from '../components/Version.js'
-import makeRequest from '../model/makeRequest.js'
-import makeRequestFnc from '../model/makeRequestFnc.js'
+import makeRequest from '../model/api/makeRequest.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
-import SongsInfo from '../model/class/SongsInfo.js'
-import Chart from "../model/class/Chart.js"
-import getNotes from "../model/getNotes.js"
-import { canUseApi } from '../model/apiPermission.js'
-import TapInfo from "../model/getInfoFromTap.js"
+import SongsInfo from '../model/game/SongsInfo.js'
+import Chart from "../model/game/Chart.js"
+import getNotes from "../model/user/getNotes.js"
+import { canUseApi } from '../model/user/apiPermission.js'
+import TapInfo from "../model/integrations/getInfoFromTap.js"
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -747,11 +746,7 @@ export class phisong extends phiPluginBase {
             return false
         }
         let ans = '直播速递：\n'
-        const info = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.liveInfo(),
-            { logTag: 'liveInfo', loggerLevel: 'warn' }
-        )
+        const info = await makeRequest.liveInfo({ event: e })
         if (info) {
             ans += info;
         } else {
@@ -1036,67 +1031,57 @@ export class phisong extends phiPluginBase {
 
         if (save.apiId && await canUseApi(e)) {
             const apiUserId = save.apiId
-            const apiAddResult = await makeRequestFnc.requestApi(
-                e,
-                async () => {
-                    /**@type {import("../model/makeRequest.js").APIUpdateCommentObject} */
-                    let cmtobj = {
-                        songId: songInfo.id,
-                        rank: rankKind,
-                        apiUserId,
-                        rks: save.saveInfo.summary.rankingScore,
-                        score: 0,
-                        acc: 0,
-                        fc: false,
-                        challenge: save.saveInfo.summary.challengeModeRank,
-                        time: new Date().toISOString(),
-                        comment: comment
-                    };
-                    let songRecord = save.getSongsRecord(songId);
-                    const record = songRecord?.[rankNum];
-                    if (!songInfo.sp_vis && record?.score) {
-                        let { phi, b19_list } = await save.getB19(e, 27)
-                        let spInfo = '';
+            /**@type {import("../model/api/makeRequest.js").APIUpdateCommentObject} */
+            let cmtobj = {
+                songId: songInfo.id,
+                rank: rankKind,
+                apiUserId,
+                rks: save.saveInfo.summary.rankingScore,
+                score: 0,
+                acc: 0,
+                fc: false,
+                challenge: save.saveInfo.summary.challengeModeRank,
+                time: new Date().toISOString(),
+                comment: comment
+            };
+            let songRecord = save.getSongsRecord(songId);
+            const record = songRecord?.[rankNum];
+            if (!songInfo.sp_vis && record?.score) {
+                let { phi, b19_list } = await save.getB19(e, 27)
+                let spInfo = '';
 
-                        for (let i = 0; i < phi.length; ++i) {
-                            const x = phi[i];
-                            if (!x) continue;
-                            if (x.id == songId && x.rank == rankKind) {
-                                spInfo = `Perfect ${i + 1}`;
-                                break;
-                            }
-                        }
-                        if (!spInfo && record.score == 1000000) {
-                            spInfo = 'All Perfect';
-                        }
-                        for (let i = 0; i < b19_list.length; ++i) {
-                            if (b19_list[i].id == songId && b19_list[i].rank == rankKind) {
-                                spInfo = spInfo ? spInfo + ` & Best ${i + 1}` : `Best ${i + 1}`;
-                                break;
-                            }
-                        }
-                        cmtobj = {
-                            ...cmtobj,
-                            score: record.score,
-                            acc: record.acc,
-                            fc: record.fc,
-                            spInfo,
-                        }
-                    };
-                    await makeRequest.addComment({
-                        token: sessionToken,
-                        data: { comment: cmtobj }
-                    });
-                    return true
-                },
-                { logTag: 'API评论失败 addComment', loggerLevel: 'warn' }
-            )
+                for (let i = 0; i < phi.length; ++i) {
+                    const x = phi[i];
+                    if (!x) continue;
+                    if (x.id == songId && x.rank == rankKind) {
+                        spInfo = `Perfect ${i + 1}`;
+                        break;
+                    }
+                }
+                if (!spInfo && record.score == 1000000) {
+                    spInfo = 'All Perfect';
+                }
+                for (let i = 0; i < b19_list.length; ++i) {
+                    if (b19_list[i].id == songId && b19_list[i].rank == rankKind) {
+                        spInfo = spInfo ? spInfo + ` & Best ${i + 1}` : `Best ${i + 1}`;
+                        break;
+                    }
+                }
+                cmtobj = {
+                    ...cmtobj,
+                    score: record.score,
+                    acc: record.acc,
+                    fc: record.fc,
+                    spInfo,
+                }
+            };
+            const apiAddResult = await credentials.addComment(cmtobj)
             if (apiAddResult) {
                 send.send_with_At(e, `在线评论成功！φ(゜▽゜*)♪`);
                 return true;
             }
         }
-        /**@type {import("../model/getComment.js").commentObject} */
+        /**@type {import("../model/game/getComment.js").commentObject} */
         let cmtobj = {
             sessionToken: save.session,
             userObjectId: save.saveInfo.objectId,
@@ -1185,11 +1170,7 @@ export class phisong extends phiPluginBase {
         let comment = getComment.getByCommentId(commentId)
         if (!comment) {
             if (await canUseApi(e)) {
-                const delResult = await makeRequestFnc.requestApi(
-                    e,
-                    () => makeRequest.delComment({ token: sessionToken, comment_id: commentId }),
-                    { logTag: 'API删除评论失败 delComment', loggerLevel: 'warn' }
-                )
+                const delResult = await credentials.deleteComment(commentId)
                 if (delResult) {
                     send.send_with_At(e, `删除在线评论成功！φ(゜▽゜*)♪`);
                     return true;
@@ -1215,6 +1196,7 @@ export class phisong extends phiPluginBase {
      * @returns 
      */
     async myComment(e) {
+        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'myComment')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -1227,11 +1209,7 @@ export class phisong extends phiPluginBase {
         }
 
         if ((save.session || save.apiId) && await canUseApi(e)) {
-            const comments = await makeRequestFnc.requestApi(
-                e,
-                () => makeRequest.getCommentsByUserId(makeRequestFnc.makePlatform(e)),
-                { logTag: '获取用户评论失败 getCommentsByUserId', loggerLevel: 'warn' }
-            )
+            const comments = await credentials.getCommentsByUserId()
             if (comments) {
 
                 if (comments && comments.length > 0) {
@@ -1285,10 +1263,9 @@ async function songInfo(page, addComment, id, e) {
         /** @type {any[]} */
         let commentData = [];
         if (await canUseApi(e)) {
-            commentData = (await makeRequestFnc.requestApi(
-                e,
-                () => makeRequest.getCommentsBySongId({ song_id: infoData.id }),
-                { logTag: '获取歌曲评论失败 getCommentsBySongId', loggerLevel: 'warn' }
+            commentData = (await makeRequest.getCommentsBySongId(
+                { song_id: infoData.id },
+                { event: e },
             )) || [];
             for (const item of commentData) {
                 item.PlayerId = (item.PlayerId && item.PlayerId.length > 15) ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;

@@ -33,35 +33,6 @@ export interface AliasProposalRecord {
     publicReviewDecisionNote?: string | null
 }
 
-export interface AliasNotificationBinding {
-    clientId: string
-    aliasNotificationKey: string
-    aliasNotificationKeyUpdatedAt: string
-    botId: PlatformUserId | null
-}
-
-export interface AliasNotificationBindingWithUser extends AliasNotificationBinding {
-    userId: PlatformUserId
-}
-
-export interface AliasBotContext {
-    clientId: string
-    notificationKey: string
-}
-
-export interface AliasBotSessionResponse {
-    notificationKey: string
-    keyUpdatedAt: string
-}
-
-export interface AliasProposalEnvelope extends AliasBotSessionResponse {
-    proposal: AliasProposalRecord
-}
-
-export interface AliasProposalListResponse {
-    items: AliasProposalRecord[]
-}
-
 export interface AliasNotificationPayload {
     proposalId?: string
     alias?: string
@@ -79,13 +50,13 @@ export interface AliasNotificationItem {
     createdAt?: string
 }
 
-export interface AliasNotificationClientResult {
-    clientId: string
+export interface AliasNotificationSessionResult {
+    requestId: string
     items: AliasNotificationItem[]
 }
 
 export interface AliasNotificationPollResponse {
-    clients: AliasNotificationClientResult[]
+    sessions: AliasNotificationSessionResult[]
 }
 
 export interface AliasProposalCreateInput {

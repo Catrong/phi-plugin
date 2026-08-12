@@ -7,11 +7,11 @@
 import { pinyin } from 'pinyin-pro'
 
 import Config from '../../components/Config.js'
-import send from '../../model/send.js'
-import getInfo from '../../model/getInfo.js'
-import getPic from '../../model/getPic.js'
-import fCompute from '../../model/fCompute.js'
-import picmodle from '../../model/picmodle.js'
+import send from '../../model/render/send.js'
+import getInfo from '../../model/game/getInfo.js'
+import getPic from '../../model/render/getPic.js'
+import fCompute from '../../model/game/fCompute.js'
+import picmodle from '../../model/render/picmodle.js'
 import logger from '../../components/Logger.js'
 import segment from '../../components/segment.js'
 import {

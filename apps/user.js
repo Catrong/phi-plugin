@@ -1,18 +1,18 @@
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import picmodle from '../model/picmodle.js'
-import getInfo from '../model/getInfo.js'
-import fCompute from '../model/fCompute.js'
-import getBanGroup from '../model/getBanGroup.js';
-import LevelRecordInfo from '../model/class/LevelRecordInfo.js'
+import send from '../model/render/send.js'
+import picmodle from '../model/render/picmodle.js'
+import getInfo from '../model/game/getInfo.js'
+import fCompute from '../model/game/fCompute.js'
+import getBanGroup from '../model/user/getBanGroup.js';
+import LevelRecordInfo from '../model/game/LevelRecordInfo.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
-import { Level, MAX_DIFFICULTY } from '../model/constNum.js'
-import getNotes from '../model/getNotes.js'
-import { UserCredentials } from '../model/userCredentials.js'
-import analyzeSaveHistory from '../model/analyzeSaveHistory.js'
-import ScoreHistory from '../model/class/scoreHistory.js'
-import { canUseApi } from '../model/apiPermission.js'
+import { Level, MAX_DIFFICULTY } from '../model/game/constNum.js'
+import getNotes from '../model/user/getNotes.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
+import analyzeSaveHistory from '../model/save/analyzeSaveHistory.js'
+import ScoreHistory from '../model/save/scoreHistory.js'
+import { canUseApi } from '../model/user/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -141,6 +141,7 @@ export class phiuser extends phiPluginBase {
         if (await canUseApi(e)) {
             try {
                 user_data = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
+                if (!user_data) user_data = await credentials.getLocalHistory()
             } catch (error) {
                 logger.info('通过phi-plugin API获取历史记录失败，改为本地存储获取')
                 user_data = await credentials.getLocalHistory()
@@ -149,6 +150,10 @@ export class phiuser extends phiPluginBase {
             user_data = await credentials.getLocalHistory()
         }
 
+        if (!user_data) {
+            send.send_with_At(e, '没有找到可用的历史记录，请先更新存档。')
+            return true
+        }
         let { rks_history, data_history, rks_range, data_range, rks_date, data_date } = user_data.getRksAndDataLine()
 
 

@@ -1,15 +1,16 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import Config from '../components/Config.js'
+import { BotApiAuth } from '../model/api/botApiAuth.js'
 import {
-    BotApiAuth,
     PhiApiError,
     classifyApiConnectionError,
     getPhiApiUserMessage,
     hasPhiApiUserMessage,
     isApiConnectionError,
     isFatalBotIdentityError,
-} from '../model/botApiAuth.js'
+} from '../model/api/phiApiErrors.js'
+import { setApiVersionBlocked } from '../model/api/apiVersion.js'
 
 test('API connection failures retain a specific stable error code', () => {
     const cases = [
@@ -26,6 +27,32 @@ test('API connection failures retain a specific stable error code', () => {
         const error = classifyApiConnectionError(Object.assign(new Error(nativeCode), { code: nativeCode }))
         assert.equal(error.code, expected)
         assert.equal(isApiConnectionError(error), true)
+    }
+})
+
+test('BotApiAuth exposes only Bot identity and direct API transport responsibilities', () => {
+    const auth = new BotApiAuth()
+    for (const method of ['bind', 'ensureBinding', 'invalidateBinding', 'readCachedBinding', 'saveBinding', 'requestHeaders']) {
+        assert.equal(typeof /** @type {any} */ (auth)[method], 'undefined')
+    }
+    assert.equal(typeof auth.getClientId, 'function')
+    assert.equal(typeof auth.signedRequest, 'function')
+})
+
+test('Bot authentication requests are stopped after an incompatible API version is detected', async () => {
+    const auth = new BotApiAuth()
+    setApiVersionBlocked(true)
+    try {
+        await assert.rejects(
+            auth.initialize(),
+            (/** @type {any} */ error) => error.code === 'api_version_incompatible',
+        )
+        await assert.rejects(
+            auth.signedRequest('/bot-clients/self', undefined, 'GET'),
+            (/** @type {any} */ error) => error.code === 'api_version_incompatible',
+        )
+    } finally {
+        setApiVersionBlocked(false)
     }
 })
 
@@ -115,43 +142,6 @@ test('a missing Bot identity is registered on reconnect and concurrent recovery 
         assert.equal(first.clientId, 'new-client-id')
         assert.equal(second.clientId, 'new-client-id')
         assert.equal(registrations, 1)
-    } finally {
-        Config.getUserCfg = originalGetUserCfg
-    }
-})
-
-test('missing local credentials cannot restore a stale API platform binding', async () => {
-    const originalGetUserCfg = Config.getUserCfg
-    Config.getUserCfg = /** @type {any} */ ((/** @type {any} */ _name, /** @type {string} */ style) => /** @type {Record<string, any>} */ ({
-        apiBotClientId: 'issued-client-id',
-        apiBotClientSecret: 'issued-secret',
-        apiBotSecretVersion: 1,
-    })[style])
-
-    const auth = new BotApiAuth()
-    auth.ready = true
-    let cacheReads = 0
-    auth.readCachedBinding = async () => {
-        cacheReads += 1
-        return {
-            bindingId: 'stale-binding',
-            apiUserId: '123',
-            bindingCredential: 'stale-credential',
-            credentialVersion: 1,
-            credentialFingerprint: 'stale-fingerprint',
-            updatedAt: new Date().toISOString(),
-        }
-    }
-    let remoteRequests = 0
-    auth.signedRequest = async () => { remoteRequests += 1; return {} }
-
-    try {
-        await assert.rejects(
-            auth.ensureBinding({ platform: 'yunzai', platform_id: 'local-user' }, false),
-            (/** @type {any} */ error) => error.code === 'binding_not_found',
-        )
-        assert.equal(cacheReads, 0)
-        assert.equal(remoteRequests, 0)
     } finally {
         Config.getUserCfg = originalGetUserCfg
     }

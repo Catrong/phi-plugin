@@ -3,7 +3,7 @@ import test from 'node:test'
 import {
     buildRksHistogram,
     getB30AnalysisRecords,
-} from '../model/b30Analysis.js'
+} from '../model/game/b30Analysis.js'
 
 /** @param {string} id @param {string} rank @param {number} rks @returns {any} */
 const record = (id, rank, rks) => ({ id, rank, rks })

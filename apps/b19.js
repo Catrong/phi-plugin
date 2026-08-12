@@ -1,28 +1,26 @@
 import common from '../components/common.js'
 import Config from '../components/Config.js';
-import send from '../model/send.js';
-import picmodle from '../model/picmodle.js'
-import ScoreHistory from '../model/class/scoreHistory.js';
-import fCompute from '../model/fCompute.js';
-import getInfo from '../model/getInfo.js';
-import { allLevel, APII18NCN, LevelNum } from '../model/constNum.js';
-import getNotes from '../model/getNotes.js';
-import getPic from '../model/getPic.js';
-import getBanGroup from '../model/getBanGroup.js';
-import makeRequest from '../model/makeRequest.js';
-import makeRequestFnc from '../model/makeRequestFnc.js';
-import getUpdateSave from '../model/getUpdateSave.js';
+import send from '../model/render/send.js';
+import picmodle from '../model/render/picmodle.js'
+import ScoreHistory from '../model/save/scoreHistory.js';
+import fCompute from '../model/game/fCompute.js';
+import getInfo from '../model/game/getInfo.js';
+import { allLevel, LevelNum } from '../model/game/constNum.js';
+import getNotes from '../model/user/getNotes.js';
+import getPic from '../model/render/getPic.js';
+import getBanGroup from '../model/user/getBanGroup.js';
+import makeRequest from '../model/api/makeRequest.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
-import LevelRecordInfo from '../model/class/LevelRecordInfo.js';
-import SongsInfo from '../model/class/SongsInfo.js';
+import LevelRecordInfo from '../model/game/LevelRecordInfo.js';
+import SongsInfo from '../model/game/SongsInfo.js';
 import Version from '../components/Version.js';
-import { canUseApi } from '../model/apiPermission.js';
-import { UserCredentials } from '../model/userCredentials.js';
+import { canUseApi } from '../model/user/apiPermission.js';
+import { UserCredentials } from '../model/user/userCredentials.js';
 import {
     buildRksHistogram,
     getB30AnalysisRecords,
-} from '../model/b30Analysis.js';
+} from '../model/game/b30Analysis.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -85,6 +83,7 @@ export class phib19 extends phiPluginBase {
      * @returns 
      */
     async b19(e) {
+        const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'b19')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -100,7 +99,8 @@ export class phib19 extends phiPluginBase {
             let otherId = /** @type {apiUserId} */ (askOtherId[1]);
 
             try {
-                save = await getUpdateSave.getUIDSaveFromApi(e, otherId);
+                save = await credentials.getCloudSaveByApiId(otherId);
+                if (!save) throw new Error('API未返回存档')
             } catch (err) {
                 send.send_with_At(e, `获取用户 ${otherId} 的存档失败！请确认该用户公开了存档且ID正确喵！\n错误信息：${err}`);
                 return true;
@@ -159,16 +159,12 @@ export class phib19 extends phiPluginBase {
             const apiEnabled = await canUseApi(e)
             let tagAnalysis = null
             if (apiEnabled && records.length) {
-                const analysisAuth = askOtherId
-                    ? { api_user_id: /** @type {apiUserId} */ (askOtherId[1]) }
-                    : save.session
-                        ? { token: save.session }
-                        : makeRequestFnc.makePlatform(e)
-                tagAnalysis = await makeRequestFnc.requestApi(
-                    e,
-                    () => makeRequest.getB30TagAnalysis(analysisAuth),
-                    { logTag: 'b30-getTagAnalysis', loggerLevel: 'warn' }
-                )
+                tagAnalysis = askOtherId
+                    ? await makeRequest.getB30TagAnalysis(
+                        { api_user_id: /** @type {apiUserId} */ (askOtherId[1]) },
+                        { event: e },
+                    )
+                    : await credentials.getB30TagAnalysis()
             }
             b30Analysis = {
                 histogram,
@@ -691,15 +687,11 @@ export class phib19 extends phiPluginBase {
 
         if (await canUseApi(e)) {
 
-            const res = await makeRequestFnc.requestApi(
-                e,
-                () => makeRequest.getAllSongAccAvgB30({
+            const res = await makeRequest.getAllSongAccAvgB30({
                     songIds: getInfo.idList,
                     minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                     maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                }),
-                { logTag: 'api-getAllSongAccAvgB30', loggerLevel: 'error' }
-            )
+                }, { event: e })
             if (res) {
                 const ids = fCompute.objectKeys(res)
                 ids.forEach(id => {
@@ -720,18 +712,14 @@ export class phib19 extends phiPluginBase {
                     })
                 })
             }
-            const apfcRes = await makeRequestFnc.requestApi(
-                e,
-                () => makeRequest.getSongsApFcCount({
+            const apfcRes = await makeRequest.getSongsApFcCount({
                     songId: getInfo.idList || [],
                     rank: Level,
                     rksRange: {
                         min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                         max: Math.floor((com_rks + 0.05) / 0.05) * 0.05
                     }
-                }),
-                { logTag: 'api-getSongsApFcCount', loggerLevel: 'error' }
-            )
+                }, { event: e })
             if (apfcRes) {
                 const ids = fCompute.objectKeys(apfcRes);
                 ids.forEach(id => {
@@ -1123,6 +1111,7 @@ async function getScore(songId, e, args = {}) {
     if (await canUseApi(e)) {
         try {
             HistoryData = await credentials.getCloudSongHistory(songId)
+            if (!HistoryData) HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
         } catch (err) {
             logger.warn(`[phi-plugin] API ERR`, err)
             HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
@@ -1131,7 +1120,7 @@ async function getScore(songId, e, args = {}) {
         HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
     }
 
-    /** @type {(import('../model/class/scoreHistory.js').extendedScoreHistoryDetail | {date_new: string})[]} */
+    /** @type {(import('../model/save/scoreHistory.js').extendedScoreHistoryDetail | {date_new: string})[]} */
     let history = []
 
     if (HistoryData) {
@@ -1237,22 +1226,19 @@ async function getScore(songId, e, args = {}) {
     data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
 
     if (!args?.unRank && await canUseApi(e)) {
-        const scoreRanklist = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.getScoreRanklistByUser({
-                ...makeRequestFnc.makePlatform(e),
+        const credentials = UserCredentials.fromEvent(e)
+        const scoreRanklist = await credentials.getScoreRanklistByUser(
+            {
                 songId,
                 rank: maxRank || 'IN',
                 orderBy: args?.orderBy || 'acc'
-            }),
+            },
             {
-                logTag: 'API错误 getScoreRanklistByUser',
-                loggerLevel: 'warn',
-                ignoreMessages: [APII18NCN.userNotFound]
+                ignoreUnboundError: true,
             }
         )
         if (scoreRanklist) {
-            scoreRanklist.users.forEach(item => {
+            scoreRanklist.users.forEach((/** @type {any} */ item) => {
                 // @ts-ignore
                 item.gameuser.challengeMode = Math.floor(item.gameuser.challengeModeRank / 100);
                 item.gameuser.challengeModeRank = item.gameuser.challengeModeRank % 100;
@@ -1271,11 +1257,7 @@ async function getScore(songId, e, args = {}) {
             // @ts-ignore
             data.ranklist.selected = maxRank;
         }
-        const apFcCount = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.getSongApFcCount({ songId }),
-            { logTag: 'API错误 getSongApFcCount', loggerLevel: 'warn' }
-        )
+        const apFcCount = await makeRequest.getSongApFcCount({ songId }, { event: e })
         if (apFcCount) {
 
             for (let level of Level) {

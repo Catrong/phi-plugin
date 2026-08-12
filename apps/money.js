@@ -1,22 +1,21 @@
 import common from '../components/common.js'
 import path from 'path'
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import getNotes from '../model/getNotes.js'
-import getBanGroup from '../model/getBanGroup.js';
-import getInfo from '../model/getInfo.js'
-import readFile from '../model/getFile.js'
-import { infoPath } from '../model/path.js'
+import send from '../model/render/send.js'
+import getNotes from '../model/user/getNotes.js'
+import getBanGroup from '../model/user/getBanGroup.js';
+import getInfo from '../model/game/getInfo.js'
+import readFile from '../model/filesystem/getFile.js'
+import { infoPath } from '../model/filesystem/path.js'
 import phiPluginBase from '../components/baseClass.js'
-import fCompute from '../model/fCompute.js'
-import picmodle from '../model/picmodle.js'
-import Save from '../model/class/Save.js'
-import { Level, LevelNum, redisPath } from '../model/constNum.js'
-import PluginData, { themeList } from '../model/class/pluginData.js'
-import makeRequest from '../model/makeRequest.js'
-import makeRequestFnc from '../model/makeRequestFnc.js'
+import fCompute from '../model/game/fCompute.js'
+import picmodle from '../model/render/picmodle.js'
+import Save from '../model/save/Save.js'
+import { Level, LevelNum, redisPath } from '../model/game/constNum.js'
+import PluginData, { themeList } from '../model/user/pluginData.js'
+import makeRequest from '../model/api/makeRequest.js'
 import logger from '../components/Logger.js'
-import { canUseApi } from '../model/apiPermission.js'
+import { canUseApi } from '../model/user/apiPermission.js'
 import platform, { redis } from '../components/platform/index.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
@@ -199,7 +198,7 @@ export class phimoney extends phiPluginBase {
         let last_task = new Date(data.task_time)
         let now_time = new Date()
         let request_time = getDayZeroTimestamp(now_time) //每天0点
-        /**@type {import('../model/class/pluginData.js').taskObj[]} */
+        /**@type {import('../model/user/pluginData.js').taskObj[]} */
         let oldtask = []
 
         /**note变化 */
@@ -425,7 +424,7 @@ export class phimoney extends phiPluginBase {
  * 
  * @param {botEvent} e
  * @param {Save} save 
- * @param {import('../model/class/pluginData.js').taskObj[]} task 
+ * @param {import('../model/user/pluginData.js').taskObj[]} task 
  * @returns 
  */
 async function randtask(e, save, task = []) {
@@ -447,15 +446,11 @@ async function randtask(e, save, task = []) {
 
     if (await canUseApi(e)) {
 
-        const res = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.getAllSongAccAvgB30({
+        const res = await makeRequest.getAllSongAccAvgB30({
                 songIds: getInfo.idList,
                 minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                 maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-            }),
-            { logTag: 'api-getAllSongAccAvgB30', loggerLevel: 'error' }
-        )
+            }, { event: e })
         if (res) {
             const ids = fCompute.objectKeys(res)
             ids.forEach(id => {

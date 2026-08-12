@@ -1,19 +1,18 @@
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import makeRequest from '../model/makeRequest.js'
-import makeRequestFnc from '../model/makeRequestFnc.js'
-import ProgressBar from "../model/progress-bar.js";
-import { USER_API_SETTING_META, USER_API_SETTING_OPTIONS } from '../model/constNum.js'
-import picmodle from '../model/picmodle.js'
-import getInfo from '../model/getInfo.js'
-import getBanGroup from '../model/getBanGroup.js'
-import getComment from '../model/getComment.js'
+import send from '../model/render/send.js'
+import makeRequest from '../model/api/makeRequest.js'
+import ProgressBar from "../model/render/progress-bar.js";
+import { USER_API_SETTING_META, USER_API_SETTING_OPTIONS } from '../model/game/constNum.js'
+import picmodle from '../model/render/picmodle.js'
+import getInfo from '../model/game/getInfo.js'
+import getBanGroup from '../model/user/getBanGroup.js'
+import getComment from '../model/game/getComment.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
-import { UserCredentials } from '../model/userCredentials.js'
-import userCredentialStore from '../model/userCredentialStore.js'
-import { getApiAccessState } from '../model/apiPermission.js'
-import fCompute from '../model/fCompute.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
+import userCredentialStore from '../model/user/userCredentialStore.js'
+import { getApiAccessState } from '../model/user/apiPermission.js'
+import fCompute from '../model/game/fCompute.js'
 import platform from '../components/platform/index.js'
 
 
@@ -228,7 +227,7 @@ export class phihelp extends phiPluginBase {
         }
 
         let resMsg = `已绑定${tokenList.platform_data.length}个平台账号\n`
-        const currentPlatform = makeRequestFnc.makePlatform(e)
+        const currentPlatform = await credentials.platformParams()
 
         tokenList.platform_data.forEach((/** @type {any} */ item, /** @type {number} */ index) => {
             if (currentPlatform.platform == item.platform_name && currentPlatform.platform_id == item.platform_id) {
@@ -388,10 +387,9 @@ export class phihelp extends phiPluginBase {
             send.send_with_At(e, `数据量过大，开始分批上传，预计${Math.ceil(user_token.length / 1000) * 5}秒...`);
             for (let i = 0; i < user_token.length; i += 1000) {
                 let batch = user_token.slice(i, i + 1000);
-                const uploadResult = await makeRequestFnc.requestApi(
-                    e,
-                    () => makeRequest.setUsersToken({ data: batch }),
-                    { errorPrefix: '上传用户Token失败', notifyUser: true }
+                const uploadResult = await makeRequest.setUsersToken(
+                    { data: batch },
+                    { event: e, errorPrefix: '上传用户Token失败', notifyUser: true },
                 )
                 if (!uploadResult) {
                     return false
@@ -400,10 +398,9 @@ export class phihelp extends phiPluginBase {
                 await new Promise(resolve => setTimeout(resolve, 5000)); // 等待1秒
             }
         } else {
-            const uploadResult = await makeRequestFnc.requestApi(
-                e,
-                () => makeRequest.setUsersToken({ data: user_token }),
-                { errorPrefix: '上传用户Token失败', notifyUser: true }
+            const uploadResult = await makeRequest.setUsersToken(
+                { data: user_token },
+                { event: e, errorPrefix: '上传用户Token失败', notifyUser: true },
             )
             if (!uploadResult) {
                 return false
@@ -432,7 +429,7 @@ export class phihelp extends phiPluginBase {
         send.send_with_At(e, '开始上传评论数据，请稍等...')
         const data = getComment.data;
 
-        /**@type {import('../model/getComment.js').commentObject[]} */
+        /**@type {import('../model/game/getComment.js').commentObject[]} */
         const updateData = []
 
         /** @type {idString[]} */
@@ -444,10 +441,9 @@ export class phihelp extends phiPluginBase {
             }
         }
 
-        const updateResult = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.updateComments({ data: updateData }),
-            { errorPrefix: '上传评论数据失败', notifyUser: true }
+        const updateResult = await makeRequest.updateComments(
+            { data: updateData },
+            { event: e, errorPrefix: '上传评论数据失败', notifyUser: true },
         )
         if (!updateResult) {
             return false
@@ -479,11 +475,7 @@ export class phihelp extends phiPluginBase {
             return true;
         }
 
-        let userSetting = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e), token }),
-            { errorPrefix: '获取用户设置失败', notifyUser: true }
-        )
+        let userSetting = await credentials.getUserSetting()
         if (!userSetting) {
             return true;
         }
@@ -530,21 +522,13 @@ export class phihelp extends phiPluginBase {
             [settingKey]: settingValue
         }
 
-        const setResult = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.setUserSetting({ ...makeRequestFnc.makePlatform(e), token, setting: patchSetting }),
-            { errorPrefix: '设置失败', notifyUser: true }
-        )
+        const setResult = await credentials.setUserSetting(patchSetting)
         if (!setResult) {
             return true;
         }
         send.send_with_At(e, `设置成功：${API_USER_SETTING_META[settingKey].title} -> ${settingValue ? '开启' : '关闭'}`)
 
-        userSetting = await makeRequestFnc.requestApi(
-            e,
-            () => makeRequest.getUserSetting({ ...makeRequestFnc.makePlatform(e), token }),
-            { errorPrefix: '获取最新用户设置失败', notifyUser: true }
-        )
+        userSetting = await credentials.getUserSetting()
         if (!userSetting) {
             return true;
         }

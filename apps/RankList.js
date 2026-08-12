@@ -1,19 +1,19 @@
-import Save from '../model/class/Save.js'
-import fCompute from '../model/fCompute.js'
-import getInfo from '../model/getInfo.js'
-import getRksRank from '../model/getRksRank.js'
-import getSave from '../model/getSave.js'
-import send from '../model/send.js'
-import picmodle from '../model/picmodle.js'
+import Save from '../model/save/Save.js'
+import fCompute from '../model/game/fCompute.js'
+import getInfo from '../model/game/getInfo.js'
+import getRksRank from '../model/game/getRksRank.js'
+import getSave from '../model/save/getSave.js'
+import send from '../model/render/send.js'
+import picmodle from '../model/render/picmodle.js'
 import Config from '../components/Config.js'
-import getBanGroup from '../model/getBanGroup.js';
-import makeRequest from '../model/makeRequest.js'
-import makeRequestFnc from '../model/makeRequestFnc.js'
-import saveHistory from '../model/class/saveHistory.js'
+import getBanGroup from '../model/user/getBanGroup.js';
+import makeRequest from '../model/api/makeRequest.js'
+import saveHistory from '../model/save/saveHistory.js'
 import phiPluginBase from '../components/baseClass.js'
-import { canUseApi } from '../model/apiPermission.js';
+import { canUseApi } from '../model/user/apiPermission.js';
 import logger from '../components/Logger.js'
 import platform from '../components/platform/index.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -58,6 +58,7 @@ export class phiRankList extends phiPluginBase {
 
 
         if (await canUseApi(e)) {
+            const credentials = UserCredentials.fromEvent(e)
             let data = {
                 Title: "RankingScore排行榜",
                 totDataNum: 0,
@@ -69,16 +70,8 @@ export class phiRankList extends phiPluginBase {
             /**请求的排名 */
             let msg = e.msg.match(/\d+/)
             const api_ranklist = msg
-                ? await makeRequestFnc.requestApi(
-                    e,
-                    () => makeRequest.getRanklistRank({ request_rank: Number(msg[0]) }),
-                    { logTag: 'API ERR getRanklistRank', loggerLevel: 'warn' }
-                )
-                : await makeRequestFnc.requestApi(
-                    e,
-                    () => makeRequest.getRanklistUser(makeRequestFnc.makePlatform(e)),
-                    { logTag: 'API ERR getRanklistUser', loggerLevel: 'warn' }
-                )
+                ? await makeRequest.getRanklistRank({ request_rank: Number(msg[0]) }, { event: e })
+                : await credentials.getRanklistUser()
             if (api_ranklist) {
                 data.totDataNum = api_ranklist.totDataNum;
                 for (let item of api_ranklist.users) {
@@ -166,11 +159,7 @@ export class phiRankList extends phiPluginBase {
         }
 
         if (await canUseApi(e)) {
-            const res = await makeRequestFnc.requestApi(
-                e,
-                () => makeRequest.getRanklistRks({ request_rks: rks }),
-                { logTag: 'API ERR getRanklistRks', loggerLevel: 'warn' }
-            )
+            const res = await makeRequest.getRanklistRks({ request_rks: rks }, { event: e })
             if (res) {
                 send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)
                 return true
@@ -199,7 +188,6 @@ export class phiRankList extends phiPluginBase {
     //         return false
     //     }
 
-    //     let list = await getSave.getGod()
     //     let plugin_data = await getNotes.getPluginData(e.user_id)
     //     let data = {
     //         Title: "封神榜",
@@ -315,7 +303,7 @@ async function makeLargeLine(save, history, e) {
 
 /**
  * 创建一个简略对象
- * @param {Save | import('../model/makeRequest.js').UserItem} save 
+ * @param {Save | import('../model/api/makeRequest.js').UserItem} save 
  */
 async function makeSmallLine(save) {
     if (!save) {

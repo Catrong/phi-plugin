@@ -1,11 +1,11 @@
 // import plugin from '../../../lib/plugins/plugin.js'
 // import Config from '../components/Config.js'
-// import send from '../model/send.js'
+// import send from '../model/render/send.js'
 // import get from '../model/getdata.js'
-// import Vika from '../model/Vika.js'
+// import Vika from '../model/integrations/Vika.js'
 // import { segment } from 'oicq'
-// import getSave from '../model/getSave.js'
-// import getBanGroup from '../model/getBanGroup.js';
+// import getSave from '../model/save/getSave.js'
+// import getBanGroup from '../model/user/getBanGroup.js';
 
 // const read = 'https://www.bilibili.com/read/cv27354116'
 // const sheet = 'https://f.kdocs.cn/g/fxsg4EM2/'
@@ -115,9 +115,7 @@
 //             return true
 //         }
 
-//         let history = await getSave.getHistory(e.user_id)
 //         history.dan = dan
-//         getSave.putHistory(e.user_id, history)
 
 //         let resmsg = [`更新成功！你的认证段位为\n`]
 //         for (let i in dan) {

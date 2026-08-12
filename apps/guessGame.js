@@ -1,9 +1,9 @@
 import Config from '../components/Config.js';
-import send from '../model/send.js';
+import send from '../model/render/send.js';
 import guessTips from './guessGame/guessTips.js';
 import guessLetter from './guessGame/guessLetter.js';
 import guessIll from './guessGame/guessIll.js';
-import getBanGroup from '../model/getBanGroup.js';
+import getBanGroup from '../model/user/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
 

@@ -2,10 +2,10 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { phihelp } from '../apps/apiSetting.js'
 import { phisstk } from '../apps/session.js'
-import getBanGroup from '../model/getBanGroup.js'
-import makeRequestFnc from '../model/makeRequestFnc.js'
-import send from '../model/send.js'
-import { UserCredentials } from '../model/userCredentials.js'
+import getBanGroup from '../model/user/getBanGroup.js'
+import makeRequestFnc from '../model/api/makeRequestFnc.js'
+import send from '../model/render/send.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
 
 const event = (msg = '') => ({
     msg,
@@ -20,7 +20,6 @@ test('clearApiData requires confirmation and authenticates deletion with SSTK', 
         getBan: getBanGroup.get,
         getToken: UserCredentials.prototype.getSessionToken,
         deleteLocalSave: UserCredentials.prototype.deleteApiCachedSave,
-        requestApi: makeRequestFnc.requestApi,
         makePlatform: makeRequestFnc.makePlatform,
         clear: UserCredentials.prototype.deleteApiAccount,
         send: send.send_with_At,
@@ -35,10 +34,9 @@ test('clearApiData requires confirmation and authenticates deletion with SSTK', 
     UserCredentials.prototype.deleteApiCachedSave = async () => true
     makeRequestFnc.makePlatform = /** @type {any} */ (() => ({ platform: 'test', platform_id: 'test-user', _local_user_id: 'test-user' }))
     UserCredentials.prototype.deleteApiAccount = /** @type {any} */ (async function () {
-        clearRequests.push({ ...this.platformParams(), token: await this.getSessionToken() })
+        clearRequests.push({ ...(await this.platformParams()), token: await this.getSessionToken() })
         return { message: 'ok' }
     })
-    makeRequestFnc.requestApi = async (_e, request) => request()
     send.send_with_At = /** @type {any} */ ((/** @type {any} */ _e, /** @type {any} */ message) => messages.push(message))
 
     try {
@@ -66,7 +64,6 @@ test('clearApiData requires confirmation and authenticates deletion with SSTK', 
         getBanGroup.get = originals.getBan
         UserCredentials.prototype.getSessionToken = originals.getToken
         UserCredentials.prototype.deleteApiCachedSave = originals.deleteLocalSave
-        makeRequestFnc.requestApi = originals.requestApi
         makeRequestFnc.makePlatform = originals.makePlatform
         UserCredentials.prototype.deleteApiAccount = originals.clear
         send.send_with_At = originals.send
@@ -74,14 +71,14 @@ test('clearApiData requires confirmation and authenticates deletion with SSTK', 
 })
 
 test('clearApiData cancellation does not call the API', async () => {
-    const originalRequestApi = makeRequestFnc.requestApi
     const originalSend = send.send_with_At
+    const originalDeleteAccount = UserCredentials.prototype.deleteApiAccount
     let requested = false
 
-    makeRequestFnc.requestApi = async () => {
+    UserCredentials.prototype.deleteApiAccount = /** @type {any} */ (async () => {
         requested = true
         return null
-    }
+    })
     send.send_with_At = /** @type {any} */ (async () => undefined)
 
     try {
@@ -92,7 +89,7 @@ test('clearApiData cancellation does not call the API', async () => {
         assert.equal(await command.confirmClearApiData(), true)
         assert.equal(requested, false)
     } finally {
-        makeRequestFnc.requestApi = originalRequestApi
+        UserCredentials.prototype.deleteApiAccount = originalDeleteAccount
         send.send_with_At = originalSend
     }
 })

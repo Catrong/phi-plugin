@@ -1,11 +1,11 @@
 import Config from '../components/Config.js'
-import picmodle from '../model/picmodle.js'
-import getInfo from '../model/getInfo.js'
-import getNotes from '../model/getNotes.js'
+import picmodle from '../model/render/picmodle.js'
+import getInfo from '../model/game/getInfo.js'
+import getNotes from '../model/user/getNotes.js'
 import phiPluginBase from '../components/baseClass.js'
-import { USER_SETTING_META, USER_SETTING_OPTIONS } from '../model/constNum.js'
-import getBanGroup from '../model/getBanGroup.js'
-import send from '../model/send.js'
+import { USER_SETTING_META, USER_SETTING_OPTIONS } from '../model/game/constNum.js'
+import getBanGroup from '../model/user/getBanGroup.js'
+import send from '../model/render/send.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 

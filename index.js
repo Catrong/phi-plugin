@@ -3,15 +3,15 @@ import https from 'node:https';
 import axios from 'axios';
 
 // 这个加载是为了提前初始化信息
-import getInfo from './model/getInfo.js'
+import getInfo from './model/game/getInfo.js'
 
 import Version from './components/Version.js'
 import Config from './components/Config.js';
 import logger from './components/Logger.js';
-import { APIBASEURL } from './model/constNum.js';
+import { APIBASEURL } from './model/game/constNum.js';
 import chalk from 'chalk';
-import autoSeekApi from './model/autoSeekApi.js';
-import botApiAuth, { getPhiApiUserMessage } from './model/botApiAuth.js';
+import autoSeekApi from './model/api/autoSeekApi.js';
+import userCredentialStore from './model/user/userCredentialStore.js';
 
 await getInfo.init();
 
@@ -58,13 +58,16 @@ for (let i in files) {
 
 export { apps }
 
+try {
+    const deleted = await userCredentialStore.deleteLegacyCredentialCaches()
+    if (deleted > 0) logger.info(`[phi-plugin] 已清理 ${deleted} 条旧版凭据缓存`)
+} catch (error) {
+    logger.warn('[phi-plugin] 旧版 Bot 平台绑定缓存清理失败，将在下次启动重试', error)
+}
+
 if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-    try {
-        await botApiAuth.initialize(Version.ver)
-    } catch (/** @type {any} */ error) {
-        logger.error(`[phi-plugin] API Bot身份初始化失败：${getPhiApiUserMessage(error)} (${error?.code || 'unknown'})`)
-    }
-    autoSeekApi.testStatus();
+    // 先校验 API 协议版本，兼容后再由连接检测恢复或注册 Bot 身份。
+    await autoSeekApi.testStatus();
 }
 
 if (!errvis) {

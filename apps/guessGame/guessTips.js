@@ -1,10 +1,10 @@
 import Config from "../../components/Config.js"
-import fCompute from "../../model/fCompute.js"
-import getInfo from "../../model/getInfo.js"
-import { allLevel } from "../../model/constNum.js"
-import send from "../../model/send.js"
-import picmodle from "../../model/picmodle.js"
-import getPic from "../../model/getPic.js"
+import fCompute from "../../model/game/fCompute.js"
+import getInfo from "../../model/game/getInfo.js"
+import { allLevel } from "../../model/game/constNum.js"
+import send from "../../model/render/send.js"
+import picmodle from "../../model/render/picmodle.js"
+import getPic from "../../model/render/getPic.js"
 import logger from "../../components/Logger.js"
 
 

@@ -1,26 +1,24 @@
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import Save from '../model/class/Save.js'
-import ScoreHistory from '../model/class/scoreHistory.js'
+import send from '../model/render/send.js'
+import Save from '../model/save/Save.js'
+import ScoreHistory from '../model/save/scoreHistory.js'
 import getQRcode from '../lib/getQRcode.js'
 import common from '../components/common.js'
-import fCompute from '../model/fCompute.js'
-import getBanGroup from '../model/getBanGroup.js';
-import { allLevel, redisPath } from "../model/constNum.js"
-import makeRequest from '../model/makeRequest.js'
-import makeRequestFnc from '../model/makeRequestFnc.js'
-import saveHistory from '../model/class/saveHistory.js'
-import getNotes from '../model/getNotes.js'
-import { APII18NCN } from '../model/constNum.js'
+import fCompute from '../model/game/fCompute.js'
+import getBanGroup from '../model/user/getBanGroup.js';
+import { allLevel, redisPath } from "../model/game/constNum.js"
+import makeRequest from '../model/api/makeRequest.js'
+import saveHistory from '../model/save/saveHistory.js'
+import getNotes from '../model/user/getNotes.js'
+import { APII18NCN } from '../model/game/constNum.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
 import segment from '../components/segment.js'
-import getInfo from '../model/getInfo.js'
-import picmodle from '../model/picmodle.js'
-import { canUseApi } from '../model/apiPermission.js'
+import getInfo from '../model/game/getInfo.js'
+import picmodle from '../model/render/picmodle.js'
+import { canUseApi } from '../model/user/apiPermission.js'
 import platform, { redis } from '../components/platform/index.js'
-import aliasProposalService from '../model/aliasProposalService.js'
-import { UserCredentials } from '../model/userCredentials.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -87,13 +85,11 @@ export class phisstk extends phiPluginBase {
                 const result = await credentials.bindWithApiId(apiId)
                 if (result?.apiUserId) {
                     let resMsg = `绑定成功！您的查分ID为：${result.apiUserId}，请妥善保管嗷！`
-                    if (('cacheWarning' in result && result.cacheWarning) || result.localCredentialWarning) {
-                        resMsg += '\nAPI绑定已成功，但本地凭据缓存失败，请稍后执行更新重试。'
-                    }
                     send.send_with_At(e, resMsg)
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                    await build(e, updateData, history)
+                    if (updateData && history) await build(e, updateData, history)
+                    else send.send_with_At(e, '绑定已成功，但暂时无法读取 API 存档，请稍后执行更新。')
                     return true
                 }
                 if (!result) {
@@ -203,23 +199,15 @@ export class phisstk extends phiPluginBase {
                 if (result?.apiUserId) {
                     apiBindingSucceeded = true
                     let resMsg = `绑定成功！您的查分ID为：${result.apiUserId}，请妥善保管嗷！`
-                    if (('cacheWarning' in result && result.cacheWarning) || result.localCredentialWarning) {
-                        resMsg += '\nAPI绑定已成功，但本地凭据缓存失败，请稍后执行更新重试。'
-                    }
                     send.send_with_At(e, resMsg)
-                    void aliasProposalService.ensureBotSession(e.user_id, sessionToken, e.self_id)
-                        .catch(() => logger.warn('[phi-plugin] alias notification key registration failed'))
                     let oldHistory = await credentials.getLocalHistory()
                     if (oldHistory) {
-                        await makeRequestFnc.requestApi(
-                            e,
-                            () => makeRequest.setHistory({ token: sessionToken, data: oldHistory }),
-                            { logTag: 'API错误 setHistory', loggerLevel: 'warn' }
-                        );
+                        await credentials.uploadHistory(oldHistory)
                     }
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                    await build(e, updateData, history)
+                    if (updateData && history) await build(e, updateData, history)
+                    else send.send_with_At(e, '绑定已成功，但暂时无法读取 API 存档，请稍后执行更新。')
                     return true
                 }
                 logger.warn('[phi-plugin] API绑定未完成，将改用当前 Bot 本地绑定')
@@ -272,7 +260,7 @@ export class phisstk extends phiPluginBase {
                 history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
             } catch (/**@type {any} */ err) {
                 if (err?.message != APII18NCN.userNotFound) {
-                    makeRequestFnc.handleApiError(e, err, {
+                    makeRequest.handleApiError(e, err, {
                         errorPrefix: '从API获取存档失败，本次更新将使用本地数据QAQ！',
                         notifyUser: true,
                         logTag: 'API错误 update from api',
@@ -514,7 +502,7 @@ async function build(e, updateData, history) {
      * @type {{date:string,
         * color:string,
         * update_num:number,
-        * song:import('../model/class/scoreHistory.js').extendedScoreHistoryDetail[]
+        * song:import('../model/save/scoreHistory.js').extendedScoreHistoryDetail[]
      * }[]}
      */
     let tot_update = []

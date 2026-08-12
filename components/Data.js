@@ -1,6 +1,6 @@
 import lodash from 'lodash'
 import fs from 'fs'
-import { pluginRoot } from '../model/path.js'
+import { pluginRoot } from '../model/filesystem/path.js'
 import logger from './Logger.js'
 import { redis } from './platform/index.js'
 

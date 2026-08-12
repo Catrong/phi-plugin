@@ -1,14 +1,14 @@
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import picmodle from '../model/picmodle.js'
-import getFile from '../model/getFile.js'
+import send from '../model/render/send.js'
+import picmodle from '../model/render/picmodle.js'
+import getFile from '../model/filesystem/getFile.js'
 import path from 'path'
-import { infoPath } from '../model/path.js'
-import getBanGroup from '../model/getBanGroup.js';
+import { infoPath } from '../model/filesystem/path.js'
+import getBanGroup from '../model/user/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
-import getNotes from '../model/getNotes.js'
-import getInfo from '../model/getInfo.js'
-import { getApiAccessState } from '../model/apiPermission.js'
+import getNotes from '../model/user/getNotes.js'
+import getInfo from '../model/game/getInfo.js'
+import { getApiAccessState } from '../model/user/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 

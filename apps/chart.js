@@ -1,19 +1,17 @@
 import Config from '../components/Config.js'
-import getInfo from "../model/getInfo.js";
-import send from "../model/send.js";
-import picmodle from '../model/picmodle.js'
-import getBanGroup from '../model/getBanGroup.js';
+import getInfo from "../model/game/getInfo.js";
+import send from "../model/render/send.js";
+import picmodle from '../model/render/picmodle.js'
+import getBanGroup from '../model/user/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
-import makeRequest from '../model/makeRequest.js';
+import makeRequest from '../model/api/makeRequest.js';
 import logger from '../components/Logger.js';
-import makeRequestFnc from '../model/makeRequestFnc.js';
-import { UserCredentials } from '../model/userCredentials.js';
-import { APII18NCN } from '../model/constNum.js'
-import { canUseApi, getApiAccessState } from '../model/apiPermission.js'
+import { UserCredentials } from '../model/user/userCredentials.js';
+import { canUseApi, getApiAccessState } from '../model/user/apiPermission.js'
 import platform from '../components/platform/index.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
-/** @import {ChartTagSongRankResponse, ChartTagTreeNode, chartsTagResponseData, chartsTagVoteCountMap} from '../model/makeRequest.js' */
+/** @import {ChartTagSongRankResponse, ChartTagTreeNode, chartsTagResponseData, chartsTagVoteCountMap} from '../model/api/makeRequest.js' */
 
 /**
  * @typedef {object} ChartCommandOptions
@@ -442,11 +440,11 @@ export class phihelp extends phiPluginBase {
     const msg = e.msg.replace(/[#/](.*?)(settag)(\s*)/, '');
 
     /** @type {ChartTagTreeNode[] | null} */
-    const tagTree = await makeRequestFnc.requestApi(
-      e,
-      () => makeRequest.getChartsTagsTree(),
-      { errorPrefix: '获取标签列表失败', notifyUser: true, logTag: 'getChartsTagsTree', loggerLevel: 'warn' }
-    );
+    const tagTree = await makeRequest.getChartsTagsTree({
+      event: e,
+      errorPrefix: '获取标签列表失败',
+      notifyUser: true,
+    });
     if (!tagTree) {
       return true;
     }
@@ -563,10 +561,9 @@ async function getChartImg(e, id, options) {
 
   if (await canUseApi(e)) {
     /** @type {ChartTagSongRankResponse | null} */
-    const apiChartTag = await makeRequestFnc.requestApi(
-      e,
-      () => makeRequest.getChartsTagbySongRankWithTree({ song_id: info.id, rank }),
-      { logTag: 'getChartsTagbySongRank', loggerLevel: 'warn' }
+    const apiChartTag = await makeRequest.getChartsTagbySongRankWithTree(
+      { song_id: info.id, rank },
+      { event: e },
     )
     if (apiChartTag) {
       const categoryWords = makeCategoryWords(apiChartTag.tree)
@@ -611,6 +608,7 @@ async function getChartImg(e, id, options) {
  * @returns {Promise<void>}
  */
 async function getChartTags(e, id, options) {
+  const credentials = UserCredentials.fromEvent(e)
   const { rank } = options
   const info = getInfo.info(id, true)
   if (!info || !info.chart[rank]) {
@@ -626,24 +624,18 @@ async function getChartTags(e, id, options) {
   let wordsMaxValue = 0
 
   /** @type {ChartTagSongRankResponse | null} */
-  const apiChartTag = await makeRequestFnc.requestApi(
-    e,
-    () => makeRequest.getChartsTagbySongRankWithTree({ song_id: info.id, rank }),
-    { errorPrefix: '获取谱面标签失败', notifyUser: true, logTag: 'getChartsTagbySongRank', loggerLevel: 'warn' }
+  const apiChartTag = await makeRequest.getChartsTagbySongRankWithTree(
+    { song_id: info.id, rank },
+    { event: e, errorPrefix: '获取谱面标签失败', notifyUser: true },
   )
   if (!apiChartTag) {
     return
   }
   /** @type {chartsTagResponseData[] | null} */
   let usersVote = null;
-  usersVote = await makeRequestFnc.requestApi(
-    e,
-    () => makeRequest.getChartsUsersVote({ ...makeRequestFnc.makePlatform(e), data: [{ song_id: info.id, rank: [rank] }] }),
-    {
-      logTag: 'getChartsUsersVote',
-      loggerLevel: 'error',
-      ignoreMessages: [APII18NCN.userNotFound]
-    }
+  usersVote = await credentials.getChartsUsersVote(
+    [{ song_id: info.id, rank: [rank] }],
+    { ignoreUnboundError: true }
   )
   if (!usersVote) {
     usersVote = []
@@ -679,18 +671,15 @@ async function getChartTags(e, id, options) {
  * @returns {Promise<void>}
  */
 async function setChartTags(e, id, options) {
-  const { rank, selectedTags, sessionToken } = options;
+  const { rank, selectedTags } = options;
   const uniqueSelectedTags = uniqueTagNames(selectedTags);
   const info = getInfo.info(id, true)
   if (!info || !info.chart[rank]) {
     return;
   }
 
-  const setResult = await makeRequestFnc.requestApi(
-    e,
-    () => makeRequest.setChartsTag({ ...makeRequestFnc.makePlatform(e), token: sessionToken, song_id: id, rank, content: uniqueSelectedTags }),
-    { errorPrefix: '投票失败QAQ！ERROR', notifyUser: true, logTag: 'setChartsTag', loggerLevel: 'error' }
-  )
+  const credentials = UserCredentials.fromEvent(e)
+  const setResult = await credentials.setChartsTag(id, rank, uniqueSelectedTags)
   if (!setResult) {
     return
   }

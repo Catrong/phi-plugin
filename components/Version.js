@@ -1,6 +1,6 @@
 
 import fs from 'fs'
-import { pluginRoot } from '../model/path.js'
+import { pluginRoot } from '../model/filesystem/path.js'
 import logger from './Logger.js'
 import fileWatcherRegistry from './FileWatcherRegistry.js'
 import platform from './platform/index.js'

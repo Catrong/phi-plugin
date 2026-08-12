@@ -2,8 +2,9 @@ import Config from '../components/Config.js';
 import Version from '../components/Version.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
-import send from '../model/send.js';
-import botApiAuth, { getPhiApiUserMessage } from '../model/botApiAuth.js';
+import send from '../model/render/send.js';
+import botApiAuth from '../model/api/botApiAuth.js';
+import { getPhiApiUserMessage } from '../model/api/phiApiErrors.js';
 
 export class phiBotClient extends phiPluginBase {
     constructor() {
