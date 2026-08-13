@@ -58,12 +58,15 @@ for (let i in files) {
 
 export { apps }
 
-try {
-    const deleted = await userCredentialStore.deleteLegacyCredentialCaches()
-    if (deleted > 0) logger.info(`[phi-plugin] 已清理 ${deleted} 条旧版凭据缓存`)
-} catch (error) {
-    logger.warn('[phi-plugin] 旧版 Bot 平台绑定缓存清理失败，将在下次启动重试', error)
-}
+// 在后台异步清理旧版凭据缓存，避免阻塞插件加载
+;(async () => {
+    try {
+        const deleted = await userCredentialStore.deleteLegacyCredentialCaches()
+        if (deleted > 0) logger.info(`[phi-plugin] 已清理 ${deleted} 条旧版凭据缓存`)
+    } catch (error) {
+        logger.warn('[phi-plugin] 旧版 Bot 平台绑定缓存清理失败，将在下次启动重试', error)
+    }
+})()
 
 if (Config.getUserCfg('config', 'openPhiPluginApi')) {
     // 先校验 API 协议版本，兼容后再由连接检测恢复或注册 Bot 身份。
