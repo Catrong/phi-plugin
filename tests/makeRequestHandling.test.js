@@ -88,3 +88,31 @@ test('UserCredentials endpoint methods forward ignoreUnboundError and use the ty
         platform.sendWithAt = originalSend
     }
 })
+
+test('UserCredentials can ignore missing local credentials before making the API request', async () => {
+    let calls = 0
+    const store = {
+        getSessionToken: async () => undefined,
+        getApiId: async () => undefined,
+    }
+    const originalRequest = phiApiClient.request
+    phiApiClient.request = async () => { calls += 1 }
+    try {
+        const credentials = UserCredentials.fromEvent(event, {
+            store: /** @type {any} */ (store),
+        })
+
+        assert.equal(
+            await credentials.getUserAPIBanStatus({ ignoreUnboundError: true }),
+            null,
+        )
+        assert.equal(calls, 0)
+        await assert.rejects(
+            credentials.getUserAPIBanStatus(),
+            (/** @type {any} */ error) => error.code === 'binding_not_found',
+        )
+        assert.equal(calls, 0)
+    } finally {
+        phiApiClient.request = originalRequest
+    }
+})
