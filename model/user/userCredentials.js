@@ -302,10 +302,16 @@ export class UserCredentials {
      * @returns {Promise<boolean | null>} 禁用状态；请求失败或被忽略时返回 `null`
      */
     async getUserAPIBanStatus(options = {}) {
-        return makeRequest.getUserBan(
-            await this.platformParams(true),
-            this.endpointOptions(options),
-        )
+        const endpointOptions = this.endpointOptions(options)
+        try {
+            return await makeRequest.getUserBan(
+                await this.platformParams(true),
+                endpointOptions,
+            )
+        } catch (error) {
+            if (makeRequest.shouldIgnoreError(error, endpointOptions)) return null
+            throw error
+        }
     }
 
     /**
