@@ -1,6 +1,6 @@
 {
   "name": "phi-plugin",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "phigros辅助插件",
   "main": "index.js",
   "directories": {

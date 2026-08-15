@@ -3,6 +3,7 @@ import phiPluginBase from '../components/baseClass.js'
 import send from '../model/render/send.js'
 import getInfo from '../model/game/getInfo.js'
 import aliasProposalService from '../model/api/aliasProposalService.js'
+import botSyncService from '../model/api/botSyncService.js'
 
 /** @import {PlatformEvent} from '../components/platform/types.js' */
 /** @import {AliasProposalRecord, AliasProposalStatus} from '../model/type/aliasProposal.js' */
@@ -13,9 +14,12 @@ const prefix = `^[#/](${head})(\\s*)(别名|alias)(\\s*)`
 /** @returns {import('../components/platform/types.js').PlatformTask} */
 export function createAliasProposalTask() {
     return {
-        name: 'phi-别名通知与正式别名同步',
-        fnc: () => aliasProposalService.scheduledTask(),
-        cron: '0 */5 * * * ?',
+        name: 'phi-Bot状态与正式别名同步',
+        fnc: async () => {
+            await botSyncService.scheduledTask()
+            await aliasProposalService.scheduledTask()
+        },
+        cron: '0 * * * * ?',
     }
 }
 
@@ -60,7 +64,7 @@ function shortList(items, includeVote = false) {
 }
 
 export class aliasProposal extends phiPluginBase {
-    /** 初始化命令规则和五分钟定时任务。 */
+    /** 初始化命令规则、Bot心跳和正式别名同步任务。 */
     constructor() {
         super({
             name: 'phi-别名提案',
@@ -77,7 +81,6 @@ export class aliasProposal extends phiPluginBase {
                 { reg: `${prefix}(撤票|unvote)(\\s*).*$`, fnc: 'unvote' },
             ],
         })
-        void aliasProposalService.initialize()
     }
 
     /**

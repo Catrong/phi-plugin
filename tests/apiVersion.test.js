@@ -23,7 +23,7 @@ test('API protocol version parser accepts only complete semantic versions', () =
 test('API protocol compatibility follows major and minor version policy', () => {
     assert.equal(compareApiVersion(SUPPORTED_API_VERSION).status, 'compatible')
     assert.equal(compareApiVersion('1.0.9').status, 'minor_mismatch')
-    assert.equal(compareApiVersion('1.1.0').status, 'minor_mismatch')
+    assert.equal(compareApiVersion('1.1.0').status, 'compatible')
     assert.equal(compareApiVersion('2.0.0').status, 'major_mismatch')
     assert.equal(compareApiVersion(undefined).status, 'invalid')
 })

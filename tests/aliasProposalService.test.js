@@ -1,28 +1,34 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import aliasProposalService, { formatAliasNotification, validateApprovedAliasSnapshot } from '../model/api/aliasProposalService.js'
+import aliasProposalService, { validateApprovedAliasSnapshot } from '../model/api/aliasProposalService.js'
 import getInfo from '../model/game/getInfo.js'
 import makeRequest from '../model/api/makeRequest.js'
 import userCredentialStore from '../model/user/userCredentialStore.js'
-import { setPlatformAdapter } from '../components/platform/index.js'
 import { aliasProposal } from '../apps/aliasProposal.js'
+import botSyncService from '../model/api/botSyncService.js'
 
 test('provides a callable scheduled-task handler for the Yunzai loader', async () => {
     const originalInitialize = aliasProposalService.initialize
     const originalScheduledTask = aliasProposalService.scheduledTask
+    const originalBotInitialize = botSyncService.initialize
+    const originalBotScheduledTask = botSyncService.scheduledTask
     let calls = 0
     aliasProposalService.initialize = async () => {}
     aliasProposalService.scheduledTask = async () => { calls++ }
+    botSyncService.initialize = async () => {}
+    botSyncService.scheduledTask = async () => { calls++ }
     try {
         const plugin = new aliasProposal()
         const task = /** @type {import('../components/platform/types.js').PlatformTask} */ (plugin.task)
-        assert.equal(task.cron, '0 */5 * * * ?')
+        assert.equal(task.cron, '0 * * * * ?')
         assert.equal(typeof task.fnc, 'function')
         await /** @type {() => Promise<unknown>} */ (task.fnc)()
-        assert.equal(calls, 1)
+        assert.equal(calls, 2)
     } finally {
         aliasProposalService.initialize = originalInitialize
         aliasProposalService.scheduledTask = originalScheduledTask
+        botSyncService.initialize = originalBotInitialize
+        botSyncService.scheduledTask = originalBotScheduledTask
     }
 })
 
@@ -60,6 +66,9 @@ test('uses the stored sessionToken through the concrete makeRequest proposal met
         assert.ok(proposal)
         assert.equal(proposal.id, 'proposal')
         assert.deepEqual(received, {
+            platform: 'yunzai',
+            platform_id: 'proposal-user',
+            _local_user_id: 'proposal-user',
             token: 'proposal-session-token',
             alias: 'nick',
             songId: 'song.0',
@@ -69,45 +78,5 @@ test('uses the stored sessionToken through the concrete makeRequest proposal met
     } finally {
         makeRequest.createAliasProposal = originalCreate
         await userCredentialStore.deleteSessionToken('proposal-user')
-    }
-})
-
-test('confirms notifications only after a successful private message', async () => {
-    await userCredentialStore.setSessionToken('notify-user', /** @type {phigrosToken} */ ('notify-session-token'))
-    /** @type {Array<{type: string, body: any}>} */
-    const calls = []
-    const originalPoll = makeRequest.pollAliasNotifications
-    const originalConfirm = makeRequest.confirmAliasNotifications
-    makeRequest.pollAliasNotifications = async body => {
-        calls.push({ type: 'poll', body })
-        return {
-            sessions: [{
-                requestId: body.sessions[0].requestId,
-                items: [{
-                    id: '00000000-0000-4000-8000-000000000002',
-                    proposalId: 'proposal',
-                    type: 'final_approved',
-                    payload: { alias: 'nick', songId: 'song.0', status: 'approved' },
-                }],
-            }],
-        }
-    }
-    makeRequest.confirmAliasNotifications = async body => {
-        calls.push({ type: 'confirm', body })
-        return { confirmed: 1 }
-    }
-    setPlatformAdapter({ relpyPrivate: async () => ({ message_id: 'sent' }) })
-    try {
-        await aliasProposalService.pollNotifications()
-        assert.equal(calls.length, 2)
-        assert.equal(calls[0].body.sessions[0].token, 'notify-session-token')
-        assert.match(calls[0].body.sessions[0].requestId, /^[0-9a-f-]{36}$/)
-        assert.equal(calls[1].body.sessions[0].token, 'notify-session-token')
-        assert.equal(calls[1].body.sessions[0].notificationIds.length, 1)
-        assert.match(formatAliasNotification({ id: 'notification', proposalId: 'proposal', type: 'final_approved', payload: {} }), /正式通过/)
-    } finally {
-        makeRequest.pollAliasNotifications = originalPoll
-        makeRequest.confirmAliasNotifications = originalConfirm
-        await userCredentialStore.deleteSessionToken('notify-user')
     }
 })

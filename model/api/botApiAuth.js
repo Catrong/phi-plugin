@@ -9,6 +9,7 @@ import { pluginRoot } from '../filesystem/path.js';
 import { APIBASEURL } from '../game/constNum.js';
 import { classifyApiConnectionError, isFatalBotIdentityError, PhiApiError } from './phiApiErrors.js';
 import { isApiVersionBlocked } from './apiVersion.js';
+import { SUPPORTED_API_VERSION } from './apiVersion.js';
 
 const TIMEOUT = 5000;
 
@@ -60,7 +61,7 @@ export class BotApiAuth {
         return configIdentity().clientId;
     }
 
-    async initialize(pluginVersion = '1.0.0') {
+    async initialize(pluginVersion = SUPPORTED_API_VERSION) {
         if (isApiVersionBlocked()) {
             throw new PhiApiError(
                 'API协议大版本不兼容，请更新 phi-plugin 后重启',
@@ -107,7 +108,7 @@ export class BotApiAuth {
         }
     }
 
-    async register(pluginVersion = '1.0.0') {
+    async register(pluginVersion = SUPPORTED_API_VERSION) {
         let response;
         try {
             response = await axios.post(`${APIBASEURL}/bot-clients/register`, JSON.stringify({
@@ -139,11 +140,11 @@ export class BotApiAuth {
         return { ...identity, claimUrl: data.claimUrl, claimExpiresAt: data.claimExpiresAt };
     }
 
-    async recoverAfterReconnect(pluginVersion = '1.0.0') {
+    async recoverAfterReconnect(pluginVersion = SUPPORTED_API_VERSION) {
         return this.initialize(pluginVersion);
     }
 
-    async reset(pluginVersion = '1.0.0') {
+    async reset(pluginVersion = SUPPORTED_API_VERSION) {
         this.ready = false;
         return this.register(pluginVersion);
     }

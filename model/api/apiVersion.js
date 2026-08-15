@@ -1,5 +1,5 @@
 /** 插件当前支持的 phi-plugin-api 协议版本。 */
-export const SUPPORTED_API_VERSION = '1.0.0'
+export const SUPPORTED_API_VERSION = '1.1.0'
 
 let versionBlocked = false
 
