@@ -12,7 +12,7 @@
         </div>
 
         {{each items as item}}
-        <div class="setting-group">
+        <div class="setting-group setting-{{item.key}}">
             <div class="setting-head">
                 <p class="setting-title">{{item.title}}</p>
                 <p class="setting-current">当前：{{item.currentTitle}}</p>
