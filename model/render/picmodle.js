@@ -36,6 +36,12 @@ export default await new class picmodle {
          */
         this.puppeteer = []
         this.tot = 0
+        this.pressureWindowStartedAt = new Date().toISOString()
+        this.pressureCompleted = 0
+        this.pressureFailed = 0
+        this.pressureTimedOut = 0
+        this.pressureMaxActive = 0
+        this.pressureMaxQueued = 0
         this.shuttingDown = false
         this.closePromise = null
         registerProcessCleanup(() => this.close(), () => this.forceClose())
@@ -93,6 +99,7 @@ export default await new class picmodle {
             }, timeout)
             waiter.timer.unref?.()
             this.waiters.push(waiter)
+            this.pressureMaxQueued = Math.max(this.pressureMaxQueued, this.waiters.length)
         })
         return p
     }
@@ -348,6 +355,7 @@ export default await new class picmodle {
         /** 事件驱动地等待一个空闲渲染器，替代原本每 100ms 轮询一次的忙等 */
         const puppeteerNum = await this.acquire(waitingTimeout)
         if (puppeteerNum < 0) {
+            this.pressureTimedOut += 1
             logger.error(`[Phi-Plugin][等待超时]`, id)
             logger.warn(`[Phi-Plugin][空闲渲染器]`, this.idle)
             logger.warn(`[Phi-Plugin][渲染中] `, [...this.rendering])
@@ -356,6 +364,7 @@ export default await new class picmodle {
         }
 
         this.rendering.add(id)
+        this.pressureMaxActive = Math.max(this.pressureMaxActive, this.rendering.size)
         try {
             let [app, tpl] = renderPath.split('/')
             let layoutPath = pluginResources.replace(/\\/g, '/') + `/html/common/layout/`
@@ -400,8 +409,10 @@ export default await new class picmodle {
             /** 返回图片信息 */
             const img = await this.puppeteer[puppeteerNum].screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
             if (!img) throw new Error('截图返回为空')
+            this.pressureCompleted += 1
             return segment.image(img)
         } catch (err) {
+            this.pressureFailed += 1
             logger.error(`[Phi-Plugin][渲染失败]`, id)
             logger.error(err)
             logger.warn(`[Phi-Plugin][渲染器]`, puppeteerNum)
@@ -413,6 +424,31 @@ export default await new class picmodle {
             this.rendering.delete(id)
             this.release(puppeteerNum)
         }
+    }
+
+    /**
+     * 取得当前绘图压力窗口，并从当前并发状态开始新的统计窗口。
+     * 仅包含队列和计数，不包含用户、命令、模板或绘图内容。
+     */
+    takeRenderPressureSnapshot() {
+        const snapshot = {
+            windowStartedAt: this.pressureWindowStartedAt,
+            capacity: Math.max(1, this.puppeteer.length),
+            active: this.rendering.size,
+            queued: this.waiters.length,
+            maxActive: Math.max(this.pressureMaxActive, this.rendering.size),
+            maxQueued: Math.max(this.pressureMaxQueued, this.waiters.length),
+            completed: this.pressureCompleted,
+            failed: this.pressureFailed,
+            timedOut: this.pressureTimedOut,
+        }
+        this.pressureWindowStartedAt = new Date().toISOString()
+        this.pressureCompleted = 0
+        this.pressureFailed = 0
+        this.pressureTimedOut = 0
+        this.pressureMaxActive = this.rendering.size
+        this.pressureMaxQueued = this.waiters.length
+        return snapshot
     }
 
     async restart() {

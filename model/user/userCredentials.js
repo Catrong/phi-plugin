@@ -238,6 +238,25 @@ export class UserCredentials {
     }
 
     /**
+     * 以当前 Bot、平台用户和 sessionToken 创建别名提案，使审核消息只能返回来源 Bot。
+     * @param {import('../type/aliasProposal.js').AliasProposalCreateInput} input 别名提案内容
+     * @param {UserCredentialApiOptions} [options] 错误处理策略
+     * @returns {Promise<import('../type/aliasProposal.js').AliasProposalRecord | null>} 新建的提案
+     */
+    async createAliasProposal(input, options = {}) {
+        const token = await this.getSessionToken()
+        if (!token) throw new PhiApiError('请先绑定 sessionToken。', 404, 'binding_not_found')
+        return makeRequest.createAliasProposal({
+            ...(await this.platformParams()),
+            token,
+            alias: input.alias,
+            songId: input.songId,
+            note: input.note || undefined,
+            source: 'bot',
+        }, this.endpointOptions(options))
+    }
+
+    /**
      * 为当前 API 账号设置新的 API Token。
      * @param {string} apiToken 新 API Token
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误

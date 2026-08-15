@@ -33,32 +33,6 @@ export interface AliasProposalRecord {
     publicReviewDecisionNote?: string | null
 }
 
-export interface AliasNotificationPayload {
-    proposalId?: string
-    alias?: string
-    songId?: string
-    status?: AliasProposalStatus | string
-    votesUp?: number
-    votesDown?: number
-}
-
-export interface AliasNotificationItem {
-    id: string
-    proposalId: string
-    type: string
-    payload?: AliasNotificationPayload
-    createdAt?: string
-}
-
-export interface AliasNotificationSessionResult {
-    requestId: string
-    items: AliasNotificationItem[]
-}
-
-export interface AliasNotificationPollResponse {
-    sessions: AliasNotificationSessionResult[]
-}
-
 export interface AliasProposalCreateInput {
     songId: string
     alias: string

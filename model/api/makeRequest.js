@@ -494,23 +494,23 @@ export default class makeRequest {
     }
 
     /**
-     * 使用 sessionToken 批量轮询别名提案通知。
-     * @param {{sessions: {requestId: string, token: phigrosToken}[], limitPerSession?: number}} params 临时请求映射
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<import('../type/aliasProposal.js').AliasNotificationPollResponse>} 通知批次
+     * 汇报 Bot 在线状态、可选绘图压力，并取得待私聊消息。
+     * @param {{
+     *  pluginVersion: string,
+     *  acknowledgedMessageIds: string[],
+     *  renderPressure?: {
+     *    windowStartedAt: string, capacity: number, active: number, queued: number,
+     *    maxActive: number, maxQueued: number, completed: number, failed: number, timedOut: number
+     *  }
+     * }} params Bot 运行状态
+     * @returns {Promise<{
+     *  ok: true, serverTime: string, nextSyncAfterSeconds: number,
+     *  reporting: {renderPressure: boolean},
+     *  messages: {id:string,type:string,schemaVersion:number,target:{platform:string,platformId:string},text:string,payload:object,createdAt:string,expiresAt:string}[]
+     * }>}
      */
-    static async pollAliasNotifications(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return makeFetch('/alias-proposals/bot/notifications/poll', params, 'POST', options)
-    }
-
-    /**
-     * 使用 sessionToken 确认已经成功私聊送达的通知。
-     * @param {{sessions: {token: phigrosToken, notificationIds: string[]}[]}} params 待确认通知
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<{confirmed: number}>} 确认数量
-     */
-    static async confirmAliasNotifications(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return makeFetch('/alias-proposals/bot/notifications/confirm', params, 'POST', options)
+    static async syncBot(params) {
+        return makeFetch('/bot/sync', params, 'POST')
     }
 
     /**

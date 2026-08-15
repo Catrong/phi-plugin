@@ -113,6 +113,10 @@ export class AutoSeekApi {
         try {
           const identity = await botApiAuth.recoverAfterReconnect(Version.ver)
           logger.mark(chalk.green(`API Bot身份已就绪：${identity.clientId}`))
+          const { default: botSyncService } = await import('./botSyncService.js')
+          await botSyncService.recoverAfterReconnect()
+          const { default: aliasProposalService } = await import('./aliasProposalService.js')
+          await aliasProposalService.initialize()
           this.seekingApi = false
         } catch (/** @type {any} */ error) {
           logger[isFatalBotIdentityError(error) ? 'error' : 'warn'](

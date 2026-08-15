@@ -6,12 +6,13 @@ import { redisPath } from '../game/constNum.js'
 import { dataPath } from '../filesystem/path.js'
 import { UserCredentials } from '../user/userCredentials.js'
 import getInfo from '../game/getInfo.js'
-import platform, { redis } from '../../components/platform/index.js'
+import { redis } from '../../components/platform/index.js'
 import logger from '../../components/Logger.js'
+import Config from '../../components/Config.js'
 import makeRequest from './makeRequest.js'
-import userCredentialStore from '../user/userCredentialStore.js'
+import { isApiVersionBlocked } from './apiVersion.js'
 
-/** @import {AliasBotEvent, AliasNotificationItem, AliasProposalCreateInput, AliasProposalRecord, AliasVoteValue} from '../type/aliasProposal.js' */
+/** @import {AliasBotEvent, AliasProposalCreateInput, AliasProposalRecord, AliasVoteValue} from '../type/aliasProposal.js' */
 
 const snapshotPath = path.join(dataPath, 'alias', 'approved-nicklist.yaml')
 const lastApprovedSyncKey = `${redisPath}:aliasApproved:lastSync`
@@ -33,37 +34,6 @@ export function validateApprovedAliasSnapshot(value) {
         })
     }
     return result
-}
-
-/**
- * @template T
- * @param {T[]} items 原始数组
- * @param {number} size 每批最大数量
- * @returns {T[][]} 顺序不变的分批数组
- */
-function chunks(items, size) {
-    /** @type {T[][]} */
-    const result = []
-    for (let i = 0; i < items.length; i += size) result.push(items.slice(i, i + size))
-    return result
-}
-
-/**
- * 将结构化通知格式化为不包含 token 的私聊文本。
- * @param {AliasNotificationItem} item API 通知项
- * @returns {string} 私聊消息文本
- */
-export function formatAliasNotification(item) {
-    const payload = item.payload || {}
-    const title = {
-        rejected_private: '别名提案被私密拒绝',
-        public_review_allowed: '别名提案已进入公开投票',
-        public_review_denied: '别名提案的公审申请被拒绝',
-        vote_ended: '别名提案公开投票已结束',
-        final_approved: '别名提案已正式通过',
-        final_rejected: '别名提案已被最终拒绝',
-    }[item.type] || '别名提案状态已更新'
-    return `${title}\n别名：${payload.alias || '--'}\n曲目：${payload.songId || '--'}\n状态：${payload.status || '--'}\n票数：赞成 ${payload.votesUp || 0} / 反对 ${payload.votesDown || 0}\n提案 ID：${payload.proposalId || item.proposalId}`
 }
 
 class AliasProposalService {
@@ -91,14 +61,7 @@ class AliasProposalService {
      * @returns {Promise<AliasProposalRecord | null>} 新提案
      */
     async create(e, input) {
-        const token = await this.tokenForEvent(e)
-        return makeRequest.createAliasProposal({
-            token,
-            alias: input.alias,
-            songId: input.songId,
-            note: input.note || undefined,
-            source: 'bot',
-        })
+        return UserCredentials.fromEvent(e).createAliasProposal(input)
     }
 
     /**
@@ -164,54 +127,12 @@ class AliasProposalService {
         return true
     }
 
-    /**
-     * 使用本地 sessionToken 批量轮询；仅在私聊成功后确认通知。
-     * @returns {Promise<void>}
-     */
-    async pollNotifications() {
-        const credentials = [...(await userCredentialStore.listSessionCredentials()).entries()]
-            .map(([userId, token]) => ({
-                userId: /** @type {import('../../components/platform/types.js').PlatformUserId} */ (userId),
-                token,
-            }))
-        for (const batch of chunks(credentials, 100)) {
-            const sessions = batch.map(item => ({ ...item, requestId: String(crypto.randomUUID()) }))
-            const response = await makeRequest.pollAliasNotifications({
-                sessions: sessions.map(item => ({ requestId: item.requestId, token: item.token })),
-                limitPerSession: 50,
-            })
-            const byRequest = new Map(sessions.map(item => [item.requestId, item]))
-            /** @type {Array<{token: phigrosToken, notificationIds: string[]}>} */
-            const confirmations = []
-            for (const session of response.sessions || []) {
-                const local = byRequest.get(session.requestId)
-                if (!local) continue
-                const delivered = []
-                for (const item of session.items || []) {
-                    try {
-                        const sent = await platform.relpyPrivate(local.userId, formatAliasNotification(item))
-                        if (sent !== false && sent != null) delivered.push(item.id)
-                    } catch {
-                        // Leave the notification pending for the next poll.
-                    }
-                }
-                if (delivered.length) confirmations.push({
-                    token: local.token,
-                    notificationIds: delivered,
-                })
-            }
-            if (confirmations.length) {
-                await makeRequest.confirmAliasNotifications({ sessions: confirmations })
-            }
-        }
-    }
-
-    /** @returns {Promise<void>} 完成一次五分钟周期任务 */
+    /** @returns {Promise<void>} 完成一次正式别名快照同步任务 */
     async scheduledTask() {
+        if (!Config.getUserCfg('config', 'openPhiPluginApi') || isApiVersionBlocked()) return
         if (this.runningTask) return
         this.runningTask = true
         try {
-            await this.pollNotifications().catch(() => logger.warn('[phi-plugin] alias notification poll failed'))
             await this.syncApprovedSnapshot(false).catch(() => logger.warn('[phi-plugin] approved alias sync failed'))
         } finally {
             this.runningTask = false
@@ -220,6 +141,7 @@ class AliasProposalService {
 
     /** @returns {Promise<void>} 启动时尝试拉取一次正式别名快照 */
     async initialize() {
+        if (!Config.getUserCfg('config', 'openPhiPluginApi') || isApiVersionBlocked()) return
         if (this.initialized) return
         this.initialized = true
         await this.syncApprovedSnapshot(true).catch(() => logger.warn('[phi-plugin] initial approved alias sync failed'))
