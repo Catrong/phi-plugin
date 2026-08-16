@@ -372,13 +372,13 @@ export default await new class picmodle {
 
             Data.createDir(`data/html/${Plugin_Name}/${app}/${tpl}`, 'root')
 
-            /** 主题解析：自定义主题的模板仅作用于 b19，themeInfo 注入布局与模板（内置主题为 null，行为与现状一致） */
+            /** 主题解析：自定义模板仅作用于 B19，页面样式与公共主题信息由 themeInfo 注入布局。 */
             let tplFile = path.join(pluginResources, 'html', app, `${tpl}.art`).replace(/\\/g, '/')
             let themeInfo = null
             const themeId = params.theme
             if (themeId) {
-                const t = themeManager.getRenderInfo(themeId, resPath)
-                if (t?.tplFile && app === 'b19') tplFile = t.tplFile
+                const t = themeManager.getRenderInfo(themeId, resPath, renderPath)
+                if (t?.tplFile && renderPath === 'b19/b19') tplFile = t.tplFile
                 if (t?.themeInfo) themeInfo = t.themeInfo
             }
 

@@ -16,17 +16,29 @@
     {{block 'css'}}
     {{/block}}
 
+    {{if themeInfo && themeInfo.cssUrl && themeInfo.cssMode == "overlay"}}
+    <link rel="stylesheet" href="{{themeInfo.cssUrl}}">
+    {{/if}}
+
     {{if themeInfo}}
-    <!-- 主题样式置于 css 之后：主题 css 可能 @import common.css，若提前注入会被 common.css 的同优先级 :root/body 规则覆盖 -->
+    <!-- 清单中的颜色和字体置于页面/主题 CSS 之后，保证清单配置优先。 -->
     <style>
         {{if themeInfo.fontUrl}}
         @font-face { font-family: "phi-theme"; src: url("{{themeInfo.fontUrl}}") format("truetype"); }
         {{/if}}
         {{if themeInfo.colors}}
-        :root { --AT: {{themeInfo.colors.AT}}; --IN: {{themeInfo.colors.IN}}; --HD: {{themeInfo.colors.HD}}; --EZ: {{themeInfo.colors.EZ}}; }
+        :root {
+            {{if themeInfo.colors.AT}}--AT: {{themeInfo.colors.AT}}; --phi-theme-AT: {{themeInfo.colors.AT}}; --phi-theme-AT-dark: color-mix(in srgb, {{themeInfo.colors.AT}} 50%, black);{{/if}}
+            {{if themeInfo.colors.IN}}--IN: {{themeInfo.colors.IN}}; --phi-theme-IN: {{themeInfo.colors.IN}}; --phi-theme-IN-dark: color-mix(in srgb, {{themeInfo.colors.IN}} 50%, black);{{/if}}
+            {{if themeInfo.colors.HD}}--HD: {{themeInfo.colors.HD}}; --phi-theme-HD: {{themeInfo.colors.HD}}; --phi-theme-HD-dark: color-mix(in srgb, {{themeInfo.colors.HD}} 50%, black);{{/if}}
+            {{if themeInfo.colors.EZ}}--EZ: {{themeInfo.colors.EZ}}; --phi-theme-EZ: {{themeInfo.colors.EZ}}; --phi-theme-EZ-dark: color-mix(in srgb, {{themeInfo.colors.EZ}} 50%, black);{{/if}}
+        }
         {{/if}}
         {{if themeInfo.fontUrl}}
         body { font-family: "phi-theme", "PHI", "NOTO", "NotoSansJP", "HIMALAYA", "NotoSansMath-Regular"; }
+        {{/if}}
+        {{if themeInfo.backgroundUrl}}
+        body > .background:not(.theme-background) { display: none; }
         {{/if}}
     </style>
     {{/if}}
@@ -36,7 +48,7 @@
 <body class="elem-{{element || elem || `hydro`}} {{displayMode || mode || `default`}}-mode  {{bodyClass}}" {{@sys.scale}}>
 
 
-    <div class="background">
+    <div class="background theme-background">
         {{if themeInfo && themeInfo.backgroundUrl}}
         <img src="{{themeInfo.backgroundUrl}}" alt="主题背景"
             style="object-fit: cover; min-width: 100%;">

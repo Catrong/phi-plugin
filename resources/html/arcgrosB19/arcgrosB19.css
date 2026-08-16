@@ -580,19 +580,19 @@ p {
 }
 
 .EZ {
-    background: linear-gradient(180deg, var(--EZ) 0%, var(--EZ) 48%, #55792e 52%, var(--EZ) 100%);
+    background: linear-gradient(180deg, var(--EZ) 0%, var(--EZ) 48%, var(--phi-theme-EZ-dark, #55792e) 52%, var(--EZ) 100%);
 }
 
 .HD {
-    background: linear-gradient(180deg, var(--HD) 0%, var(--HD) 48%, #005c7d 52%, var(--HD) 100%);
+    background: linear-gradient(180deg, var(--HD) 0%, var(--HD) 48%, var(--phi-theme-HD-dark, #005c7d) 52%, var(--HD) 100%);
 }
 
 .IN {
-    background: linear-gradient(180deg, var(--IN) 0%, var(--IN) 48%, #7b0000 52%, var(--IN) 100%);
+    background: linear-gradient(180deg, var(--IN) 0%, var(--IN) 48%, var(--phi-theme-IN-dark, #7b0000) 52%, var(--IN) 100%);
 }
 
 .AT {
-    background: linear-gradient(180deg, var(--AT) 0%, var(--AT) 48%, #292929 52%, var(--AT) 100%);
+    background: linear-gradient(180deg, var(--AT) 0%, var(--AT) 48%, var(--phi-theme-AT-dark, #292929) 52%, var(--AT) 100%);
 }
 
 .EZ-box {

@@ -160,7 +160,7 @@ pnpm install -P
 | `#phi randclg [课题总值] [难度] ([曲目定数范围])` | 随机课题 eg: /rand 40 (IN 13-15)
 | `#phi (曲绘\|ill\|Ill) xxx` | 查询phigros中某一曲目的曲绘
 | `#phi (search\|查询\|检索) <条件 值>` | 检索曲库中的曲目，支持BPM 定数 物量，条件 bpm dif cmb，值可以为区间，以 - 间隔
-| `#phi (theme\|主题) [0-2]` | 切换绘图主题，仅对 b30, update, randclg, sign, task 生效
+| `#phi (theme\|主题) [编号]` | 切换绘图主题，页面级样式按主题包配置生效
 | `#phi (myset\|个人设置)` | 查看和修改用户设置，参数为设置项名称，值支持使用序号选择，建议先查看设置项列表
 | `sign/签到` | 签到获取Notes
 | `task/我的任务` | 查看自己的任务

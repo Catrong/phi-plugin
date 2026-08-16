@@ -26,6 +26,20 @@ color:
   IN: "#7b5ea7"
   HD: "#5b9bd5"
   EZ: "#7ecb8a"
-# 自定义模板文件，放在主题包目录。
+# 自定义模板文件，仅作用于 B19。
 template: "b19.art"
-css: "b19.css"
+# 按渲染页面加载覆盖样式；可使用 app 或 app/template，完整键优先。
+# 未配置的页面保留插件默认 CSS 和字体，但仍会使用上方配置的背景与难度颜色。
+css:
+  b19: "b19.css"
+  sign: "sign.css"
+  update: "update.css"
+  clg: "clg.css"
+  arcgrosB19: "arcgrosB19.css"
+  suggest: "suggest.css"
+  table: "table.css"
+  list: "list.css"
+  historyB30: "historyB30.css"
+  setting: "setting.css"
+  difficultyHistory: "difficultyHistory.css"
+  help: "help.css"

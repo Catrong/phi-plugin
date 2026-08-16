@@ -14,6 +14,7 @@ import userCredentialStore from '../model/user/userCredentialStore.js'
 import { getApiAccessState } from '../model/user/apiPermission.js'
 import fCompute from '../model/game/fCompute.js'
 import platform from '../components/platform/index.js'
+import getNotes from '../model/user/getNotes.js'
 
 
 /**@import {botEvent} from '../components/baseClass.js' */
@@ -550,6 +551,7 @@ export class phihelp extends phiPluginBase {
         * @param {Partial<Record<apiSettingKey, boolean>>} userSetting
      */
     async renderApiUserSetting(e, userSetting) {
+        const pluginData = await getNotes.getNotesData(e.user_id)
         /**
          * @param {keyof typeof USER_API_SETTING_OPTIONS} key
          * @param {string} current
@@ -580,7 +582,7 @@ export class phihelp extends phiPluginBase {
             pageDescription: '以下设置会同步到查分平台账户权限。',
             items: items,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
-            theme: 'default'
+            theme: pluginData?.theme || 'default'
         }, 'userSetting'))
     }
 }
