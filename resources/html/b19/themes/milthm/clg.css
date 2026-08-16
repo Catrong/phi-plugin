@@ -16,7 +16,7 @@
   clip-path: none;
 }
 
-.dif {
+.dif p {
   color: color-mix(in srgb, var(--HD) 72%, white);
 }
 
