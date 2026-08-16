@@ -204,25 +204,26 @@ test('旧版字符串 css 仅替换 B19 样式，其他页面使用默认 CSS �
 })
 
 test('主题资源 URL 使用实际目录名，并拒绝越界路径和符号链接', () => {
-    const dirName = '__theme_actual_dir__'
+    const dirName = '__theme actual#dir%__'
     const testId = '__theme_different_id__'
     const testDir = path.join(THEMES_DIR, dirName)
     const outsideFile = path.join(THEMES_DIR, '__theme_outside.css')
+    const nestedDir = path.join(testDir, 'nested styles')
     let symlinkCreated = false
     try {
-        fs.mkdirSync(testDir, { recursive: true })
+        fs.mkdirSync(nestedDir, { recursive: true })
         fs.writeFileSync(path.join(testDir, 'info.yaml'), [
             `id: "${testId}"`,
             'name: "Path safety"',
-            'background: "background.png"',
+            'background: "background #%.png"',
             'css:',
-            '  sign: "valid.css"',
+            '  sign: "nested styles/valid #%.css"',
             '  update: "../__theme_outside.css"',
             '  help: "linked.css"',
             '',
         ].join('\n'))
-        fs.writeFileSync(path.join(testDir, 'valid.css'), 'fixture')
-        fs.writeFileSync(path.join(testDir, 'background.png'), 'fixture')
+        fs.writeFileSync(path.join(nestedDir, 'valid #%.css'), 'fixture')
+        fs.writeFileSync(path.join(testDir, 'background #%.png'), 'fixture')
         fs.writeFileSync(outsideFile, 'fixture')
         try {
             fs.symlinkSync(outsideFile, path.join(testDir, 'linked.css'))
@@ -231,9 +232,15 @@ test('主题资源 URL 使用实际目录名，并拒绝越界路径和符号链
         themeManager.scan()
 
         const sign = themeManager.getRenderInfo(testId, RES, 'sign/sign')
-        assert.equal(sign?.themeInfo.baseUrl, `resources/html/b19/themes/${dirName}/`)
-        assert.equal(sign?.themeInfo.cssUrl, `resources/html/b19/themes/${dirName}/valid.css`)
-        assert.equal(sign?.themeInfo.backgroundUrl, `resources/html/b19/themes/${dirName}/background.png`)
+        const encodedDir = encodeURIComponent(dirName)
+        assert.equal(sign?.themeInfo.baseUrl, `resources/html/b19/themes/${encodedDir}/`)
+        assert.equal(sign?.themeInfo.cssUrl,
+            `resources/html/b19/themes/${encodedDir}/nested%20styles/valid%20%23%25.css`)
+        assert.equal(sign?.themeInfo.backgroundUrl,
+            `resources/html/b19/themes/${encodedDir}/background%20%23%25.png`)
+        const cssUrl = new URL(sign?.themeInfo.cssUrl ?? '', 'file:///')
+        assert.equal(cssUrl.hash, '')
+        assert.equal(cssUrl.search, '')
 
         const escaped = themeManager.getRenderInfo(testId, RES, 'update/update')
         assert.equal(escaped?.themeInfo.cssUrl, undefined)

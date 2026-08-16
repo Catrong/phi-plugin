@@ -40,6 +40,12 @@ const PAGE_KEY_RE = /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)?$/
 const COLOR_RE = /^#[0-9a-fA-F]{3,8}$/
 
 /**
+ * 对 URL 中由主题包控制的路径逐段编码，同时保留目录分隔符。
+ * @param {string} value
+ */
+const encodeThemeUrlPath = value => value.split('/').map(encodeURIComponent).join('/')
+
+/**
  * @typedef {object} CustomTheme 自定义主题条目（由 info.yaml 解析得到）
  * @property {string} id 主题标识
  * @property {string} name 显示名
@@ -274,7 +280,7 @@ export default await new class themeManager {
         if (!id) return null
         const custom = this.customThemes.get(id)
         if (custom) {
-            const baseUrl = `${resPath}html/b19/themes/${custom.dirName}/`
+            const baseUrl = `${resPath}html/b19/themes/${encodeURIComponent(custom.dirName)}/`
             const renderTarget = page.includes('/') ? page : `${page}/${page}`
             const app = renderTarget.split('/')[0]
             let realThemeDir
@@ -304,7 +310,7 @@ export default await new class themeManager {
                 }
             }
             /** @param {{relative: string}} asset */
-            const assetUrl = (asset) => baseUrl + asset.relative
+            const assetUrl = (asset) => baseUrl + encodeThemeUrlPath(asset.relative)
             /** @type {any} */
             const themeInfo = { id: custom.id, name: custom.name, baseUrl }
             const cssNames = custom.legacyCss

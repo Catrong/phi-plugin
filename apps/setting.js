@@ -397,7 +397,7 @@ export class phihelp extends phiPluginBase {
         send.send_with_At(e, await picmodle.common(e, 'setting', {
             ...data,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
-            theme: 'default'
+            theme: pluginData?.theme || 'default'
         }, 'userSetting'))
         return true
     }
