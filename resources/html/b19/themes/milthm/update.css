@@ -51,6 +51,7 @@
   z-index: 1;
   margin: 0;
   line-height: 1;
+  transform: translateY(-0.3em);
 }
 
 .coinbox,

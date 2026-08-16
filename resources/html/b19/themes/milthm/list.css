@@ -5,9 +5,10 @@
 }
 
 .line {
+  box-sizing: border-box;
   background-color: var(--milthm-panel);
   border: 1px solid var(--milthm-border);
-  border-radius: var(--milthm-radius);
+  border-radius: 4px;
 }
 
 .song_name p,

@@ -41,7 +41,13 @@
 .queryDifficulty .index p,
 .queryDifficulty .query p,
 .queryDifficulty .total p,
+.phigrosTitle p,
+.titleDesc p,
 .labelContent p,
 .rank p {
   line-height: 1;
+}
+
+.titleDesc p {
+  white-space: nowrap;
 }

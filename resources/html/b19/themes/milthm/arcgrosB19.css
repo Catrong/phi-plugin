@@ -15,6 +15,10 @@
   line-height: 1;
 }
 
+.player_broad img {
+  top: -95%;
+}
+
 .arcChallenge {
   bottom: 2px;
   width: 100%;

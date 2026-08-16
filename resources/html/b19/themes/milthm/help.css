@@ -6,6 +6,7 @@
 }
 
 .line {
+  box-sizing: border-box;
   background-color: var(--milthm-panel);
   border: 1px solid var(--milthm-border);
   border-radius: var(--milthm-radius);
