@@ -30,6 +30,10 @@
   line-height: 1;
 }
 
+.playerInfo .clgBox .Challenge p {
+  transform: translateY(-0.3em);
+}
+
 .ill,
 .changeTag {
   border-radius: var(--milthm-radius);
