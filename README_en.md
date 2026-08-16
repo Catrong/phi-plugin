@@ -128,7 +128,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi randclg [total] [difficulty] ([rating range])` | Random challenge (e.g., /rand 40 (IN 13-15)) |
 | `#phi ill xxx` | View song illustration |
 | `#phi search <criteria>` | Search songs by BPM/rating/notes |
-| `#phi theme [0-2]` | Switch themes (affects b30/update/randclg/sign/task) |
+| `#phi theme [number]` | Switch themes; page styles are applied according to the theme package |
 | `#phi myset <field> <value>` | View/modify user settings, value supports selection by number (e.g., /myset theme 1) |
 | `sign/sign` | Daily check-in |
 | `task/mytasks` | View tasks |

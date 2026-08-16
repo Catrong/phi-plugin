@@ -295,7 +295,7 @@ body {
 }
 
 .table-IN {
-  --IN: #ff5d5d;
+  --IN: var(--phi-theme-IN, #ff5d5d);
   --shadow-color: var(--IN);
   --bkg-color: var(--IN);
 }

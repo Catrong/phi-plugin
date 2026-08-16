@@ -1,0 +1,38 @@
+:root {
+  --milthm-panel: rgba(16, 16, 24, 0.72);
+  --milthm-border: rgba(184, 218, 236, 0.28);
+  --milthm-radius: 14px;
+}
+
+.line {
+  background-color: var(--milthm-panel);
+  border: 1px solid var(--milthm-border);
+  border-radius: var(--milthm-radius);
+}
+
+.song_name p,
+.song_name span,
+.num p,
+.num span,
+.song p,
+.song span,
+.dif p,
+.dif span {
+  line-height: 1;
+}
+
+.AT {
+  background: color-mix(in srgb, var(--AT) 55%, transparent);
+}
+
+.IN {
+  background: color-mix(in srgb, var(--IN) 55%, transparent);
+}
+
+.HD {
+  background: color-mix(in srgb, var(--HD) 55%, transparent);
+}
+
+.EZ {
+  background: color-mix(in srgb, var(--EZ) 55%, transparent);
+}

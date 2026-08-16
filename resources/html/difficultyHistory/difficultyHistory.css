@@ -92,19 +92,27 @@ body {
 }
 
 .AT-box {
-  --bg-color: linear-gradient(90deg, #6e6e6e88 0%, #37373788 100%);
+  --bg-color: linear-gradient(90deg,
+    color-mix(in srgb, var(--phi-theme-AT, #6e6e6e) 53.33%, transparent) 0%,
+    color-mix(in srgb, var(--phi-theme-AT-dark, #373737) 53.33%, transparent) 100%);
 }
 
 .IN-box {
-  --bg-color: linear-gradient(90deg, #ff000088 0%, #7f000088 100%);
+  --bg-color: linear-gradient(90deg,
+    color-mix(in srgb, var(--phi-theme-IN, #ff0000) 53.33%, transparent) 0%,
+    color-mix(in srgb, var(--phi-theme-IN-dark, #7f0000) 53.33%, transparent) 100%);
 }
 
 .HD-box {
-  --bg-color: linear-gradient(90deg, #00b0f088 0%, #00587888 100%);
+  --bg-color: linear-gradient(90deg,
+    color-mix(in srgb, var(--phi-theme-HD, #00b0f0) 53.33%, transparent) 0%,
+    color-mix(in srgb, var(--phi-theme-HD-dark, #005878) 53.33%, transparent) 100%);
 }
 
 .EZ-box {
-  --bg-color: linear-gradient(90deg, #92d05088 0%, #49682888 100%);
+  --bg-color: linear-gradient(90deg,
+    color-mix(in srgb, var(--phi-theme-EZ, #92d050) 53.33%, transparent) 0%,
+    color-mix(in srgb, var(--phi-theme-EZ-dark, #496828) 53.33%, transparent) 100%);
 }
 
 .AT-box,

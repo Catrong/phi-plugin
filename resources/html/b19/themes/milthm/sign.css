@@ -1,0 +1,80 @@
+:root {
+  --milthm-panel: rgba(16, 16, 24, 0.68);
+  --milthm-panel-strong: rgba(12, 12, 18, 0.82);
+  --milthm-border: rgba(184, 218, 236, 0.28);
+  --milthm-radius: 14px;
+  --milthm-radius-sm: 8px;
+}
+
+body {
+  --bkg-color: var(--milthm-panel);
+}
+
+.backGlass {
+  border-color: var(--milthm-border);
+  border-radius: var(--milthm-radius);
+}
+
+.playerInfo .blackBlock,
+.playerInfo .dataBox,
+.playerInfo .spInfo,
+.luckCard,
+.quoteCard,
+.wordsBox,
+.dailySongsPanel,
+.noticePanel,
+.panelHeader,
+.songItem,
+.noticePanel .noticeBody .calendarWeekHeader,
+.noticePanel .noticeBody .noticeRow.clip-box {
+  border-radius: var(--milthm-radius);
+}
+
+.panelHeader {
+  background: color-mix(in srgb, var(--HD) 68%, transparent);
+}
+
+.songItem,
+.noticePanel,
+.dailySongsPanel {
+  border: 1px solid var(--milthm-border);
+}
+
+.playerInfo .clgBox .Challenge {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+}
+
+.playerInfo .clgBox .Challenge > * {
+  grid-area: 1 / 1;
+}
+
+.playerInfo .clgBox .Challenge img {
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.playerInfo .clgBox .Challenge p {
+  z-index: 1;
+  margin: 0;
+  line-height: 1;
+}
+
+.songCover,
+.taskStatus,
+.noticePanel .noticeBody .calendarCell {
+  border-radius: var(--milthm-radius-sm);
+}
+
+.noticePanel .noticeBody .calendarCell.signed {
+  background: color-mix(in srgb, var(--EZ) 28%, transparent);
+  border-color: color-mix(in srgb, var(--EZ) 55%, transparent);
+}
+
+.noticePanel .noticeBody .calendarCell.today {
+  outline-color: color-mix(in srgb, var(--IN) 70%, white);
+}

@@ -356,19 +356,19 @@ body p {
 }
 
 .rank-AT {
-  background-color: rgb(110, 110, 110);
+  background-color: var(--phi-theme-AT, rgb(110, 110, 110));
 }
 
 .rank-IN {
-  background-color: rgb(255, 0, 0);
+  background-color: var(--phi-theme-IN, rgb(255, 0, 0));
 }
 
 .rank-HD {
-  background-color: #00b0f0;
+  background-color: var(--phi-theme-HD, #00b0f0);
 }
 
 .rank-EZ {
-  background-color: #92d050;
+  background-color: var(--phi-theme-EZ, #92d050);
 }
 
 .org,
