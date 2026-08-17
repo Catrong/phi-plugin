@@ -15,9 +15,10 @@ import { isApiVersionBlocked } from './apiVersion.js'
  * @param {string} originalPath 包含查询参数的 API 原始路径
  * @param {any} [params] 最终发送的请求参数
  * @param {'POST'|'GET'|'PUT'} [method='POST'] HTTP 方法
+ * @param {{timeout?:number}} [transportOptions] 端点专用传输选项
  * @returns {Promise<any>} API JSON 响应
  */
-async function request(originalPath, params = {}, method = 'POST') {
+async function request(originalPath, params = {}, method = 'POST', transportOptions = {}) {
     if (isApiVersionBlocked()) {
         throw new PhiApiError(
             'API协议大版本不兼容，请更新 phi-plugin 后重启',
@@ -27,7 +28,7 @@ async function request(originalPath, params = {}, method = 'POST') {
     }
     try {
         await botApiAuth.initialize()
-        const json = await botApiAuth.signedRequest(originalPath, params, method)
+        const json = await botApiAuth.signedRequest(originalPath, params, method, undefined, {}, transportOptions)
         if (Config.getUserCfg('config', 'debug') > 3) {
             logger.info(`[phi-plugin] API请求成功: ${originalPath}`)
         }

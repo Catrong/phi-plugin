@@ -3,8 +3,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
 import art from 'art-template'
-import themeManager from '../model/themeManager.js'
-import { pluginResources } from '../model/path.js'
+import themeManager from '../model/theme/manager.js'
+import { pluginResources } from '../model/filesystem/path.js'
 
 const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'themes')
 const RES = 'resources/'

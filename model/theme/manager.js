@@ -1,10 +1,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import logger from '../components/Logger.js'
-import fileWatcherRegistry from '../components/FileWatcherRegistry.js'
-import YamlReader from '../components/YamlReader.js'
-import { pluginResources } from './filesystem/path.js'
-import { USER_SETTING_OPTIONS } from './game/constNum.js'
+import logger from '../../components/Logger.js'
+import fileWatcherRegistry from '../../components/FileWatcherRegistry.js'
+import YamlReader from '../../components/YamlReader.js'
+import { pluginResources } from '../filesystem/path.js'
+import { USER_SETTING_OPTIONS } from '../game/constNum.js'
 
 /** 自定义主题目录 */
 const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'themes')
@@ -49,6 +49,7 @@ const COLOR_RE = /^#[0-9a-fA-F]{3,8}$/
  * @property {Record<string, string>} [colors] 四难度基础色（AT/IN/HD/EZ）
  * @property {string} [template] b19 模板文件名
  * @property {string} [css] 样式表文件名
+ * @property {boolean} marketInstalled 是否由主题市场安装
  */
 
 /**
@@ -91,6 +92,7 @@ export default await new class themeManager {
             const themes = new Map()
             if (fs.existsSync(THEMES_DIR)) {
                 for (const dirName of fs.readdirSync(THEMES_DIR)) {
+                    if (dirName.startsWith('.phi-market-')) continue
                     const dir = path.join(THEMES_DIR, dirName)
                     let isDir = false
                     try {
@@ -158,7 +160,21 @@ export default await new class themeManager {
 
         const name = typeof yamlData.name === 'string' && yamlData.name ? yamlData.name : id
         /** @type {CustomTheme} */
-        const entry = { id, name, dir }
+        const entry = { id, name, dir, marketInstalled: false }
+        const receiptPath = path.join(dir, '.phi-market.json')
+        if (fs.existsSync(receiptPath)) {
+            entry.marketInstalled = true
+            try {
+                const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'))
+                const validReceipt = receipt?.source === 'phi-theme-marketplace'
+                    && receipt?.slug === id
+                    && typeof receipt?.version === 'string'
+                    && /^[a-f0-9]{64}$/.test(receipt?.sha256)
+                if (!validReceipt) logger.warn(`[phi-plugin][主题] ${dirName} 的市场安装收据无效，仍从普通主题列表隐藏`)
+            } catch {
+                logger.warn(`[phi-plugin][主题] ${dirName} 的市场安装收据无效，仍从普通主题列表隐藏`)
+            }
+        }
         if (typeof yamlData.Author === 'string' && yamlData.Author) entry.author = yamlData.Author
         if (typeof yamlData.description === 'string' && yamlData.description) entry.description = yamlData.description
         /** @type {['font', 'background', 'template', 'css']} */
@@ -189,7 +205,7 @@ export default await new class themeManager {
     /**
      * 获取主题条目（内置或自定义），未知 id 返回 null
      * @param {string} [id]
-     * @returns {{id: string, name: string, dir?: string, template?: string, css?: string, font?: string, background?: string, icons?: Record<string, string>, colors?: Record<string, string>} | null}
+     * @returns {{id: string, name: string, dir?: string, template?: string, css?: string, font?: string, background?: string, icons?: Record<string, string>, colors?: Record<string, string>, marketInstalled?: boolean} | null}
      */
     getTheme(id) {
         if (!id) return null
@@ -222,7 +238,9 @@ export default await new class themeManager {
     getThemeList() {
         return [
             ...BUILTIN_THEMES.map(t => ({ id: t.id, src: t.name })),
-            ...[...this.customThemes.values()].map(t => ({ id: t.id, src: t.name })),
+            ...[...this.customThemes.values()]
+                .filter(t => !t.marketInstalled)
+                .map(t => ({ id: t.id, src: t.name })),
         ]
     }
 
@@ -230,11 +248,12 @@ export default await new class themeManager {
      * 完整主题选项 map（内置 + 自定义，序号连续），setting.js 展示用
      * @returns {Record<string, {title: string, description: string}>}
      */
-    getThemeOptions() {
+    getThemeOptions(currentUserTheme = '') {
         /** @type {Record<string, {title: string, description: string}>} */
         const options = { ...USER_SETTING_OPTIONS.theme }
         let index = Object.keys(options).length
         for (const t of this.customThemes.values()) {
+            if (t.marketInstalled && t.id !== currentUserTheme) continue
             options[t.id] = {
                 title: `[${index}]${t.name}`,
                 description: t.description || (t.author ? `作者：${t.author}` : ''),

@@ -37,12 +37,13 @@ function writeIdentityAtomic(identity) {
 /** @param {any} response */
 function parseResponse(response) {
     const data = response.data;
+    const nestedError = data?.error && typeof data.error === 'object' ? data.error : null;
     if (response.status < 200 || response.status >= 300 || data?.error) {
         throw new PhiApiError(
-            data?.message || data?.error || `API request failed (${response.status})`,
+            nestedError?.message || data?.message || (typeof data?.error === 'string' ? data.error : '') || `API request failed (${response.status})`,
             response.status,
-            data?.code || data?.errorCode || 'api_request_failed',
-            data,
+            nestedError?.code || data?.code || data?.errorCode || 'api_request_failed',
+            { body: data, retryAfter: response.headers?.['retry-after'] },
         );
     }
     return data;
@@ -173,8 +174,8 @@ export class BotApiAuth {
         };
     }
 
-    /** @param {string} originalPath @param {any} body @param {string} [method] @param {{clientId:string, secret:string, secretVersion:number}} [identity] @param {Record<string,string>} [extraHeaders] */
-    async signedRequest(originalPath, body, method = 'POST', identity = configIdentity(), extraHeaders = {}) {
+    /** @param {string} originalPath @param {any} body @param {string} [method] @param {{clientId:string, secret:string, secretVersion:number}} [identity] @param {Record<string,string>} [extraHeaders] @param {{timeout?:number}} [requestOptions] */
+    async signedRequest(originalPath, body, method = 'POST', identity = configIdentity(), extraHeaders = {}, requestOptions = {}) {
         if (isApiVersionBlocked()) {
             throw new PhiApiError(
                 'API协议大版本不兼容，请更新 phi-plugin 后重启',
@@ -193,7 +194,7 @@ export class BotApiAuth {
                 method: upperMethod,
                 headers,
                 data: upperMethod === 'GET' ? undefined : rawBody,
-                timeout: TIMEOUT,
+                timeout: requestOptions.timeout ?? TIMEOUT,
                 validateStatus: () => true,
             });
         } catch (error) {
