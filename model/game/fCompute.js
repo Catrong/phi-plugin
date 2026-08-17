@@ -90,32 +90,7 @@ export default class fCompute {
      */
     static getBackground(save_background) {
         try {
-            switch (save_background) {
-                case 'Another Me ': {
-                    save_background = 'Another Me (KALPA)'
-                    break
-                }
-                case 'Another Me': {
-                    save_background = 'Another Me (Rising Sun Traxx)'
-                    break
-                }
-                case 'Re_Nascence (Psystyle Ver.) ': {
-                    save_background = 'Re_Nascence (Psystyle Ver.)'
-                    break
-                }
-                case 'Energy Synergy Matrix': {
-                    save_background = 'ENERGY SYNERGY MATRIX'
-                    break
-                }
-                case 'Le temps perdu-': {
-                    save_background = 'Le temps perdu'
-                    break
-                }
-                default: {
-                    break
-                }
-            }
-            return getInfo.getill(/**@type {idString} */(save_background))
+            return getInfo.getBackground(save_background)
         } catch (err) {
             logger.error(`获取背景曲绘错误`, err)
             return false
