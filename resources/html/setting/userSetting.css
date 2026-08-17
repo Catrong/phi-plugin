@@ -104,6 +104,14 @@ body {
     box-sizing: border-box;
 }
 
+.setting-theme .option-row {
+    flex-wrap: wrap;
+}
+
+.setting-theme .option-card {
+    flex: 0 0 calc((100% - 30px) / 4);
+}
+
 .option-card.selected {
     border-color: #7be7ff;
     background: linear-gradient(170deg, rgb(26 81 118 / 88%), rgb(12 50 77 / 85%));
