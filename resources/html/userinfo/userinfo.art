@@ -214,7 +214,7 @@
                     <p>{{e.title}}</p>
                 </div>
                 <div class="stats-up">
-                    <div class="Rating"> <img src="{{_res_path}}html/otherimg/{{e.Rating}}.png" alt="{{e.Rating}}">
+                    <div class="Rating"> <img src="{{themeInfo && themeInfo.icons && themeInfo.icons[e.Rating] ? themeInfo.icons[e.Rating] : (_res_path + 'html/otherimg/' + e.Rating + '.png')}}" alt="{{e.Rating}}">
                     </div>
                     <div class="stats-group">
                         <div class="stats-group-real">
