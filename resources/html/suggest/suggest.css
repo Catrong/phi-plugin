@@ -133,19 +133,19 @@ body p {
 }
 
 .AT {
-  background: #9c9c9c88;
+  background: color-mix(in srgb, var(--phi-theme-AT, #9c9c9c) 53.33%, transparent);
 }
 
 .IN {
-  background: #ff616188;
+  background: color-mix(in srgb, var(--phi-theme-IN, #ff6161) 53.33%, transparent);
 }
 
 .HD {
-  background: #009dff88;
+  background: color-mix(in srgb, var(--phi-theme-HD, #009dff) 53.33%, transparent);
 }
 
 .EZ {
-  background: #7ae07a88;
+  background: color-mix(in srgb, var(--phi-theme-EZ, #7ae07a) 53.33%, transparent);
 }
 
 .ill_box {

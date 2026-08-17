@@ -1,5 +1,3 @@
-@import "../../../common/common.css";
-
 body {
   /* writing-mode: vertical-lr; */
   flex-direction: column;
@@ -27,8 +25,8 @@ body p {
   --clipSlope: 0;         /* 关闭全局斜切斜率 */
   --radius: 14px;         /* 主圆角 */
   --radius-sm: 8px;       /* 小元素圆角 */
-  --m-purple: #7b5ea7;    /* milthm 主题强调色（与 info.yaml IN 一致） */
-  --m-blue: #5b9bd5;      /* 次级强调色（与 info.yaml HD 一致） */
+  --m-purple: var(--phi-theme-IN, #7b5ea7);
+  --m-blue: var(--phi-theme-HD, #5b9bd5);
   --panel: rgba(16, 16, 24, 0.55);   /* 半透明面板底 */
 }
 
@@ -134,9 +132,32 @@ body p {
 
 .clgBox p {
   font-size: 1.5rem;
-  margin-top: 7px;
   color: white;
-  margin-left: 3px;
+  margin: 0;
+  line-height: 1;
+}
+
+.clgBox .Challenge {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+}
+
+.clgBox .Challenge > * {
+  grid-area: 1 / 1;
+}
+
+.clgBox .Challenge img {
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.clgBox .Challenge p {
+  z-index: 1;
+  transform: translateY(-0.3em);
 }
 
 .date {
@@ -323,7 +344,7 @@ body p {
 .phi_song .info-IN,
 .phi_song .info-HD,
 .phi_song .info-EZ {
-  filter: drop-shadow(0 0 10px rgba(123, 94, 167, 0.75));
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--m-purple) 75%, transparent));
 }
 
 .b_song .info-AT,
@@ -605,7 +626,7 @@ body p {
 }
 
 .accHyper {
-  --bkgColor: rgba(91, 155, 213, 0.3);
+  --bkgColor: color-mix(in srgb, var(--m-blue) 30%, transparent);
   --lineColor: var(--m-blue);
 }
 
@@ -892,7 +913,7 @@ body p {
   background: rgba(0, 0, 0, 0.62);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-top: 2px solid rgba(255, 255, 255, 0.9);
-  border-bottom: 2px solid rgba(123, 94, 167, 0.75);
+  border-bottom: 2px solid color-mix(in srgb, var(--m-purple) 75%, transparent);
   backdrop-filter: blur(7px);
   border-radius: var(--radius);
 }
@@ -1015,7 +1036,7 @@ body p {
 }
 
 .tag-radar-shape {
-  fill: rgba(123, 94, 167, 0.3);
+  fill: color-mix(in srgb, var(--m-purple) 30%, transparent);
   stroke: var(--m-purple);
   stroke-width: 1.8;
 }
@@ -1186,11 +1207,11 @@ body p {
 .histogram-bar {
   width: 72%;
   min-height: 2px;
-  box-shadow: 0 0 10px rgba(123, 94, 167, 0.25);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--m-purple) 25%, transparent);
 }
 
 .best-bar {
-  background: linear-gradient(90deg, #7b5ea7, #5b9bd5);
+  background: linear-gradient(90deg, var(--m-purple), var(--m-blue));
 }
 
 .phi-bar {
@@ -1284,10 +1305,10 @@ body p {
 
 .phi-plugin p {
   font-size: xx-large;
-  text-shadow: 0 0 20px rgba(123, 94, 167, 0.8);
+  text-shadow: 0 0 20px color-mix(in srgb, var(--m-purple) 80%, transparent);
 }
 
 .ver p {
   font-size: large;
-  text-shadow: 0 0 20px rgba(91, 155, 213, 0.8);
+  text-shadow: 0 0 20px color-mix(in srgb, var(--m-blue) 80%, transparent);
 }

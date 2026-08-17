@@ -1,0 +1,37 @@
+:root {
+  --milthm-panel: rgba(16, 16, 24, 0.76);
+  --milthm-border: rgba(184, 218, 236, 0.3);
+  --milthm-radius: 14px;
+}
+
+.song-box {
+  background-color: var(--milthm-panel);
+  border: 1px solid var(--milthm-border);
+  border-radius: var(--milthm-radius);
+  clip-path: none;
+}
+
+.ill-box {
+  border-radius: var(--milthm-radius) 0 0 var(--milthm-radius);
+  clip-path: none;
+}
+
+.dif p {
+  color: color-mix(in srgb, var(--HD) 72%, white);
+}
+
+.notes-info {
+  border-color: var(--milthm-border);
+}
+
+.tot-box {
+  background: var(--milthm-panel);
+  border: 1px solid var(--milthm-border);
+  border-radius: var(--milthm-radius);
+  clip-path: none;
+}
+
+.tot_clg p {
+  line-height: 1;
+  text-shadow: 0 0 3px black, 0 0 12px color-mix(in srgb, var(--IN) 58%, white);
+}

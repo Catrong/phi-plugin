@@ -33,8 +33,17 @@ const CONFLICT_IDS = new Set(['default', 'snow', 'star', 'dss2', 'topText', 'foo
 /** 主题 id 合法性 */
 const ID_RE = /^[a-zA-Z0-9_-]+$/
 
+/** 页面样式键：app 或 app/template */
+const PAGE_KEY_RE = /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)?$/
+
 /** 难度色合法性（#RRGGBB / #RGB 等） */
 const COLOR_RE = /^#[0-9a-fA-F]{3,8}$/
+
+/**
+ * 对 URL 中由主题包控制的路径逐段编码，同时保留目录分隔符。
+ * @param {string} value
+ */
+const encodeThemeUrlPath = value => value.split('/').map(encodeURIComponent).join('/')
 
 /**
  * @typedef {object} CustomTheme 自定义主题条目（由 info.yaml 解析得到）
@@ -43,12 +52,14 @@ const COLOR_RE = /^#[0-9a-fA-F]{3,8}$/
  * @property {string} [author] 作者
  * @property {string} [description] 描述（myset 展示）
  * @property {string} dir 主题目录绝对路径
+ * @property {string} dirName 主题目录名
  * @property {string} [font] 字体文件名
  * @property {string} [background] 背景图文件名
  * @property {Record<string, string>} [icons] 评级图标文件名映射（key 与 song.Rating 取值一致）
  * @property {Record<string, string>} [colors] 四难度基础色（AT/IN/HD/EZ）
  * @property {string} [template] b19 模板文件名
- * @property {string} [css] 样式表文件名
+ * @property {Record<string, string>} [css] 按渲染页面配置的样式表文件名
+ * @property {boolean} [legacyCss] 是否使用旧版 B19 替换样式语义
  * @property {boolean} marketInstalled 是否由主题市场安装
  */
 
@@ -96,7 +107,8 @@ export default await new class themeManager {
                     const dir = path.join(THEMES_DIR, dirName)
                     let isDir = false
                     try {
-                        isDir = fs.statSync(dir).isDirectory()
+                        // 主题根目录必须是实体目录，避免通过目录链接绕过资源根边界。
+                        isDir = fs.lstatSync(dir).isDirectory()
                     } catch { }
                     if (!isDir) continue
                     const entry = this.parseThemeDir(dir, dirName, themes)
@@ -160,7 +172,7 @@ export default await new class themeManager {
 
         const name = typeof yamlData.name === 'string' && yamlData.name ? yamlData.name : id
         /** @type {CustomTheme} */
-        const entry = { id, name, dir, marketInstalled: false }
+        const entry = { id, name, dir, dirName, marketInstalled: false }
         const receiptPath = path.join(dir, '.phi-market.json')
         if (fs.existsSync(receiptPath)) {
             entry.marketInstalled = true
@@ -177,10 +189,22 @@ export default await new class themeManager {
         }
         if (typeof yamlData.Author === 'string' && yamlData.Author) entry.author = yamlData.Author
         if (typeof yamlData.description === 'string' && yamlData.description) entry.description = yamlData.description
-        /** @type {['font', 'background', 'template', 'css']} */
-        const assetKeys = ['font', 'background', 'template', 'css']
+        /** @type {['font', 'background', 'template']} */
+        const assetKeys = ['font', 'background', 'template']
         for (const key of assetKeys) {
             if (typeof yamlData[key] === 'string' && yamlData[key]) entry[key] = yamlData[key]
+        }
+        if (typeof yamlData.css === 'string' && yamlData.css) {
+            // 旧主题包的字符串 CSS 会替换 B19 默认样式，不能改成覆盖层。
+            entry.css = { 'b19/b19': yamlData.css }
+            entry.legacyCss = true
+        } else if (yamlData.css && typeof yamlData.css === 'object') {
+            /** @type {Record<string, string>} */
+            const pageCss = {}
+            for (const [page, file] of Object.entries(yamlData.css)) {
+                if (PAGE_KEY_RE.test(page) && typeof file === 'string' && file) pageCss[page] = file
+            }
+            if (Object.keys(pageCss).length) entry.css = pageCss
         }
         if (yamlData.icon && typeof yamlData.icon === 'object') {
             /** @type {Record<string, string>} */
@@ -205,7 +229,7 @@ export default await new class themeManager {
     /**
      * 获取主题条目（内置或自定义），未知 id 返回 null
      * @param {string} [id]
-     * @returns {{id: string, name: string, dir?: string, template?: string, css?: string, font?: string, background?: string, icons?: Record<string, string>, colors?: Record<string, string>, marketInstalled?: boolean} | null}
+     * @returns {{id: string, name: string, dir?: string, dirName?: string, template?: string, css?: Record<string, string>, legacyCss?: boolean, font?: string, background?: string, icons?: Record<string, string>, colors?: Record<string, string>, marketInstalled?: boolean} | null}
      */
     getTheme(id) {
         if (!id) return null
@@ -268,36 +292,72 @@ export default await new class themeManager {
      * 内置 dss2 返回其独立模板路径（themeInfo 为 null）；未知/内置无资源返回 null
      * @param {string} id
      * @param {string} resPath 资源根路径（结尾带 /）
+     * @param {string} [page] 当前渲染目标（app/template；短键 app 会规范为 app/app）
      * @returns {{tplFile: string | null, themeInfo: any} | null}
      */
-    getRenderInfo(id, resPath) {
+    getRenderInfo(id, resPath, page = 'b19/b19') {
         if (!id) return null
         const custom = this.customThemes.get(id)
         if (custom) {
-            const baseUrl = `${resPath}html/b19/themes/${id}/`
-            /** 校验主题资源文件是否存在（值为空或文件缺失均视为不存在） */
-            /** @param {string | undefined} name */
-            const exists = (name) => {
-                if (!name) return false
-                return fs.existsSync(path.join(custom.dir, name))
+            const baseUrl = `${resPath}html/b19/themes/${encodeURIComponent(custom.dirName)}/`
+            const renderTarget = page.includes('/') ? page : `${page}/${page}`
+            const app = renderTarget.split('/')[0]
+            let realThemeDir
+            try {
+                realThemeDir = fs.realpathSync(custom.dir)
+            } catch {
+                return null
             }
+            /** 仅解析主题目录内的普通文件，缺失或越界资源均走默认回退。 */
+            /** @param {string | undefined} name */
+            const resolveAsset = (name) => {
+                if (!name) return null
+                const candidate = path.resolve(custom.dir, name)
+                const relative = path.relative(custom.dir, candidate)
+                if (relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) return null
+                try {
+                    if (!fs.lstatSync(candidate).isFile()) return null
+                    const realCandidate = fs.realpathSync(candidate)
+                    const realRelative = path.relative(realThemeDir, realCandidate)
+                    if (realRelative === '..' || realRelative.startsWith(`..${path.sep}`) || path.isAbsolute(realRelative)) return null
+                    return {
+                        file: candidate,
+                        relative: relative.replace(/\\/g, '/'),
+                    }
+                } catch {
+                    return null
+                }
+            }
+            /** @param {{relative: string}} asset */
+            const assetUrl = (asset) => baseUrl + encodeThemeUrlPath(asset.relative)
             /** @type {any} */
             const themeInfo = { id: custom.id, name: custom.name, baseUrl }
-            if (exists(custom.css)) themeInfo.cssUrl = baseUrl + custom.css
-            if (exists(custom.font)) themeInfo.fontUrl = baseUrl + custom.font
-            if (exists(custom.background)) themeInfo.backgroundUrl = baseUrl + custom.background
+            const cssNames = custom.legacyCss
+                ? (renderTarget === 'b19/b19' ? [custom.css?.['b19/b19']] : [])
+                : [custom.css?.[renderTarget], custom.css?.[app]]
+            const pageCss = cssNames.map(resolveAsset).find(Boolean)
+            if (pageCss) {
+                themeInfo.cssUrl = assetUrl(pageCss)
+                themeInfo.cssMode = custom.legacyCss ? 'replace' : 'overlay'
+                // 未给当前页面配置 CSS 时保留插件原生字体。
+                const font = resolveAsset(custom.font)
+                if (font) themeInfo.fontUrl = assetUrl(font)
+            }
+            const background = resolveAsset(custom.background)
+            if (background) themeInfo.backgroundUrl = assetUrl(background)
             if (custom.icons) {
                 /** @type {Record<string, string>} */
                 const icons = {}
                 for (const [k, v] of Object.entries(custom.icons)) {
-                    if (exists(v)) icons[k] = baseUrl + v
+                    const icon = resolveAsset(v)
+                    if (icon) icons[k] = assetUrl(icon)
                 }
                 if (Object.keys(icons).length) themeInfo.icons = icons
             }
             if (custom.colors) themeInfo.colors = custom.colors
-            const template = custom.template
+            const template = resolveAsset(custom.template)
             return {
-                tplFile: template && exists(template) ? path.join(custom.dir, template).replace(/\\/g, '/') : null,
+                tplFile: template ? template.file.replace(/\\/g, '/') : null,
                 themeInfo,
             }
         }
