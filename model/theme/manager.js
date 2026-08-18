@@ -6,9 +6,10 @@ import YamlReader from '../../components/YamlReader.js'
 import { pluginResources } from '../filesystem/path.js'
 import { USER_SETTING_OPTIONS } from '../game/constNum.js'
 import themePolicy from './policy.js'
+import { migrateLegacyThemeDirectories, themesDir } from './paths.js'
 
 /** 自定义主题目录 */
-const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'res', 'themes')
+const THEMES_DIR = themesDir
 
 /**
  * 内置主题（default/snow/star 无独立模板，走默认 tplFile 解析与布局 theme 分支；
@@ -65,7 +66,7 @@ const encodeThemeUrlPath = value => value.split('/').map(encodeURIComponent).joi
  */
 
 /**
- * 主题管理器：内置主题与 resources/html/b19/res/themes/ 下自定义主题的统一注册表，
+ * 主题管理器：内置主题与 resources/themes/<themeId>/ 下自定义主题的统一注册表，
  * 提供主题列表/选项/渲染配置解析，并支持目录热更新（无需重启 bot）。
  */
 export default await new class themeManager {
@@ -79,11 +80,21 @@ export default await new class themeManager {
     }
 
     async init() {
+        for (const migration of migrateLegacyThemeDirectories()) {
+            logger.info(`[phi-plugin][主题] 已迁移主题目录：${migration.from} -> ${migration.to}`)
+        }
         this.scan()
         // 监听主题目录：info.yaml 及主题目录的增删改均触发重新扫描（目录不存在时 chokidar 会等待其出现）
         const lease = fileWatcherRegistry.watch('b19:themes', THEMES_DIR, () => {
             this.scan()
-        }, ['add', 'addDir', 'change', 'unlink', 'unlinkDir'], { ignoreInitial: true })
+        }, ['add', 'addDir', 'change', 'unlink', 'unlinkDir'], {
+            ignoreInitial: true,
+            // 安装暂存、锁和备份必须与主题目录位于同一文件系统以支持原子改名，
+            // 但不能让 Windows 文件监听器持有这些路径，否则提交阶段可能 EPERM。
+            ignored: watchedPath => path.relative(THEMES_DIR, watchedPath)
+                .split(path.sep)
+                .some(part => part.startsWith('.phi-market-')),
+        })
         // ignoreInitial 会丢弃初始扫描完成前的变更，等 watcher 就绪后补扫一次兜底
         await new Promise(resolve => lease.watcher.once('ready', () => resolve(undefined)))
         this.scan()
@@ -306,7 +317,7 @@ export default await new class themeManager {
         if (!id) return null
         const custom = this.customThemes.get(id)
         if (custom) {
-            const baseUrl = `${resPath}html/b19/res/themes/${encodeURIComponent(custom.dirName)}/`
+            const baseUrl = `${resPath}themes/${encodeURIComponent(custom.dirName)}/`
             const renderTarget = page.includes('/') ? page : `${page}/${page}`
             const app = renderTarget.split('/')[0]
             let realThemeDir

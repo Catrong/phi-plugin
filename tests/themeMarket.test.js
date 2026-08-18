@@ -5,9 +5,9 @@ import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import JSZip from 'jszip'
-import { pluginResources } from '../model/filesystem/path.js'
 import themeManager from '../model/theme/manager.js'
 import themePolicy from '../model/theme/policy.js'
+import { themesDir } from '../model/theme/paths.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
 import {
     installMarketArchive,
@@ -17,7 +17,6 @@ import {
     withMarketInstallLock,
 } from '../model/theme/installer.js'
 
-const themesDir = path.join(pluginResources, 'html', 'b19', 'res', 'themes')
 const sha256 = 'b'.repeat(64)
 
 /** @param {string} themeId @param {{topLevel?:boolean, unsafePath?:boolean}} [options] */
