@@ -98,7 +98,7 @@ export default new class getInfo {
          */
         this.songsid = {}
         /**
-         * @type {Record<string, idString>}
+         * @type {{[key:songString]:idString}}
          * @description 原曲名称获取id
          */
         this.idssong = {}
@@ -257,7 +257,7 @@ export default new class getInfo {
             this.sp_info[id] = { ...sp_json[i] }
             this.sp_info[id].sp_vis = true
             this.sp_info[id].id = id
-            this.idssong[i] = id
+            this.idssong[/** @type {songString} */ (/** @type {unknown} */ (i))] = id
             this.idssong[this.sp_info[id].song] = id
             if (this.sp_info[id]?.illustration) {
                 this.illlist.push(this.sp_info[id].id)
@@ -1010,7 +1010,7 @@ export default new class getInfo {
 
     /**
      * 通过原曲曲目获取曲目id
-     * @param {string} song 原曲曲名
+     * @param {songString} song 原曲曲名
      * @returns {idString | undefined} 曲目id
      */
     SongGetId(song) {
