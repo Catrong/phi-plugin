@@ -6,7 +6,7 @@ import YAML from 'yaml'
 import { pluginResources } from '../filesystem/path.js'
 import { ThemeMarketClientError } from './marketClient.js'
 
-const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'themes')
+const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'res', 'themes')
 const WORK_DIR = path.join(THEMES_DIR, '.phi-market-work')
 const LOCK_PATH = path.join(THEMES_DIR, '.phi-market-install.lock')
 const MAX_ARCHIVE_BYTES = 50 * 1024 * 1024

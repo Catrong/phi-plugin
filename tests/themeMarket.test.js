@@ -16,7 +16,7 @@ import {
     withMarketInstallLock,
 } from '../model/theme/installer.js'
 
-const themesDir = path.join(pluginResources, 'html', 'b19', 'themes')
+const themesDir = path.join(pluginResources, 'html', 'b19', 'res', 'themes')
 const sha256 = 'b'.repeat(64)
 
 /** @param {string} themeId @param {{topLevel?:boolean, unsafePath?:boolean}} [options] */
