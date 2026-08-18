@@ -20,6 +20,45 @@ async function waitFor(fn, timeout = 4000) {
     return fn()
 }
 
+/** @param {string} theme @param {any} themeInfo @param {string} [template] */
+function renderUserInfo(theme, themeInfo, template = 'userinfo') {
+    const source = fs.readFileSync(path.join(pluginResources, 'html', 'userinfo', `${template}.art`), 'utf8')
+    return art.render(source, {
+        _res_path: RES,
+        defaultLayout: path.join(pluginResources, 'html', 'common', 'layout', 'default.art'),
+        sys: { scale: 'style="transform:scale(1)"' },
+        theme,
+        themeInfo,
+        background: 'song.png',
+        _plugin: 'phi-plugin',
+        Version: { ver: 'test' },
+        gameuser: {
+            avatar: 'avatar1',
+            backgroundurl: 'player.png',
+            PlayerId: 'TestPlayer',
+            rks: { toFixed: () => '15.0000' },
+            ChallengeMode: '0',
+            ChallengeModeRank: '12',
+            data: '100',
+            selfIntro: '',
+        },
+        rks_history: [],
+        data_history: [],
+        rks_range: [0, 0],
+        data_range: [0, 0],
+        data_date: [],
+        rks_date: [],
+        acc_rks_data: [],
+        acc_rks_range: [0, 0],
+        acc_rks_AccRange: [],
+        userstats: [{
+            Rating: 'FC', title: 'IN', unlock: 1, tot: 1, cleared: 1, fc: 1, phi: 1,
+            real_score: 1, tot_score: 1, highest: { toFixed: () => '15.00' },
+            lowest: { toFixed: () => '14.00' },
+        }],
+    })
+}
+
 test('内置主题注册完整，milthm 作为自定义主题注册成功', () => {
     assert.ok(themeManager.isTheme('default'))
     assert.ok(themeManager.isTheme('snow'))
@@ -153,6 +192,67 @@ test('新版页面 CSS 优先匹配完整渲染目标，再回退到 app 短键'
     } finally {
         fs.rmSync(testDir, { recursive: true, force: true })
         themeManager.scan()
+    }
+})
+
+test('userinfo/userinfo 后置加载精确页面样式并使用主题图标', () => {
+    const testId = '__theme_userinfo__'
+    const testDir = path.join(THEMES_DIR, testId)
+    try {
+        fs.mkdirSync(testDir, { recursive: true })
+        fs.writeFileSync(path.join(testDir, 'info.yaml'), [
+            'id: "' + testId + '"',
+            'name: "User info"',
+            'css:',
+            '  userinfo/userinfo: "userinfo.css"',
+            'icon:',
+            '  FC: "FC.png"',
+            '',
+        ].join('\n'))
+        fs.writeFileSync(path.join(testDir, 'userinfo.css'), 'fixture')
+        fs.writeFileSync(path.join(testDir, 'FC.png'), 'fixture')
+        themeManager.scan()
+
+        const info = themeManager.getRenderInfo(testId, RES, 'userinfo/userinfo')
+        assert.ok(info)
+        assert.match(info.themeInfo.cssUrl, /__theme_userinfo__\/userinfo\.css$/)
+        assert.equal(info.themeInfo.cssMode, 'overlay')
+        assert.match(info.themeInfo.icons.FC, /__theme_userinfo__\/FC\.png$/)
+
+        const oldInfo = themeManager.getRenderInfo(testId, RES, 'userinfo/userinfo-old')
+        assert.ok(oldInfo)
+        assert.equal(oldInfo.themeInfo.cssUrl, undefined)
+
+        const html = renderUserInfo(testId, info.themeInfo)
+        assert.ok(html.includes('html/userinfo/userinfo.css'))
+        assert.ok(html.includes(info.themeInfo.cssUrl))
+        assert.ok(html.indexOf('html/userinfo/userinfo.css') < html.indexOf(info.themeInfo.cssUrl))
+        assert.ok(html.includes(info.themeInfo.icons.FC))
+    } finally {
+        fs.rmSync(testDir, { recursive: true, force: true })
+        themeManager.scan()
+    }
+})
+
+test('userinfo 未配置专用样式时保留原生 CSS、主题背景和主题评级图标', () => {
+    for (const template of ['userinfo', 'userinfo-old']) {
+        const target = `userinfo/${template}`
+        const info = themeManager.getRenderInfo('milthm', RES, target)
+        assert.ok(info)
+        assert.equal(info.themeInfo.cssUrl, undefined)
+        assert.equal(info.themeInfo.fontUrl, undefined)
+        assert.ok(info.themeInfo.backgroundUrl)
+        assert.ok(info.themeInfo.icons.FC)
+
+        const html = renderUserInfo('milthm', info.themeInfo, template)
+        assert.ok(html.includes(`html/userinfo/${template}.css`))
+        assert.ok(html.includes(info.themeInfo.backgroundUrl))
+        assert.ok(html.includes(info.themeInfo.icons.FC))
+        assert.ok(!html.includes('@font-face'))
+        assert.ok(!html.includes('font-family: "phi-theme"'))
+
+        const defaultIconHtml = renderUserInfo('milthm', { ...info.themeInfo, icons: {} }, template)
+        assert.ok(defaultIconHtml.includes('html/otherimg/FC.png'))
     }
 })
 

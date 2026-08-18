@@ -768,11 +768,13 @@ export default class Save {
         stats[3].title = Level[3]
 
         for (let id of idsFromRecord) {
-            if (!getInfo.info(id)) {
-                continue
-            }
+            // 记录数组会为 Legacy 槽位保留下标 3 的 null 占位，必须以当前曲库谱面为准。
+            const info = getInfo.ori_info[id]
+            if (!info?.chart) continue
             let record = Record[id]
             for (let lv of [0, 1, 2, 3]) {
+                const chart = info.chart[Level[lv]]
+                if (!chart || !Number(chart.difficulty)) continue
                 if (record.length <= lv || record[lv] === undefined) continue
 
                 ++stats[lv].unlock

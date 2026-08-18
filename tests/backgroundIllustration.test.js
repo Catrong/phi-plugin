@@ -3,18 +3,19 @@ import test from 'node:test'
 import fCompute from '../model/game/fCompute.js'
 import getInfo from '../model/game/getInfo.js'
 
-test('个人背景曲绘通过统一解析器获取', () => {
-    const original = getInfo.getBackground
-    const calls = []
-    getInfo.getBackground = background => {
-        calls.push(background)
-        return 'resolved-background.png'
-    }
+test('SP个人背景曲绘通过内部ID解析', async () => {
+    await getInfo.init()
 
-    try {
-        assert.equal(fCompute.getBackground('Introduction'), 'resolved-background.png')
-        assert.deepEqual(calls, ['Introduction'])
-    } finally {
-        getInfo.getBackground = original
-    }
+    assert.equal(getInfo.SongGetId(/** @type {songString} */ ('Introduction')), 'Introduction.0')
+    assert.equal(
+        getInfo.SongGetId(/** @type {songString} */ ('Oblivion:PHIN')),
+        'OblivionPHIN.Daily天利vsEndCat终猫ftAiSSw夜輪.0'
+    )
+
+    const result = fCompute.getBackground('Introduction')
+    if (!result) assert.fail('Introduction背景解析失败')
+
+    const background = result.replace(/\\/g, '/')
+    assert.match(background, /\/SP\/Introduction\.png$/)
+    assert.doesNotMatch(background, /\/otherimg\/phigros\.png$/)
 })
