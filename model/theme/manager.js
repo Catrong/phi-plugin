@@ -58,7 +58,7 @@ const encodeThemeUrlPath = value => value.split('/').map(encodeURIComponent).joi
  * @property {Record<string, string>} [icons] 评级图标文件名映射（key 与 song.Rating 取值一致）
  * @property {Record<string, string>} [colors] 四难度基础色（AT/IN/HD/EZ）
  * @property {string} [template] b19 模板文件名
- * @property {Record<string, string>} [css] 按渲染页面配置的样式表文件名
+ * @property {Record<string, Record<string, string>>} [css] 按渲染页面配置的按渲染页面配置的样式表文件名
  * @property {boolean} [legacyCss] 是否使用旧版 B19 替换样式语义
  * @property {boolean} marketInstalled 是否由主题市场安装
  */
