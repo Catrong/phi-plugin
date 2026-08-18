@@ -47,7 +47,7 @@ export default class PluginData {
         this.theme = data.theme
     }
     // 自定义主题放行（未知 id → 保持 default，与现状一致）
-    if (this.theme === "default" && themeManager.isCustomTheme(data?.theme)) {
+    if (this.theme === "default" && themeManager.isCustomTheme(data?.theme) && themeManager.isThemeAvailable(data?.theme)) {
       this.theme = data.theme
     }
 

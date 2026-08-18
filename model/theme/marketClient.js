@@ -18,6 +18,33 @@ export class ThemeMarketClientError extends Error {
     }
 }
 
+/** @param {any} theme */
+function validateTheme(theme) {
+    if (!theme || typeof theme.slug !== 'string' || !/^[a-z][a-z0-9_-]{0,119}$/.test(theme.slug)
+        || typeof theme.name !== 'string' || !['public', 'restricted', 'bot_only'].includes(theme.downloadPolicy)
+        || theme.botDownloadAllowed !== true) {
+        throw new ThemeMarketClientError('theme_store_invalid_response', 502)
+    }
+    return theme
+}
+
+export async function getAvailableMarketThemes() {
+    const response = await makeRequest.getThemeMarketList()
+    if (response?.ok !== true || !Array.isArray(response.themes) || response.themes.length > 500) {
+        throw new ThemeMarketClientError('theme_store_invalid_response', 502)
+    }
+    return response.themes.map(validateTheme)
+}
+
+/** @param {string} themeId */
+export async function getAvailableMarketTheme(themeId) {
+    const response = await makeRequest.getThemeMarketDetail(themeId)
+    if (response?.ok !== true) throw new ThemeMarketClientError('theme_store_invalid_response', 502)
+    const theme = validateTheme(response.theme)
+    if (theme.slug !== themeId) throw new ThemeMarketClientError('theme_store_invalid_response', 502)
+    return theme
+}
+
 /** @param {number} ms */
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))

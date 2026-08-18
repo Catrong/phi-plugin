@@ -5,6 +5,7 @@ import fileWatcherRegistry from '../../components/FileWatcherRegistry.js'
 import YamlReader from '../../components/YamlReader.js'
 import { pluginResources } from '../filesystem/path.js'
 import { USER_SETTING_OPTIONS } from '../game/constNum.js'
+import themePolicy from './policy.js'
 
 /** 自定义主题目录 */
 const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'themes')
@@ -58,7 +59,7 @@ const encodeThemeUrlPath = value => value.split('/').map(encodeURIComponent).joi
  * @property {Record<string, string>} [icons] 评级图标文件名映射（key 与 song.Rating 取值一致）
  * @property {Record<string, string>} [colors] 四难度基础色（AT/IN/HD/EZ）
  * @property {string} [template] b19 模板文件名
- * @property {Record<string, Record<string, string>>} [css] 按渲染页面配置的按渲染页面配置的样式表文件名
+ * @property {Record<string, string>} [css] 按渲染页面配置的样式表文件名
  * @property {boolean} [legacyCss] 是否使用旧版 B19 替换样式语义
  * @property {boolean} marketInstalled 是否由主题市场安装
  */
@@ -255,6 +256,12 @@ export default await new class themeManager {
         return Boolean(id && this.customThemes.has(id))
     }
 
+    /** 当前 Bot 策略是否允许使用该已注册主题；内置和普通本地主题不受市场策略影响。 @param {string} [id] */
+    isThemeAvailable(id) {
+        const theme = this.getTheme(id)
+        return Boolean(theme && (!theme.marketInstalled || themePolicy.isAllowed(theme.id)))
+    }
+
     /**
      * 主题列表 [{id, src}]，内置在前自定义在后（money.js /theme 使用）
      * @returns {{id: string, src: string}[]}
@@ -263,7 +270,7 @@ export default await new class themeManager {
         return [
             ...BUILTIN_THEMES.map(t => ({ id: t.id, src: t.name })),
             ...[...this.customThemes.values()]
-                .filter(t => !t.marketInstalled)
+                .filter(t => !t.marketInstalled || themePolicy.isAllowed(t.id))
                 .map(t => ({ id: t.id, src: t.name })),
         ]
     }
@@ -277,7 +284,7 @@ export default await new class themeManager {
         const options = { ...USER_SETTING_OPTIONS.theme }
         let index = Object.keys(options).length
         for (const t of this.customThemes.values()) {
-            if (t.marketInstalled && t.id !== currentUserTheme) continue
+            if (t.marketInstalled && !themePolicy.isAllowed(t.id)) continue
             options[t.id] = {
                 title: `[${index}]${t.name}`,
                 description: t.description || (t.author ? `作者：${t.author}` : ''),

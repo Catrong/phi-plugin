@@ -7,6 +7,7 @@ import test from 'node:test'
 import JSZip from 'jszip'
 import { pluginResources } from '../model/filesystem/path.js'
 import themeManager from '../model/theme/manager.js'
+import themePolicy from '../model/theme/policy.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
 import {
     installMarketArchive,
@@ -71,9 +72,10 @@ test('verified downloader sends no credentials and enforces size and SHA-256', a
     }
 })
 
-test('market installer validates, installs, receipts and hides a theme from other users', async () => {
+test('market installer visibility follows the Bot blacklist and whitelist policy', async () => {
     const themeId = `markettest${Date.now()}`
     const target = path.join(themesDir, themeId)
+    const previousPolicy = themePolicy.snapshot()
     try {
         const archive = await makeArchive(themeId, { topLevel: true })
         const receipt = await withMarketInstallLock(() => installMarketArchive(themeId, {
@@ -83,10 +85,16 @@ test('market installer validates, installs, receipts and hides a theme from othe
         assert.equal(await isMarketThemeCached(themeId, { version: '1.2.3', sha256 }), true)
         themeManager.scan()
         assert.equal(themeManager.getTheme(themeId)?.marketInstalled, true)
+        themePolicy.apply({ mode: 'blacklist', entries: [] }, false)
+        assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), true)
+        assert.equal(Boolean(themeManager.getThemeOptions()[themeId]), true)
+        themePolicy.apply({ mode: 'blacklist', entries: [themeId] }, false)
         assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), false)
-        assert.equal(Boolean(themeManager.getThemeOptions()[themeId]), false)
-        assert.equal(Boolean(themeManager.getThemeOptions(themeId)[themeId]), true)
+        assert.equal(Boolean(themeManager.getThemeOptions(themeId)[themeId]), false)
+        themePolicy.apply({ mode: 'whitelist', entries: [themeId] }, false)
+        assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), true)
     } finally {
+        themePolicy.apply(previousPolicy, false)
         await fs.promises.rm(target, { recursive: true, force: true })
         themeManager.scan()
     }
@@ -143,7 +151,8 @@ test('market install lock serializes concurrent operations', async () => {
 test('market command is scoped to the configured command head and myset has no custom-theme bypass', () => {
     const command = fs.readFileSync(new URL('../apps/market.js', import.meta.url), 'utf8')
     const settings = fs.readFileSync(new URL('../apps/setting.js', import.meta.url), 'utf8')
-    assert.equal(command.includes('reg: `^[#/]${commandHead}\\\\s+market'), true)
+    assert.equal(command.includes("reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\\\s*)market"), true)
+    assert.doesNotMatch(command, /escapedCommandHead/)
     assert.doesNotMatch(command, /\^\[#\/\]market/)
     assert.match(settings, /getThemeOptions\(pluginData\.theme\)/)
     assert.doesNotMatch(settings, /const custom = themeManager\.getTheme/)

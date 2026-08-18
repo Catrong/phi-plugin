@@ -44,6 +44,7 @@ const USER_ERROR_MESSAGES = {
     bot_registration_rate_limited: 'Bot身份申请过于频繁，插件稍后会自动重试。',
     invalid_registration_response: 'API返回的Bot身份数据无效，插件稍后会自动重试。',
     theme_store_bot_not_whitelisted: '当前 Bot 未被主题商店授权安装该主题。',
+    theme_not_allowed_by_bot: 'Bot 主人设置的主题范围不允许使用该主题。',
     theme_not_found: '主题商店中未找到该主题，或主题尚未发布。',
     theme_version_not_found: '主题商店中未找到可安装的主题版本。',
     theme_version_incompatible: '当前 phi-plugin 版本与该主题不兼容。',
