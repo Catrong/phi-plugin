@@ -5,7 +5,7 @@ import { pluginResources } from '../filesystem/path.js'
 
 export const themesDir = path.join(pluginResources, 'themes')
 
-const z= [
+const legacyThemeDirs = [
     path.join(pluginResources, 'html', 'b19', 'res', 'themes'),
     path.join(pluginResources, 'html', 'b19', 'themes'),
 ]
