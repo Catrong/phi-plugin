@@ -20,9 +20,15 @@ function safeCover(value) {
     }
 }
 
-/** @param {any} item */
-function normalizeTheme(item) {
+/**
+ * @param {any} item
+ * @param {boolean|null} [inheritedBotDownloadAllowed]
+ */
+export function normalizeMarketTheme(item, inheritedBotDownloadAllowed = null) {
     const slug = text(item?.slug || item?.themeId, 120).toLowerCase()
+    const botDownloadAllowed = typeof item?.botDownloadAllowed === 'boolean'
+        ? item.botDownloadAllowed
+        : inheritedBotDownloadAllowed
     return {
         slug,
         themeId: text(item?.themeId || slug, 120),
@@ -39,6 +45,7 @@ function normalizeTheme(item) {
         updatedAt: text(item?.updatedAt, 40),
         featured: item?.featured === true,
         size: Number.isSafeInteger(item?.size) && item.size > 0 ? item.size : 0,
+        botDownloadAllowed,
     }
 }
 
@@ -69,8 +76,9 @@ async function requestJson(url) {
 /** @param {string} [query] */
 export async function fetchThemeCatalog(query = '') {
     const data = /** @type {any} */ (await requestJson(API_BASE))
+    const inheritedBotDownloadAllowed = typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null
     const themes = Array.isArray(data?.themes)
-        ? data.themes.map(normalizeTheme).filter((/** @type {{slug:string}} */ theme) => SLUG_RE.test(theme.slug))
+        ? data.themes.map((/** @type {any} */ item) => normalizeMarketTheme(item, inheritedBotDownloadAllowed)).filter((/** @type {{slug:string}} */ theme) => SLUG_RE.test(theme.slug))
         : []
     const needle = text(query, 80).toLocaleLowerCase()
     const filtered = needle
@@ -89,7 +97,7 @@ export async function fetchThemeCatalog(query = '') {
 export async function fetchThemeDetail(slug) {
     if (!SLUG_RE.test(slug)) throw new ThemeMarketClientError('theme_slug_invalid', 400)
     const data = /** @type {any} */ (await requestJson(`${API_BASE}/${encodeURIComponent(slug)}`))
-    const theme = normalizeTheme(data?.theme || data)
+    const theme = normalizeMarketTheme(data?.theme || data, typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null)
     if (theme.slug !== slug) throw new ThemeMarketClientError('theme_catalog_invalid_response', 502)
     return { ...theme, releaseNotes: text(data?.releaseNotes || data?.theme?.releaseNotes, 3000) }
 }

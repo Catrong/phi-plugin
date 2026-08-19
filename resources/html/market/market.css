@@ -27,6 +27,10 @@ h1, h2, p { margin: 0; }
 .tags span { padding: 3px 7px; color: #a9e7f7; border: 1px solid rgb(125 225 255 / 28%); background: rgb(18 79 103 / 42%); font-size: 11px; }
 .policy { padding: 4px 7px; color: #9eeaff; border: 1px solid rgb(125 225 255 / 38%); font-size: 11px; white-space: nowrap; }
 .policy-public { color: #b9f0c7; border-color: rgb(141 235 163 / 42%); }
+.policy-current { color: #e9f9ff; border-color: rgb(222 248 255 / 55%); background: rgb(99 189 214 / 20%); }
+.policy-denied { color: #ffd5d5; border-color: rgb(255 139 139 / 58%); background: rgb(143 41 55 / 24%); }
+.download-notice { margin-top: 10px; color: #ffb8b8; font-size: 12px; line-height: 1.45; }
+.detail-notice { margin-top: 18px; padding: 10px 12px; border-left: 3px solid #ff8b8b; background: rgb(143 41 55 / 20%); }
 .theme-footer { display: flex; justify-content: space-between; margin-top: 12px; color: #7ea5b8; font-size: 12px; }
 .empty-state { padding: 80px 24px; text-align: center; border: 1px solid rgb(153 222 248 / 25%); background: rgb(8 33 52 / 85%); }
 .empty-mark { color: #79defc; font: 64px 'Aldrich', 'PHI'; }

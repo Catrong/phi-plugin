@@ -23,6 +23,9 @@
             <div class="tags">
                 {{each detail.tags as tag}}<span>{{tag}}</span>{{/each}}
             </div>
+            {{if detail.botDownloadAllowed === false}}
+            <p class="download-notice detail-notice">此 Bot 不在联动 Bot 范围内，暂无法下载该主题。<br>前往 market.lyh.org.cn 查看</p>
+            {{/if}}
         </div>
     </section>
     <section class="detail-stats">

@@ -8,6 +8,7 @@ import JSZip from 'jszip'
 import { pluginResources } from '../model/filesystem/path.js'
 import themeManager from '../model/theme/manager.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
+import { normalizeMarketTheme } from '../model/theme/catalog.js'
 import {
     installMarketArchive,
     isMarketThemeCached,
@@ -147,4 +148,11 @@ test('market command is scoped to the configured command head and myset has no c
     assert.doesNotMatch(command, /\^\[#\/\]market/)
     assert.match(settings, /getThemeOptions\(pluginData\.theme\)/)
     assert.doesNotMatch(settings, /const custom = themeManager\.getTheme/)
+})
+
+test('market UI preserves Bot download capability without trusting anonymous responses', () => {
+    assert.equal(normalizeMarketTheme({ slug: 'restricted-theme', name: 'Restricted', botDownloadAllowed: false }).botDownloadAllowed, false)
+    assert.equal(normalizeMarketTheme({ slug: 'public-theme', name: 'Public', botDownloadAllowed: true }).botDownloadAllowed, true)
+    assert.equal(normalizeMarketTheme({ slug: 'anonymous-theme', name: 'Anonymous' }).botDownloadAllowed, null)
+    assert.equal(normalizeMarketTheme({ slug: 'inherited-theme', name: 'Inherited' }, false).botDownloadAllowed, false)
 })
