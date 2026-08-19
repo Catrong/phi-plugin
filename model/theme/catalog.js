@@ -3,6 +3,7 @@ import makeRequest from '../api/makeRequest.js'
 
 export const THEME_MARKET_API_ORIGIN = 'https://lyh.org.cn:18473'
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
+export const THEME_MARKET_PAGE_SIZE = 6
 
 /** @param {unknown} value @param {number} limit */
 function text(value, limit) {
@@ -49,8 +50,11 @@ export function normalizeMarketTheme(item, inheritedBotDownloadAllowed = null) {
     }
 }
 
-/** @param {string} [query] */
-export async function fetchThemeCatalog(query = '') {
+/**
+ * @param {string} [query]
+ * @param {number} [page]
+ */
+export async function fetchThemeCatalog(query = '', page = 1) {
     const data = /** @type {any} */ (await makeRequest.getThemeMarketList())
     const inheritedBotDownloadAllowed = typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null
     const themes = Array.isArray(data?.themes)
@@ -62,10 +66,17 @@ export async function fetchThemeCatalog(query = '') {
             .some((/** @type {string} */ value) => value.toLocaleLowerCase().includes(needle)))
         : themes
     filtered.sort((/** @type {any} */ a, /** @type {any} */ b) => Number(b.featured) - Number(a.featured) || b.updatedAt.localeCompare(a.updatedAt))
+    const total = filtered.length
+    const pageCount = Math.max(1, Math.ceil(total / THEME_MARKET_PAGE_SIZE))
+    const currentPage = Number.isSafeInteger(page) ? Math.min(Math.max(page, 1), pageCount) : 1
+    const start = (currentPage - 1) * THEME_MARKET_PAGE_SIZE
     return {
         demo: data?.demo === true,
-        themes: filtered.slice(0, 60),
+        themes: filtered.slice(start, start + THEME_MARKET_PAGE_SIZE),
         query: needle,
+        page: currentPage,
+        pageCount,
+        total,
     }
 }
 

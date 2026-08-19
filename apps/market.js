@@ -112,11 +112,16 @@ export class phiMarket extends phiPluginBase {
         const raw = match?.[1]?.trim() || ''
         const args = raw ? raw.split(/\s+/) : []
 
-        // 无参数或 list 子命令通过 phi-plugin-api 获取当前 Bot 可见目录。
-        if (!args.length || args[0].toLowerCase() === 'list') {
-            const query = args.slice(1).join(' ')
+        // 无参数、页码或 list 子命令通过 phi-plugin-api 获取当前 Bot 可见目录。
+        if (!args.length || args[0].toLowerCase() === 'list' || (args.length === 1 && /^\d+$/.test(args[0]))) {
+            const listArgs = args[0]?.toLowerCase() === 'list' ? args.slice(1) : args
+            let page = 1
+            const lastArg = listArgs.at(-1)
+            if (lastArg && /^\d+$/.test(lastArg)) page = Number(lastArg)
+            const queryArgs = lastArg && /^\d+$/.test(lastArg) ? listArgs.slice(0, -1) : listArgs
+            const query = queryArgs.join(' ')
             try {
-                const catalog = await fetchThemeCatalog(query)
+                const catalog = await fetchThemeCatalog(query, page)
                 const pluginData = await getNotes.getNotesData(e.user_id)
                 send.send_with_At(e, await picmodle.market(e, {
                     ...catalog,
@@ -153,7 +158,7 @@ export class phiMarket extends phiPluginBase {
         }
 
         if (args.length !== 1 || /\s/.test(raw)) {
-            send.send_with_At(e, `用法：/${commandHead} market [list [关键词] | detail <主题slug> | <主题slug>]`)
+            send.send_with_At(e, `用法：/${commandHead} market [list [关键词] [页码] | detail <主题slug> | <主题slug>]`)
             return true
         }
         const themeId = args[0].toLowerCase()

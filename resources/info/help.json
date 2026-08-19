@@ -294,8 +294,8 @@
             },
             {
                 "title": "/market",
-                "eg": "/market [slug]",
-                "desc": "浏览主题市场；输入主题 slug 可安装并切换，使用 /market detail <slug> 查看详情"
+                "eg": "/market [slug] | /market list [关键词] [页码]",
+                "desc": "浏览主题市场；输入主题 slug 可安装并切换，使用 /market detail <slug> 查看详情，主题目录支持页码"
             },
             {
                 "title": "/myset",

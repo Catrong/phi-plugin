@@ -9,7 +9,7 @@ import { pluginResources } from '../model/filesystem/path.js'
 import themeManager from '../model/theme/manager.js'
 import makeRequest from '../model/api/makeRequest.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
-import { fetchThemeCatalog, fetchThemeDetail, normalizeMarketTheme } from '../model/theme/catalog.js'
+import { fetchThemeCatalog, fetchThemeDetail, normalizeMarketTheme, THEME_MARKET_PAGE_SIZE } from '../model/theme/catalog.js'
 import {
     installMarketArchive,
     isMarketThemeCached,
@@ -182,5 +182,29 @@ test('market catalog and detail use the phi-plugin-api Bot proxy response', asyn
     } finally {
         makeRequest.getThemeMarketList = originals.list
         makeRequest.getThemeMarketDetail = originals.detail
+    }
+})
+
+test('market catalog paginates filtered themes after proxy loading', async () => {
+    const originalList = makeRequest.getThemeMarketList
+    const themes = Array.from({ length: THEME_MARKET_PAGE_SIZE + 2 }, (_, index) => ({
+        slug: `page-theme-${index}`,
+        name: `Page Theme ${index}`,
+        summary: 'pagination',
+        updatedAt: `2026-08-${String(19 - Math.min(index, 18)).padStart(2, '0')}`,
+    }))
+    makeRequest.getThemeMarketList = async () => ({ ok: true, themes })
+    try {
+        const first = await fetchThemeCatalog('pagination', 1)
+        assert.equal(first.page, 1)
+        assert.equal(first.pageCount, 2)
+        assert.equal(first.total, THEME_MARKET_PAGE_SIZE + 2)
+        assert.equal(first.themes.length, THEME_MARKET_PAGE_SIZE)
+        const second = await fetchThemeCatalog('pagination', 2)
+        assert.equal(second.page, 2)
+        assert.equal(second.themes.length, 2)
+        assert.notEqual(first.themes[0].slug, second.themes[0].slug)
+    } finally {
+        makeRequest.getThemeMarketList = originalList
     }
 })
