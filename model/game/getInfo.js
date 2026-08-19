@@ -257,6 +257,8 @@ export default new class getInfo {
             this.sp_info[id] = { ...sp_json[i] }
             this.sp_info[id].sp_vis = true
             this.sp_info[id].id = id
+            this.idssong[/** @type {songString} */ (/** @type {unknown} */ (i))] = id
+            this.idssong[this.sp_info[id].song] = id
             if (this.sp_info[id]?.illustration) {
                 this.illlist.push(this.sp_info[id].id)
             }

@@ -4,6 +4,7 @@ import Config from '../../components/Config.js'
 import platform from '../../components/platform/index.js'
 import makeRequest from './makeRequest.js'
 import { isApiVersionBlocked } from './apiVersion.js'
+import themePolicy from '../theme/policy.js'
 
 export class BotSyncService {
     constructor() {
@@ -33,6 +34,7 @@ export class BotSyncService {
             })
             for (const id of acknowledgedMessageIds) this.pendingAcknowledgements.delete(id)
             this.reportRenderPressure = response?.reporting?.renderPressure === true
+            if (response?.themePolicy) themePolicy.apply(response.themePolicy)
 
             for (const message of response?.messages || []) {
                 try {

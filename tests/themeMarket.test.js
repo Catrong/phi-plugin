@@ -5,8 +5,10 @@ import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import JSZip from 'jszip'
-import { pluginResources } from '../model/filesystem/path.js'
+import Config from '../components/Config.js'
 import themeManager from '../model/theme/manager.js'
+import themePolicy from '../model/theme/policy.js'
+import { themesDir } from '../model/theme/paths.js'
 import makeRequest from '../model/api/makeRequest.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
 import { fetchThemeCatalog, fetchThemeDetail, normalizeMarketTheme, THEME_MARKET_PAGE_SIZE } from '../model/theme/catalog.js'
@@ -18,7 +20,6 @@ import {
     withMarketInstallLock,
 } from '../model/theme/installer.js'
 
-const themesDir = path.join(pluginResources, 'html', 'b19', 'themes')
 const sha256 = 'b'.repeat(64)
 
 /** @param {string} themeId @param {{topLevel?:boolean, unsafePath?:boolean}} [options] */
@@ -73,9 +74,10 @@ test('verified downloader sends no credentials and enforces size and SHA-256', a
     }
 })
 
-test('market installer validates, installs, receipts and hides a theme from other users', async () => {
+test('market installer visibility follows the Bot blacklist and whitelist policy', async () => {
     const themeId = `markettest${Date.now()}`
     const target = path.join(themesDir, themeId)
+    const previousPolicy = themePolicy.snapshot()
     try {
         const archive = await makeArchive(themeId, { topLevel: true })
         const receipt = await withMarketInstallLock(() => installMarketArchive(themeId, {
@@ -85,10 +87,16 @@ test('market installer validates, installs, receipts and hides a theme from othe
         assert.equal(await isMarketThemeCached(themeId, { version: '1.2.3', sha256 }), true)
         themeManager.scan()
         assert.equal(themeManager.getTheme(themeId)?.marketInstalled, true)
+        themePolicy.apply({ mode: 'blacklist', entries: [] }, false)
+        assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), true)
+        assert.equal(Boolean(themeManager.getThemeOptions()[themeId]), true)
+        themePolicy.apply({ mode: 'blacklist', entries: [themeId] }, false)
         assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), false)
-        assert.equal(Boolean(themeManager.getThemeOptions()[themeId]), false)
-        assert.equal(Boolean(themeManager.getThemeOptions(themeId)[themeId]), true)
+        assert.equal(Boolean(themeManager.getThemeOptions(themeId)[themeId]), false)
+        themePolicy.apply({ mode: 'whitelist', entries: [themeId] }, false)
+        assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), true)
     } finally {
+        themePolicy.apply(previousPolicy, false)
         await fs.promises.rm(target, { recursive: true, force: true })
         themeManager.scan()
     }
@@ -145,20 +153,18 @@ test('market install lock serializes concurrent operations', async () => {
 test('market command is scoped to the configured command head and myset has no custom-theme bypass', () => {
     const command = fs.readFileSync(new URL('../apps/market.js', import.meta.url), 'utf8')
     const settings = fs.readFileSync(new URL('../apps/setting.js', import.meta.url), 'utf8')
-    assert.equal(command.includes('reg: `^[#/]${commandHead}\\\\s+market'), true)
+    assert.equal(command.includes("reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\\\s*)market"), true)
+    assert.doesNotMatch(command, /escapedCommandHead/)
     assert.doesNotMatch(command, /\^\[#\/\]market/)
     assert.match(settings, /getThemeOptions\(pluginData\.theme\)/)
     assert.doesNotMatch(settings, /const custom = themeManager\.getTheme/)
 })
 
-test('market UI preserves Bot download capability without trusting anonymous responses', () => {
+test('market UI preserves Bot download capability and uses the phi-plugin-api proxy', async () => {
     assert.equal(normalizeMarketTheme({ slug: 'restricted-theme', name: 'Restricted', botDownloadAllowed: false }).botDownloadAllowed, false)
     assert.equal(normalizeMarketTheme({ slug: 'public-theme', name: 'Public', botDownloadAllowed: true }).botDownloadAllowed, true)
     assert.equal(normalizeMarketTheme({ slug: 'anonymous-theme', name: 'Anonymous' }).botDownloadAllowed, null)
-    assert.equal(normalizeMarketTheme({ slug: 'inherited-theme', name: 'Inherited' }, false).botDownloadAllowed, false)
-})
 
-test('market catalog and detail use the phi-plugin-api Bot proxy response', async () => {
     const originals = {
         list: makeRequest.getThemeMarketList,
         detail: makeRequest.getThemeMarketDetail,
@@ -185,7 +191,7 @@ test('market catalog and detail use the phi-plugin-api Bot proxy response', asyn
     }
 })
 
-test('market catalog paginates filtered themes after proxy loading', async () => {
+test('market catalog filters before paginating and does not alter user theme settings', async () => {
     const originalList = makeRequest.getThemeMarketList
     const themes = Array.from({ length: THEME_MARKET_PAGE_SIZE + 2 }, (_, index) => ({
         slug: `page-theme-${index}`,
@@ -207,4 +213,9 @@ test('market catalog paginates filtered themes after proxy loading', async () =>
     } finally {
         makeRequest.getThemeMarketList = originalList
     }
+
+    const command = fs.readFileSync(new URL('../apps/market.js', import.meta.url), 'utf8')
+    assert.match(command, /fetchThemeCatalog/)
+    assert.match(command, /marketDetail/)
+    assert.doesNotMatch(command, /putNotesData\(/)
 })

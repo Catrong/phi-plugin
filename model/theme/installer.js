@@ -3,10 +3,10 @@ import fs from 'node:fs'
 import path from 'node:path'
 import JSZip from 'jszip'
 import YAML from 'yaml'
-import { pluginResources } from '../filesystem/path.js'
 import { ThemeMarketClientError } from './marketClient.js'
+import { migrateLegacyThemeDirectories, themesDir } from './paths.js'
 
-const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'themes')
+const THEMES_DIR = themesDir
 const WORK_DIR = path.join(THEMES_DIR, '.phi-market-work')
 const LOCK_PATH = path.join(THEMES_DIR, '.phi-market-install.lock')
 const MAX_ARCHIVE_BYTES = 50 * 1024 * 1024
@@ -304,6 +304,7 @@ export async function isMarketThemeCached(themeId, download) {
 
 /** @param {string} themeId */
 export async function recoverMarketInstall(themeId) {
+    migrateLegacyThemeDirectories()
     await fs.promises.mkdir(WORK_DIR, { recursive: true, mode: 0o700 })
     const target = path.join(THEMES_DIR, themeId)
     const entries = await fs.promises.readdir(THEMES_DIR, { withFileTypes: true })
@@ -414,6 +415,7 @@ function processAlive(pid) {
 }
 
 async function acquireFileLock() {
+    migrateLegacyThemeDirectories()
     await fs.promises.mkdir(THEMES_DIR, { recursive: true, mode: 0o700 })
     const started = Date.now()
     while (Date.now() - started < LOCK_WAIT_MS) {

@@ -506,6 +506,7 @@ export default class makeRequest {
      * @returns {Promise<{
      *  ok: true, serverTime: string, nextSyncAfterSeconds: number,
      *  reporting: {renderPressure: boolean},
+     *  themePolicy?: {mode:'blacklist'|'whitelist', entries:string[]},
      *  messages: {id:string,type:string,schemaVersion:number,target:{platform:string,platformId:string},text:string,payload:object,createdAt:string,expiresAt:string}[]
      * }>}
      */
@@ -522,12 +523,12 @@ export default class makeRequest {
         return phiApiClient.request('/bot/integrations/theme-store/download-url', params, 'POST', { timeout: 15_000 })
     }
 
-    /** @returns {Promise<{ok:true,themes:any[]}>} 获取当前 Bot 主题策略过滤后的市场主题列表。 */
+    /** @returns {Promise<{ok:true,themes:any[]}>} 获取经当前 Bot 主题策略过滤后的市场主题列表。 */
     static async getThemeMarketList() {
         return phiApiClient.request('/bot/integrations/theme-store/themes', {}, 'GET', { timeout: 30_000 })
     }
 
-    /** @param {string} themeId 获取当前 Bot 主题策略过滤后的主题详情。 */
+    /** @param {string} themeId 获取经当前 Bot 主题策略过滤后的主题详情。 */
     static async getThemeMarketDetail(themeId) {
         return phiApiClient.request(`/bot/integrations/theme-store/themes/${encodeURIComponent(themeId)}`, {}, 'GET', { timeout: 15_000 })
     }

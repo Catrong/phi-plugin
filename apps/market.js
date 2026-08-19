@@ -10,6 +10,7 @@ import themeManager from '../model/theme/manager.js'
 import {
     authorizeThemeDownload,
     downloadThemeArchive,
+    getAvailableMarketTheme,
     ThemeMarketClientError,
 } from '../model/theme/marketClient.js'
 import {
@@ -25,10 +26,6 @@ import { fetchThemeCatalog, fetchThemeDetail, isThemeSlug } from '../model/theme
 /** @import {botEvent} from '../components/baseClass.js' */
 
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
-
-function escapedCommandHead() {
-    return String(Config.getUserCfg('config', 'cmdhead') || 'phi').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
 
 /** @param {string} themeId */
 async function waitForThemeRegistration(themeId) {
@@ -88,14 +85,13 @@ function userErrorMessage(error) {
 
 export class phiMarket extends phiPluginBase {
     constructor() {
-        const commandHead = escapedCommandHead()
         super({
             name: 'phi-theme-market',
-            dsc: 'phi-plugin 主题市场',
+            dsc: 'phi-plugin 主题市场安装',
             event: 'message',
             priority: 999,
             rule: [{
-                reg: `^[#/]${commandHead}\\s+market(?:\\s+.*)?$`,
+                reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)market(\\s+.*)?$`,
                 fnc: 'market',
             }],
         })
@@ -108,8 +104,14 @@ export class phiMarket extends phiPluginBase {
             return false
         }
         const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
-        const match = new RegExp(`^[#/]${escapedCommandHead()}\\s+market(?:\\s+(.+))?$`, 'i').exec(e.msg.trim())
-        const raw = match?.[1]?.trim() || ''
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '主题市场依赖联合查分 API，请先由 Bot 主人启用该功能。')
+            return true
+        }
+        const raw = e.msg.replace(
+            new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)market(\\s*)`, 'i'),
+            '',
+        ).trim()
         const args = raw ? raw.split(/\s+/) : []
 
         // 无参数、页码或 list 子命令通过 phi-plugin-api 获取当前 Bot 可见目录。
@@ -167,34 +169,30 @@ export class phiMarket extends phiPluginBase {
             return true
         }
 
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '主题安装依赖联合查分 API，请先由 Bot 主人启用该功能。')
-            return true
-        }
-
-        send.send_with_At(e, `正在获取并校验主题 ${themeId}，请稍候。`)
         try {
-            const result = await installLatestTheme(themeId)
-            const pluginData = await getNotes.getNotesData(e.user_id)
-            pluginData.theme = themeId
-            try {
-                await getNotes.putNotesData(e.user_id, pluginData)
-            } catch {
-                throw new ThemeMarketClientError('theme_user_setting_save_failed')
+            const detail = await getAvailableMarketTheme(themeId)
+            if (!e.isMaster) {
+                const installed = themeManager.getTheme(themeId)?.marketInstalled === true
+                send.send_with_At(e, [
+                    `${detail.name}（${detail.slug}）`,
+                    detail.author ? `作者：${detail.author}` : '',
+                    detail.version ? `版本：${detail.version}` : '',
+                    detail.summary || detail.description || '',
+                    installed ? `该主题已安装，请使用 /${commandHead} theme 选择。` : '该主题尚未安装，请联系 Bot 主人。',
+                ].filter(Boolean).join('\n'))
+                return true
             }
+            send.send_with_At(e, `正在获取并校验主题 ${themeId}，请稍候。`)
+            const result = await installLatestTheme(themeId)
             const cacheText = result.cached ? '（已命中本地安全缓存）' : ''
-            send.send_with_At(e, `主题设置成功：${result.theme.name} ${result.version}${cacheText}`)
+            send.send_with_At(e, `主题安装成功：${result.theme.name} ${result.version}${cacheText}\n用户可通过 /${commandHead} theme 离线选择。`)
             return true
         } catch (error) {
             const caught = /** @type {any} */ (error)
             const code = typeof caught?.code === 'string' && /^[a-z0-9_]{1,80}$/.test(caught.code)
                 ? caught.code : 'theme_install_failed'
             logger.warn(`[phi-plugin][主题市场] ${themeId} 安装失败：${code}`)
-            if (code === 'theme_user_setting_save_failed') {
-                send.send_with_At(e, '主题已安装到全局缓存，但保存你的主题选择失败，请稍后重试。')
-            } else {
-                send.send_with_At(e, userErrorMessage(error))
-            }
+            send.send_with_At(e, userErrorMessage(error))
             return true
         }
     }

@@ -3,10 +3,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
 import art from 'art-template'
-import themeManager from '../model/themeManager.js'
+import themeManager from '../model/theme/manager.js'
 import { pluginResources } from '../model/filesystem/path.js'
+import { migrateLegacyThemeDirectories, themesDir } from '../model/theme/paths.js'
 
-const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'themes')
+const THEMES_DIR = themesDir
 const RES = 'resources/'
 
 /** 等待条件成立（用于热更新断言） */
@@ -90,13 +91,13 @@ test('getRenderInfo：自定义主题返回模板路径与 themeInfo，资源 ur
     assert.ok(info)
     assert.match(info.tplFile ?? '', /themes[\\/]milthm[\\/]b19\.art$/)
     assert.equal(info.themeInfo.id, 'milthm')
-    assert.equal(info.themeInfo.baseUrl, 'resources/html/b19/themes/milthm/')
-    assert.equal(info.themeInfo.cssUrl, 'resources/html/b19/themes/milthm/b19.css')
+    assert.equal(info.themeInfo.baseUrl, 'resources/themes/milthm/')
+    assert.equal(info.themeInfo.cssUrl, 'resources/themes/milthm/b19.css')
     assert.equal(info.themeInfo.cssMode, 'overlay')
-    assert.equal(info.themeInfo.fontUrl, 'resources/html/b19/themes/milthm/font.ttf')
-    assert.equal(info.themeInfo.backgroundUrl, 'resources/html/b19/themes/milthm/bg.png')
-    assert.equal(info.themeInfo.icons.phi, 'resources/html/b19/themes/milthm/phi.png')
-    assert.equal(info.themeInfo.icons.FC, 'resources/html/b19/themes/milthm/FC.png')
+    assert.equal(info.themeInfo.fontUrl, 'resources/themes/milthm/font.ttf')
+    assert.equal(info.themeInfo.backgroundUrl, 'resources/themes/milthm/bg.png')
+    assert.equal(info.themeInfo.icons.phi, 'resources/themes/milthm/phi.png')
+    assert.equal(info.themeInfo.icons.FC, 'resources/themes/milthm/FC.png')
     assert.deepEqual(info.themeInfo.colors, { AT: '#555555', IN: '#7b5ea7', HD: '#5b9bd5', EZ: '#7ecb8a' })
 })
 
@@ -108,16 +109,16 @@ test('getRenderInfo：按页面选择 CSS，缺省页面保留背景和颜色但
     for (const page of pages) {
         const info = themeManager.getRenderInfo('milthm', RES, `${page}/${page}`)
         assert.ok(info)
-        assert.equal(info.themeInfo.cssUrl, `resources/html/b19/themes/milthm/${page}.css`)
+        assert.equal(info.themeInfo.cssUrl, `resources/themes/milthm/${page}.css`)
         assert.equal(info.themeInfo.cssMode, 'overlay')
-        assert.equal(info.themeInfo.fontUrl, 'resources/html/b19/themes/milthm/font.ttf')
+        assert.equal(info.themeInfo.fontUrl, 'resources/themes/milthm/font.ttf')
     }
 
     const fallback = themeManager.getRenderInfo('milthm', RES, 'unconfiguredPage')
     assert.ok(fallback)
     assert.equal(fallback.themeInfo.cssUrl, undefined)
     assert.equal(fallback.themeInfo.fontUrl, undefined)
-    assert.equal(fallback.themeInfo.backgroundUrl, 'resources/html/b19/themes/milthm/bg.png')
+    assert.equal(fallback.themeInfo.backgroundUrl, 'resources/themes/milthm/bg.png')
     assert.deepEqual(fallback.themeInfo.colors, { AT: '#555555', IN: '#7b5ea7', HD: '#5b9bd5', EZ: '#7ecb8a' })
 })
 
@@ -333,11 +334,11 @@ test('主题资源 URL 使用实际目录名，并拒绝越界路径和符号链
 
         const sign = themeManager.getRenderInfo(testId, RES, 'sign/sign')
         const encodedDir = encodeURIComponent(dirName)
-        assert.equal(sign?.themeInfo.baseUrl, `resources/html/b19/themes/${encodedDir}/`)
+        assert.equal(sign?.themeInfo.baseUrl, `resources/themes/${encodedDir}/`)
         assert.equal(sign?.themeInfo.cssUrl,
-            `resources/html/b19/themes/${encodedDir}/nested%20styles/valid%20%23%25.css`)
+            `resources/themes/${encodedDir}/nested%20styles/valid%20%23%25.css`)
         assert.equal(sign?.themeInfo.backgroundUrl,
-            `resources/html/b19/themes/${encodedDir}/background%20%23%25.png`)
+            `resources/themes/${encodedDir}/background%20%23%25.png`)
         const cssUrl = new URL(sign?.themeInfo.cssUrl ?? '', 'file:///')
         assert.equal(cssUrl.hash, '')
         assert.equal(cssUrl.search, '')
@@ -370,9 +371,27 @@ test('主题根目录符号链接不会被注册', (t) => {
         themeManager.scan()
         assert.ok(!themeManager.isCustomTheme(testId))
     } finally {
-        fs.rmSync(linkedDir, { force: true })
+        fs.rmSync(linkedDir, { recursive: true, force: true })
         fs.rmSync(externalDir, { recursive: true, force: true })
         themeManager.scan()
+    }
+})
+
+test('旧主题目录按 info.yaml.id 自动迁移到 resources/themes', () => {
+    const id = `legacymove${Date.now()}`
+    const legacyRoot = path.join(pluginResources, 'html', 'b19', 'res', 'themes')
+    const legacyDir = path.join(legacyRoot, `old-folder-${id}`)
+    const target = path.join(THEMES_DIR, id)
+    try {
+        fs.mkdirSync(legacyDir, { recursive: true })
+        fs.writeFileSync(path.join(legacyDir, 'info.yaml'), `id: "${id}"\nname: "Legacy move"\n`)
+        const moved = migrateLegacyThemeDirectories()
+        assert.equal(moved.some(item => item.from === legacyDir && item.to === target), true)
+        assert.equal(fs.existsSync(legacyDir), false)
+        assert.equal(fs.existsSync(path.join(target, 'info.yaml')), true)
+    } finally {
+        fs.rmSync(legacyDir, { recursive: true, force: true })
+        fs.rmSync(target, { recursive: true, force: true })
     }
 })
 
