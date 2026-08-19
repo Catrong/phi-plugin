@@ -3,40 +3,6 @@ import { ThemeMarketClientError } from './marketClient.js'
 export const THEME_MARKET_API_ORIGIN = 'https://lyh.org.cn:18473'
 const API_BASE = `${THEME_MARKET_API_ORIGIN}/api/market/themes`
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
-const DENIED_CACHE_TTL_MS = 5 * 60 * 1000
-const deniedThemeCache = new Map()
-
-/** @param {string} slug */
-function cachedBotDownloadAllowed(slug) {
-    const expiresAt = deniedThemeCache.get(slug)
-    if (!expiresAt) return null
-    if (expiresAt <= Date.now()) {
-        deniedThemeCache.delete(slug)
-        return null
-    }
-    return false
-}
-
-/**
- * Record a definitive denial returned by the authenticated download flow.
- * The public catalog cannot expose this field without the server-side store credential.
- * @param {string} slug
- */
-export function markThemeDownloadDenied(slug) {
-    if (SLUG_RE.test(slug)) deniedThemeCache.set(slug, Date.now() + DENIED_CACHE_TTL_MS)
-}
-
-/** @param {string} slug */
-export function clearThemeDownloadDenied(slug) {
-    deniedThemeCache.delete(slug)
-}
-
-/** @param {any} theme */
-function applyCachedBotDownloadCapability(theme) {
-    if (typeof theme.botDownloadAllowed === 'boolean') return theme
-    const cached = cachedBotDownloadAllowed(theme.slug)
-    return cached === null ? theme : { ...theme, botDownloadAllowed: cached }
-}
 
 /** @param {unknown} value @param {number} limit */
 function text(value, limit) {
@@ -63,7 +29,7 @@ export function normalizeMarketTheme(item, inheritedBotDownloadAllowed = null) {
     const botDownloadAllowed = typeof item?.botDownloadAllowed === 'boolean'
         ? item.botDownloadAllowed
         : inheritedBotDownloadAllowed
-    return applyCachedBotDownloadCapability({
+    return {
         slug,
         themeId: text(item?.themeId || slug, 120),
         name: text(item?.name || slug, 100) || slug,
@@ -80,7 +46,7 @@ export function normalizeMarketTheme(item, inheritedBotDownloadAllowed = null) {
         featured: item?.featured === true,
         size: Number.isSafeInteger(item?.size) && item.size > 0 ? item.size : 0,
         botDownloadAllowed,
-    })
+    }
 }
 
 /** @param {string} url */
@@ -112,7 +78,7 @@ export async function fetchThemeCatalog(query = '') {
     const data = /** @type {any} */ (await requestJson(API_BASE))
     const inheritedBotDownloadAllowed = typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null
     const themes = Array.isArray(data?.themes)
-        ? data.themes.map((/** @type {any} */ item) => applyCachedBotDownloadCapability(normalizeMarketTheme(item, inheritedBotDownloadAllowed))).filter((/** @type {{slug:string}} */ theme) => SLUG_RE.test(theme.slug))
+        ? data.themes.map((/** @type {any} */ item) => normalizeMarketTheme(item, inheritedBotDownloadAllowed)).filter((/** @type {{slug:string}} */ theme) => SLUG_RE.test(theme.slug))
         : []
     const needle = text(query, 80).toLocaleLowerCase()
     const filtered = needle
@@ -127,18 +93,13 @@ export async function fetchThemeCatalog(query = '') {
     }
 }
 
-/**
- * @param {string} slug
- * @param {string} [botClientId] 已完成 Bot HMAC 认证的公开 Bot ID，不是商店凭据
- */
-export async function fetchThemeDetail(slug, botClientId = '') {
+/** @param {string} slug */
+export async function fetchThemeDetail(slug) {
     if (!SLUG_RE.test(slug)) throw new ThemeMarketClientError('theme_slug_invalid', 400)
-    const clientId = /^pbc_[a-zA-Z0-9_-]{1,128}$/.test(botClientId) ? botClientId : ''
-    const query = clientId ? `?botClientId=${encodeURIComponent(clientId)}` : ''
-    const data = /** @type {any} */ (await requestJson(`${API_BASE}/${encodeURIComponent(slug)}${query}`))
+    const data = /** @type {any} */ (await requestJson(`${API_BASE}/${encodeURIComponent(slug)}`))
     const theme = normalizeMarketTheme(data?.theme || data, typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null)
     if (theme.slug !== slug) throw new ThemeMarketClientError('theme_catalog_invalid_response', 502)
-    return { ...applyCachedBotDownloadCapability(theme), releaseNotes: text(data?.releaseNotes || data?.theme?.releaseNotes, 3000) }
+    return { ...theme, releaseNotes: text(data?.releaseNotes || data?.theme?.releaseNotes, 3000) }
 }
 
 export const isThemeSlug = (/** @type {unknown} */ value) => typeof value === 'string' && SLUG_RE.test(value)

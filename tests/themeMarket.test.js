@@ -8,11 +8,7 @@ import JSZip from 'jszip'
 import { pluginResources } from '../model/filesystem/path.js'
 import themeManager from '../model/theme/manager.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
-import {
-    clearThemeDownloadDenied,
-    markThemeDownloadDenied,
-    normalizeMarketTheme,
-} from '../model/theme/catalog.js'
+import { normalizeMarketTheme } from '../model/theme/catalog.js'
 import {
     installMarketArchive,
     isMarketThemeCached,
@@ -159,13 +155,4 @@ test('market UI preserves Bot download capability without trusting anonymous res
     assert.equal(normalizeMarketTheme({ slug: 'public-theme', name: 'Public', botDownloadAllowed: true }).botDownloadAllowed, true)
     assert.equal(normalizeMarketTheme({ slug: 'anonymous-theme', name: 'Anonymous' }).botDownloadAllowed, null)
     assert.equal(normalizeMarketTheme({ slug: 'inherited-theme', name: 'Inherited' }, false).botDownloadAllowed, false)
-})
-
-test('market denial cache exposes only a short-lived definitive rejection', () => {
-    clearThemeDownloadDenied('cached-theme')
-    assert.equal(normalizeMarketTheme({ slug: 'cached-theme', name: 'Cached' }).botDownloadAllowed, null)
-    markThemeDownloadDenied('cached-theme')
-    assert.equal(normalizeMarketTheme({ slug: 'cached-theme', name: 'Cached' }).botDownloadAllowed, false)
-    clearThemeDownloadDenied('cached-theme')
-    assert.equal(normalizeMarketTheme({ slug: 'cached-theme', name: 'Cached' }).botDownloadAllowed, null)
 })
