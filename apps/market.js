@@ -7,6 +7,7 @@ import getNotes from '../model/user/getNotes.js'
 import send from '../model/render/send.js'
 import picmodle from '../model/render/picmodle.js'
 import themeManager from '../model/theme/manager.js'
+import botApiAuth from '../model/api/botApiAuth.js'
 import {
     authorizeThemeDownload,
     downloadThemeArchive,
@@ -20,7 +21,13 @@ import {
     withMarketInstallLock,
 } from '../model/theme/installer.js'
 import { getPhiApiUserMessage, hasPhiApiUserMessage } from '../model/api/phiApiErrors.js'
-import { fetchThemeCatalog, fetchThemeDetail, isThemeSlug } from '../model/theme/catalog.js'
+import {
+    clearThemeDownloadDenied,
+    fetchThemeCatalog,
+    fetchThemeDetail,
+    isThemeSlug,
+    markThemeDownloadDenied,
+} from '../model/theme/catalog.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
 
@@ -138,7 +145,7 @@ export class phiMarket extends phiPluginBase {
                 return true
             }
             try {
-                const detail = await fetchThemeDetail(themeId)
+                const detail = await fetchThemeDetail(themeId, botApiAuth.getClientId())
                 const pluginData = await getNotes.getNotesData(e.user_id)
                 send.send_with_At(e, await picmodle.marketDetail(e, {
                     theme: pluginData?.theme || 'default',
@@ -170,6 +177,7 @@ export class phiMarket extends phiPluginBase {
         send.send_with_At(e, `正在获取并校验主题 ${themeId}，请稍候。`)
         try {
             const result = await installLatestTheme(themeId)
+            clearThemeDownloadDenied(themeId)
             const pluginData = await getNotes.getNotesData(e.user_id)
             pluginData.theme = themeId
             try {
@@ -185,6 +193,7 @@ export class phiMarket extends phiPluginBase {
             const code = typeof caught?.code === 'string' && /^[a-z0-9_]{1,80}$/.test(caught.code)
                 ? caught.code : 'theme_install_failed'
             logger.warn(`[phi-plugin][主题市场] ${themeId} 安装失败：${code}`)
+            if (code === 'theme_store_bot_not_whitelisted') markThemeDownloadDenied(themeId)
             if (code === 'theme_user_setting_save_failed') {
                 send.send_with_At(e, '主题已安装到全局缓存，但保存你的主题选择失败，请稍后重试。')
             } else {
