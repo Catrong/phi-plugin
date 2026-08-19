@@ -522,6 +522,16 @@ export default class makeRequest {
         return phiApiClient.request('/bot/integrations/theme-store/download-url', params, 'POST', { timeout: 15_000 })
     }
 
+    /** @returns {Promise<{ok:true,themes:any[]}>} 获取当前 Bot 主题策略过滤后的市场主题列表。 */
+    static async getThemeMarketList() {
+        return phiApiClient.request('/bot/integrations/theme-store/themes', {}, 'GET', { timeout: 30_000 })
+    }
+
+    /** @param {string} themeId 获取当前 Bot 主题策略过滤后的主题详情。 */
+    static async getThemeMarketDetail(themeId) {
+        return phiApiClient.request(`/bot/integrations/theme-store/themes/${encodeURIComponent(themeId)}`, {}, 'GET', { timeout: 15_000 })
+    }
+
     /**
      * 清空用户数据
      * @param {highAu} params

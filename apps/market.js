@@ -112,7 +112,7 @@ export class phiMarket extends phiPluginBase {
         const raw = match?.[1]?.trim() || ''
         const args = raw ? raw.split(/\s+/) : []
 
-        // 无参数或 list 子命令显示公开目录；目录查询不需要 Bot HMAC 或长期凭据。
+        // 无参数或 list 子命令通过 phi-plugin-api 获取当前 Bot 可见目录。
         if (!args.length || args[0].toLowerCase() === 'list') {
             const query = args.slice(1).join(' ')
             try {
@@ -130,7 +130,7 @@ export class phiMarket extends phiPluginBase {
             return true
         }
 
-        // detail/info 只展示公开详情；安装仍必须通过 /market <slug> 走 Bot HMAC。
+        // detail/info 通过 phi-plugin-api 获取当前 Bot 策略过滤后的详情。
         if (['detail', 'info', '详情'].includes(args[0].toLowerCase())) {
             const themeId = args[1]?.toLowerCase() || ''
             if (!isThemeSlug(themeId)) {

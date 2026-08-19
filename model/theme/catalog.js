@@ -1,7 +1,7 @@
 import { ThemeMarketClientError } from './marketClient.js'
+import makeRequest from '../api/makeRequest.js'
 
 export const THEME_MARKET_API_ORIGIN = 'https://lyh.org.cn:18473'
-const API_BASE = `${THEME_MARKET_API_ORIGIN}/api/market/themes`
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
 
 /** @param {unknown} value @param {number} limit */
@@ -49,33 +49,9 @@ export function normalizeMarketTheme(item, inheritedBotDownloadAllowed = null) {
     }
 }
 
-/** @param {string} url */
-async function requestJson(url) {
-    let response
-    try {
-        response = await fetch(url, {
-            method: 'GET',
-            headers: { Accept: 'application/json' },
-            redirect: 'error',
-            signal: AbortSignal.timeout(10_000),
-        })
-    } catch {
-        throw new ThemeMarketClientError('theme_catalog_unavailable')
-    }
-    if (!response.ok) {
-        if (response.body) await response.body.cancel().catch(() => {})
-        throw new ThemeMarketClientError('theme_catalog_unavailable', response.status)
-    }
-    try {
-        return /** @type {any} */ (await response.json())
-    } catch {
-        throw new ThemeMarketClientError('theme_catalog_invalid_response', 502)
-    }
-}
-
 /** @param {string} [query] */
 export async function fetchThemeCatalog(query = '') {
-    const data = /** @type {any} */ (await requestJson(API_BASE))
+    const data = /** @type {any} */ (await makeRequest.getThemeMarketList())
     const inheritedBotDownloadAllowed = typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null
     const themes = Array.isArray(data?.themes)
         ? data.themes.map((/** @type {any} */ item) => normalizeMarketTheme(item, inheritedBotDownloadAllowed)).filter((/** @type {{slug:string}} */ theme) => SLUG_RE.test(theme.slug))
@@ -96,7 +72,7 @@ export async function fetchThemeCatalog(query = '') {
 /** @param {string} slug */
 export async function fetchThemeDetail(slug) {
     if (!SLUG_RE.test(slug)) throw new ThemeMarketClientError('theme_slug_invalid', 400)
-    const data = /** @type {any} */ (await requestJson(`${API_BASE}/${encodeURIComponent(slug)}`))
+    const data = /** @type {any} */ (await makeRequest.getThemeMarketDetail(slug))
     const theme = normalizeMarketTheme(data?.theme || data, typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null)
     if (theme.slug !== slug) throw new ThemeMarketClientError('theme_catalog_invalid_response', 502)
     return { ...theme, releaseNotes: text(data?.releaseNotes || data?.theme?.releaseNotes, 3000) }

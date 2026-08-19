@@ -7,8 +7,9 @@ import test from 'node:test'
 import JSZip from 'jszip'
 import { pluginResources } from '../model/filesystem/path.js'
 import themeManager from '../model/theme/manager.js'
+import makeRequest from '../model/api/makeRequest.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
-import { normalizeMarketTheme } from '../model/theme/catalog.js'
+import { fetchThemeCatalog, fetchThemeDetail, normalizeMarketTheme } from '../model/theme/catalog.js'
 import {
     installMarketArchive,
     isMarketThemeCached,
@@ -155,4 +156,31 @@ test('market UI preserves Bot download capability without trusting anonymous res
     assert.equal(normalizeMarketTheme({ slug: 'public-theme', name: 'Public', botDownloadAllowed: true }).botDownloadAllowed, true)
     assert.equal(normalizeMarketTheme({ slug: 'anonymous-theme', name: 'Anonymous' }).botDownloadAllowed, null)
     assert.equal(normalizeMarketTheme({ slug: 'inherited-theme', name: 'Inherited' }, false).botDownloadAllowed, false)
+})
+
+test('market catalog and detail use the phi-plugin-api Bot proxy response', async () => {
+    const originals = {
+        list: makeRequest.getThemeMarketList,
+        detail: makeRequest.getThemeMarketDetail,
+    }
+    makeRequest.getThemeMarketList = async () => ({
+        ok: true,
+        themes: [{ slug: 'proxy-theme', name: 'Proxy Theme', botDownloadAllowed: false }],
+    })
+    makeRequest.getThemeMarketDetail = async themeId => ({
+        ok: true,
+        theme: { slug: themeId, name: 'Proxy Theme', downloadPolicy: 'bot_only' },
+        botDownloadAllowed: false,
+        releaseNotes: 'proxy response',
+    })
+    try {
+        const catalog = await fetchThemeCatalog()
+        assert.equal(catalog.themes[0].botDownloadAllowed, false)
+        const detail = await fetchThemeDetail('proxy-theme')
+        assert.equal(detail.botDownloadAllowed, false)
+        assert.equal(detail.releaseNotes, 'proxy response')
+    } finally {
+        makeRequest.getThemeMarketList = originals.list
+        makeRequest.getThemeMarketDetail = originals.detail
+    }
 })
