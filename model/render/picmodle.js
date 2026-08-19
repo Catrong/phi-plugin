@@ -2,7 +2,7 @@ import puppeteer from './puppeteer.js'
 import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../../components/index.js'
 import { _path, pluginResources, imgPath, tempPath } from '../filesystem/path.js'
 import fCompute from '../game/fCompute.js'
-import themeManager from '../themeManager.js'
+import themeManager from '../theme/manager.js'
 import fs from 'node:fs'
 import logger from '../../components/Logger.js'
 import segment from '../../components/segment.js'
@@ -297,6 +297,16 @@ export default await new class picmodle {
         return await this.common(e, 'help', data)
     }
 
+    /** 主题市场目录页 */
+    async market(/** @type {any} */ e, /** @type {any} */ data) {
+        return await this.common(e, 'market', data)
+    }
+
+    /** 主题市场详情页 */
+    async marketDetail(/** @type {any} */ e, /** @type {any} */ data) {
+        return await this.common(e, 'market', data, 'detail')
+    }
+
     /**
      * 
      * @param {any} e 
@@ -319,7 +329,7 @@ export default await new class picmodle {
 
     /** 
      * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|
-     * 'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|
+     * 'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'market'|
      * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'
      * } picKind
      */

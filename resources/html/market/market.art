@@ -1,0 +1,59 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/market/market.css">
+{{/block}}
+
+{{block 'main'}}
+<main class="market-page">
+    <header class="market-header">
+        <div>
+            <p class="eyebrow">PHI THEME MARKET</p>
+            <h1>主题市场</h1>
+            <p class="subtitle">发现社区主题，为你的查分页面换一种节奏。</p>
+        </div>
+        <div class="market-meta">
+            <span class="count">{{themes.length}} 个主题</span>
+            {{if query}}<span class="query">“{{query}}”</span>{{/if}}
+        </div>
+    </header>
+
+    {{if themes.length}}
+    <section class="theme-grid">
+        {{each themes as item}}
+        <article class="theme-card{{item.featured ? ' featured' : ''}}">
+            <div class="cover-wrap">
+                {{if item.cover}}
+                <img class="cover" src="{{item.cover}}" alt="{{item.name}}">
+                {{else}}
+                <div class="cover-fallback"><span>{{item.name.slice(0, 1)}}</span></div>
+                {{/if}}
+                {{if item.featured}}<span class="featured-label">推荐</span>{{/if}}
+            </div>
+            <div class="theme-body">
+                <div class="theme-title-row">
+                    <h2>{{item.name}}</h2>
+                    <span class="policy policy-{{item.downloadPolicy}}">{{item.slug === currentTheme ? '当前使用' : (item.downloadPolicy === 'public' ? '公开' : '需授权')}}</span>
+                </div>
+                <p class="slug">{{item.slug}}</p>
+                <p class="summary">{{item.summary || item.description || '暂无主题简介'}}</p>
+                <div class="tags">
+                    {{each item.tags as tag}}<span>{{tag}}</span>{{/each}}
+                </div>
+                <div class="theme-footer">
+                    <span>v{{item.version || '--'}}</span>
+                    <span>{{item.author || '社区作者'}}</span>
+                </div>
+            </div>
+        </article>
+        {{/each}}
+    </section>
+    {{else}}
+    <section class="empty-state">
+        <div class="empty-mark">φ</div>
+        <h2>没有找到主题</h2>
+        <p>换个关键词试试，或稍后再打开市场目录。</p>
+    </section>
+    {{/if}}
+
+</main>
+{{/block}}

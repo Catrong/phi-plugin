@@ -81,6 +81,9 @@ cmdhead: "phi"
 #  是否启用Phigros联合查分API
 openPhiPluginApi: true
 
+# 主题市场临时下载链接允许的唯一来源。必须为 HTTPS origin，不含路径。
+themeMarketDownloadOrigin: "https://lyh.org.cn:18473"
+
 # 由查分 API 首次启动时签发，请勿手工填写任意 UUID。
 apiBotClientId: ""
 apiBotClientSecret: ""

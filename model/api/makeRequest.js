@@ -514,6 +514,15 @@ export default class makeRequest {
     }
 
     /**
+     * 以 Bot HMAC 向 phi-plugin-api 申请主题市场短期下载链接。
+     * 调用方负责使用同一 requestId 进行有限重试。
+     * @param {{requestId:string, themeId:string, version?:string}} params
+     */
+    static async requestThemeDownload(params) {
+        return phiApiClient.request('/bot/integrations/theme-store/download-url', params, 'POST', { timeout: 15_000 })
+    }
+
+    /**
      * 清空用户数据
      * @param {highAu} params
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文

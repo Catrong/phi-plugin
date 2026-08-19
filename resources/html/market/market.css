@@ -1,0 +1,49 @@
+@import '../common/common.css';
+
+body { width: 1080px; min-height: 760px; color: #edf8ff; }
+.background img { filter: blur(5px) brightness(38%); }
+.market-page { width: 100%; box-sizing: border-box; padding: 38px 42px 28px; }
+.market-header, .detail-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+.eyebrow { margin: 0 0 8px; color: #7de1ff; font: 13px 'Aldrich', 'PHI'; letter-spacing: 2px; }
+h1, h2, p { margin: 0; }
+.market-header h1, .detail-intro h1 { color: #fff; font: 42px 'Aldrich', 'PHI'; text-shadow: 0 0 22px rgb(87 211 255 / 35%); }
+.subtitle { margin-top: 8px; color: #b9d2e4; font-size: 16px; }
+.market-meta { display: flex; gap: 10px; align-items: center; color: #9bd8ef; font-size: 14px; }
+.count, .query, .detail-slug { padding: 7px 11px; border: 1px solid rgb(153 222 248 / 30%); background: rgb(7 34 54 / 74%); }
+.theme-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.theme-card { display: flex; min-height: 190px; overflow: hidden; border: 1px solid rgb(153 222 248 / 25%); background: linear-gradient(135deg, rgb(8 33 52 / 94%), rgb(8 23 38 / 90%)); box-shadow: 0 14px 28px rgb(0 0 0 / 25%); }
+.theme-card.featured { border-color: rgb(112 229 255 / 65%); }
+.cover-wrap { position: relative; width: 178px; min-width: 178px; }
+.cover { width: 100%; height: 100%; min-height: 190px; object-fit: cover; }
+.cover-fallback { display: flex; width: 100%; height: 100%; min-height: 190px; align-items: center; justify-content: center; background: linear-gradient(145deg, #156681, #142d4d); }
+.cover-fallback span { color: rgb(219 250 255 / 85%); font: 68px 'Aldrich', 'PHI'; }
+.featured-label { position: absolute; top: 10px; left: 10px; padding: 4px 8px; color: #062236; background: #83eaff; font-size: 12px; }
+.theme-body { display: flex; min-width: 0; flex: 1; flex-direction: column; padding: 16px 17px 13px; }
+.theme-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.theme-title-row h2 { overflow: hidden; color: #fff; font: 22px 'Aldrich', 'PHI'; text-overflow: ellipsis; white-space: nowrap; }
+.slug { margin-top: 4px; color: #73bfdc; font: 12px monospace; }
+.summary { display: -webkit-box; overflow: hidden; margin-top: 11px; color: #c8deeb; font-size: 14px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 12px; }
+.tags span { padding: 3px 7px; color: #a9e7f7; border: 1px solid rgb(125 225 255 / 28%); background: rgb(18 79 103 / 42%); font-size: 11px; }
+.policy { padding: 4px 7px; color: #9eeaff; border: 1px solid rgb(125 225 255 / 38%); font-size: 11px; white-space: nowrap; }
+.policy-public { color: #b9f0c7; border-color: rgb(141 235 163 / 42%); }
+.theme-footer { display: flex; justify-content: space-between; margin-top: 12px; color: #7ea5b8; font-size: 12px; }
+.empty-state { padding: 80px 24px; text-align: center; border: 1px solid rgb(153 222 248 / 25%); background: rgb(8 33 52 / 85%); }
+.empty-mark { color: #79defc; font: 64px 'Aldrich', 'PHI'; }
+.empty-state h2 { margin-top: 8px; font-size: 24px; }
+.empty-state p { margin-top: 8px; color: #adc9d8; }
+.back-link { color: #8fddf2; font-size: 15px; text-decoration: none; }
+.detail-header { align-items: center; }
+.detail-hero { display: flex; gap: 28px; padding: 22px; border: 1px solid rgb(153 222 248 / 30%); background: linear-gradient(135deg, rgb(8 33 52 / 95%), rgb(8 23 38 / 88%)); }
+.detail-cover { width: 310px; height: 240px; flex: 0 0 310px; object-fit: cover; }
+.detail-intro { min-width: 0; padding: 8px 4px; }
+.detail-intro h1 { font-size: 38px; }
+.detail-author { margin-top: 8px; color: #83c7de; font-size: 14px; }
+.detail-description { margin-top: 18px; color: #d0e4ef; font-size: 16px; line-height: 1.6; white-space: pre-wrap; }
+.detail-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 16px; border: 1px solid rgb(153 222 248 / 25%); background: rgb(153 222 248 / 18%); }
+.detail-stats div { padding: 14px 16px; background: rgb(8 33 52 / 90%); }
+.detail-stats span { display: block; color: #83b1c4; font-size: 12px; }
+.detail-stats strong { display: block; overflow: hidden; margin-top: 7px; color: #effcff; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
+.release-notes { margin-top: 16px; padding: 18px 20px; border: 1px solid rgb(153 222 248 / 25%); background: rgb(8 33 52 / 82%); }
+.release-notes h2 { color: #dffaff; font-size: 20px; }
+.release-notes p { margin-top: 10px; color: #c5dbe7; line-height: 1.6; white-space: pre-wrap; }

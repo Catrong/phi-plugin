@@ -10,7 +10,7 @@
  * @property {number} request.value 任务要求数值
  */
 
-import themeManager from '../themeManager.js'
+import themeManager from '../theme/manager.js'
 
 /**
  * 内置主题列表（兼容旧版 /theme；新代码请使用 themeManager.getThemeList()）

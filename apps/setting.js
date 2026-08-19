@@ -4,7 +4,7 @@ import getInfo from '../model/game/getInfo.js'
 import getNotes from '../model/user/getNotes.js'
 import phiPluginBase from '../components/baseClass.js'
 import { USER_SETTING_META, USER_SETTING_OPTIONS } from '../model/game/constNum.js'
-import themeManager from '../model/themeManager.js'
+import themeManager from '../model/theme/manager.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import send from '../model/render/send.js'
 
@@ -324,7 +324,9 @@ export class phihelp extends phiPluginBase {
 
             /** 主题选项动态合并内置 + 自定义主题，其余设置项保持静态数据源 */
             /** @param {string} key */
-            const getOptions = (key) => key === 'theme' ? themeManager.getThemeOptions() : /** @type {any} */ (USER_SETTING_OPTIONS)[key]
+            const getOptions = (key) => key === 'theme'
+                ? themeManager.getThemeOptions(pluginData.theme)
+                : /** @type {any} */ (USER_SETTING_OPTIONS)[key]
             const optionMap = /** @type {Record<string, { title: string, description: string }>} */ (getOptions(settingKey))
             const optionKeys = Object.keys(optionMap)
             const valueAliasMap = settingValueAlias[settingKey]
@@ -337,12 +339,6 @@ export class phihelp extends phiPluginBase {
                 if (optionIndex >= 0 && optionIndex < optionKeys.length) {
                     canonicalValue = optionKeys[optionIndex]
                 }
-            }
-
-            // 主题别名兜底：未命中选项表时尝试按 id 直接解析自定义主题（大小写不敏感）
-            if (settingKey === 'theme' && !optionMap[canonicalValue]) {
-                const custom = themeManager.getTheme(valueInput) || themeManager.getTheme(valueInputRaw)
-                if (custom) canonicalValue = custom.id
             }
 
             if (!optionMap[canonicalValue]) {
@@ -367,7 +363,9 @@ export class phihelp extends phiPluginBase {
          * @param {string} current
          */
         const buildItem = (key, current) => {
-            const options = /** @type {Record<string, { title: string, description: string }>} */ (key === 'theme' ? themeManager.getThemeOptions() : USER_SETTING_OPTIONS[key])
+            const options = /** @type {Record<string, { title: string, description: string }>} */ (key === 'theme'
+                ? themeManager.getThemeOptions(current)
+                : USER_SETTING_OPTIONS[key])
             return {
                 key,
                 title: USER_SETTING_META[key].title,
