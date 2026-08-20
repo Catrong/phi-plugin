@@ -3,13 +3,14 @@ import Config from '../components/Config.js'
 import logger from '../components/Logger.js'
 import phiPluginBase from '../components/baseClass.js'
 import getBanGroup from '../model/user/getBanGroup.js'
+import getNotes from '../model/user/getNotes.js'
 import send from '../model/render/send.js'
+import picmodle from '../model/render/picmodle.js'
 import themeManager from '../model/theme/manager.js'
 import {
     authorizeThemeDownload,
     downloadThemeArchive,
     getAvailableMarketTheme,
-    getAvailableMarketThemes,
     ThemeMarketClientError,
 } from '../model/theme/marketClient.js'
 import {
@@ -20,6 +21,7 @@ import {
     withMarketInstallLock,
 } from '../model/theme/installer.js'
 import { getPhiApiUserMessage, hasPhiApiUserMessage } from '../model/api/phiApiErrors.js'
+import { fetchThemeCatalog, fetchThemeDetail, isThemeSlug } from '../model/theme/catalog.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
 
@@ -110,26 +112,58 @@ export class phiMarket extends phiPluginBase {
             new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)market(\\s*)`, 'i'),
             '',
         ).trim()
-        if (!raw) {
+        const args = raw ? raw.split(/\s+/) : []
+
+        // 无参数、页码或 list 子命令通过 phi-plugin-api 获取当前 Bot 可见目录。
+        if (!args.length || args[0].toLowerCase() === 'list' || (args.length === 1 && /^\d+$/.test(args[0]))) {
+            const listArgs = args[0]?.toLowerCase() === 'list' ? args.slice(1) : args
+            let page = 1
+            const lastArg = listArgs.at(-1)
+            if (lastArg && /^\d+$/.test(lastArg)) page = Number(lastArg)
+            const queryArgs = lastArg && /^\d+$/.test(lastArg) ? listArgs.slice(0, -1) : listArgs
+            const query = queryArgs.join(' ')
             try {
-                const themes = await getAvailableMarketThemes()
-                if (!themes.length) {
-                    send.send_with_At(e, '当前 Bot 暂无可用的市场主题。')
-                    return true
-                }
-                const lines = themes.slice(0, 30).map((/** @type {any} */ theme) => `${theme.slug} · ${theme.name}${theme.version ? ` · ${theme.version}` : ''}`)
-                const suffix = themes.length > lines.length ? `\n另有 ${themes.length - lines.length} 个主题未展示。` : ''
-                send.send_with_At(e, `当前 Bot 可用的市场主题：\n${lines.join('\n')}${suffix}`)
-            } catch (error) {
-                send.send_with_At(e, userErrorMessage(error))
+                const catalog = await fetchThemeCatalog(query, page)
+                const pluginData = await getNotes.getNotesData(e.user_id)
+                send.send_with_At(e, await picmodle.market(e, {
+                    ...catalog,
+                    currentTheme: pluginData?.theme || 'default',
+                    commandHead,
+                }))
+            } catch (/** @type {any} */ error) {
+                logger.warn(`[phi-plugin][主题市场] 目录加载失败：${error?.code || 'unknown'}`)
+                send.send_with_At(e, '主题市场目录暂时不可用，请稍后重试。')
             }
             return true
         }
-        if (/\s/.test(raw)) {
-            send.send_with_At(e, `用法：/${commandHead} market [主题slug]`)
+
+        // detail/info 通过 phi-plugin-api 获取当前 Bot 策略过滤后的详情。
+        if (['detail', 'info', '详情'].includes(args[0].toLowerCase())) {
+            const themeId = args[1]?.toLowerCase() || ''
+            if (!isThemeSlug(themeId)) {
+                send.send_with_At(e, `用法：/${commandHead} market detail <主题slug>`)
+                return true
+            }
+            try {
+                const detail = await fetchThemeDetail(themeId)
+                const pluginData = await getNotes.getNotesData(e.user_id)
+                send.send_with_At(e, await picmodle.marketDetail(e, {
+                    theme: pluginData?.theme || 'default',
+                    detail,
+                    commandHead,
+                }))
+            } catch (/** @type {any} */ error) {
+                logger.warn(`[phi-plugin][主题市场] 详情加载失败 ${themeId}：${error?.code || 'unknown'}`)
+                send.send_with_At(e, '未找到该主题，或主题市场暂时不可用。')
+            }
             return true
         }
-        const themeId = raw.toLowerCase()
+
+        if (args.length !== 1 || /\s/.test(raw)) {
+            send.send_with_At(e, `用法：/${commandHead} market [list [关键词] [页码] | detail <主题slug> | <主题slug>]`)
+            return true
+        }
+        const themeId = args[0].toLowerCase()
         if (!SLUG_RE.test(themeId)) {
             send.send_with_At(e, '主题 slug 格式无效。')
             return true

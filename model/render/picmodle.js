@@ -297,6 +297,16 @@ export default await new class picmodle {
         return await this.common(e, 'help', data)
     }
 
+    /** 主题市场目录页 */
+    async market(/** @type {any} */ e, /** @type {any} */ data) {
+        return await this.common(e, 'market', data)
+    }
+
+    /** 主题市场详情页 */
+    async marketDetail(/** @type {any} */ e, /** @type {any} */ data) {
+        return await this.common(e, 'market', data, 'detail')
+    }
+
     /**
      * 
      * @param {any} e 
@@ -319,7 +329,7 @@ export default await new class picmodle {
 
     /** 
      * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|
-     * 'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|
+     * 'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'market'|
      * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'
      * } picKind
      */

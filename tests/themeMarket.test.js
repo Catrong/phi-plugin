@@ -5,10 +5,13 @@ import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import JSZip from 'jszip'
+import Config from '../components/Config.js'
 import themeManager from '../model/theme/manager.js'
 import themePolicy from '../model/theme/policy.js'
 import { themesDir } from '../model/theme/paths.js'
+import makeRequest from '../model/api/makeRequest.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
+import { fetchThemeCatalog, fetchThemeDetail, normalizeMarketTheme, THEME_MARKET_PAGE_SIZE } from '../model/theme/catalog.js'
 import {
     installMarketArchive,
     isMarketThemeCached,
@@ -155,4 +158,64 @@ test('market command is scoped to the configured command head and myset has no c
     assert.doesNotMatch(command, /\^\[#\/\]market/)
     assert.match(settings, /getThemeOptions\(pluginData\.theme\)/)
     assert.doesNotMatch(settings, /const custom = themeManager\.getTheme/)
+})
+
+test('market UI preserves Bot download capability and uses the phi-plugin-api proxy', async () => {
+    assert.equal(normalizeMarketTheme({ slug: 'restricted-theme', name: 'Restricted', botDownloadAllowed: false }).botDownloadAllowed, false)
+    assert.equal(normalizeMarketTheme({ slug: 'public-theme', name: 'Public', botDownloadAllowed: true }).botDownloadAllowed, true)
+    assert.equal(normalizeMarketTheme({ slug: 'anonymous-theme', name: 'Anonymous' }).botDownloadAllowed, null)
+
+    const originals = {
+        list: makeRequest.getThemeMarketList,
+        detail: makeRequest.getThemeMarketDetail,
+    }
+    makeRequest.getThemeMarketList = async () => ({
+        ok: true,
+        themes: [{ slug: 'proxy-theme', name: 'Proxy Theme', botDownloadAllowed: false }],
+    })
+    makeRequest.getThemeMarketDetail = async themeId => ({
+        ok: true,
+        theme: { slug: themeId, name: 'Proxy Theme', downloadPolicy: 'bot_only' },
+        botDownloadAllowed: false,
+        releaseNotes: 'proxy response',
+    })
+    try {
+        const catalog = await fetchThemeCatalog()
+        assert.equal(catalog.themes[0].botDownloadAllowed, false)
+        const detail = await fetchThemeDetail('proxy-theme')
+        assert.equal(detail.botDownloadAllowed, false)
+        assert.equal(detail.releaseNotes, 'proxy response')
+    } finally {
+        makeRequest.getThemeMarketList = originals.list
+        makeRequest.getThemeMarketDetail = originals.detail
+    }
+})
+
+test('market catalog filters before paginating and does not alter user theme settings', async () => {
+    const originalList = makeRequest.getThemeMarketList
+    const themes = Array.from({ length: THEME_MARKET_PAGE_SIZE + 2 }, (_, index) => ({
+        slug: `page-theme-${index}`,
+        name: `Page Theme ${index}`,
+        summary: 'pagination',
+        updatedAt: `2026-08-${String(19 - Math.min(index, 18)).padStart(2, '0')}`,
+    }))
+    makeRequest.getThemeMarketList = async () => ({ ok: true, themes })
+    try {
+        const first = await fetchThemeCatalog('pagination', 1)
+        assert.equal(first.page, 1)
+        assert.equal(first.pageCount, 2)
+        assert.equal(first.total, THEME_MARKET_PAGE_SIZE + 2)
+        assert.equal(first.themes.length, THEME_MARKET_PAGE_SIZE)
+        const second = await fetchThemeCatalog('pagination', 2)
+        assert.equal(second.page, 2)
+        assert.equal(second.themes.length, 2)
+        assert.notEqual(first.themes[0].slug, second.themes[0].slug)
+    } finally {
+        makeRequest.getThemeMarketList = originalList
+    }
+
+    const command = fs.readFileSync(new URL('../apps/market.js', import.meta.url), 'utf8')
+    assert.match(command, /fetchThemeCatalog/)
+    assert.match(command, /marketDetail/)
+    assert.doesNotMatch(command, /putNotesData\(/)
 })
