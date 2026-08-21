@@ -282,22 +282,22 @@ test('market page sends one safe Markdown action row for each displayed theme', 
         { slug: 'ocean-salt', name: 'Ocean "Salt"', botDownloadAllowed: true },
         { slug: 'restricted-theme', name: 'Restricted | Theme', botDownloadAllowed: false },
     ]
-    const markdown = buildMarketQuickMarkdown(/** @type {any} */(themes), 'custom', { page: 2, pageCount: 3 })
-    assert.match(markdown, /Ocean "Salt" \| <qqbot-cmd-input text="\/custom market detail ocean-salt" show="查看详情"/)
-    assert.match(markdown, /text="\/custom market ocean-salt" show="使用主题"/)
-    assert.match(markdown, /Restricted \\| Theme \| <qqbot-cmd-input text="\/custom market detail restricted-theme" show="查看详情"/)
-    assert.match(markdown, /text="\/custom market restricted-theme" show="使用主题"/)
-    assert.match(markdown, /text="\/custompr" show="上一页"/)
-    assert.match(markdown, /text="\/customnx" show="下一页"/)
-    assert.equal((markdown.match(/^\|/gm) || []).length, themes.length + 3)
-
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
     /** @type {any[]} */ const replies = []
-    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'custom' : key === 'LetterMarkdown')
     send.reply = async (_event, message) => { replies.push(message); return {} }
     try {
-        await sendMarketQuickCommands(/** @type {any} */({}), /** @type {any} */(themes), 'custom')
+        const markdown = buildMarketQuickMarkdown(/** @type {any} */(themes), { page: 2, pageCount: 3 })
+        assert.match(markdown, /Ocean "Salt" \| <qqbot-cmd-input text="\/custom market detail ocean-salt" show="查看详情"/)
+        assert.match(markdown, /text="\/custom market ocean-salt" show="使用主题"/)
+        assert.match(markdown, /Restricted \\| Theme \| <qqbot-cmd-input text="\/custom market detail restricted-theme" show="查看详情"/)
+        assert.match(markdown, /text="\/custom market restricted-theme" show="使用主题"/)
+        assert.match(markdown, /text="\/custompr" show="上一页"/)
+        assert.match(markdown, /text="\/customnx" show="下一页"/)
+        assert.equal((markdown.match(/^\|/gm) || []).length, themes.length + 4)
+
+        await sendMarketQuickCommands(/** @type {any} */({}), /** @type {any} */(themes))
         assert.equal(replies.length, 1)
         assert.equal(replies[0]?.type, 'markdown')
         assert.match(replies[0]?.text || '', /\/custom market ocean-salt/)
@@ -315,16 +315,16 @@ test('market page sends no quick-command text when Markdown is disabled or fails
     try {
         Config.getUserCfg = /** @type {any} */ (() => false)
         send.reply = async () => { calls++; return {} }
-        await sendMarketQuickCommands(/** @type {any} */({}), themes, 'phi')
+        await sendMarketQuickCommands(/** @type {any} */({}), themes)
         assert.equal(calls, 0)
 
         Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
         send.reply = async () => { calls++; throw new Error('markdown unavailable') }
-        await sendMarketQuickCommands(/** @type {any} */({}), themes, 'phi')
+        await sendMarketQuickCommands(/** @type {any} */({}), themes)
         assert.equal(calls, 1)
 
         send.reply = async () => { calls++; return { error: [new Error('markdown rejected')] } }
-        await sendMarketQuickCommands(/** @type {any} */({}), themes, 'phi')
+        await sendMarketQuickCommands(/** @type {any} */({}), themes)
         assert.equal(calls, 2)
 
         const guoba = fs.readFileSync(new URL('../guoba.support.js', import.meta.url), 'utf8')
@@ -346,9 +346,9 @@ test('market shorthand navigation preserves the current query and page state', a
         sendWithAt: send.send_with_At,
         reply: send.reply,
     }
-    /** @type {{query:string,page:number,pageCount:number}[]} */ const rendered = []
+    /** @type {{query:string,page:number,pageCount:number,commandHead:string}[]} */ const rendered = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => {
-        if (key === 'cmdhead') return 'phi'
+        if (key === 'cmdhead') return 'custom'
         if (key === 'openPhiPluginApi') return true
         if (key === 'LetterMarkdown') return false
         return undefined
@@ -365,7 +365,7 @@ test('market shorthand navigation preserves the current query and page state', a
         })),
     })
     picmodle.market = /** @type {any} */ (async (/** @type {any} */ _event, /** @type {any} */ data) => {
-        rendered.push({ query: data.query, page: data.page, pageCount: data.pageCount })
+        rendered.push({ query: data.query, page: data.page, pageCount: data.pageCount, commandHead: data.commandHead })
         return `market-page-${data.page}`
     })
     send.send_with_At = async () => undefined
@@ -376,13 +376,13 @@ test('market shorthand navigation preserves the current query and page state', a
         const event = (/** @type {string} */ msg) => /** @type {any} */({
             msg, user_id: 'market-nav-user', group_id: 'market-nav-group', platform: 'test', isGroup: true,
         })
-        assert.equal(await command.market(event('/phi market list ocean 1')), true)
-        assert.equal(await command.marketPage(event('/phinx')), true)
-        assert.equal(await command.marketPage(event('/phi pr')), true)
+        assert.equal(await command.market(event('/custom market list ocean 1')), true)
+        assert.equal(await command.marketPage(event('/customnx')), true)
+        assert.equal(await command.marketPage(event('/custom pr')), true)
         assert.deepEqual(rendered, [
-            { query: 'ocean', page: 1, pageCount: 2 },
-            { query: 'ocean', page: 2, pageCount: 2 },
-            { query: 'ocean', page: 1, pageCount: 2 },
+            { query: 'ocean', page: 1, pageCount: 2, commandHead: 'custom' },
+            { query: 'ocean', page: 2, pageCount: 2, commandHead: 'custom' },
+            { query: 'ocean', page: 1, pageCount: 2, commandHead: 'custom' },
         ])
         assert.match(String(command.rule?.[1]?.reg || ''), /nx\|pr\|上一页\|下一页/)
     } finally {

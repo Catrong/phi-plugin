@@ -66,8 +66,9 @@ export class phiMarket extends phiPluginBase {
         })
     }
 
-    /** @param {botEvent} e @param {string} query @param {number} page @param {string} commandHead */
-    async renderMarketCatalog(e, query, page, commandHead) {
+    /** @param {botEvent} e @param {string} query @param {number} page */
+    async renderMarketCatalog(e, query, page) {
+        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
         const catalog = await fetchThemeCatalog(query, page)
         const pluginData = await getNotes.getNotesData(e.user_id)
         await send.send_with_At(e, await picmodle.market(e, {
@@ -76,7 +77,7 @@ export class phiMarket extends phiPluginBase {
             commandHead,
         }))
         setMarketPageState(e, query, catalog.page, catalog.pageCount)
-        await sendMarketQuickCommands(e, catalog.themes, commandHead, catalog)
+        await sendMarketQuickCommands(e, catalog.themes, catalog)
     }
 
     /** @param {botEvent} e */
@@ -103,7 +104,7 @@ export class phiMarket extends phiPluginBase {
             return true
         }
         try {
-            await this.renderMarketCatalog(e, state.query, targetPage, commandHead)
+            await this.renderMarketCatalog(e, state.query, targetPage)
         } catch (/** @type {any} */ error) {
             logger.warn(`[phi-plugin][主题市场] 翻页加载失败：${error?.code || 'unknown'}`)
             send.send_with_At(e, '主题市场目录暂时不可用，请稍后重试。')
@@ -137,7 +138,7 @@ export class phiMarket extends phiPluginBase {
             const queryArgs = lastArg && /^\d+$/.test(lastArg) ? listArgs.slice(0, -1) : listArgs
             const query = queryArgs.join(' ')
             try {
-                await this.renderMarketCatalog(e, query, page, commandHead)
+                await this.renderMarketCatalog(e, query, page)
             } catch (/** @type {any} */ error) {
                 logger.warn(`[phi-plugin][主题市场] 目录加载失败：${error?.code || 'unknown'}`)
                 send.send_with_At(e, '主题市场目录暂时不可用，请稍后重试。')

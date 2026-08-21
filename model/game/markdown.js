@@ -29,11 +29,11 @@ export function commandInput(text, show) {
 
 /**
  * @param {{slug:string,name:string,botDownloadAllowed:boolean|null}[]} themes
- * @param {string} commandHead
  * @param {{page?:number,pageCount?:number}} [pagination]
  */
-export function buildMarketQuickMarkdown(themes, commandHead, pagination = {}) {
+export function buildMarketQuickMarkdown(themes, pagination = {}) {
     if (!themes.length) return ''
+    const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
     const rows = themes.map(theme => [
         escapeMarkdownText(theme.name),
         commandInput(`/${commandHead} market detail ${theme.slug}`, '查看详情'),
@@ -59,12 +59,11 @@ export function buildMarketQuickMarkdown(themes, commandHead, pagination = {}) {
 /**
  * @param {botEvent} e
  * @param {{slug:string,name:string,botDownloadAllowed:boolean|null}[]} themes
- * @param {string} commandHead
  * @param {{page?:number,pageCount?:number}} [pagination]
  */
-export async function sendMarketQuickCommands(e, themes, commandHead, pagination = {}) {
+export async function sendMarketQuickCommands(e, themes, pagination = {}) {
     if (!Config.getUserCfg('config', 'LetterMarkdown')) return
-    const markdown = buildMarketQuickMarkdown(themes, commandHead, pagination)
+    const markdown = buildMarketQuickMarkdown(themes, pagination)
     if (!markdown) return
     try {
         const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(markdown)))
