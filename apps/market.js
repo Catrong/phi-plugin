@@ -1,4 +1,3 @@
-import crypto from 'node:crypto'
 import Config from '../components/Config.js'
 import logger from '../components/Logger.js'
 import phiPluginBase from '../components/baseClass.js'
@@ -6,88 +5,18 @@ import getBanGroup from '../model/user/getBanGroup.js'
 import getNotes from '../model/user/getNotes.js'
 import send from '../model/render/send.js'
 import picmodle from '../model/render/picmodle.js'
-import themeManager from '../model/theme/manager.js'
-import {
-    authorizeThemeDownload,
-    downloadThemeArchive,
-    getAvailableMarketTheme,
-    ThemeMarketClientError,
-} from '../model/theme/marketClient.js'
-import {
-    installMarketArchive,
-    isMarketThemeCached,
-    marketWorkPath,
-    recoverMarketInstall,
-    withMarketInstallLock,
-} from '../model/theme/installer.js'
-import { getPhiApiUserMessage, hasPhiApiUserMessage } from '../model/api/phiApiErrors.js'
+import themeUseService, { marketThemeErrorMessage } from '../model/theme/useService.js'
 import { fetchThemeCatalog, fetchThemeDetail, isThemeSlug } from '../model/theme/catalog.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
 
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
 
-/** @param {string} themeId */
-async function waitForThemeRegistration(themeId) {
-    themeManager.scan()
-    for (let attempt = 0; attempt < 20; attempt++) {
-        const theme = themeManager.getTheme(themeId)
-        if (theme?.marketInstalled) return theme
-        await new Promise(resolve => setTimeout(resolve, 50))
-    }
-    throw new ThemeMarketClientError('theme_registry_refresh_failed')
-}
-
-/** @param {string} themeId */
-async function installLatestTheme(themeId) {
-    return withMarketInstallLock(async () => {
-        await recoverMarketInstall(themeId)
-        for (let authorizationCycle = 0; authorizationCycle < 2; authorizationCycle++) {
-            const requestId = crypto.randomUUID()
-            const download = await authorizeThemeDownload(themeId, requestId)
-            if (await isMarketThemeCached(themeId, download)) {
-                const theme = await waitForThemeRegistration(themeId)
-                return { cached: true, version: download.version, theme }
-            }
-
-            const archivePath = marketWorkPath(`download-${themeId}-${requestId}.zip`)
-            try {
-                await downloadThemeArchive(download, archivePath)
-                await installMarketArchive(themeId, download, archivePath)
-                const theme = await waitForThemeRegistration(themeId)
-                return { cached: false, version: download.version, theme }
-            } catch (error) {
-                if (/** @type {any} */ (error)?.code === 'theme_download_url_expired' && authorizationCycle === 0) continue
-                throw error
-            }
-        }
-        throw new ThemeMarketClientError('theme_download_url_expired')
-    })
-}
-
-/** @param {any} error */
-function userErrorMessage(error) {
-    if (hasPhiApiUserMessage(error)) return getPhiApiUserMessage(error)
-    /** @type {Record<string, string>} */
-    const local = {
-        theme_market_origin_invalid: '主题市场下载来源配置无效，请联系 Bot 主人。',
-        theme_download_url_expired: '主题下载链接已失效，请稍后重试。',
-        theme_download_url_untrusted: '主题商店返回了不受信任的下载地址。',
-        theme_download_unavailable: '主题包暂时无法下载，请稍后重试。',
-        theme_package_integrity_failed: '主题包完整性校验失败，已停止安装。',
-        theme_package_reserved_id: '该主题 ID 与插件内置主题冲突，无法安装。',
-        theme_conflicts_with_local_theme: '同名本地主题不是市场安装版本，已拒绝覆盖。',
-        theme_install_busy: '主题安装队列繁忙，请稍后重试。',
-        theme_registry_refresh_failed: '主题已写入，但注册表刷新失败，请联系 Bot 主人检查。',
-    }
-    return local[String(error?.code || '')] || '主题安装失败，主题包未被启用。'
-}
-
 export class phiMarket extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-theme-market',
-            dsc: 'phi-plugin 主题市场安装',
+            dsc: 'phi-plugin 主题市场查看与使用',
             event: 'message',
             priority: 999,
             rule: [{
@@ -170,29 +99,23 @@ export class phiMarket extends phiPluginBase {
         }
 
         try {
-            const detail = await getAvailableMarketTheme(themeId)
-            if (!e.isMaster) {
-                const installed = themeManager.getTheme(themeId)?.marketInstalled === true
-                send.send_with_At(e, [
-                    `${detail.name}（${detail.slug}）`,
-                    detail.author ? `作者：${detail.author}` : '',
-                    detail.version ? `版本：${detail.version}` : '',
-                    detail.summary || detail.description || '',
-                    installed ? `该主题已安装，请使用 /${commandHead} theme 选择。` : '该主题尚未安装，请联系 Bot 主人。',
-                ].filter(Boolean).join('\n'))
+            send.send_with_At(e, `正在校验并启用主题 ${themeId}，首次使用时会自动下载，请稍候。`)
+            const result = await themeUseService.use(themeId)
+            const pluginData = await getNotes.getNotesData(e.user_id)
+            pluginData.theme = themeId
+            if (!getNotes.putNotesData(e.user_id, pluginData)) {
+                send.send_with_At(e, '主题已准备完成，但你的主题设置保存失败，请稍后重试。')
                 return true
             }
-            send.send_with_At(e, `正在获取并校验主题 ${themeId}，请稍候。`)
-            const result = await installLatestTheme(themeId)
-            const cacheText = result.cached ? '（已命中本地安全缓存）' : ''
-            send.send_with_At(e, `主题安装成功：${result.theme.name} ${result.version}${cacheText}\n用户可通过 /${commandHead} theme 离线选择。`)
+            const actionText = result.cached ? '已使用本地安全缓存' : '已自动下载并完成安全校验'
+            send.send_with_At(e, `主题已启用：${result.theme.name} ${result.version}（${actionText}）`)
             return true
         } catch (error) {
             const caught = /** @type {any} */ (error)
             const code = typeof caught?.code === 'string' && /^[a-z0-9_]{1,80}$/.test(caught.code)
                 ? caught.code : 'theme_install_failed'
-            logger.warn(`[phi-plugin][主题市场] ${themeId} 安装失败：${code}`)
-            send.send_with_At(e, userErrorMessage(error))
+            logger.warn(`[phi-plugin][主题市场] ${themeId} 启用失败：${code}`)
+            send.send_with_At(e, marketThemeErrorMessage(error))
             return true
         }
     }

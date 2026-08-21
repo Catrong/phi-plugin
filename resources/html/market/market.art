@@ -32,18 +32,20 @@
             <div class="theme-body">
                 <div class="theme-title-row">
                     <h2>{{item.name}}</h2>
-                    {{if item.botDownloadAllowed === false}}
-                    <span class="policy policy-denied">暂无法下载</span>
-                    {{else if item.slug === currentTheme}}
-                    <span class="policy policy-current">当前使用</span>
-                    {{else}}
-                    <span class="policy policy-{{item.downloadPolicy}}">{{item.downloadPolicy === 'public' ? '公开' : '需授权'}}</span>
-                    {{/if}}
+                    <div class="theme-status">
+                        {{if item.slug === currentTheme}}<span class="policy policy-current">当前使用</span>{{/if}}
+                        <span class="policy policy-{{item.downloadPolicy}}">{{item.downloadPolicy === 'public' ? '公开' : '需授权'}}</span>
+                        {{if item.botDownloadAllowed === true}}
+                        <span class="policy policy-available">可用</span>
+                        {{else}}
+                        <span class="policy policy-denied">不可用</span>
+                        {{/if}}
+                    </div>
                 </div>
                 <p class="slug">{{item.slug}}</p>
                 <p class="summary">{{item.summary || item.description || '暂无主题简介'}}</p>
                 {{if item.botDownloadAllowed === false}}
-                <p class="download-notice">此 Bot 不在联动 Bot 范围内，暂无法下载该主题。<br>前往 market.lyh.org.cn 查看</p>
+                <p class="download-notice">此 Bot 当前无权下载该主题。<br>前往 market.lyh.org.cn 查看</p>
                 {{/if}}
                 <div class="tags">
                     {{each item.tags as tag}}<span>{{tag}}</span>{{/each}}

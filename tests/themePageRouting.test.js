@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import Config from '../components/Config.js'
 import { phihelp as ApiSettings } from '../apps/apiSetting.js'
 import { phihelp as UserSettings } from '../apps/setting.js'
 import { phiuser as UserInfo } from '../apps/user.js'
@@ -9,6 +10,8 @@ import picmodle from '../model/render/picmodle.js'
 import send from '../model/render/send.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import getNotes from '../model/user/getNotes.js'
+import themeManager from '../model/theme/manager.js'
+import themeUseService from '../model/theme/useService.js'
 import { UserCredentials } from '../model/user/userCredentials.js'
 
 /** @param {string} msg */
@@ -37,9 +40,10 @@ test('用户设置页把当前主题传给完整页面渲染目标', async () =>
         send: send.send_with_At,
     }
     /** @type {any[]} */ const renders = []
+    let currentTheme = 'milthm'
 
     getBanGroup.get = async () => false
-    getNotes.getNotesData = async () => /** @type {any} */ (pluginData())
+    getNotes.getNotesData = async () => /** @type {any} */ ({ ...pluginData(), theme: currentTheme })
     getInfo.getill = () => 'background.png'
     picmodle.common = /** @type {any} */ (async (/** @type {any[]} */ ...args) => {
         renders.push(args)
@@ -54,9 +58,80 @@ test('用户设置页把当前主题传给完整页面渲染目标', async () =>
         assert.equal(renders[0][1], 'setting')
         assert.equal(renders[0][2].theme, 'milthm')
         assert.equal(renders[0][3], 'userSetting')
+        const themedOptions = renders[0][2].items.find((/** @type {any} */ item) => item.key === 'theme').options
+        assert.deepEqual(themedOptions.slice(0, 4).map((/** @type {any} */ option) => option.value), ['default', 'snow', 'star', 'dss2'])
+        assert.equal(themedOptions.length, 5)
+        assert.equal(themedOptions[4].title, 'Milthm')
+        assert.equal(themedOptions[4].selected, true)
+        assert.equal(themedOptions[4].fullWidth, true)
+        assert.match(themedOptions[4].description, /\/phi market <slug>/)
+
+        currentTheme = 'default'
+        assert.equal(await command.showUserSetting(/** @type {any} */ (event('/phi myset'))), true)
+        const defaultOptions = renders[1][2].items.find((/** @type {any} */ item) => item.key === 'theme').options
+        assert.equal(defaultOptions[0].selected, true)
+        assert.equal(defaultOptions[4].title, '自定义')
+        assert.equal(defaultOptions[4].selected, false)
+        assert.equal(defaultOptions[4].fullWidth, true)
     } finally {
         getBanGroup.get = originals.getBan
         getNotes.getNotesData = originals.getNotesData
+        getInfo.getill = originals.getIll
+        picmodle.common = originals.common
+        send.send_with_At = originals.send
+    }
+})
+
+test('用户按市场 slug 设置未下载主题时会自动下载并保存', async () => {
+    const originals = {
+        getUserCfg: Config.getUserCfg,
+        getBan: getBanGroup.get,
+        getNotesData: getNotes.getNotesData,
+        putNotesData: getNotes.putNotesData,
+        getThemeOptions: themeManager.getThemeOptions,
+        use: themeUseService.use,
+        getIll: getInfo.getill,
+        common: picmodle.common,
+        send: send.send_with_At,
+    }
+    let installed = false
+    const pluginData = /** @type {any} */ ({
+        theme: 'default', b30AvgKind: 'all', b30AvgColor: 'red',
+        allowApiUsage: true, showB30Analysis: true,
+    })
+    /** @type {string[]} */ const used = []
+    /** @type {any[]} */ const saved = []
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'phi' : key === 'openPhiPluginApi')
+    getBanGroup.get = async () => false
+    getNotes.getNotesData = async () => pluginData
+    getNotes.putNotesData = (userId, data) => { saved.push({ userId, data: { ...data } }); return true }
+    themeManager.getThemeOptions = () => ({
+        default: { title: '[0]默认', description: '' },
+        ...(installed ? { 'ocean-salt': { title: '[1]Ocean Salt', description: 'market' } } : {}),
+    })
+    themeUseService.use = async slug => {
+        used.push(slug)
+        installed = true
+        return /** @type {any} */ ({ cached: false, version: '1.0.0', theme: { id: slug, name: 'Ocean Salt' } })
+    }
+    getInfo.getill = () => 'background.png'
+    picmodle.common = /** @type {any} */ (async () => 'image')
+    send.send_with_At = async () => undefined
+
+    try {
+        const command = new UserSettings()
+        assert.equal(await command.showUserSetting(/** @type {any} */ (event('/phi myset 主题 ocean-salt'))), true)
+        assert.deepEqual(used, ['ocean-salt'])
+        assert.equal(saved.length, 1)
+        assert.equal(saved[0].userId, 'test-user')
+        assert.equal(saved[0].data.theme, 'ocean-salt')
+    } finally {
+        Config.getUserCfg = originals.getUserCfg
+        getBanGroup.get = originals.getBan
+        getNotes.getNotesData = originals.getNotesData
+        getNotes.putNotesData = originals.putNotesData
+        themeManager.getThemeOptions = originals.getThemeOptions
+        themeUseService.use = originals.use
         getInfo.getill = originals.getIll
         picmodle.common = originals.common
         send.send_with_At = originals.send

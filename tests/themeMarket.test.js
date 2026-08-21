@@ -6,9 +6,14 @@ import path from 'node:path'
 import test from 'node:test'
 import JSZip from 'jszip'
 import Config from '../components/Config.js'
+import { phiMarket } from '../apps/market.js'
+import getBanGroup from '../model/user/getBanGroup.js'
+import getNotes from '../model/user/getNotes.js'
+import send from '../model/render/send.js'
 import themeManager from '../model/theme/manager.js'
 import themePolicy from '../model/theme/policy.js'
 import { themesDir } from '../model/theme/paths.js'
+import themeUseService, { ThemeUseService } from '../model/theme/useService.js'
 import makeRequest from '../model/api/makeRequest.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
 import { fetchThemeCatalog, fetchThemeDetail, normalizeMarketTheme, THEME_MARKET_PAGE_SIZE } from '../model/theme/catalog.js'
@@ -150,13 +155,88 @@ test('market install lock serializes concurrent operations', async () => {
     assert.deepEqual(order, ['first-start', 'first-end', 'second-start', 'second-end'])
 })
 
+test('theme use validates Bot access before installing on demand', async () => {
+    /** @type {string[]} */
+    const calls = []
+    const service = new ThemeUseService({
+        getTheme: async slug => {
+            calls.push(`validate:${slug}`)
+            return /** @type {any} */ ({ slug, name: 'Ocean Salt', botDownloadAllowed: true })
+        },
+        install: async slug => {
+            calls.push(`install:${slug}`)
+            return /** @type {any} */ ({ cached: false, version: '1.0.0', theme: { id: slug, name: 'Ocean Salt' } })
+        },
+    })
+
+    const result = await service.use('ocean-salt')
+    assert.deepEqual(calls, ['validate:ocean-salt', 'install:ocean-salt'])
+    assert.equal(result.cached, false)
+    assert.equal(result.theme.id, 'ocean-salt')
+    assert.equal(result.detail.slug, 'ocean-salt')
+})
+
+test('theme use rejects invalid slugs before contacting the market', async () => {
+    let called = false
+    const service = new ThemeUseService({
+        getTheme: async () => { called = true; return /** @type {any} */ ({}) },
+        install: async () => /** @type {any} */ ({}),
+    })
+    await assert.rejects(service.use('../unsafe'), error => /** @type {any} */ (error)?.code === 'theme_slug_invalid')
+    assert.equal(called, false)
+})
+
+test('market slug command lets a regular user download and select the theme', async () => {
+    const originals = {
+        getUserCfg: Config.getUserCfg,
+        getBan: getBanGroup.get,
+        getNotesData: getNotes.getNotesData,
+        putNotesData: getNotes.putNotesData,
+        send: send.send_with_At,
+        use: themeUseService.use,
+    }
+    const pluginData = { theme: 'default' }
+    /** @type {string[]} */ const messages = []
+    /** @type {string[]} */ const used = []
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'phi' : key === 'openPhiPluginApi')
+    getBanGroup.get = async () => false
+    getNotes.getNotesData = async () => /** @type {any} */ (pluginData)
+    getNotes.putNotesData = (_userId, data) => data === pluginData
+    send.send_with_At = async (_event, message) => { messages.push(String(message)) }
+    themeUseService.use = async slug => {
+        used.push(slug)
+        return /** @type {any} */ ({ cached: false, version: '1.0.0', theme: { id: slug, name: 'Ocean Salt' } })
+    }
+    try {
+        const command = new phiMarket()
+        const handled = await command.market(/** @type {any} */ ({
+            msg: '/phi market ocean-salt', user_id: 'regular-user', isMaster: false,
+        }))
+        assert.equal(handled, true)
+        assert.deepEqual(used, ['ocean-salt'])
+        assert.equal(pluginData.theme, 'ocean-salt')
+        assert.match(messages.at(-1) || '', /主题已启用/)
+    } finally {
+        Config.getUserCfg = originals.getUserCfg
+        getBanGroup.get = originals.getBan
+        getNotes.getNotesData = originals.getNotesData
+        getNotes.putNotesData = originals.putNotesData
+        send.send_with_At = originals.send
+        themeUseService.use = originals.use
+    }
+})
+
 test('market command is scoped to the configured command head and myset has no custom-theme bypass', () => {
     const command = fs.readFileSync(new URL('../apps/market.js', import.meta.url), 'utf8')
     const settings = fs.readFileSync(new URL('../apps/setting.js', import.meta.url), 'utf8')
     assert.equal(command.includes("reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\\\s*)market"), true)
     assert.doesNotMatch(command, /escapedCommandHead/)
     assert.doesNotMatch(command, /\^\[#\/\]market/)
+    assert.doesNotMatch(command, /if \(!e\.isMaster\)/)
+    assert.match(command, /themeUseService\.use\(themeId\)/)
+    assert.match(command, /pluginData\.theme = themeId/)
     assert.match(settings, /getThemeOptions\(pluginData\.theme\)/)
+    assert.match(settings, /themeUseService\.use\(canonicalValue\)/)
     assert.doesNotMatch(settings, /const custom = themeManager\.getTheme/)
 })
 
@@ -164,6 +244,10 @@ test('market UI preserves Bot download capability and uses the phi-plugin-api pr
     assert.equal(normalizeMarketTheme({ slug: 'restricted-theme', name: 'Restricted', botDownloadAllowed: false }).botDownloadAllowed, false)
     assert.equal(normalizeMarketTheme({ slug: 'public-theme', name: 'Public', botDownloadAllowed: true }).botDownloadAllowed, true)
     assert.equal(normalizeMarketTheme({ slug: 'anonymous-theme', name: 'Anonymous' }).botDownloadAllowed, null)
+    const marketTemplate = fs.readFileSync(new URL('../resources/html/market/market.art', import.meta.url), 'utf8')
+    assert.match(marketTemplate, /botDownloadAllowed === true/)
+    assert.match(marketTemplate, />可用</)
+    assert.match(marketTemplate, />不可用</)
 
     const originals = {
         list: makeRequest.getThemeMarketList,
@@ -191,7 +275,7 @@ test('market UI preserves Bot download capability and uses the phi-plugin-api pr
     }
 })
 
-test('market catalog filters before paginating and does not alter user theme settings', async () => {
+test('market catalog filters before paginating and list-only requests do not alter user settings', async () => {
     const originalList = makeRequest.getThemeMarketList
     const themes = Array.from({ length: THEME_MARKET_PAGE_SIZE + 2 }, (_, index) => ({
         slug: `page-theme-${index}`,
@@ -217,5 +301,6 @@ test('market catalog filters before paginating and does not alter user theme set
     const command = fs.readFileSync(new URL('../apps/market.js', import.meta.url), 'utf8')
     assert.match(command, /fetchThemeCatalog/)
     assert.match(command, /marketDetail/)
-    assert.doesNotMatch(command, /putNotesData\(/)
+    const listBranch = command.slice(command.indexOf('// 无参数'), command.indexOf('// detail/info'))
+    assert.doesNotMatch(listBranch, /putNotesData\(/)
 })
