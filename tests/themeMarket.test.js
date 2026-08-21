@@ -6,7 +6,8 @@ import path from 'node:path'
 import test from 'node:test'
 import JSZip from 'jszip'
 import Config from '../components/Config.js'
-import { buildMarketQuickMarkdown, phiMarket, sendMarketQuickCommands } from '../apps/market.js'
+import { phiMarket } from '../apps/market.js'
+import { buildMarketQuickMarkdown, sendMarketQuickCommands } from '../model/game/markdown.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import getNotes from '../model/user/getNotes.js'
 import send from '../model/render/send.js'
@@ -181,9 +182,9 @@ test('theme use rejects invalid slugs before contacting the market', async () =>
     let called = false
     const service = new ThemeUseService({
         getTheme: async () => { called = true; return /** @type {any} */ ({}) },
-        install: async () => /** @type {any} */ ({}),
+        install: async () => /** @type {any} */({}),
     })
-    await assert.rejects(service.use('../unsafe'), error => /** @type {any} */ (error)?.code === 'theme_slug_invalid')
+    await assert.rejects(service.use('../unsafe'), error => /** @type {any} */(error)?.code === 'theme_slug_invalid')
     assert.equal(called, false)
 })
 
@@ -201,7 +202,7 @@ test('market slug command lets a regular user download and select the theme', as
     /** @type {string[]} */ const used = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'phi' : key === 'openPhiPluginApi')
     getBanGroup.get = async () => false
-    getNotes.getNotesData = async () => /** @type {any} */ (pluginData)
+    getNotes.getNotesData = async () => /** @type {any} */(pluginData)
     getNotes.putNotesData = (_userId, data) => data === pluginData
     send.send_with_At = async (_event, message) => { messages.push(String(message)) }
     themeUseService.use = async slug => {
@@ -210,7 +211,7 @@ test('market slug command lets a regular user download and select the theme', as
     }
     try {
         const command = new phiMarket()
-        const handled = await command.market(/** @type {any} */ ({
+        const handled = await command.market(/** @type {any} */({
             msg: '/phi market ocean-salt', user_id: 'regular-user', isMaster: false,
         }))
         assert.equal(handled, true)
@@ -281,7 +282,7 @@ test('market page sends one safe Markdown action row for each displayed theme', 
         { slug: 'ocean-salt', name: 'Ocean "Salt"', botDownloadAllowed: true },
         { slug: 'restricted-theme', name: 'Restricted | Theme', botDownloadAllowed: false },
     ]
-    const markdown = buildMarketQuickMarkdown(/** @type {any} */ (themes), 'custom', { page: 2, pageCount: 3 })
+    const markdown = buildMarketQuickMarkdown(/** @type {any} */(themes), 'custom', { page: 2, pageCount: 3 })
     assert.match(markdown, /Ocean "Salt" \| <qqbot-cmd-input text="\/custom market detail ocean-salt" show="查看详情"/)
     assert.match(markdown, /text="\/custom market ocean-salt" show="使用主题"/)
     assert.match(markdown, /Restricted \\| Theme \| <qqbot-cmd-input text="\/custom market detail restricted-theme" show="查看详情"/)
@@ -296,7 +297,7 @@ test('market page sends one safe Markdown action row for each displayed theme', 
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
     send.reply = async (_event, message) => { replies.push(message); return {} }
     try {
-        await sendMarketQuickCommands(/** @type {any} */ ({}), /** @type {any} */ (themes), 'custom')
+        await sendMarketQuickCommands(/** @type {any} */({}), /** @type {any} */(themes), 'custom')
         assert.equal(replies.length, 1)
         assert.equal(replies[0]?.type, 'markdown')
         assert.match(replies[0]?.text || '', /\/custom market ocean-salt/)
@@ -314,16 +315,16 @@ test('market page sends no quick-command text when Markdown is disabled or fails
     try {
         Config.getUserCfg = /** @type {any} */ (() => false)
         send.reply = async () => { calls++; return {} }
-        await sendMarketQuickCommands(/** @type {any} */ ({}), themes, 'phi')
+        await sendMarketQuickCommands(/** @type {any} */({}), themes, 'phi')
         assert.equal(calls, 0)
 
         Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
         send.reply = async () => { calls++; throw new Error('markdown unavailable') }
-        await sendMarketQuickCommands(/** @type {any} */ ({}), themes, 'phi')
+        await sendMarketQuickCommands(/** @type {any} */({}), themes, 'phi')
         assert.equal(calls, 1)
 
         send.reply = async () => { calls++; return { error: [new Error('markdown rejected')] } }
-        await sendMarketQuickCommands(/** @type {any} */ ({}), themes, 'phi')
+        await sendMarketQuickCommands(/** @type {any} */({}), themes, 'phi')
         assert.equal(calls, 2)
 
         const guoba = fs.readFileSync(new URL('../guoba.support.js', import.meta.url), 'utf8')
@@ -353,7 +354,7 @@ test('market shorthand navigation preserves the current query and page state', a
         return undefined
     })
     getBanGroup.get = async () => false
-    getNotes.getNotesData = async () => /** @type {any} */ ({ theme: 'default' })
+    getNotes.getNotesData = async () => /** @type {any} */({ theme: 'default' })
     makeRequest.getThemeMarketList = async () => ({
         ok: true,
         themes: Array.from({ length: THEME_MARKET_PAGE_SIZE + 2 }, (_, index) => ({
@@ -372,7 +373,7 @@ test('market shorthand navigation preserves the current query and page state', a
 
     try {
         const command = new phiMarket()
-        const event = (/** @type {string} */ msg) => /** @type {any} */ ({
+        const event = (/** @type {string} */ msg) => /** @type {any} */({
             msg, user_id: 'market-nav-user', group_id: 'market-nav-group', platform: 'test', isGroup: true,
         })
         assert.equal(await command.market(event('/phi market list ocean 1')), true)
