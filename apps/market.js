@@ -68,7 +68,7 @@ export class phiMarket extends phiPluginBase {
 
     /** @param {botEvent} e @param {string} query @param {number} page */
     async renderMarketCatalog(e, query, page) {
-        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+        const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
         const catalog = await fetchThemeCatalog(query, page)
         const pluginData = await getNotes.getNotesData(e.user_id)
         await send.send_with_At(e, await picmodle.market(e, {
@@ -86,7 +86,7 @@ export class phiMarket extends phiPluginBase {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+        const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '主题市场依赖联合查分 API，请先由 Bot 主人启用该功能。')
             return true
@@ -118,7 +118,7 @@ export class phiMarket extends phiPluginBase {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+        const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
         if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
             send.send_with_At(e, '主题市场依赖联合查分 API，请先由 Bot 主人启用该功能。')
             return true

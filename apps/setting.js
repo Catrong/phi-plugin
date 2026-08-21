@@ -408,7 +408,7 @@ export class phihelp extends phiPluginBase {
         const buildThemeItem = (current) => {
             const builtins = /** @type {Record<string, {title:string, description:string}>} */ (USER_SETTING_OPTIONS.theme)
             const customTheme = themeManager.isCustomTheme(current) ? themeManager.getTheme(current) : null
-            const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+            const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
             const marketGuide = `/${commandHead} market 查看列表；/${commandHead} market detail <slug> 查看详情；/${commandHead} market <slug> 使用主题，首次使用会自动下载。`
             return {
                 key: 'theme',
