@@ -381,9 +381,9 @@ export function supportGuoba() {
                     },
                 },
                 {
-                    field: 'letterMarkdown',
-                    label: '开字母发送MD消息',
-                    bottomHelpMessage: '开字母是否发送Markdown消息，开启发送Markdown消息，关闭直接发送文字版',
+                    field: 'LetterMarkdown',
+                    label: '交互式MD消息',
+                    bottomHelpMessage: '控制开字母和主题市场的Markdown消息；关闭后主题市场不发送快捷操作',
                     component: 'Switch',
                 },
                 {

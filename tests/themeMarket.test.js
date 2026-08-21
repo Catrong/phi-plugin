@@ -6,10 +6,11 @@ import path from 'node:path'
 import test from 'node:test'
 import JSZip from 'jszip'
 import Config from '../components/Config.js'
-import { phiMarket } from '../apps/market.js'
+import { buildMarketQuickMarkdown, phiMarket, sendMarketQuickCommands } from '../apps/market.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import getNotes from '../model/user/getNotes.js'
 import send from '../model/render/send.js'
+import picmodle from '../model/render/picmodle.js'
 import themeManager from '../model/theme/manager.js'
 import themePolicy from '../model/theme/policy.js'
 import { themesDir } from '../model/theme/paths.js'
@@ -272,6 +273,125 @@ test('market UI preserves Bot download capability and uses the phi-plugin-api pr
     } finally {
         makeRequest.getThemeMarketList = originals.list
         makeRequest.getThemeMarketDetail = originals.detail
+    }
+})
+
+test('market page sends one safe Markdown action row for each displayed theme', async () => {
+    const themes = [
+        { slug: 'ocean-salt', name: 'Ocean "Salt"', botDownloadAllowed: true },
+        { slug: 'restricted-theme', name: 'Restricted | Theme', botDownloadAllowed: false },
+    ]
+    const markdown = buildMarketQuickMarkdown(/** @type {any} */ (themes), 'custom', { page: 2, pageCount: 3 })
+    assert.match(markdown, /Ocean "Salt" \| <qqbot-cmd-input text="\/custom market detail ocean-salt" show="查看详情"/)
+    assert.match(markdown, /text="\/custom market ocean-salt" show="使用主题"/)
+    assert.match(markdown, /Restricted \\| Theme \| <qqbot-cmd-input text="\/custom market detail restricted-theme" show="查看详情"/)
+    assert.match(markdown, /text="\/custom market restricted-theme" show="使用主题"/)
+    assert.match(markdown, /text="\/custompr" show="上一页"/)
+    assert.match(markdown, /text="\/customnx" show="下一页"/)
+    assert.equal((markdown.match(/^\|/gm) || []).length, themes.length + 3)
+
+    const originalGetUserCfg = Config.getUserCfg
+    const originalReply = send.reply
+    /** @type {any[]} */ const replies = []
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
+    send.reply = async (_event, message) => { replies.push(message); return {} }
+    try {
+        await sendMarketQuickCommands(/** @type {any} */ ({}), /** @type {any} */ (themes), 'custom')
+        assert.equal(replies.length, 1)
+        assert.equal(replies[0]?.type, 'markdown')
+        assert.match(replies[0]?.text || '', /\/custom market ocean-salt/)
+    } finally {
+        Config.getUserCfg = originalGetUserCfg
+        send.reply = originalReply
+    }
+})
+
+test('market page sends no quick-command text when Markdown is disabled or fails', async () => {
+    const themes = /** @type {any} */ ([{ slug: 'ocean-salt', name: 'Ocean Salt', botDownloadAllowed: true }])
+    const originalGetUserCfg = Config.getUserCfg
+    const originalReply = send.reply
+    let calls = 0
+    try {
+        Config.getUserCfg = /** @type {any} */ (() => false)
+        send.reply = async () => { calls++; return {} }
+        await sendMarketQuickCommands(/** @type {any} */ ({}), themes, 'phi')
+        assert.equal(calls, 0)
+
+        Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
+        send.reply = async () => { calls++; throw new Error('markdown unavailable') }
+        await sendMarketQuickCommands(/** @type {any} */ ({}), themes, 'phi')
+        assert.equal(calls, 1)
+
+        send.reply = async () => { calls++; return { error: [new Error('markdown rejected')] } }
+        await sendMarketQuickCommands(/** @type {any} */ ({}), themes, 'phi')
+        assert.equal(calls, 2)
+
+        const guoba = fs.readFileSync(new URL('../guoba.support.js', import.meta.url), 'utf8')
+        assert.match(guoba, /field: 'LetterMarkdown'/)
+        assert.doesNotMatch(guoba, /field: 'letterMarkdown'/)
+    } finally {
+        Config.getUserCfg = originalGetUserCfg
+        send.reply = originalReply
+    }
+})
+
+test('market shorthand navigation preserves the current query and page state', async () => {
+    const originals = {
+        getUserCfg: Config.getUserCfg,
+        getBan: getBanGroup.get,
+        getNotesData: getNotes.getNotesData,
+        list: makeRequest.getThemeMarketList,
+        market: picmodle.market,
+        sendWithAt: send.send_with_At,
+        reply: send.reply,
+    }
+    /** @type {{query:string,page:number,pageCount:number}[]} */ const rendered = []
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => {
+        if (key === 'cmdhead') return 'phi'
+        if (key === 'openPhiPluginApi') return true
+        if (key === 'LetterMarkdown') return false
+        return undefined
+    })
+    getBanGroup.get = async () => false
+    getNotes.getNotesData = async () => /** @type {any} */ ({ theme: 'default' })
+    makeRequest.getThemeMarketList = async () => ({
+        ok: true,
+        themes: Array.from({ length: THEME_MARKET_PAGE_SIZE + 2 }, (_, index) => ({
+            slug: `ocean-theme-${index}`,
+            name: `Ocean Theme ${index}`,
+            summary: 'ocean results',
+            botDownloadAllowed: true,
+        })),
+    })
+    picmodle.market = /** @type {any} */ (async (/** @type {any} */ _event, /** @type {any} */ data) => {
+        rendered.push({ query: data.query, page: data.page, pageCount: data.pageCount })
+        return `market-page-${data.page}`
+    })
+    send.send_with_At = async () => undefined
+    send.reply = async () => undefined
+
+    try {
+        const command = new phiMarket()
+        const event = (/** @type {string} */ msg) => /** @type {any} */ ({
+            msg, user_id: 'market-nav-user', group_id: 'market-nav-group', platform: 'test', isGroup: true,
+        })
+        assert.equal(await command.market(event('/phi market list ocean 1')), true)
+        assert.equal(await command.marketPage(event('/phinx')), true)
+        assert.equal(await command.marketPage(event('/phi pr')), true)
+        assert.deepEqual(rendered, [
+            { query: 'ocean', page: 1, pageCount: 2 },
+            { query: 'ocean', page: 2, pageCount: 2 },
+            { query: 'ocean', page: 1, pageCount: 2 },
+        ])
+        assert.match(String(command.rule?.[1]?.reg || ''), /nx\|pr\|上一页\|下一页/)
+    } finally {
+        Config.getUserCfg = originals.getUserCfg
+        getBanGroup.get = originals.getBan
+        getNotes.getNotesData = originals.getNotesData
+        makeRequest.getThemeMarketList = originals.list
+        picmodle.market = originals.market
+        send.send_with_At = originals.sendWithAt
+        send.reply = originals.reply
     }
 })
 

@@ -1,5 +1,6 @@
 import Config from '../components/Config.js'
 import logger from '../components/Logger.js'
+import segment from '../components/segment.js'
 import phiPluginBase from '../components/baseClass.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import getNotes from '../model/user/getNotes.js'
@@ -11,6 +12,110 @@ import { fetchThemeCatalog, fetchThemeDetail, isThemeSlug } from '../model/theme
 /** @import {botEvent} from '../components/baseClass.js' */
 
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
+const MARKET_STATE_TTL_MS = 10 * 60 * 1000
+/** @type {Map<string, {query:string,page:number,pageCount:number,updatedAt:number}>} */
+const marketPageStates = new Map()
+
+/** @param {botEvent} e */
+function marketPageStateKey(e) {
+    const userId = String(e.user_id || e.userId || '')
+    const chatId = String(e.group_id || e.groupId || e.chatId || userId)
+    const adapter = e.bot?.adapter
+    const platform = String(e.platform || (typeof adapter === 'object' ? adapter?.name : adapter) || '')
+    return `${platform}:${chatId}:${userId}`
+}
+
+/** @param {botEvent} e */
+function getMarketPageState(e) {
+    const key = marketPageStateKey(e)
+    const state = marketPageStates.get(key)
+    if (!state) return null
+    if (state.updatedAt <= Date.now() - MARKET_STATE_TTL_MS) {
+        marketPageStates.delete(key)
+        return null
+    }
+    return state
+}
+
+/** @param {botEvent} e @param {string} query @param {number} page @param {number} pageCount */
+function setMarketPageState(e, query, page, pageCount) {
+    marketPageStates.set(marketPageStateKey(e), { query, page, pageCount, updatedAt: Date.now() })
+    if (marketPageStates.size > 1000) {
+        const expiredBefore = Date.now() - MARKET_STATE_TTL_MS
+        for (const [key, state] of marketPageStates) {
+            if (state.updatedAt <= expiredBefore) marketPageStates.delete(key)
+        }
+    }
+}
+
+/** @param {unknown} value */
+function escapeMarkdownText(value) {
+    return String(value ?? '')
+        .replace(/\\/g, '\\\\')
+        .replace(/([|*_`~])/g, '\\$1')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+}
+
+/** @param {unknown} value */
+function escapeCommandAttribute(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+}
+
+/** @param {string} text @param {string} show */
+function commandInput(text, show) {
+    return `<qqbot-cmd-input text="${escapeCommandAttribute(text)}" show="${escapeCommandAttribute(show)}" reference="false" />`
+}
+
+/**
+ * @param {{slug:string,name:string,botDownloadAllowed:boolean|null}[]} themes
+ * @param {string} commandHead
+ * @param {{page?:number,pageCount?:number}} [pagination]
+ */
+export function buildMarketQuickMarkdown(themes, commandHead, pagination = {}) {
+    if (!themes.length) return ''
+    const rows = themes.map(theme => [
+        escapeMarkdownText(theme.name),
+        commandInput(`/${commandHead} market detail ${theme.slug}`, '查看详情'),
+        commandInput(`/${commandHead} market ${theme.slug}`, '使用主题'),
+    ])
+    const table = [
+        `| ${rows[0].join(' | ')} |`,
+        '| :---: | :---: | :---: |',
+        ...rows.slice(1).map(row => `| ${row.join(' | ')} |`),
+    ]
+    const page = pagination.page || 1
+    const pageCount = pagination.pageCount || 1
+    const navigation = pageCount > 1 ? [
+        '',
+        '***',
+        `| ${page > 1 ? commandInput(`/${commandHead}pr`, '上一页') : '已是首页'} | ${page} / ${pageCount} 页 | ${page < pageCount ? commandInput(`/${commandHead}nx`, '下一页') : '已是末页'} |`,
+        '| :---: | :---: | :---: |',
+    ] : []
+    return ['***', '本页主题快捷操作：', '', ...table, ...navigation].join('\n')
+}
+
+/**
+ * @param {botEvent} e
+ * @param {{slug:string,name:string,botDownloadAllowed:boolean|null}[]} themes
+ * @param {string} commandHead
+ * @param {{page?:number,pageCount?:number}} [pagination]
+ */
+export async function sendMarketQuickCommands(e, themes, commandHead, pagination = {}) {
+    if (!Config.getUserCfg('config', 'LetterMarkdown')) return
+    const markdown = buildMarketQuickMarkdown(themes, commandHead, pagination)
+    if (!markdown) return
+    try {
+        const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(markdown)))
+        if (sent?.error?.length) logger.warn('[phi-plugin][主题市场] Markdown 发送失败')
+    } catch (error) {
+        logger.warn('[phi-plugin][主题市场] Markdown 发送失败', error)
+    }
+}
 
 export class phiMarket extends phiPluginBase {
     constructor() {
@@ -22,8 +127,56 @@ export class phiMarket extends phiPluginBase {
             rule: [{
                 reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)market(\\s+.*)?$`,
                 fnc: 'market',
+            }, {
+                reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(nx|pr|上一页|下一页)$`,
+                fnc: 'marketPage',
             }],
         })
+    }
+
+    /** @param {botEvent} e @param {string} query @param {number} page @param {string} commandHead */
+    async renderMarketCatalog(e, query, page, commandHead) {
+        const catalog = await fetchThemeCatalog(query, page)
+        const pluginData = await getNotes.getNotesData(e.user_id)
+        await send.send_with_At(e, await picmodle.market(e, {
+            ...catalog,
+            currentTheme: pluginData?.theme || 'default',
+            commandHead,
+        }))
+        setMarketPageState(e, query, catalog.page, catalog.pageCount)
+        await sendMarketQuickCommands(e, catalog.themes, commandHead, catalog)
+    }
+
+    /** @param {botEvent} e */
+    async marketPage(e) {
+        if (await getBanGroup.get(e, 'theme')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '主题市场依赖联合查分 API，请先由 Bot 主人启用该功能。')
+            return true
+        }
+        const action = e.msg.replace(new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)`, 'i'), '').trim().toLowerCase()
+        const state = getMarketPageState(e)
+        if (!state) {
+            send.send_with_At(e, `请先使用 /${commandHead} market 打开主题市场。`)
+            return true
+        }
+        const next = ['nx', '下一页'].includes(action)
+        const targetPage = state.page + (next ? 1 : -1)
+        if (targetPage < 1 || targetPage > state.pageCount) {
+            send.send_with_At(e, targetPage < 1 ? '已经是主题市场第一页了。' : '已经是主题市场最后一页了。')
+            return true
+        }
+        try {
+            await this.renderMarketCatalog(e, state.query, targetPage, commandHead)
+        } catch (/** @type {any} */ error) {
+            logger.warn(`[phi-plugin][主题市场] 翻页加载失败：${error?.code || 'unknown'}`)
+            send.send_with_At(e, '主题市场目录暂时不可用，请稍后重试。')
+        }
+        return true
     }
 
     /** @param {botEvent} e */
@@ -52,13 +205,7 @@ export class phiMarket extends phiPluginBase {
             const queryArgs = lastArg && /^\d+$/.test(lastArg) ? listArgs.slice(0, -1) : listArgs
             const query = queryArgs.join(' ')
             try {
-                const catalog = await fetchThemeCatalog(query, page)
-                const pluginData = await getNotes.getNotesData(e.user_id)
-                send.send_with_At(e, await picmodle.market(e, {
-                    ...catalog,
-                    currentTheme: pluginData?.theme || 'default',
-                    commandHead,
-                }))
+                await this.renderMarketCatalog(e, query, page, commandHead)
             } catch (/** @type {any} */ error) {
                 logger.warn(`[phi-plugin][主题市场] 目录加载失败：${error?.code || 'unknown'}`)
                 send.send_with_At(e, '主题市场目录暂时不可用，请稍后重试。')

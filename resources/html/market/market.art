@@ -66,5 +66,17 @@
     </section>
     {{/if}}
 
+    <section class="market-commands">
+        <h2>相关命令</h2>
+        <div class="command-grid">
+            <code>/{{commandHead}} market [页码]</code><span>查看主题列表</span>
+            <code>/{{commandHead}} market list &lt;关键词&gt; [页码]</code><span>搜索主题</span>
+            <code>/{{commandHead}} market detail &lt;slug&gt;</code><span>查看主题详情</span>
+            <code>/{{commandHead}} market &lt;slug&gt;</code><span>下载并使用主题</span>
+            <code>/{{commandHead}}pr · /{{commandHead}}上一页</code><span>返回上一页</span>
+            <code>/{{commandHead}}nx · /{{commandHead}}下一页</code><span>前往下一页</span>
+        </div>
+    </section>
+
 </main>
 {{/block}}
