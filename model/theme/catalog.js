@@ -4,6 +4,7 @@ import themeManager from './manager.js'
 
 export const THEME_MARKET_API_ORIGIN = 'https://lyh.org.cn:18473'
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
+const PINNED_LOCAL_THEME_ID = 'milthm'
 export const THEME_MARKET_PAGE_SIZE = 6
 
 /** @param {unknown} value @param {number} limit */
@@ -49,6 +50,7 @@ export function normalizeMarketTheme(item, inheritedBotDownloadAllowed = null) {
         size: Number.isSafeInteger(item?.size) && item.size > 0 ? item.size : 0,
         botDownloadAllowed,
         local: false,
+        pinnedLocal: false,
     }
 }
 
@@ -60,7 +62,9 @@ function paginateThemes(themes, query, page, localOnly) {
             .some((/** @type {string} */ value) => value.toLocaleLowerCase().includes(needle)))
         : themes
     if (!localOnly) {
-        filtered.sort((/** @type {any} */ a, /** @type {any} */ b) => Number(b.featured) - Number(a.featured) || b.updatedAt.localeCompare(a.updatedAt))
+        filtered.sort((/** @type {any} */ a, /** @type {any} */ b) => Number(b.pinnedLocal) - Number(a.pinnedLocal)
+            || Number(b.featured) - Number(a.featured)
+            || b.updatedAt.localeCompare(a.updatedAt))
     }
     const total = filtered.length
     const pageCount = Math.max(1, Math.ceil(total / THEME_MARKET_PAGE_SIZE))
@@ -96,6 +100,7 @@ function normalizeLocalTheme(theme) {
         size: 0,
         botDownloadAllowed: themeManager.isThemeAvailable(theme.id),
         local: true,
+        pinnedLocal: theme.id === PINNED_LOCAL_THEME_ID,
     }
 }
 
@@ -123,9 +128,13 @@ export function getLocalThemeDetail(themeId) {
 export async function fetchThemeCatalog(query = '', page = 1) {
     const data = /** @type {any} */ (await makeRequest.getThemeMarketList())
     const inheritedBotDownloadAllowed = typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null
-    const themes = Array.isArray(data?.themes)
+    const onlineThemes = Array.isArray(data?.themes)
         ? data.themes.map((/** @type {any} */ item) => normalizeMarketTheme(item, inheritedBotDownloadAllowed)).filter((/** @type {{slug:string}} */ theme) => SLUG_RE.test(theme.slug))
         : []
+    const pinnedLocalTheme = getLocalThemeDetail(PINNED_LOCAL_THEME_ID)
+    const themes = pinnedLocalTheme
+        ? [pinnedLocalTheme, ...onlineThemes.filter((/** @type {{slug:string}} */ theme) => theme.slug !== PINNED_LOCAL_THEME_ID)]
+        : onlineThemes
     return {
         demo: data?.demo === true,
         ...paginateThemes(themes, query, page, false),

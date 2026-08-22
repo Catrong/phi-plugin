@@ -102,10 +102,6 @@ export class phiMarket extends phiPluginBase {
             return false
         }
         const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '主题市场依赖联合查分 API，请先由 Bot 主人启用该功能。')
-            return true
-        }
         const action = e.msg.replace(new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)`, 'i'), '').trim().toLowerCase()
         const state = getMarketPageState(e)
         if (!state) {
@@ -134,10 +130,6 @@ export class phiMarket extends phiPluginBase {
             return false
         }
         const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, '主题市场依赖联合查分 API，请先由 Bot 主人启用该功能。')
-            return true
-        }
         const raw = e.msg.replace(
             new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)market(\\s*)`, 'i'),
             '',
@@ -172,7 +164,7 @@ export class phiMarket extends phiPluginBase {
             }
             try {
                 let detail = localDetail
-                if (Config.getUserCfg('config', 'openPhiPluginApi') && isThemeSlug(themeId)) {
+                if (!localDetail && Config.getUserCfg('config', 'openPhiPluginApi') && isThemeSlug(themeId)) {
                     try {
                         detail = await fetchThemeDetail(themeId)
                     } catch (/** @type {any} */ error) {

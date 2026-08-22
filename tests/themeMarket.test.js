@@ -317,7 +317,10 @@ test('market UI preserves Bot download capability and uses the phi-plugin-api pr
     }
     makeRequest.getThemeMarketList = async () => ({
         ok: true,
-        themes: [{ slug: 'proxy-theme', name: 'Proxy Theme', botDownloadAllowed: false }],
+        themes: [
+            { slug: 'proxy-theme', name: 'Proxy Theme', botDownloadAllowed: false },
+            { slug: 'milthm', name: 'Remote Milthm', botDownloadAllowed: false },
+        ],
     })
     makeRequest.getThemeMarketDetail = async themeId => ({
         ok: true,
@@ -327,7 +330,10 @@ test('market UI preserves Bot download capability and uses the phi-plugin-api pr
     })
     try {
         const catalog = await fetchThemeCatalog()
-        assert.equal(catalog.themes[0].botDownloadAllowed, false)
+        assert.equal(catalog.themes[0].slug, 'milthm')
+        assert.equal(catalog.themes[0].local, true)
+        assert.equal(catalog.themes.filter(theme => theme.slug === 'milthm').length, 1)
+        assert.equal(catalog.themes.find(theme => theme.slug === 'proxy-theme')?.botDownloadAllowed, false)
         const detail = await fetchThemeDetail('proxy-theme')
         assert.equal(detail.botDownloadAllowed, false)
         assert.equal(detail.releaseNotes, 'proxy response')
