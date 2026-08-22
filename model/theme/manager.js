@@ -6,6 +6,8 @@ import YamlReader from '../../components/YamlReader.js'
 import { pluginResources } from '../filesystem/path.js'
 import { USER_SETTING_OPTIONS } from '../game/constNum.js'
 import themePolicy from './policy.js'
+import { recoverAllMarketInstalls } from './recovery.js'
+import { withMarketInstallLock } from './installLock.js'
 import { migrateLegacyThemeDirectories, themesDir } from './paths.js'
 
 /** 自定义主题目录 */
@@ -84,6 +86,18 @@ export default await new class themeManager {
         for (const migration of migrateLegacyThemeDirectories()) {
             logger.info(`[phi-plugin][主题] 已迁移主题目录：${migration.from} -> ${migration.to}`)
         }
+        /** @type {{themeId: string, error: unknown}[]} */
+        let recoveryFailures = []
+        try {
+            recoveryFailures = await withMarketInstallLock(() => recoverAllMarketInstalls({ cleanAllWork: true }))
+        } catch (error) {
+            // 其他进程正在安装或锁暂时不可用时不能阻断插件启动；
+            // 每次市场安装前仍会执行 recoverAllMarketInstalls 兜底。
+            logger.error('[phi-plugin][主题] 启动时的市场主题恢复被跳过（安装锁暂不可用）', error)
+        }
+        for (const failure of recoveryFailures) {
+            logger.error(`[phi-plugin][主题] 恢复中断的市场主题安装失败：${failure.themeId}`, failure.error)
+        }
         this.scan()
         // 监听主题目录：info.yaml 及主题目录的增删改均触发重新扫描（目录不存在时 chokidar 会等待其出现）
         const lease = fileWatcherRegistry.watch('b19:themes', THEMES_DIR, () => {
@@ -97,7 +111,7 @@ export default await new class themeManager {
                 .some(part => part.startsWith('.phi-market-')),
         })
         // ignoreInitial 会丢弃初始扫描完成前的变更，等 watcher 就绪后补扫一次兜底
-        await new Promise(resolve => lease.watcher.once('ready', () => resolve(undefined)))
+        await lease.ready
         this.scan()
         return this
     }

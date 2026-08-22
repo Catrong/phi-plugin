@@ -24,7 +24,7 @@
     <!-- 清单中的颜色和字体置于页面/主题 CSS 之后，保证清单配置优先。 -->
     <style>
         {{if themeInfo.fontUrl}}
-        @font-face { font-family: "phi-theme"; src: url("{{themeInfo.fontUrl}}") format("truetype"); }
+        @font-face { font-family: "phi-theme"; src: url("{{@ themeInfo.fontUrl}}") format("truetype"); }
         {{/if}}
         {{if themeInfo.colors}}
         :root {

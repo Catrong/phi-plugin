@@ -7,12 +7,13 @@ const globalStore = /** @type {Record<symbol, any>} */ (globalThis)
 /**
  * @typedef {object} FileWatcherLease
  * @property {import('chokidar').FSWatcher} watcher
+ * @property {Promise<void>} ready
  * @property {() => Promise<void>} close
  */
 
 export class FileWatcherRegistry {
     constructor() {
-        /** @type {Map<string, {file: string, watcher: import('chokidar').FSWatcher, onChange: (...args: any[]) => void, lease: FileWatcherLease}>} */
+        /** @type {Map<string, {file: string, watcher: import('chokidar').FSWatcher, ready: Promise<void>, onChange: (...args: any[]) => void, lease: FileWatcherLease}>} */
         this.entries = new Map()
     }
 
@@ -30,7 +31,7 @@ export class FileWatcherRegistry {
         const current = this.entries.get(key)
         if (current?.file === normalizedFile) {
             current.onChange = onChange
-            current.lease = this.createLease(key, current.watcher)
+            current.lease = this.createLease(key, current.watcher, current.ready)
             return current.lease
         }
 
@@ -39,20 +40,22 @@ export class FileWatcherRegistry {
             void current.watcher.close()
         }
 
-        /** @type {{file: string, watcher: import('chokidar').FSWatcher, onChange: (...args: any[]) => void, lease: FileWatcherLease}} */
+        /** @type {{file: string, watcher: import('chokidar').FSWatcher, ready: Promise<void>, onChange: (...args: any[]) => void, lease: FileWatcherLease}} */
         const entry = {
             file: normalizedFile,
             watcher: /** @type {any} */ (null),
+            ready: /** @type {any} */ (null),
             onChange,
             lease: /** @type {any} */ (null),
         }
         entry.watcher = chokidar.watch(normalizedFile, watchOptions)
+        entry.ready = new Promise(resolve => entry.watcher.once('ready', () => resolve()))
         const watcher = /** @type {any} */ (entry.watcher)
         for (const event of events) {
             watcher.on(event, /** @type {(...args: any[]) => void} */ ((...args) => entry.onChange(...args)))
 
         }
-        entry.lease = this.createLease(key, entry.watcher)
+        entry.lease = this.createLease(key, entry.watcher, entry.ready)
         this.entries.set(key, entry)
         return entry.lease
     }
@@ -60,12 +63,14 @@ export class FileWatcherRegistry {
     /**
      * @param {string} key
      * @param {import('chokidar').FSWatcher} watcher
+     * @param {Promise<void>} ready
      * @returns {FileWatcherLease}
      */
-    createLease(key, watcher) {
+    createLease(key, watcher, ready) {
         /** @type {FileWatcherLease} */
         const lease = {
             watcher,
+            ready,
             close: () => this.close(key, lease),
         }
         return lease

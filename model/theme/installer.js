@@ -4,11 +4,19 @@ import path from 'node:path'
 import JSZip from 'jszip'
 import YAML from 'yaml'
 import { ThemeMarketClientError } from './marketClient.js'
-import { migrateLegacyThemeDirectories, themesDir } from './paths.js'
+import { themesDir } from './paths.js'
+import {
+    readMarketReceipt,
+    recoverAllMarketInstalls as recoverAllMarketInstallsUnlocked,
+    recoverMarketInstall as recoverMarketInstallUnlocked,
+} from './recovery.js'
+import { assertMarketInstallQuota } from './installGuard.js'
+import { withMarketInstallLock } from './installLock.js'
+
+export { withMarketInstallLock } from './installLock.js'
 
 const THEMES_DIR = themesDir
 const WORK_DIR = path.join(THEMES_DIR, '.phi-market-work')
-const LOCK_PATH = path.join(THEMES_DIR, '.phi-market-install.lock')
 const MAX_ARCHIVE_BYTES = 50 * 1024 * 1024
 const MAX_FILES = 128
 const MAX_ENTRIES = 256
@@ -16,9 +24,6 @@ const MAX_EXTRACTED_BYTES = 50 * 1024 * 1024
 const MAX_TEXT_BYTES = 5 * 1024 * 1024
 const MAX_RESOURCE_BYTES = 20 * 1024 * 1024
 const MAX_COMPRESSION_RATIO = 200
-const LOCK_WAIT_MS = 120_000
-const LOCK_STALE_MS = 5 * 60_000
-const WORK_STALE_MS = 60 * 60_000
 
 const RESERVED_IDS = new Set(['default', 'snow', 'star', 'dss2', 'topText', 'foolsDay'])
 const TEXT_EXTENSIONS = new Set(['.art', '.css', '.json', '.md', '.txt', '.yaml'])
@@ -29,9 +34,6 @@ const ALLOWED_EXTENSIONS = new Set([
 const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i
 
 /** @typedef {{fileName:string, compressedSize:number, uncompressedSize:number, unixPermissions:(number|null)}} ZipEntry */
-
-/** @param {number} ms */
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 /** @param {unknown} error */
 function normalizedZipError(error) {
@@ -275,18 +277,6 @@ async function extractArchive(zipPath, targetDir, layout) {
     }
 }
 
-/** @param {string} receiptPath */
-async function readReceipt(receiptPath) {
-    try {
-        const value = JSON.parse(await fs.promises.readFile(receiptPath, 'utf8'))
-        if (value?.source !== 'phi-theme-marketplace' || typeof value?.slug !== 'string'
-            || typeof value?.version !== 'string' || !/^[a-f0-9]{64}$/.test(value?.sha256)) return null
-        return value
-    } catch {
-        return null
-    }
-}
-
 /** @param {string} themeId @param {{version:string,sha256:string}} download */
 export async function isMarketThemeCached(themeId, download) {
     const target = path.join(THEMES_DIR, themeId)
@@ -294,7 +284,7 @@ export async function isMarketThemeCached(themeId, download) {
         const stat = await fs.promises.lstat(target)
         if (!stat.isDirectory() || stat.isSymbolicLink()) return false
         const info = YAML.parse(await fs.promises.readFile(path.join(target, 'info.yaml'), 'utf8'))
-        const receipt = await readReceipt(path.join(target, '.phi-market.json'))
+        const receipt = await readMarketReceipt(path.join(target, '.phi-market.json'))
         return info?.id === themeId && receipt?.slug === themeId
             && receipt?.version === download.version && receipt?.sha256 === download.sha256
     } catch {
@@ -303,165 +293,103 @@ export async function isMarketThemeCached(themeId, download) {
 }
 
 /** @param {string} themeId */
-export async function recoverMarketInstall(themeId) {
-    migrateLegacyThemeDirectories()
-    await fs.promises.mkdir(WORK_DIR, { recursive: true, mode: 0o700 })
+export async function assertMarketInstallTarget(themeId) {
+    if (!/^[a-z][a-z0-9_-]{0,119}$/.test(themeId) || RESERVED_IDS.has(themeId)) {
+        throw new ThemeMarketClientError('theme_package_reserved_id')
+    }
     const target = path.join(THEMES_DIR, themeId)
-    const entries = await fs.promises.readdir(THEMES_DIR, { withFileTypes: true })
-    const prefix = `.phi-market-backup-${themeId}-`
-    const backups = entries.filter(entry => entry.isDirectory() && entry.name.startsWith(prefix))
-    const targetExists = await fs.promises.lstat(target).then(() => true, () => false)
-    if (!targetExists && backups.length) {
-        const candidates = await Promise.all(backups.map(async entry => ({
-            entry,
-            stat: await fs.promises.stat(path.join(THEMES_DIR, entry.name)),
-            receipt: await readReceipt(path.join(THEMES_DIR, entry.name, '.phi-market.json')),
-        })))
-        const recoverable = candidates
-            .filter(item => item.receipt?.slug === themeId)
-            .sort((a, b) => b.stat.mtimeMs - a.stat.mtimeMs)[0]
-        if (recoverable) await fs.promises.rename(path.join(THEMES_DIR, recoverable.entry.name), target)
+    const existing = await fs.promises.lstat(target).catch(() => null)
+    if (!existing) return { existing: null, marketOwned: false }
+    if (!existing.isDirectory() || existing.isSymbolicLink()) {
+        throw new ThemeMarketClientError('theme_conflicts_with_local_theme')
     }
+    const receiptPath = path.join(target, '.phi-market.json')
+    const marker = await fs.promises.lstat(receiptPath).catch(() => null)
+    const receipt = await readMarketReceipt(receiptPath)
+    if (!marker?.isFile() || (receipt && receipt.slug !== themeId)) {
+        throw new ThemeMarketClientError('theme_conflicts_with_local_theme')
+    }
+    return { existing, marketOwned: true }
+}
 
-    const now = Date.now()
-    for (const entry of await fs.promises.readdir(WORK_DIR, { withFileTypes: true })) {
-        const fullPath = path.join(WORK_DIR, entry.name)
-        const stat = await fs.promises.stat(fullPath).catch(() => null)
-        if (stat && now - stat.mtimeMs > WORK_STALE_MS) {
-            await fs.promises.rm(fullPath, { recursive: true, force: true })
+/** @param {string} themeId @param {{version:string,sha256:string}} download @param {string} zipPath */
+async function installMarketArchiveUnlocked(themeId, download, zipPath) {
+    let stage = ''
+    try {
+        const recoveryFailures = await recoverAllMarketInstallsUnlocked()
+        if (recoveryFailures.length) throw new ThemeMarketClientError('theme_install_recovery_failed')
+        const target = path.join(THEMES_DIR, themeId)
+        const { existing } = await assertMarketInstallTarget(themeId)
+
+        const id = crypto.randomUUID()
+        stage = path.join(WORK_DIR, `stage-${themeId}-${id}`)
+        const backup = path.join(THEMES_DIR, `.phi-market-backup-${themeId}-${id}`)
+        let movedOld = false
+        let installed = false
+        await fs.promises.mkdir(stage, { recursive: false, mode: 0o700 })
+        try {
+            const entries = await listZipEntries(zipPath)
+            const layout = validateArchiveLayout(entries)
+            await extractArchive(zipPath, stage, layout)
+            const infoPath = path.join(stage, 'info.yaml')
+            const info = YAML.parse(await fs.promises.readFile(infoPath, 'utf8'))
+            if (!info || typeof info !== 'object' || info.id !== themeId) {
+                throw new ThemeMarketClientError('theme_package_id_mismatch')
+            }
+            const receipt = {
+                installedAt: new Date().toISOString(),
+                sha256: download.sha256,
+                slug: themeId,
+                source: 'phi-theme-marketplace',
+                version: download.version,
+            }
+            await fs.promises.writeFile(path.join(stage, '.phi-market.json'), `${JSON.stringify(receipt, null, 2)}\n`, {
+                encoding: 'utf8', mode: 0o600, flag: 'wx',
+            })
+            await assertMarketInstallQuota(themeId, stage)
+            if (existing) {
+                await fs.promises.rename(target, backup)
+                movedOld = true
+            }
+            await fs.promises.rename(stage, target)
+            installed = true
+            if (movedOld) await fs.promises.rm(backup, { recursive: true, force: true }).catch(() => {})
+            return receipt
+        } catch (error) {
+            if (!installed && movedOld) {
+                const targetNow = await fs.promises.lstat(target).catch(() => null)
+                if (!targetNow) await fs.promises.rename(backup, target).catch(() => {})
+            }
+            throw error
+        } finally {
+            if (stage) await fs.promises.rm(stage, { recursive: true, force: true }).catch(() => {})
         }
-    }
-    for (const entry of await fs.promises.readdir(THEMES_DIR, { withFileTypes: true })) {
-        if (!entry.isDirectory() || !entry.name.startsWith(prefix)) continue
-        const fullPath = path.join(THEMES_DIR, entry.name)
-        if (path.resolve(fullPath) !== path.resolve(target)) {
-            await fs.promises.rm(fullPath, { recursive: true, force: true })
-        }
+    } finally {
+        await fs.promises.rm(zipPath, { force: true }).catch(() => {})
     }
 }
 
 /** @param {string} themeId @param {{version:string,sha256:string}} download @param {string} zipPath */
 export async function installMarketArchive(themeId, download, zipPath) {
-    if (!/^[a-z][a-z0-9_-]{0,119}$/.test(themeId) || RESERVED_IDS.has(themeId)) {
-        throw new ThemeMarketClientError('theme_package_reserved_id')
-    }
-    await recoverMarketInstall(themeId)
-    const target = path.join(THEMES_DIR, themeId)
-    const existing = await fs.promises.lstat(target).catch(() => null)
-    if (existing) {
-        if (!existing.isDirectory() || existing.isSymbolicLink()) {
-            throw new ThemeMarketClientError('theme_conflicts_with_local_theme')
-        }
-        const receipt = await readReceipt(path.join(target, '.phi-market.json'))
-        if (receipt?.slug !== themeId) {
-            throw new ThemeMarketClientError('theme_conflicts_with_local_theme')
-        }
-    }
-
-    const id = crypto.randomUUID()
-    const stage = path.join(WORK_DIR, `stage-${themeId}-${id}`)
-    const backup = path.join(THEMES_DIR, `.phi-market-backup-${themeId}-${id}`)
-    let movedOld = false
-    let installed = false
+    let entered = false
     try {
-        await fs.promises.mkdir(stage, { recursive: false, mode: 0o700 })
-        const entries = await listZipEntries(zipPath)
-        const layout = validateArchiveLayout(entries)
-        await extractArchive(zipPath, stage, layout)
-        const infoPath = path.join(stage, 'info.yaml')
-        const info = YAML.parse(await fs.promises.readFile(infoPath, 'utf8'))
-        if (!info || typeof info !== 'object' || info.id !== themeId) {
-            throw new ThemeMarketClientError('theme_package_id_mismatch')
-        }
-        const receipt = {
-            installedAt: new Date().toISOString(),
-            sha256: download.sha256,
-            slug: themeId,
-            source: 'phi-theme-marketplace',
-            version: download.version,
-        }
-        await fs.promises.writeFile(path.join(stage, '.phi-market.json'), `${JSON.stringify(receipt, null, 2)}\n`, {
-            encoding: 'utf8', mode: 0o600, flag: 'wx',
+        return await withMarketInstallLock(() => {
+            entered = true
+            return installMarketArchiveUnlocked(themeId, download, zipPath)
         })
-        if (existing) {
-            await fs.promises.rename(target, backup)
-            movedOld = true
-        }
-        await fs.promises.rename(stage, target)
-        installed = true
-        if (movedOld) await fs.promises.rm(backup, { recursive: true, force: true }).catch(() => {})
-        return receipt
-    } catch (error) {
-        if (!installed && movedOld) {
-            const targetNow = await fs.promises.lstat(target).catch(() => null)
-            if (!targetNow) await fs.promises.rename(backup, target).catch(() => {})
-        }
-        throw error
     } finally {
-        await fs.promises.rm(stage, { recursive: true, force: true }).catch(() => {})
-        await fs.promises.rm(zipPath, { force: true }).catch(() => {})
+        if (!entered) await fs.promises.rm(zipPath, { force: true }).catch(() => {})
     }
 }
 
-/** @param {number} pid */
-function processAlive(pid) {
-    if (!Number.isSafeInteger(pid) || pid <= 0) return false
-    try {
-        process.kill(pid, 0)
-        return true
-    } catch (error) {
-        return /** @type {any} */ (error)?.code === 'EPERM'
-    }
+/** @param {string} themeId */
+export function recoverMarketInstall(themeId) {
+    return withMarketInstallLock(() => recoverMarketInstallUnlocked(themeId))
 }
 
-async function acquireFileLock() {
-    migrateLegacyThemeDirectories()
-    await fs.promises.mkdir(THEMES_DIR, { recursive: true, mode: 0o700 })
-    const started = Date.now()
-    while (Date.now() - started < LOCK_WAIT_MS) {
-        try {
-            const handle = await fs.promises.open(LOCK_PATH, 'wx', 0o600)
-            await handle.writeFile(JSON.stringify({ pid: process.pid, createdAt: new Date().toISOString() }))
-            await handle.sync()
-            return handle
-        } catch (error) {
-            if (/** @type {any} */ (error)?.code !== 'EEXIST') throw error
-            const stat = await fs.promises.stat(LOCK_PATH).catch(() => null)
-            if (stat && Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
-                const owner = await fs.promises.readFile(LOCK_PATH, 'utf8')
-                    .then(value => JSON.parse(value), () => null)
-                if (!processAlive(Number(owner?.pid))) {
-                    await fs.promises.rm(LOCK_PATH, { force: true }).catch(() => {})
-                    continue
-                }
-            }
-            await wait(200)
-        }
-    }
-    throw new ThemeMarketClientError('theme_install_busy')
-}
-
-/** @type {Promise<void>} */
-let processQueue = Promise.resolve()
-
-/** @template T @param {() => Promise<T>} operation @returns {Promise<T>} */
-export async function withMarketInstallLock(operation) {
-    const previous = processQueue.catch(() => {})
-    /** @type {() => void} */
-    let releaseQueue = () => {}
-    processQueue = new Promise(resolve => { releaseQueue = () => resolve() })
-    await previous
-    let handle
-    try {
-        handle = await acquireFileLock()
-        return await operation()
-    } finally {
-        if (handle) {
-            await handle.close().catch(() => {})
-            await fs.promises.rm(LOCK_PATH, { force: true }).catch(() => {})
-        }
-        releaseQueue()
-    }
+/** @param {{cleanAllWork?:boolean}} [options] */
+export function recoverAllMarketInstalls(options = {}) {
+    return withMarketInstallLock(() => recoverAllMarketInstallsUnlocked(options))
 }
 
 /** @param {string} fileName */
