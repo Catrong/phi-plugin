@@ -1,5 +1,6 @@
 import { ThemeMarketClientError } from './marketClient.js'
 import makeRequest from '../api/makeRequest.js'
+import themeManager from './manager.js'
 
 export const THEME_MARKET_API_ORIGIN = 'https://lyh.org.cn:18473'
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
@@ -47,7 +48,72 @@ export function normalizeMarketTheme(item, inheritedBotDownloadAllowed = null) {
         featured: item?.featured === true,
         size: Number.isSafeInteger(item?.size) && item.size > 0 ? item.size : 0,
         botDownloadAllowed,
+        local: false,
     }
+}
+
+/** @param {any[]} themes @param {string} query @param {number} page @param {boolean} localOnly */
+function paginateThemes(themes, query, page, localOnly) {
+    const needle = text(query, 80).toLocaleLowerCase()
+    const filtered = needle
+        ? themes.filter((/** @type {any} */ theme) => [theme.slug, theme.name, theme.author, theme.summary, ...theme.tags]
+            .some((/** @type {string} */ value) => value.toLocaleLowerCase().includes(needle)))
+        : themes
+    if (!localOnly) {
+        filtered.sort((/** @type {any} */ a, /** @type {any} */ b) => Number(b.featured) - Number(a.featured) || b.updatedAt.localeCompare(a.updatedAt))
+    }
+    const total = filtered.length
+    const pageCount = Math.max(1, Math.ceil(total / THEME_MARKET_PAGE_SIZE))
+    const currentPage = Number.isSafeInteger(page) ? Math.min(Math.max(page, 1), pageCount) : 1
+    const start = (currentPage - 1) * THEME_MARKET_PAGE_SIZE
+    return {
+        themes: filtered.slice(start, start + THEME_MARKET_PAGE_SIZE),
+        query: needle,
+        page: currentPage,
+        pageCount,
+        total,
+        localOnly,
+    }
+}
+
+/** @param {any} theme */
+function normalizeLocalTheme(theme) {
+    return {
+        slug: theme.id,
+        themeId: theme.id,
+        name: theme.name || theme.id,
+        author: theme.author || '',
+        summary: theme.description || '',
+        description: theme.description || '',
+        cover: '',
+        tags: [theme.marketInstalled ? '已下载' : '本地主题'],
+        version: theme.marketVersion || '',
+        downloadPolicy: 'local',
+        compatibility: '本地已安装',
+        downloads: 0,
+        updatedAt: '',
+        featured: false,
+        size: 0,
+        botDownloadAllowed: themeManager.isThemeAvailable(theme.id),
+        local: true,
+    }
+}
+
+/**
+ * 返回当前进程已注册的本地自定义主题目录，不访问网络。
+ * @param {string} [query]
+ * @param {number} [page]
+ */
+export function getLocalThemeCatalog(query = '', page = 1) {
+    const themes = themeManager.getCustomThemes().map(normalizeLocalTheme)
+    return { demo: false, ...paginateThemes(themes, query, page, true) }
+}
+
+/** @param {string} themeId */
+export function getLocalThemeDetail(themeId) {
+    const theme = themeManager.getTheme(themeId)
+    if (!theme || !themeManager.isCustomTheme(themeId)) return null
+    return { ...normalizeLocalTheme(theme), releaseNotes: '' }
 }
 
 /**
@@ -60,23 +126,9 @@ export async function fetchThemeCatalog(query = '', page = 1) {
     const themes = Array.isArray(data?.themes)
         ? data.themes.map((/** @type {any} */ item) => normalizeMarketTheme(item, inheritedBotDownloadAllowed)).filter((/** @type {{slug:string}} */ theme) => SLUG_RE.test(theme.slug))
         : []
-    const needle = text(query, 80).toLocaleLowerCase()
-    const filtered = needle
-        ? themes.filter((/** @type {any} */ theme) => [theme.slug, theme.name, theme.author, theme.summary, ...theme.tags]
-            .some((/** @type {string} */ value) => value.toLocaleLowerCase().includes(needle)))
-        : themes
-    filtered.sort((/** @type {any} */ a, /** @type {any} */ b) => Number(b.featured) - Number(a.featured) || b.updatedAt.localeCompare(a.updatedAt))
-    const total = filtered.length
-    const pageCount = Math.max(1, Math.ceil(total / THEME_MARKET_PAGE_SIZE))
-    const currentPage = Number.isSafeInteger(page) ? Math.min(Math.max(page, 1), pageCount) : 1
-    const start = (currentPage - 1) * THEME_MARKET_PAGE_SIZE
     return {
         demo: data?.demo === true,
-        themes: filtered.slice(start, start + THEME_MARKET_PAGE_SIZE),
-        query: needle,
-        page: currentPage,
-        pageCount,
-        total,
+        ...paginateThemes(themes, query, page, false),
     }
 }
 

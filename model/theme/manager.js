@@ -63,6 +63,7 @@ const encodeThemeUrlPath = value => value.split('/').map(encodeURIComponent).joi
  * @property {Record<string, string>} [css] 按渲染页面配置的样式表文件名
  * @property {boolean} [legacyCss] 是否使用旧版 B19 替换样式语义
  * @property {boolean} marketInstalled 是否由主题市场安装
+ * @property {string} [marketVersion] 市场安装收据中的版本
  */
 
 /**
@@ -194,7 +195,8 @@ export default await new class themeManager {
                     && receipt?.slug === id
                     && typeof receipt?.version === 'string'
                     && /^[a-f0-9]{64}$/.test(receipt?.sha256)
-                if (!validReceipt) logger.warn(`[phi-plugin][主题] ${dirName} 的市场安装收据无效，仍从普通主题列表隐藏`)
+                if (validReceipt) entry.marketVersion = receipt.version
+                else logger.warn(`[phi-plugin][主题] ${dirName} 的市场安装收据无效，仍从普通主题列表隐藏`)
             } catch {
                 logger.warn(`[phi-plugin][主题] ${dirName} 的市场安装收据无效，仍从普通主题列表隐藏`)
             }
@@ -241,7 +243,7 @@ export default await new class themeManager {
     /**
      * 获取主题条目（内置或自定义），未知 id 返回 null
      * @param {string} [id]
-     * @returns {{id: string, name: string, dir?: string, dirName?: string, template?: string, css?: Record<string, string>, legacyCss?: boolean, font?: string, background?: string, icons?: Record<string, string>, colors?: Record<string, string>, marketInstalled?: boolean} | null}
+     * @returns {{id: string, name: string, dir?: string, dirName?: string, template?: string, css?: Record<string, string>, legacyCss?: boolean, font?: string, background?: string, icons?: Record<string, string>, colors?: Record<string, string>, marketInstalled?: boolean, marketVersion?: string} | null}
      */
     getTheme(id) {
         if (!id) return null
@@ -265,6 +267,11 @@ export default await new class themeManager {
      */
     isCustomTheme(id) {
         return Boolean(id && this.customThemes.has(id))
+    }
+
+    /** 获取全部已注册的本地自定义主题，供主题市场离线目录使用。 */
+    getCustomThemes() {
+        return [...this.customThemes.values()].map(theme => ({ ...theme }))
     }
 
     /** 当前 Bot 策略是否允许使用该已注册主题；内置和普通本地主题不受市场策略影响。 @param {string} [id] */

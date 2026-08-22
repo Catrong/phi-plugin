@@ -68,12 +68,25 @@ export class ThemeUseService {
         this.install = dependencies.install || installLatestMarketTheme
     }
 
-    /** Validate current Bot access, then download on cache miss. @param {string} themeId */
+    /** Use an allowed registered theme offline, otherwise validate and install it online. @param {string} themeId */
     async use(themeId) {
+        const localTheme = themeManager.getTheme(themeId)
+        if (localTheme && themeManager.isCustomTheme(themeId)) {
+            if (!themeManager.isThemeAvailable(themeId)) {
+                throw new ThemeMarketClientError('theme_not_allowed_by_bot', 403)
+            }
+            return {
+                cached: true,
+                local: true,
+                version: localTheme.marketVersion || '',
+                theme: localTheme,
+                detail: null,
+            }
+        }
         if (!SLUG_RE.test(themeId)) throw new ThemeMarketClientError('theme_slug_invalid', 400)
         const detail = await this.getTheme(themeId)
         const result = await this.install(themeId)
-        return { ...result, detail }
+        return { ...result, local: false, detail }
     }
 }
 

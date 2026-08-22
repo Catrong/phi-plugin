@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
+import art from 'art-template'
 import JSZip from 'jszip'
 import Config from '../components/Config.js'
 import { phiMarket } from '../apps/market.js'
@@ -18,7 +19,14 @@ import { themesDir } from '../model/theme/paths.js'
 import themeUseService, { ThemeUseService } from '../model/theme/useService.js'
 import makeRequest from '../model/api/makeRequest.js'
 import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
-import { fetchThemeCatalog, fetchThemeDetail, normalizeMarketTheme, THEME_MARKET_PAGE_SIZE } from '../model/theme/catalog.js'
+import {
+    fetchThemeCatalog,
+    fetchThemeDetail,
+    getLocalThemeCatalog,
+    getLocalThemeDetail,
+    normalizeMarketTheme,
+    THEME_MARKET_PAGE_SIZE,
+} from '../model/theme/catalog.js'
 import {
     installMarketArchive,
     isMarketThemeCached,
@@ -100,8 +108,16 @@ test('market installer visibility follows the Bot blacklist and whitelist policy
         themePolicy.apply({ mode: 'blacklist', entries: [themeId] }, false)
         assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), false)
         assert.equal(Boolean(themeManager.getThemeOptions(themeId)[themeId]), false)
+        const blockedLocalTheme = getLocalThemeCatalog(themeId).themes[0]
+        assert.equal(blockedLocalTheme?.slug, themeId)
+        assert.equal(blockedLocalTheme?.botDownloadAllowed, false)
+        await assert.rejects(
+            new ThemeUseService().use(themeId),
+            error => /** @type {any} */(error)?.code === 'theme_not_allowed_by_bot',
+        )
         themePolicy.apply({ mode: 'whitelist', entries: [themeId] }, false)
         assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), true)
+        assert.equal((await new ThemeUseService().use(themeId)).cached, true)
     } finally {
         themePolicy.apply(previousPolicy, false)
         await fs.promises.rm(target, { recursive: true, force: true })
@@ -188,6 +204,29 @@ test('theme use rejects invalid slugs before contacting the market', async () =>
     assert.equal(called, false)
 })
 
+test('installed custom themes can be listed, inspected, and used without the API', async () => {
+    const catalog = getLocalThemeCatalog('milthm')
+    assert.equal(catalog.localOnly, true)
+    assert.equal(catalog.total, 1)
+    assert.equal(catalog.themes[0]?.slug, 'milthm')
+    assert.equal(catalog.themes[0]?.local, true)
+    assert.equal(catalog.themes[0]?.botDownloadAllowed, true)
+
+    const detail = getLocalThemeDetail('milthm')
+    assert.equal(detail?.name, 'Milthm')
+    assert.equal(detail?.compatibility, '本地已安装')
+
+    let onlineCalls = 0
+    const service = new ThemeUseService({
+        getTheme: async () => { onlineCalls++; throw new Error('must stay offline') },
+        install: async () => { onlineCalls++; throw new Error('must stay offline') },
+    })
+    const result = await service.use('milthm')
+    assert.equal(result.cached, true)
+    assert.equal(result.theme.id, 'milthm')
+    assert.equal(onlineCalls, 0)
+})
+
 test('market slug command lets a regular user download and select the theme', async () => {
     const originals = {
         getUserCfg: Config.getUserCfg,
@@ -251,6 +290,27 @@ test('market UI preserves Bot download capability and uses the phi-plugin-api pr
     assert.match(marketTemplate, />可用</)
     assert.match(marketTemplate, />不可用</)
 
+    const layoutData = {
+        defaultLayout: path.resolve('resources/html/common/layout/default.art'),
+        _res_path: '/resources/',
+        theme: 'default',
+        themeInfo: null,
+        sys: { scale: '' },
+        bodyClass: '',
+    }
+    const localTheme = getLocalThemeDetail('milthm')
+    const localCatalogHtml = art.render(marketTemplate, {
+        ...layoutData,
+        ...getLocalThemeCatalog(),
+        currentTheme: 'milthm',
+        commandHead: 'phi',
+    })
+    assert.match(localCatalogHtml, /本地离线模式/)
+    assert.match(localCatalogHtml, /policy-local/)
+    const detailTemplate = fs.readFileSync(new URL('../resources/html/market/detail.art', import.meta.url), 'utf8')
+    const localDetailHtml = art.render(detailTemplate, { ...layoutData, detail: localTheme })
+    assert.match(localDetailHtml, /已安装，可离线使用/)
+
     const originals = {
         list: makeRequest.getThemeMarketList,
         detail: makeRequest.getThemeMarketDetail,
@@ -274,6 +334,67 @@ test('market UI preserves Bot download capability and uses the phi-plugin-api pr
     } finally {
         makeRequest.getThemeMarketList = originals.list
         makeRequest.getThemeMarketDetail = originals.detail
+    }
+})
+
+test('market command falls back to local custom themes when API is disabled or unavailable', async () => {
+    const originals = {
+        getUserCfg: Config.getUserCfg,
+        getBan: getBanGroup.get,
+        getNotesData: getNotes.getNotesData,
+        list: makeRequest.getThemeMarketList,
+        market: picmodle.market,
+        marketDetail: picmodle.marketDetail,
+        sendWithAt: send.send_with_At,
+        reply: send.reply,
+    }
+    let apiEnabled = false
+    let onlineCalls = 0
+    /** @type {any[]} */ const catalogs = []
+    /** @type {any[]} */ const details = []
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => {
+        if (key === 'cmdhead') return 'phi'
+        if (key === 'openPhiPluginApi') return apiEnabled
+        if (key === 'LetterMarkdown') return false
+        return undefined
+    })
+    getBanGroup.get = async () => false
+    getNotes.getNotesData = async () => /** @type {any} */({ theme: 'default' })
+    makeRequest.getThemeMarketList = async () => {
+        onlineCalls++
+        throw Object.assign(new Error('offline'), { code: 'api_offline' })
+    }
+    picmodle.market = /** @type {any} */ (async (/** @type {any} */ _event, /** @type {any} */ data) => { catalogs.push(data); return 'local-market' })
+    picmodle.marketDetail = /** @type {any} */ (async (/** @type {any} */ _event, /** @type {any} */ data) => { details.push(data); return 'local-detail' })
+    send.send_with_At = async () => undefined
+    send.reply = async () => undefined
+
+    try {
+        const command = new phiMarket()
+        const event = (/** @type {string} */ msg) => /** @type {any} */({ msg, user_id: 'offline-market-user' })
+        assert.equal(await command.market(event('/phi market')), true)
+        assert.equal(onlineCalls, 0)
+        assert.equal(catalogs[0]?.localOnly, true)
+        assert.equal(catalogs[0]?.themes.some((/** @type {any} */ theme) => theme.slug === 'milthm'), true)
+
+        apiEnabled = true
+        assert.equal(await command.market(event('/phi market')), true)
+        assert.equal(onlineCalls, 1)
+        assert.equal(catalogs[1]?.localOnly, true)
+
+        apiEnabled = false
+        assert.equal(await command.market(event('/phi market detail milthm')), true)
+        assert.equal(details[0]?.detail.local, true)
+        assert.equal(details[0]?.detail.slug, 'milthm')
+    } finally {
+        Config.getUserCfg = originals.getUserCfg
+        getBanGroup.get = originals.getBan
+        getNotes.getNotesData = originals.getNotesData
+        makeRequest.getThemeMarketList = originals.list
+        picmodle.market = originals.market
+        picmodle.marketDetail = originals.marketDetail
+        send.send_with_At = originals.sendWithAt
+        send.reply = originals.reply
     }
 })
 

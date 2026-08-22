@@ -18,20 +18,20 @@
         <div class="detail-intro">
             <p class="eyebrow">THEME DETAILS</p>
             <h1>{{detail.name}}</h1>
-            <p class="detail-author">by {{detail.author || '社区作者'}} · v{{detail.version || '--'}}</p>
+            <p class="detail-author">by {{detail.author || (detail.local ? '本地主题' : '社区作者')}} · {{detail.version ? 'v' + detail.version : (detail.local ? '已安装' : 'v--')}}</p>
             <p class="detail-description">{{detail.description || detail.summary || '暂无详细介绍。'}}</p>
             <div class="tags">
                 {{each detail.tags as tag}}<span>{{tag}}</span>{{/each}}
             </div>
             {{if detail.botDownloadAllowed === false}}
-            <p class="download-notice detail-notice">此 Bot 不在联动 Bot 范围内，暂无法下载该主题。<br>前往 market.lyh.org.cn 查看</p>
+            <p class="download-notice detail-notice">{{if detail.local}}Bot 主人设置的主题范围不允许使用该本地主题。{{else}}此 Bot 不在联动 Bot 范围内，暂无法下载该主题。<br>前往 market.lyh.org.cn 查看{{/if}}</p>
             {{/if}}
         </div>
     </section>
     <section class="detail-stats">
-        <div><span>下载量</span><strong>{{detail.downloads}}</strong></div>
+        <div><span>{{detail.local ? '来源' : '下载量'}}</span><strong>{{detail.local ? '本地自定义主题' : detail.downloads}}</strong></div>
         <div><span>兼容性</span><strong>{{detail.compatibility || '以最新插件为准'}}</strong></div>
-        <div><span>下载策略</span><strong>{{detail.downloadPolicy === 'public' ? '公开' : 'Bot 授权'}}</strong></div>
+        <div><span>下载策略</span><strong>{{detail.local ? '已安装，可离线使用' : (detail.downloadPolicy === 'public' ? '公开' : 'Bot 授权')}}</strong></div>
         <div><span>更新时间</span><strong>{{detail.updatedAt || '--'}}</strong></div>
     </section>
     {{if detail.releaseNotes}}
