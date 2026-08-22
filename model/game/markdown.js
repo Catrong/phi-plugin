@@ -33,7 +33,7 @@ export function commandInput(text, show) {
  */
 export function buildMarketQuickMarkdown(themes, pagination = {}) {
     if (!themes.length) return ''
-    const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+    const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
     const rows = themes.map(theme => [
         escapeMarkdownText(theme.name),
         commandInput(`/${commandHead} market detail ${theme.slug}`, '查看详情'),

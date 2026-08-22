@@ -75,7 +75,7 @@ export class phiMarket extends phiPluginBase {
 
     /** @param {botEvent} e @param {string} query @param {number} page @param {boolean} [forceLocal] */
     async renderMarketCatalog(e, query, page, forceLocal = false) {
-        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+        const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
         let catalog
         if (!forceLocal && Config.getUserCfg('config', 'openPhiPluginApi')) {
             try {
@@ -101,7 +101,11 @@ export class phiMarket extends phiPluginBase {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+        const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '主题市场依赖联合查分 API，请先由 Bot 主人启用该功能。')
+            return true
+        }
         const action = e.msg.replace(new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)`, 'i'), '').trim().toLowerCase()
         const state = getMarketPageState(e)
         if (!state) {
@@ -129,7 +133,11 @@ export class phiMarket extends phiPluginBase {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+        const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
+        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            send.send_with_At(e, '主题市场依赖联合查分 API，请先由 Bot 主人启用该功能。')
+            return true
+        }
         const raw = e.msg.replace(
             new RegExp(`^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)market(\\s*)`, 'i'),
             '',
