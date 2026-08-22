@@ -18,7 +18,12 @@ import themePolicy from '../model/theme/policy.js'
 import { themesDir } from '../model/theme/paths.js'
 import themeUseService, { ThemeUseService } from '../model/theme/useService.js'
 import makeRequest from '../model/api/makeRequest.js'
-import { downloadThemeArchive, ThemeMarketClientError } from '../model/theme/marketClient.js'
+import {
+    downloadThemeArchive,
+    getAvailableMarketTheme,
+    getAvailableMarketThemes,
+    ThemeMarketClientError,
+} from '../model/theme/marketClient.js'
 import {
     fetchThemeCatalog,
     fetchThemeDetail,
@@ -84,6 +89,18 @@ test('verified downloader sends no credentials and enforces size and SHA-256', a
             error => error instanceof ThemeMarketClientError && error.code === 'theme_package_integrity_failed',
         )
         assert.equal(fs.existsSync(target), false)
+
+        let networkAttempts = 0
+        await assert.rejects(
+            downloadThemeArchive(download, target, {
+                fetchImpl: async () => {
+                    networkAttempts++
+                    throw Object.assign(new Error('socket hang up'), { code: 'ECONNRESET' })
+                },
+            }),
+            error => /** @type {any} */ (error)?.code === 'api_network_error',
+        )
+        assert.equal(networkAttempts, 2)
     } finally {
         await fs.promises.rm(tempDir, { recursive: true, force: true })
     }
@@ -112,12 +129,63 @@ test('market installer visibility follows the Bot blacklist and whitelist policy
         assert.equal(blockedLocalTheme?.slug, themeId)
         assert.equal(blockedLocalTheme?.botDownloadAllowed, false)
         await assert.rejects(
-            new ThemeUseService().use(themeId),
+            new ThemeUseService({ marketEnabled: () => true }).use(themeId),
             error => /** @type {any} */(error)?.code === 'theme_not_allowed_by_bot',
         )
         themePolicy.apply({ mode: 'whitelist', entries: [themeId] }, false)
         assert.equal(themeManager.getThemeList().some(theme => theme.id === themeId), true)
-        assert.equal((await new ThemeUseService().use(themeId)).cached, true)
+        /** @type {string[]} */ const onlineCalls = []
+        const updated = await new ThemeUseService({
+            marketEnabled: () => true,
+            getTheme: async slug => {
+                onlineCalls.push(`detail:${slug}`)
+                return /** @type {any} */ ({
+                    slug, name: 'Updated theme', downloadPolicy: 'public', botDownloadAllowed: true,
+                })
+            },
+            install: async slug => {
+                onlineCalls.push(`install:${slug}`)
+                return /** @type {any} */ ({
+                    cached: false, version: '2.0.0', theme: themeManager.getTheme(slug),
+                })
+            },
+        }).use(themeId)
+        assert.deepEqual(onlineCalls, [`detail:${themeId}`, `install:${themeId}`])
+        assert.equal(updated.cached, false)
+        assert.equal(updated.version, '2.0.0')
+
+        let installCalled = false
+        const offline = await new ThemeUseService({
+            marketEnabled: () => true,
+            getTheme: async () => { throw Object.assign(new Error('offline'), { code: 'api_offline' }) },
+            install: async () => { installCalled = true; return /** @type {any} */ ({}) },
+        }).use(themeId)
+        assert.equal(offline.cached, true)
+        assert.equal(offline.local, false)
+        assert.equal(offline.offline, true)
+        assert.equal(offline.theme.id, themeId)
+        assert.equal(installCalled, false)
+
+        const authorizationOffline = await new ThemeUseService({
+            marketEnabled: () => true,
+            getTheme: async slug => /** @type {any} */ ({
+                slug, name: 'Theme', downloadPolicy: 'public', botDownloadAllowed: true,
+            }),
+            install: async () => { throw Object.assign(new Error('timeout'), { code: 'api_timeout' }) },
+        }).use(themeId)
+        assert.equal(authorizationOffline.cached, true)
+        assert.equal(authorizationOffline.detail?.slug, themeId)
+
+        await assert.rejects(
+            new ThemeUseService({
+                marketEnabled: () => true,
+                getTheme: async slug => /** @type {any} */ ({
+                    slug, name: 'Theme', downloadPolicy: 'public', botDownloadAllowed: true,
+                }),
+                install: async () => { throw new ThemeMarketClientError('theme_store_bot_not_whitelisted', 403) },
+            }).use(themeId),
+            error => /** @type {any} */(error)?.code === 'theme_store_bot_not_whitelisted',
+        )
     } finally {
         themePolicy.apply(previousPolicy, false)
         await fs.promises.rm(target, { recursive: true, force: true })
@@ -204,6 +272,62 @@ test('theme use rejects invalid slugs before contacting the market', async () =>
     assert.equal(called, false)
 })
 
+test('market detail capability accepts both API layouts and rejects ambiguity', async () => {
+    const originals = {
+        list: makeRequest.getThemeMarketList,
+        detail: makeRequest.getThemeMarketDetail,
+    }
+    const baseTheme = {
+        slug: 'contract-theme',
+        name: 'Contract Theme',
+        downloadPolicy: 'public',
+    }
+    try {
+        makeRequest.getThemeMarketDetail = async () => ({
+            ok: true,
+            theme: baseTheme,
+            botDownloadAllowed: true,
+        })
+        assert.equal((await getAvailableMarketTheme('contract-theme')).botDownloadAllowed, true)
+
+        makeRequest.getThemeMarketDetail = async () => ({
+            ok: true,
+            theme: { ...baseTheme, botDownloadAllowed: true },
+        })
+        assert.equal((await getAvailableMarketTheme('contract-theme')).botDownloadAllowed, true)
+
+        makeRequest.getThemeMarketList = async () => ({
+            ok: true,
+            botDownloadAllowed: true,
+            themes: [baseTheme],
+        })
+        assert.equal((await getAvailableMarketThemes())[0]?.botDownloadAllowed, true)
+
+        makeRequest.getThemeMarketDetail = async () => ({
+            ok: true,
+            botDownloadAllowed: true,
+            theme: { ...baseTheme, botDownloadAllowed: false },
+        })
+        await assert.rejects(
+            getAvailableMarketTheme('contract-theme'),
+            error => /** @type {any} */(error)?.code === 'theme_store_invalid_response',
+        )
+
+        makeRequest.getThemeMarketDetail = async () => ({
+            ok: true,
+            botDownloadAllowed: false,
+            theme: baseTheme,
+        })
+        await assert.rejects(
+            getAvailableMarketTheme('contract-theme'),
+            error => /** @type {any} */(error)?.code === 'theme_not_allowed_by_bot',
+        )
+    } finally {
+        makeRequest.getThemeMarketList = originals.list
+        makeRequest.getThemeMarketDetail = originals.detail
+    }
+})
+
 test('installed custom themes can be listed, inspected, and used without the API', async () => {
     const catalog = getLocalThemeCatalog('milthm')
     assert.equal(catalog.localOnly, true)
@@ -239,13 +363,15 @@ test('market slug command lets a regular user download and select the theme', as
     const pluginData = { theme: 'default' }
     /** @type {string[]} */ const messages = []
     /** @type {string[]} */ const used = []
+    /** @type {any[]} */ const useOptions = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'phi' : key === 'openPhiPluginApi')
     getBanGroup.get = async () => false
     getNotes.getNotesData = async () => /** @type {any} */(pluginData)
     getNotes.putNotesData = (_userId, data) => data === pluginData
     send.send_with_At = async (_event, message) => { messages.push(String(message)) }
-    themeUseService.use = async slug => {
+    themeUseService.use = async (slug, options) => {
         used.push(slug)
+        useOptions.push(options)
         return /** @type {any} */ ({ cached: false, version: '1.0.0', theme: { id: slug, name: 'Ocean Salt' } })
     }
     try {
@@ -255,6 +381,7 @@ test('market slug command lets a regular user download and select the theme', as
         }))
         assert.equal(handled, true)
         assert.deepEqual(used, ['ocean-salt'])
+        assert.match(useOptions[0]?.requesterId || '', /regular-user$/)
         assert.equal(pluginData.theme, 'ocean-salt')
         assert.match(messages.at(-1) || '', /主题已启用/)
     } finally {
@@ -274,10 +401,10 @@ test('market command is scoped to the configured command head and myset has no c
     assert.doesNotMatch(command, /escapedCommandHead/)
     assert.doesNotMatch(command, /\^\[#\/\]market/)
     assert.doesNotMatch(command, /if \(!e\.isMaster\)/)
-    assert.match(command, /themeUseService\.use\(themeId\)/)
+    assert.match(command, /themeUseService\.use\(themeId, \{ requesterId:/)
     assert.match(command, /pluginData\.theme = themeId/)
     assert.match(settings, /getThemeOptions\(pluginData\.theme\)/)
-    assert.match(settings, /themeUseService\.use\(canonicalValue\)/)
+    assert.match(settings, /themeUseService\.use\(canonicalValue, \{ requesterId:/)
     assert.doesNotMatch(settings, /const custom = themeManager\.getTheme/)
 })
 
@@ -388,6 +515,14 @@ test('market command falls back to local custom themes when API is disabled or u
         assert.equal(onlineCalls, 1)
         assert.equal(catalogs[1]?.localOnly, true)
 
+        makeRequest.getThemeMarketList = /** @type {any} */ (async () => {
+            onlineCalls++
+            return { ok: false, themes: [] }
+        })
+        assert.equal(await command.market(event('/phi market')), true)
+        assert.equal(onlineCalls, 2)
+        assert.equal(catalogs[2]?.localOnly, true)
+
         apiEnabled = false
         assert.equal(await command.market(event('/phi market detail milthm')), true)
         assert.equal(details[0]?.detail.local, true)
@@ -401,6 +536,82 @@ test('market command falls back to local custom themes when API is disabled or u
         picmodle.marketDetail = originals.marketDetail
         send.send_with_At = originals.sendWithAt
         send.reply = originals.reply
+    }
+})
+
+test('market-installed detail is online-first and only connection errors use local detail', async () => {
+    const themeId = `detailtest${Date.now()}`
+    const target = path.join(themesDir, themeId)
+    const originals = {
+        getUserCfg: Config.getUserCfg,
+        getBan: getBanGroup.get,
+        getNotesData: getNotes.getNotesData,
+        detail: makeRequest.getThemeMarketDetail,
+        marketDetail: picmodle.marketDetail,
+        sendWithAt: send.send_with_At,
+    }
+    /** @type {any[]} */ const rendered = []
+    /** @type {any[]} */ const replies = []
+    try {
+        const archive = await makeArchive(themeId)
+        await withMarketInstallLock(() => installMarketArchive(themeId, {
+            version: '1.0.0', sha256,
+        }, archive))
+        themeManager.scan()
+
+        Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => {
+            if (key === 'cmdhead') return 'phi'
+            if (key === 'openPhiPluginApi') return true
+            return false
+        })
+        getBanGroup.get = async () => false
+        getNotes.getNotesData = async () => /** @type {any} */ ({ theme: 'default' })
+        makeRequest.getThemeMarketDetail = async () => ({
+            ok: true,
+            botDownloadAllowed: true,
+            theme: {
+                slug: themeId,
+                name: 'Remote Detail',
+                version: '2.0.0',
+                downloadPolicy: 'public',
+            },
+        })
+        picmodle.marketDetail = /** @type {any} */ (async (/** @type {any} */ _event, /** @type {any} */ data) => {
+            rendered.push(data.detail)
+            return 'market-detail'
+        })
+        send.send_with_At = async (_event, message) => { replies.push(message); return undefined }
+
+        const command = new phiMarket()
+        const event = /** @type {any} */ ({ msg: `/phi market detail ${themeId}`, user_id: 'detail-user' })
+        assert.equal(await command.market(event), true)
+        assert.equal(rendered[0]?.name, 'Remote Detail')
+        assert.equal(rendered[0]?.version, '2.0.0')
+        assert.equal(rendered[0]?.local, false)
+
+        makeRequest.getThemeMarketDetail = async () => {
+            throw Object.assign(new Error('offline'), { code: 'api_offline' })
+        }
+        assert.equal(await command.market(event), true)
+        assert.equal(rendered[1]?.slug, themeId)
+        assert.equal(rendered[1]?.version, '1.0.0')
+        assert.equal(rendered[1]?.local, true)
+
+        makeRequest.getThemeMarketDetail = async () => {
+            throw new ThemeMarketClientError('theme_store_invalid_response', 502)
+        }
+        assert.equal(await command.market(event), true)
+        assert.equal(rendered.length, 2)
+        assert.equal(replies.at(-1), '未找到该主题，或主题市场暂时不可用。')
+    } finally {
+        Config.getUserCfg = originals.getUserCfg
+        getBanGroup.get = originals.getBan
+        getNotes.getNotesData = originals.getNotesData
+        makeRequest.getThemeMarketDetail = originals.detail
+        picmodle.marketDetail = originals.marketDetail
+        send.send_with_At = originals.sendWithAt
+        await fs.promises.rm(target, { recursive: true, force: true })
+        themeManager.scan()
     }
 })
 
@@ -530,6 +741,7 @@ test('market catalog filters before paginating and list-only requests do not alt
         name: `Page Theme ${index}`,
         summary: 'pagination',
         updatedAt: `2026-08-${String(19 - Math.min(index, 18)).padStart(2, '0')}`,
+        botDownloadAllowed: true,
     }))
     makeRequest.getThemeMarketList = async () => ({ ok: true, themes })
     try {
@@ -551,4 +763,39 @@ test('market catalog filters before paginating and list-only requests do not alt
     assert.match(command, /marketDetail/)
     const listBranch = command.slice(command.indexOf('// 无参数'), command.indexOf('// detail/info'))
     assert.doesNotMatch(listBranch, /putNotesData\(/)
+})
+
+test('market catalog rejects malformed responses and deduplicates valid slugs', async () => {
+    const originalList = makeRequest.getThemeMarketList
+    const validTheme = {
+        slug: 'duplicate-theme',
+        name: 'Duplicate Theme',
+        botDownloadAllowed: true,
+    }
+    try {
+        for (const response of [
+            { ok: false, themes: [] },
+            { ok: true, themes: null },
+            { ok: true, themes: Array.from({ length: 501 }, () => validTheme) },
+            { ok: true, themes: [{ name: 'Missing slug', botDownloadAllowed: true }] },
+            { ok: true, themes: [{ slug: 'missing-capability', name: 'Missing capability' }] },
+        ]) {
+            makeRequest.getThemeMarketList = /** @type {any} */ (async () => response)
+            await assert.rejects(
+                fetchThemeCatalog(),
+                error => /** @type {any} */(error)?.code === 'theme_store_invalid_response',
+            )
+        }
+
+        makeRequest.getThemeMarketList = async () => ({
+            ok: true,
+            themes: [validTheme, { ...validTheme, name: 'Duplicate Theme Again' }],
+        })
+        const catalog = await fetchThemeCatalog('duplicate')
+        assert.equal(catalog.total, 1)
+        assert.equal(catalog.themes[0]?.slug, 'duplicate-theme')
+        assert.equal(catalog.themes[0]?.name, 'Duplicate Theme')
+    } finally {
+        makeRequest.getThemeMarketList = originalList
+    }
 })

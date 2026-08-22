@@ -16,6 +16,8 @@ import {
     isThemeSlug,
 } from '../model/theme/catalog.js'
 import { sendMarketQuickCommands } from '../model/game/markdown.js'
+import { isApiConnectionError } from '../model/api/phiApiErrors.js'
+import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
 
@@ -156,19 +158,26 @@ export class phiMarket extends phiPluginBase {
         // 详情优先读取在线市场，请求不可用时回退到已注册的本地主题信息。
         if (['detail', 'info', '详情'].includes(args[0].toLowerCase())) {
             const requestedThemeId = args[1] || ''
-            const localDetail = getLocalThemeDetail(requestedThemeId)
-            const themeId = requestedThemeId.toLowerCase()
+            const exactLocalDetail = getLocalThemeDetail(requestedThemeId)
+            const themeId = exactLocalDetail ? requestedThemeId : requestedThemeId.toLowerCase()
+            const localDetail = exactLocalDetail || getLocalThemeDetail(themeId)
             if (!localDetail && !isThemeSlug(themeId)) {
                 send.send_with_At(e, `用法：/${commandHead} market detail <主题slug>`)
                 return true
             }
             try {
+                const localTheme = localDetail ? themeManager.getTheme(themeId) : null
                 let detail = localDetail
-                if (!localDetail && Config.getUserCfg('config', 'openPhiPluginApi') && isThemeSlug(themeId)) {
+                const shouldFetchOnline = Config.getUserCfg('config', 'openPhiPluginApi')
+                    && isThemeSlug(themeId)
+                    && (!localDetail || localTheme?.marketInstalled)
+                if (shouldFetchOnline) {
                     try {
                         detail = await fetchThemeDetail(themeId)
                     } catch (/** @type {any} */ error) {
-                        logger.warn(`[phi-plugin][主题市场] 在线详情不可用，尝试本地详情 ${themeId}：${error?.code || 'unknown'}`)
+                        if (!localDetail || !isApiConnectionError(error)) throw error
+                        logger.warn(`[phi-plugin][主题市场] 在线详情连接失败，已使用本地详情 ${themeId}：${error?.code || 'unknown'}`)
+                        detail = localDetail
                     }
                 }
                 if (!detail) throw new Error('local_theme_not_found')
@@ -204,12 +213,13 @@ export class phiMarket extends phiPluginBase {
         }
 
         try {
-            send.send_with_At(e, localTheme
+            send.send_with_At(e, localTheme && !localTheme.marketInstalled
                 ? `正在启用本地主题 ${themeId}，请稍候。`
                 : `正在校验并启用主题 ${themeId}，首次使用时会自动下载，请稍候。`)
-            const result = await themeUseService.use(themeId)
+            const result = await themeUseService.use(themeId, { requesterId: getThemeInstallRequesterId(e) })
             const pluginData = await getNotes.getNotesData(e.user_id)
-            pluginData.theme = themeId
+            if (typeof pluginData.setThemePreference === 'function') pluginData.setThemePreference(themeId)
+            else pluginData.theme = themeId
             if (!getNotes.putNotesData(e.user_id, pluginData)) {
                 send.send_with_At(e, '主题已准备完成，但你的主题设置保存失败，请稍后重试。')
                 return true

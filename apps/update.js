@@ -113,7 +113,8 @@ export class phiupdate extends phiPluginBase {
             command = [
                 `git -C ${repoPath} fetch --all --prune`,
                 `git -C ${repoPath} reset --hard origin/main`,
-                `git -C ${repoPath} clean -fd`
+                // 即使 .gitignore 被用户修改，也不能让强制更新删除已安装主题。
+                `git -C ${repoPath} clean -fd -e resources/themes/`
             ].join(" && ");
             this.reply("开始执行强制更新操作，请稍等");
         } else {

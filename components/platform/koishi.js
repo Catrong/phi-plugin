@@ -14,6 +14,9 @@ const wrappedSymbol = Symbol('phi.koishiWrapped')
 const contextStoreSymbol = Symbol('phi.koishiContexts')
 const require = createRequire(import.meta.url)
 
+/** @param {fs.Stats} stat */
+const templateIdentity = stat => `${stat.dev}:${stat.ino}:${stat.mtimeMs}:${stat.ctimeMs}:${stat.size}`
+
 /**
  * @typedef {object} KoishiAdapterOptions
  * @property {any} [h] Koishi 的 h 工具，建议从 `koishi` 导入后传入。
@@ -207,7 +210,7 @@ function createRedis(ctx, options, logger) {
     return new MemoryRedis()
 }
 
-class KoishiRenderer {
+export class KoishiRenderer {
     /**
      * @param {PlatformRendererConfig} [data]
      */
@@ -218,6 +221,8 @@ class KoishiRenderer {
         this.dir = './temp/html'
         /** @type {Record<string, string>} */
         this.html = {}
+        /** @type {Record<string, string>} */
+        this.htmlIdentity = {}
         /** @type {Record<string, import('chokidar').FSWatcher>} */
         this.watcher = {}
         mkdirs(this.dir)
@@ -242,12 +247,28 @@ class KoishiRenderer {
     dealTpl(name, data) {
         let { tplFile, saveId = name } = data
         let savePath = `./temp/html/${name}/${saveId}.html`
-        if (!this.html[tplFile]) {
+        let identity
+        try {
+            const stat = fs.statSync(tplFile)
+            if (!stat.isFile()) return false
+            identity = templateIdentity(stat)
+        } catch {
+            delete this.html[tplFile]
+            delete this.htmlIdentity[tplFile]
+            return false
+        }
+        if (!Object.hasOwn(this.html, tplFile) || this.htmlIdentity[tplFile] !== identity) {
             mkdirs(`./temp/html/${name}`)
+            let handle
             try {
-                this.html[tplFile] = fs.readFileSync(tplFile, 'utf8')
+                handle = fs.openSync(tplFile, 'r')
+                const stat = fs.fstatSync(handle)
+                this.html[tplFile] = fs.readFileSync(handle, 'utf8')
+                this.htmlIdentity[tplFile] = templateIdentity(stat)
             } catch {
                 return false
+            } finally {
+                if (handle !== undefined) fs.closeSync(handle)
             }
             this.watch(tplFile)
         }
@@ -265,9 +286,13 @@ class KoishiRenderer {
     watch(tplFile) {
         if (this.watcher[tplFile]) return
         const watcher = chokidar.watch(tplFile)
-        watcher.on('change', () => {
+        const invalidate = () => {
             delete this.html[tplFile]
-        })
+            delete this.htmlIdentity[tplFile]
+        }
+        watcher.on('change', invalidate)
+        watcher.on('add', invalidate)
+        watcher.on('unlink', invalidate)
         this.watcher[tplFile] = watcher
     }
 }

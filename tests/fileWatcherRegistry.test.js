@@ -14,13 +14,15 @@ test('reuses a watcher while replacing stale hot-reload callbacks', async () => 
     try {
         let staleCalls = 0
         const firstLease = registry.watch('config', file, () => staleCalls++)
-        await new Promise(resolve => firstLease.watcher.once('ready', () => resolve(undefined)))
+        await firstLease.ready
 
-        const changed = new Promise(resolve => {
-            const secondLease = registry.watch('config', file, resolve)
-            assert.equal(secondLease.watcher, firstLease.watcher)
-            void firstLease.close()
-        })
+        /** @type {() => void} */
+        let resolveChanged = () => {}
+        const changed = new Promise(resolve => { resolveChanged = () => resolve(undefined) })
+        const secondLease = registry.watch('config', file, resolveChanged)
+        assert.equal(secondLease.watcher, firstLease.watcher)
+        await secondLease.ready
+        void firstLease.close()
         await fs.writeFile(file, 'value: 2\n')
         await changed
 

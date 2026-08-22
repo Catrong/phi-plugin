@@ -1,4 +1,5 @@
 import crypto from 'node:crypto'
+import Config from '../../components/Config.js'
 import themeManager from './manager.js'
 import {
     authorizeThemeDownload,
@@ -10,10 +11,17 @@ import {
     installMarketArchive,
     isMarketThemeCached,
     marketWorkPath,
+    assertMarketInstallTarget,
+    recoverAllMarketInstalls,
     recoverMarketInstall,
     withMarketInstallLock,
 } from './installer.js'
-import { getPhiApiUserMessage, hasPhiApiUserMessage } from '../api/phiApiErrors.js'
+import { getPhiApiUserMessage, hasPhiApiUserMessage, isApiConnectionError } from '../api/phiApiErrors.js'
+import {
+    assertFreshMarketInstallCapacity,
+    freshInstallRateLimiter,
+    marketInstallCoordinator,
+} from './installGuard.js'
 
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
 
@@ -32,16 +40,27 @@ async function waitForThemeRegistration(themeId) {
  * Authorize and install the latest compatible release. The authorization is
  * still required on a cache hit so revoked Bot/theme access cannot be bypassed.
  * @param {string} themeId
+ * @param {{requesterId?:string}} [options]
  */
-export async function installLatestMarketTheme(themeId) {
-    return withMarketInstallLock(async () => {
+export function installLatestMarketTheme(themeId, options = {}) {
+    return marketInstallCoordinator.schedule(themeId, () => withMarketInstallLock(async () => {
+        const recoveryFailures = await recoverAllMarketInstalls()
+        if (recoveryFailures.length) throw new ThemeMarketClientError('theme_install_recovery_failed')
         await recoverMarketInstall(themeId)
+        await assertMarketInstallTarget(themeId)
+        let freshInstallPrepared = false
         for (let authorizationCycle = 0; authorizationCycle < 2; authorizationCycle++) {
             const requestId = crypto.randomUUID()
             const download = await authorizeThemeDownload(themeId, requestId)
             if (await isMarketThemeCached(themeId, download)) {
                 const theme = await waitForThemeRegistration(themeId)
                 return { cached: true, version: download.version, theme }
+            }
+
+            if (!freshInstallPrepared) {
+                const capacity = await assertFreshMarketInstallCapacity(themeId)
+                if (capacity.fresh) await freshInstallRateLimiter.consume(String(options.requesterId || ''))
+                freshInstallPrepared = true
             }
 
             const archivePath = marketWorkPath(`download-${themeId}-${requestId}.zip`)
@@ -56,37 +75,75 @@ export async function installLatestMarketTheme(themeId) {
             }
         }
         throw new ThemeMarketClientError('theme_download_url_expired')
-    })
+    }))
 }
 
 export class ThemeUseService {
     /**
-     * @param {{getTheme?:typeof getAvailableMarketTheme, install?:typeof installLatestMarketTheme}} [dependencies]
+     * @param {{getTheme?:typeof getAvailableMarketTheme, install?:typeof installLatestMarketTheme, marketEnabled?:()=>boolean}} [dependencies]
      */
     constructor(dependencies = {}) {
         this.getTheme = dependencies.getTheme || getAvailableMarketTheme
         this.install = dependencies.install || installLatestMarketTheme
+        this.marketEnabled = dependencies.marketEnabled
+            || (() => Boolean(Config.getUserCfg('config', 'openPhiPluginApi')))
     }
 
-    /** Use an allowed registered theme offline, otherwise validate and install it online. @param {string} themeId */
-    async use(themeId) {
+    /** @param {any} theme @param {any} [detail] */
+    cachedMarketTheme(theme, detail = null) {
+        return {
+            cached: true,
+            local: false,
+            offline: true,
+            version: theme.marketVersion || '',
+            theme,
+            detail,
+        }
+    }
+
+    /**
+     * Use a local theme offline, or validate and update a market-installed theme online.
+     * @param {string} themeId
+     * @param {{requesterId?:string}} [options]
+     */
+    async use(themeId, options = {}) {
         const localTheme = themeManager.getTheme(themeId)
         if (localTheme && themeManager.isCustomTheme(themeId)) {
             if (!themeManager.isThemeAvailable(themeId)) {
                 throw new ThemeMarketClientError('theme_not_allowed_by_bot', 403)
             }
-            return {
-                cached: true,
-                local: true,
-                version: localTheme.marketVersion || '',
-                theme: localTheme,
-                detail: null,
+            if (!localTheme.marketInstalled) {
+                return {
+                    cached: true,
+                    local: true,
+                    offline: true,
+                    version: '',
+                    theme: localTheme,
+                    detail: null,
+                }
             }
+            if (!SLUG_RE.test(themeId)) throw new ThemeMarketClientError('theme_slug_invalid', 400)
+            if (!this.marketEnabled()) return this.cachedMarketTheme(localTheme)
         }
         if (!SLUG_RE.test(themeId)) throw new ThemeMarketClientError('theme_slug_invalid', 400)
-        const detail = await this.getTheme(themeId)
-        const result = await this.install(themeId)
-        return { ...result, local: false, detail }
+        let detail
+        try {
+            detail = await this.getTheme(themeId)
+        } catch (error) {
+            if (localTheme?.marketInstalled && isApiConnectionError(error)) {
+                return this.cachedMarketTheme(localTheme)
+            }
+            throw error
+        }
+        try {
+            const result = await this.install(themeId, options)
+            return { ...result, local: false, offline: false, detail }
+        } catch (error) {
+            if (localTheme?.marketInstalled && isApiConnectionError(error)) {
+                return this.cachedMarketTheme(localTheme, detail)
+            }
+            throw error
+        }
     }
 }
 
@@ -104,6 +161,12 @@ export function marketThemeErrorMessage(error) {
         theme_package_reserved_id: '该主题 ID 与插件内置主题冲突，无法安装。',
         theme_conflicts_with_local_theme: '同名本地主题不是市场安装版本，已拒绝覆盖。',
         theme_install_busy: '主题安装队列繁忙，请稍后重试。',
+        theme_install_queue_full: '当前等待安装的主题过多，请稍后再试。',
+        theme_install_rate_limited: '你在一小时内安装的新主题过多，请稍后再试。',
+        theme_install_count_quota_exceeded: '此 Bot 已安装的市场主题数量达到上限，请联系 Bot 主人清理后再试。',
+        theme_install_disk_quota_exceeded: '此 Bot 的市场主题存储空间已达到上限，请联系 Bot 主人清理后再试。',
+        theme_install_recovery_failed: '主题安装恢复未完成，请联系 Bot 主人检查主题目录后再试。',
+        theme_install_rate_state_invalid: '主题安装限频状态异常，请联系 Bot 主人检查主题目录。',
         theme_registry_refresh_failed: '主题已写入，但注册表刷新失败，请联系 Bot 主人检查。',
     }
     return local[String(error?.code || '')] || '主题下载或启用失败，请稍后重试。'

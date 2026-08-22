@@ -7,6 +7,9 @@ import send from '../render/send.js'
 /** @param {unknown} value */
 export function escapeMarkdownText(value) {
     return String(value ?? '')
+        .replace(/[\u0000-\u001f\u007f]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
         .replace(/\\/g, '\\\\')
         .replace(/([|*_`~])/g, '\\$1')
         .replace(/</g, '&lt;')

@@ -1,6 +1,7 @@
 import JSZip from "jszip";
 import fs from 'node:fs';
 import path from "node:path";
+import { Readable } from 'node:stream';
 import getFile from "../filesystem/getFile.js";
 import { backupPath, pluginDataPath, savePath, dataPath } from "../filesystem/path.js";
 import saveHistory from "./saveHistory.js";
@@ -10,8 +11,148 @@ import send from "../render/send.js";
 import logger from "../../components/Logger.js";
 import Save from "./Save.js";
 import userCredentialStore from '../user/userCredentialStore.js';
+import { themesDir } from '../theme/paths.js';
+import { withMarketInstallLock } from '../theme/installLock.js';
 
 const MaxNum = 1e4
+const THEME_DIR_RE = /^[a-zA-Z0-9_-]+$/
+const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i
+
+class LazyFileReadStream extends Readable {
+    /** @param {string} file */
+    constructor(file) {
+        super()
+        this.file = file
+        /** @type {fs.ReadStream|null} */
+        this.source = null
+    }
+
+    _read() {
+        if (this.source) {
+            this.source.resume()
+            return
+        }
+        const source = fs.createReadStream(this.file)
+        this.source = source
+        source.on('data', chunk => {
+            if (!this.push(chunk)) source.pause()
+        })
+        source.on('end', () => this.push(null))
+        source.on('error', error => this.destroy(error))
+    }
+
+    /** @param {Error|null} error @param {(error?:Error|null)=>void} callback */
+    _destroy(error, callback) {
+        this.source?.destroy()
+        callback(error)
+    }
+}
+
+/** @param {JSZip} zip @param {string} source @param {string} relative */
+function addThemeDirectory(zip, source, relative) {
+    let files = 0
+    for (const entry of fs.readdirSync(source, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+        const fullPath = path.join(source, entry.name)
+        const archivePath = `${relative}/${entry.name}`
+        const stat = fs.lstatSync(fullPath)
+        if (stat.isSymbolicLink()) {
+            logger.warn(`[phi-plugin][backup] 跳过主题中的符号链接：${fullPath}`)
+            continue
+        }
+        if (stat.isDirectory()) {
+            zip.folder(archivePath)
+            files += addThemeDirectory(zip, fullPath, archivePath)
+        } else if (stat.isFile()) {
+            zip.file(archivePath, new LazyFileReadStream(fullPath))
+            files++
+        }
+    }
+    return files
+}
+
+/** @param {JSZip} zip Add installed/local themes, excluding transaction directories. */
+export function addThemesToBackup(zip) {
+    if (!fs.existsSync(themesDir)) return { themes: 0, files: 0 }
+    let themes = 0
+    let files = 0
+    for (const entry of fs.readdirSync(themesDir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+        if (!entry.isDirectory() || entry.name.startsWith('.phi-market-') || !THEME_DIR_RE.test(entry.name)) continue
+        zip.folder(`themes/${entry.name}`)
+        files += addThemeDirectory(zip, path.join(themesDir, entry.name), `themes/${entry.name}`)
+        themes++
+    }
+    return { themes, files }
+}
+
+/** @param {string} name @param {boolean} directory */
+function parseThemeArchivePath(name, directory) {
+    if (!name.startsWith('themes/') || name.includes('\u0000')) return null
+    if (process.platform === 'win32' && /[\\\u0001-\u001f\u007f]/.test(name)) return null
+    const relative = name.slice('themes/'.length)
+    const segments = relative.split('/')
+    if (directory && segments.at(-1) === '') segments.pop()
+    if (segments.length < (directory ? 1 : 2)
+        || !THEME_DIR_RE.test(segments[0])
+        || segments.some(segment => !segment || segment === '.' || segment === '..'
+            || (process.platform === 'win32'
+                && (segment.includes(':') || /[. ]$/.test(segment) || WINDOWS_RESERVED.test(segment))))) return null
+    return segments
+}
+
+/** @param {JSZip} zip Restore missing themes atomically; existing themes are preserved. */
+async function restoreThemesFromBackupUnlocked(zip) {
+    const entries = Object.values(zip.files).filter(file => file.name.startsWith('themes/') && file.name !== 'themes/')
+    if (!entries.length) return { restored: 0, skipped: 0 }
+
+    /** @type {{file:import('jszip').JSZipObject,segments:string[],directory:boolean}[]} */
+    const parsed = []
+    for (const file of entries) {
+        const originalName = /** @type {any} */ (file).unsafeOriginalName ?? file.name
+        const segments = parseThemeArchivePath(originalName, file.dir)
+        if (!segments) throw new Error(`备份中的主题路径不安全：${originalName}`)
+        parsed.push({ file, segments, directory: file.dir })
+    }
+
+    fs.mkdirSync(themesDir, { recursive: true, mode: 0o700 })
+    const stage = await fs.promises.mkdtemp(path.join(themesDir, '.phi-market-restore-'))
+    const themeNames = new Set(parsed.map(item => item.segments[0]))
+    let restored = 0
+    let skipped = 0
+    try {
+        for (const item of parsed) {
+            const output = path.join(stage, ...item.segments)
+            const relative = path.relative(stage, output)
+            if (relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+                throw new Error(`备份中的主题路径越界：${item.file.name}`)
+            }
+            if (item.directory) {
+                await fs.promises.mkdir(output, { recursive: true, mode: 0o700 })
+            } else {
+                await fs.promises.mkdir(path.dirname(output), { recursive: true, mode: 0o700 })
+                await fs.promises.writeFile(output, await item.file.async('nodebuffer'), { mode: 0o600, flag: 'wx' })
+            }
+        }
+        for (const themeName of [...themeNames].sort()) {
+            const source = path.join(stage, themeName)
+            const target = path.join(themesDir, themeName)
+            const exists = await fs.promises.lstat(target).then(() => true, () => false)
+            if (exists) {
+                skipped++
+                continue
+            }
+            await fs.promises.rename(source, target)
+            restored++
+        }
+    } finally {
+        await fs.promises.rm(stage, { recursive: true, force: true })
+    }
+    return { restored, skipped }
+}
+
+/** @param {JSZip} zip Restore themes under the same lock used by market installs. */
+export function restoreThemesFromBackup(zip) {
+    return withMarketInstallLock(() => restoreThemesFromBackupUnlocked(zip))
+}
 
 /**@import {botEvent} from "../../components/baseClass.js" */
 export default class getBackup {
@@ -88,15 +229,32 @@ export default class getBackup {
         }
         send.send_with_At(e, '开始压缩备份数据，请稍等...')
         console.info('\n[phi-plugin][backup] 开始压缩备份数据...')
-        zip.generateNodeStream({ streamFiles: true })
-            .pipe(fs.createWriteStream(path.join(backupPath, zipName)))
-            .on('finish', async function () {
-                console.info('[phi-plugin]备份完成' + path.join(backupPath, zipName))
-                send.send_with_At(e, `${zipName.replace(".zip", '')} 成功备份到 ./backup 目录下`)
-                if (e.msg.replace(/^[#/].*backup/, '').includes('back')) {
-                    fCompute.sendFile(e, await zip.generateAsync({ type: 'nodebuffer' }), zipName)
+        const outputPath = path.join(backupPath, zipName)
+        try {
+            await withMarketInstallLock(async () => {
+                const themeBackup = addThemesToBackup(zip)
+                if (themeBackup.themes) {
+                    send.send_with_At(e, `已加入 ${themeBackup.themes} 个主题到备份`)
+                    logger.info(`[phi-plugin][backup] 已加入 ${themeBackup.themes} 个主题、${themeBackup.files} 个文件`)
                 }
-            });
+                await new Promise((resolve, reject) => {
+                    const archive = zip.generateNodeStream({ streamFiles: true })
+                    const output = fs.createWriteStream(outputPath)
+                    archive.once('error', reject)
+                    output.once('error', reject)
+                    output.once('finish', () => resolve(undefined))
+                    archive.pipe(output)
+                })
+            })
+        } catch (error) {
+            await fs.promises.rm(outputPath, { force: true }).catch(() => {})
+            throw error
+        }
+        console.info('[phi-plugin]备份完成' + outputPath)
+        send.send_with_At(e, `${zipName.replace(".zip", '')} 成功备份到 ./backup 目录下`)
+        if (e.msg.replace(/^[#/].*backup/, '').includes('back')) {
+            await fCompute.sendFile(e, outputPath, zipName)
+        }
         return { zipName: zipName, zip: zip }
     }
 
@@ -106,6 +264,10 @@ export default class getBackup {
      */
     static async restore(zipPath) {
         let zip = await JSZip.loadAsync(fs.readFileSync(zipPath))
+        const themeRestore = await restoreThemesFromBackup(zip)
+        if (themeRestore.restored || themeRestore.skipped) {
+            logger.info(`[phi-plugin][backup] 主题恢复完成：恢复 ${themeRestore.restored} 个，保留现有 ${themeRestore.skipped} 个`)
+        }
         /**存档相关 */
         zip.folder('saveData')?.forEach((session) => {
             try {

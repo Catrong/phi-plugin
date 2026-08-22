@@ -1,11 +1,21 @@
-import { ThemeMarketClientError } from './marketClient.js'
+import { resolveBotDownloadAllowed, ThemeMarketClientError } from './marketClient.js'
 import makeRequest from '../api/makeRequest.js'
 import themeManager from './manager.js'
 
 export const THEME_MARKET_API_ORIGIN = 'https://lyh.org.cn:18473'
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
 const PINNED_LOCAL_THEME_ID = 'milthm'
+const MAX_MARKET_THEMES = 500
 export const THEME_MARKET_PAGE_SIZE = 6
+
+/** @param {unknown} value */
+function isRecord(value) {
+    return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+
+function invalidCatalogResponse() {
+    return new ThemeMarketClientError('theme_store_invalid_response', 502)
+}
 
 /** @param {unknown} value @param {number} limit */
 function text(value, limit) {
@@ -58,7 +68,7 @@ export function normalizeMarketTheme(item, inheritedBotDownloadAllowed = null) {
 function paginateThemes(themes, query, page, localOnly) {
     const needle = text(query, 80).toLocaleLowerCase()
     const filtered = needle
-        ? themes.filter((/** @type {any} */ theme) => [theme.slug, theme.name, theme.author, theme.summary, ...theme.tags]
+        ? themes.filter((/** @type {any} */ theme) => [theme.slug, theme.name, theme.author, theme.summary, theme.description, ...theme.tags]
             .some((/** @type {string} */ value) => value.toLocaleLowerCase().includes(needle)))
         : themes
     if (!localOnly) {
@@ -121,16 +131,40 @@ export function getLocalThemeDetail(themeId) {
     return { ...normalizeLocalTheme(theme), releaseNotes: '' }
 }
 
+/** @param {any} response @param {any} item */
+function validateCatalogTheme(response, item) {
+    if (!isRecord(item)
+        || typeof item.slug !== 'string' || !SLUG_RE.test(item.slug)
+        || typeof item.name !== 'string' || !item.name.trim() || item.name.length > 100
+        || Object.hasOwn(item, 'downloadPolicy') && !['public', 'restricted', 'bot_only'].includes(item.downloadPolicy)
+        || Object.hasOwn(item, 'tags') && (!Array.isArray(item.tags) || item.tags.some((/** @type {unknown} */ tag) => typeof tag !== 'string'))) {
+        throw invalidCatalogResponse()
+    }
+    const botDownloadAllowed = resolveBotDownloadAllowed(response, item)
+    return normalizeMarketTheme(item, botDownloadAllowed)
+}
+
 /**
  * @param {string} [query]
  * @param {number} [page]
  */
 export async function fetchThemeCatalog(query = '', page = 1) {
     const data = /** @type {any} */ (await makeRequest.getThemeMarketList())
-    const inheritedBotDownloadAllowed = typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null
-    const onlineThemes = Array.isArray(data?.themes)
-        ? data.themes.map((/** @type {any} */ item) => normalizeMarketTheme(item, inheritedBotDownloadAllowed)).filter((/** @type {{slug:string}} */ theme) => SLUG_RE.test(theme.slug))
-        : []
+    if (!isRecord(data)
+        || data.ok !== true
+        || !Array.isArray(data.themes)
+        || data.themes.length > MAX_MARKET_THEMES
+        || Object.hasOwn(data, 'demo') && typeof data.demo !== 'boolean') {
+        throw invalidCatalogResponse()
+    }
+    const seen = new Set()
+    const onlineThemes = []
+    for (const item of data.themes) {
+        const theme = validateCatalogTheme(data, item)
+        if (seen.has(theme.slug)) continue
+        seen.add(theme.slug)
+        onlineThemes.push(theme)
+    }
     const pinnedLocalTheme = getLocalThemeDetail(PINNED_LOCAL_THEME_ID)
     const themes = pinnedLocalTheme
         ? [pinnedLocalTheme, ...onlineThemes.filter((/** @type {{slug:string}} */ theme) => theme.slug !== PINNED_LOCAL_THEME_ID)]
@@ -145,8 +179,13 @@ export async function fetchThemeCatalog(query = '', page = 1) {
 export async function fetchThemeDetail(slug) {
     if (!SLUG_RE.test(slug)) throw new ThemeMarketClientError('theme_slug_invalid', 400)
     const data = /** @type {any} */ (await makeRequest.getThemeMarketDetail(slug))
-    const theme = normalizeMarketTheme(data?.theme || data, typeof data?.botDownloadAllowed === 'boolean' ? data.botDownloadAllowed : null)
-    if (theme.slug !== slug) throw new ThemeMarketClientError('theme_catalog_invalid_response', 502)
+    if (!isRecord(data) || data.ok !== true || !isRecord(data.theme)) throw invalidCatalogResponse()
+    if (Object.hasOwn(data, 'releaseNotes') && typeof data.releaseNotes !== 'string'
+        || Object.hasOwn(data.theme, 'releaseNotes') && typeof data.theme.releaseNotes !== 'string') {
+        throw invalidCatalogResponse()
+    }
+    const theme = validateCatalogTheme(data, data.theme)
+    if (theme.slug !== slug) throw invalidCatalogResponse()
     return { ...theme, releaseNotes: text(data?.releaseNotes || data?.theme?.releaseNotes, 3000) }
 }
 

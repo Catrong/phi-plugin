@@ -6,6 +6,7 @@ import phiPluginBase from '../components/baseClass.js'
 import { USER_SETTING_META, USER_SETTING_OPTIONS } from '../model/game/constNum.js'
 import themeManager from '../model/theme/manager.js'
 import themeUseService, { marketThemeErrorMessage } from '../model/theme/useService.js'
+import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import send from '../model/render/send.js'
 
@@ -323,6 +324,11 @@ export class phihelp extends phiPluginBase {
                 return true
             }
 
+            if (settingKey === 'theme' && await getBanGroup.get(e, 'theme')) {
+                send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                return false
+            }
+
             /** 主题选项动态合并内置 + 自定义主题，其余设置项保持静态数据源 */
             /** @param {string} key */
             const getOptions = (key) => key === 'theme'
@@ -343,14 +349,18 @@ export class phihelp extends phiPluginBase {
                 }
             }
 
-            if (settingKey === 'theme' && !optionMap[canonicalValue] && /^[a-z][a-z0-9_-]{0,119}$/.test(canonicalValue)) {
-                if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
+            const selectedTheme = settingKey === 'theme' ? themeManager.getTheme(canonicalValue) : null
+            const shouldPrepareTheme = settingKey === 'theme'
+                && /^[a-z][a-z0-9_-]{0,119}$/.test(canonicalValue)
+                && (!optionMap[canonicalValue] || selectedTheme?.marketInstalled)
+            if (shouldPrepareTheme) {
+                if (!selectedTheme && !Config.getUserCfg('config', 'openPhiPluginApi')) {
                     send.send_with_At(e, '该主题尚未下载，自动下载依赖联合查分 API，请联系 Bot 主人启用。')
                     return true
                 }
-                send.send_with_At(e, `正在校验并下载主题 ${canonicalValue}，请稍候。`)
+                send.send_with_At(e, `正在校验并准备主题 ${canonicalValue}，请稍候。`)
                 try {
-                    await themeUseService.use(canonicalValue)
+                    await themeUseService.use(canonicalValue, { requesterId: getThemeInstallRequesterId(e) })
                     // 下载期间用户数据可能已由其他命令更新；保存前重新读取，避免覆盖并发修改。
                     pluginData = await getNotes.getNotesData(e.user_id)
                     optionMap = /** @type {Record<string, { title: string, description: string }>} */ (getOptions(settingKey))
@@ -369,6 +379,8 @@ export class phihelp extends phiPluginBase {
 
             if (settingKey === 'allowApiUsage' || settingKey === 'showB30Analysis') {
                 pluginData[settingKey] = canonicalValue === 'true'
+            } else if (settingKey === 'theme' && typeof pluginData.setThemePreference === 'function') {
+                pluginData.setThemePreference(canonicalValue)
             } else {
                 // @ts-ignore
                 pluginData[settingKey] = canonicalValue

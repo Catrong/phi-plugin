@@ -16,6 +16,8 @@ resources/original_ill/
 /resources/splited_music/
 /resources/info/songsurl.yaml
 /resources/otherill/
+# 主题目录包含运行时下载和用户自行安装的主题。已跟踪的内置主题仍由 Git 正常更新。
+/resources/themes/*
 
 # 忽略特定文件
 /package-lock.json

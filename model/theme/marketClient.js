@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import fs from 'node:fs'
 import Config from '../../components/Config.js'
 import makeRequest from '../api/makeRequest.js'
+import { classifyApiConnectionError } from '../api/phiApiErrors.js'
 
 const MAX_ARCHIVE_BYTES = 50 * 1024 * 1024
 const AUTH_ATTEMPTS = 3
@@ -18,30 +19,66 @@ export class ThemeMarketClientError extends Error {
     }
 }
 
-/** @param {any} theme */
-function validateTheme(theme) {
-    if (!theme || typeof theme.slug !== 'string' || !/^[a-z][a-z0-9_-]{0,119}$/.test(theme.slug)
-        || typeof theme.name !== 'string' || !['public', 'restricted', 'bot_only'].includes(theme.downloadPolicy)
-        || theme.botDownloadAllowed !== true) {
+const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
+
+/** @param {unknown} value */
+function isRecord(value) {
+    return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+
+/**
+ * The API has shipped both response-level and theme-level capability fields.
+ * Accept either layout, but never guess when the field is absent or conflicts.
+ * @param {any} response
+ * @param {any} theme
+ */
+export function resolveBotDownloadAllowed(response, theme) {
+    const hasResponseValue = isRecord(response) && Object.hasOwn(response, 'botDownloadAllowed')
+    const hasThemeValue = isRecord(theme) && Object.hasOwn(theme, 'botDownloadAllowed')
+    const responseValue = hasResponseValue ? response.botDownloadAllowed : undefined
+    const themeValue = hasThemeValue ? theme.botDownloadAllowed : undefined
+    if (
+        hasResponseValue && typeof responseValue !== 'boolean'
+        || hasThemeValue && typeof themeValue !== 'boolean'
+        || !hasResponseValue && !hasThemeValue
+        || hasResponseValue && hasThemeValue && responseValue !== themeValue
+    ) {
         throw new ThemeMarketClientError('theme_store_invalid_response', 502)
     }
-    return theme
+    return /** @type {boolean} */ (hasThemeValue ? themeValue : responseValue)
+}
+
+/** @param {any} theme @param {boolean} botDownloadAllowed */
+function validateTheme(theme, botDownloadAllowed) {
+    if (!isRecord(theme)
+        || typeof theme.slug !== 'string' || !SLUG_RE.test(theme.slug)
+        || typeof theme.name !== 'string' || !theme.name.trim() || theme.name.length > 100
+        || !['public', 'restricted', 'bot_only'].includes(theme.downloadPolicy)) {
+        throw new ThemeMarketClientError('theme_store_invalid_response', 502)
+    }
+    return { ...theme, name: theme.name.trim(), botDownloadAllowed }
 }
 
 export async function getAvailableMarketThemes() {
     const response = await makeRequest.getThemeMarketList()
-    if (response?.ok !== true || !Array.isArray(response.themes) || response.themes.length > 500) {
+    if (!isRecord(response) || response.ok !== true || !Array.isArray(response.themes) || response.themes.length > 500) {
         throw new ThemeMarketClientError('theme_store_invalid_response', 502)
     }
-    return response.themes.map(validateTheme)
+    return response.themes.map((/** @type {any} */ theme) => validateTheme(
+        theme,
+        resolveBotDownloadAllowed(response, theme),
+    ))
 }
 
 /** @param {string} themeId */
 export async function getAvailableMarketTheme(themeId) {
     const response = await makeRequest.getThemeMarketDetail(themeId)
-    if (response?.ok !== true) throw new ThemeMarketClientError('theme_store_invalid_response', 502)
-    const theme = validateTheme(response.theme)
+    if (!isRecord(response) || response.ok !== true || !isRecord(response.theme)) {
+        throw new ThemeMarketClientError('theme_store_invalid_response', 502)
+    }
+    const theme = validateTheme(response.theme, resolveBotDownloadAllowed(response, response.theme))
     if (theme.slug !== themeId) throw new ThemeMarketClientError('theme_store_invalid_response', 502)
+    if (!theme.botDownloadAllowed) throw new ThemeMarketClientError('theme_not_allowed_by_bot', 403)
     return theme
 }
 
@@ -178,12 +215,17 @@ export async function downloadThemeArchive(download, targetPath, options = {}) {
             if (url.origin !== configuredDownloadOrigin() || url.protocol !== 'https:' || url.username || url.password || url.hash) {
                 throw new ThemeMarketClientError('theme_download_url_untrusted')
             }
-            const response = await fetchImpl(url, {
-                method: 'GET',
-                headers: { Accept: 'application/zip' },
-                redirect: 'error',
-                signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
-            })
+            let response
+            try {
+                response = await fetchImpl(url, {
+                    method: 'GET',
+                    headers: { Accept: 'application/zip' },
+                    redirect: 'error',
+                    signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
+                })
+            } catch (error) {
+                throw classifyApiConnectionError(error)
+            }
             if ([401, 403, 410].includes(response.status)) {
                 await response.body?.cancel()
                 throw new ThemeMarketClientError('theme_download_url_expired', response.status)
@@ -208,7 +250,13 @@ export async function downloadThemeArchive(download, targetPath, options = {}) {
             const hash = crypto.createHash('sha256')
             let total = 0
             while (true) {
-                const { done, value } = await reader.read()
+                let chunk
+                try {
+                    chunk = await reader.read()
+                } catch (error) {
+                    throw classifyApiConnectionError(error)
+                }
+                const { done, value } = chunk
                 if (done) break
                 if (!value) continue
                 total += value.byteLength
