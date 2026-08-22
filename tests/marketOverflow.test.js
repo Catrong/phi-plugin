@@ -21,3 +21,11 @@ test('market styles constrain long content to the fixed render width', () => {
     assert.match(css, /\.release-notes p\s*\{[^}]*overflow-wrap:\s*anywhere/)
     assert.match(css, /grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/)
 })
+
+test('layout emits the theme font URL without HTML escaping inside <style>', () => {
+    const layout = fs.readFileSync(new URL('../resources/html/common/layout/default.art', import.meta.url), 'utf8')
+    // <style> 是 raw text，实体不会解码；fontUrl 已按路径段 encodeURIComponent，
+    // 必须用原始输出语法，否则含 ' 或 & 的字体文件名会被 &#39;/&amp; 破坏。
+    assert.match(layout, /src:\s*url\("\{\{@ themeInfo\.fontUrl\}\}"\)/)
+    assert.doesNotMatch(layout, /url\("\{\{themeInfo\.fontUrl\}\}/)
+})

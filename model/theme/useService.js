@@ -1,6 +1,7 @@
 import crypto from 'node:crypto'
 import Config from '../../components/Config.js'
 import themeManager from './manager.js'
+import themePolicy from './policy.js'
 import {
     authorizeThemeDownload,
     downloadThemeArchive,
@@ -126,6 +127,11 @@ export class ThemeUseService {
             if (!this.marketEnabled()) return this.cachedMarketTheme(localTheme)
         }
         if (!SLUG_RE.test(themeId)) throw new ThemeMarketClientError('theme_slug_invalid', 400)
+        // 市场策略同样约束首次下载：本地尚未安装的 slug 也必须先通过 Bot 黑/白名单，
+        // 否则被拉黑的主题仍可触发下载并占用配额。
+        if (!themePolicy.isAllowed(themeId)) {
+            throw new ThemeMarketClientError('theme_not_allowed_by_bot', 403)
+        }
         let detail
         try {
             detail = await this.getTheme(themeId)
@@ -160,6 +166,7 @@ export function marketThemeErrorMessage(error) {
         theme_package_integrity_failed: '主题包完整性校验失败，已停止安装。',
         theme_package_reserved_id: '该主题 ID 与插件内置主题冲突，无法安装。',
         theme_conflicts_with_local_theme: '同名本地主题不是市场安装版本，已拒绝覆盖。',
+        theme_not_allowed_by_bot: 'Bot 主人的主题策略不允许使用该主题。',
         theme_install_busy: '主题安装队列繁忙，请稍后重试。',
         theme_install_queue_full: '当前等待安装的主题过多，请稍后再试。',
         theme_install_rate_limited: '你在一小时内安装的新主题过多，请稍后再试。',

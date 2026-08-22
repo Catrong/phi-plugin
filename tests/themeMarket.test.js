@@ -39,6 +39,7 @@ import {
     recoverMarketInstall,
     withMarketInstallLock,
 } from '../model/theme/installer.js'
+import { marketInstallLockPath } from '../model/theme/installLock.js'
 
 const sha256 = 'b'.repeat(64)
 
@@ -241,6 +242,31 @@ test('market install lock serializes concurrent operations', async () => {
     assert.deepEqual(order, ['first-start', 'first-end', 'second-start', 'second-end'])
 })
 
+test('a stale lock whose pid was reused by another process is still reaped', async () => {
+    // 进程启动标识依赖 /proc/<pid>/stat，非 Linux 平台退化为仅按 pid 判断，跳过该场景。
+    if (!fs.existsSync('/proc/self/stat')) return
+    fs.mkdirSync(themesDir, { recursive: true })
+    const backdated = new Date(Date.now() - 10 * 60_000)
+    await withMarketInstallLock(async () => {
+        fs.writeFileSync(marketInstallLockPath, `${JSON.stringify({
+            pid: process.pid,
+            // 存活进程的 starttime 不可能为 0：模拟锁持有者崩溃后 pid 被复用的情形。
+            identity: '0',
+            token: crypto.randomUUID(),
+            createdAt: new Date(backdated).toISOString(),
+        })}\n`, { mode: 0o600 })
+        fs.utimesSync(marketInstallLockPath, backdated, backdated)
+    })
+    let entered = false
+    try {
+        await withMarketInstallLock(async () => { entered = true })
+        assert.equal(entered, true)
+        assert.equal(fs.existsSync(marketInstallLockPath), false)
+    } finally {
+        await fs.promises.rm(marketInstallLockPath, { force: true })
+    }
+})
+
 test('theme use validates Bot access before installing on demand', async () => {
     /** @type {string[]} */
     const calls = []
@@ -270,6 +296,32 @@ test('theme use rejects invalid slugs before contacting the market', async () =>
     })
     await assert.rejects(service.use('../unsafe'), error => /** @type {any} */(error)?.code === 'theme_slug_invalid')
     assert.equal(called, false)
+})
+
+test('theme use applies the Bot policy to slugs that are not installed yet', async () => {
+    const previousPolicy = themePolicy.snapshot()
+    /** @type {string[]} */
+    const calls = []
+    const service = new ThemeUseService({
+        getTheme: async slug => { calls.push(`validate:${slug}`); return /** @type {any} */ ({}) },
+        install: async slug => { calls.push(`install:${slug}`); return /** @type {any} */ ({}) },
+    })
+    try {
+        themePolicy.apply({ mode: 'blacklist', entries: ['blocked-slug'] }, false)
+        await assert.rejects(
+            service.use('blocked-slug'),
+            error => /** @type {any} */(error)?.code === 'theme_not_allowed_by_bot',
+        )
+        assert.deepEqual(calls, [])
+        themePolicy.apply({ mode: 'whitelist', entries: ['other-theme'] }, false)
+        await assert.rejects(
+            service.use('blocked-slug'),
+            error => /** @type {any} */(error)?.code === 'theme_not_allowed_by_bot',
+        )
+        assert.deepEqual(calls, [])
+    } finally {
+        themePolicy.apply(previousPolicy, false)
+    }
 })
 
 test('market detail capability accepts both API layouts and rejects ambiguity', async () => {

@@ -17,15 +17,45 @@ const installLockContext = new AsyncLocalStorage()
 /** @param {number} ms */
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-/** @param {number} pid */
-function processAlive(pid) {
+/** @returns {string | null} 本进程的调度器启动标识（clock ticks）；非 Linux 或 /proc 不可用时返回 null */
+function currentProcessStartIdentity() {
+    try {
+        const stat = fs.readFileSync(`/proc/${process.pid}/stat`, 'utf8')
+        // comm 字段可能含空格和括号，字段从最后一个 ')' 之后数起：其后首列是第 3 列 state，
+        // 因此第 22 列 starttime 的下标为 19。重启后 starttime 归零，可顺带识别跨重启的残留锁。
+        return stat.slice(stat.lastIndexOf(')') + 2).split(' ')[19] || null
+    } catch {
+        return null
+    }
+}
+
+/**
+ * 核对锁记录的 pid 当前是否仍是当初那个进程：pid 被无关进程复用时启动标识不同，
+ * 崩溃持有者的锁才能被回收，而不是被永久判为存活。
+ * @param {number} pid @param {string | undefined} identity
+ * @returns {boolean | null} 无法判定（非 Linux / proc 不可读 / 旧锁未记录）时为 null
+ */
+function processIdentityMatches(pid, identity) {
+    if (!identity) return null
+    try {
+        const stat = fs.readFileSync(`/proc/${pid}/stat`, 'utf8')
+        const current = stat.slice(stat.lastIndexOf(')') + 2).split(' ')[19]
+        return current ? current === identity : null
+    } catch {
+        return null
+    }
+}
+
+/** @param {number} pid @param {string | undefined} identity */
+function processAlive(pid, identity) {
     if (!Number.isSafeInteger(pid) || pid <= 0) return false
     try {
         process.kill(pid, 0)
-        return true
     } catch (error) {
-        return /** @type {any} */ (error)?.code === 'EPERM'
+        if (/** @type {any} */ (error)?.code !== 'EPERM') return false
     }
+    // 无法核对启动标识时保持保守的“存活”结论，避免误清他人的锁。
+    return processIdentityMatches(pid, identity) !== false
 }
 
 /** @returns {Promise<{stat:fs.Stats,owner:any,generation:string}|null>} */
@@ -46,7 +76,7 @@ async function readFileLockState() {
 /** @param {{stat:fs.Stats,owner:any}} state */
 function isStaleFileLock(state) {
     return Date.now() - state.stat.mtimeMs > LOCK_STALE_MS
-        && !processAlive(Number(state.owner?.pid))
+        && !processAlive(Number(state.owner?.pid), state.owner?.identity)
 }
 
 /**
@@ -95,7 +125,12 @@ async function acquireFileLock() {
             handle = await fs.promises.open(LOCK_PATH, 'wx', 0o600)
             const token = crypto.randomUUID()
             try {
-                await handle.writeFile(JSON.stringify({ pid: process.pid, token, createdAt: new Date().toISOString() }))
+                await handle.writeFile(JSON.stringify({
+                    pid: process.pid,
+                    identity: currentProcessStartIdentity(),
+                    token,
+                    createdAt: new Date().toISOString(),
+                }))
                 await handle.sync()
                 return { handle, token }
             } catch (error) {

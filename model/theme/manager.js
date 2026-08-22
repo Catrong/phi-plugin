@@ -86,7 +86,15 @@ export default await new class themeManager {
         for (const migration of migrateLegacyThemeDirectories()) {
             logger.info(`[phi-plugin][主题] 已迁移主题目录：${migration.from} -> ${migration.to}`)
         }
-        const recoveryFailures = await withMarketInstallLock(() => recoverAllMarketInstalls({ cleanAllWork: true }))
+        /** @type {{themeId: string, error: unknown}[]} */
+        let recoveryFailures = []
+        try {
+            recoveryFailures = await withMarketInstallLock(() => recoverAllMarketInstalls({ cleanAllWork: true }))
+        } catch (error) {
+            // 其他进程正在安装或锁暂时不可用时不能阻断插件启动；
+            // 每次市场安装前仍会执行 recoverAllMarketInstalls 兜底。
+            logger.error('[phi-plugin][主题] 启动时的市场主题恢复被跳过（安装锁暂不可用）', error)
+        }
         for (const failure of recoveryFailures) {
             logger.error(`[phi-plugin][主题] 恢复中断的市场主题安装失败：${failure.themeId}`, failure.error)
         }
