@@ -681,7 +681,7 @@ body {
   position: absolute;
   width: 470px;
   z-index: 5;
-  --top: calc((var(--dashTop) + 690px));
+  --top: calc((var(--dashTop) + 660px));
   --left-margin: 1580px;
   backdrop-filter: none;
 }
@@ -694,4 +694,13 @@ body {
   font-size: 28px;
   margin-top: 19px;
   margin-left: 8px;
+}
+
+.copyright {
+  position: absolute;
+  width: 470px;
+  z-index: 5;
+  --top: calc((var(--dashTop) + 730px));
+  --left-margin: 1580px;
+  backdrop-filter: none;
 }

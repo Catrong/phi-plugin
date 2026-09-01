@@ -658,7 +658,7 @@ body {
     writing-mode: horizontal-tb;
     justify-content: center;
     position: absolute;
-    bottom: 50px;
+    bottom: 120px;
 }
 
 .createdbox p {
