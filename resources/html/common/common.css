@@ -172,7 +172,7 @@ body p {
 
 .tips {
   position: absolute;
-  bottom: 0px;
+  bottom: 1.5%;
   left: 5px;
   writing-mode: horizontal-tb;
 }

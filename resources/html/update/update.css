@@ -664,3 +664,9 @@ circle {
     font-size: large;
     text-shadow: 0 0 20px #fff700;
 }
+
+.copyright {
+    width: 60%;
+    margin-bottom: 6%;
+}
+

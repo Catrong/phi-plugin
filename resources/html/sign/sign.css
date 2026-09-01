@@ -681,7 +681,7 @@ body {
   position: absolute;
   width: 470px;
   z-index: 5;
-  --top: calc((var(--dashTop) + 660px));
+  --top: calc((var(--dashTop) + 655px));
   --left-margin: 1580px;
   backdrop-filter: none;
 }
@@ -700,7 +700,7 @@ body {
   position: absolute;
   width: 470px;
   z-index: 5;
-  --top: calc((var(--dashTop) + 730px));
+  --top: calc((var(--dashTop) + 725px));
   --left-margin: 1580px;
   backdrop-filter: none;
 }
