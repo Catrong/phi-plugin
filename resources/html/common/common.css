@@ -164,6 +164,11 @@ body p {
   justify-content: center;
 }
 
+.copyright p {
+  color: white;
+  font-size: 16px;
+  text-align: center;
+}
 
 .tips {
   position: absolute;
