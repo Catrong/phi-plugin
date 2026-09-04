@@ -168,6 +168,7 @@ body p {
   color: white;
   font-size: 16px;
   text-align: center;
+  text-shadow: 0 0 10px #00000080;
 }
 
 .tips {

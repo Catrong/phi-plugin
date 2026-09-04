@@ -65,6 +65,11 @@
             </div>
         </div>
     </div>
+    {{if tips}}
+    <div class="tips">
+        <p>Tip:{{tips}}</p>
+    </div>
+    {{/if}}
     {{if box_line[0]||task_data}}
     <div class="record_box">
         {{if task_data && (task_data[0]||task_data[1]||task_data[2]||task_data[3]||task_data[4])}}
@@ -234,11 +239,7 @@
         <p>*Phi-Plugin不是Phigros官方项目，与南京鸽游网络有限公司及Phigros官方不存在授权、合作或运营关系。
         </p>
     </div>
-    {{if tips}}
-    <div class="tips">
-        <p>Tip:{{tips}}</p>
-    </div>
-    {{/if}}
+    
     {{if theme == "snow"}}
     <div class="snow-box"> </div>
     <script>
