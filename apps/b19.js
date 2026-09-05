@@ -10,6 +10,7 @@ import getNotes from '../model/user/getNotes.js';
 import getPic from '../model/render/getPic.js';
 import getBanGroup from '../model/user/getBanGroup.js';
 import makeRequest from '../model/api/makeRequest.js';
+import { buildGameRecordPayload } from '../model/api/gameRecordPayload.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
 import LevelRecordInfo from '../model/game/LevelRecordInfo.js';
@@ -165,7 +166,7 @@ export class phib19 extends phiPluginBase {
                         { event: e },
                     )
                     : await makeRequest.getB30TagAnalysis(
-                        { gameRecord: save.gameRecord },
+                        { gameRecord: buildGameRecordPayload(save.gameRecord) },
                         { event: e },
                     )
             }

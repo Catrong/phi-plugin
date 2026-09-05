@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phigros Song Select</title>
+  <style>
+    @font-face {
+      font-family: "Aldrich";
+      src: url("./html/common/font/Aldrich-Regular.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Phi";
+      src: url("./html/common/font/phi.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    :root {
+      color-scheme: dark;
+      font-family: "Aldrich", "Phi", "Segoe UI", sans-serif;
+      background: #080a0e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      isolation: isolate;
+      overflow: hidden;
+      background: #15191d;
+    }
+
+    .artwork,
+    .artwork-fallback {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      user-select: none;
+    }
+
+    .artwork-fallback {
+      z-index: -3;
+      filter: saturate(.72) brightness(.67);
+    }
+
+    .artwork {
+      z-index: -2;
+      filter: saturate(.88) brightness(.76) contrast(1.04);
+      transition: opacity 220ms ease;
+    }
+
+    .screen::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      content: "";
+      background:
+        linear-gradient(90deg, rgba(5, 10, 14, .76) 0%, rgba(7, 11, 15, .36) 36%, rgba(8, 10, 15, .05) 70%),
+        linear-gradient(0deg, rgba(8, 12, 18, .48) 0%, transparent 35%, rgba(3, 6, 8, .34) 100%);
+      pointer-events: none;
+    }
+
+    .back {
+      position: absolute;
+      top: clamp(20px, 6.3vh, 64px);
+      left: clamp(20px, 3vw, 48px);
+      width: clamp(76px, 9.5vw, 142px);
+      height: clamp(42px, 6.1vw, 82px);
+      border: 2px solid rgba(190, 250, 255, .9);
+      border-radius: 2px;
+      color: white;
+      background: rgba(202, 250, 255, .16);
+      box-shadow: 0 0 8px #fff, 0 0 18px #2ce8ff, inset 0 0 14px rgba(86, 237, 255, .72);
+      clip-path: polygon(12% 0, 100% 14%, 89% 100%, 0 84%);
+      cursor: pointer;
+    }
+
+    .back::before {
+      content: "";
+      position: absolute;
+      width: 29%;
+      aspect-ratio: 1;
+      top: 50%;
+      left: 45%;
+      border-left: clamp(3px, .38vw, 6px) solid white;
+      border-bottom: clamp(3px, .38vw, 6px) solid white;
+      transform: translate(-50%, -50%) rotate(45deg);
+      filter: drop-shadow(0 0 5px #5eeeff);
+    }
+
+    .song-header {
+      position: absolute;
+      top: clamp(92px, 20vh, 210px);
+      left: 3vw;
+      width: 86vw;
+      height: clamp(92px, 14.5vh, 146px);
+    }
+
+    .song-header::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      border-top: 2px solid rgba(185, 226, 255, .76);
+      border-bottom: 2px solid rgba(185, 226, 255, .56);
+      background-color: rgba(6, 17, 24, .4);
+      background-image:
+        linear-gradient(60deg, transparent 49%, rgba(154, 213, 241, .28) 50%, transparent 52%),
+        linear-gradient(-60deg, transparent 49%, rgba(154, 213, 241, .28) 50%, transparent 52%);
+      background-size: 88px 76px;
+      box-shadow: 0 0 22px rgba(121, 202, 246, .18);
+      clip-path: polygon(0 0, 82% 8%, 100% 48%, 88% 100%, 0 88%);
+      -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 54%, rgba(0, 0, 0, .55) 72%, transparent 96%);
+      mask-image: linear-gradient(90deg, #000 0%, #000 54%, rgba(0, 0, 0, .55) 72%, transparent 96%);
+    }
+
+    .song-copy {
+      position: absolute;
+      top: 22%;
+      left: 4.5%;
+      width: 48%;
+      color: #fff;
+      text-shadow: 0 1px 2px #000, 0 0 8px rgba(255, 255, 255, .48);
+    }
+
+    .song-title {
+      overflow: hidden;
+      margin: 0;
+      font-size: clamp(23px, 2.6vw, 44px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .song-artist {
+      overflow: hidden;
+      margin: .2em 0 0;
+      color: rgba(255, 255, 255, .9);
+      font-size: clamp(12px, 1.15vw, 19px);
+      font-weight: 600;
+      letter-spacing: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .hex-mark {
+      position: absolute;
+      top: 48%;
+      left: 11%;
+      width: clamp(96px, 14vw, 218px);
+      aspect-ratio: 1.15;
+      opacity: .17;
+      filter: drop-shadow(0 0 8px #c9edff);
+    }
+
+    .hex-mark::before,
+    .hex-mark::after {
+      position: absolute;
+      inset: 13%;
+      content: "";
+      border: clamp(2px, .25vw, 4px) solid #d6effc;
+      clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+    }
+
+    .hex-mark::after {
+      inset: 30%;
+    }
+
+    .triangle-field {
+      position: absolute;
+      top: 38%;
+      left: 7%;
+      width: 47vw;
+      height: 30vh;
+      min-height: 110px;
+      opacity: .1;
+      background-image:
+        linear-gradient(60deg, transparent 48.5%, #b8e3f8 49.5%, transparent 51%),
+        linear-gradient(-60deg, transparent 48.5%, #b8e3f8 49.5%, transparent 51%);
+      background-size: clamp(70px, 8vw, 126px) clamp(60px, 7vw, 110px);
+      -webkit-mask-image: linear-gradient(90deg, #000, rgba(0, 0, 0, .46) 70%, transparent);
+      mask-image: linear-gradient(90deg, #000, rgba(0, 0, 0, .46) 70%, transparent);
+      pointer-events: none;
+    }
+
+    .display-title {
+      position: absolute;
+      left: 22vw;
+      bottom: clamp(106px, 18.5vh, 188px);
+      width: 55vw;
+      margin: 0;
+      color: rgba(242, 244, 250, .8);
+      font-size: clamp(24px, 4.5vw, 72px);
+      font-style: italic;
+      font-weight: 700;
+      line-height: .95;
+      text-align: center;
+      text-shadow: 3px 3px 0 rgba(12, 13, 28, .66), 0 0 9px rgba(255, 255, 255, .4);
+      text-transform: uppercase;
+    }
+
+    .bottom-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: clamp(24px, 5.5vh, 62px);
+      height: clamp(62px, 10vh, 98px);
+    }
+
+    .status {
+      position: absolute;
+      left: 4.5vw;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: repeat(3, clamp(82px, 10vw, 146px)) clamp(260px, 31vw, 480px);
+      height: 82%;
+      color: #9da2a7;
+      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .58));
+    }
+
+    .difficulty,
+    .score {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      border-top: 2px solid rgba(166, 206, 226, .62);
+      border-bottom: 2px solid rgba(166, 206, 226, .45);
+      background: rgba(250, 250, 247, .94);
+      font-size: clamp(12px, 1.4vw, 22px);
+      font-weight: 700;
+    }
+
+    .difficulty {
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .difficulty strong {
+      font-size: clamp(16px, 1.7vw, 27px);
+      font-weight: 700;
+    }
+
+    .difficulty small {
+      margin-top: .22em;
+      font-size: clamp(7px, .65vw, 10px);
+      font-weight: 700;
+      opacity: .56;
+    }
+
+    .difficulty:first-child {
+      clip-path: polygon(10% 0, 100% 0, 92% 100%, 0 100%);
+      padding-left: 8%;
+    }
+
+    .difficulty.active {
+      z-index: 2;
+      color: white;
+      background: #ed174d;
+      clip-path: polygon(16% 0, 100% 0, 84% 100%, 0 100%);
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, .24);
+    }
+
+    .score {
+      position: relative;
+      justify-content: flex-start;
+      margin-left: -9%;
+      padding-left: 22%;
+      color: #f7f7fb;
+      border-color: rgba(141, 187, 212, .52);
+      background: rgba(11, 17, 27, .82);
+      clip-path: polygon(8% 0, 100% 0, 94% 100%, 0 100%);
+    }
+
+    .score-value {
+      font-size: clamp(20px, 2.6vw, 40px);
+      font-weight: 700;
+      text-shadow: 0 0 5px rgba(255, 255, 255, .44);
+    }
+
+    .score-label {
+      margin-top: .08em;
+      color: #8e969d;
+      font-size: clamp(8px, .72vw, 11px);
+    }
+
+    .score-metrics {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      line-height: .88;
+    }
+
+    .new-label {
+      margin-left: auto;
+      padding-right: 8%;
+      color: #a5aaae;
+      font-size: clamp(11px, 1.2vw, 19px);
+    }
+
+    .play {
+      position: absolute;
+      right: 5.5vw;
+      bottom: 0;
+      width: clamp(108px, 13vw, 196px);
+      height: 100%;
+      border: 0;
+      color: #8f9598;
+      background: rgba(255, 255, 252, .96);
+      clip-path: polygon(25% 0, 100% 0, 88% 100%, 0 100%);
+      cursor: pointer;
+      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .5));
+    }
+
+    .play::before {
+      position: absolute;
+      top: 50%;
+      left: 57%;
+      width: 0;
+      height: 0;
+      content: "";
+      border-top: clamp(12px, 1.8vw, 26px) solid transparent;
+      border-bottom: clamp(12px, 1.8vw, 26px) solid transparent;
+      border-left: clamp(18px, 2.7vw, 38px) solid currentColor;
+      transform: translate(-50%, -50%);
+    }
+
+    .play:hover,
+    .back:hover {
+      filter: brightness(1.12) drop-shadow(0 0 8px rgba(119, 235, 255, .8));
+    }
+
+    .play:focus-visible,
+    .back:focus-visible {
+      outline: 3px solid #7aeaff;
+      outline-offset: 5px;
+    }
+
+    .screen.is-starting .play {
+      color: #fff;
+      background: #ed174d;
+    }
+
+    @media (max-width: 700px), (max-height: 450px) {
+      .song-header {
+        top: 20vh;
+        left: 2.5vw;
+        width: 90vw;
+        height: 22vh;
+        min-height: 66px;
+      }
+
+      .song-copy {
+        left: 4%;
+        width: 55%;
+      }
+
+      .display-title {
+        left: 17vw;
+        bottom: 21vh;
+        width: 68vw;
+      }
+
+      .hex-mark {
+        top: 45%;
+        left: 7%;
+      }
+
+      .triangle-field {
+        left: 4%;
+        width: 56vw;
+      }
+
+      .bottom-bar {
+        bottom: 4vh;
+        height: 14vh;
+        min-height: 48px;
+      }
+
+      .status {
+        left: 3vw;
+        grid-template-columns: repeat(3, minmax(46px, 11vw)) minmax(150px, 37vw);
+      }
+
+      .score {
+        padding-left: 17%;
+      }
+
+      .play {
+        right: 3vw;
+        width: 15vw;
+        min-width: 76px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="screen" id="screen">
+    <img class="artwork-fallback" src="./otherill/雪降SP.png" alt="" onerror="this.onerror=null;this.src='./html/otherimg/phigros.png'">
+    <img class="artwork" id="artwork" alt="随机曲绘">
+
+    <button class="back" id="back" type="button" aria-label="返回"></button>
+
+    <section class="song-header" aria-label="曲目信息">
+      <div class="song-copy">
+        <h1 class="song-title" id="songTitle">About The Universe</h1>
+        <p class="song-artist">SOTUI &amp; Missionary</p>
+      </div>
+    </section>
+
+    <div class="hex-mark" aria-hidden="true"></div>
+    <div class="triangle-field" aria-hidden="true"></div>
+    <p class="display-title" id="displayTitle">About The Universe</p>
+
+    <footer class="bottom-bar">
+      <div class="status" aria-label="谱面和分数">
+        <div class="difficulty"><strong>4</strong><small>EZ</small></div>
+        <div class="difficulty"><strong>9</strong><small>HD</small></div>
+        <div class="difficulty active"><strong>15</strong><small>IN</small></div>
+        <div class="score">
+          <span class="score-metrics">
+            <span class="score-value">0000000</span>
+            <span class="score-label">96.00%</span>
+          </span>
+          <span class="new-label">NEW</span>
+        </div>
+      </div>
+      <button class="play" id="play" type="button" aria-label="开始"></button>
+    </footer>
+  </main>
+
+  <script>
+    const songs = [
+      "Glaciaxion.SunsetRay",
+      "EradicationCatastrophe.NceS",
+      "Credits.Frums",
+      "Dlyrotz.Likey",
+      "EnginexStartmelodymix.CrossingSound",
+      "Wintercube.CtymaxfeatNceS",
+      "Cipher20.TetrajectoryfeatCtymax",
+      "混乱Confusion.OnlyMyBlackScore",
+      "FULiAUTOSHOOTER.MYUKKE",
+      "HumaN.SOTUI",
+      "PRAW.Bluewind",
+      "PixelRebelz.Normal1zer",
+      "Cereris.SunsetRayNceS",
+      "SURREALISM.Itsuki",
+      "BonusTime.MegaloPaleWhite",
+      "ENERGYSYNERGYMATRIX.Tanchiky",
+      "Chronologika.Hundotte",
+      "Aphasia.闫东炜",
+      "Ark.kanoryo",
+      "DistortedFate.Sakuzyo"
+    ];
+
+    const artwork = document.querySelector("#artwork");
+    let shuffledSongs = [];
+    let candidateIndex = 0;
+
+    async function getSongFiles() {
+      if (location.protocol === "file:") return songs;
+
+      try {
+        const response = await fetch("./info/info.csv");
+        if (!response.ok) return songs;
+        const songFiles = (await response.text())
+          .split(/\r?\n/)
+          .slice(1)
+          .map((line) => line.split("\t", 1)[0].trim())
+          .filter(Boolean);
+        return songFiles.length ? songFiles : songs;
+      } catch {
+        return songs;
+      }
+    }
+
+    function tryNextArtwork() {
+      if (candidateIndex >= shuffledSongs.length) {
+        artwork.hidden = true;
+        return;
+      }
+
+      const file = shuffledSongs[candidateIndex++];
+      artwork.src = `./original_ill/ill/${encodeURIComponent(file)}.png`;
+    }
+
+    artwork.addEventListener("error", tryNextArtwork);
+    artwork.addEventListener("load", () => {
+      artwork.hidden = false;
+    });
+
+    getSongFiles().then((songFiles) => {
+      shuffledSongs = songFiles
+        .map((song) => ({ song, order: Math.random() }))
+        .sort((a, b) => a.order - b.order)
+        .map(({ song }) => song);
+      tryNextArtwork();
+    });
+
+    document.querySelector("#back").addEventListener("click", () => {
+      if (history.length > 1) history.back();
+    });
+
+    document.querySelector("#play").addEventListener("click", () => {
+      const screen = document.querySelector("#screen");
+      screen.classList.add("is-starting");
+      window.setTimeout(() => screen.classList.remove("is-starting"), 260);
+    });
+  </script>
+</body>
+</html>
