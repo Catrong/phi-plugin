@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Catrong/phi-plugin#readme",
   "dependencies": {
+    "@napi-rs/canvas": "^1.0.8",
     "archiver": "^7.0.1",
     "art-template": "^4.13.4",
     "axios": "^1.11.0",

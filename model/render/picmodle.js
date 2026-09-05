@@ -10,6 +10,7 @@ import path from 'node:path'
 import platform from '../../components/platform/index.js'
 import { registerProcessCleanup } from '../../components/ProcessCleanup.js'
 import RenderPressureHistory from './renderPressureHistory.js'
+import { renderDefaultB30Canvas } from './b30CanvasRenderer.js'
 
 /**@import {botEvent} from '../../components/baseClass.js' */
 
@@ -57,16 +58,12 @@ export default await new class picmodle {
             logger.error(`[Phi-Plugin][清理临时文件失败]`)
             logger.error(err)
         }
-        /** 初始化puppeteer实例 */
+        /** 初始化渲染器槽位；Chromium 在非 Canvas 页面首次渲染时按需启动。 */
         let num = Config.getUserCfg('config', 'renderNum')
         for (let i = 0; i < num; i++) {
             this.puppeteer.push(new puppeteer({
                 puppeteerTimeout: Config.getUserCfg('config', 'timeout')
             }, `${i}`))
-            this.puppeteer[i].browserInit().catch(err => {
-                logger.error(`[Phi-Plugin][渲染器预热失败]`, i)
-                logger.error(err)
-            })
             this.idle.push(i)
         }
         return this;
@@ -141,7 +138,51 @@ export default await new class picmodle {
      * @returns 
      */
     async b19(e, data) {
+        if (data?.theme === 'default') {
+            return this.renderDefaultB30(data, {
+                e,
+                scale: Config.getUserCfg('config', 'renderScale') / 100,
+            })
+        }
         return await this.common(e, 'b19', data)
+    }
+
+    /**
+     * 默认 B30 使用原生 Canvas，避免启动 Chromium。
+     * @param {any} params
+     * @param {any} cfg
+     */
+    async renderDefaultB30(params, cfg) {
+        const id = this.tot++
+        const rendererNum = await this.acquire(Config.getUserCfg('config', 'waitingTimeout'))
+        if (rendererNum < 0) {
+            this.pressureTimedOut += 1
+            logger.error(`[Phi-Plugin][Canvas等待超时]`, id)
+            return '等待超时，请稍后重试QAQ！'
+        }
+
+        this.rendering.add(id)
+        this.pressureMaxActive = Math.max(this.pressureMaxActive, this.rendering.size)
+        const startedAt = Date.now()
+        try {
+            const image = await renderDefaultB30Canvas(params, {
+                scale: cfg.scale || 1,
+                pluginName: Display_Plugin_Name,
+                version: Version.ver,
+                quality: 90,
+            })
+            this.pressureCompleted += 1
+            logger.mark(`[图片生成][b19/canvas] ${(image.length / 1024).toFixed(2)}KB ${logger.green(`${Date.now() - startedAt}ms`)}`)
+            return segment.image(image)
+        } catch (err) {
+            this.pressureFailed += 1
+            logger.error(`[Phi-Plugin][Canvas渲染失败]`, id)
+            logger.error(err)
+            return '渲染失败QAQ！\n' + err
+        } finally {
+            this.rendering.delete(id)
+            this.release(rendererNum)
+        }
     }
 
     /**
