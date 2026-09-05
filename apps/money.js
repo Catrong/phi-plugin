@@ -468,7 +468,7 @@ async function randtask(e, save, task = []) {
      */
     let allTaskList = [];
 
-    if (await canUseApi(e)) {
+    if (await canUseApi(e, 'scoreStatistics')) {
 
         const res = await makeRequest.getAllSongAccAvgB30({
                 songIds: getInfo.idList,

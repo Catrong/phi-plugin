@@ -158,7 +158,7 @@ export class phiRankList extends phiPluginBase {
             return false
         }
 
-        if (await canUseApi(e)) {
+        if (await canUseApi(e, 'scoreStatistics')) {
             const res = await makeRequest.getRanklistRks({ request_rks: rks }, { event: e })
             if (res) {
                 send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)

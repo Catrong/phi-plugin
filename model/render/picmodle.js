@@ -9,6 +9,7 @@ import segment from '../../components/segment.js'
 import path from 'node:path'
 import platform from '../../components/platform/index.js'
 import { registerProcessCleanup } from '../../components/ProcessCleanup.js'
+import RenderPressureHistory from './renderPressureHistory.js'
 
 /**@import {botEvent} from '../../components/baseClass.js' */
 
@@ -42,6 +43,7 @@ export default await new class picmodle {
         this.pressureTimedOut = 0
         this.pressureMaxActive = 0
         this.pressureMaxQueued = 0
+        this.pressureHistory = new RenderPressureHistory()
         this.shuttingDown = false
         this.closePromise = null
         registerProcessCleanup(() => this.close(), () => this.forceClose())
@@ -441,6 +443,7 @@ export default await new class picmodle {
      * 仅包含队列和计数，不包含用户、命令、模板或绘图内容。
      */
     takeRenderPressureSnapshot() {
+        const endedAt = new Date().toISOString()
         const snapshot = {
             windowStartedAt: this.pressureWindowStartedAt,
             capacity: Math.max(1, this.puppeteer.length),
@@ -452,13 +455,14 @@ export default await new class picmodle {
             failed: this.pressureFailed,
             timedOut: this.pressureTimedOut,
         }
-        this.pressureWindowStartedAt = new Date().toISOString()
+        const history = this.pressureHistory.record(snapshot, endedAt)
+        this.pressureWindowStartedAt = endedAt
         this.pressureCompleted = 0
         this.pressureFailed = 0
         this.pressureTimedOut = 0
         this.pressureMaxActive = this.rendering.size
         this.pressureMaxQueued = this.waiters.length
-        return snapshot
+        return { ...snapshot, history }
     }
 
     async restart() {

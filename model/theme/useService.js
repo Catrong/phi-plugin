@@ -23,6 +23,7 @@ import {
     freshInstallRateLimiter,
     marketInstallCoordinator,
 } from './installGuard.js'
+import { isApiCapabilityConfigured } from '../user/apiPermission.js'
 
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
 
@@ -87,7 +88,7 @@ export class ThemeUseService {
         this.getTheme = dependencies.getTheme || getAvailableMarketTheme
         this.install = dependencies.install || installLatestMarketTheme
         this.marketEnabled = dependencies.marketEnabled
-            || (() => Boolean(Config.getUserCfg('config', 'openPhiPluginApi')))
+            || (() => isApiCapabilityConfigured('customTheme'))
     }
 
     /** @param {any} theme @param {any} [detail] */
@@ -132,6 +133,9 @@ export class ThemeUseService {
         if (!themePolicy.isAllowed(themeId)) {
             throw new ThemeMarketClientError('theme_not_allowed_by_bot', 403)
         }
+        if (!this.marketEnabled()) {
+            throw new ThemeMarketClientError('custom_theme_api_disabled', 403)
+        }
         let detail
         try {
             detail = await this.getTheme(themeId)
@@ -175,6 +179,7 @@ export function marketThemeErrorMessage(error) {
         theme_install_recovery_failed: '主题安装恢复未完成，请联系 Bot 主人检查主题目录后再试。',
         theme_install_rate_state_invalid: '主题安装限频状态异常，请联系 Bot 主人检查主题目录。',
         theme_registry_refresh_failed: '主题已写入，但注册表刷新失败，请联系 Bot 主人检查。',
+        custom_theme_api_disabled: 'Bot 主人已关闭自定义主题功能。',
     }
     return local[String(error?.code || '')] || '主题下载或启用失败，请稍后重试。'
 }

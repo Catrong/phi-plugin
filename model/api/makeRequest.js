@@ -503,7 +503,11 @@ export default class makeRequest {
      *  acknowledgedMessageIds: string[],
      *  renderPressure?: {
      *    windowStartedAt: string, capacity: number, active: number, queued: number,
-     *    maxActive: number, maxQueued: number, completed: number, failed: number, timedOut: number
+     *    maxActive: number, maxQueued: number, completed: number, failed: number, timedOut: number,
+     *    history: Array<{
+     *      startedAt: string, endedAt: string, capacity: number, active: number, queued: number,
+     *      maxActive: number, maxQueued: number, completed: number, failed: number, timedOut: number
+     *    }>
      *  }
      * }} params Bot 运行状态
      * @returns {Promise<{
@@ -898,7 +902,7 @@ export default class makeRequest {
 
     /**
      * 获取用户按动态 RKS 门槛计算的谱面实力分析（雷达图、擅长 tag 与薄弱 tag）。
-     * @param {baseAu} params
+     * @param {baseAu | {gameRecord: gameRecord}} params
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
      * @returns {Promise<{
      *  analysisMode: 'threshold_pool',

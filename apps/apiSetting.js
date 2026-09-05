@@ -151,6 +151,10 @@ export class phihelp extends phiPluginBase {
             send.send_with_At(e, '这里没有连接查分平台哦！')
             return false
         }
+        if (!access.capabilityEnabled) {
+            send.send_with_At(e, 'Bot 主人已关闭在线查分功能。')
+            return false
+        }
         if (!access.userEnabled) {
             send.send_with_At(e, '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。')
             return false

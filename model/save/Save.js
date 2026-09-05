@@ -393,7 +393,7 @@ export default class Save {
 
         let com_rks = sum_rks / 30
 
-        if (option.avgType !== 'none' && await canUseApi(e) !== false) {
+        if (option.avgType !== 'none' && await canUseApi(e, 'scoreStatistics') !== false) {
             try {
 
                 if (!option.avgType || option.avgType === "all") {

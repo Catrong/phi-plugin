@@ -9,6 +9,7 @@ import themeUseService, { marketThemeErrorMessage } from '../model/theme/useServ
 import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import send from '../model/render/send.js'
+import { isApiCapabilityConfigured } from '../model/user/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -354,7 +355,7 @@ export class phihelp extends phiPluginBase {
                 && /^[a-z][a-z0-9_-]{0,119}$/.test(canonicalValue)
                 && (!optionMap[canonicalValue] || selectedTheme?.marketInstalled)
             if (shouldPrepareTheme) {
-                if (!selectedTheme && !Config.getUserCfg('config', 'openPhiPluginApi')) {
+                if (!selectedTheme && !isApiCapabilityConfigured('customTheme')) {
                     send.send_with_At(e, '该主题尚未下载，自动下载依赖联合查分 API，请联系 Bot 主人启用。')
                     return true
                 }

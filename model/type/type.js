@@ -102,6 +102,9 @@
  * @typedef {'WordSuggImg'} WordSuggImg Suggest曲绘图片
  * @typedef {'cmdhead'} cmdhead 命令头
  * @typedef {'openPhiPluginApi'} openPhiPluginApi 是否启用Phigros联合查分API地址
+ * @typedef {'enableCustomThemeApi'} enableCustomThemeApi 是否启用自定义主题 API
+ * @typedef {'enableScoreStatisticsApi'} enableScoreStatisticsApi 是否启用免认证查分统计 API
+ * @typedef {'enableOnlineScoreApi'} enableOnlineScoreApi 是否启用需认证在线查分 API
  * @typedef {'themeMarketDownloadOrigin'} themeMarketDownloadOrigin 主题市场下载来源
  * @typedef {'debug'} debug 输出测试日志
  * @typedef {'otherinfo'} otherinfo 曲库
@@ -154,6 +157,9 @@
  * |WordSuggImg
  * |cmdhead
  * |openPhiPluginApi
+ * |enableCustomThemeApi
+ * |enableScoreStatisticsApi
+ * |enableOnlineScoreApi
  * |themeMarketDownloadOrigin
  * |debug
  * |otherinfo
@@ -281,7 +287,7 @@
  * @property {string} background
  * @property {string} CLGMOD
  * 
- * @typedef {Record<idString, ori_record[]>} gameRecord
+ * @typedef {Record<idString, (ori_record | null)[]>} gameRecord
  * 
  * @typedef {object} oriSave
  * @property {phigrosToken} session

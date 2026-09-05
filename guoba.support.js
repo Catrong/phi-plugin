@@ -301,8 +301,26 @@ export function supportGuoba() {
                 },
                 {
                     field: 'openPhiPluginApi',
-                    label: '联合查分',
-                    bottomHelpMessage: '是否启用Phigros联合查分API',
+                    label: 'API 总开关',
+                    bottomHelpMessage: '关闭后自定义主题、查分统计和在线查分 API 均不可用',
+                    component: 'Switch',
+                },
+                {
+                    field: 'enableCustomThemeApi',
+                    label: '自定义主题 API',
+                    bottomHelpMessage: '允许浏览、下载和使用 API 提供的自定义主题，受 API 总开关控制',
+                    component: 'Switch',
+                },
+                {
+                    field: 'enableScoreStatisticsApi',
+                    label: '查分数据统计 API',
+                    bottomHelpMessage: '允许使用无需用户认证的成绩统计、排行汇总与谱面分析，受 API 总开关控制',
+                    component: 'Switch',
+                },
+                {
+                    field: 'enableOnlineScoreApi',
+                    label: '在线查分 API',
+                    bottomHelpMessage: '允许使用需要用户认证的在线查分能力，受 API 总开关和用户个人 API 开关控制',
                     component: 'Switch',
                 },
                 {

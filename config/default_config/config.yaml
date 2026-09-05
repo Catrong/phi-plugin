@@ -81,6 +81,15 @@ cmdhead: "phi"
 #  是否启用Phigros联合查分API
 openPhiPluginApi: true
 
+# 是否允许从 API 获取和安装自定义主题（受上方总开关控制）
+enableCustomThemeApi: true
+
+# 是否允许调用无需用户认证的查分统计与谱面分析接口（受上方总开关控制）
+enableScoreStatisticsApi: true
+
+# 是否允许调用需要用户认证的在线查分接口（受上方总开关和用户个人 API 开关控制）
+enableOnlineScoreApi: true
+
 # 主题市场临时下载链接允许的唯一来源。必须为 HTTPS origin，不含路径。
 themeMarketDownloadOrigin: "https://lyh.org.cn:18473"
 

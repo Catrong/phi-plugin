@@ -24,13 +24,12 @@ export class BotSyncService {
         this.running = true
         const acknowledgedMessageIds = [...this.pendingAcknowledgements]
         try {
-            const renderPressure = this.reportRenderPressure
-                ? (await import('../render/picmodle.js')).default.takeRenderPressureSnapshot()
-                : undefined
+            // 始终在本地滚动采样；服务端许可只决定是否把匿名压力历史放入请求。
+            const renderPressure = (await import('../render/picmodle.js')).default.takeRenderPressureSnapshot()
             const response = await makeRequest.syncBot({
                 pluginVersion: Version.ver,
                 acknowledgedMessageIds,
-                ...(renderPressure ? { renderPressure } : {}),
+                ...(this.reportRenderPressure ? { renderPressure } : {}),
             })
             for (const id of acknowledgedMessageIds) this.pendingAcknowledgements.delete(id)
             this.reportRenderPressure = response?.reporting?.renderPressure === true

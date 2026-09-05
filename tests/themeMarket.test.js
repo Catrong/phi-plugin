@@ -416,7 +416,7 @@ test('market slug command lets a regular user download and select the theme', as
     /** @type {string[]} */ const messages = []
     /** @type {string[]} */ const used = []
     /** @type {any[]} */ const useOptions = []
-    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'phi' : key === 'openPhiPluginApi')
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'phi' : ['openPhiPluginApi', 'enableCustomThemeApi'].includes(key))
     getBanGroup.get = async () => false
     getNotes.getNotesData = async () => /** @type {any} */(pluginData)
     getNotes.putNotesData = (_userId, data) => data === pluginData
@@ -540,6 +540,7 @@ test('market command falls back to local custom themes when API is disabled or u
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => {
         if (key === 'cmdhead') return 'phi'
         if (key === 'openPhiPluginApi') return apiEnabled
+        if (key === 'enableCustomThemeApi') return true
         if (key === 'LetterMarkdown') return false
         return undefined
     })
@@ -614,6 +615,7 @@ test('market-installed detail is online-first and only connection errors use loc
         Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => {
             if (key === 'cmdhead') return 'phi'
             if (key === 'openPhiPluginApi') return true
+            if (key === 'enableCustomThemeApi') return true
             return false
         })
         getBanGroup.get = async () => false
