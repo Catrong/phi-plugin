@@ -95,7 +95,11 @@ export class phihelp extends phiPluginBase {
         // }
         const apiAccess = await getApiAccessState(e)
         if (!apiAccess.enabled) {
-            send.send_with_At(e, apiAccess.globalEnabled ? '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。' : `这里没有连接查分平台哦！`)
+            send.send_with_At(e, !apiAccess.globalEnabled
+                ? '这里没有连接查分平台哦！'
+                : !apiAccess.capabilityEnabled
+                    ? 'Bot 主人已关闭在线查分功能。'
+                    : '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。')
             return false
         }
 

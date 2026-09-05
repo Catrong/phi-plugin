@@ -1,13 +1,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import logger from '../components/Logger.js'
-import fileWatcherRegistry from '../components/FileWatcherRegistry.js'
-import YamlReader from '../components/YamlReader.js'
-import { pluginResources } from './filesystem/path.js'
-import { USER_SETTING_OPTIONS } from './game/constNum.js'
+import logger from '../../components/Logger.js'
+import fileWatcherRegistry from '../../components/FileWatcherRegistry.js'
+import YamlReader from '../../components/YamlReader.js'
+import { pluginResources } from '../filesystem/path.js'
+import { USER_SETTING_OPTIONS } from '../game/constNum.js'
+import themePolicy from './policy.js'
+import { recoverAllMarketInstalls } from './recovery.js'
+import { withMarketInstallLock } from './installLock.js'
+import { migrateLegacyThemeDirectories, themesDir } from './paths.js'
 
 /** 自定义主题目录 */
-const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'themes')
+const THEMES_DIR = themesDir
 
 /**
  * 内置主题（default/snow/star 无独立模板，走默认 tplFile 解析与布局 theme 分支；
@@ -60,10 +64,12 @@ const encodeThemeUrlPath = value => value.split('/').map(encodeURIComponent).joi
  * @property {string} [template] b19 模板文件名
  * @property {Record<string, string>} [css] 按渲染页面配置的样式表文件名
  * @property {boolean} [legacyCss] 是否使用旧版 B19 替换样式语义
+ * @property {boolean} marketInstalled 是否由主题市场安装
+ * @property {string} [marketVersion] 市场安装收据中的版本
  */
 
 /**
- * 主题管理器：内置主题与 resources/html/b19/themes/ 下自定义主题的统一注册表，
+ * 主题管理器：内置主题与 resources/themes/<themeId>/ 下自定义主题的统一注册表，
  * 提供主题列表/选项/渲染配置解析，并支持目录热更新（无需重启 bot）。
  */
 export default await new class themeManager {
@@ -77,13 +83,35 @@ export default await new class themeManager {
     }
 
     async init() {
+        for (const migration of migrateLegacyThemeDirectories()) {
+            logger.info(`[phi-plugin][主题] 已迁移主题目录：${migration.from} -> ${migration.to}`)
+        }
+        /** @type {{themeId: string, error: unknown}[]} */
+        let recoveryFailures = []
+        try {
+            recoveryFailures = await withMarketInstallLock(() => recoverAllMarketInstalls({ cleanAllWork: true }))
+        } catch (error) {
+            // 其他进程正在安装或锁暂时不可用时不能阻断插件启动；
+            // 每次市场安装前仍会执行 recoverAllMarketInstalls 兜底。
+            logger.error('[phi-plugin][主题] 启动时的市场主题恢复被跳过（安装锁暂不可用）', error)
+        }
+        for (const failure of recoveryFailures) {
+            logger.error(`[phi-plugin][主题] 恢复中断的市场主题安装失败：${failure.themeId}`, failure.error)
+        }
         this.scan()
         // 监听主题目录：info.yaml 及主题目录的增删改均触发重新扫描（目录不存在时 chokidar 会等待其出现）
         const lease = fileWatcherRegistry.watch('b19:themes', THEMES_DIR, () => {
             this.scan()
-        }, ['add', 'addDir', 'change', 'unlink', 'unlinkDir'], { ignoreInitial: true })
+        }, ['add', 'addDir', 'change', 'unlink', 'unlinkDir'], {
+            ignoreInitial: true,
+            // 安装暂存、锁和备份必须与主题目录位于同一文件系统以支持原子改名，
+            // 但不能让 Windows 文件监听器持有这些路径，否则提交阶段可能 EPERM。
+            ignored: watchedPath => path.relative(THEMES_DIR, watchedPath)
+                .split(path.sep)
+                .some(part => part.startsWith('.phi-market-')),
+        })
         // ignoreInitial 会丢弃初始扫描完成前的变更，等 watcher 就绪后补扫一次兜底
-        await new Promise(resolve => lease.watcher.once('ready', () => resolve(undefined)))
+        await lease.ready
         this.scan()
         return this
     }
@@ -102,6 +130,7 @@ export default await new class themeManager {
             const themes = new Map()
             if (fs.existsSync(THEMES_DIR)) {
                 for (const dirName of fs.readdirSync(THEMES_DIR)) {
+                    if (dirName.startsWith('.phi-market-')) continue
                     const dir = path.join(THEMES_DIR, dirName)
                     let isDir = false
                     try {
@@ -170,7 +199,22 @@ export default await new class themeManager {
 
         const name = typeof yamlData.name === 'string' && yamlData.name ? yamlData.name : id
         /** @type {CustomTheme} */
-        const entry = { id, name, dir, dirName }
+        const entry = { id, name, dir, dirName, marketInstalled: false }
+        const receiptPath = path.join(dir, '.phi-market.json')
+        if (fs.existsSync(receiptPath)) {
+            entry.marketInstalled = true
+            try {
+                const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'))
+                const validReceipt = receipt?.source === 'phi-theme-marketplace'
+                    && receipt?.slug === id
+                    && typeof receipt?.version === 'string'
+                    && /^[a-f0-9]{64}$/.test(receipt?.sha256)
+                if (validReceipt) entry.marketVersion = receipt.version
+                else logger.warn(`[phi-plugin][主题] ${dirName} 的市场安装收据无效，仍从普通主题列表隐藏`)
+            } catch {
+                logger.warn(`[phi-plugin][主题] ${dirName} 的市场安装收据无效，仍从普通主题列表隐藏`)
+            }
+        }
         if (typeof yamlData.Author === 'string' && yamlData.Author) entry.author = yamlData.Author
         if (typeof yamlData.description === 'string' && yamlData.description) entry.description = yamlData.description
         /** @type {['font', 'background', 'template']} */
@@ -213,7 +257,7 @@ export default await new class themeManager {
     /**
      * 获取主题条目（内置或自定义），未知 id 返回 null
      * @param {string} [id]
-     * @returns {{id: string, name: string, dir?: string, dirName?: string, template?: string, css?: Record<string, string>, legacyCss?: boolean, font?: string, background?: string, icons?: Record<string, string>, colors?: Record<string, string>} | null}
+     * @returns {{id: string, name: string, dir?: string, dirName?: string, template?: string, css?: Record<string, string>, legacyCss?: boolean, font?: string, background?: string, icons?: Record<string, string>, colors?: Record<string, string>, marketInstalled?: boolean, marketVersion?: string} | null}
      */
     getTheme(id) {
         if (!id) return null
@@ -239,6 +283,17 @@ export default await new class themeManager {
         return Boolean(id && this.customThemes.has(id))
     }
 
+    /** 获取全部已注册的本地自定义主题，供主题市场离线目录使用。 */
+    getCustomThemes() {
+        return [...this.customThemes.values()].map(theme => ({ ...theme }))
+    }
+
+    /** 当前 Bot 策略是否允许使用该已注册主题；内置和普通本地主题不受市场策略影响。 @param {string} [id] */
+    isThemeAvailable(id) {
+        const theme = this.getTheme(id)
+        return Boolean(theme && (!theme.marketInstalled || themePolicy.isAllowed(theme.id)))
+    }
+
     /**
      * 主题列表 [{id, src}]，内置在前自定义在后（money.js /theme 使用）
      * @returns {{id: string, src: string}[]}
@@ -246,7 +301,9 @@ export default await new class themeManager {
     getThemeList() {
         return [
             ...BUILTIN_THEMES.map(t => ({ id: t.id, src: t.name })),
-            ...[...this.customThemes.values()].map(t => ({ id: t.id, src: t.name })),
+            ...[...this.customThemes.values()]
+                .filter(t => !t.marketInstalled || themePolicy.isAllowed(t.id))
+                .map(t => ({ id: t.id, src: t.name })),
         ]
     }
 
@@ -254,11 +311,12 @@ export default await new class themeManager {
      * 完整主题选项 map（内置 + 自定义，序号连续），setting.js 展示用
      * @returns {Record<string, {title: string, description: string}>}
      */
-    getThemeOptions() {
+    getThemeOptions(currentUserTheme = '') {
         /** @type {Record<string, {title: string, description: string}>} */
         const options = { ...USER_SETTING_OPTIONS.theme }
         let index = Object.keys(options).length
         for (const t of this.customThemes.values()) {
+            if (t.marketInstalled && !themePolicy.isAllowed(t.id)) continue
             options[t.id] = {
                 title: `[${index}]${t.name}`,
                 description: t.description || (t.author ? `作者：${t.author}` : ''),
@@ -280,7 +338,7 @@ export default await new class themeManager {
         if (!id) return null
         const custom = this.customThemes.get(id)
         if (custom) {
-            const baseUrl = `${resPath}html/b19/themes/${encodeURIComponent(custom.dirName)}/`
+            const baseUrl = `${resPath}themes/${encodeURIComponent(custom.dirName)}/`
             const renderTarget = page.includes('/') ? page : `${page}/${page}`
             const app = renderTarget.split('/')[0]
             let realThemeDir

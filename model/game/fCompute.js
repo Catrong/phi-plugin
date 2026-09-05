@@ -67,7 +67,7 @@ export default class fCompute {
     /**
      * 发送文件
      * @param {*} e 
-     * @param {Buffer} file 
+     * @param {string | Buffer} file
      * @param {string} filename 
      */
     static async sendFile(e, file, filename) {

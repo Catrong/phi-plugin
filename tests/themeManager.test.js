@@ -3,10 +3,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
 import art from 'art-template'
-import themeManager from '../model/themeManager.js'
+import themeManager from '../model/theme/manager.js'
 import { pluginResources } from '../model/filesystem/path.js'
+import { migrateLegacyThemeDirectories, themesDir } from '../model/theme/paths.js'
 
-const THEMES_DIR = path.join(pluginResources, 'html', 'b19', 'themes')
+const THEMES_DIR = themesDir
 const RES = 'resources/'
 
 /** 等待条件成立（用于热更新断言） */
@@ -18,6 +19,45 @@ async function waitFor(fn, timeout = 4000) {
         await new Promise(resolve => setTimeout(resolve, 50))
     }
     return fn()
+}
+
+/** @param {string} theme @param {any} themeInfo @param {string} [template] */
+function renderUserInfo(theme, themeInfo, template = 'userinfo') {
+    const source = fs.readFileSync(path.join(pluginResources, 'html', 'userinfo', `${template}.art`), 'utf8')
+    return art.render(source, {
+        _res_path: RES,
+        defaultLayout: path.join(pluginResources, 'html', 'common', 'layout', 'default.art'),
+        sys: { scale: 'style="transform:scale(1)"' },
+        theme,
+        themeInfo,
+        background: 'song.png',
+        _plugin: 'phi-plugin',
+        Version: { ver: 'test' },
+        gameuser: {
+            avatar: 'avatar1',
+            backgroundurl: 'player.png',
+            PlayerId: 'TestPlayer',
+            rks: { toFixed: () => '15.0000' },
+            ChallengeMode: '0',
+            ChallengeModeRank: '12',
+            data: '100',
+            selfIntro: '',
+        },
+        rks_history: [],
+        data_history: [],
+        rks_range: [0, 0],
+        data_range: [0, 0],
+        data_date: [],
+        rks_date: [],
+        acc_rks_data: [],
+        acc_rks_range: [0, 0],
+        acc_rks_AccRange: [],
+        userstats: [{
+            Rating: 'FC', title: 'IN', unlock: 1, tot: 1, cleared: 1, fc: 1, phi: 1,
+            real_score: 1, tot_score: 1, highest: { toFixed: () => '15.00' },
+            lowest: { toFixed: () => '14.00' },
+        }],
+    })
 }
 
 test('内置主题注册完整，milthm 作为自定义主题注册成功', () => {
@@ -51,13 +91,13 @@ test('getRenderInfo：自定义主题返回模板路径与 themeInfo，资源 ur
     assert.ok(info)
     assert.match(info.tplFile ?? '', /themes[\\/]milthm[\\/]b19\.art$/)
     assert.equal(info.themeInfo.id, 'milthm')
-    assert.equal(info.themeInfo.baseUrl, 'resources/html/b19/themes/milthm/')
-    assert.equal(info.themeInfo.cssUrl, 'resources/html/b19/themes/milthm/b19.css')
+    assert.equal(info.themeInfo.baseUrl, 'resources/themes/milthm/')
+    assert.equal(info.themeInfo.cssUrl, 'resources/themes/milthm/b19.css')
     assert.equal(info.themeInfo.cssMode, 'overlay')
-    assert.equal(info.themeInfo.fontUrl, 'resources/html/b19/themes/milthm/font.ttf')
-    assert.equal(info.themeInfo.backgroundUrl, 'resources/html/b19/themes/milthm/bg.png')
-    assert.equal(info.themeInfo.icons.phi, 'resources/html/b19/themes/milthm/phi.png')
-    assert.equal(info.themeInfo.icons.FC, 'resources/html/b19/themes/milthm/FC.png')
+    assert.equal(info.themeInfo.fontUrl, 'resources/themes/milthm/font.ttf')
+    assert.equal(info.themeInfo.backgroundUrl, 'resources/themes/milthm/bg.png')
+    assert.equal(info.themeInfo.icons.phi, 'resources/themes/milthm/phi.png')
+    assert.equal(info.themeInfo.icons.FC, 'resources/themes/milthm/FC.png')
     assert.deepEqual(info.themeInfo.colors, { AT: '#555555', IN: '#7b5ea7', HD: '#5b9bd5', EZ: '#7ecb8a' })
 })
 
@@ -69,16 +109,16 @@ test('getRenderInfo：按页面选择 CSS，缺省页面保留背景和颜色但
     for (const page of pages) {
         const info = themeManager.getRenderInfo('milthm', RES, `${page}/${page}`)
         assert.ok(info)
-        assert.equal(info.themeInfo.cssUrl, `resources/html/b19/themes/milthm/${page}.css`)
+        assert.equal(info.themeInfo.cssUrl, `resources/themes/milthm/${page}.css`)
         assert.equal(info.themeInfo.cssMode, 'overlay')
-        assert.equal(info.themeInfo.fontUrl, 'resources/html/b19/themes/milthm/font.ttf')
+        assert.equal(info.themeInfo.fontUrl, 'resources/themes/milthm/font.ttf')
     }
 
     const fallback = themeManager.getRenderInfo('milthm', RES, 'unconfiguredPage')
     assert.ok(fallback)
     assert.equal(fallback.themeInfo.cssUrl, undefined)
     assert.equal(fallback.themeInfo.fontUrl, undefined)
-    assert.equal(fallback.themeInfo.backgroundUrl, 'resources/html/b19/themes/milthm/bg.png')
+    assert.equal(fallback.themeInfo.backgroundUrl, 'resources/themes/milthm/bg.png')
     assert.deepEqual(fallback.themeInfo.colors, { AT: '#555555', IN: '#7b5ea7', HD: '#5b9bd5', EZ: '#7ecb8a' })
 })
 
@@ -153,6 +193,67 @@ test('新版页面 CSS 优先匹配完整渲染目标，再回退到 app 短键'
     } finally {
         fs.rmSync(testDir, { recursive: true, force: true })
         themeManager.scan()
+    }
+})
+
+test('userinfo/userinfo 后置加载精确页面样式并使用主题图标', () => {
+    const testId = '__theme_userinfo__'
+    const testDir = path.join(THEMES_DIR, testId)
+    try {
+        fs.mkdirSync(testDir, { recursive: true })
+        fs.writeFileSync(path.join(testDir, 'info.yaml'), [
+            'id: "' + testId + '"',
+            'name: "User info"',
+            'css:',
+            '  userinfo/userinfo: "userinfo.css"',
+            'icon:',
+            '  FC: "FC.png"',
+            '',
+        ].join('\n'))
+        fs.writeFileSync(path.join(testDir, 'userinfo.css'), 'fixture')
+        fs.writeFileSync(path.join(testDir, 'FC.png'), 'fixture')
+        themeManager.scan()
+
+        const info = themeManager.getRenderInfo(testId, RES, 'userinfo/userinfo')
+        assert.ok(info)
+        assert.match(info.themeInfo.cssUrl, /__theme_userinfo__\/userinfo\.css$/)
+        assert.equal(info.themeInfo.cssMode, 'overlay')
+        assert.match(info.themeInfo.icons.FC, /__theme_userinfo__\/FC\.png$/)
+
+        const oldInfo = themeManager.getRenderInfo(testId, RES, 'userinfo/userinfo-old')
+        assert.ok(oldInfo)
+        assert.equal(oldInfo.themeInfo.cssUrl, undefined)
+
+        const html = renderUserInfo(testId, info.themeInfo)
+        assert.ok(html.includes('html/userinfo/userinfo.css'))
+        assert.ok(html.includes(info.themeInfo.cssUrl))
+        assert.ok(html.indexOf('html/userinfo/userinfo.css') < html.indexOf(info.themeInfo.cssUrl))
+        assert.ok(html.includes(info.themeInfo.icons.FC))
+    } finally {
+        fs.rmSync(testDir, { recursive: true, force: true })
+        themeManager.scan()
+    }
+})
+
+test('userinfo 未配置专用样式时保留原生 CSS、主题背景和主题评级图标', () => {
+    for (const template of ['userinfo', 'userinfo-old']) {
+        const target = `userinfo/${template}`
+        const info = themeManager.getRenderInfo('milthm', RES, target)
+        assert.ok(info)
+        assert.equal(info.themeInfo.cssUrl, undefined)
+        assert.equal(info.themeInfo.fontUrl, undefined)
+        assert.ok(info.themeInfo.backgroundUrl)
+        assert.ok(info.themeInfo.icons.FC)
+
+        const html = renderUserInfo('milthm', info.themeInfo, template)
+        assert.ok(html.includes(`html/userinfo/${template}.css`))
+        assert.ok(html.includes(info.themeInfo.backgroundUrl))
+        assert.ok(html.includes(info.themeInfo.icons.FC))
+        assert.ok(!html.includes('@font-face'))
+        assert.ok(!html.includes('font-family: "phi-theme"'))
+
+        const defaultIconHtml = renderUserInfo('milthm', { ...info.themeInfo, icons: {} }, template)
+        assert.ok(defaultIconHtml.includes('html/otherimg/FC.png'))
     }
 })
 
@@ -233,11 +334,11 @@ test('主题资源 URL 使用实际目录名，并拒绝越界路径和符号链
 
         const sign = themeManager.getRenderInfo(testId, RES, 'sign/sign')
         const encodedDir = encodeURIComponent(dirName)
-        assert.equal(sign?.themeInfo.baseUrl, `resources/html/b19/themes/${encodedDir}/`)
+        assert.equal(sign?.themeInfo.baseUrl, `resources/themes/${encodedDir}/`)
         assert.equal(sign?.themeInfo.cssUrl,
-            `resources/html/b19/themes/${encodedDir}/nested%20styles/valid%20%23%25.css`)
+            `resources/themes/${encodedDir}/nested%20styles/valid%20%23%25.css`)
         assert.equal(sign?.themeInfo.backgroundUrl,
-            `resources/html/b19/themes/${encodedDir}/background%20%23%25.png`)
+            `resources/themes/${encodedDir}/background%20%23%25.png`)
         const cssUrl = new URL(sign?.themeInfo.cssUrl ?? '', 'file:///')
         assert.equal(cssUrl.hash, '')
         assert.equal(cssUrl.search, '')
@@ -270,9 +371,27 @@ test('主题根目录符号链接不会被注册', (t) => {
         themeManager.scan()
         assert.ok(!themeManager.isCustomTheme(testId))
     } finally {
-        fs.rmSync(linkedDir, { force: true })
+        fs.rmSync(linkedDir, { recursive: true, force: true })
         fs.rmSync(externalDir, { recursive: true, force: true })
         themeManager.scan()
+    }
+})
+
+test('旧主题目录按 info.yaml.id 自动迁移到 resources/themes', () => {
+    const id = `legacymove${Date.now()}`
+    const legacyRoot = path.join(pluginResources, 'html', 'b19', 'res', 'themes')
+    const legacyDir = path.join(legacyRoot, `old-folder-${id}`)
+    const target = path.join(THEMES_DIR, id)
+    try {
+        fs.mkdirSync(legacyDir, { recursive: true })
+        fs.writeFileSync(path.join(legacyDir, 'info.yaml'), `id: "${id}"\nname: "Legacy move"\n`)
+        const moved = migrateLegacyThemeDirectories()
+        assert.equal(moved.some(item => item.from === legacyDir && item.to === target), true)
+        assert.equal(fs.existsSync(legacyDir), false)
+        assert.equal(fs.existsSync(path.join(target, 'info.yaml')), true)
+    } finally {
+        fs.rmSync(legacyDir, { recursive: true, force: true })
+        fs.rmSync(target, { recursive: true, force: true })
     }
 })
 

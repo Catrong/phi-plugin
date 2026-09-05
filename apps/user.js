@@ -111,6 +111,10 @@ export class phiuser extends phiPluginBase {
             return true
         }
 
+        // /info 使用独立的 userinfo/userinfo 渲染目标，需把当前用户主题传入渲染数据，
+        // 主题管理器才能命中主题包中的完整页面键。
+        const pluginData = await getNotes.getNotesData(e.user_id)
+
         let stats = await save.getStats()
 
         let money = save.gameProgress.money
@@ -261,11 +265,13 @@ export class phiuser extends phiPluginBase {
             acc_rks_range: acc_rks_range,
             acc_rks_AccRange: acc_rks_AccRange_position,
             background: bksong,
+            theme: pluginData?.theme || 'star',
         }
 
         // console.info(acc_rks_AccRange_position)
 
-        let kind = Number(e.msg.replace(/\/.*info/g, ''))
+        const infoVersion = e.msg.match(new RegExp(`^[#/](?:${Config.getUserCfg('config', 'cmdhead')})\\s*info([12])?`, 'i'))?.at(-1)
+        const kind = Number(infoVersion || 0)
         send.send_with_At(e, await picmodle.user_info(e, data, kind))
     }
 

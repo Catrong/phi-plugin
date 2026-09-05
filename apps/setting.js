@@ -4,9 +4,12 @@ import getInfo from '../model/game/getInfo.js'
 import getNotes from '../model/user/getNotes.js'
 import phiPluginBase from '../components/baseClass.js'
 import { USER_SETTING_META, USER_SETTING_OPTIONS } from '../model/game/constNum.js'
-import themeManager from '../model/themeManager.js'
+import themeManager from '../model/theme/manager.js'
+import themeUseService, { marketThemeErrorMessage } from '../model/theme/useService.js'
+import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import send from '../model/render/send.js'
+import { isApiCapabilityConfigured } from '../model/user/apiPermission.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -195,7 +198,7 @@ export class phihelp extends phiPluginBase {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
-        const pluginData = await getNotes.getNotesData(e.user_id)
+        let pluginData = await getNotes.getNotesData(e.user_id)
 
         /**@type {Record<'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis', string[]>} */
         const settingKeyAlias = {
@@ -322,14 +325,22 @@ export class phihelp extends phiPluginBase {
                 return true
             }
 
+            if (settingKey === 'theme' && await getBanGroup.get(e, 'theme')) {
+                send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                return false
+            }
+
             /** 主题选项动态合并内置 + 自定义主题，其余设置项保持静态数据源 */
             /** @param {string} key */
-            const getOptions = (key) => key === 'theme' ? themeManager.getThemeOptions() : /** @type {any} */ (USER_SETTING_OPTIONS)[key]
-            const optionMap = /** @type {Record<string, { title: string, description: string }>} */ (getOptions(settingKey))
-            const optionKeys = Object.keys(optionMap)
+            const getOptions = (key) => key === 'theme'
+                ? themeManager.getThemeOptions(pluginData.theme)
+                : /** @type {any} */ (USER_SETTING_OPTIONS)[key]
+            let optionMap = /** @type {Record<string, { title: string, description: string }>} */ (getOptions(settingKey))
+            let optionKeys = Object.keys(optionMap)
             const valueAliasMap = settingValueAlias[settingKey]
 
             let canonicalValue = valueAliasMap[valueInput] || valueAliasMap[valueInputRaw] || valueInputRaw
+            if (settingKey === 'theme' && /^[a-z][a-z0-9_-]{0,119}$/.test(valueInput)) canonicalValue = valueInput
 
             // 支持通过 1 开始的序号选择：1=第一个选项
             if (/^\d+$/.test(valueInputRaw)) {
@@ -339,10 +350,26 @@ export class phihelp extends phiPluginBase {
                 }
             }
 
-            // 主题别名兜底：未命中选项表时尝试按 id 直接解析自定义主题（大小写不敏感）
-            if (settingKey === 'theme' && !optionMap[canonicalValue]) {
-                const custom = themeManager.getTheme(valueInput) || themeManager.getTheme(valueInputRaw)
-                if (custom) canonicalValue = custom.id
+            const selectedTheme = settingKey === 'theme' ? themeManager.getTheme(canonicalValue) : null
+            const shouldPrepareTheme = settingKey === 'theme'
+                && /^[a-z][a-z0-9_-]{0,119}$/.test(canonicalValue)
+                && (!optionMap[canonicalValue] || selectedTheme?.marketInstalled)
+            if (shouldPrepareTheme) {
+                if (!selectedTheme && !isApiCapabilityConfigured('customTheme')) {
+                    send.send_with_At(e, '该主题尚未下载，自动下载依赖联合查分 API，请联系 Bot 主人启用。')
+                    return true
+                }
+                send.send_with_At(e, `正在校验并准备主题 ${canonicalValue}，请稍候。`)
+                try {
+                    await themeUseService.use(canonicalValue, { requesterId: getThemeInstallRequesterId(e) })
+                    // 下载期间用户数据可能已由其他命令更新；保存前重新读取，避免覆盖并发修改。
+                    pluginData = await getNotes.getNotesData(e.user_id)
+                    optionMap = /** @type {Record<string, { title: string, description: string }>} */ (getOptions(settingKey))
+                    optionKeys = Object.keys(optionMap)
+                } catch (error) {
+                    send.send_with_At(e, marketThemeErrorMessage(error))
+                    return true
+                }
             }
 
             if (!optionMap[canonicalValue]) {
@@ -353,11 +380,16 @@ export class phihelp extends phiPluginBase {
 
             if (settingKey === 'allowApiUsage' || settingKey === 'showB30Analysis') {
                 pluginData[settingKey] = canonicalValue === 'true'
+            } else if (settingKey === 'theme' && typeof pluginData.setThemePreference === 'function') {
+                pluginData.setThemePreference(canonicalValue)
             } else {
                 // @ts-ignore
                 pluginData[settingKey] = canonicalValue
             }
-            getNotes.putNotesData(e.user_id, pluginData)
+            if (!getNotes.putNotesData(e.user_id, pluginData)) {
+                send.send_with_At(e, '主题或用户设置已准备完成，但保存失败，请稍后重试。')
+                return true
+            }
 
             send.send_with_At(e, `设置成功：${USER_SETTING_META[settingKey].title} -> ${optionMap[canonicalValue].title}`)
         }
@@ -367,7 +399,9 @@ export class phihelp extends phiPluginBase {
          * @param {string} current
          */
         const buildItem = (key, current) => {
-            const options = /** @type {Record<string, { title: string, description: string }>} */ (key === 'theme' ? themeManager.getThemeOptions() : USER_SETTING_OPTIONS[key])
+            const options = /** @type {Record<string, { title: string, description: string }>} */ (key === 'theme'
+                ? themeManager.getThemeOptions(current)
+                : USER_SETTING_OPTIONS[key])
             return {
                 key,
                 title: USER_SETTING_META[key].title,
@@ -382,11 +416,41 @@ export class phihelp extends phiPluginBase {
             }
         }
 
+        /** 主题展示固定为四个内置项 + 一个整行的市场主题入口。 */
+        /** @param {string} current */
+        const buildThemeItem = (current) => {
+            const builtins = /** @type {Record<string, {title:string, description:string}>} */ (USER_SETTING_OPTIONS.theme)
+            const customTheme = themeManager.isCustomTheme(current) ? themeManager.getTheme(current) : null
+            const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
+            const marketGuide = `/${commandHead} market 查看列表；/${commandHead} market detail <slug> 查看详情；/${commandHead} market <slug> 使用主题，首次使用会自动下载。`
+            return {
+                key: 'theme',
+                title: USER_SETTING_META.theme.title,
+                description: USER_SETTING_META.theme.description,
+                currentTitle: customTheme?.name || builtins[current]?.title || current,
+                options: [
+                    ...Object.keys(builtins).map(value => ({
+                        value,
+                        title: builtins[value].title,
+                        description: builtins[value].description,
+                        selected: value === current,
+                    })),
+                    {
+                        value: customTheme?.id || '__market__',
+                        title: customTheme?.name || '自定义',
+                        description: marketGuide,
+                        selected: Boolean(customTheme),
+                        fullWidth: true,
+                    },
+                ],
+            }
+        }
+
         const data = {
             pageTitle: 'Phi-Plugin 用户设置',
             pageDescription: '以下选项为你的个人偏好展示，选择结果将用于对应图片渲染。',
             items: [
-                buildItem('theme', pluginData?.theme || 'default'),
+                buildThemeItem(pluginData?.theme || 'default'),
                 buildItem('b30AvgKind', pluginData?.b30AvgKind || 'all'),
                 buildItem('b30AvgColor', pluginData?.b30AvgColor || 'red'),
                 buildItem('allowApiUsage', String(pluginData?.allowApiUsage !== false)),

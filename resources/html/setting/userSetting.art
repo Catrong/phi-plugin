@@ -21,7 +21,7 @@
 
             <div class="option-row">
                 {{each item.options as option}}
-                <div class="option-card{{option.selected ? ' selected' : ''}}">
+                <div class="option-card{{option.selected ? ' selected' : ''}}{{option.fullWidth ? ' option-full-width' : ''}}">
                     <div class="option-title-line">
                         <p class="option-title">{{option.title}}</p>
                         {{if option.selected}}

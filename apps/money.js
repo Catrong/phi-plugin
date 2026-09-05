@@ -13,11 +13,13 @@ import picmodle from '../model/render/picmodle.js'
 import Save from '../model/save/Save.js'
 import { Level, LevelNum, redisPath } from '../model/game/constNum.js'
 import PluginData, { themeList } from '../model/user/pluginData.js'
-import themeManager from '../model/themeManager.js'
+import themeManager from '../model/theme/manager.js'
 import makeRequest from '../model/api/makeRequest.js'
 import logger from '../components/Logger.js'
 import { canUseApi } from '../model/user/apiPermission.js'
 import platform, { redis } from '../components/platform/index.js'
+import themeUseService, { marketThemeErrorMessage } from '../model/theme/useService.js'
+import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -378,18 +380,37 @@ export class phimoney extends phiPluginBase {
         const themeList = getThemeList()
         let msg = e.msg.replace(/.*?theme\s*/g, '')
         let aim = Number(msg)
-        if (typeof aim != 'number' || aim < 0 || aim > themeList.length - 1) {
+        if (!Number.isInteger(aim) || aim < 0 || aim > themeList.length - 1) {
             send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getUserCfg('config', 'cmdhead')} theme 0-${themeList.length - 1}`)
             return false
         }
 
+        const selectedTheme = themeList[aim]
+        if (themeManager.getTheme(selectedTheme.id)?.marketInstalled) {
+            send.send_with_At(e, `正在校验并准备主题 ${selectedTheme.id}，请稍候。`)
+            try {
+                await themeUseService.use(selectedTheme.id, { requesterId: getThemeInstallRequesterId(e) })
+            } catch (error) {
+                send.send_with_At(e, marketThemeErrorMessage(error))
+                return true
+            }
+        }
+
+        // 主题准备期间用户数据可能已被其他命令更新，保存前重新读取。
         const plugin_data = await getNotes.getNotesData(e.user_id)
-        // @ts-ignore
-        plugin_data.theme = themeList[aim].id
+        if (typeof plugin_data.setThemePreference === 'function') {
+            plugin_data.setThemePreference(selectedTheme.id)
+        } else {
+            // @ts-ignore
+            plugin_data.theme = selectedTheme.id
+        }
 
-        getNotes.putNotesData(e.user_id, plugin_data)
+        if (!getNotes.putNotesData(e.user_id, plugin_data)) {
+            send.send_with_At(e, '主题已准备完成，但你的主题设置保存失败，请稍后重试。')
+            return true
+        }
 
-        send.send_with_At(e, `设置成功！\n你当前的主题是：${themeList[aim].src}`)
+        send.send_with_At(e, `设置成功！\n你当前的主题是：${selectedTheme.src}`)
         return true
     }
 
@@ -447,7 +468,7 @@ async function randtask(e, save, task = []) {
      */
     let allTaskList = [];
 
-    if (await canUseApi(e)) {
+    if (await canUseApi(e, 'scoreStatistics')) {
 
         const res = await makeRequest.getAllSongAccAvgB30({
                 songIds: getInfo.idList,

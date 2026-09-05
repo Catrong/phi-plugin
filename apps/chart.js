@@ -394,9 +394,9 @@ export class phihelp extends phiPluginBase {
       return false
     }
 
-    const apiAccess = await getApiAccessState(e)
+    const apiAccess = await getApiAccessState(e, 'scoreStatistics')
     if (!apiAccess.enabled) {
-      send.send_with_At(e, apiAccess.globalEnabled ? '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。' : '这里没有连接查分平台哦！')
+      send.send_with_At(e, apiAccess.globalEnabled ? 'Bot 主人已关闭查分数据统计功能。' : '这里没有连接查分平台哦！')
       return false
     }
 
@@ -421,7 +421,11 @@ export class phihelp extends phiPluginBase {
 
     const apiAccess = await getApiAccessState(e)
     if (!apiAccess.enabled) {
-      send.send_with_At(e, apiAccess.globalEnabled ? '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。' : '这里没有连接查分平台哦！')
+      send.send_with_At(e, !apiAccess.globalEnabled
+        ? '这里没有连接查分平台哦！'
+        : !apiAccess.capabilityEnabled
+          ? 'Bot 主人已关闭在线查分功能。'
+          : '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。')
       return false
     }
 
@@ -559,7 +563,7 @@ async function getChartImg(e, id, options) {
   const words = []
   let wordsMaxValue = 0
 
-  if (await canUseApi(e)) {
+  if (await canUseApi(e, 'scoreStatistics')) {
     /** @type {ChartTagSongRankResponse | null} */
     const apiChartTag = await makeRequest.getChartsTagbySongRankWithTree(
       { song_id: info.id, rank },

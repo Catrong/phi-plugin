@@ -94,9 +94,9 @@ export class phiset extends phiPluginBase {
             return false
         }
         send.send_with_At(e, '开始备份，请稍等...')
-        setTimeout(() => {
+        setTimeout(async () => {
             try {
-                getBackup.backup(e)
+                await getBackup.backup(e)
             } catch (err) {
                 logger.info(err)
                 send.send_with_At(e, err)

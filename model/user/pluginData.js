@@ -10,13 +10,22 @@
  * @property {number} request.value 任务要求数值
  */
 
-import themeManager from '../themeManager.js'
+import themeManager from '../theme/manager.js'
 
 /**
  * 内置主题列表（兼容旧版 /theme；新代码请使用 themeManager.getThemeList()）
  * @type {{id: string, src: string}[]}
  */
 export const themeList = [{ id: "default", src: "默认" }, { id: "snow", src: "寒冬" }, { id: "star", src: "使一颗心免于哀伤" }, { id: "dss2", src: "大师赛2" }]
+
+const BUILTIN_THEME_IDS = new Set(themeList.map(theme => theme.id))
+const THEME_ID_RE = /^[a-zA-Z0-9_-]{1,120}$/
+
+/** @param {unknown} themeId */
+function normalizeThemePreference(themeId) {
+  if (themeId === 'common') return 'default'
+  return typeof themeId === 'string' && THEME_ID_RE.test(themeId) ? themeId : 'default'
+}
 
 export default class PluginData {
   /**
@@ -37,19 +46,11 @@ export default class PluginData {
     /**@type {number} */
     this.noticeCode = isNaN(data?.noticeCode) ? 0 : data.noticeCode
 
-    /**@type {string} 主题标识（内置或已注册的自定义主题） */
-    this.theme = "default"
-    switch (data?.theme) {
-      case "default":
-      case "snow":
-      case "star":
-      case "dss2":
-        this.theme = data.theme
-    }
-    // 自定义主题放行（未知 id → 保持 default，与现状一致）
-    if (this.theme === "default" && themeManager.isCustomTheme(data?.theme)) {
-      this.theme = data.theme
-    }
+    /** @type {string} 持久化的用户主题偏好；策略临时禁用或主题暂时缺失时仍保留。 */
+    this.themePreference = 'default'
+    /** @type {string} 本次运行实际可用于渲染的主题标识。 */
+    this.theme = 'default'
+    this.setThemePreference(data?.theme)
 
     /**@type {"all" | "b30" | "top"} */
     this.b30AvgKind = "all"
@@ -76,5 +77,25 @@ export default class PluginData {
 
     /**@type {boolean} 是否展示 B30 统计分析 */
     this.showB30Analysis = data?.showB30Analysis !== false
+  }
+
+  /**
+   * 更新用户偏好，并根据当前本地注册表与 Bot 策略计算实际渲染主题。
+   * @param {unknown} themeId
+   */
+  setThemePreference(themeId) {
+    const requested = normalizeThemePreference(themeId)
+    this.themePreference = requested
+    this.theme = BUILTIN_THEME_IDS.has(requested)
+      || (themeManager.isCustomTheme(requested) && themeManager.isThemeAvailable(requested))
+      ? requested
+      : 'default'
+    return this.theme
+  }
+
+  /** 保持旧版存储结构：偏好继续写入 theme，不额外落盘运行时字段。 */
+  toJSON() {
+    const { themePreference, ...data } = this
+    return { ...data, theme: themePreference }
   }
 }

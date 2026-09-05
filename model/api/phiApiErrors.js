@@ -43,11 +43,20 @@ const USER_ERROR_MESSAGES = {
     bot_signature_invalid: 'Bot凭证签名校验失败，请Bot主人执行“重置API Bot身份”。',
     bot_registration_rate_limited: 'Bot身份申请过于频繁，插件稍后会自动重试。',
     invalid_registration_response: 'API返回的Bot身份数据无效，插件稍后会自动重试。',
+    theme_store_bot_not_whitelisted: '当前 Bot 未被主题商店授权安装该主题。',
+    theme_not_allowed_by_bot: 'Bot 主人设置的主题范围不允许使用该主题。',
+    theme_not_found: '主题商店中未找到该主题，或主题尚未发布。',
+    theme_version_not_found: '主题商店中未找到可安装的主题版本。',
+    theme_version_incompatible: '当前 phi-plugin 版本与该主题不兼容。',
+    theme_download_rate_limited: '主题下载请求过于频繁，请稍后重试。',
+    theme_store_invalid_response: '主题商店返回了无效数据，请稍后重试。',
+    theme_store_unavailable: '主题商店暂时不可用，请稍后重试。',
+    integration_not_configured: '主题商店集成尚未配置，请联系服务管理员。',
     binding_not_found: '当前平台账号尚未绑定，请使用sessionToken绑定。',
     bot_user_credential_required: '当前请求缺少 sessionToken 或 API ID，请重新绑定。',
     binding_conflict_requires_sstk: '当前平台已绑定其他查分ID，请使用sessionToken重新绑定。',
     user_id_binding_disabled: () => {
-        const commandHead = String(Config.getUserCfg('config', 'cmdhead') || 'phi')
+        const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
         return `该用户未开启API ID绑定，请使用 /${commandHead} bind <sessionToken> 或 /${commandHead} bind qrcode 扫码重新绑定。`
     },
     user_not_found: '未找到对应的查分ID，请检查后重试。',

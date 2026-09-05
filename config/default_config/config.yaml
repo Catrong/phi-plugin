@@ -81,6 +81,18 @@ cmdhead: "phi"
 #  是否启用Phigros联合查分API
 openPhiPluginApi: true
 
+# 是否允许从 API 获取和安装自定义主题（受上方总开关控制）
+enableCustomThemeApi: true
+
+# 是否允许调用无需用户认证的查分统计与谱面分析接口（受上方总开关控制）
+enableScoreStatisticsApi: true
+
+# 是否允许调用需要用户认证的在线查分接口（受上方总开关和用户个人 API 开关控制）
+enableOnlineScoreApi: true
+
+# 主题市场临时下载链接允许的唯一来源。必须为 HTTPS origin，不含路径。
+themeMarketDownloadOrigin: "https://lyh.org.cn:18473"
+
 # 由查分 API 首次启动时签发，请勿手工填写任意 UUID。
 apiBotClientId: ""
 apiBotClientSecret: ""
@@ -103,7 +115,7 @@ otherinfo: 0
 #  猜字母条数
 LetterNum: 8
 
-#  是否使用markdown格式发送猜字母结果，开启后可以点击指令快速填写
+#  是否发送开字母和主题市场的交互式 Markdown；关闭后主题市场不发送快捷操作
 LetterMarkdown: true
 
 #  猜对后是否发送以及发送什么曲绘 原版 水印版 不发送

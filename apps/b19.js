@@ -156,7 +156,7 @@ export class phib19 extends phiPluginBase {
         if (plugin_data.showB30Analysis !== false && nnum == 33) {
             const records = getB30AnalysisRecords(save_b19)
             const histogram = buildRksHistogram(records)
-            const apiEnabled = await canUseApi(e)
+            const apiEnabled = await canUseApi(e, 'scoreStatistics')
             let tagAnalysis = null
             if (apiEnabled && records.length) {
                 tagAnalysis = askOtherId
@@ -164,7 +164,10 @@ export class phib19 extends phiPluginBase {
                         { api_user_id: /** @type {apiUserId} */ (askOtherId[1]) },
                         { event: e },
                     )
-                    : await credentials.getB30TagAnalysis()
+                    : await makeRequest.getB30TagAnalysis(
+                        { gameRecord: save.gameRecord },
+                        { event: e },
+                    )
             }
             b30Analysis = {
                 histogram,
@@ -684,7 +687,7 @@ export class phib19 extends phiPluginBase {
          */
         const phiTaskList = [];
 
-        if (await canUseApi(e)) {
+        if (await canUseApi(e, 'scoreStatistics')) {
 
             const res = await makeRequest.getAllSongAccAvgB30({
                     songIds: getInfo.idList,

@@ -261,7 +261,7 @@ p {
     position: absolute;
     width: 304px;
     height: 20px;
-    right: 5px;
+    right: 40px;
     top: 133px;
 }
 
@@ -627,8 +627,9 @@ p {
 
 .arc_created {
     position: absolute;
-    bottom: 0px;
+    bottom: -20px;
     left: 24px;
+    margin-bottom: 5px;
 }
 
 .arc_created p {

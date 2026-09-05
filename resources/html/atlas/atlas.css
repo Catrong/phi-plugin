@@ -510,7 +510,7 @@ body {
     justify-content: center;
     width: 84.8%;
     margin: 100px;
-    margin-bottom: 200px;
+    /* margin-bottom: 200px; */
 }
 
 .comment_title {
@@ -658,7 +658,7 @@ body {
     writing-mode: horizontal-tb;
     justify-content: center;
     position: absolute;
-    bottom: 50px;
+    bottom: 120px;
 }
 
 .createdbox p {
@@ -688,4 +688,8 @@ body {
 .ver p {
     font-size: 20px;
     text-shadow: 0 0 20px #fff700;
+}
+
+.copyright {
+    margin-top: 4%;
 }

@@ -10,6 +10,9 @@ const rawReplySymbol = Symbol('phi.rawReply')
 const wrappedSymbol = Symbol('phi.platformWrapped')
 const require = createRequire(import.meta.url)
 
+/** @param {fs.Stats} stat */
+const templateIdentity = stat => `${stat.dev}:${stat.ino}:${stat.mtimeMs}:${stat.ctimeMs}:${stat.size}`
+
 /**
  * @param {string} specifier
  * @returns {Promise<any | null>}
@@ -120,7 +123,7 @@ class FallbackPlugin {
     }
 }
 
-class FallbackRenderer {
+export class FallbackRenderer {
     /**
      * @param {PlatformRendererConfig} [data]
      */
@@ -131,6 +134,8 @@ class FallbackRenderer {
         this.dir = './temp/html'
         /** @type {Record<string, string>} */
         this.html = {}
+        /** @type {Record<string, string>} */
+        this.htmlIdentity = {}
         /** @type {Record<string, import('chokidar').FSWatcher>} */
         this.watcher = {}
         this.createDir(this.dir)
@@ -168,13 +173,30 @@ class FallbackRenderer {
     dealTpl(name, data) {
         let { tplFile, saveId = name } = data
         let savePath = `./temp/html/${name}/${saveId}.html`
-        if (!this.html[tplFile]) {
+        let identity
+        try {
+            const stat = fs.statSync(tplFile)
+            if (!stat.isFile()) return false
+            identity = templateIdentity(stat)
+        } catch (error) {
+            delete this.html[tplFile]
+            delete this.htmlIdentity[tplFile]
+            globalThis.logger?.error?.(`加载html错误：${tplFile}`)
+            return false
+        }
+        if (!Object.hasOwn(this.html, tplFile) || this.htmlIdentity[tplFile] !== identity) {
             this.createDir(`./temp/html/${name}`)
+            let handle
             try {
-                this.html[tplFile] = fs.readFileSync(tplFile, 'utf8')
+                handle = fs.openSync(tplFile, 'r')
+                const stat = fs.fstatSync(handle)
+                this.html[tplFile] = fs.readFileSync(handle, 'utf8')
+                this.htmlIdentity[tplFile] = templateIdentity(stat)
             } catch (error) {
                 globalThis.logger?.error?.(`加载html错误：${tplFile}`)
                 return false
+            } finally {
+                if (handle !== undefined) fs.closeSync(handle)
             }
             this.watch(tplFile)
         }
@@ -200,13 +222,88 @@ class FallbackRenderer {
     watch(tplFile) {
         if (this.watcher[tplFile]) return
         const watcher = chokidar.watch(tplFile)
-        watcher.on('change', () => {
+        const invalidate = () => {
             delete this.html[tplFile]
+            delete this.htmlIdentity[tplFile]
             globalThis.logger?.mark?.(`[修改html模板] ${tplFile}`)
-        })
+        }
+        watcher.on('change', invalidate)
+        watcher.on('add', invalidate)
+        watcher.on('unlink', invalidate)
         this.watcher[tplFile] = watcher
     }
 }
+
+/**
+ * Yunzai normally supplies its own Renderer. Add the same stat-based cache
+ * validation around that host class so atomic theme swaps are visible there too.
+ * @param {any} Base
+ */
+export function withReliableTemplateCache(Base) {
+    return class extends Base {
+        /** @param {...any} args */
+        constructor(...args) {
+            super(...args)
+            /** @type {Record<string, string>} */
+            this.phiTemplateIdentity = {}
+            /** @type {Set<string>} */
+            this.phiTemplateWatchers = new Set()
+        }
+
+        /** @param {string} name @param {{tplFile:string,[key:string]:unknown}} data */
+        dealTpl(name, data) {
+            const tplFile = data?.tplFile
+            const clearCachedTemplate = () => {
+                if (this.html) delete this.html[tplFile]
+                delete this.phiTemplateIdentity[tplFile]
+            }
+            const readIdentity = () => {
+                try {
+                    const stat = fs.statSync(tplFile)
+                    return stat.isFile() ? templateIdentity(stat) : ''
+                } catch {
+                    return ''
+                }
+            }
+
+            for (let attempt = 0; attempt < 3; attempt++) {
+                const before = readIdentity()
+                if (!before) {
+                    clearCachedTemplate()
+                    return super.dealTpl(name, data)
+                }
+                if (this.phiTemplateIdentity[tplFile] !== before) clearCachedTemplate()
+
+                const result = super.dealTpl(name, data)
+                const after = readIdentity()
+                if (before === after) {
+                    if (result) this.phiTemplateIdentity[tplFile] = after
+                    return result
+                }
+                clearCachedTemplate()
+            }
+            return false
+        }
+
+        /** @param {string} tplFile */
+        watch(tplFile) {
+            const result = super.watch?.(tplFile)
+            const watcher = this.watcher?.[tplFile]
+            if (watcher && !this.phiTemplateWatchers.has(tplFile)) {
+                const invalidate = () => {
+                    if (this.html) delete this.html[tplFile]
+                    delete this.phiTemplateIdentity[tplFile]
+                }
+                watcher.on('add', invalidate)
+                watcher.on('unlink', invalidate)
+                this.phiTemplateWatchers.add(tplFile)
+            }
+            return result
+        }
+    }
+}
+
+export const YunzaiRenderer = withReliableTemplateCache(yunzaiRendererModule?.default || FallbackRenderer)
 
 /**
  * @param {'image' | 'at' | 'markdown' | 'text'} type
@@ -231,7 +328,7 @@ const memoryRedis = new MemoryRedis()
 const adapter = {
     name: 'yunzai',
     PluginBase: yunzaiPluginModule?.default || FallbackPlugin,
-    RendererBase: yunzaiRendererModule?.default || FallbackRenderer,
+    RendererBase: YunzaiRenderer,
     redis: globalThis.redis || memoryRedis,
     rootPath: process.cwd(),
 
