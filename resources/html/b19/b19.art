@@ -349,9 +349,9 @@
         <div class="analysis-panel-head">
             <div>
                 <p class="analysis-kicker">CHART PROFILE</p>
-                <p class="analysis-title">谱面标签能力</p>
+                <p class="analysis-title">谱面实力分析</p>
             </div>
-            <p class="analysis-meta">有效票 {{b30Analysis.tagAnalysis ? b30Analysis.tagAnalysis.totalVotes : 0}}</p>
+            <p class="analysis-meta">{{if b30Analysis.tagAnalysis && b30Analysis.tagAnalysis.threshold != null}}RKS≥{{b30Analysis.tagAnalysis.threshold.toFixed(1)}} · 成绩 {{b30Analysis.tagAnalysis.recordCount}} · 选票 {{b30Analysis.tagAnalysis.totalVotes}}{{else if b30Analysis.tagAnalysis}}有效票 {{b30Analysis.tagAnalysis.totalVotes}}{{else}}暂无数据{{/if}}</p>
         </div>
         <div class="tag-analysis-body {{if !b30Analysis.tagAnalysis || b30Analysis.tagAnalysis.insufficient}}is-insufficient{{/if}}">
             <div class="tag-analysis-content">
@@ -405,13 +405,13 @@
             </div>
             {{if !b30Analysis.tagAnalysis || b30Analysis.tagAnalysis.insufficient}}
             <div class="tag-insufficient-message">
-                <p>可用谱面标签统计量不足，请前往 https://www.phib19.top 或使用 /settag 进行谱面标签投票</p>
+                <p>有效选票或逐标签成绩样本不足，请前往 https://www.phib19.top 或使用 /settag 进行谱面标签投票</p>
             </div>
             {{/if}}
         </div>
         {{if b30Analysis.tagAnalysis && !b30Analysis.tagAnalysis.insufficient}}
         <div class="tag-analysis-tip">
-            <p>当前谱面标签统计量较小，可以前往 https://www.phib19.top 或使用 /settag 指令进行投票哦！</p>
+            <p>谱面投票可前往 https://www.phib19.top 或使用 /settag 指令提交</p>
         </div>
         {{/if}}
     </section>

@@ -322,9 +322,12 @@ function endpointErrorLogging(path) {
 
 /**
  * 谱面标签统计响应，data 为平铺有效票数，tree 为分类/细分树。
- * @typedef {object} ChartTagSongRankResponse
- * @property {chartsTagVoteCountMap} data 平铺有效票数
- * @property {chartsTagVoteCountMap} [primary] 主要票统计
+* @typedef {object} ChartTagSongRankResponse
+* @property {chartsTagVoteCountMap} data 平铺有效票数
+ * @property {chartsTagVoteCountMap} [normalized] 每张选票总质量归一后的标签质量
+ * @property {chartsTagVoteCountMap} [support] 选择该标签的独立选票数
+ * @property {number} [ballotCount] 当前谱面的有效选票数
+* @property {chartsTagVoteCountMap} [primary] 主要票统计
  * @property {chartsTagVoteCountMap} [secondary] 次要票统计
  * @property {ChartTagTreeNode[]} tree 标签树
  */
@@ -879,9 +882,12 @@ export default class makeRequest {
     /**
      * 批量获取谱面标签信息，按曲目和难度分别返回。
      * @param {{data: {song_id: idString, rank?: levelKind[]}[], total?: boolean}} params
-     * @returns {Promise<{
-     *  data: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
-     *  primary: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
+    * @returns {Promise<{
+    *  data: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
+     *  normalized: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
+     *  support: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
+     *  ballotCounts: Record<idString, Record<levelKind, number>>,
+    *  primary: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
      *  secondary: Record<idString, Record<levelKind, chartsTagVoteCountMap>>,
      *  tree: Record<idString, Record<levelKind, ChartTagTreeNode[]>>
      * }>}
@@ -891,17 +897,22 @@ export default class makeRequest {
     }
 
     /**
-     * 获取用户 B30 谱面标签分析（雷达图、擅长 tag 与薄弱 tag）。
+     * 获取用户按动态 RKS 门槛计算的谱面实力分析（雷达图、擅长 tag 与薄弱 tag）。
      * @param {baseAu} params
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
      * @returns {Promise<{
+     *  analysisMode: 'threshold_pool',
+     *  threshold: number,
+     *  minimumChartVoters: number,
+     *  minimumTagSamples: number,
+     *  recordCount: number,
      *  totalVotes: number,
      *  minimumVotes: number,
      *  averageRks: number,
      *  categories: {name: string, rks: number, votes: number, hasVotes: boolean}[],
      *  radar: {grids: string[], axes: {x: number, y: number}[], points: string, categories: object[]},
-     *  strong: {name: string, rks: number, votes: number}[],
-     *  weak: {name: string, rks: number, votes: number}[],
+     *  strong: {name: string, rks: number, rawRks: number, votes: number, sampleCount: number, effectiveSampleSize: number, confidence: number}[],
+     *  weak: {name: string, rks: number, rawRks: number, votes: number, sampleCount: number, effectiveSampleSize: number, confidence: number}[],
      *  insufficient: boolean
      * }>}
      */
