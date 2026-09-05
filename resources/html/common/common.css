@@ -153,9 +153,27 @@ body p {
   text-shadow: 0 0 20px #fff700;
 }
 
+.copyright {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  /* margin-top: 5%; */
+  margin-bottom: 4%;
+  writing-mode: horizontal-tb;
+  justify-content: center;
+}
+
+.copyright p {
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  text-shadow: 0 0 10px #00000080;
+}
+
 .tips {
   position: absolute;
-  bottom: 0px;
+  bottom: 1.5%;
   left: 5px;
   writing-mode: horizontal-tb;
 }

@@ -731,6 +731,21 @@ circle {
     margin-bottom: 30px;
 }
 
+.copyright {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    writing-mode: horizontal-tb;
+    z-index: 1;
+}
+
+.copyright p {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+}
+
 .phi-plugin p {
     font-size: 76px;
     text-shadow: 0 0 20px rgb(0 186 255);

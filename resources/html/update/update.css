@@ -33,7 +33,7 @@ body p {
     display: flex;
     z-index: 1;
     flex-direction: row;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
     justify-content: space-around;
     /* writing-mode: vertical-lr; */
     align-items: center;
@@ -632,7 +632,7 @@ circle {
     flex-direction: row;
     align-items: flex-start;
     margin-top: 5%;
-    margin-bottom: 5.5%;
+    margin-bottom: 1.5%;
     writing-mode: horizontal-tb;
     justify-content: center;
 }
@@ -663,4 +663,14 @@ circle {
 .ver p {
     font-size: large;
     text-shadow: 0 0 20px #fff700;
+}
+
+.copyright {
+    width: 60%;
+    margin-bottom: 6%;
+}
+
+.tips {
+    position: relative;
+    margin: 0 auto 20px 20px;
 }
