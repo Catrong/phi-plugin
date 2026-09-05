@@ -138,12 +138,12 @@ export default await new class picmodle {
      * @returns 
      */
     async b19(e, data) {
-        if (data?.theme === 'default') {
-            return this.renderDefaultB30(data, {
-                e,
-                scale: Config.getUserCfg('config', 'renderScale') / 100,
-            })
-        }
+        // if (data?.theme === 'default') {
+        //     return this.renderDefaultB30(data, {
+        //         e,
+        //         scale: Config.getUserCfg('config', 'renderScale') / 100,
+        //     })
+        // }
         return await this.common(e, 'b19', data)
     }
 
