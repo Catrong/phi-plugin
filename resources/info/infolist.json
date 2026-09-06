@@ -1750,6 +1750,16 @@
         "length": "2:48",
         "chapter": "Single-单曲 精选集",
         "isOriginal": true
+    },
+    "NWAD.Knighthood":{
+        "bpm": "210",
+        "length": "2:39",
+        "chapter": "Chapter EX-Paradigm：Reboot 精选集"
+    },
+    "DevastatingHistory.NAMV":{
+        "bpm": "220",
+        "length": "2:22",
+        "chapter": "Chapter EX-Liminality 精选集"
     }
 }
 
