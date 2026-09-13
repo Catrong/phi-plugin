@@ -15,7 +15,7 @@ import {
     getLocalThemeDetail,
     isThemeSlug,
 } from '../model/theme/catalog.js'
-import { sendMarketQuickCommands } from '../model/game/markdown.js'
+import { sendMarketQuickCommands, sendQuickCommands } from '../model/game/markdown.js'
 import { isApiConnectionError } from '../model/api/phiApiErrors.js'
 import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
 import { isApiCapabilityConfigured } from '../model/user/apiPermission.js'
@@ -188,6 +188,10 @@ export class phiMarket extends phiPluginBase {
                     detail,
                     commandHead,
                 }))
+                await sendQuickCommands(e, [
+                    { command: `/${commandHead} market ${themeId}`, label: '使用主题' },
+                    { command: `/${commandHead} market`, label: '返回市场' },
+                ], '主题操作')
             } catch (/** @type {any} */ error) {
                 logger.warn(`[phi-plugin][主题市场] 详情加载失败 ${themeId}：${error?.code || 'unknown'}`)
                 send.send_with_At(e, '未找到该主题，或主题市场暂时不可用。')

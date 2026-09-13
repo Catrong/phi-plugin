@@ -401,7 +401,7 @@ export function supportGuoba() {
                 {
                     field: 'LetterMarkdown',
                     label: '交互式MD消息',
-                    bottomHelpMessage: '控制开字母和主题市场的Markdown消息；关闭后主题市场不发送快捷操作',
+                    bottomHelpMessage: '控制开字母、主题市场及 QQ 官方机器人页面的 Markdown 快捷操作消息',
                     component: 'Switch',
                 },
                 {

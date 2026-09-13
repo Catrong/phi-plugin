@@ -19,6 +19,7 @@ import picmodle from '../model/render/picmodle.js'
 import { canUseApi } from '../model/user/apiPermission.js'
 import platform, { redis } from '../components/platform/index.js'
 import { UserCredentials } from '../model/user/userCredentials.js'
+import { sendQuickCommands, sessionQuickCommands, updateQuickCommands } from '../model/game/markdown.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -88,7 +89,7 @@ export class phisstk extends phiPluginBase {
                     send.send_with_At(e, resMsg)
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                    if (updateData && history) await build(e, updateData, history)
+                    if (updateData && history) await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作')
                     else send.send_with_At(e, '绑定已成功，但暂时无法读取 API 存档，请稍后执行更新。')
                     return true
                 }
@@ -206,7 +207,7 @@ export class phisstk extends phiPluginBase {
                     }
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                    if (updateData && history) await build(e, updateData, history)
+                    if (updateData && history) await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作')
                     else send.send_with_At(e, '绑定已成功，但暂时无法读取 API 存档，请稍后执行更新。')
                     return true
                 }
@@ -225,7 +226,7 @@ export class phisstk extends phiPluginBase {
             if (!updateData) return true;
             send.send_with_At(e, `${apiBindingSucceeded ? '' : 'API绑定不可用，已按当前 Bot 本地状态完成绑定。\n'}请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
             let history = await credentials.getLocalHistory()
-            await build(e, updateData, history)
+            await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作')
         } catch (error) {
             logger.error(error)
             send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
@@ -293,7 +294,7 @@ export class phisstk extends phiPluginBase {
         }
 
         try {
-            await build(e, updateData, history)
+            await build(e, updateData, history, updateQuickCommands, '更新页快捷操作')
         } catch (error) {
             logger.error(error)
             send.send_with_At(e, `更新失败QAQ！\n错误信息：${error}`)
@@ -479,7 +480,7 @@ function comWidth(num) {
  * @param {{save:Save, added_rks_notes: number[]}} updateData
  * @param {saveHistory} history
  */
-async function build(e, updateData, history) {
+async function build(e, updateData, history, quickCommands = updateQuickCommands, quickCommandsTitle = '更新页快捷操作') {
 
     let { added_rks_notes, save } = updateData
 
@@ -659,6 +660,7 @@ async function build(e, updateData, history) {
     }
 
     send.send_with_At(e, [await picmodle.update(e, data), `PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`])
+    await sendQuickCommands(e, quickCommands(Config.getUserCfg('config', 'cmdhead')), quickCommandsTitle)
 
     return false
 }

@@ -13,6 +13,12 @@ import { UserCredentials } from '../model/user/userCredentials.js'
 import analyzeSaveHistory from '../model/save/analyzeSaveHistory.js'
 import ScoreHistory from '../model/save/scoreHistory.js'
 import { canUseApi } from '../model/user/apiPermission.js'
+import {
+    sendQuickCommands,
+    scoreQuickCommands,
+    userListQuickCommands,
+    historyQuickCommands,
+} from '../model/game/markdown.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -273,6 +279,7 @@ export class phiuser extends phiPluginBase {
         const infoVersion = e.msg.match(new RegExp(`^[#/](?:${Config.getUserCfg('config', 'cmdhead')})\\s*info([12])?`, 'i'))?.at(-1)
         const kind = Number(infoVersion || 0)
         send.send_with_At(e, await picmodle.user_info(e, data, kind))
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -499,6 +506,7 @@ export class phiuser extends phiPluginBase {
 
 
         send.send_with_At(e, await picmodle.lvsco(e, data))
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -639,6 +647,7 @@ export class phiuser extends phiPluginBase {
             // dan: await get.getDan(e.user_id),
             request: request
         }))
+        await sendQuickCommands(e, userListQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩筛选快捷操作')
 
     }
 
@@ -675,6 +684,7 @@ export class phiuser extends phiPluginBase {
             stats,
             background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
         }));
+        await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
     }
 
     /**
@@ -928,6 +938,7 @@ export class phiuser extends phiPluginBase {
             background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
             theme: pluginData?.theme || 'star',
         }))
+        await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
 
     }
 
