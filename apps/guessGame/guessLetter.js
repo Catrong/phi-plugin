@@ -14,6 +14,7 @@ import fCompute from '../../model/game/fCompute.js'
 import picmodle from '../../model/render/picmodle.js'
 import logger from '../../components/Logger.js'
 import segment from '../../components/segment.js'
+import { isOfficialBot } from '../../model/game/markdown.js'
 import {
     LETTER_HIDDEN_CHAR,
     allGuessed,
@@ -811,7 +812,7 @@ function cmdInpt(text, show, reference = false) {
  */
 async function tryToSendMd(e, fnc) {
     const letterMarkdown = Config.getUserCfg('config', 'LetterMarkdown')
-    if (!letterMarkdown) {
+    if (!letterMarkdown || ((e?.bot || e?.platform) && !isOfficialBot(e))) {
         await send.reply(e, fnc(false))
         return;
     }
