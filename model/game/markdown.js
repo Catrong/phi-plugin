@@ -45,7 +45,7 @@ export function isOfficialBot(e) {
  * 构建通用的快捷操作菜单。
  * @param {{command:string,label:string}[]} commands
  * @param {string} [title]
- * @param {{showHeaders?: boolean, headers?: string[]}} [options]
+ * @param {{showHeaders?: boolean, headers?: string[], columns?: number}} [options]
  */
 export function buildQuickCommandMarkdown(commands, title = '快捷操作', options = {}) {
     const unique = []
@@ -59,16 +59,20 @@ export function buildQuickCommandMarkdown(commands, title = '快捷操作', opti
         unique.push({ command, label })
     }
     if (!unique.length) return ''
+    const defaultColumns = unique.length <= 5 ? unique.length : 3
+    const columns = Math.max(1, Math.min(8, Math.floor(options.columns || defaultColumns)))
     const rows = []
-    for (let index = 0; index < unique.length; index += 3) {
-        const row = unique.slice(index, index + 3)
-        while (row.length < 3) row.push({ command: '', label: '' })
+    for (let index = 0; index < unique.length; index += columns) {
+        const row = unique.slice(index, index + columns)
+        while (row.length < columns) row.push({ command: '', label: '' })
         rows.push(`| ${row.map(item => item.command ? commandInput(item.command, item.label) : '').join(' | ')} |`)
     }
-    const headerValues = options.headers?.length === 3 ? options.headers : ['1', '2', '3']
+    const headerValues = options.headers?.length === columns
+        ? options.headers
+        : Array.from({ length: columns }, (_, index) => String(index + 1))
     const headers = options.showHeaders === true
-        ? ['| 操作 | 操作 | 操作 |', '| :---: | :---: | :---: |']
-        : [`| ${headerValues.map(value => escapeMarkdownText(value)).join(' | ')} |`, '| :---: | :---: | :---: |']
+        ? [`| ${Array.from({ length: columns }, () => '操作').join(' | ')} |`, `| ${Array.from({ length: columns }, () => ':---:').join(' | ')} |`]
+        : [`| ${headerValues.map(value => escapeMarkdownText(value)).join(' | ')} |`, `| ${Array.from({ length: columns }, () => ':---:').join(' | ')} |`]
     return ['***', `${escapeMarkdownText(title)}：`, '', ...headers, ...rows].join('\n')
 }
 
@@ -91,16 +95,19 @@ export async function sendQuickCommands(e, commands, title = '快捷操作') {
 }
 
 /**
- * 构建分组快捷操作菜单。每个分组独立渲染为一张三列表格。
+ * 构建分组快捷操作菜单。每个分组独立渲染为一张标准 Markdown 表格。
  * @param {{title:string,commands:{command:string,label:string}[]}[]} sections
  * @param {string} [title]
  */
 export function buildQuickCommandSectionsMarkdown(sections, title = '快捷操作') {
     const blocks = []
     for (const section of sections || []) {
-        const table = buildQuickCommandMarkdown(section?.commands || [], section?.title || title, {
+        const sectionCommands = section?.commands || []
+        const columns = sectionCommands.length >= 4 ? 4 : Math.max(1, sectionCommands.length)
+        const table = buildQuickCommandMarkdown(sectionCommands, section?.title || title, {
             showHeaders: false,
-            headers: ['0', '1', '2'],
+            columns,
+            headers: Array.from({ length: columns }, (_, index) => String(index)),
         })
         if (table) blocks.push(table)
     }
@@ -110,13 +117,21 @@ export function buildQuickCommandSectionsMarkdown(sections, title = '快捷操�
 /** 向 QQ 官方机器人发送分组快捷操作菜单。 */
 export async function sendQuickCommandSections(e, sections, title = '快捷操作') {
     if (!isOfficialBot(e) || !Config.getUserCfg('config', 'LetterMarkdown')) return
-    const markdown = buildQuickCommandSectionsMarkdown(sections, title)
-    if (!markdown) return
-    try {
-        const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(markdown)))
-        if (sent?.error?.length) logger.warn('[phi-plugin] 快捷操作 Markdown 发送失败')
-    } catch (error) {
-        logger.warn('[phi-plugin] 快捷操作 Markdown 发送失败', error)
+    for (const section of sections || []) {
+        const sectionCommands = section?.commands || []
+        const columns = sectionCommands.length >= 4 ? 4 : Math.max(1, sectionCommands.length)
+        const markdown = buildQuickCommandMarkdown(sectionCommands, section?.title || title, {
+            showHeaders: false,
+            columns,
+            headers: Array.from({ length: columns }, (_, index) => String(index)),
+        })
+        if (!markdown) continue
+        try {
+            const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(markdown)))
+            if (sent?.error?.length) logger.warn('[phi-plugin] 快捷操作 Markdown 发送失败')
+        } catch (error) {
+            logger.warn('[phi-plugin] 快捷操作 Markdown 发送失败', error)
+        }
     }
 }
 
