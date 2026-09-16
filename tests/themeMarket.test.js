@@ -719,9 +719,10 @@ test('market page sends no quick-command text when Markdown is disabled or fails
         await sendMarketQuickCommands(/** @type {any} */({}), themes)
         assert.equal(calls, 2)
 
-        const guoba = fs.readFileSync(new URL('../guoba.support.js', import.meta.url), 'utf8')
-        assert.match(guoba, /field: 'LetterMarkdown'/)
-        assert.doesNotMatch(guoba, /field: 'letterMarkdown'/)
+        const { createGuobaSchemas } = await import('../components/settings/guoba.js')
+        const fields = createGuobaSchemas().map(item => item.field)
+        assert.ok(fields.includes('LetterMarkdown'))
+        assert.ok(!fields.includes('letterMarkdown'))
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply

@@ -4,7 +4,7 @@ import { createRequire } from 'node:module'
 import chokidar from 'chokidar'
 import MemoryRedis from './memoryRedis.js'
 import { createKoishiDatabaseRedis } from './koishiDatabaseRedis.js'
-import { setPlatformAdapter } from './index.js'
+import { setPlatformAdapter } from './state.js'
 
 /** @import {PhiSegment, PlatformAdapter, PlatformEvent, PlatformForwardMessage, PlatformLogger, PlatformMessageInput, PlatformMessageOutput, PlatformPluginConfig, PlatformRendererConfig} from './types.js' */
 
