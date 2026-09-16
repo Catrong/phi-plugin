@@ -52,7 +52,13 @@ export default await new class picmodle {
     async init() {
         /** 清理临时文件 */
         try {
-            fs.rmSync(tempPath, { force: true, recursive: true })
+            // Preserve Chromium profiles and their locks, including after an
+            // unclean host exit. Never bypass a surviving browser's profile lock.
+            if (fs.existsSync(tempPath)) {
+                for (const entry of fs.readdirSync(tempPath)) {
+                    if (entry !== 'puppeteer') fs.rmSync(path.join(tempPath, entry), { force: true, recursive: true })
+                }
+            }
         } catch (err) {
             logger.error(`[Phi-Plugin][清理临时文件失败]`)
             logger.error(err)
