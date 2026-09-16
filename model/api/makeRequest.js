@@ -436,6 +436,15 @@ export default class makeRequest {
     }
 
     /**
+     * 上报当前 Bot 平台用户已在本地完成解绑，使 API 端绑定状态跟随同步。
+     * @param {{platform: string, platformId: string, reason?: string}} params 平台身份与解绑原因
+     * @returns {Promise<{ok: true, bindingId: string|null, status: string}>} API 端绑定状态
+     */
+    static async unbindBotPlatform(params) {
+        return makeFetch('/bot/bindings/unbind', params, 'POST')
+    }
+
+    /**
      * 使用 sessionToken 创建曲目别名提案。
      * @param {{token: phigrosToken, alias: string, songId: string, note?: string, source: 'bot'}} params 提案内容
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
@@ -514,6 +523,7 @@ export default class makeRequest {
      *  ok: true, serverTime: string, nextSyncAfterSeconds: number,
      *  reporting: {renderPressure: boolean},
      *  themePolicy?: {mode:'blacklist'|'whitelist', entries:string[]},
+     *  unbindRequests?: {bindingId:string,platform:string,platformId:string,reason:string,requestedAt:string}[],
      *  messages: {id:string,type:string,schemaVersion:number,target:{platform:string,platformId:string},text:string,payload:object,createdAt:string,expiresAt:string}[]
      * }>}
      */

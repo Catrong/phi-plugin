@@ -238,6 +238,45 @@ export class UserCredentials {
     }
 
     /**
+     * 向 API 上报当前用户已完成本地解绑，使 API 端绑定状态跟随同步。
+     * 平台身份优先取显式参数；省略时回退到当前事件。无平台上下文时跳过上报。
+     * @param {{platform?: string, platformId?: string, reason?: string}} [context] 显式平台身份与解绑原因
+     * @returns {Promise<boolean>} 上报是否成功
+     */
+    async reportUnbind(context = {}) {
+        let { platform, platformId } = context
+        if ((!platform || !platformId) && this.event) {
+            const params = makeRequestFnc.makePlatform(this.event)
+            platform = params.platform
+            platformId = params.platform_id
+        }
+        if (!platform || !platformId) return false
+        try {
+            await makeRequest.unbindBotPlatform({
+                platform,
+                platformId,
+                reason: context.reason || 'user_unbind',
+            })
+            return true
+        } catch (error) {
+            logger.warn('[phi-plugin] 上报本地解绑失败，API 端绑定状态将在下次同步时同步', error)
+            return false
+        }
+    }
+
+    /**
+     * 解绑当前 Bot本地用户并向 API 同步解绑状态。
+     * 本地解绑必定执行；API 上报失败只记录日志，不影响本地结果。
+     * @param {{platform?: string, platformId?: string, reason?: string}} [context] 显式平台身份；省略时取当前事件
+     * @returns {Promise<{hadBinding: boolean, reported: boolean}>} 本地是否曾有绑定、API 是否上报成功
+     */
+    async unbindAndReport(context = {}) {
+        const { hadBinding } = await this.unbindLocal()
+        const reported = await this.reportUnbind(context)
+        return { hadBinding, reported }
+    }
+
+    /**
      * 以当前 Bot、平台用户和 sessionToken 创建别名提案，使审核消息只能返回来源 Bot。
      * @param {import('../type/aliasProposal.js').AliasProposalCreateInput} input 别名提案内容
      * @param {UserCredentialApiOptions} [options] 错误处理策略

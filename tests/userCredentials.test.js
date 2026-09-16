@@ -259,6 +259,59 @@ test('API save refresh is implemented by UserCredentials and reuses an unchanged
     }
 })
 
+test('local unbind reports the unbind back to the API using the event platform', async () => {
+    const store = fakeStore()
+    store.sessions.set('local-user', 'old-token')
+    /** @type {any[]} */ const calls = []
+    const originalRequest = phiApiClient.request
+    const originalDelSave = getSave.deleteSaveBySessionToken
+    getSave.deleteSaveBySessionToken = async () => true
+    phiApiClient.request = async (/** @type {any} */ path, /** @type {any} */ body) => {
+        calls.push([path, body])
+        return { ok: true, bindingId: 'binding-id', status: 'unbound' }
+    }
+    try {
+        const credentials = UserCredentials.fromEvent(event(), { store: /** @type {any} */ (store) })
+        const result = await credentials.unbindAndReport()
+        assert.deepEqual(result, { hadBinding: true, reported: true })
+        assert.deepEqual(calls, [['/bot/bindings/unbind', {
+            platform: 'yunzai',
+            platformId: 'local-user',
+            reason: 'user_unbind',
+        }]])
+        assert.deepEqual(await credentials.getLocalCredentials(), { sessionToken: undefined, apiId: undefined })
+    } finally {
+        phiApiClient.request = originalRequest
+        getSave.deleteSaveBySessionToken = originalDelSave
+    }
+})
+
+test('reportUnbind skips the API when no platform identity is available', async () => {
+    const store = fakeStore()
+    const credentials = new UserCredentials('local-user', { store: /** @type {any} */ (store) })
+    const originalRequest = phiApiClient.request
+    let called = false
+    phiApiClient.request = async () => { called = true; return {} }
+    try {
+        assert.equal(await credentials.reportUnbind(), false)
+        assert.equal(called, false)
+    } finally {
+        phiApiClient.request = originalRequest
+    }
+})
+
+test('reportUnbind swallows API failures so local unbinding is never blocked', async () => {
+    const store = fakeStore()
+    const credentials = new UserCredentials('local-user', { store: /** @type {any} */ (store) })
+    const originalRequest = phiApiClient.request
+    phiApiClient.request = async () => { throw new Error('API unavailable') }
+    try {
+        assert.equal(await credentials.reportUnbind({ platform: 'yunzai', platformId: '20002' }), false)
+    } finally {
+        phiApiClient.request = originalRequest
+    }
+})
+
 test('failed API session binding can commit the new sessionToken through local binding', async () => {
     const store = fakeStore()
     store.sessions.set('local-user', 'old-token')
