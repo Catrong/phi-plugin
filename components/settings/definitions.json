@@ -1,0 +1,522 @@
+[
+  {
+    "key": "renderScale",
+    "group": "渲染设置",
+    "label": "渲染精度",
+    "description": "对所有的图片生效，设置渲染精度",
+    "type": "number",
+    "min": 50,
+    "max": 200,
+    "placeholder": "请输入渲染精度",
+    "unit": "%",
+    "required": true
+  },
+  {
+    "key": "randerQuality",
+    "group": "渲染设置",
+    "label": "渲染质量",
+    "description": "对所有的图片生效，设置渲染的质量",
+    "type": "number",
+    "min": 1,
+    "max": 100,
+    "placeholder": "请输入渲染质量",
+    "unit": "%",
+    "required": true
+  },
+  {
+    "key": "timeout",
+    "group": "渲染设置",
+    "label": "渲染超时时间",
+    "description": "对所有的图片生效，超时后重启puppeteer，单位ms",
+    "type": "number",
+    "min": 1000,
+    "max": 120000,
+    "placeholder": "请输入渲染超时时间",
+    "unit": "ms",
+    "required": true
+  },
+  {
+    "key": "waitingTimeout",
+    "group": "渲染设置",
+    "label": "等待超时时间",
+    "description": "对所有的图片生效，单位ms",
+    "type": "number",
+    "min": 1000,
+    "max": 120000,
+    "placeholder": "请输入等待超时时间",
+    "unit": "ms",
+    "required": true
+  },
+  {
+    "key": "renderNum",
+    "group": "渲染设置",
+    "label": "并行渲染数量",
+    "description": "并行数量越多，占用的资源越多，建议谨慎修改，修改后重启生效",
+    "type": "number",
+    "min": 1,
+    "max": 10,
+    "placeholder": "请输入并行渲染数量",
+    "required": true
+  },
+  {
+    "key": "commentsAPage",
+    "group": "渲染设置",
+    "label": "每页评论条数",
+    "description": "/song 每页评论最大渲染条数",
+    "type": "number",
+    "min": 1,
+    "max": 20,
+    "placeholder": "请输入每页评论最大渲染条数",
+    "required": true
+  },
+  {
+    "key": "B19MaxNum",
+    "group": "渲染设置",
+    "label": "B19最大限制",
+    "description": "用户可以获取B19图片成绩的最大数量，建议不要太大",
+    "type": "number",
+    "min": 22,
+    "max": 1000,
+    "placeholder": "请输入B19最大限制",
+    "required": true
+  },
+  {
+    "key": "HistoryDayNum",
+    "group": "渲染设置",
+    "label": "历史成绩单日数量",
+    "description": "/update 展现历史成绩的单日最大数量，至少为2",
+    "type": "number",
+    "min": 2,
+    "max": 10000,
+    "placeholder": "请输入最大限制",
+    "required": true
+  },
+  {
+    "key": "HistoryScoreDate",
+    "group": "渲染设置",
+    "label": "历史成绩展示天数",
+    "description": "/update 展现历史成绩的最大天数",
+    "type": "number",
+    "min": 1,
+    "max": 100,
+    "placeholder": "请输入最大限制",
+    "required": true
+  },
+  {
+    "key": "HistoryScoreNum",
+    "group": "渲染设置",
+    "label": "历史成绩展示数量",
+    "description": "/update 展现历史成绩的最大数量",
+    "type": "number",
+    "min": 10,
+    "max": 10000,
+    "placeholder": "请输入最大限制",
+    "required": true
+  },
+  {
+    "key": "listScoreMaxNum",
+    "group": "渲染设置",
+    "label": "/list 最大数量",
+    "description": "/list 最大渲染成绩数量，建议为3的倍数",
+    "type": "number",
+    "min": 3,
+    "max": 10000,
+    "placeholder": "请输入最大限制",
+    "required": true
+  },
+  {
+    "key": "WordB19Img",
+    "group": "渲染设置",
+    "label": "文字版B19曲绘图片",
+    "description": "关闭可大幅度提升发送速度",
+    "type": "boolean"
+  },
+  {
+    "key": "WordSuggImg",
+    "group": "渲染设置",
+    "label": "Suggest曲绘图片",
+    "description": "关闭可大幅度提升发送速度",
+    "type": "boolean"
+  },
+  {
+    "key": "defaultGlobal",
+    "group": "系统设置",
+    "label": "默认使用国际服",
+    "description": "开启后默认使用国际服查询，关闭后默认使用国服查询",
+    "type": "boolean"
+  },
+  {
+    "key": "onLinePhiIllUrl",
+    "group": "系统设置",
+    "label": "在线曲绘来源",
+    "description": "仅在未下载曲绘时有效，不影响下载曲绘指令。在线曲绘将重复下载曲绘资源，建议使用 /下载曲绘 将曲绘缓存到本地",
+    "type": "select",
+    "options": [
+      {
+        "label": "GitHub raw",
+        "value": 1
+      },
+      {
+        "label": "Gitee raw",
+        "value": 2
+      },
+      {
+        "label": "弦塔资源站",
+        "value": 3
+      },
+      {
+        "label": "cnb.cool",
+        "value": 4
+      }
+    ]
+  },
+  {
+    "key": "githubProxy",
+    "group": "系统设置",
+    "label": "GitHub代理",
+    "description": "仅在在线曲绘来源为 GitHub raw 或下载曲绘源为 GitHub 时生效。填 false 为不使用代理，也可填写代理地址，如 https://gh-proxy.com",
+    "type": "string",
+    "placeholder": "false 或 https://gh-proxy.com",
+    "allowFalse": true
+  },
+  {
+    "key": "downIllUrl",
+    "group": "系统设置",
+    "label": "下载曲绘源",
+    "description": "下载曲绘的源，实时生效。选择 GitHub 时会使用上面的 GitHub代理配置",
+    "type": "select",
+    "options": [
+      {
+        "label": "gitee（暂时弃用）",
+        "value": "https://gitee.com/Steveeee-e/phi-plugin-ill.git"
+      },
+      {
+        "label": "github",
+        "value": "https://github.com/Catrong/phi-plugin-ill.git"
+      }
+    ],
+    "allowCustom": true
+  },
+  {
+    "key": "watchInfoPath",
+    "group": "系统设置",
+    "label": "监听信息文件",
+    "description": "是否监听信息文件变化，如果机器人有自动更新插件功能建议开启，如遇监听文件数量超限请尝试关闭",
+    "type": "boolean"
+  },
+  {
+    "key": "allowComment",
+    "group": "系统设置",
+    "label": "曲目评论",
+    "description": "是否开启曲目评论功能，该功能目前暂无敏感词校验",
+    "type": "boolean"
+  },
+  {
+    "key": "autoPullPhiIll",
+    "group": "系统设置",
+    "label": "自动更新曲绘",
+    "description": "开启后手动更新插件时自动更新曲绘文件",
+    "type": "boolean"
+  },
+  {
+    "key": "isGuild",
+    "group": "系统设置",
+    "label": "频道模式",
+    "description": "开启后文字版仅限私聊，关闭文字版图片，文字版将折叠为长消息",
+    "type": "boolean"
+  },
+  {
+    "key": "TapTapLoginQRcode",
+    "group": "系统设置",
+    "label": "绑定二维码",
+    "description": "登录TapTap绑定是否发送二维码，开启仅发送二维码，关闭直接发送链接",
+    "type": "boolean"
+  },
+  {
+    "key": "cmdhead",
+    "group": "系统设置",
+    "label": "命令头",
+    "description": "命令正则匹配开头，不包含#/，支持正则表达式，'\\' 请双写( \\s --> \\\\s )，最外层可以不加括号",
+    "type": "string",
+    "placeholder": "请输入命令头"
+  },
+  {
+    "key": "openPhiPluginApi",
+    "group": "系统设置",
+    "label": "API 总开关",
+    "description": "关闭后自定义主题、查分统计和在线查分 API 均不可用",
+    "type": "boolean"
+  },
+  {
+    "key": "enableCustomThemeApi",
+    "group": "系统设置",
+    "label": "自定义主题 API",
+    "description": "允许浏览、下载和使用 API 提供的自定义主题，受 API 总开关控制",
+    "type": "boolean"
+  },
+  {
+    "key": "enableScoreStatisticsApi",
+    "group": "系统设置",
+    "label": "查分数据统计 API",
+    "description": "允许使用无需用户认证的成绩统计、排行汇总与谱面分析，受 API 总开关控制",
+    "type": "boolean"
+  },
+  {
+    "key": "enableOnlineScoreApi",
+    "group": "系统设置",
+    "label": "在线查分 API",
+    "description": "允许使用需要用户认证的在线查分能力，受 API 总开关和用户个人 API 开关控制",
+    "type": "boolean"
+  },
+  {
+    "key": "mutiNickWaitTimeOut",
+    "group": "系统设置",
+    "label": "多个曲目回复序号等待时长",
+    "description": "别名重复触发多个曲目选择时，等待回复序号的时长，单位：秒",
+    "type": "number",
+    "min": 5,
+    "max": 999,
+    "placeholder": "请输入等待时长",
+    "required": true
+  },
+  {
+    "key": "otherinfo",
+    "group": "系统设置",
+    "label": "曲库",
+    "description": "使用曲库的模式，若启用自定义则重名的以自定义为准",
+    "type": "select",
+    "options": [
+      {
+        "label": "原版曲库",
+        "value": 0
+      },
+      {
+        "label": "原版+自定义",
+        "value": 1
+      },
+      {
+        "label": "仅自定义",
+        "value": 2
+      }
+    ]
+  },
+  {
+    "key": "GuessTipCd",
+    "group": "猜曲绘设置",
+    "label": "提示间隔",
+    "description": "猜曲绘的提示间隔时间，单位：秒",
+    "type": "number",
+    "min": 0,
+    "max": 120,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "GuessTipRecall",
+    "group": "猜曲绘设置",
+    "label": "猜曲绘撤回",
+    "description": "是否在下一条提示发出的时候撤回上一条",
+    "type": "boolean"
+  },
+  {
+    "key": "LetterNum",
+    "group": "开字母设置",
+    "label": "字母条数",
+    "description": "开字母的条数",
+    "type": "number",
+    "min": 1,
+    "max": 99999,
+    "placeholder": "请输入数量",
+    "required": true
+  },
+  {
+    "key": "LetterMarkdown",
+    "group": "开字母设置",
+    "label": "交互式MD消息",
+    "description": "控制开字母和主题市场的Markdown消息；关闭后主题市场不发送快捷操作",
+    "type": "boolean"
+  },
+  {
+    "key": "LetterIllustration",
+    "group": "开字母设置",
+    "label": "发送曲绘",
+    "description": "猜对后是否发送以及发送什么曲绘，水印版需要占用渲染资源，不发图片更快",
+    "type": "select",
+    "options": [
+      {
+        "label": "水印版",
+        "value": "水印版"
+      },
+      {
+        "label": "原版",
+        "value": "原版"
+      },
+      {
+        "label": "不发送",
+        "value": "不发送"
+      }
+    ]
+  },
+  {
+    "key": "LetterRevealCd",
+    "group": "开字母设置",
+    "label": "翻开字母间隔",
+    "description": "开字母的全局开字母间隔时间，单位：秒",
+    "type": "number",
+    "min": 0,
+    "max": 120,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "LetterGuessCd",
+    "group": "开字母设置",
+    "label": "猜字母回答间隔",
+    "description": "开字母的全局开启间隔时间，单位：秒",
+    "type": "number",
+    "min": 0,
+    "max": 120,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "LetterTipCd",
+    "group": "开字母设置",
+    "label": "字母提示间隔",
+    "description": "开字母的全局提示间隔时间，单位：秒",
+    "type": "number",
+    "min": 0,
+    "max": 120,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "LetterTimeLength",
+    "group": "开字母设置",
+    "label": "猜字母待机时长",
+    "description": "无人回答多长时间后结束，单位：秒",
+    "type": "number",
+    "min": 0,
+    "max": 9999999,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "GuessTipsTipCD",
+    "group": "提示猜歌设置",
+    "label": "提示冷却",
+    "description": "提示猜歌提示的冷却时间间隔，单位：秒",
+    "type": "number",
+    "min": 0,
+    "max": 120,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "GuessTipsTipNum",
+    "group": "提示猜歌设置",
+    "label": "提示条数",
+    "description": "提示猜歌的提示条数（除曲绘外），若总提示条数小于设定条数则将会发送全部提示",
+    "type": "number",
+    "min": 0,
+    "max": 17,
+    "placeholder": "请输入条数",
+    "required": true
+  },
+  {
+    "key": "GuessTipsTimeout",
+    "group": "提示猜歌设置",
+    "label": "游戏时长",
+    "description": "提示猜歌超时时长，单位：秒",
+    "type": "number",
+    "min": 30,
+    "max": 600,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "GuessTipsAnsTime",
+    "group": "提示猜歌设置",
+    "label": "额外时间",
+    "description": "发送曲绘后多久公布答案，单位：秒",
+    "type": "number",
+    "min": 5,
+    "max": 600,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "allowChartTag",
+    "group": "系统设置",
+    "label": "谱面标签",
+    "description": "是否开启谱面标签功能，目前暂无敏感词校验。",
+    "type": "boolean"
+  },
+  {
+    "key": "themeMarketDownloadOrigin",
+    "group": "系统设置",
+    "label": "主题下载来源",
+    "description": "主题市场下载链接允许的唯一 HTTPS 来源，不含路径。",
+    "type": "string",
+    "format": "https-origin"
+  },
+  {
+    "key": "debug",
+    "group": "其他设置",
+    "label": "调试日志",
+    "description": "设置为 0 关闭测试日志。",
+    "type": "number",
+    "min": 0
+  },
+  {
+    "key": "chartPath",
+    "group": "其他设置",
+    "label": "谱面文件路径",
+    "description": "本机谱面文件所在目录。",
+    "type": "string"
+  },
+  {
+    "key": "VikaToken",
+    "group": "其他设置",
+    "label": "认证 Token",
+    "description": "修改后重载插件生效。",
+    "type": "string",
+    "secret": true,
+    "internal": true
+  },
+  {
+    "key": "apiBotClientId",
+    "group": "API 内部凭据",
+    "label": "Bot 客户端 ID",
+    "type": "string",
+    "description": "由 API 自动签发，也可手动修改；客户端 ID、密钥及版本号须保持匹配。",
+    "generated": true
+  },
+  {
+    "key": "apiBotClientSecret",
+    "group": "API 内部凭据",
+    "label": "Bot 客户端密钥",
+    "type": "string",
+    "description": "由 API 自动签发，也可手动修改；客户端 ID、密钥及版本号须保持匹配。",
+    "secret": true,
+    "generated": true
+  },
+  {
+    "key": "apiBotSecretVersion",
+    "group": "API 内部凭据",
+    "label": "Bot 密钥版本",
+    "type": "number",
+    "description": "由 API 自动签发，也可手动修改；客户端 ID、密钥及版本号须保持匹配。",
+    "generated": true,
+    "min": 0,
+    "step": 1
+  }
+]

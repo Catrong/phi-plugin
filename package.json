@@ -2,7 +2,15 @@
   "name": "phi-plugin",
   "version": "1.0.2",
   "description": "phigros辅助插件",
-  "main": "index.js",
+  "main": "koishi.cjs",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./koishi.cjs"
+    },
+    "./koishi": "./koishi.cjs",
+    "./*": "./*"
+  },
   "directories": {
     "lib": "lib"
   },

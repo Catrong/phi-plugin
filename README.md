@@ -49,6 +49,28 @@
 
 ### 安装：
 
+#### 加载环境
+
+同一份 `phi-plugin` 支持 Koishi / Yunzai。标准 Koishi 启动进程通过宿主环境变量识别，Koishi 的 `apply(ctx)` 在加载业务模块前注入适配器；其他环境默认按 Yunzai 加载。不会因为安装了 `koishi` 依赖就切换平台。
+
+- **Yunzai**：保留原来的 `plugins/phi-plugin/index.js` 加载方式，自动导出 `apps`。
+- **Koishi 4**：启用 `database`、`puppeteer` 服务后，加载本插件的 `koishi.cjs`（兼容 Koishi 的 CommonJS 加载器）。例如在 `koishi.yml` 的 `plugins` 下配置 `./external/phi-plugin/koishi.cjs: {}`，路径按宿主目录调整。自行编写宿主时也可导入 `phi-plugin/koishi` 并使用 `ctx.plugin()` 注册。
+
+Koishi 会复用本插件的业务和规则，数据库由 Koishi 的 `database` 服务提供。原来的独立 `koishi-plugin-phi-plugin` 不会被自动替换；切换时请停用旧插件，避免重复响应。同一进程不支持先加载 Yunzai 业务再切换 Koishi。
+
+#### 配置管理
+
+- `components/settings/definitions.json` 集中维护设置项的分组、名称、说明、类型、范围和选项；默认值只在 `config/default_config/config.yaml` 中维护。
+- Guoba 通过 `components/settings/guoba.js` 导出表单，由 `guoba.support.js` 接入，保存到原有 `config/config/config.yaml`。
+- Koishi 通过 `components/settings/koishi.cjs` 导出 `Config` Schema，ESM 和 CommonJS 插件入口均支持。在控制台的本插件配置页修改并保存即可；设置指令的修改也会交由 Koishi 保存并按宿主流程重载插件。
+- Koishi 的面板配置优先于本地 YAML；首次使用时，未填写的普通字段使用默认 YAML 的值。如需沿用旧插件的自定义设置，请在面板填写对应值。
+- API 客户端 ID、密钥、版本号在两端表单中均可查看和编辑，密钥默认遮罩；未配置时沿用本地已签发的凭据。在 Koishi 下，API 自动签发/轮换会将三项凭据一起交由宿主保存，后续读取使用同一配置；Guoba/Yunzai 仍保存在本地 YAML。机器人设置消息不展示凭据。
+- 频道模式会统一关闭文字版 B19 和 Suggest 曲绘图片。标注需要重启的资源参数仍需重启宿主后生效。
+
+这里管理的是管理员的**插件配置**。[Koishi 文档中的用户设置](https://koishi.chat/zh-CN/guide/console/client.html#用户设置)用于控制台用户个人偏好；玩家的 `/phi myset` 设置仍由原有个人设置流程管理。
+
+#### Yunzai 安装
+
 在Yunzai目录下运行
 
 > 使用Github
