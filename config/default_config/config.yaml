@@ -11,6 +11,9 @@ timeout: 20000
 #  等待渲染超时时间 ms
 waitingTimeout: 10000
 
+#  等待渲染的队列上限，不含正在渲染的请求；0 为不排队，修改后立即生效
+renderQueueLimit: 32
+
 #  并行渲染数量
 renderNum: 1
 

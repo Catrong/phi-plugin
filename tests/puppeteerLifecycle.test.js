@@ -5,6 +5,7 @@ import { EventEmitter } from 'node:events'
 import { setTimeout as delay } from 'node:timers/promises'
 import puppeteer from 'puppeteer'
 import Puppeteer from '../model/render/puppeteer.js'
+import { fileURLToPath } from 'node:url'
 
 function browserDouble(pid = 321) {
     const browser = new EventEmitter()
@@ -191,4 +192,68 @@ test('POSIX fallback kills the dedicated process group instead of only the paren
     const renderer = new Puppeteer({ idleTimeout: 0 })
     renderer.killProcess(321)
     assert.deepEqual(kill.mock.calls[0].arguments, [-321, 'SIGKILL'])
+})
+
+test('permanent shutdown closes real template watchers and drops template caches', async () => {
+    const renderer = new Puppeteer({ idleTimeout: 0 })
+    const file = fileURLToPath(import.meta.url)
+    renderer.watch(file)
+    const watcher = renderer.watcher[file]
+    try {
+        await new Promise(resolve => watcher.once('ready', resolve))
+        renderer.html[file] = 'cached template'
+        await renderer.closeBrowser()
+        assert.equal(watcher.closed, false, 'idle browser closure must keep template watching')
+        await Promise.all([renderer.shutdown(), renderer.shutdown()])
+        assert.equal(watcher.closed, true)
+        assert.deepEqual(renderer.watcher, {})
+        assert.deepEqual(renderer.html, {})
+        assert.deepEqual(renderer.phiTemplateIdentity, {})
+        assert.equal(renderer.phiTemplateWatchers.size, 0)
+        renderer.watch(file)
+        assert.deepEqual(renderer.watcher, {}, 'shutdown renderer cannot create another watcher')
+    } finally {
+        await watcher.close()
+    }
+})
+
+test('watchers are released even when browser cleanup fails', async () => {
+    const renderer = new Puppeteer({ idleTimeout: 0 })
+    let closed = 0
+    renderer.watcher = { one: { close: async () => { closed++ } } }
+    renderer.closeBrowser = async () => { throw new Error('browser cleanup failed') }
+    await assert.rejects(renderer.shutdown(), /browser cleanup failed/)
+    assert.equal(closed, 1)
+    assert.deepEqual(renderer.watcher, {})
+})
+
+for (const mode of ['hang', 'reject']) {
+    test(`page close ${mode} recycles its browser and lets screenshot finish`, { timeout: 2000 }, async () => {
+        const renderer = new Puppeteer({ pageCloseTimeout: 10, closeTimeout: 10, idleTimeout: 10 })
+        const browser = browserDouble()
+        browser.newPage = async () => ({
+            isClosed: () => false,
+            close: () => mode === 'hang' ? new Promise(() => {}) : Promise.reject(new Error('close failed')),
+        })
+        renderer.browser = browser
+        renderer.browserPid = 321
+        renderer.dealTpl = () => 'test.html'
+        renderer.renderPage = async () => { renderer.renderNum++; return [Buffer.from('image')] }
+        assert.deepEqual(await renderer.screenshot('test/image'), Buffer.from('image'))
+        assert.equal(browser.process().exitCode, 0)
+        assert.equal(renderer.browser, false)
+        assert.equal(renderer.shoting.length, 0)
+        await renderer.shutdown()
+    })
+}
+
+test('late page close timeout never closes a replacement browser', { timeout: 2000 }, async () => {
+    const renderer = new Puppeteer({ pageCloseTimeout: 10, idleTimeout: 0 })
+    const old = browserDouble()
+    const replacement = browserDouble(322)
+    renderer.browser = replacement
+    await renderer.closePage({ close: () => new Promise(() => {}) }, old)
+    assert.equal(renderer.browser, replacement)
+    assert.equal(replacement.process().exitCode, null)
+    await renderer.shutdown()
 })

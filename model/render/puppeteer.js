@@ -9,6 +9,7 @@ import platform from "../../components/platform/index.js"
 
 const Renderer = platform.RendererBase
 const botConfig = platform.getBotConfig()
+const PAGE_CLOSE_TIMEOUT_MS = 3000
 
 /** @typedef {import('puppeteer').Browser} Browser */
 /** @typedef {import('puppeteer').Page} Page */
@@ -64,6 +65,9 @@ class Puppeteer extends Renderer {
         this.idleTimer = /** @type {NodeJS.Timeout | null} */ (null)
         /** 关闭浏览器的超时时间(ms)，超时则强制结束进程 */
         this.closeTimeout = config.closeTimeout || 8000
+        this.pageCloseTimeout = Number.isFinite(config.pageCloseTimeout) && config.pageCloseTimeout > 0
+            ? config.pageCloseTimeout : PAGE_CLOSE_TIMEOUT_MS
+        this.templateClosePromise = /** @type {Promise<void> | null} */ (null)
         /** @type {any} */
         this.config = {
             userDataDir: path.resolve(tempPath, "puppeteer", browserId),
@@ -160,6 +164,8 @@ class Puppeteer extends Renderer {
         const start = Date.now()
         /** @type {Page | undefined} */
         let page
+        /** @type {Browser | undefined} */
+        let pageBrowser
 
         try {
             if (!(await this.browserInit())) return false
@@ -170,6 +176,7 @@ class Puppeteer extends Renderer {
             const renderPromise = (async () => {
                 const browser = this.browser
                 if (!browser) throw new Error('浏览器未启动')
+                pageBrowser = browser
                 page = await browser.newPage()
                 return this.renderPage(page, name, savePath, data, start)
             })()
@@ -192,12 +199,64 @@ class Puppeteer extends Renderer {
             if (!err?.isRenderTimeout) await this.restart(true).catch(closeErr => logger.error(closeErr))
             return false
         } finally {
-            this.removeJob(jobName)
-            if (page && !page.isClosed()) {
-                await page.close().catch((/** @type {any} */ err) => logger.error(err))
+            try {
+                if (page && !page.isClosed()) await this.closePage(page, pageBrowser)
+            } finally {
+                this.removeJob(jobName)
+                this.resetIdleTimer()
             }
-            this.resetIdleTimer()
         }
+    }
+
+    /** 页面关闭也必须有独立截止时间；失败时回收所属浏览器，不能误关重启后的新实例。
+     * @param {Page} page @param {Browser | undefined} browser
+     */
+    async closePage(page, browser) {
+        let timeoutId
+        try {
+            await Promise.race([
+                page.close(),
+                new Promise((_, reject) => {
+                    timeoutId = setTimeout(() => reject(new Error('page.close 超时')), this.pageCloseTimeout)
+                }),
+            ])
+        } catch (err) {
+            logger.error(`[phi-plugin] 页面关闭失败，回收所属浏览器(${this.browserId})`, err)
+            if (browser && this.browser === browser) {
+                await this.closeBrowser().catch(closeErr => logger.error(closeErr))
+            } else if (this.closePromise) {
+                await this.closePromise.catch(closeErr => logger.error(closeErr))
+            }
+        } finally {
+            clearTimeout(timeoutId)
+        }
+    }
+
+    /** @param {string} tplFile */
+    watch(tplFile) {
+        if (this.shutdownRequested) return
+        return (/** @type {((file: string) => void) | undefined} */ (super.watch))?.call(this, tplFile)
+    }
+
+    /** 模板 watcher 属于渲染器实例；仅永久关闭时释放，普通 Chromium 重启继续复用。 */
+    closeTemplateResources() {
+        if (this.templateClosePromise) return this.templateClosePromise
+        const watchers = [...new Set(Object.values(
+            /** @type {Record<string, import('chokidar').FSWatcher>} */ (this.watcher || {})
+        ))]
+        this.watcher = {}
+        this.html = {}
+        this.htmlIdentity = {}
+        this.phiTemplateIdentity = {}
+        ;(/** @type {Set<string> | undefined} */ (this.phiTemplateWatchers))?.clear()
+        this.templateClosePromise = Promise.allSettled(watchers.map(watcher =>
+            Promise.resolve().then(() => watcher.close())
+        )).then(results => {
+            for (const result of results) {
+                if (result.status === 'rejected') logger.error('[phi-plugin] 模板监听器关闭失败', result.reason)
+            }
+        })
+        return this.templateClosePromise
     }
 
     /** @param {string} jobName */
@@ -364,6 +423,7 @@ class Puppeteer extends Renderer {
     async shutdown() {
         this.shutdownRequested = true
         this.clearIdleTimer()
+        await this.closeTemplateResources()
         if (this.initPromise) {
             await this.initPromise.catch(() => false)
         }

@@ -58,6 +58,7 @@ function validateSettings(input) {
         const invalid = () => { throw new TypeError(`配置项「${item.label}」的值无效`) }
         if (item.type === 'number') {
             if (typeof value !== 'number' || !Number.isFinite(value)) invalid()
+            if (item.format === 'integer' && !Number.isSafeInteger(value)) invalid()
             if (item.min !== undefined && value < item.min) invalid()
             if (item.max !== undefined && value > item.max) invalid()
         } else if (item.type === 'boolean') {

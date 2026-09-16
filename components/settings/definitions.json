@@ -48,6 +48,19 @@
     "required": true
   },
   {
+    "key": "renderQueueLimit",
+    "group": "渲染设置",
+    "label": "等待队列上限",
+    "description": "最多等待渲染的请求数，不含正在渲染的请求；0 为不排队，满载立即提示繁忙，修改后立即生效",
+    "type": "number",
+    "min": 0,
+    "max": 1000,
+    "step": 1,
+    "format": "integer",
+    "placeholder": "请输入等待队列上限",
+    "required": true
+  },
+  {
     "key": "renderNum",
     "group": "渲染设置",
     "label": "并行渲染数量",
