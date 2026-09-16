@@ -28,46 +28,37 @@
 具体功能可在安装插件后 通过 `/phihelp` 查看详细指令
 
 ---
-<!--
-
-### 贡献者
-
-感谢以下贡献者对本项目做出的贡献
-
-<table>
-    <tr>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/Walkersifolia"><img src="https://avatars.githubusercontent.com/u/129571444?v=4?s=100" style="border-radius: 50%" width="50px;" alt="圈圈"/><br /><sub><b>@Walkersifolia</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=Walkersifolia" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/S-t-e-v-e-e"><img src="https://avatars.githubusercontent.com/u/117198625?v=4?s=100" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=S-t-e-v-e-e" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/7aGiven"><img src="https://avatars.githubusercontent.com/u/77519196?v=4?s=100" style="border-radius: 50%" width="50px;" alt="文酱"/><br /><sub><b>@7aGiven</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=7aGiven" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/MYS-KISO"><img src="https://avatars.githubusercontent.com/u/101465504?v=4?s=100" style="border-radius: 50%" width="50px;" alt="MoistCrystal"/><br /><sub><b>@MoistCrystal</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=MYS-KISO" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/yt6983138"><img src="https://avatars.githubusercontent.com/u/83499886?v=4?s=100" style="border-radius: 50%" width="50px;" alt="yt6983138"/><br /><sub><b>@static_void</b></sub></a><br /><a href="https://github.com/yt6983138" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="15%" nowrap="nowrap"><a href="https://github.com/wms26"><img src="https://avatars.githubusercontent.com/u/50258919?v=4?s=100" style="border-radius: 50%" width="50px;" alt="wms26"/><br /><sub><b>@千柒</b></sub></a><br /><a href="https://github.com/wms26" title="Contributor">🌸</a></td>
-    </tr>
-</table>
--->
 
 ### 安装：
 
-#### 加载环境
+#### Koishi 安装
 
-同一份 `phi-plugin` 支持 Koishi / Yunzai。标准 Koishi 启动进程通过宿主环境变量识别，Koishi 的 `apply(ctx)` 在加载业务模块前注入适配器；其他环境默认按 Yunzai 加载。不会因为安装了 `koishi` 依赖就切换平台。
+在已有的 Koishi 4 项目根目录执行（需要 Node.js，克隆或更新时需要 Git）：
 
-- **Yunzai**：保留原来的 `plugins/phi-plugin/index.js` 加载方式，自动导出 `apps`。
-- **Koishi 4**：启用 `database`、`puppeteer` 服务后，加载本插件的 `koishi.cjs`（兼容 Koishi 的 CommonJS 加载器）。例如在 `koishi.yml` 的 `plugins` 下配置 `./external/phi-plugin/koishi.cjs: {}`，路径按宿主目录调整。自行编写宿主时也可导入 `phi-plugin/koishi` 并使用 `ctx.plugin()` 注册。
+```sh
+node ./external/phi-plugin/scripts/install-koishi.cjs
+```
 
-Koishi 会复用本插件的业务和规则，数据库由 Koishi 的 `database` 服务提供。原来的独立 `koishi-plugin-phi-plugin` 不会被自动替换；切换时请停用旧插件，避免重复响应。同一进程不支持先加载 Yunzai 业务再切换 Koishi。
+首次安装时，也可以从包含此脚本的插件版本中单独取得 `scripts/install-koishi.cjs`，在 Koishi 根目录运行 `node install-koishi.cjs`。脚本会自动克隆缺失的插件本体；已有本体默认直接复用，不会自动更新。
 
-#### 配置管理
+脚本会生成独立的 `koishi-plugin-phi-plugin` 包装包、安装依赖，并在 `koishi.yml` 登记插件，让 WebUI 能识别插件并显示配置表单。**不会修改本体 `phi-plugin/package.json`**，但会修改 Koishi 宿主的 `package.json` 和锁文件。已有插件配置、凭据、禁用状态及 Puppeteer 设置会保留；旧的相对路径入口会迁移为标准插件名。
 
-- `components/settings/definitions.json` 集中维护设置项的分组、名称、说明、类型、范围和选项；默认值只在 `config/default_config/config.yaml` 中维护。
-- Guoba 通过 `components/settings/guoba.js` 导出表单，由 `guoba.support.js` 接入，保存到原有 `config/config/config.yaml`。
-- Koishi 通过 `components/settings/koishi.cjs` 导出 `Config` Schema，ESM 和 CommonJS 插件入口均支持。在控制台的本插件配置页修改并保存即可；设置指令的修改也会交由 Koishi 保存并按宿主流程重载插件。
-- Koishi 的面板配置优先于本地 YAML；首次使用时，未填写的普通字段使用默认 YAML 的值。如需沿用旧插件的自定义设置，请在面板填写对应值。
-- API 客户端 ID、密钥、版本号在两端表单中均可查看和编辑，密钥默认遮罩；未配置时沿用本地已签发的凭据。在 Koishi 下，API 自动签发/轮换会将三项凭据一起交由宿主保存，后续读取使用同一配置；Guoba/Yunzai 仍保存在本地 YAML。机器人设置消息不展示凭据。
-- 频道模式会统一关闭文字版 B19 和 Suggest 曲绘图片。标注需要重启的资源参数仍需重启宿主后生效。
+```sh
+# 预览安装计划，不修改文件
+node ./external/phi-plugin/scripts/install-koishi.cjs --dry-run
+# 从其他目录执行时指定 Koishi 根目录
+node /path/to/install-koishi.cjs --root /path/to/koishi-app
+# 更新本体并重新安装（仅允许干净 Git 工作区，快进更新）
+node ./external/phi-plugin/scripts/install-koishi.cjs --update
+```
 
-这里管理的是管理员的**插件配置**。[Koishi 文档中的用户设置](https://koishi.chat/zh-CN/guide/console/client.html#用户设置)用于控制台用户个人偏好；玩家的 `/phi myset` 设置仍由原有个人设置流程管理。
+包管理器优先按宿主唯一的锁文件识别，也可用 `--manager npm`、`--manager yarn` 或 `--manager pnpm` 指定。Yarn 需要 2+ 且使用 `nodeLinker: node-modules`。非默认 YAML 配置可用 `--config 文件路径` 指定。
+
+安装前会将待修改的已有宿主文件和包装文件备份至宿主 `.phi-plugin-install-backups/`。安装失败时可据此恢复；脚本不会自动回滚已安装的依赖，也不会自动重启 Koishi。安装成功后请重启 Koishi 并刷新 WebUI。
+
+请在控制台启用一个 `database` 服务。缺少 Puppeteer 时脚本会添加其依赖和配置，但保留已有服务的禁用状态。安装过程跳过浏览器下载，请通过 Koishi Puppeteer 服务配置可用的 Chrome / Chromium 路径。
+
+若原先使用独立版本的同名`koishi-plugin-phi-plugin`插件，请先迁移，脚本不会覆盖它。
 
 #### Yunzai 安装
 

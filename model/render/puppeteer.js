@@ -8,7 +8,6 @@ import logger from "../../components/Logger.js"
 import platform from "../../components/platform/index.js"
 
 const Renderer = platform.RendererBase
-const botConfig = platform.getBotConfig()
 const PAGE_CLOSE_TIMEOUT_MS = 3000
 
 /** @typedef {import('puppeteer').Browser} Browser */
@@ -45,6 +44,8 @@ class Puppeteer extends Renderer {
             type: "image",
             render: "screenshot",
         })
+        // 按实例读取当前平台配置，避免重载后仍保留首次导入时的宿主路径。
+        const botConfig = platform.getBotConfig()
         this.browserId = browserId
         this.browser = /** @type {Browser | false} */ (false)
         this.browserPid = null
