@@ -177,6 +177,8 @@ export class BotApiAuth {
             'X-Phi-Bot-Timestamp': timestamp,
             'X-Phi-Bot-Nonce': nonce,
             'X-Phi-Bot-Signature': signature,
+            // 声明本插件适配的 API 协议版本，供服务端决定绑定协议可升级到的最高版本。
+            'X-Phi-Bot-Api-Version': SUPPORTED_API_VERSION,
         };
     }
 
