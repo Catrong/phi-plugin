@@ -179,6 +179,8 @@ export interface PlatformTask {
     name?: string
     fnc?: string | (() => MaybePromise<unknown>)
     cron?: string
+    /** Koishi 调度周期（毫秒）；Yunzai 使用 cron。 */
+    interval?: number
     log?: boolean
     [key: string]: unknown
 }

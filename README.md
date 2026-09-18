@@ -62,6 +62,8 @@ node ./external/phi-plugin/scripts/install-koishi.cjs --update
 
 #### Koishi 指令管理
 
+Koishi 加载插件后还会每分钟执行“phi-Bot状态与正式别名同步”：上报 Bot 状态并处理 API 下发事项；正式别名距上次成功同步满 6 小时才重新下载。任务遵循 API 总开关和版本检查，不重叠执行，插件卸载或重载时自动清理旧定时器。启动时的首次同步仍由原有 API 初始化流程负责。
+
 插件通过 Koishi 的 `ctx.command()` 注册功能，可在指令管理中查看、调整权限或设置别名。管理标识使用稳定的 `phi-plugin.<模块>.<方法>`，例如 `phi-plugin.help.help`、`phi-plugin.b19.b19`；修改命令头不会改变这些标识。原来的游戏答题和会话确认仍作为普通消息处理。
 
 聊天中继续使用原有写法，命令头 `cmdhead` 可以自定义、使用正则或留空：

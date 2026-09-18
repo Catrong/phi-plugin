@@ -21,6 +21,7 @@ test('provides a callable scheduled-task handler for the Yunzai loader', async (
         const plugin = new aliasProposal()
         const task = /** @type {import('../components/platform/types.js').PlatformTask} */ (plugin.task)
         assert.equal(task.cron, '0 * * * * ?')
+        assert.equal(task.interval, 60_000)
         assert.equal(typeof task.fnc, 'function')
         await /** @type {() => Promise<unknown>} */ (task.fnc)()
         assert.equal(calls, 2)

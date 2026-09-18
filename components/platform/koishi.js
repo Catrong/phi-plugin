@@ -6,6 +6,7 @@ import MemoryRedis from './memoryRedis.js'
 import { createKoishiDatabaseRedis } from './koishiDatabaseRedis.js'
 import { setPlatformAdapter } from './state.js'
 import { registerCommands } from './koishiCommands.js'
+import { registerKoishiTasks } from './koishiTasks.js'
 
 /** @import {PhiSegment, PlatformAdapter, PlatformEvent, PlatformForwardMessage, PlatformLogger, PlatformMessageInput, PlatformMessageOutput, PlatformPluginConfig, PlatformRendererConfig} from './types.js' */
 
@@ -787,7 +788,9 @@ export function registerKoishiApps(ctx, apps, adapter, options = {}) {
         .filter(({ instance }) => Boolean(instance))
         .sort((a, b) => Number(a.instance.priority ?? 5000) - Number(b.instance.priority ?? 5000))
     registerCommands(ctx, entries, adapter, block)
-    return entries.map(({ instance }) => instance)
+    const instances = entries.map(({ instance }) => instance)
+    registerKoishiTasks(ctx, instances, adapter.logger)
+    return instances
 }
 
 export default createKoishiAdapter

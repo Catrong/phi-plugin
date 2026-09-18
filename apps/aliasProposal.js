@@ -20,6 +20,7 @@ export function createAliasProposalTask() {
             await aliasProposalService.scheduledTask()
         },
         cron: '0 * * * * ?',
+        interval: 60_000,
     }
 }
 
