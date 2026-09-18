@@ -7,6 +7,7 @@ import { createKoishiDatabaseRedis } from './koishiDatabaseRedis.js'
 import { setPlatformAdapter } from './state.js'
 import { registerCommands } from './koishiCommands.js'
 import { registerKoishiTasks } from './koishiTasks.js'
+import sharedSettings from '../settings/shared.cjs'
 
 /** @import {PhiSegment, PlatformAdapter, PlatformEvent, PlatformForwardMessage, PlatformLogger, PlatformMessageInput, PlatformMessageOutput, PlatformPluginConfig, PlatformRendererConfig} from './types.js' */
 
@@ -50,6 +51,7 @@ const templateIdentity = stat => `${stat.dev}:${stat.ino}:${stat.mtimeMs}:${stat
 /**
  * @typedef {object} KoishiRegisterOptions
  * @property {boolean} [block=true] 处理到匹配规则后是否阻断后续 middleware。
+ * @property {string} [cmdhead] 当前命令头，空字符串表示不注册根分组。
  */
 
 /**
@@ -787,7 +789,7 @@ export function registerKoishiApps(ctx, apps, adapter, options = {}) {
         .map(([key, App]) => ({ key, instance: typeof App === 'function' ? new App() : App }))
         .filter(({ instance }) => Boolean(instance))
         .sort((a, b) => Number(a.instance.priority ?? 5000) - Number(b.instance.priority ?? 5000))
-    registerCommands(ctx, entries, adapter, block)
+    registerCommands(ctx, entries, adapter, block, options.cmdhead ?? sharedSettings.defaults.cmdhead)
     const instances = entries.map(({ instance }) => instance)
     registerKoishiTasks(ctx, instances, adapter.logger)
     return instances

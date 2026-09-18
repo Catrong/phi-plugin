@@ -1,6 +1,6 @@
 /**
  * 将 Yunzai 风格正则交给 Koishi 的命令执行管线。
- * 管理标识不包含 cmdhead：cmdhead 是正则，可以为空，不能作为 Koishi 命令名。
+ * 普通命令头作为根分组；空命令头直接按模块和功能分级。
  */
 
 /** @param {RegExp} regexp @param {string} message */
@@ -15,13 +15,22 @@ function isCommand(regexp) {
     return Boolean(prefix?.includes('#') && prefix.includes('/'))
 }
 
+/** 正则命令头继续用于匹配；有限字面量分支取第一个作为管理分组。 @param {string} head */
+export function commandRoot(head) {
+    if (head === '') return ''
+    const literal = head.replace(/^\((?:\?:)?(.*)\)$/, '$1').split('|')[0]
+    return /^[\p{L}\p{N}_-]+$/u.test(literal) ? literal.toLowerCase().replace(/_/g, '-') : 'phi-plugin'
+}
+
 /**
  * @param {any} ctx
  * @param {{key: string, instance: any}[]} apps
  * @param {ReturnType<typeof import('./koishi.js').createKoishiAdapter>} adapter
  * @param {boolean} block
+ * @param {string} head
  */
-export function registerCommands(ctx, apps, adapter, block) {
+export function registerCommands(ctx, apps, adapter, block, head) {
+    const root = commandRoot(head)
     /** @type {{name: string, instance: any, fnc: string, regexp: RegExp}[]} */
     const routes = []
     /** @type {{instance: any, fnc: string, regexp: RegExp}[]} */
@@ -34,7 +43,7 @@ export function registerCommands(ctx, apps, adapter, block) {
                 listeners.push({ instance, fnc: rule.fnc, regexp })
                 continue
             }
-            const name = `phi-plugin.${key}.${rule.fnc}`.toLowerCase().replace(/_/g, '-')
+            const name = [root, key, rule.fnc].filter(Boolean).join('.').toLowerCase().replace(/_/g, '-')
             routes.push({ name, instance, fnc: rule.fnc, regexp })
         }
     }

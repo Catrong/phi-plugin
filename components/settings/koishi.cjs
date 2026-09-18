@@ -3,7 +3,10 @@ const { editable, defaults, readGeneratedSettings } = require('./shared.cjs')
 
 function createKoishiSchema() {
     const groups = [...new Set(editable.map(item => item.group))]
-    return Schema.intersect(groups.map(group => Schema.object(Object.fromEntries(
+    return Schema.intersect([Schema.object({
+        __updatePlugin: Schema.any().role('phi-plugin-update', { target: 'plugin' }).description('更新插件'),
+        __updateArtwork: Schema.any().role('phi-plugin-update', { target: 'artwork' }).description('更新曲绘库'),
+    }), ...groups.map(group => Schema.object(Object.fromEntries(
         editable.filter(item => item.group === group).map(item => {
             /** @type {import('koishi').Schema<any>} */
             let schema
@@ -32,7 +35,7 @@ function createKoishiSchema() {
             }
             return [item.key, schema]
         }),
-    )).description(group)))
+    )).description(group))])
 }
 
 module.exports = { createKoishiSchema, Config: createKoishiSchema() }

@@ -24,13 +24,14 @@ async function fixture(head, options = {}) {
     const adapter = createKoishiAdapter(app, { database: false, h })
     /** @type {any[]} */
     let instances = []
-    /** @param {any} ctx */
-    function plugin(ctx) {
+    /** @param {any} ctx @param {any} config */
+    function plugin(ctx, config) {
+        const currentHead = config.cmdhead
         const demo = {
             name: '测试指令', priority: 100,
             rule: [
-                { reg: `^[#/](${head})(\\s*)help$`, fnc: 'help' },
-                { reg: new RegExp(`^[#/](${head})(\\s*)score[\\s\\S]*$`, 'g'), fnc: 'score' },
+                { reg: `^[#/](${currentHead})(\\s*)help$`, fnc: 'help' },
+                { reg: new RegExp(`^[#/](${currentHead})(\\s*)score[\\s\\S]*$`, 'g'), fnc: 'score' },
                 { reg: '^.*$', fnc: 'guess' },
             ],
             help(/** @type {any} */ e) { calls.push(`help:${e.msg}`); return e.reply('help-result') },
@@ -38,9 +39,9 @@ async function fixture(head, options = {}) {
             guess(/** @type {any} */ e) { calls.push(`guess:${e.msg}`); return false },
             ...options.instance,
         }
-        instances = registerKoishiApps(ctx, { demo, ...options.apps }, adapter, options)
+        instances = registerKoishiApps(ctx, { demo, ...options.apps }, adapter, { ...options, cmdhead: currentHead })
     }
-    const fork = app.plugin(plugin)
+    const fork = app.plugin(plugin, { cmdhead: head })
     /** @param {string} content @param {boolean} [direct] */
     function session(content, direct = false) {
         const s = bot.session({
@@ -60,8 +61,8 @@ async function fixture(head, options = {}) {
 test('legacy commands are registered, run once through Koishi, and preserve raw arguments', async () => {
     const env = await fixture('phi')
     try {
-        assert.ok(env.app.$commander.get('phi-plugin.demo.help'))
-        assert.equal(env.app.$commander.get('phi-plugin.demo.guess'), undefined)
+        assert.ok(env.app.$commander.get('phi.demo.help'))
+        assert.equal(env.app.$commander.get('phi.demo.guess'), undefined)
         await env.receive('/phihelp')
         await env.receive('#phi help')
         const text = '/phi score "a b" --help $(other)\nnext <at id="someone"/>'
@@ -86,7 +87,7 @@ test('custom, empty and regex heads work with host prefixes and direct messages'
             await env.receive(messages[3], true)
             assert.equal(env.calls.length, 4)
             assert.ok(env.calls.every(call => call.startsWith('help:')))
-            assert.ok(env.app.$commander.get('phi-plugin.demo.help'))
+            assert.ok(env.app.$commander.get(`${head ? (head === '(?:phi|pg)' ? 'phi' : head) + '.' : ''}demo.help`))
             await env.receive(messages[3])
             assert.equal(env.calls.at(-1), `guess:${messages[3]}`)
         } finally { await env.close() }
@@ -107,7 +108,7 @@ test('Koishi command checks cannot be bypassed by legacy syntax or fallback midd
     const env = await fixture('phi')
     try {
         env.app.before('command/execute', (/** @type {any} */ argv) => {
-            if (argv.command.name === 'phi-plugin.demo.help') return 'denied'
+            if (argv.command.name === 'phi.demo.help') return 'denied'
         })
         await env.receive('/phihelp')
         await env.receive('#phi help')
@@ -143,7 +144,7 @@ test('active confirmations precede command parsing and unloading removes routes 
         await env.receive('/phihelp')
         assert.equal(env.calls.length, 1)
         await env.fork.dispose()
-        assert.equal(env.app.$commander.get('phi-plugin.demo.help'), undefined)
+        assert.equal(env.app.$commander.get('phi.demo.help'), undefined)
         await env.receive('/phihelp')
         assert.equal(env.calls.length, 1)
     } finally { await env.close() }
@@ -152,12 +153,12 @@ test('active confirmations precede command parsing and unloading removes routes 
 test('native command names and aliases use the same action and permissions', async () => {
     const env = await fixture('phi')
     try {
-        const command = env.app.$commander.get('phi-plugin.demo.help')
+        const command = env.app.$commander.get('phi.demo.help')
         command.alias('phi-test-help')
-        await env.receive('/phi-plugin.demo.help /phi help')
+        await env.receive('/phi.demo.help /phi help')
         await env.receive('/phi-test-help #phihelp')
         assert.deepEqual(env.calls, ['help:/phi help', 'help:#phihelp'])
-        await env.receive('/phi-plugin.demo.score /phi score <at id="someone"/>')
+        await env.receive('/phi.demo.score /phi score <at id="someone"/>')
         assert.equal(env.calls.at(-1), 'score:/phi score <at id="someone"/>')
         command.config.permissions = ['phi-test-denied']
         await env.receive('/phihelp')
@@ -172,7 +173,7 @@ test('disabled aliases on overlapping commands cannot be bypassed by fallthrough
         apps: { other: { priority: 200, rule: [{ reg: '^[/#]phihelp$', fnc: 'help' }], help() { assert.fail('disabled command ran') } } },
     })
     try {
-        env.app.$commander.get('phi-plugin.other.help')._aliases['phi-plugin.other.help'].filter = false
+        env.app.$commander.get('phi.other.help')._aliases['phi.other.help'].filter = false
         await env.receive('/phihelp')
         assert.deepEqual(env.calls, [])
     } finally { await env.close() }
@@ -187,5 +188,23 @@ test('block false executes later commands once then continues ordinary middlewar
         await env.receive('/phihelp')
         assert.deepEqual(env.calls, ['help:/phihelp', 'guess:/phihelp'])
         assert.equal(following, 1)
+    } finally { await env.close() }
+})
+
+test('changing command head rebuilds the hierarchy and removes previous registrations', async () => {
+    const env = await fixture('phi')
+    try {
+        env.fork.update({ cmdhead: 'pg' })
+        await env.app.lifecycle.flush()
+        assert.equal(env.app.$commander.get('phi.demo.help'), undefined)
+        assert.ok(env.app.$commander.get('pg.demo.help'))
+        await env.receive('/pghelp')
+        env.fork.update({ cmdhead: '' })
+        await env.app.lifecycle.flush()
+        assert.equal(env.app.$commander.get('pg.demo.help'), undefined)
+        assert.ok(env.app.$commander.get('demo.help'))
+        await env.receive('/help')
+        await env.receive('/demo.help /help')
+        assert.deepEqual(env.calls, ['help:/pghelp', 'help:/help', 'help:/help'])
     } finally { await env.close() }
 })

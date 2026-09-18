@@ -15,6 +15,15 @@ test('central definitions cover every YAML setting exactly once', () => {
     assert.deepEqual([...keys].sort(), Object.keys(shared.defaults).sort())
 })
 
+test('Koishi maintenance buttons precede settings and are not persistent configuration defaults', () => {
+    const buttons = schema.list?.[0]?.dict
+    assert.ok(buttons)
+    assert.deepEqual(Object.keys(buttons), ['__updatePlugin', '__updateArtwork'])
+    assert.equal(buttons.__updatePlugin.meta.role, 'phi-plugin-update')
+    assert.equal(buttons.__updateArtwork.meta.extra.target, 'artwork')
+    assert.equal(Object.hasOwn(schema({}), '__updatePlugin'), false)
+})
+
 test('Guoba and Koishi expose the same editable fields and YAML defaults', () => {
     const guobaFields = createGuobaSchemas().filter(item => item.field).map(item => item.field).sort()
     const koishiDefaults = schema({})

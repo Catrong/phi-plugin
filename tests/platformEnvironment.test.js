@@ -58,6 +58,7 @@ test('Koishi apply loads the installed host and registers middleware', () => {
         let saved
         let dispose
         const ctx = {
+            inject() {},
             middleware(fn) { middleware = fn },
             on(event, fn) { if (event === 'dispose') dispose = fn },
             scope: { config: { database: false }, update(value) { saved = value } },

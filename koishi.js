@@ -20,6 +20,8 @@ export async function apply(ctx, config = {}) {
     const { h } = require('koishi')
     const { useKoishiAdapter, registerKoishiApps } = await import('./components/platform/koishi.js')
     const adapter = useKoishiAdapter(ctx, { ...config, h })
+    const { registerKoishiConsole } = await import('./components/platform/koishiConsole.js')
+    registerKoishiConsole(ctx)
     const { bindHostSettings, updateHostSettings } = await import('./components/settings/host.js')
     const unbind = bindHostSettings(config, values => {
         if (typeof ctx.scope?.update !== 'function') throw new Error('[phi-plugin] 宿主不支持保存插件配置')
