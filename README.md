@@ -29,9 +29,53 @@
 
 ---
 
-### 安装：
+### 安装
+
+#### Yunzai 安装
+
+在Yunzai目录下运行
+
+> 使用Github
+
+```bash
+#安装插件本体
+git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/ 
+#进入插件目录
+cd ./plugins/phi-plugin/ 
+#安装插件所需依赖
+pnpm install -P
+```
+
+> 使用Gitee
+
+```bash
+#安装插件本体
+git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
+#进入插件目录
+cd ./plugins/phi-plugin/
+#安装插件所需依赖
+pnpm install -P 
+```
+
+> [!WARNING]
+> 请使用主人权限执行该指令以下载曲绘，否则相关曲绘将无法正常展示！（可以是标准输入或者其他平台）
+> 
+>```txt
+> /phi downill
+>```
+
+> [!TIP]
+> 如果安装依赖时速度过慢，运行：
+> 
+>```txt
+> pnpm config set registry https://registry.npmmirror.com
+>```
 
 #### Koishi 安装
+
+<details>
+
+<summary>展开</summary>
 
 在已有的 Koishi 4 项目根目录执行（需要 Node.js，克隆或更新时需要 Git）：
 
@@ -87,45 +131,7 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 
 已有仓库执行 `git pull --ff-only`，保留当前分支和远程配置；有未提交修改或无法快进时停止，不强制覆盖。曲绘库尚未下载时，按已保存的 `downIllUrl` 和 `githubProxy` 克隆。插件更新完成后请重载插件，若依赖发生变化则重新运行安装脚本。按钮不会自动重启 Koishi；接入此控制台扩展无需改动本体 `package.json`。
 
-#### Yunzai 安装
-
-在Yunzai目录下运行
-
-> 使用Github
-
-```
-#安装插件本体
-git clone --depth=1 https://github.com/Catrong/phi-plugin.git ./plugins/phi-plugin/ 
-#进入插件目录
-cd ./plugins/phi-plugin/ 
-#安装插件所需依赖
-pnpm install -P
-```
-
-> 使用Gitee
-
-```
-#安装插件本体
-git clone --depth=1 https://gitee.com/catrong/phi-plugin.git ./plugins/phi-plugin/
-#进入插件目录
-cd ./plugins/phi-plugin/
-#安装插件所需依赖
-pnpm install -P 
-```
-
-> [!WARNING]
-> 请使用主人权限执行该指令以下载曲绘，否则相关曲绘将无法正常展示！（可以是标准输入或者其他平台）
-> 
->```
-> /phi downill
->```
-
-> [!TIP]
-> 如果安装依赖时速度过慢，运行：
-> 
->```
-> pnpm config set registry https://registry.npmmirror.com
->```
+</details>
 
 ---
 
