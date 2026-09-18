@@ -21,6 +21,7 @@ async function fixture(head, options = {}) {
         bot.sendMessage = async (/** @type {string} */ channel, /** @type {any} */ content) => { sent.push(String(content)); return [] }
     })
     await app.start()
+    options.setup?.(app)
     const adapter = createKoishiAdapter(app, { database: false, h })
     /** @type {any[]} */
     let instances = []
@@ -206,5 +207,23 @@ test('changing command head rebuilds the hierarchy and removes previous registra
         await env.receive('/help')
         await env.receive('/demo.help /help')
         assert.deepEqual(env.calls, ['help:/pghelp', 'help:/help', 'help:/help'])
+    } finally { await env.close() }
+})
+
+test('empty-head collision preserves system help execution and Phi remains callable', async () => {
+    const env = await fixture('', {
+        setup(/** @type {any} */ app) { app.command('help [command:string]', '系统帮助').action(() => 'system-help') },
+        apps: { help: { rule: [{ reg: '^[/#]phihelp$', fnc: 'help' }], help(/** @type {any} */ e) { return e.reply('phi-help') } } },
+    })
+    try {
+        assert.ok(env.app.$commander.get('p.help.help'))
+        assert.equal(env.app.$commander.get('help').children.length, 0)
+        await env.receive('/help')
+        assert.deepEqual(env.sent.filter(Boolean), ['system-help'])
+        assert.deepEqual(env.calls, [])
+        await env.receive('#help')
+        assert.deepEqual(env.calls, ['help:#help'])
+        await env.receive('/p.help.help /phihelp')
+        assert.equal(env.sent.at(-1), 'phi-help')
     } finally { await env.close() }
 })
