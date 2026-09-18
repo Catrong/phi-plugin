@@ -5,6 +5,7 @@ import chokidar from 'chokidar'
 import MemoryRedis from './memoryRedis.js'
 import { createKoishiDatabaseRedis } from './koishiDatabaseRedis.js'
 import { setPlatformAdapter } from './state.js'
+import { registerCommands } from './koishiCommands.js'
 
 /** @import {PhiSegment, PlatformAdapter, PlatformEvent, PlatformForwardMessage, PlatformLogger, PlatformMessageInput, PlatformMessageOutput, PlatformPluginConfig, PlatformRendererConfig} from './types.js' */
 
@@ -772,7 +773,7 @@ export function useKoishiAdapter(ctx, options = {}) {
 }
 
 /**
- * 将现有 `apps` 规则注册到 Koishi middleware。
+ * 将现有 `apps` 指令注册到 Koishi 命令管线，普通消息和上下文保留为 middleware。
  *
  * @param {any} ctx
  * @param {Record<string, any>} apps
@@ -781,44 +782,12 @@ export function useKoishiAdapter(ctx, options = {}) {
  */
 export function registerKoishiApps(ctx, apps, adapter, options = {}) {
     const block = options.block !== false
-    const instances = Object.values(apps)
-        .map(App => typeof App === 'function' ? new App() : App)
-        .filter(Boolean)
-        .sort((a, b) => Number(a.priority || 5000) - Number(b.priority || 5000))
-
-    ctx.middleware(/**
-     * @param {any} session
-     * @param {any} next
-     */
-    async (session, next) => {
-        const e = adapter.fromSession(session)
-
-        for (const instance of instances) {
-            const context = instance.getKoishiContext?.(e)
-            if (!context) continue
-            const handler = instance[context.name]
-            if (typeof handler !== 'function') continue
-            instance.e = e
-            const result = await handler.call(instance, e)
-            if (block && result !== false) return
-        }
-
-        for (const instance of instances) {
-            for (const rule of instance.rule || []) {
-                const reg = rule.reg instanceof RegExp ? rule.reg : new RegExp(rule.reg)
-                if (!reg.test(e.msg)) continue
-                const handler = instance[rule.fnc]
-                if (typeof handler !== 'function') continue
-                instance.e = e
-                const result = await handler.call(instance, e)
-                if (block && result !== false) return
-            }
-        }
-
-        return next()
-    })
-
-    return instances
+    const entries = Object.entries(apps)
+        .map(([key, App]) => ({ key, instance: typeof App === 'function' ? new App() : App }))
+        .filter(({ instance }) => Boolean(instance))
+        .sort((a, b) => Number(a.instance.priority ?? 5000) - Number(b.instance.priority ?? 5000))
+    registerCommands(ctx, entries, adapter, block)
+    return entries.map(({ instance }) => instance)
 }
 
 export default createKoishiAdapter

@@ -8,8 +8,8 @@ import botSyncService from '../model/api/botSyncService.js'
 /** @import {PlatformEvent} from '../components/platform/types.js' */
 /** @import {AliasProposalRecord, AliasProposalStatus} from '../model/type/aliasProposal.js' */
 
-const head = Config.getUserCfg('config', 'cmdhead')
-const prefix = `^[#/](${head})(\\s*)(别名|alias)(\\s*)`
+const getHead = () => Config.getUserCfg('config', 'cmdhead')
+const getPrefix = () => `^[#/](${getHead()})(\\s*)(别名|alias)(\\s*)`
 
 /** @returns {import('../components/platform/types.js').PlatformTask} */
 export function createAliasProposalTask() {
@@ -43,7 +43,7 @@ const statusName = {
  */
 function splitArgs(message, command) {
     return message
-        .replace(new RegExp(`${prefix}${command}\\s*`, 'i'), '')
+        .replace(new RegExp(`${getPrefix()}${command}\\s*`, 'i'), '')
         .split('|')
         .map(item => item.trim())
 }
@@ -73,12 +73,12 @@ export class aliasProposal extends phiPluginBase {
             priority: 1000,
             task: createAliasProposalTask(),
             rule: [
-                { reg: `${prefix}(提案|submit)(\\s*).*$`, fnc: 'propose' },
-                { reg: `${prefix}(我的|mine)$`, fnc: 'mine' },
-                { reg: `${prefix}(公审|public)$`, fnc: 'publicList' },
-                { reg: `${prefix}(申诉|appeal)(\\s*).*$`, fnc: 'appeal' },
-                { reg: `${prefix}(投票|vote)(\\s*).*$`, fnc: 'vote' },
-                { reg: `${prefix}(撤票|unvote)(\\s*).*$`, fnc: 'unvote' },
+                { reg: `${getPrefix()}(提案|submit)(\\s*).*$`, fnc: 'propose' },
+                { reg: `${getPrefix()}(我的|mine)$`, fnc: 'mine' },
+                { reg: `${getPrefix()}(公审|public)$`, fnc: 'publicList' },
+                { reg: `${getPrefix()}(申诉|appeal)(\\s*).*$`, fnc: 'appeal' },
+                { reg: `${getPrefix()}(投票|vote)(\\s*).*$`, fnc: 'vote' },
+                { reg: `${getPrefix()}(撤票|unvote)(\\s*).*$`, fnc: 'unvote' },
             ],
         })
     }
@@ -114,7 +114,7 @@ export class aliasProposal extends phiPluginBase {
         }
         const [songText, alias, note] = splitArgs(e.msg, '(提案|submit)')
         if (!songText || !alias) {
-            send.send_with_At(e, `格式：/${head} alias submit 曲目 | 别名 | 私密备注（可选）`)
+            send.send_with_At(e, `格式：/${getHead()} alias submit 曲目 | 别名 | 私密备注（可选）`)
             return false
         }
         if (alias.length > 64 || (note && note.length > 500)) {
@@ -168,7 +168,7 @@ export class aliasProposal extends phiPluginBase {
         }
         const [proposalId, reason] = splitArgs(e.msg, '(申诉|appeal)')
         if (!proposalId || !reason) {
-            send.send_with_At(e, `格式：/${head} alias appeal 提案ID | 10-500字理由`)
+            send.send_with_At(e, `格式：/${getHead()} alias appeal 提案ID | 10-500字理由`)
             return false
         }
         if (reason.length < 10 || reason.length > 500) {
@@ -186,13 +186,13 @@ export class aliasProposal extends phiPluginBase {
      * @returns {Promise<boolean>} 是否成功记录投票
      */
     async vote(e) {
-        const args = e.msg.replace(new RegExp(`${prefix}(投票|vote)\\s*`, 'i'), '').trim().split(/\s+/)
+        const args = e.msg.replace(new RegExp(`${getPrefix()}(投票|vote)\\s*`, 'i'), '').trim().split(/\s+/)
         const proposalId = args[0]
         const choice = String(args[1] || '').toLowerCase()
         /** @type {1 | -1 | null} */
         const value = ['赞成', 'yes', '1', '+'].includes(choice) ? 1 : ['反对', 'no', '-1', '-'].includes(choice) ? -1 : null
         if (!proposalId || value === null) {
-            send.send_with_At(e, `格式：/${head} alias vote 提案ID 赞成|反对`)
+            send.send_with_At(e, `格式：/${getHead()} alias vote 提案ID 赞成|反对`)
             return false
         }
         const proposal = await this.withFailureMessage(e, () => aliasProposalService.vote(e, proposalId, value))
@@ -206,9 +206,9 @@ export class aliasProposal extends phiPluginBase {
      * @returns {Promise<boolean>} 是否成功撤票
      */
     async unvote(e) {
-        const proposalId = e.msg.replace(new RegExp(`${prefix}(撤票|unvote)\\s*`, 'i'), '').trim()
+        const proposalId = e.msg.replace(new RegExp(`${getPrefix()}(撤票|unvote)\\s*`, 'i'), '').trim()
         if (!proposalId) {
-            send.send_with_At(e, `格式：/${head} alias unvote 提案ID`)
+            send.send_with_At(e, `格式：/${getHead()} alias unvote 提案ID`)
             return false
         }
         const proposal = await this.withFailureMessage(e, () => aliasProposalService.vote(e, proposalId, 0))

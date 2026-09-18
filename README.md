@@ -60,6 +60,23 @@ node ./external/phi-plugin/scripts/install-koishi.cjs --update
 
 若原先使用独立版本的同名`koishi-plugin-phi-plugin`插件，请先迁移，脚本不会覆盖它。
 
+#### Koishi 指令管理
+
+插件通过 Koishi 的 `ctx.command()` 注册功能，可在指令管理中查看、调整权限或设置别名。管理标识使用稳定的 `phi-plugin.<模块>.<方法>`，例如 `phi-plugin.help.help`、`phi-plugin.b19.b19`；修改命令头不会改变这些标识。原来的游戏答题和会话确认仍作为普通消息处理。
+
+聊天中继续使用原有写法，命令头 `cmdhead` 可以自定义、使用正则或留空：
+
+| cmdhead | 示例 |
+| --- | --- |
+| `phi` | `/phihelp`、`#phi help`、`/phi b30` |
+| `pg` | `/pghelp`、`/pg b30` |
+| 空字符串 | `/help`、`/b30` |
+| `phi\|pg` | `/phihelp`、`/pghelp` |
+
+Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`、`cmdhead` 为空时，可发送 `!b30`；全局前缀也为空时可直接发送 `b30`。原有 `/`、`#` 写法仍兼容。保存命令头设置后由 Koishi 重载插件并重新匹配指令。
+
+如需用管理标识或它的 Koishi 别名调用，参数须为完整原始指令，例如 `phi-plugin.b19.b19 /pg b30`。两种调用都会经过 Koishi 的命令权限检查；原有业务权限检查仍保留。
+
 #### Yunzai 安装
 
 在Yunzai目录下运行
