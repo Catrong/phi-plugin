@@ -43,7 +43,7 @@ export class phib19 extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-b19',
-            dsc: 'phigros b19查询',
+            dsc: 'phigros b30查询',
             event: 'message',
             priority: 1000,
             rule: [
