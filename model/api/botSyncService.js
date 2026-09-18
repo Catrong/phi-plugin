@@ -5,6 +5,7 @@ import platform from '../../components/platform/index.js'
 import makeRequest from './makeRequest.js'
 import { isApiVersionBlocked } from './apiVersion.js'
 import themePolicy from '../theme/policy.js'
+import { UserCredentials } from '../user/userCredentials.js'
 
 export class BotSyncService {
     constructor() {
@@ -35,6 +36,10 @@ export class BotSyncService {
             this.reportRenderPressure = response?.reporting?.renderPressure === true
             if (response?.themePolicy) themePolicy.apply(response.themePolicy)
 
+            for (const request of response?.unbindRequests || []) {
+                await this.applyUnbindRequest(request)
+            }
+
             for (const message of response?.messages || []) {
                 try {
                     const sent = await platform.relpyPrivate(message.target.platformId, message.text)
@@ -45,6 +50,29 @@ export class BotSyncService {
             }
         } finally {
             this.running = false
+        }
+    }
+
+    /**
+     * 执行服务端下发的解绑信号：清除本地绑定与数据，并把解绑状态回传 API。
+     * 单个信号失败不影响其余信号，失败项将在下次同步重试（API 端保持 disabled 直至确认）。
+     * @param {{platform?: string, platformId?: string, reason?: string}} request 解绑信号
+     * @returns {Promise<void>}
+     */
+    async applyUnbindRequest(request) {
+        const platformId = String(request?.platformId ?? '').trim()
+        if (!platformId) return
+        try {
+            const credentials = new UserCredentials(platformId)
+            const { hadBinding } = await credentials.unbindLocal()
+            await credentials.reportUnbind({
+                platform: typeof request?.platform === 'string' ? request.platform : undefined,
+                platformId,
+                reason: request?.reason || 'disabled_by_account',
+            })
+            if (hadBinding) logger.mark(`[phi-plugin] 已按 API 解绑信号清除本地绑定：${platformId}`)
+        } catch (error) {
+            logger.warn(`[phi-plugin] 处理 API 解绑信号失败，将在下次同步重试：${platformId}`, error)
         }
     }
 

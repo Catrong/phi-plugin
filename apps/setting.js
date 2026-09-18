@@ -14,8 +14,10 @@ import { sendQuickCommands, configQuickCommands, sendQuickCommandSections, userS
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
-/**直接从guoba.support.js导入设置 */
-let configInfo = (await import('../guoba.support.js')).supportGuoba().configInfo
+import { createGuobaConfigInfo } from '../components/settings/guoba.js'
+
+// 指令设置页复用集中定义，不再依赖 Guoba 插件入口。
+const configInfo = createGuobaConfigInfo(Config, { includeCredentials: false })
 
 
 export class phihelp extends phiPluginBase {
@@ -74,7 +76,7 @@ export class phihelp extends phiPluginBase {
                         Config.modify('config', field, value)
                         break;
                     case 'InputNumber':
-                        Config.modify('config', field, Math.max(Math.min(Number(value), schema.componentProps?.max || Infinity), schema.componentProps?.min || -Infinity))
+                        Config.modify('config', field, Math.max(Math.min(Number(value), schema.componentProps?.max ?? Infinity), schema.componentProps?.min ?? -Infinity))
                         break;
                     case 'Switch':
                         switch (value) {

@@ -4,7 +4,10 @@ import { createRequire } from 'node:module'
 import chokidar from 'chokidar'
 import MemoryRedis from './memoryRedis.js'
 import { createKoishiDatabaseRedis } from './koishiDatabaseRedis.js'
-import { setPlatformAdapter } from './index.js'
+import { setPlatformAdapter } from './state.js'
+import { registerCommands } from './koishiCommands.js'
+import { registerKoishiTasks } from './koishiTasks.js'
+import sharedSettings from '../settings/shared.cjs'
 
 /** @import {PhiSegment, PlatformAdapter, PlatformEvent, PlatformForwardMessage, PlatformLogger, PlatformMessageInput, PlatformMessageOutput, PlatformPluginConfig, PlatformRendererConfig} from './types.js' */
 
@@ -13,6 +16,23 @@ const rawSessionSymbol = Symbol('phi.koishiSession')
 const wrappedSymbol = Symbol('phi.koishiWrapped')
 const contextStoreSymbol = Symbol('phi.koishiContexts')
 const require = createRequire(import.meta.url)
+
+/** @param {unknown} data */
+function imageSource(data) {
+    let bytes
+    if (Buffer.isBuffer(data)) bytes = data
+    else if (data instanceof ArrayBuffer) bytes = Buffer.from(data)
+    else if (ArrayBuffer.isView(data)) bytes = Buffer.from(data.buffer, data.byteOffset, data.byteLength)
+    else if (typeof data === 'string' && data.startsWith('base64://')) bytes = Buffer.from(data.slice(9), 'base64')
+    if (!bytes) return data
+
+    let mime = 'application/octet-stream'
+    if (bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) mime = 'image/png'
+    else if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) mime = 'image/jpeg'
+    else if (/^GIF8[79]a$/.test(bytes.subarray(0, 6).toString('ascii'))) mime = 'image/gif'
+    else if (bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WEBP') mime = 'image/webp'
+    return `data:${mime};base64,${bytes.toString('base64')}`
+}
 
 /** @param {fs.Stats} stat */
 const templateIdentity = stat => `${stat.dev}:${stat.ino}:${stat.mtimeMs}:${stat.ctimeMs}:${stat.size}`
@@ -31,6 +51,7 @@ const templateIdentity = stat => `${stat.dev}:${stat.ino}:${stat.mtimeMs}:${stat
 /**
  * @typedef {object} KoishiRegisterOptions
  * @property {boolean} [block=true] 处理到匹配规则后是否阻断后续 middleware。
+ * @property {string} [cmdhead] 当前命令头，空字符串表示不注册根分组。
  */
 
 /**
@@ -406,6 +427,7 @@ export function createKoishiAdapter(ctx, options = {}) {
         logger,
         segment: {
             image(data) {
+                data = imageSource(data)
                 if (typeof h?.image === 'function') return h.image(data)
                 if (typeof h === 'function') return h('image', { url: String(data) })
                 return { __phiSegment: true, type: 'image', data }
@@ -425,7 +447,17 @@ export function createKoishiAdapter(ctx, options = {}) {
         },
 
         getBotConfig() {
-            return options.botConfig || ctx?.config || {}
+            const config = options.botConfig || ctx?.config || {}
+            const puppeteer = ctx?.puppeteer
+            // Koishi 自动探测到的路径不一定会写回 config，已启动进程的
+            // spawnfile 才是实际可执行文件。仅复用路径，不共享/关闭宿主浏览器。
+            const executablePath = puppeteer?.config?.executablePath
+                || puppeteer?.browser?.process?.()?.spawnfile
+                || puppeteer?.executable
+            return {
+                ...config,
+                chromium_path: config.chromium_path || executablePath,
+            }
         },
 
         getPackageVersion() {
@@ -718,7 +750,7 @@ export function createKoishiAdapter(ctx, options = {}) {
          */
         async uploadFile(e, file, filename) {
             if (typeof h?.file === 'function') return this.reply(e, h.file(file, { filename }))
-            if (Buffer.isBuffer(file) && typeof h?.image === 'function') return this.reply(e, h.image(file))
+            if (Buffer.isBuffer(file) && typeof h?.image === 'function') return this.reply(e, this.segment.image(file))
             if (typeof file === 'string' && typeof h?.file === 'function') return this.reply(e, h.file(file, { filename }))
             return false
         },
@@ -744,7 +776,7 @@ export function useKoishiAdapter(ctx, options = {}) {
 }
 
 /**
- * 将现有 `apps` 规则注册到 Koishi middleware。
+ * 将现有 `apps` 指令注册到 Koishi 命令管线，普通消息和上下文保留为 middleware。
  *
  * @param {any} ctx
  * @param {Record<string, any>} apps
@@ -753,43 +785,13 @@ export function useKoishiAdapter(ctx, options = {}) {
  */
 export function registerKoishiApps(ctx, apps, adapter, options = {}) {
     const block = options.block !== false
-    const instances = Object.values(apps)
-        .map(App => typeof App === 'function' ? new App() : App)
-        .filter(Boolean)
-        .sort((a, b) => Number(a.priority || 5000) - Number(b.priority || 5000))
-
-    ctx.middleware(/**
-     * @param {any} session
-     * @param {any} next
-     */
-    async (session, next) => {
-        const e = adapter.fromSession(session)
-
-        for (const instance of instances) {
-            const context = instance.getKoishiContext?.(e)
-            if (!context) continue
-            const handler = instance[context.name]
-            if (typeof handler !== 'function') continue
-            instance.e = e
-            const result = await handler.call(instance, e)
-            if (block && result !== false) return
-        }
-
-        for (const instance of instances) {
-            for (const rule of instance.rule || []) {
-                const reg = rule.reg instanceof RegExp ? rule.reg : new RegExp(rule.reg)
-                if (!reg.test(e.msg)) continue
-                const handler = instance[rule.fnc]
-                if (typeof handler !== 'function') continue
-                instance.e = e
-                const result = await handler.call(instance, e)
-                if (block && result !== false) return
-            }
-        }
-
-        return next()
-    })
-
+    const entries = Object.entries(apps)
+        .map(([key, App]) => ({ key, instance: typeof App === 'function' ? new App() : App }))
+        .filter(({ instance }) => Boolean(instance))
+        .sort((a, b) => Number(a.instance.priority ?? 5000) - Number(b.instance.priority ?? 5000))
+    registerCommands(ctx, entries, adapter, block, options.cmdhead ?? sharedSettings.defaults.cmdhead)
+    const instances = entries.map(({ instance }) => instance)
+    registerKoishiTasks(ctx, instances, adapter.logger)
     return instances
 }
 

@@ -4,6 +4,7 @@ import path from 'node:path';
 import axios from 'axios';
 import YAML from 'yaml';
 import Config from '../../components/Config.js';
+import { writeHostSettings } from '../../components/settings/host.js';
 import logger from '../../components/Logger.js';
 import { pluginRoot } from '../filesystem/path.js';
 import { APIBASEURL } from '../game/constNum.js';
@@ -23,6 +24,11 @@ function configIdentity() {
 
 /** @param {{clientId: string, secret: string, secretVersion: number}} identity */
 function writeIdentityAtomic(identity) {
+    if (writeHostSettings({
+        apiBotClientId: identity.clientId,
+        apiBotClientSecret: identity.secret,
+        apiBotSecretVersion: identity.secretVersion,
+    })) return;
     const target = path.join(pluginRoot, 'config', 'config', 'config.yaml');
     const current = YAML.parse(fs.readFileSync(target, 'utf8')) || {};
     current.apiBotClientId = identity.clientId;
@@ -171,6 +177,8 @@ export class BotApiAuth {
             'X-Phi-Bot-Timestamp': timestamp,
             'X-Phi-Bot-Nonce': nonce,
             'X-Phi-Bot-Signature': signature,
+            // 声明本插件适配的 API 协议版本，供服务端决定绑定协议可升级到的最高版本。
+            'X-Phi-Bot-Api-Version': SUPPORTED_API_VERSION,
         };
     }
 

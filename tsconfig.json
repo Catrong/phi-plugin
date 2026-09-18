@@ -2,6 +2,7 @@
   "include": ["**/*.js", "**/*.d.ts"],
   "exclude": [
     "dist",
+    "client-dist",
     "node_modules",
     "logs",
     "ssl",

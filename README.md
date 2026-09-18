@@ -28,26 +28,66 @@
 具体功能可在安装插件后 通过 `/phihelp` 查看详细指令
 
 ---
-<!--
-
-### 贡献者
-
-感谢以下贡献者对本项目做出的贡献
-
-<table>
-    <tr>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/Walkersifolia"><img src="https://avatars.githubusercontent.com/u/129571444?v=4?s=100" style="border-radius: 50%" width="50px;" alt="圈圈"/><br /><sub><b>@Walkersifolia</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=Walkersifolia" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/KeluIsAfkeru"><img src="https://avatars.githubusercontent.com/u/107661829?v=4?s=100" style="border-radius: 50%" width="50px;" alt="屑克鲁"/><br /><sub><b>@KeluIsAfkeru</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=KeluIsAfkeru" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/S-t-e-v-e-e"><img src="https://avatars.githubusercontent.com/u/117198625?v=4?s=100" style="border-radius: 50%" width="50px;" alt="史蒂夫"/><br /><sub><b>@Steve~ɘvɘɈƧ</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=S-t-e-v-e-e" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/7aGiven"><img src="https://avatars.githubusercontent.com/u/77519196?v=4?s=100" style="border-radius: 50%" width="50px;" alt="文酱"/><br /><sub><b>@7aGiven</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=7aGiven" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/MYS-KISO"><img src="https://avatars.githubusercontent.com/u/101465504?v=4?s=100" style="border-radius: 50%" width="50px;" alt="MoistCrystal"/><br /><sub><b>@MoistCrystal</b></sub></a><br /><a href="https://github.com/Catrong/phi-plugin/graphs/contributors/commits?author=MYS-KISO" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="10%" nowrap="nowrap"><a href="https://github.com/yt6983138"><img src="https://avatars.githubusercontent.com/u/83499886?v=4?s=100" style="border-radius: 50%" width="50px;" alt="yt6983138"/><br /><sub><b>@static_void</b></sub></a><br /><a href="https://github.com/yt6983138" title="Contributor">🌸</a></td>
-        <td align="center" valign="top" width="15%" nowrap="nowrap"><a href="https://github.com/wms26"><img src="https://avatars.githubusercontent.com/u/50258919?v=4?s=100" style="border-radius: 50%" width="50px;" alt="wms26"/><br /><sub><b>@千柒</b></sub></a><br /><a href="https://github.com/wms26" title="Contributor">🌸</a></td>
-    </tr>
-</table>
--->
 
 ### 安装：
+
+#### Koishi 安装
+
+在已有的 Koishi 4 项目根目录执行（需要 Node.js，克隆或更新时需要 Git）：
+
+```sh
+node ./external/phi-plugin/scripts/install-koishi.cjs
+```
+
+首次安装时，也可以从包含此脚本的插件版本中单独取得 `scripts/install-koishi.cjs`，在 Koishi 根目录运行 `node install-koishi.cjs`。脚本会自动克隆缺失的插件本体；已有本体默认直接复用，不会自动更新。
+
+脚本会生成独立的 `koishi-plugin-phi-plugin` 包装包、安装依赖，并在 `koishi.yml` 登记插件，让 WebUI 能识别插件并显示配置表单。**不会修改本体 `phi-plugin/package.json`**，但会修改 Koishi 宿主的 `package.json` 和锁文件。已有插件配置、凭据、禁用状态及 Puppeteer 设置会保留；旧的相对路径入口会迁移为标准插件名。
+
+```sh
+# 预览安装计划，不修改文件
+node ./external/phi-plugin/scripts/install-koishi.cjs --dry-run
+# 从其他目录执行时指定 Koishi 根目录
+node /path/to/install-koishi.cjs --root /path/to/koishi-app
+# 更新本体并重新安装（仅允许干净 Git 工作区，快进更新）
+node ./external/phi-plugin/scripts/install-koishi.cjs --update
+```
+
+包管理器优先按宿主唯一的锁文件识别，也可用 `--manager npm`、`--manager yarn` 或 `--manager pnpm` 指定。Yarn 需要 2+ 且使用 `nodeLinker: node-modules`。非默认 YAML 配置可用 `--config 文件路径` 指定。
+
+安装前会将待修改的已有宿主文件和包装文件备份至宿主 `.phi-plugin-install-backups/`。安装失败时可据此恢复；脚本不会自动回滚已安装的依赖，也不会自动重启 Koishi。安装成功后请重启 Koishi 并刷新 WebUI。
+
+请在控制台启用一个 `database` 服务。缺少 Puppeteer 时脚本会添加其依赖和配置，但保留已有服务的禁用状态。安装过程跳过浏览器下载，请通过 Koishi Puppeteer 服务配置可用的 Chrome / Chromium 路径。
+
+若原先使用独立版本的同名`koishi-plugin-phi-plugin`插件，请先迁移，脚本不会覆盖它。
+
+#### Koishi 指令管理
+
+Koishi 加载插件后还会每分钟执行“phi-Bot状态与正式别名同步”：上报 Bot 状态并处理 API 下发事项；正式别名距上次成功同步满 6 小时才重新下载。任务遵循 API 总开关和版本检查，不重叠执行，插件卸载或重载时自动清理旧定时器。启动时的首次同步仍由原有 API 初始化流程负责。
+
+插件通过 Koishi 的 `ctx.command()` 注册功能，可在指令管理中查看、调整权限或设置别名。普通命令头作为根分组，例如 `phi.help.help`、`phi.b19.b19`；改成 `pg` 后会重新注册为 `pg.help.help`、`pg.b19.b19`。命令头为空时直接按模块和功能分级，例如 `help.help`、`b19.b19`。旧注册随重载清理；原来绑定旧指令标识的权限和别名设置需按新标识调整。游戏答题和会话确认仍作为普通消息处理。
+
+正则命令头仍用于匹配聊天内容。对于 `phi|pg`、`(?:phi|pg)` 这类命令头，使用首个字面量分支 `phi` 作为管理分组；无法提取字面量的复杂正则使用 `phi-plugin` 分组，不将正则符号作为指令名。
+
+聊天中继续使用原有写法，命令头 `cmdhead` 可以自定义、使用正则或留空：
+
+| cmdhead | 示例 |
+| --- | --- |
+| `phi` | `/phihelp`、`#phi help`、`/phi b30` |
+| `pg` | `/pghelp`、`/pg b30` |
+| 空字符串 | `/help`、`/b30` |
+| `phi\|pg` | `/phihelp`、`/pghelp` |
+
+Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`、`cmdhead` 为空时，可发送 `!b30`；全局前缀也为空时可直接发送 `b30`。原有 `/`、`#` 写法仍兼容。保存命令头设置后由 Koishi 重载插件并重新匹配指令。
+
+如需用管理标识或它的 Koishi 别名调用，参数须为完整原始指令，例如 `pg.b19.b19 /pg b30`。两种调用都会经过 Koishi 的命令权限检查；原有业务权限检查仍保留。
+
+#### Koishi 设置页更新按钮
+
+插件启用并加载控制台扩展后，设置表单顶部提供“更新插件”和“更新曲绘库”两行按钮，点击即可执行，无需保存设置。仅控制台权限等级 4 及以上用户可以执行；页面显示更新进度和结果，并阻止重复启动。
+
+已有仓库执行 `git pull --ff-only`，保留当前分支和远程配置；有未提交修改或无法快进时停止，不强制覆盖。曲绘库尚未下载时，按已保存的 `downIllUrl` 和 `githubProxy` 克隆。插件更新完成后请重载插件，若依赖发生变化则重新运行安装脚本。按钮不会自动重启 Koishi；接入此控制台扩展无需改动本体 `package.json`。
+
+#### Yunzai 安装
 
 在Yunzai目录下运行
 

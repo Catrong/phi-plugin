@@ -6,6 +6,7 @@ import fileWatcherRegistry from './FileWatcherRegistry.js'
 import { pluginRoot } from '../model/filesystem/path.js'
 import logger from './Logger.js'
 import platform from './platform/index.js'
+import { getHostSettings, writeHostSetting } from './settings/host.js'
 
 const Plugin_Name = 'phi-plugin'
 const Plugin_Path = pluginRoot
@@ -111,7 +112,8 @@ class Config {
      * @returns {Record<string, any>}
      */
     getConfig(name) {
-        return this.getYaml('config', name)
+        const local = this.getYaml('config', name)
+        return name === 'config' ? { ...local, ...getHostSettings() } : local
     }
 
     /**
@@ -191,6 +193,7 @@ class Config {
      * @param {'config'|'default_config'} [type] 配置文件或默认
      */
     modify(name, key, value, type = 'config') {
+        if (name === 'config' && type === 'config' && writeHostSetting(key, value)) return
         let path = `${Plugin_Path}/config/${type}/${name}.yaml`
         new YamlReader(path).set(key, value)
         delete this.config[`${type}.${name}`]

@@ -52,28 +52,30 @@ export default await new class picmodle {
     async init() {
         /** 清理临时文件 */
         try {
-            fs.rmSync(tempPath, { force: true, recursive: true })
+            // Preserve Chromium profiles and their locks, including after an
+            // unclean host exit. Never bypass a surviving browser's profile lock.
+            if (fs.existsSync(tempPath)) {
+                for (const entry of fs.readdirSync(tempPath)) {
+                    if (entry !== 'puppeteer') fs.rmSync(path.join(tempPath, entry), { force: true, recursive: true })
+                }
+            }
         } catch (err) {
             logger.error(`[Phi-Plugin][清理临时文件失败]`)
             logger.error(err)
         }
-        /** 初始化puppeteer实例 */
+        /** 初始化渲染器槽位；Chromium 在非 Canvas 页面首次渲染时按需启动。 */
         let num = Config.getUserCfg('config', 'renderNum')
         for (let i = 0; i < num; i++) {
             this.puppeteer.push(new puppeteer({
                 puppeteerTimeout: Config.getUserCfg('config', 'timeout')
             }, `${i}`))
-            this.puppeteer[i].browserInit().catch(err => {
-                logger.error(`[Phi-Plugin][渲染器预热失败]`, i)
-                logger.error(err)
-            })
             this.idle.push(i)
         }
         return this;
     }
 
     /**
-     * 获取一个空闲渲染器下标；超时返回 -1
+     * 获取一个空闲渲染器下标；超时/关闭返回 -1，队列已满返回 -2
      * 事件驱动，替代原本每 100ms 轮询一次的忙等
      * @param {number} timeout 等待超时时间 ms
      * @returns {Promise<number>}
@@ -81,6 +83,10 @@ export default await new class picmodle {
     acquire(timeout) {
         if (this.shuttingDown) return Promise.resolve(-1)
         if (this.idle.length) return Promise.resolve(/** @type {number} */(this.idle.shift()))
+        const configuredLimit = Number(Config.getUserCfg('config', 'renderQueueLimit'))
+        const queueLimit = Number.isSafeInteger(configuredLimit) && configuredLimit >= 0 && configuredLimit <= 1000
+            ? configuredLimit : Config.getdefSet('config').renderQueueLimit
+        if (this.waiters.length >= queueLimit) return Promise.resolve(-2)
         /** @type {Promise<number>} */
         const p = new Promise(resolve => {
             /** @type {{ settled: boolean, timer: any, done: (idx: number) => void }} */
@@ -366,6 +372,11 @@ export default await new class picmodle {
 
         /** 事件驱动地等待一个空闲渲染器，替代原本每 100ms 轮询一次的忙等 */
         const puppeteerNum = await this.acquire(waitingTimeout)
+        if (puppeteerNum === -2) {
+            this.pressureFailed += 1
+            logger.warn('[Phi-Plugin][渲染队列已满]', this.waiters.length)
+            return '图片生成请求较多，请稍后重试QAQ！'
+        }
         if (puppeteerNum < 0) {
             this.pressureTimedOut += 1
             logger.error(`[Phi-Plugin][等待超时]`, id)

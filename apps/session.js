@@ -340,7 +340,7 @@ export class phisstk extends phiPluginBase {
         if (msg == '确认') {
             let flag = true
             try {
-                await credentials.unbindLocal()
+                await credentials.unbindAndReport()
             } catch (err) {
                 send.send_with_At(e, err)
                 logger.error(err)

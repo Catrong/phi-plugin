@@ -11,6 +11,9 @@ timeout: 20000
 #  等待渲染超时时间 ms
 waitingTimeout: 10000
 
+#  等待渲染的队列上限，不含正在渲染的请求；0 为不排队，修改后立即生效
+renderQueueLimit: 32
+
 #  并行渲染数量
 renderNum: 1
 
@@ -93,7 +96,7 @@ enableOnlineScoreApi: true
 # 主题市场临时下载链接允许的唯一来源。必须为 HTTPS origin，不含路径。
 themeMarketDownloadOrigin: "https://lyh.org.cn:18473"
 
-# 由查分 API 首次启动时签发，请勿手工填写任意 UUID。
+# 由查分 API 签发，也可在管理表单中修改；客户端 ID、密钥和版本号须保持匹配。
 apiBotClientId: ""
 apiBotClientSecret: ""
 apiBotSecretVersion: 0

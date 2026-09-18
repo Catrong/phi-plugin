@@ -83,6 +83,7 @@
  * @typedef {'randerQuality'} randerQuality 渲染质量
  * @typedef {'timeout'} timeout 渲染超时时间
  * @typedef {'waitingTimeout'} waitingTimeout 等待超时时间
+ * @typedef {'renderQueueLimit'} renderQueueLimit 等待队列上限
  * @typedef {'renderNum'} renderNum 并行渲染数量
  * @typedef {'commentsAPage'} commentsAPage 每页最大渲染评论数量
  * @typedef {'B19MaxNum'} B19MaxNum B19最大限制
@@ -139,6 +140,7 @@
  * |randerQuality
  * |timeout
  * |waitingTimeout
+ * |renderQueueLimit
  * |renderNum
  * |commentsAPage
  * |B19MaxNum

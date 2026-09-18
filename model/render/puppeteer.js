@@ -3,13 +3,12 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 import puppeteer from "puppeteer"
 import timers from "node:timers/promises"
-import fs from "node:fs/promises"
 import { tempPath } from "../filesystem/path.js"
 import logger from "../../components/Logger.js"
 import platform from "../../components/platform/index.js"
 
 const Renderer = platform.RendererBase
-const botConfig = platform.getBotConfig()
+const PAGE_CLOSE_TIMEOUT_MS = 3000
 
 /** @typedef {import('puppeteer').Browser} Browser */
 /** @typedef {import('puppeteer').Page} Page */
@@ -45,12 +44,15 @@ class Puppeteer extends Renderer {
             type: "image",
             render: "screenshot",
         })
+        // 按实例读取当前平台配置，避免重载后仍保留首次导入时的宿主路径。
+        const botConfig = platform.getBotConfig()
         this.browserId = browserId
         this.browser = /** @type {Browser | false} */ (false)
         this.browserPid = null
         this.initPromise = /** @type {Promise<Browser | false> | null} */ (null)
         this.closing = false
         this.closingPid = null
+        this.closePromise = /** @type {Promise<void> | null} */ (null)
         this.shutdownRequested = false
         /** @type {string[]} */
         this.shoting = []
@@ -64,6 +66,9 @@ class Puppeteer extends Renderer {
         this.idleTimer = /** @type {NodeJS.Timeout | null} */ (null)
         /** 关闭浏览器的超时时间(ms)，超时则强制结束进程 */
         this.closeTimeout = config.closeTimeout || 8000
+        this.pageCloseTimeout = Number.isFinite(config.pageCloseTimeout) && config.pageCloseTimeout > 0
+            ? config.pageCloseTimeout : PAGE_CLOSE_TIMEOUT_MS
+        this.templateClosePromise = /** @type {Promise<void> | null} */ (null)
         /** @type {any} */
         this.config = {
             userDataDir: path.resolve(tempPath, "puppeteer", browserId),
@@ -89,6 +94,7 @@ class Puppeteer extends Renderer {
      * @returns {Promise<Browser | false>}
      */
     async browserInit() {
+        if (this.closePromise) await this.closePromise
         if (this.shutdownRequested) return false
         if (this.browser) return this.browser
         if (this.initPromise) return this.initPromise
@@ -111,12 +117,7 @@ class Puppeteer extends Renderer {
             } else if (errMsg.includes("cannot open shared object file")) {
                 logger.error("没有正确安装 Chromium 运行库")
             } else if (errMsg.includes(this.config.userDataDir)) {
-                logger.warn(`[phi-plugin] puppeteer profile 被占用，清理后重试：${this.config.userDataDir}`)
-                await fs.rm(this.config.userDataDir, { force: true, recursive: true }).catch(() => { })
-                return puppeteer.launch(this.config).catch(retryErr => {
-                    logger.error(retryErr)
-                    return false
-                })
+                logger.warn(`[phi-plugin] puppeteer profile 启动失败，保留目录及锁，请检查占用进程：${this.config.userDataDir}`)
             }
             return false
         })
@@ -128,7 +129,9 @@ class Puppeteer extends Renderer {
         }
 
         if (this.shutdownRequested) {
+            this.closingPid = browser.process()?.pid
             await this.stop(browser, browser.process()?.pid)
+            this.closingPid = null
             return false
         }
 
@@ -137,6 +140,7 @@ class Puppeteer extends Renderer {
         logger.info(`[phi-plugin] puppeteer Chromium(${this.browserId}) 启动成功 ${browser.wsEndpoint()}`)
 
         browser.once("disconnected", () => this.onDisconnected(browser))
+        this.resetIdleTimer()
         return browser
     }
 
@@ -145,9 +149,7 @@ class Puppeteer extends Renderer {
     onDisconnected(browser) {
         if (this.closing || this.browser !== browser) return
         logger.warn(`[phi-plugin] puppeteer Chromium(${this.browserId}) 连接已断开，将在下次渲染时重新启动`)
-        this.browser = false
-        this.browserPid = null
-        this.clearIdleTimer()
+        void this.closeBrowser().catch(err => logger.error(err))
     }
 
     /**
@@ -158,23 +160,24 @@ class Puppeteer extends Renderer {
      */
     async screenshot(name, data = {}) {
         this.clearIdleTimer()
-        if (!(await this.browserInit())) return false
-
-        data.saveId = `${data.saveId || name.split("/").pop()}_${this.browserId}`
-        const resolvedPath = (/** @type {any} */ (this.dealTpl))(name, data)
-        if (!resolvedPath) return false
-        const savePath = String(resolvedPath)
-
         const jobName = `${name}#${Date.now()}`
         this.shoting.push(jobName)
         const start = Date.now()
         /** @type {Page | undefined} */
         let page
+        /** @type {Browser | undefined} */
+        let pageBrowser
 
         try {
+            if (!(await this.browserInit())) return false
+            data.saveId = `${data.saveId || name.split("/").pop()}_${this.browserId}`
+            const resolvedPath = (/** @type {any} */ (this.dealTpl))(name, data)
+            if (!resolvedPath) return false
+            const savePath = String(resolvedPath)
             const renderPromise = (async () => {
                 const browser = this.browser
                 if (!browser) throw new Error('浏览器未启动')
+                pageBrowser = browser
                 page = await browser.newPage()
                 return this.renderPage(page, name, savePath, data, start)
             })()
@@ -191,18 +194,70 @@ class Puppeteer extends Renderer {
             }
 
             await this.restart()
-            this.resetIdleTimer()
             return data.multiPage ? ret : ret[0]
         } catch (/** @type {any} */ err) {
             logger.error(`[图片生成][${name}] 图片生成失败`, err)
-            if (!err?.isRenderTimeout) await this.restart(true)
+            if (!err?.isRenderTimeout) await this.restart(true).catch(closeErr => logger.error(closeErr))
             return false
         } finally {
-            this.removeJob(jobName)
-            if (page && !page.isClosed()) {
-                await page.close().catch((/** @type {any} */ err) => logger.error(err))
+            try {
+                if (page && !page.isClosed()) await this.closePage(page, pageBrowser)
+            } finally {
+                this.removeJob(jobName)
+                this.resetIdleTimer()
             }
         }
+    }
+
+    /** 页面关闭也必须有独立截止时间；失败时回收所属浏览器，不能误关重启后的新实例。
+     * @param {Page} page @param {Browser | undefined} browser
+     */
+    async closePage(page, browser) {
+        let timeoutId
+        try {
+            await Promise.race([
+                page.close(),
+                new Promise((_, reject) => {
+                    timeoutId = setTimeout(() => reject(new Error('page.close 超时')), this.pageCloseTimeout)
+                }),
+            ])
+        } catch (err) {
+            logger.error(`[phi-plugin] 页面关闭失败，回收所属浏览器(${this.browserId})`, err)
+            if (browser && this.browser === browser) {
+                await this.closeBrowser().catch(closeErr => logger.error(closeErr))
+            } else if (this.closePromise) {
+                await this.closePromise.catch(closeErr => logger.error(closeErr))
+            }
+        } finally {
+            clearTimeout(timeoutId)
+        }
+    }
+
+    /** @param {string} tplFile */
+    watch(tplFile) {
+        if (this.shutdownRequested) return
+        return (/** @type {((file: string) => void) | undefined} */ (super.watch))?.call(this, tplFile)
+    }
+
+    /** 模板 watcher 属于渲染器实例；仅永久关闭时释放，普通 Chromium 重启继续复用。 */
+    closeTemplateResources() {
+        if (this.templateClosePromise) return this.templateClosePromise
+        const watchers = [...new Set(Object.values(
+            /** @type {Record<string, import('chokidar').FSWatcher>} */ (this.watcher || {})
+        ))]
+        this.watcher = {}
+        this.html = {}
+        this.htmlIdentity = {}
+        this.phiTemplateIdentity = {}
+        ;(/** @type {Set<string> | undefined} */ (this.phiTemplateWatchers))?.clear()
+        this.templateClosePromise = Promise.allSettled(watchers.map(watcher =>
+            Promise.resolve().then(() => watcher.close())
+        )).then(results => {
+            for (const result of results) {
+                if (result.status === 'rejected') logger.error('[phi-plugin] 模板监听器关闭失败', result.reason)
+            }
+        })
+        return this.templateClosePromise
     }
 
     /** @param {string} jobName */
@@ -313,34 +368,22 @@ class Puppeteer extends Renderer {
     /** 重启 */
     async restart(force = false) {
         if (this.shutdownRequested) return false
-        if (!this.browser) return false
+        if (!this.browser && !this.closePromise && !this.initPromise) return false
         if (!force && (this.renderNum % this.restartNum !== 0 || this.shoting.length > 0)) return false
 
         logger.info(`[phi-plugin] puppeteer Chromium(${this.browserId}) ${force ? "强制" : ""}关闭重启...`)
-        const browser = this.browser
-        const pid = this.browserPid
-        this.closingPid = pid
-        this.browser = false
-        this.browserPid = null
-        this.clearIdleTimer()
-        this.closing = true
-        try {
-            await this.stop(browser, pid)
-        } finally {
-            this.closingPid = null
-            this.closing = false
-        }
+        await this.closeBrowser()
         return this.browserInit()
     }
 
     /** 空闲定时器：长时间无渲染时关闭浏览器释放资源 */
     resetIdleTimer() {
         this.clearIdleTimer()
-        if (this.shutdownRequested || !(this.idleTimeout > 0)) return
+        if (this.shutdownRequested || !this.browser || this.shoting.length > 0 || !(this.idleTimeout > 0)) return
         this.idleTimer = setTimeout(() => {
             if (this.shoting.length > 0 || !this.browser) return
             logger.info(`[phi-plugin] puppeteer Chromium(${this.browserId}) 空闲超过 ${this.idleTimeout / 1000}s，自动关闭释放资源`)
-            this.closeBrowser()
+            void this.closeBrowser().catch(err => logger.error(err))
         }, this.idleTimeout)
         this.idleTimer.unref?.()
     }
@@ -354,6 +397,11 @@ class Puppeteer extends Renderer {
 
     /** 主动关闭浏览器且不重启，下次渲染时按需重新启动 */
     async closeBrowser() {
+        if (this.closePromise) return this.closePromise
+        if (this.initPromise) {
+            await this.initPromise
+            if (this.closePromise) return this.closePromise
+        }
         if (!this.browser) return
         this.clearIdleTimer()
         const browser = this.browser
@@ -362,18 +410,21 @@ class Puppeteer extends Renderer {
         this.browser = false
         this.browserPid = null
         this.closing = true
-        try {
-            await this.stop(browser, pid)
-        } finally {
+        // Publish the barrier before stop can emit disconnected. On failure retain
+        // both the barrier and PID: launching another browser would lose ownership.
+        this.closePromise = Promise.resolve().then(() => this.stop(browser, pid)).then(() => {
             this.closingPid = null
             this.closing = false
-        }
+            this.closePromise = null
+        })
+        return this.closePromise
     }
 
     /** 永久关闭实例；退出清理后不允许再次拉起 Chromium。 */
     async shutdown() {
         this.shutdownRequested = true
         this.clearIdleTimer()
+        await this.closeTemplateResources()
         if (this.initPromise) {
             await this.initPromise.catch(() => false)
         }
@@ -399,15 +450,30 @@ class Puppeteer extends Renderer {
     /** @param {Browser} browser @param {number | null | undefined} pid */
     async stop(browser, pid) {
         if (!browser) return
-        pid = pid ?? browser.process()?.pid
+        const browserProcess = browser.process()
+        pid = pid ?? browserProcess?.pid
+        let timeoutId
         try {
             await Promise.race([
                 browser.close(),
-                timers.setTimeout(this.closeTimeout).then(() => Promise.reject(new Error("close 超时"))),
+                new Promise((_, reject) => {
+                    timeoutId = setTimeout(() => reject(new Error("close 超时")), this.closeTimeout)
+                }),
             ])
         } catch (err) {
             logger.error(`[phi-plugin] puppeteer Chromium(${this.browserId}) 正常关闭失败，尝试强制结束进程(${pid})`, err)
             this.killProcess(pid)
+        } finally {
+            clearTimeout(timeoutId)
+        }
+        // A disconnected transport may resolve close before the OS process exits.
+        if (browserProcess && browserProcess.exitCode === null && browserProcess.signalCode === null) {
+            this.killProcess(pid)
+            const deadline = Date.now() + this.closeTimeout
+            while (browserProcess.exitCode === null && browserProcess.signalCode === null) {
+                if (Date.now() >= deadline) throw new Error(`Chromium(${pid}) 强制关闭后仍未退出，停止重新启动`)
+                await timers.setTimeout(25)
+            }
         }
     }
 
@@ -419,7 +485,9 @@ class Puppeteer extends Renderer {
             if (process.platform === "win32") {
                 childProcess.execFileSync("taskkill", ["/pid", `${pid}`, "/T", "/F"], { stdio: "ignore" })
             } else {
-                process.kill(pid, "SIGKILL")
+                // Puppeteer's POSIX launcher uses detached=true: PID is the
+                // dedicated process group leader, never the bot's process group.
+                process.kill(-pid, "SIGKILL")
             }
             logger.mark(`[phi-plugin] puppeteer Chromium(${this.browserId}) 进程 ${pid} 已强制结束`)
         } catch (/** @type {any} */ err) {
