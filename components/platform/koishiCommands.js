@@ -1,8 +1,9 @@
 /**
  * 将 Yunzai 风格正则交给 Koishi 的命令执行管线。
- * 普通命令头作为根分组；空命令头直接按模块和功能分级。
+ * 常用功能直接注册在命令头下，其余按业务分类分组。
  */
 import { commandSnapshot, scheduleCommandSync, validateDiscordCommands, validateDiscordName } from './koishiCommandSync.js'
+import { commandSpec, commonCommands, commandCategories } from './koishiCommandNames.js'
 
 /** @param {RegExp} regexp @param {string} message */
 function matches(regexp, message) {
@@ -32,7 +33,7 @@ export function commandRoot(head) {
  */
 export function registerCommands(ctx, apps, adapter, block, head) {
     const requestedRoot = commandRoot(head)
-    /** @type {{name: string, instance: any, fnc: string, regexp: RegExp}[]} */
+    /** @type {{name: string, instance: any, fnc: string, regexp: RegExp, text: string, bare: boolean, key: string}[]} */
     const routes = []
     /** @type {{instance: any, fnc: string, regexp: RegExp}[]} */
     const listeners = []
@@ -46,23 +47,27 @@ export function registerCommands(ctx, apps, adapter, block, head) {
                 listeners.push({ instance, fnc: rule.fnc, regexp })
                 continue
             }
-            const parts = [key, rule.fnc].map(part => part.toLowerCase().replace(/_/g, '-'))
-            for (const part of parts) validateDiscordName(part)
-            const name = parts.join('.')
+            const spec = commandSpec(key, rule.fnc)
+            const category = commandCategories[key]?.[0] ?? key.toLowerCase().replace(/_/g, '-')
+            let name = commonCommands.includes(spec.name) ? spec.name : `${category}.${spec.name}`
             if (routes.some(route => route.name === name && (route.instance !== instance || route.fnc !== rule.fnc))) {
-                throw new Error(`规范化后指令重名：${name}`)
+                name = `${category}.${spec.name}`
             }
-            routes.push({ name, instance, fnc: rule.fnc, regexp })
+            for (const part of name.split('.')) validateDiscordName(part)
+            if (routes.some(route => route.name === name && (route.instance !== instance || route.fnc !== rule.fnc))) throw new Error(`规范化后指令重名：${name}`)
+            routes.push({ name, instance, fnc: rule.fnc, regexp, text: spec.text, bare: spec.bare, key })
         }
     }
 
+    const names = [...new Set(routes.map(route => route.name.split('.')[0]))]
+    let selectedRoot = ''
     if (routes.length) {
-        const modules = [...new Set(routes.map(route => route.name.split('.')[0]))]
         const candidates = [...new Set([requestedRoot, '', 'p', 'phi', 'phigros', 'phi-plugin'])]
-        const root = candidates.find(candidate => (candidate ? [candidate] : modules).every(name => !ctx.$commander.get(name)))
+        const root = candidates.find(candidate => (candidate ? [candidate] : names).every(name => !ctx.$commander.get(name)))
         if (root === undefined) throw new Error('Koishi 指令注册冲突：空头、p、phi、phigros、phi-plugin 均已占用，请设置其他命令头')
         if (root !== requestedRoot) ctx.logger('phi-plugin').warn('指令分组 %s 已占用，整棵树改用 %s', requestedRoot || '空头', root || '空头')
-        for (const name of root ? [root] : modules) reserved.add(name)
+        selectedRoot = root
+        for (const name of root ? [root] : names) reserved.add(name)
         if (root) for (const route of routes) route.name = `${root}.${route.name}`
     }
 
@@ -99,6 +104,17 @@ export function registerCommands(ctx, apps, adapter, block, head) {
         // 同名系统命令/别名优先；例如空头时 /help 留给 Koishi，#help 仍可用。
         const existing = ctx.$commander.resolve(content.trim().split(/\s+/, 1)[0], session)
         if (existing && !reserved.has(existing.name.split('.')[0])) return
+        // 原生扁平指令也保留参数原文，避免 --help、引号、插值被 Koishi 再次解释。
+        const native = (session.isDirect || stripped.appel || typeof stripped.prefix === 'string') && routes.find(route => {
+            const spelling = route.name.replaceAll('.', ' ')
+            return content === spelling || content.startsWith(`${spelling} `)
+                || content === route.name || content.startsWith(`${route.name} `)
+        })
+        if (native) {
+            const spelling = content.startsWith(native.name) ? native.name : native.name.replaceAll('.', ' ')
+            const argument = content.slice(spelling.length).trimStart()
+            return { name: native.name, args: [argument], options: {} }
+        }
         const original = String(stripped.content ?? session.content ?? '')
         // 原有 /、# 和语音触发方式继续有效；Koishi 的 prefix 另行处理。
         let message = original
@@ -113,12 +129,27 @@ export function registerCommands(ctx, apps, adapter, block, head) {
     for (const name of new Set(routes.map(route => route.name))) {
         const own = routes.filter(route => route.name === name)
         const { instance, fnc } = own[0]
-        ctx.command(`${name} <message:text>`, [...`${instance.dsc || instance.name || 'Phigros'} · ${fnc}`].slice(0, 100).join(''), {
+        ctx.command(`${name} [args:text]`, [...`${instance.dsc || instance.name || 'Phigros'} · ${name.split('.').at(-1)}`].slice(0, 100).join(''), {
             authority: 1,
-        }).usage('可直接发送原有 phi-plugin 指令。通过本管理标识调用时，message 请填写完整原始指令。')
+        }).usage('直接调用功能，无需重复输入指令头；args 仅填写曲名、筛选条件等参数。也兼容完整原始指令。')
             .action(async (/** @type {any} */ argv, /** @type {string} */ message) => {
-                const index = routes.findIndex(route => route.name === name && matches(route.regexp, message || ''))
-                if (index < 0) return '请提供符合当前命令头设置的完整原始指令。'
+                message ||= ''
+                let index = routes.findIndex(route => route.name === name && matches(route.regexp, message))
+                if (index < 0) {
+                    // 注册冲突回退不改变业务正则，使用能匹配原规则的命令头还原事件。
+                    const heads = [...new Set([head, commandRoot(head), '', 'p', 'phi', 'pgr', 'phigros', 'phi-plugin'])]
+                    for (const route of own) {
+                        for (const prefix of route.bare ? [''] : heads) {
+                            const candidate = `/${prefix}${prefix ? ' ' : ''}${route.text}${message ? ` ${message}` : ''}`
+                            if (!matches(route.regexp, candidate)) continue
+                            message = candidate
+                            index = routes.indexOf(route)
+                            break
+                        }
+                        if (index >= 0) break
+                    }
+                }
+                if (index < 0) return '参数不符合该功能的格式，请查看帮助；复杂正则命令头也可通过 args 传入完整原始指令。'
                 const e = adapter.fromSession(argv.session)
                 e.msg = e.text = message
                 instance.e = e
@@ -137,6 +168,10 @@ export function registerCommands(ctx, apps, adapter, block, head) {
     }
 
     if (routes.length) {
+        for (const [key, [category, description]] of Object.entries(commandCategories)) {
+            const name = [selectedRoot, category].filter(Boolean).join('.')
+            if (routes.some(route => route.key === key && route.name.startsWith(`${name}.`))) ctx.command(name, description)
+        }
         scheduleCommandSync(ctx)
         ctx.before('parse', (/** @type {string} */ content, /** @type {any} */ session) => {
             if (!ctx.filter(session)) return

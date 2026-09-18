@@ -16,8 +16,9 @@ function entries(key, count = 1) {
     /** @type {any} */
     const instance = { rule: [] }
     for (let i = 0; i < count; i++) {
-        instance.rule.push({ reg: '^[/#]help$', fnc: `run${i}` })
-        instance[`run${i}`] = () => 'ok'
+        const fnc = count === 1 ? key : `run${i}`
+        instance.rule.push({ reg: '^[/#]help$', fnc })
+        instance[fnc] = () => 'ok'
     }
     return [{ key, instance }]
 }
@@ -40,7 +41,7 @@ test('collision keeps host help intact, including its Discord arguments and acti
     await app.start()
     try {
         registerCommands(app, entries('help'), /** @type {any} */ ({}), true, '')
-        assert.ok(app.$commander.get('phi.help.run0'))
+        assert.ok(app.$commander.get('phi.help'))
         assert.deepEqual(help.children, [])
         const encoded = Discord.encodeCommand(help.toJSON())
         assert.equal(encoded.options?.[0].name, 'command')
@@ -61,8 +62,8 @@ test('whole-tree conflict fallback follows empty, p, phi, phigros, phi-plugin an
             for (const name of occupied) app.command(name)
             registerCommands(app, [...entries('help'), ...entries('b19')], /** @type {any} */ ({}), true, '')
             const prefix = expected ? `${expected}.` : ''
-            assert.ok(app.$commander.get(`${prefix}help.run0`))
-            assert.ok(app.$commander.get(`${prefix}b19.run0`))
+            assert.ok(app.$commander.get(`${prefix}help`))
+            assert.ok(app.$commander.get(`${prefix}b30`))
         } finally { await app.stop() }
     }
     const app = new App()
@@ -71,7 +72,7 @@ test('whole-tree conflict fallback follows empty, p, phi, phigros, phi-plugin an
         for (const name of ['help', 'p', 'phi', 'phigros', 'phi-plugin']) app.command(name)
         assert.throws(() => registerCommands(app, entries('help'), /** @type {any} */ ({}), true, ''), /均已占用/)
         registerCommands(app, entries('help'), /** @type {any} */ ({}), true, 'custom')
-        assert.ok(app.$commander.get('custom.help.run0'))
+        assert.ok(app.$commander.get('custom.help'))
     } finally { await app.stop() }
 })
 

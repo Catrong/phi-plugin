@@ -62,8 +62,8 @@ async function fixture(head, options = {}) {
 test('legacy commands are registered, run once through Koishi, and preserve raw arguments', async () => {
     const env = await fixture('phi')
     try {
-        assert.ok(env.app.$commander.get('phi.demo.help'))
-        assert.equal(env.app.$commander.get('phi.demo.guess'), undefined)
+        assert.ok(env.app.$commander.get('phi.help'))
+        assert.equal(env.app.$commander.get('phi.guess'), undefined)
         await env.receive('/phihelp')
         await env.receive('#phi help')
         const text = '/phi score "a b" --help $(other)\nnext <at id="someone"/>'
@@ -88,7 +88,7 @@ test('custom, empty and regex heads work with host prefixes and direct messages'
             await env.receive(messages[3], true)
             assert.equal(env.calls.length, 4)
             assert.ok(env.calls.every(call => call.startsWith('help:')))
-            assert.ok(env.app.$commander.get(`${head ? (head === '(?:phi|pg)' ? 'phi' : head) + '.' : ''}demo.help`))
+            assert.ok(env.app.$commander.get(`${head ? (head === '(?:phi|pg)' ? 'phi' : head) + '.' : ''}help`))
             await env.receive(messages[3])
             assert.equal(env.calls.at(-1), `guess:${messages[3]}`)
         } finally { await env.close() }
@@ -109,7 +109,7 @@ test('Koishi command checks cannot be bypassed by legacy syntax or fallback midd
     const env = await fixture('phi')
     try {
         env.app.before('command/execute', (/** @type {any} */ argv) => {
-            if (argv.command.name === 'phi.demo.help') return 'denied'
+            if (argv.command.name === 'phi.help') return 'denied'
         })
         await env.receive('/phihelp')
         await env.receive('#phi help')
@@ -145,7 +145,7 @@ test('active confirmations precede command parsing and unloading removes routes 
         await env.receive('/phihelp')
         assert.equal(env.calls.length, 1)
         await env.fork.dispose()
-        assert.equal(env.app.$commander.get('phi.demo.help'), undefined)
+        assert.equal(env.app.$commander.get('phi.help'), undefined)
         await env.receive('/phihelp')
         assert.equal(env.calls.length, 1)
     } finally { await env.close() }
@@ -154,12 +154,12 @@ test('active confirmations precede command parsing and unloading removes routes 
 test('native command names and aliases use the same action and permissions', async () => {
     const env = await fixture('phi')
     try {
-        const command = env.app.$commander.get('phi.demo.help')
+        const command = env.app.$commander.get('phi.help')
         command.alias('phi-test-help')
-        await env.receive('/phi.demo.help /phi help')
+        await env.receive('/phi.help /phi help')
         await env.receive('/phi-test-help #phihelp')
         assert.deepEqual(env.calls, ['help:/phi help', 'help:#phihelp'])
-        await env.receive('/phi.demo.score /phi score <at id="someone"/>')
+        await env.receive('/phi.score /phi score <at id="someone"/>')
         assert.equal(env.calls.at(-1), 'score:/phi score <at id="someone"/>')
         command.config.permissions = ['phi-test-denied']
         await env.receive('/phihelp')
@@ -197,15 +197,15 @@ test('changing command head rebuilds the hierarchy and removes previous registra
     try {
         env.fork.update({ cmdhead: 'pg' })
         await env.app.lifecycle.flush()
-        assert.equal(env.app.$commander.get('phi.demo.help'), undefined)
-        assert.ok(env.app.$commander.get('pg.demo.help'))
+        assert.equal(env.app.$commander.get('phi.help'), undefined)
+        assert.ok(env.app.$commander.get('pg.help'))
         await env.receive('/pghelp')
         env.fork.update({ cmdhead: '' })
         await env.app.lifecycle.flush()
-        assert.equal(env.app.$commander.get('pg.demo.help'), undefined)
-        assert.ok(env.app.$commander.get('demo.help'))
+        assert.equal(env.app.$commander.get('pg.help'), undefined)
+        assert.ok(env.app.$commander.get('help'))
         await env.receive('/help')
-        await env.receive('/demo.help /help')
+        await env.receive('/help /help')
         assert.deepEqual(env.calls, ['help:/pghelp', 'help:/help', 'help:/help'])
     } finally { await env.close() }
 })
@@ -216,14 +216,14 @@ test('empty-head collision preserves system help execution and Phi remains calla
         apps: { help: { rule: [{ reg: '^[/#]phihelp$', fnc: 'help' }], help(/** @type {any} */ e) { return e.reply('phi-help') } } },
     })
     try {
-        assert.ok(env.app.$commander.get('p.help.help'))
+        assert.ok(env.app.$commander.get('p.guides.help'))
         assert.equal(env.app.$commander.get('help').children.length, 0)
         await env.receive('/help')
         assert.deepEqual(env.sent.filter(Boolean), ['system-help'])
         assert.deepEqual(env.calls, [])
         await env.receive('#help')
         assert.deepEqual(env.calls, ['help:#help'])
-        await env.receive('/p.help.help /phihelp')
+        await env.receive('/p.guides.help /phihelp')
         assert.equal(env.sent.at(-1), 'phi-help')
     } finally { await env.close() }
 })
