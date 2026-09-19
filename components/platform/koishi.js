@@ -52,6 +52,9 @@ const templateIdentity = stat => `${stat.dev}:${stat.ino}:${stat.mtimeMs}:${stat
  * @typedef {object} KoishiRegisterOptions
  * @property {boolean} [block=true] 处理到匹配规则后是否阻断后续 middleware。
  * @property {string} [cmdhead] 当前命令头，空字符串表示不注册根分组。
+ * @property {string[]} [koishiShortcutCommands] 直接显示在快捷菜单中的功能 ID。
+ * @property {string[]} [koishiShortcutCategories] 快捷菜单中显示的分类 ID。
+ * @property {string[] | null} [koishiShortcuts] 树形选择；null 时兼容旧版两组配置。
  */
 
 /**
@@ -789,7 +792,10 @@ export function registerKoishiApps(ctx, apps, adapter, options = {}) {
         .map(([key, App]) => ({ key, instance: typeof App === 'function' ? new App() : App }))
         .filter(({ instance }) => Boolean(instance))
         .sort((a, b) => Number(a.instance.priority ?? 5000) - Number(b.instance.priority ?? 5000))
-    registerCommands(ctx, entries, adapter, block, options.cmdhead ?? sharedSettings.defaults.cmdhead)
+    registerCommands(ctx, entries, adapter, block, options.cmdhead ?? sharedSettings.defaults.cmdhead, {
+        commands: options.koishiShortcuts?.filter(key => key.startsWith('command:')).map(key => key.slice(8)) ?? options.koishiShortcutCommands,
+        categories: options.koishiShortcuts?.filter(key => key.startsWith('category:')).map(key => key.slice(9)) ?? options.koishiShortcutCategories,
+    })
     const instances = entries.map(({ instance }) => instance)
     registerKoishiTasks(ctx, instances, adapter.logger)
     return instances

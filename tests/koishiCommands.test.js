@@ -227,3 +227,13 @@ test('empty-head collision preserves system help execution and Phi remains calla
         assert.equal(env.sent.at(-1), 'phi-help')
     } finally { await env.close() }
 })
+
+test('hiding all shortcuts leaves original chat commands executable', async () => {
+    const env = await fixture('phi', { koishiShortcutCommands: [], koishiShortcutCategories: [] })
+    try {
+        assert.equal(env.app.$commander.get('phi').config.slash, false)
+        assert.ok(env.app.$commander.get('phi.demo.help'))
+        await env.receive('/phihelp')
+        assert.deepEqual(env.calls, ['help:/phihelp'])
+    } finally { await env.close() }
+})

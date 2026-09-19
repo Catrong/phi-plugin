@@ -4,9 +4,9 @@ import vm from 'node:vm'
 import { createRequire } from 'node:module'
 import test from 'node:test'
 import { registerCommands } from '../components/platform/koishiCommands.js'
-import { createKoishiAdapter } from '../components/platform/koishi.js'
+import { createKoishiAdapter, registerKoishiApps } from '../components/platform/koishi.js'
 import { commandSnapshot, validateDiscordCommands } from '../components/platform/koishiCommandSync.js'
-import { commandSpec, commonCommands } from '../components/platform/koishiCommandNames.js'
+import { commandSpec, commonCommands, shortcutCommands, defaultShortcutCommands, defaultShortcutCategories } from '../components/platform/koishiCommandNames.js'
 
 const require = createRequire(import.meta.url)
 const { App, Bot, h } = /** @type {any} */ (require('koishi'))
@@ -127,13 +127,92 @@ test('Discord argv and chat syntax call real rules without repeating the origina
 })
 
 test('public command spellings match actual case-sensitive rules', () => {
+    const ids = []
     for (const { key, instance } of actualRules('p', [])) {
         for (const rule of instance.rule) {
             if (!new RegExp(rule.reg).source.startsWith('^[')) continue
+            ids.push(`${key}.${rule.fnc}`)
             const spec = commandSpec(key, rule.fnc)
             const prefix = spec.bare ? '/' : '/p '
             const inputs = ['', 'a', '1', ' song'].map(args => `${prefix}${spec.text}${args ? ` ${args}` : ''}`)
             assert.ok(inputs.some(input => new RegExp(rule.reg).test(input)), `${key}.${rule.fnc}: ${spec.text}`)
         }
     }
+    assert.deepEqual(shortcutCommands.map(item => item.id).sort(), [...new Set(ids)].sort())
+})
+
+test('shortcut selections promote functions, include categories, deduplicate and hide unselected menus only', async () => {
+    for (const head of ['p', '']) {
+        const app = new App()
+        await app.start()
+        try {
+            registerCommands(app, actualRules(head, []), /** @type {any} */ ({}), true, head, {
+                commands: ['phisong.alias', 'b19.b19', 'phisong.alias'], categories: ['session', 'phisong'],
+            })
+            const snapshot = commandSnapshot(app)
+            validateDiscordCommands(snapshot)
+            const prefix = head ? `${head}.` : ''
+            const menu = head ? snapshot[0].children : snapshot
+            assert.deepEqual(menu.map((/** @type {any} */ cmd) => cmd.name).sort(), ['account', 'alias', 'b30', 'songs'].map(name => prefix + name).sort())
+            const songs = menu.find((/** @type {any} */ cmd) => cmd.name === prefix + 'songs')
+            assert.ok(songs.children.length > 0)
+            assert.ok(!songs.children.some((/** @type {any} */ cmd) => cmd.name.endsWith('.alias')))
+            assert.ok(app.$commander.get(prefix + 'admin.ban'), '隐藏菜单不删除 Koishi 聊天指令')
+            assert.equal(app.$commander.get(prefix + 'admin.ban').config.slash, false)
+        } finally { await app.stop() }
+    }
+})
+
+test('empty shortcuts remove exported menu and configuration reload restores defaults', async () => {
+    const app = new App()
+    await app.start()
+    const entries = actualRules('p', [])
+    const fork = app.plugin((/** @type {any} */ ctx, /** @type {any} */ config) => {
+        registerCommands(ctx, entries, /** @type {any} */ ({}), true, 'p', config)
+    }, { commands: [], categories: [] })
+    try {
+        assert.deepEqual(commandSnapshot(app), [])
+        assert.ok(app.$commander.get('p.scores.b30'))
+        fork.update({})
+        await app.lifecycle.flush()
+        assert.equal(commandSnapshot(app)[0].children.length, 25)
+        assert.ok(app.$commander.get('p.b30'))
+        assert.equal(app.$commander.get('p.scores.b30'), undefined)
+    } finally { await fork.dispose(); await app.stop() }
+})
+
+test('selected functions and nonempty categories obey the combined Discord limit before registration', async () => {
+    const app = new App()
+    await app.start()
+    try {
+        assert.throws(() => registerCommands(app, actualRules('p', []), /** @type {any} */ ({}), true, 'p', {
+            commands: [...defaultShortcutCommands, 'phisong.alias'], categories: defaultShortcutCategories,
+        }), /超过 25/)
+        assert.equal(app.$commander.get('p'), undefined)
+    } finally { await app.stop() }
+})
+
+test('unified tree selection overrides old fields and preserves independent category and command choices', async () => {
+    const app = new App()
+    await app.start()
+    const apps = Object.fromEntries(actualRules('p', []).map(({ key, instance }) => [key, instance]))
+    const fork = app.plugin((/** @type {any} */ ctx, /** @type {any} */ config) => {
+        registerKoishiApps(ctx, apps, /** @type {any} */ ({}), { cmdhead: 'p', koishiShortcutCommands: ['help.help'], koishiShortcutCategories: [], ...config })
+    }, { koishiShortcuts: ['category:b19', 'command:b19.b19'] })
+    try {
+        assert.deepEqual(commandSnapshot(app)[0].children.map((/** @type {any} */ item) => item.name).sort(), ['p.b30', 'p.scores'])
+        fork.update({ koishiShortcuts: ['command:b19.b19'] })
+        await app.lifecycle.flush()
+        assert.deepEqual(commandSnapshot(app)[0].children.map((/** @type {any} */ item) => item.name), ['p.b30'])
+        fork.update({ koishiShortcuts: ['category:b19'] })
+        await app.lifecycle.flush()
+        assert.equal(commandSnapshot(app)[0].children[0].name, 'p.scores')
+        assert.ok(commandSnapshot(app)[0].children[0].children.some((/** @type {any} */ item) => item.name === 'p.scores.b30'))
+        fork.update({ koishiShortcuts: [] })
+        await app.lifecycle.flush()
+        assert.deepEqual(commandSnapshot(app), [])
+        fork.update({ koishiShortcuts: null })
+        await app.lifecycle.flush()
+        assert.deepEqual(commandSnapshot(app)[0].children.map((/** @type {any} */ item) => item.name), ['p.help'])
+    } finally { await fork.dispose(); await app.stop() }
 })

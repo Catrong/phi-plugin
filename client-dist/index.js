@@ -1,10 +1,43 @@
 // @ts-nocheck
 // 浏览器入口：import 由 Koishi Console 转换，直接复用宿主运行时，无需构建依赖。
 import { send, SchemaBase } from '@koishijs/client';
-import { defineComponent, h, ref, onMounted, onBeforeUnmount, resolveComponent } from 'vue';
+import { defineComponent, h, ref, watch, onMounted, onBeforeUnmount, resolveComponent } from 'vue';
 
 /** @param {any} ctx @param {any} data */
 export default function apply(ctx, data) {
+    ctx.schema({
+        type: 'union',
+        role: 'phi-plugin-shortcuts',
+        component: defineComponent({
+            props: ['schema', 'modelValue', 'disabled'],
+            emits: ['update:modelValue'],
+            setup(props, { emit }) {
+                const tree = ref(null)
+                const extra = () => props.schema.meta.extra
+                const selection = () => props.modelValue ?? data.value.shortcuts ?? [
+                    ...extra().categories.map(key => `category:${key}`),
+                    ...extra().commands.map(key => `command:${key}`),
+                ]
+                watch(() => props.modelValue, () => tree.value?.setCheckedKeys(selection()), { deep: true, flush: 'post' })
+                const update = (_, state) => {
+                    if (props.disabled) return
+                    emit('update:modelValue', [...state.checkedKeys])
+                }
+                return () => h(SchemaBase, {}, {
+                    title: () => '快捷指令',
+                    desc: () => h('p', '勾选分组：添加分类菜单；勾选子命令：添加顶层快捷指令。父子独立选择，不自动联动。指令与非空分组合计最多 25 个入口，保存后同步。'),
+                    default: () => h(resolveComponent('el-tree'), {
+                        ref: tree, data: extra().tree, nodeKey: 'id', showCheckbox: true,
+                        checkStrictly: true, expandOnClickNode: false,
+                        defaultCheckedKeys: selection(),
+                        props: { label: 'label', children: 'children', disabled: () => props.disabled },
+                        onCheck: update,
+                        style: { padding: '8px 16px', background: 'transparent' },
+                    }),
+                })
+            },
+        }),
+    })
     const job = ref(null)
     const pending = ref(false)
     const error = ref('')

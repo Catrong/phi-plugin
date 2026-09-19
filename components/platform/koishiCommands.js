@@ -30,10 +30,11 @@ export function commandRoot(head) {
  * @param {ReturnType<typeof import('./koishi.js').createKoishiAdapter>} adapter
  * @param {boolean} block
  * @param {string} head
+ * @param {{commands?: string[], categories?: string[]}} [shortcuts]
  */
-export function registerCommands(ctx, apps, adapter, block, head) {
+export function registerCommands(ctx, apps, adapter, block, head, shortcuts = {}) {
     const requestedRoot = commandRoot(head)
-    /** @type {{name: string, instance: any, fnc: string, regexp: RegExp, text: string, bare: boolean, key: string}[]} */
+    /** @type {{name: string, instance: any, fnc: string, regexp: RegExp, text: string, bare: boolean, key: string, slash: boolean}[]} */
     const routes = []
     /** @type {{instance: any, fnc: string, regexp: RegExp}[]} */
     const listeners = []
@@ -49,13 +50,15 @@ export function registerCommands(ctx, apps, adapter, block, head) {
             }
             const spec = commandSpec(key, rule.fnc)
             const category = commandCategories[key]?.[0] ?? key.toLowerCase().replace(/_/g, '-')
-            let name = commonCommands.includes(spec.name) ? spec.name : `${category}.${spec.name}`
+            const direct = shortcuts.commands === undefined ? commonCommands.includes(spec.name) : shortcuts.commands.includes(`${key}.${rule.fnc}`)
+            const slash = direct || shortcuts.categories === undefined || shortcuts.categories.includes(key)
+            let name = direct ? spec.name : `${category}.${spec.name}`
             if (routes.some(route => route.name === name && (route.instance !== instance || route.fnc !== rule.fnc))) {
                 name = `${category}.${spec.name}`
             }
             for (const part of name.split('.')) validateDiscordName(part)
             if (routes.some(route => route.name === name && (route.instance !== instance || route.fnc !== rule.fnc))) throw new Error(`规范化后指令重名：${name}`)
-            routes.push({ name, instance, fnc: rule.fnc, regexp, text: spec.text, bare: spec.bare, key })
+            routes.push({ name, instance, fnc: rule.fnc, regexp, text: spec.text, bare: spec.bare, key, slash })
         }
     }
 
@@ -74,7 +77,7 @@ export function registerCommands(ctx, apps, adapter, block, head) {
     // 先校验整棵计划树，避免注册到一半才发现超限。
     /** @type {any[]} */
     const planned = []
-    for (const { name } of routes) {
+    for (const { name } of routes.filter(route => route.slash)) {
         let children = planned
         let full = ''
         for (const part of name.split('.')) {
@@ -131,6 +134,7 @@ export function registerCommands(ctx, apps, adapter, block, head) {
         const { instance, fnc } = own[0]
         ctx.command(`${name} [args:text]`, [...`${instance.dsc || instance.name || 'Phigros'} · ${name.split('.').at(-1)}`].slice(0, 100).join(''), {
             authority: 1,
+            slash: own.some(route => route.slash),
         }).usage('直接调用功能，无需重复输入指令头；args 仅填写曲名、筛选条件等参数。也兼容完整原始指令。')
             .action(async (/** @type {any} */ argv, /** @type {string} */ message) => {
                 message ||= ''
@@ -171,6 +175,24 @@ export function registerCommands(ctx, apps, adapter, block, head) {
         for (const [key, [category, description]] of Object.entries(commandCategories)) {
             const name = [selectedRoot, category].filter(Boolean).join('.')
             if (routes.some(route => route.key === key && route.name.startsWith(`${name}.`))) ctx.command(name, description)
+        }
+        // Koishi 4 仅过滤根节点的 slash，子节点需要随自有根一起过滤。
+        // 启动、重连与主动同步共用 toJSON，避免隐藏功能被重新上传。
+        for (const name of reserved) {
+            const rootCommand = ctx.$commander.get(name)
+            rootCommand.config.slash = routes.some(route => route.slash && (route.name === name || route.name.startsWith(`${name}.`)))
+            const toJSON = rootCommand.toJSON.bind(rootCommand)
+            rootCommand.toJSON = () => {
+                /** @param {any} node @returns {any} */
+                function filter(node) {
+                    if (!ctx.$commander.get(node.name)?.config.slash) return null
+                    const children = node.children.map(filter).filter(Boolean)
+                    if (node.children.length && !children.length) return null
+                    return { ...node, children }
+                }
+                const data = toJSON()
+                return filter(data) ?? { ...data, children: [] }
+            }
         }
         scheduleCommandSync(ctx)
         ctx.before('parse', (/** @type {string} */ content, /** @type {any} */ session) => {

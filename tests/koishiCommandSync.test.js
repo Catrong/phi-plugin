@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import test from 'node:test'
 import { setTimeout as pause } from 'node:timers/promises'
-import { commandSnapshot, scheduleCommandSync, validateDiscordCommands, validateDiscordName } from '../components/platform/koishiCommandSync.js'
+import { commandSnapshot, discordRetryDelay, scheduleCommandSync, validateDiscordCommands, validateDiscordName } from '../components/platform/koishiCommandSync.js'
 import { registerCommands } from '../components/platform/koishiCommands.js'
 
 const require = createRequire(import.meta.url)
@@ -11,6 +11,15 @@ const { Discord } = require('@satorijs/adapter-discord')
 
 /** @param {string} name @param {any[]} [children] */
 const node = (name, children = []) => ({ name, children, arguments: [], options: [], description: {} })
+
+test('Discord retry_after is parsed in seconds from adapter and HTTP errors', () => {
+    assert.equal(discordRetryDelay(new Error('[429] {"message":"You are being rate limited.","retry_after":15.336,"global":false}')), 15586)
+    assert.equal(discordRetryDelay({ response: { status: 429, data: { retry_after: 2, global: true } } }), 2250)
+    assert.equal(discordRetryDelay(new Error('[429] invalid JSON')), 30000)
+    assert.equal(discordRetryDelay({ status: 429, response: { data: { retry_after: -1 } } }), 30000)
+    assert.equal(discordRetryDelay(new Error('[403] {"retry_after":2}')), undefined)
+    assert.equal(discordRetryDelay(new Error('network error')), undefined)
+})
 /** @param {string} key @param {number} [count] */
 function entries(key, count = 1) {
     /** @type {any} */
@@ -206,4 +215,70 @@ test('in-flight updates serialize and take a fresh snapshot; disabled/offline bo
     }
     await pause(40)
     assert.equal(sent.length, 2)
+})
+
+test('429 cooldown survives reload requests, retries latest tree, restores old interaction mapping and deduplicates success', async () => {
+    const app = new App()
+    /** @type {any} */
+    let bot
+    /** @type {{time: number, names: string[]}[]} */
+    const sent = []
+    const oldCommands = [node('old')]
+    const botFork = app.plugin((/** @type {any} */ ctx) => {
+        bot = new Bot(ctx, { slash: true }, 'discord')
+        bot.user = { id: 'test-rate-limit' }
+        bot.commands = oldCommands
+        bot.updateCommands = async (/** @type {any[]} */ commands) => {
+            bot.commands = commands
+            sent.push({ time: Date.now(), names: commands.map(command => command.name) })
+            if (sent.length === 1) throw new Error('[429] {"retry_after":0.1,"global":false}')
+        }
+    })
+    await app.start()
+    bot._status = Universal.Status.ONLINE
+    const plugin = (/** @type {any} */ ctx, /** @type {any} */ config) => {
+        ctx.command(config.head)
+        scheduleCommandSync(ctx, 10)
+    }
+    const fork = app.plugin(plugin, { head: 'first' })
+    try {
+        await pause(50)
+        assert.equal(sent.length, 1)
+        assert.equal(bot.commands, oldCommands)
+        fork.update({ head: 'second' })
+        await app.lifecycle.flush()
+        await pause(40)
+        fork.update({ head: 'latest' })
+        await app.lifecycle.flush()
+        await pause(40)
+        assert.equal(sent.length, 1, '重载不得绕过冷却期限')
+        await pause(300)
+        assert.equal(sent.length, 2)
+        assert.deepEqual(sent[1].names, ['latest'])
+        assert.ok(sent[1].time - sent[0].time >= 350)
+        scheduleCommandSync(app)
+        await pause(40)
+        assert.equal(sent.length, 2, '成功上传过的相同快照不重复请求')
+    } finally { await fork.dispose(); await botFork.dispose(); await app.stop() }
+})
+
+test('repeated 429 responses back off again and host shutdown cancels pending retry', async () => {
+    const app = new App()
+    /** @type {any} */
+    let bot
+    let calls = 0
+    const botFork = app.plugin((/** @type {any} */ ctx) => {
+        bot = new Bot(ctx, { slash: true }, 'discord')
+        bot.updateCommands = async () => { calls++; throw new Error('[429] {"retry_after":0}') }
+    })
+    await app.start()
+    bot._status = Universal.Status.ONLINE
+    app.command('test')
+    try {
+        scheduleCommandSync(app, 10)
+        await pause(330)
+        assert.equal(calls, 2)
+    } finally { await botFork.dispose(); await app.stop() }
+    await pause(300)
+    assert.equal(calls, 2)
 })
