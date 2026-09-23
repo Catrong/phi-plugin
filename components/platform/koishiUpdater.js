@@ -36,6 +36,19 @@ export function createGitUpdater({ pluginDir, artworkDir, readConfig, git = runG
     let job = null
     let completion = Promise.resolve()
 
+    /**
+     * 曲绘是只读的二进制资源库：每次更新后把历史截断回单个提交（depth=1）并丢弃被替换掉的旧曲绘，
+     * 否则每张新曲绘都会在 .git 里永久留一份。pull 会把中间提交拉成不可达的松散对象，
+     * 所以还要 prune 一次才能把它们清掉。
+     * @param {string} directory
+     */
+    async function shrinkArtwork(directory) {
+        await git(['fetch', '--prune', '--depth=1'], directory)
+        await git(['reflog', 'expire', '--expire=now', '--expire-unreachable=now', '--all'], directory)
+        await git(['repack', '-a', '-d', '-q'], directory)
+        await git(['prune', '--expire=now'], directory)
+    }
+
     /** @param {'plugin' | 'artwork'} target */
     async function update(target) {
         const directory = target === 'plugin' ? pluginDir : artworkDir
@@ -65,6 +78,8 @@ export function createGitUpdater({ pluginDir, artworkDir, readConfig, git = runG
         const before = await git(['rev-parse', 'HEAD'], directory)
         await git(['pull', '--ff-only'], directory)
         const after = await git(['rev-parse', 'HEAD'], directory)
+        // 无论本次是否拉到新提交都收缩一次：没有更新时 .git 不该继续留着历史，也不该停止回收
+        if (target === 'artwork') await shrinkArtwork(directory)
         if (before === after) return '已经是最新版本。'
         return target === 'plugin' ? '插件更新完成，请重载插件；如依赖有变化，请重新运行安装脚本。' : '曲绘库更新完成。'
     }

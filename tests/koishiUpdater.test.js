@@ -38,6 +38,9 @@ test('real Git updates both repositories, refuses dirty trees and does not disca
         await updater.wait()
         assert.equal(updater.status()?.state, 'success')
         assert.equal(await fs.readFile(path.join(artworkDir, 'data.txt'), 'utf8'), 'two')
+        // 曲绘库收缩回 depth=1，插件仓库保留完整历史
+        assert.equal(await runGit(['rev-list', '--count', 'HEAD'], artworkDir), '1')
+        assert.equal(await runGit(['rev-list', '--count', 'HEAD'], pluginDir), '2')
         await fs.writeFile(path.join(pluginDir, 'data.txt'), 'local')
         updater.start('plugin')
         await updater.wait()
