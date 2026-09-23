@@ -1,0 +1,143 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/frib19/frib19.css">
+{{/block}}
+
+{{block 'main'}}
+<div class="main">
+    <div class="titleRow">
+        <div class="title">
+            <p class="phigros-title-font">Phigros</p>
+            <p class="titleDesc">Guess the Song · 弗一把</p>
+        </div>
+        <div class="levelBox">
+            <div class="levelTag clip-box {{level}}-BKG">
+                <p>{{levelText}}</p>
+            </div>
+            <p class="levelDesc">定数与物量均以 {{level}} 谱面为准</p>
+        </div>
+        <div class="roundBox">
+            <div class="round">
+                <p>{{round}}</p>
+            </div>
+            <div class="roundMax">
+                <p>/ {{maxGuess}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tableBox">
+        <div class="dataRow headRow">
+            <div class="cell playerCell"><p>玩家</p></div>
+            <div class="cell songCell"><p>歌曲</p></div>
+            <div class="cell artistCell"><p>Artist</p></div>
+            <div class="cell versionCell"><p>Version</p></div>
+            <div class="cell chapterCell"><p>分类</p></div>
+            <div class="cell originalCell"><p>独占</p></div>
+            <div class="cell difficultyCell"><p>定数</p></div>
+            <div class="cell bpmCell"><p>BPM</p></div>
+            <div class="cell comboCell"><p>物量</p></div>
+        </div>
+
+        {{each rows row index}}
+        <div class="dataRow{{row.hit ? ' rowHit' : ''}}">
+            <div class="cell playerCell">
+                <div class="rowIndex"><p>{{index + 1}}</p></div>
+                <div class="playerName"><p name="pvis">{{row.player}}</p></div>
+            </div>
+            <div class="cell songCell state-{{row.hit ? 'same' : 'diff'}}">
+                <p class="songName" name="pvis">{{row.song}}</p>
+                {{if row.hit}}<p class="mark">✓</p>{{/if}}
+            </div>
+            {{each row.cells cell}}
+            <div class="cell {{cell.cls}} state-{{cell.state}}">
+                <p class="cellValue" name="pvis">{{cell.value}}</p>
+                {{if cell.arrow == 'up'}}<p class="arrow">↑</p>
+                {{else if cell.arrow == 'down'}}<p class="arrow">↓</p>
+                {{else if cell.state == 'same'}}<p class="mark">✓</p>{{/if}}
+            </div>
+            {{/each}}
+        </div>
+        {{/each}}
+
+        {{if answerRow}}
+        <div class="dataRow rowAnswer">
+            <div class="cell playerCell">
+                <div class="rowIndex answerTag"><p>答案</p></div>
+                <div class="playerName"><p name="pvis">{{answerRow.player}}</p></div>
+            </div>
+            <div class="cell songCell state-same">
+                <p class="songName" name="pvis">{{answerRow.song}}</p>
+                <p class="mark">✓</p>
+            </div>
+            {{each answerRow.cells cell}}
+            <div class="cell {{cell.cls}} state-{{cell.state}}">
+                <p class="cellValue" name="pvis">{{cell.value}}</p>
+                {{if cell.arrow == 'up'}}<p class="arrow">↑</p>
+                {{else if cell.arrow == 'down'}}<p class="arrow">↓</p>
+                {{else if cell.state == 'same'}}<p class="mark">✓</p>{{/if}}
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+
+    <div class="legendRow">
+        <div class="legendItem">
+            <div class="legendBox state-same"><p>✓</p></div>
+            <p>属性相同</p>
+        </div>
+        <div class="legendItem">
+            <div class="legendBox state-near"><p>近</p></div>
+            <p>属性相近</p>
+        </div>
+        <div class="legendItem">
+            <div class="legendBox state-diff"><p>&nbsp;</p></div>
+            <p>属性不同</p>
+        </div>
+        <div class="legendItem">
+            <p class="legendArrow">↑</p>
+            <p>答案更高 / 更晚</p>
+        </div>
+        <div class="legendItem">
+            <p class="legendArrow">↓</p>
+            <p>答案更低 / 更早</p>
+        </div>
+        <div class="legendItem">
+            <p class="legendArrow">—</p>
+            <p>数据未知</p>
+        </div>
+    </div>
+
+    <div class="tipsRow">
+        <p>相近范围：版本前后 {{nearVersion}} 代 · 定数 ±{{nearDifficulty}} · BPM ±{{nearBpm}} · 物量 ±{{nearCombo}}</p>
+        <p>发送曲名进行猜测 · /{{cmdhead}} ans 公布答案 · 连续 {{timeout}} 秒无有效猜测后过期</p>
+    </div>
+
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>{{_plugin}}</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
+
+    {{if theme == "snow"}}
+    <div class="snow-box"> </div>
+    <script>
+        themeSnow();
+    </script>
+    {{else if theme == "topText" || theme == "foolsDay"}}
+    <div class="topTextBox" id="topTextBox"></div>
+    <script>
+        themeTopText();
+    </script>
+    {{else if theme == "star"}}
+    <canvas id="stars"></canvas>
+    <script>
+        themeStar();
+    </script>
+    {{/if}}
+{{/block}}

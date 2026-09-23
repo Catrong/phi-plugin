@@ -199,6 +199,7 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 | `#phi (guess\|猜曲绘) [-l <0-3>]` | 猜曲绘，回答无特殊命令，直接回复，如果不是曲名就不会说话，如果是不正确的曲名会回复。#ans 结束
 | `#phi (ltr\|开字母)` | 根据字母猜曲名，#出/#open... 开指定的字母，#第n个/#nX.xxx 进行回答，#ans 获取答案
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
+| `#phi (弗一把\|friberg\|fib\|fri) [难度=EZ\|HD\|IN\|AT] [定数下限，如 14+]` | 弗一把猜歌，直接回复曲名猜测，每次猜测都会对比 Artist、加入版本、分类、是否独占、定数、BPM、物量与答案的异同，#ans 获取答案；定数与物量以指定难度的谱面为准
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名
 | `#phi chart <曲名> [难度=IN]` | 查询phigros中某一谱面的详细信息
 | `#phi tag <曲名> [难度=IN] <标签>` | 查看谱面标签，标签可选项见回复说明，难度默认为IN
@@ -260,6 +261,7 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 | tipgame | tip猜歌 | /tipgame
 | guessgame | 猜歌 | /guess
 | ltrgame | 猜字母 | /letter /ltr
+| fribgame | 弗一把 | /friberg /fib /fri
 | sign | 娱乐功能 | /sign /send /task /retask /jrrp
 | setting | 系统设置 | /theme
 | dan | 段位认证相关 | /dan /danupdate

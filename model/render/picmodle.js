@@ -286,6 +286,16 @@ export default await new class picmodle {
     }
 
     /**
+     * 弗一把猜测记录
+     * @param {any} e
+     * @param {any} data
+     * @returns
+     */
+    async frib19(e, data) {
+        return await this.common(e, 'frib19', data)
+    }
+
+    /**
      * 
      * @param {any} e 
      * @param {any} data 
@@ -337,7 +347,7 @@ export default await new class picmodle {
 
     /** 
      * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|
-     * 'ill'|'chartInfo'|'guess'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'market'|
+     * 'ill'|'chartInfo'|'guess'|'frib19'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'market'|
      * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'
      * } picKind
      */

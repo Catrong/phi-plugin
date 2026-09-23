@@ -467,6 +467,103 @@
     "required": true
   },
   {
+    "key": "FribMaxGuess",
+    "group": "弗一把设置",
+    "label": "最大猜测次数",
+    "description": "单局弗一把允许的猜测次数，达到次数后公布答案",
+    "type": "number",
+    "min": 1,
+    "max": 99,
+    "step": 1,
+    "format": "integer",
+    "placeholder": "请输入次数",
+    "required": true
+  },
+  {
+    "key": "FribTimeout",
+    "group": "弗一把设置",
+    "label": "待机时长",
+    "description": "连续多少秒没有有效猜测后自动公布答案，单位：秒",
+    "type": "number",
+    "min": 30,
+    "max": 9999999,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "FribDefaultLevel",
+    "group": "弗一把设置",
+    "label": "默认难度",
+    "description": "未指定难度时使用的谱面，定数与物量均以该难度为准",
+    "type": "select",
+    "options": [
+      {
+        "label": "EZ",
+        "value": "EZ"
+      },
+      {
+        "label": "HD",
+        "value": "HD"
+      },
+      {
+        "label": "IN",
+        "value": "IN"
+      },
+      {
+        "label": "AT",
+        "value": "AT"
+      }
+    ]
+  },
+  {
+    "key": "FribNearVersion",
+    "group": "弗一把设置",
+    "label": "版本相近范围",
+    "description": "曲目加入版本相差几代内视为相近",
+    "type": "number",
+    "min": 0,
+    "max": 20,
+    "step": 1,
+    "format": "integer",
+    "placeholder": "请输入代数",
+    "required": true
+  },
+  {
+    "key": "FribNearDifficulty",
+    "group": "弗一把设置",
+    "label": "定数相近范围",
+    "description": "定数相差多少以内视为相近",
+    "type": "number",
+    "min": 0,
+    "max": 5,
+    "step": 0.1,
+    "placeholder": "请输入范围",
+    "required": true
+  },
+  {
+    "key": "FribNearBpm",
+    "group": "弗一把设置",
+    "label": "BPM相近范围",
+    "description": "BPM 相差多少以内视为相近",
+    "type": "number",
+    "min": 0,
+    "max": 500,
+    "placeholder": "请输入范围",
+    "required": true
+  },
+  {
+    "key": "FribNearCombo",
+    "group": "弗一把设置",
+    "label": "物量相近范围",
+    "description": "物量相差多少以内视为相近",
+    "type": "number",
+    "min": 0,
+    "max": 10000,
+    "placeholder": "请输入范围",
+    "required": true
+  },
+  {
     "key": "allowChartTag",
     "group": "系统设置",
     "label": "谱面标签",

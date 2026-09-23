@@ -3,11 +3,12 @@ import send from '../model/render/send.js';
 import guessTips from './guessGame/guessTips.js';
 import guessLetter from './guessGame/guessLetter.js';
 import guessIll from './guessGame/guessIll.js';
+import frib19 from './guessGame/frib19.js';
 import getBanGroup from '../model/user/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
 
-let games = "(提示猜曲|tipgame|(ltr|letter|开字母).*|guess|猜曲绘)"
+let games = "(提示猜曲|tipgame|(ltr|letter|开字母).*|guess|猜曲绘|(弗一把|([Ff][Rr][Ii][Bb][Ee][Rr][Gg])|([Ff][Ii][Bb])|([Ff][Rr][Ii])))"
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -30,7 +31,7 @@ export class phiGames extends phiPluginBase {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)${games}\\s*((\\-[lL]\\s*\\d+))?$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)${games}\\s*((\\-[lL]\\s*\\d+)|(([Ee][Zz]|[Hh][Dd]|[Ii][Nn]|[Aa][Tt])(\\s*\\d+(\\.\\d+)?\\s*\\+?)?)|(\\d+(\\.\\d+)?\\s*\\+))?$`,
                     fnc: 'start'
                 },
                 {
@@ -72,7 +73,9 @@ export class phiGames extends phiPluginBase {
         if (!msg) {
             return false
         }
-        switch (msg) {
+        /** 弗一把的英文别名大小写不敏感 */
+        const gameName = msg.toLowerCase()
+        switch (gameName) {
             case "tipgame":
             case "提示猜曲": {
 
@@ -93,8 +96,20 @@ export class phiGames extends phiPluginBase {
 
                 return await guessIll.start(e, gameList)
             }
+            case "弗一把":
+            case "friberg":
+            case "fib":
+            case "fri": {
+
+                if (await getBanGroup.get(e, 'fribgame')) {
+                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                    return false
+                }
+
+                return await frib19.start(e, gameList)
+            }
             default: {
-                if (msg.startsWith("ltr") || msg.startsWith("letter") || msg.startsWith("开字母")) {
+                if (gameName.startsWith("ltr") || gameName.startsWith("letter") || gameName.startsWith("开字母")) {
 
                     if (await getBanGroup.get(e, 'ltrgame')) {
                         send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -156,6 +171,10 @@ export class phiGames extends phiPluginBase {
                 logger.info(`[phi-games][guess][ill] ${e.msg}`)
                 return await guessIll.guess(e, gameList)
             }
+            case "frib19": {
+                logger.info(`[phi-games][guess][frib] ${e.msg}`)
+                return await frib19.guess(e, gameList)
+            }
             default: {
                 return false
             }
@@ -204,6 +223,9 @@ export class phiGames extends phiPluginBase {
             }
             case "guessIll": {
                 return await guessIll.ans(e, gameList)
+            }
+            case "frib19": {
+                return await frib19.ans(e, gameList)
             }
             default: {
                 send.reply(e, `当前没有进行中的游戏嗷！`)

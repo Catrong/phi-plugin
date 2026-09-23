@@ -58,6 +58,7 @@
  * | 'tipgame'
  * | 'guessgame'
  * | 'ltrgame'
+ * | 'fribgame'
  * | 'sign'
  * | 'send'
  * | 'tasks'
@@ -127,6 +128,14 @@
  * @typedef {'GuessTipsTipNum'} GuessTipsTipNum 提示条数
  * @typedef {'GuessTipsTimeout'} GuessTipsTimeout 游戏时长
  * @typedef {'GuessTipsAnsTime'} GuessTipsAnsTime 额外时间
+ * 弗一把设置
+ * @typedef {'FribMaxGuess'} FribMaxGuess 最大猜测次数
+ * @typedef {'FribTimeout'} FribTimeout 待机时长
+ * @typedef {'FribDefaultLevel'} FribDefaultLevel 默认难度
+ * @typedef {'FribNearVersion'} FribNearVersion 版本相近范围
+ * @typedef {'FribNearDifficulty'} FribNearDifficulty 定数相近范围
+ * @typedef {'FribNearBpm'} FribNearBpm BPM相近范围
+ * @typedef {'FribNearCombo'} FribNearCombo 物量相近范围
  * 其他设置
  * @typedef {'VikaToken'} VikaToken VikaToken
  * @typedef {'apiBotClientId'} apiBotClientId API签发的Bot clientId
@@ -180,6 +189,13 @@
  * |GuessTipsTipNum
  * |GuessTipsTimeout
  * |GuessTipsAnsTime
+ * |FribMaxGuess
+ * |FribTimeout
+ * |FribDefaultLevel
+ * |FribNearVersion
+ * |FribNearDifficulty
+ * |FribNearBpm
+ * |FribNearCombo
  * |VikaToken
  * |apiBotClientId
  * |apiBotClientSecret

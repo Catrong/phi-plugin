@@ -156,6 +156,28 @@ GuessTipsTimeout: 600
 #  发送曲绘后多久公布答案(s)
 GuessTipsAnsTime: 30
 
+#  ************ 【弗一把设置】 *************
+#  单局最大猜测次数
+FribMaxGuess: 8
+
+#  待机超时时长(s)，超时自动公布答案
+FribTimeout: 600
+
+#  默认分档难度 EZ HD IN AT
+FribDefaultLevel: "IN"
+
+#  版本相近范围（前后几代）
+FribNearVersion: 2
+
+#  定数相近范围
+FribNearDifficulty: 0.3
+
+#  BPM相近范围
+FribNearBpm: 20
+
+#  物量相近范围
+FribNearCombo: 200
+
 #  ************ 【其他设置】 *************
 #  认证 Token
 VikaToken: ""

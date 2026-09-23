@@ -1,0 +1,350 @@
+@import "../common/common.css";
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1240px;
+    height: fit-content;
+    margin: 0;
+    color: white;
+    font-family: 'PHI', 'NOTO', 'NotoSansJP', 'HIMALAYA', '吞弥恰俊';
+}
+
+body p {
+    margin: 0;
+    color: white;
+}
+
+.background img {
+    height: 100%;
+    min-width: 100%;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 30px 0 10px 0;
+    z-index: 1;
+}
+
+.titleRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 94%;
+    padding-bottom: 18px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.28);
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+}
+
+.title .phigros-title-font {
+    font-size: 46px;
+    line-height: 1.1;
+}
+
+.titleDesc {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.78);
+    letter-spacing: 2px;
+}
+
+.levelBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.levelTag {
+    --height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 26px;
+    backdrop-filter: blur(10px);
+}
+
+.levelTag p {
+    font-size: 24px;
+    font-family: 'Aldrich', 'PHI';
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+}
+
+.levelDesc {
+    margin-top: 8px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.roundBox {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    backdrop-filter: blur(10px);
+}
+
+.round p {
+    font-size: 62px;
+    font-family: 'Aldrich', 'PHI';
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(0, 186, 255, 0.85);
+}
+
+.roundMax {
+    padding-bottom: 8px;
+}
+
+.roundMax p {
+    font-size: 26px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tableBox {
+    display: flex;
+    flex-direction: column;
+    width: 94%;
+    margin-top: 18px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(0, 21, 29, 0.42);
+    backdrop-filter: blur(14px);
+}
+
+.dataRow {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    min-height: 62px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dataRow:last-child {
+    border-bottom: none;
+}
+
+.headRow {
+    min-height: 46px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.headRow .cell p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.cell {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 10px 8px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.cell p {
+    font-size: 18px;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+.songCell p,
+.artistCell p,
+.chapterCell p {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.chapterCell p {
+    font-size: 16px;
+}
+
+.playerCell {
+    width: 12%;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 14px;
+}
+
+.playerCell .rowIndex p {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.62);
+    font-family: 'Aldrich', 'PHI';
+}
+
+.playerCell .answerTag p {
+    color: #fff700;
+}
+
+.songCell {
+    width: 19%;
+    justify-content: center;
+}
+
+.songCell .songName {
+    font-size: 20px;
+}
+
+.artistCell {
+    width: 15%;
+}
+
+.artistCell p {
+    font-size: 17px;
+}
+
+.chapterCell {
+    width: 16%;
+}
+
+.versionCell {
+    width: 9%;
+}
+
+.originalCell {
+    width: 8%;
+}
+
+.difficultyCell {
+    width: 7%;
+}
+
+.bpmCell {
+    width: 7%;
+}
+
+.comboCell {
+    width: 7%;
+}
+
+.cell .cellValue {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
+}
+
+.state-same {
+    background: color-mix(in srgb, var(--phi-theme-EZ, #7ae07a) 42%, transparent);
+}
+
+.state-near {
+    background: rgba(255, 208, 92, 0.42);
+}
+
+.state-diff {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.state-unknown {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.state-unknown .cellValue {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.mark {
+    margin-left: 6px;
+    font-size: 18px;
+    color: #d3ffd3;
+}
+
+.arrow {
+    margin-left: 6px;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.legendRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 94%;
+    margin-top: 22px;
+}
+
+.legendItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 16px;
+}
+
+.legendItem p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.legendBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 8px;
+    border-radius: 4px;
+}
+
+.legendBox p {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.legendArrow {
+    margin-right: 6px;
+    font-size: 19px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.tipsRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 94%;
+    margin-top: 16px;
+}
+
+.tipsRow p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.75);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.createdbox {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    writing-mode: horizontal-tb;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.createdbox p {
+    color: white;
+    font-family: 'Aldrich', 'PHI';
+}
+
+.phi-plugin p {
+    font-size: 34px;
+    text-shadow: 0 0 20px rgb(0 186 255);
+}
+
+.ver p {
+    font-size: 18px;
+    text-shadow: 0 0 20px #fff700;
+}
+
+.ver {
+    margin-left: 14px;
+}

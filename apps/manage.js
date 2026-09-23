@@ -16,7 +16,7 @@ import { redis } from '../components/platform/index.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
-let banSetting = ["help", "bind", "b19", "wb19", "song", "ranklist", "fnc", "tipgame", "guessgame", "ltrgame", "sign", "setting", "dan", "apiSetting"]
+let banSetting = ["help", "bind", "b19", "wb19", "song", "ranklist", "fnc", "tipgame", "guessgame", "ltrgame", "fribgame", "sign", "setting", "dan", "apiSetting"]
 
 export class phiset extends phiPluginBase {
     constructor() {

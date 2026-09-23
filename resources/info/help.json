@@ -288,6 +288,11 @@
                 "desc": "提示猜歌，回答直接发曲目，识别后 Bot 会回复正确与否"
             },
             {
+                "title": "/弗一把<br>/friberg",
+                "eg": "/friberg [难度] [定数下限] (直接回答) /ans",
+                "desc": "弗一把猜歌，每次猜测都会对比曲目属性，逐步逼近正确答案<br>定数与物量以指定难度的谱面为准，定数下限可写成 14+ 的形式<br>eg1: /friberg<br>eg2: /弗一把 IN 14+"
+            },
+            {
                 "title": "/theme",
                 "eg": "/theme [0-3]",
                 "desc": "切换主题，作用于 pgr update list task<br>0：默认&ensp;&ensp;&ensp;1：寒冬<br>2：使一颗心免于哀伤<br>3：大师赛2eg: /theme 1"
@@ -419,7 +424,7 @@
             {
                 "title": "/unban",
                 "eg": "/unban <功能>",
-                "desc": "恢复使用某一类功能\n可选参数: all help bind b19 wb19 song ranklist fnc tipgame guessgame ltrgame sign setting dan"
+                "desc": "恢复使用某一类功能\n可选参数: all help bind b19 wb19 song ranklist fnc tipgame guessgame ltrgame fribgame sign setting dan"
             },
             {
                 "title": "/updateUserToken",

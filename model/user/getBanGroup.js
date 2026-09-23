@@ -96,6 +96,8 @@ export default class getBanGroup {
                 return await this.redis(group_id, 'guessgame')
             case 'ltrgame':
                 return await this.redis(group_id, 'ltrgame')
+            case 'fribgame':
+                return await this.redis(group_id, 'fribgame')
             case 'sign':
             case 'send':
             case 'tasks':
