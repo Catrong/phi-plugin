@@ -176,14 +176,18 @@ export function parseBpmRange(bpm) {
 }
 
 /**
- * 解析开局参数，例如「/phi 弗一把 IN 14+」
+ * 解析开局参数，例如「/phi 弗一把 IN 14+」。
+ * 只给一个定数（如「14.1」）时视为「14.1+」，即该定数及以上。
  * @param {string} msg 触发消息
  * @param {levelKind} [defaultLevel] 未指定难度时使用的分档
  * @returns {{ level: levelKind, minDifficulty: number | null }}
  */
 export function parseStartArgs(msg, defaultLevel = FRIB_DEFAULT_LEVEL) {
-    const text = String(msg ?? '').replace(/-\s*[lL]\s*\d+/g, '')
-    const rawLevel = text.match(/\b(EZ|HD|IN|AT)\b/i)?.[1]?.toUpperCase() ?? ''
+    // 去掉命令头，避免命令头本身含难度缩写时被当成难度；同时忽略猜曲绘遗留的 -l 参数
+    const text = String(msg ?? '')
+        .replace(/^[#/]\s*\S+\s*/, '')
+        .replace(/-\s*[lL]\s*\d+/g, '')
+    const rawLevel = text.match(/(EZ|HD|IN|AT)/i)?.[1]?.toUpperCase() ?? ''
     const fallback = FRIB_LEVELS.find(item => item === defaultLevel) ?? FRIB_DEFAULT_LEVEL
     const level = FRIB_LEVELS.find(item => item === rawLevel) ?? fallback
     const rawDifficulty = text.match(/(\d+(?:\.\d+)?)\s*\+?/)
@@ -242,23 +246,6 @@ export function compareBoolean(guess, answer) {
     }
 }
 
-/** 原谱师名中常见的多人署名分隔符 */
-const CHARTER_SEPARATOR = /\s*(?:&|＆|,|，|、|\/|vs\.?|\+)\s*/i
-
-/**
- * 拆分原谱师名中的多人署名，单个署名返回单元素数组
- * @param {unknown} raw
- * @returns {string[]}
- */
-export function splitCharterNames(raw) {
-    const text = String(raw ?? '').trim()
-    if (!text) return []
-    return text
-        .split(CHARTER_SEPARATOR)
-        .map(name => name.trim())
-        .filter(Boolean)
-}
-
 /**
  * 归一化谱师名单：去空白、忽略大小写、去重
  * @param {string[]} names
@@ -276,18 +263,16 @@ function normalizeCharterSet(names) {
 }
 
 /**
- * 判定用的谱师名单：优先使用已确认的真实名录（按字典序），缺失时拆分原谱师名
+ * 已确认的真实谱师名录（按字典序），没有数据时返回 null
  * @param {fribSongInfo} info
  * @param {levelKind} level
- * @returns {string[]}
+ * @returns {string[] | null}
  */
-export function charterNameList(info, level) {
-    const verified = info?.charters?.[level]
-    if (Array.isArray(verified)) {
-        const names = verified.map(name => String(name ?? '').trim()).filter(Boolean)
-        if (names.length) return [...names].sort()
-    }
-    return splitCharterNames(info?.chart?.[level]?.charter)
+export function charterVerifiedNames(info, level) {
+    const list = info?.charters?.[level]
+    if (!Array.isArray(list)) return null
+    const names = list.map(name => String(name ?? '').trim()).filter(Boolean)
+    return names.length ? [...names].sort() : null
 }
 
 /**
@@ -297,9 +282,8 @@ export function charterNameList(info, level) {
  * @returns {string}
  */
 export function charterDisplayText(info, level) {
-    const verified = info?.charters?.[level]
-    if (Array.isArray(verified) && verified.some(name => String(name ?? '').trim())) {
-        const names = charterNameList(info, level)
+    const names = charterVerifiedNames(info, level)
+    if (names) {
         const plainAscii = names.every(name => /^[\x20-\x7E]+$/.test(name))
         return names.join(plainAscii ? ', ' : '、')
     }
@@ -307,15 +291,22 @@ export function charterDisplayText(info, level) {
 }
 
 /**
- * 谱师名单对比：完全相同为相同，只要两份名单有重合即为相近，否则不同
- * @param {string[]} guess
- * @param {string[]} answer
+ * 谱师对比：
+ * 双方都有真实名录时按名单集合比较，完全相同为相同、有重合即为相近；
+ * 任一方只能使用原谱师名时按整体文本比较（不拆分），相同为相同、否则不同。
+ * @param {fribSongInfo} guess
+ * @param {fribSongInfo} answer
+ * @param {levelKind} level
  * @returns {{ state: string, arrow: string }}
  */
-export function compareCharterSets(guess, answer) {
-    const guessSet = normalizeCharterSet(guess)
-    const answerSet = normalizeCharterSet(answer)
-    if (!guessSet.length || !answerSet.length) return { state: FRIB_STATE.UNKNOWN, arrow: FRIB_ARROW.NONE }
+export function compareCharter(guess, answer, level) {
+    const guessVerified = charterVerifiedNames(guess, level)
+    const answerVerified = charterVerifiedNames(answer, level)
+    if (!guessVerified || !answerVerified) {
+        return compareText(charterDisplayText(guess, level), charterDisplayText(answer, level))
+    }
+    const guessSet = normalizeCharterSet(guessVerified)
+    const answerSet = normalizeCharterSet(answerVerified)
     const same = guessSet.length === answerSet.length && guessSet.every(name => answerSet.includes(name))
     if (same) return { state: FRIB_STATE.SAME, arrow: FRIB_ARROW.NONE }
     return {
@@ -593,7 +584,7 @@ export function createFribRow(guess, answer, context) {
         hit: Boolean(guessSong) && guessSong === answerSong,
         charter: buildItem(
             charterDisplayText(guess, context.level),
-            compareCharterSets(charterNameList(guess, context.level), charterNameList(answer, context.level)),
+            compareCharter(guess, answer, context.level),
         ),
         version: buildItem(guessVersion?.label, version, guessVersion ? formatVersionDate(guessVersion.date) : ''),
         chapter: buildItem(guess?.chapter, compareText(guess?.chapter, answer?.chapter)),

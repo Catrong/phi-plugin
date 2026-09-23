@@ -118,7 +118,7 @@
 
     <div class="tipsRow">
         <p>相近范围：版本前后 {{nearVersion}} 代 · 定数 ±{{nearDifficulty}} · BPM ±{{nearBpm}} · 物量 ±{{nearCombo}}</p>
-        <p>谱师名录来源于 daogemm.github.io，按字典序排列，多名谱师只要有一人重合即视为相近</p>
+        <p>谱师名录来源于 daogemm.github.io，按字典序排列；双方都有真实名录时，多名谱师只要有一人重合即视为相近</p>
         <p>本局参与 {{players}} 人 · 发送曲名进行猜测 · /{{cmdhead}} ans 公布答案 · 连续 {{timeout}} 秒无有效猜测后过期</p>
     </div>
 

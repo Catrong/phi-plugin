@@ -8,7 +8,21 @@ import getBanGroup from '../model/user/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
 
-let games = "(提示猜曲|tipgame|(ltr|letter|开字母).*|guess|猜曲绘|(弗一把|([Ff][Rr][Ii][Bb][Ee][Rr][Gg])|([Ff][Ii][Bb])|([Ff][Rr][Ii])))"
+/**
+ * 各游戏及其自身支持的参数，按游戏分组写在这里：
+ * - 提示猜曲 / tipgame：无参数
+ * - 开字母 / ltr：后续内容直接吞掉（由字母游戏自己解析）
+ * - 猜曲绘 / guess：-l 指定干扰难度
+ * - 弗一把 / fib：难度与定数下限，可与游戏名连写（如 IN 14+、14.1、fib14.3）
+ * 每个游戏名都放在独立捕获组里，start 取第一个命中的捕获组作为游戏名，
+ * 参数只作用于所属游戏，不会互相串味。
+ */
+let games = [
+    '(提示猜曲|tipgame)',
+    '(ltr|letter|开字母).*',
+    '(guess|猜曲绘)(?:\\s*\\-[lL]\\s*\\d+)?',
+    '(弗一把|(?:[Ff][Rr][Ii][Bb][Ee][Rr][Gg])|(?:[Ff][Ii][Bb])|(?:[Ff][Rr][Ii]))(?:\\s*(?:(?:[Ee][Zz]|[Hh][Dd]|[Ii][Nn]|[Aa][Tt])(?:\\s*\\d+(?:\\.\\d+)?\\s*\\+?)?|\\d+(?:\\.\\d+)?\\s*\\+?))?',
+].join('|')
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -31,7 +45,7 @@ export class phiGames extends phiPluginBase {
             priority: 1000,
             rule: [
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)${games}\\s*((\\-[lL]\\s*\\d+)|(([Ee][Zz]|[Hh][Dd]|[Ii][Nn]|[Aa][Tt])(\\s*\\d+(\\.\\d+)?\\s*\\+?)?)|(\\d+(\\.\\d+)?\\s*\\+))?$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(?:${games})$`,
                     fnc: 'start'
                 },
                 {
@@ -61,7 +75,10 @@ export class phiGames extends phiPluginBase {
      * @returns 
      */
     async start(e) {
-        let msg = e.msg.match(new RegExp(games))?.[0]
+        const head = Config.getUserCfg('config', 'cmdhead')
+        /** games 中每个游戏名都是独立捕获组，取第一个命中的捕获组即为本次游戏名 */
+        const matched = String(e.msg ?? '').match(new RegExp(`^[#/](${head})(\\s*)(?:${games})$`))
+        const msg = matched?.slice(3).find(value => value !== undefined) ?? ''
         if (!e.group_id) {
             send.send_with_At(e, '请在群聊中使用这个功能嗷！')
             return false

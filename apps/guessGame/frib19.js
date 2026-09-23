@@ -359,8 +359,8 @@ export default new class frib19 {
         gameList[group_id] = { gameType: 'frib19' }
         send.reply(e, [
             `下面开始进行弗一把哦！本局按「${levelText(level, minDifficulty)}」谱面对比，定数与物量均以该难度为准嗷！`,
-            `直接发送曲名进行猜测，参与的人越多本局可猜次数越多（1 人 ${guessNumLimit(1, guessNumTable())} 次，最多 ${guessNumLimit(99, guessNumTable())} 次）；猜中或次数用尽后公布答案，连续 ${Config.getUserCfg('config', 'FribTimeout')} 秒没有有效猜测会自动结束呐！`,
-            `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 可以提前公布答案哦！回答冷却：个人 ${Config.getUserCfg('config', 'FribSelfGuessCd')}s、群聊 ${Config.getUserCfg('config', 'FribGroupGuessCd')}s。`,
+            `直接发送曲名进行猜测，参与的人越多本局可猜次数越多（初始 ${guessNumLimit(1, guessNumTable())} 次，最多 ${guessNumLimit(99, guessNumTable())} 次）；猜中或次数用尽后公布答案，连续 ${Config.getUserCfg('config', 'FribTimeout')} 秒没有有效猜测会自动结束呐！`,
+            `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 获取答案，回答冷却：个人 ${Config.getUserCfg('config', 'FribSelfGuessCd')}s、群聊 ${Config.getUserCfg('config', 'FribGroupGuessCd')}s。`,
         ])
         refreshTimeout(group_id, gameList)
         return true
@@ -391,8 +391,10 @@ export default new class frib19 {
             markGuessed(game, e)
             try {
                 await send.send_with_At(e, `恭喜你，猜中啦喵！ヾ(≧▽≦*)o`, true)
-                await send.reply(e, ['正确答案是：', await renderGame(e, game, true)])
+                await send.reply(e, await renderGame(e, game, true))
                 await send.reply(e, await getPic.GetSongsInfoAtlas(e, game.ansId))
+                await send.reply(e, `正确答案是：${answer.song}！发送 /${Config.getUserCfg('config', 'cmdhead')} fib 可以再来一局喵！\n` +
+                    `Tip: 可以指定难度与定级范围哦~ 例如 /${Config.getUserCfg('config', 'cmdhead')} fib AT 15+`)
             } catch (err) {
                 logger.error('[phi-plugin][frib19]结算消息发送失败')
                 logger.error(err)

@@ -74,6 +74,17 @@ test('开局参数解析难度与定数下限', () => {
     assert.deepEqual(parseStartArgs('/phi fri', /** @type {any} */ ('XX')), { level: 'IN', minDifficulty: null })
     assert.deepEqual(parseStartArgs('/phi 弗一把 -l 3'), { level: 'IN', minDifficulty: null })
     assert.deepEqual(parseStartArgs('/phi 弗一把 AT -l 2'), { level: 'AT', minDifficulty: null })
+    /** 只给定数时视为该定数及以上 */
+    assert.deepEqual(parseStartArgs('/phi fib 14.1'), { level: 'IN', minDifficulty: 14.1 })
+    assert.deepEqual(parseStartArgs('/phi fib 14.1+'), { level: 'IN', minDifficulty: 14.1 })
+    assert.deepEqual(parseStartArgs('/phi 弗一把 15'), { level: 'IN', minDifficulty: 15 })
+    assert.deepEqual(parseStartArgs('/phi fri at 15'), { level: 'AT', minDifficulty: 15 })
+    /** 支持与游戏名连写 */
+    assert.deepEqual(parseStartArgs('/phi fib14.3'), { level: 'IN', minDifficulty: 14.3 })
+    assert.deepEqual(parseStartArgs('/phi 弗一把14.3'), { level: 'IN', minDifficulty: 14.3 })
+    assert.deepEqual(parseStartArgs('/phi fibAT15'), { level: 'AT', minDifficulty: 15 })
+    assert.deepEqual(parseStartArgs('/phi fib IN'), { level: 'IN', minDifficulty: null })
+    assert.deepEqual(parseStartArgs('/phi fib'), { level: 'IN', minDifficulty: null })
 })
 
 test('数值对比区分相同、相近与不同并给出方向', () => {
@@ -374,7 +385,7 @@ test('早于收录范围的曲目展示最早版本号加短横且只比较早�
     })
 })
 
-test('谱师按名录集合判定：有重合即相近，缺失名录时用原谱师名', () => {
+test('谱师按名录集合判定：有重合即相近，原谱师名整体比较不拆分', () => {
     const context = {
         player: '废酱',
         level: /** @type {levelKind} */ ('IN'),
@@ -397,30 +408,34 @@ test('谱师按名录集合判定：有重合即相近，缺失名录时用原�
         createFribRow(song('x', ['Salt', 'Akko']), song('y', ['Akko', 'Salt']), context).charter,
         { value: 'Akko, Salt', state: FRIB_STATE.SAME, arrow: '' },
     )
-    /** 有重合 → 相近 */
+    /** 双方都有名录且有重合 → 相近 */
     assert.deepEqual(
         createFribRow(song('x', ['Akko', 'Salt']), song('y', ['Salt', 'Rikko']), context).charter,
         { value: 'Akko, Salt', state: FRIB_STATE.NEAR, arrow: '' },
     )
-    /** 无重合 → 不同 */
+    /** 双方都有名录且无重合 → 不同 */
     assert.deepEqual(
         createFribRow(song('x', ['Akko']), song('y', ['Rikko']), context).charter,
         { value: 'Akko', state: FRIB_STATE.DIFF, arrow: '' },
     )
-    /** 缺失真实名录 → 使用原谱师名并拆成集合判定 */
+    /** 任一方只有原谱师名 → 整体文本比较，不拆分，也不判相近 */
     assert.deepEqual(
         createFribRow(song('Akko & Salt', undefined), song('Salt', undefined), context).charter,
-        { value: 'Akko & Salt', state: FRIB_STATE.NEAR, arrow: '' },
+        { value: 'Akko & Salt', state: FRIB_STATE.DIFF, arrow: '' },
+    )
+    assert.deepEqual(
+        createFribRow(song('Akko & Salt', undefined), song('Akko & Salt', undefined), context).charter,
+        { value: 'Akko & Salt', state: FRIB_STATE.SAME, arrow: '' },
+    )
+    /** 一方有名录、一方只有原谱师名 → 只比较整体文本 */
+    assert.deepEqual(
+        createFribRow(song('Salt', ['Salt', 'Akko']), song('Salt', undefined), context).charter,
+        { value: 'Akko, Salt', state: FRIB_STATE.DIFF, arrow: '' },
     )
     /** 双方都没有谱师数据 → 数据未知 */
     assert.deepEqual(
         createFribRow(song('', undefined), song('Rikko', ['Rikko']), context).charter,
         { value: '—', state: FRIB_STATE.UNKNOWN, arrow: '' },
-    )
-    /** 一方有名录、一方只有原谱师名时仍按集合比较 */
-    assert.deepEqual(
-        createFribRow(song('Salt', ['Salt', 'Akko']), song('Akko', undefined), context).charter,
-        { value: 'Akko, Salt', state: FRIB_STATE.NEAR, arrow: '' },
     )
 })
 
