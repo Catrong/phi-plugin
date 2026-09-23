@@ -200,6 +200,7 @@ async function renderGame(e, game, showAnswer) {
         nearDifficulty: Config.getUserCfg('config', 'FribNearDifficulty'),
         nearBpm: Config.getUserCfg('config', 'FribNearBpm'),
         nearCombo: Config.getUserCfg('config', 'FribNearCombo'),
+        earliestVersion: getVersionIndex().earliestLabel,
         cmdhead: Config.getUserCfg('config', 'cmdhead'),
         timeout: Config.getUserCfg('config', 'FribTimeout'),
     })

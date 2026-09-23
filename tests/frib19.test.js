@@ -3,7 +3,7 @@ import test from 'node:test'
 
 import {
     FRIB_STATE,
-    FRIB_UNKNOWN_VERSION,
+    FRIB_UNKNOWN_TEXT,
     buildSongPool,
     buildVersionIndex,
     compareBoolean,
@@ -18,12 +18,15 @@ import {
 
 /**
  * 构造版本索引，测试中不关心里层类型
- * @param {[string, { label: string, order: number } | null][]} entries
+ * @param {[string, { label: string, order: number, beforeRange: boolean } | null][]} entries
  * @returns {import('../apps/guessGame/frib19Utils.js').fribVersionIndex}
  */
 function versionIndex(entries) {
-    return /** @type {any} */ ({ bySong: new Map(entries), orderOfCode: new Map() })
+    return /** @type {any} */ ({ bySong: new Map(entries), orderOfCode: new Map(), earliestLabel: '3.4.0' })
 }
+
+/** 早于收录范围的版本，只比较早晚 */
+const beforeRange = { label: '3.4.0-', order: -1, beforeRange: true }
 
 /** @type {import('../apps/guessGame/frib19Utils.js').fribSongInfo} */
 const answer = {
@@ -95,23 +98,42 @@ test('文本与布尔属性对比忽略大小写且不产生箭头', () => {
 })
 
 test('版本对比按收录序号判定相近并处理未知版本', () => {
-    const older = { label: '3.4.0', order: 0 }
-    const newer = { label: '3.5.1', order: 2 }
+    const older = { label: '3.4.0', order: 0, beforeRange: false }
+    const newer = { label: '3.5.1', order: 2, beforeRange: false }
     assert.deepEqual(compareVersion(older, newer, 2), { state: FRIB_STATE.NEAR, arrow: 'up' })
     assert.deepEqual(compareVersion(newer, older, 2), { state: FRIB_STATE.NEAR, arrow: 'down' })
     assert.deepEqual(compareVersion(older, older, 2), { state: FRIB_STATE.SAME, arrow: '' })
-    assert.deepEqual(compareVersion(older, { label: '3.20.0', order: 30 }, 2), { state: FRIB_STATE.DIFF, arrow: 'up' })
+    assert.deepEqual(compareVersion(older, { label: '3.20.0', order: 30, beforeRange: false }, 2), { state: FRIB_STATE.DIFF, arrow: 'up' })
     assert.deepEqual(compareVersion(null, newer, 2), { state: FRIB_STATE.UNKNOWN, arrow: '' })
 })
 
-test('版本索引把最早版本内的曲目视为早于收录范围', () => {
+test('早于收录范围的版本只比较早晚且双方一致时视为相同', () => {
+    const adjacent = { label: '3.4.1', order: 1, beforeRange: false }
+    const far = { label: '3.4.3', order: 3, beforeRange: false }
+    assert.deepEqual(compareVersion(beforeRange, beforeRange, 2), { state: FRIB_STATE.SAME, arrow: '' })
+    assert.deepEqual(compareVersion(adjacent, beforeRange, 2), { state: FRIB_STATE.DIFF, arrow: 'down' })
+    assert.deepEqual(compareVersion(beforeRange, adjacent, 2), { state: FRIB_STATE.DIFF, arrow: 'up' })
+    assert.deepEqual(compareVersion(far, beforeRange, 2), { state: FRIB_STATE.DIFF, arrow: 'down' })
+    assert.deepEqual(compareVersion(adjacent, far, 2), { state: FRIB_STATE.NEAR, arrow: 'up' })
+})
+
+test('版本索引把最早版本内的曲目记为最早版本号加短横', () => {
     const index = buildVersionIndex(
         { '92': { version_label: '3.4.0' }, '95': { version_label: '3.4.3' } },
         { '92': { 'Old.Song': {} }, '95': { 'Old.Song': {}, 'New.Song': {} } },
     )
-    assert.equal(index.bySong.get(/** @type {any} */ ('Old.Song')), null)
-    assert.deepEqual(index.bySong.get(/** @type {any} */ ('New.Song')), { label: '3.4.3', order: 1 })
+    assert.deepEqual(index.bySong.get(/** @type {any} */ ('Old.Song')), {
+        label: '3.4.0-',
+        order: -1,
+        beforeRange: true,
+    })
+    assert.deepEqual(index.bySong.get(/** @type {any} */ ('New.Song')), {
+        label: '3.4.3',
+        order: 1,
+        beforeRange: false,
+    })
     assert.equal(index.orderOfCode.get('95'), 1)
+    assert.equal(index.earliestLabel, '3.4.0')
 })
 
 test('曲目池只保留拥有对应难度且满足定数下限的曲目', () => {
@@ -145,8 +167,8 @@ test('猜测行按相近范围给出颜色状态与箭头', () => {
         player: '废酱',
         level: 'IN',
         versionIndex: versionIndex([
-            ['Answer.Song', { label: '3.5.1', order: 2 }],
-            ['Guess.Song', { label: '3.4.0', order: 0 }],
+            ['Answer.Song', { label: '3.5.1', order: 2, beforeRange: false }],
+            ['Guess.Song', { label: '3.4.0', order: 0, beforeRange: false }],
         ]),
         nearDifficulty: 0.3,
         nearBpm: 20,
@@ -176,7 +198,7 @@ test('命中行与缺失数据行分别标记命中与数据未知', () => {
         nearVersion: 2,
     })
     assert.equal(hit.hit, true)
-    assert.deepEqual(hit.version, { value: FRIB_UNKNOWN_VERSION, state: FRIB_STATE.UNKNOWN, arrow: '' })
+    assert.deepEqual(hit.version, { value: FRIB_UNKNOWN_TEXT, state: FRIB_STATE.UNKNOWN, arrow: '' })
     assert.deepEqual(hit.difficulty, { value: '15.4', state: FRIB_STATE.SAME, arrow: '' })
     assert.deepEqual(hit.original, { value: '独占', state: FRIB_STATE.SAME, arrow: '' })
 
@@ -193,6 +215,42 @@ test('命中行与缺失数据行分别标记命中与数据未知', () => {
     assert.equal(empty.bpm.state, FRIB_STATE.UNKNOWN)
     assert.equal(empty.combo.value, '—')
     assert.equal(empty.chapter.value, '—')
+})
+
+test('早于收录范围的曲目展示最早版本号加短横且只比较早晚', () => {
+    const early = /** @type {any} */ ({
+        id: 'Early.0',
+        song: 'Early Song',
+        bpm: '150',
+        chart: { IN: { difficulty: 15, combo: 1000 } },
+    })
+    const context = {
+        player: '废酱',
+        level: /** @type {levelKind} */ ('IN'),
+        versionIndex: versionIndex([
+            ['Early.0', { label: '3.4.0-', order: -1, beforeRange: true }],
+            ['Answer.Song', { label: '3.5.1', order: 2, beforeRange: false }],
+        ]),
+        nearDifficulty: 0.3,
+        nearBpm: 20,
+        nearCombo: 200,
+        nearVersion: 2,
+    }
+    assert.deepEqual(createFribRow(early, answer, context).version, {
+        value: '3.4.0-',
+        state: FRIB_STATE.DIFF,
+        arrow: 'up',
+    })
+    assert.deepEqual(createFribRow(answer, early, context).version, {
+        value: '3.5.1',
+        state: FRIB_STATE.DIFF,
+        arrow: 'down',
+    })
+    assert.deepEqual(createFribRow(early, early, context).version, {
+        value: '3.4.0-',
+        state: FRIB_STATE.SAME,
+        arrow: '',
+    })
 })
 
 test('渲染行保持模板约定的七列顺序', () => {

@@ -18,9 +18,6 @@ export const FRIB_ARROW = {
     NONE: '',
 }
 
-/** 曲目早于收录的最早版本时展示的占位文本 */
-export const FRIB_UNKNOWN_VERSION = 'x.xx.xx-'
-
 /** 属性数据缺失时展示的占位文本 */
 export const FRIB_UNKNOWN_TEXT = '—'
 
@@ -32,14 +29,16 @@ export const FRIB_DEFAULT_LEVEL = /** @type {levelKind} */ ('IN')
 
 /**
  * @typedef {object} fribVersionInfo
- * @property {string} label 版本号文本，如 3.5.1
- * @property {number} order 版本在收录历史中的序号
+ * @property {string} label 版本号文本，如 3.5.1；早于收录范围时为最早版本号加 -
+ * @property {number} order 版本在收录历史中的序号；早于收录范围的曲目排在最早版本之前
+ * @property {boolean} beforeRange 是否早于收录的最早版本，此类曲目只比较早晚、不判定相近
  */
 
 /**
  * @typedef {object} fribVersionIndex
- * @property {Map<idString, fribVersionInfo | null>} bySong 曲目加入版本，null 表示早于收录范围
+ * @property {Map<idString, fribVersionInfo | null>} bySong 曲目加入版本，null 表示没有任何收录记录
  * @property {Map<string, number>} orderOfCode 版本编号对应的历史序号
+ * @property {string} earliestLabel 收录的最早版本号
  */
 
 /**
@@ -181,7 +180,8 @@ export function compareBoolean(guess, answer) {
 }
 
 /**
- * 版本对比，相近范围为前后若干代
+ * 版本对比，相近范围为前后若干代；
+ * 早于收录范围的曲目只比较早晚，不判定相近
  * @param {fribVersionInfo | null} guess
  * @param {fribVersionInfo | null} answer
  * @param {number} tolerance
@@ -192,7 +192,7 @@ export function compareVersion(guess, answer, tolerance) {
     const offset = answer.order - guess.order
     let state = FRIB_STATE.DIFF
     if (offset === 0) state = FRIB_STATE.SAME
-    else if (Math.abs(offset) <= tolerance) state = FRIB_STATE.NEAR
+    else if (!guess.beforeRange && !answer.beforeRange && Math.abs(offset) <= tolerance) state = FRIB_STATE.NEAR
     let arrow = FRIB_ARROW.NONE
     if (offset > 0) arrow = FRIB_ARROW.UP
     else if (offset < 0) arrow = FRIB_ARROW.DOWN
@@ -201,7 +201,8 @@ export function compareVersion(guess, answer, tolerance) {
 
 /**
  * 根据历史定数记录推导每首曲目的加入版本。
- * 收录的最早版本中已存在的曲目无法确定加入版本，记为 null。
+ * 收录的最早版本中已存在的曲目无法确定加入版本，记为「最早版本号-」，
+ * 排在最早版本之前，只参与早晚比较。
  * @param {Record<string, { version_label?: string } | undefined>} versionInfoByCode
  * @param {Record<string, Record<string, unknown> | undefined>} historyDifficultyByVersion
  * @returns {fribVersionIndex}
@@ -216,22 +217,29 @@ export function buildVersionIndex(versionInfoByCode, historyDifficultyByVersion)
     /** @type {Map<idString, fribVersionInfo | null>} */
     const bySong = new Map()
     const earliest = codes[0]
+    const earliestLabel = String(versionInfoByCode?.[earliest]?.version_label ?? earliest)
+    const earliestOrder = orderOfCode.get(earliest) ?? 0
     for (const code of codes) {
         const songs = historyDifficultyByVersion?.[code] ?? {}
         const versionInfo = versionInfoByCode?.[code]
         for (const id of Object.keys(songs)) {
             if (bySong.has(/** @type {idString} */ (id))) continue
             if (code === earliest) {
-                bySong.set(/** @type {idString} */ (id), null)
+                bySong.set(/** @type {idString} */ (id), {
+                    label: `${earliestLabel}-`,
+                    order: earliestOrder - 1,
+                    beforeRange: true,
+                })
                 continue
             }
             bySong.set(/** @type {idString} */ (id), {
                 label: String(versionInfo?.version_label ?? code),
                 order: orderOfCode.get(code) ?? 0,
+                beforeRange: false,
             })
         }
     }
-    return { bySong, orderOfCode }
+    return { bySong, orderOfCode, earliestLabel }
 }
 
 /**
@@ -270,13 +278,13 @@ function versionOf(info, versionIndex) {
 }
 
 /**
- * 版本展示文本
+ * 版本展示文本，没有任何收录记录时退化为数据未知
  * @param {fribSongInfo} info
  * @param {fribVersionIndex} versionIndex
  * @returns {string}
  */
 function versionLabelOf(info, versionIndex) {
-    return versionOf(info, versionIndex)?.label ?? FRIB_UNKNOWN_VERSION
+    return versionOf(info, versionIndex)?.label ?? FRIB_UNKNOWN_TEXT
 }
 
 /**
