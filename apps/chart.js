@@ -70,6 +70,7 @@ import { sendQuickCommands } from '../model/game/markdown.js'
  * @property {levelKind} rank 难度
  * @property {number} difficulty 定数
  * @property {string} charter 谱师
+ * @property {string} charterReal 谱师真实名录文本（daogemm.github.io，按字典序），无数据时为空字符串
  * @property {number | undefined} tap Tap 数
  * @property {number | undefined} drag Drag 数
  * @property {number | undefined} hold Hold 数
@@ -585,6 +586,7 @@ async function getChartImg(e, id, options) {
     rank: rank,
     difficulty: chart.difficulty,
     charter: chart.charter,
+    charterReal: getInfo.getChartersText(info.id, rank),
     tap: chart.tap,
     drag: chart.drag,
     hold: chart.hold,

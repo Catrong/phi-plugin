@@ -40,7 +40,8 @@ const answer = {
     chapter: 'Chapter 7 时钟链接',
     bpm: '190',
     isOriginal: true,
-    chart: { IN: { difficulty: 15.4, combo: 1200 } },
+    chart: { IN: { difficulty: 15.4, combo: 1200, charter: 'Akko & Salt' } },
+    charters: { IN: ['Akko', 'Salt'] },
 }
 
 /** @type {import('../apps/guessGame/frib19Utils.js').fribSongInfo} */
@@ -51,7 +52,8 @@ const guess = {
     chapter: 'Chapter 5 霓虹灯牌',
     bpm: '170',
     isOriginal: false,
-    chart: { IN: { difficulty: 15.2, combo: 1100 } },
+    chart: { IN: { difficulty: 15.2, combo: 1100, charter: 'Rikko' } },
+    charters: { IN: ['Rikko'] },
 }
 
 test('BPM 文本支持单值、区间与非法数据', () => {
@@ -297,7 +299,7 @@ test('猜测行按相近范围给出颜色状态与箭头', () => {
     assert.equal(row.player, '废酱')
     assert.equal(row.song, 'Guess Song')
     assert.equal(row.hit, false)
-    assert.deepEqual(row.composer, { value: 'Other', state: FRIB_STATE.DIFF, arrow: '' })
+    assert.deepEqual(row.charter, { value: 'Rikko', state: FRIB_STATE.DIFF, arrow: '' })
     assert.deepEqual(row.version, { value: '1.2.1', sub: '2019-11-22', state: FRIB_STATE.NEAR, arrow: 'up' })
     assert.deepEqual(row.chapter, { value: 'Chapter 5 霓虹灯牌', state: FRIB_STATE.DIFF, arrow: '' })
     assert.deepEqual(row.original, { value: '非独占', state: FRIB_STATE.DIFF, arrow: '' })
@@ -372,6 +374,56 @@ test('早于收录范围的曲目展示最早版本号加短横且只比较早�
     })
 })
 
+test('谱师按名录集合判定：有重合即相近，缺失名录时用原谱师名', () => {
+    const context = {
+        player: '废酱',
+        level: /** @type {levelKind} */ ('IN'),
+        versionIndex: versionIndex([]),
+        nearDifficulty: 0.3,
+        nearBpm: 20,
+        nearCombo: 200,
+        nearVersion: 2,
+    }
+    /** @param {string} charter @param {string[] | undefined} charters */
+    const song = (charter, charters) => /** @type {any} */ ({
+        id: `Song.${charter}`,
+        song: `Song ${charter}`,
+        chart: { IN: { difficulty: 15, combo: 1000, charter } },
+        ...(charters ? { charters: { IN: charters } } : {}),
+    })
+
+    /** 名录顺序不同但集合一致 → 相同，展示按字典序 */
+    assert.deepEqual(
+        createFribRow(song('x', ['Salt', 'Akko']), song('y', ['Akko', 'Salt']), context).charter,
+        { value: 'Akko, Salt', state: FRIB_STATE.SAME, arrow: '' },
+    )
+    /** 有重合 → 相近 */
+    assert.deepEqual(
+        createFribRow(song('x', ['Akko', 'Salt']), song('y', ['Salt', 'Rikko']), context).charter,
+        { value: 'Akko, Salt', state: FRIB_STATE.NEAR, arrow: '' },
+    )
+    /** 无重合 → 不同 */
+    assert.deepEqual(
+        createFribRow(song('x', ['Akko']), song('y', ['Rikko']), context).charter,
+        { value: 'Akko', state: FRIB_STATE.DIFF, arrow: '' },
+    )
+    /** 缺失真实名录 → 使用原谱师名并拆成集合判定 */
+    assert.deepEqual(
+        createFribRow(song('Akko & Salt', undefined), song('Salt', undefined), context).charter,
+        { value: 'Akko & Salt', state: FRIB_STATE.NEAR, arrow: '' },
+    )
+    /** 双方都没有谱师数据 → 数据未知 */
+    assert.deepEqual(
+        createFribRow(song('', undefined), song('Rikko', ['Rikko']), context).charter,
+        { value: '—', state: FRIB_STATE.UNKNOWN, arrow: '' },
+    )
+    /** 一方有名录、一方只有原谱师名时仍按集合比较 */
+    assert.deepEqual(
+        createFribRow(song('Salt', ['Salt', 'Akko']), song('Akko', undefined), context).charter,
+        { value: 'Akko, Salt', state: FRIB_STATE.NEAR, arrow: '' },
+    )
+})
+
 test('渲染行保持模板约定的七列顺序', () => {
     const row = createFribRow(guess, answer, {
         player: '废酱',
@@ -387,7 +439,7 @@ test('渲染行保持模板约定的七列顺序', () => {
     assert.equal(rendered[0].player, '废酱')
     assert.equal(rendered[0].hit, false)
     assert.deepEqual(rendered[0].cells.map(cell => cell.cls), [
-        'artistCell',
+        'charterCell',
         'versionCell',
         'chapterCell',
         'originalCell',

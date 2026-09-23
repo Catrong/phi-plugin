@@ -8,6 +8,7 @@ import getPic from '../../model/render/getPic.js'
 import readFile from '../../model/filesystem/getFile.js'
 import { infoPath } from '../../model/filesystem/path.js'
 import path from 'node:path'
+import fs from 'node:fs'
 import logger from '../../components/Logger.js'
 import {
     buildSongPool,
@@ -22,7 +23,7 @@ import {
 
 /** @import {GameList} from '../guessGame.js' */
 /** @import {botEvent} from '../../components/baseClass.js' */
-/** @import {fribRow, fribVersionIndex} from './frib19Utils.js' */
+/** @import {fribRow, fribSongInfo, fribVersionIndex} from './frib19Utils.js' */
 
 /**
  * @typedef {object} fribGameData
@@ -56,6 +57,24 @@ let versionIndexSource = null
 
 /** 缓存对应的版本数量，用于识别同一引用的增量填充 */
 let versionIndexSize = -1
+
+/** 缓存对应的版本数据文件时间戳，用于识别 songVersion.csv / taptap-updates.json 的变化 */
+let versionIndexStamp = ''
+
+/**
+ * 版本数据文件的时间戳签名：这两个文件不属于 getInfo 的曲目数据结构，
+ * 单独用它识别变化，保证改动后下一次渲染即生效
+ * @returns {string}
+ */
+function versionDataStamp() {
+    return [songVersionPath, taptapUpdatesPath].map(file => {
+        try {
+            return fs.statSync(file).mtimeMs
+        } catch {
+            return 0
+        }
+    }).join(':')
+}
 
 /**
  * 读取数值配置，非法值回退默认
@@ -110,9 +129,13 @@ function loadTaptapUpdates() {
 function getVersionIndex() {
     const oldHistory = getInfo.historyDifficultyByVersion
     const size = oldHistory ? Object.keys(oldHistory).length : 0
-    if (versionIndexCache && versionIndexSource === oldHistory && versionIndexSize === size) return versionIndexCache
+    const stamp = versionDataStamp()
+    if (versionIndexCache && versionIndexSource === oldHistory && versionIndexSize === size && versionIndexStamp === stamp) {
+        return versionIndexCache
+    }
     versionIndexSource = oldHistory
     versionIndexSize = size
+    versionIndexStamp = stamp
     versionIndexCache = buildVersionIndex({
         oldVersionInfo: getInfo.versionInfoByCode,
         oldHistory,
@@ -156,6 +179,15 @@ function compareContext(player, level) {
         nearCombo: numberCfg(Config.getUserCfg('config', 'FribNearCombo'), 200),
         nearVersion: numberCfg(Config.getUserCfg('config', 'FribNearVersion'), 2),
     }
+}
+
+/**
+ * 附加该难度的真实谱师名录，供弗一把的谱师列使用
+ * @param {any} info `getInfo.info()` 返回的曲目信息
+ * @returns {fribSongInfo}
+ */
+function withCharters(info) {
+    return { ...info, charters: getInfo.charters?.[info?.id] }
 }
 
 /**
@@ -259,7 +291,7 @@ async function renderGame(e, game, showAnswer) {
     /** 背景使用本局最近一次猜测的曲目，尚未产生猜测时使用答案曲绘 */
     const background = getInfo.getill(game.lastGuessId ?? game.ansId)
     const pluginData = await getNotes.getNotesData(e.user_id)
-    const answerRow = showAnswer ? createFribRow(answer, answer, compareContext('', game.level)) : null
+    const answerRow = showAnswer ? createFribRow(withCharters(answer), withCharters(answer), compareContext('', game.level)) : null
     return await picmodle.frib19(e, {
         background,
         theme: pluginData?.theme,
@@ -354,7 +386,7 @@ export default new class frib19 {
             return false
         }
         if (ids.includes(game.ansId)) {
-            game.rows.push(createFribRow(answer, answer, compareContext(playerName(e), game.level)))
+            game.rows.push(createFribRow(withCharters(answer), withCharters(answer), compareContext(playerName(e), game.level)))
             game.lastGuessId = game.ansId
             markGuessed(game, e)
             try {
@@ -388,7 +420,7 @@ export default new class frib19 {
         }
         const guessInfo = getInfo.info(guessId)
         if (!guessInfo) return false
-        game.rows.push(createFribRow(guessInfo, answer, compareContext(playerName(e), game.level)))
+        game.rows.push(createFribRow(withCharters(guessInfo), withCharters(answer), compareContext(playerName(e), game.level)))
         game.guessedIds.push(guessId)
         game.lastGuessId = guessId
         markGuessed(game, e)

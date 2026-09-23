@@ -152,27 +152,166 @@ export default new class getInfo {
 
         /**@type {Save | null} */
         this.badSave = null;
-
-
-        this.kongYouData = {
-            timeStamp: 0,
-            songList: [],
-            tagsTree: [],
-            tagsTop: {},
-        }
-
+        
         this.initIng = false
         this.reinitRequested = false
 
-        if (Config.getUserCfg('config', 'watchInfoPath')) {
-            this.infoWatcher = fileWatcherRegistry.watch('info:directory', infoPath, () => {
-                void this.init().catch(err => logger.error('[phi-plugin]热更新曲目信息失败', err))
-            });
-        } else {
-            void fileWatcherRegistry.close('info:directory')
+        /** 已注册的信息文件监听 @type {{close: () => Promise<void>}[]} */
+        this.infoWatcherLeases = []
+        /** @type {Promise<void>} 重载串行链，避免加载与初始化并发 */
+        this.infoReloadChain = Promise.resolve()
+        /** @type {Set<string>} 待重载的单元 */
+        this.pendingReloadUnits = new Set()
+        /** @type {ReturnType<typeof setTimeout> | null} */
+        this.reloadTimer = null
+        /** @type {Record<string, Partial<Record<levelKind, number>>>} 上一版本定数表，用于新曲与改谱对比 */
+        this.oldDifList = {}
+        /** @type {boolean} 版本历史是否已加载 */
+        this.versionHistoryLoaded = false
+
+        /** @type {Record<idString, Partial<Record<levelKind, string[]>>>} 来源于 https://daogemm.github.io/files/infos/charters.json */
+        this.charters = {}
+
+        this.setupInfoWatchers()
+    }
+
+    /**
+     * 信息文件 → 变化时需要重载的单元。
+     * 键为 infoPath 下的文件名，值为该文件影响到的数据结构单元。
+     */
+    static infoReloadMap = {
+        'info.csv': ['songs'],
+        'infolist.json': ['songs'],
+        'notesInfo.json': ['songs'],
+        'oldNotesInfo.json': ['songs'],
+        'spinfo.json': ['songs'],
+        'nicklist.yaml': ['aliases'],
+        'chaplist.yaml': ['chapters'],
+        'tips.txt': ['tips'],
+        'avatar.txt': ['avatar'],
+        'jrrp.json': ['jrrp'],
+        'notice.json': ['notice'],
+        'charters.json': ['charters'],
+    }
+
+    /** 全部重载单元，顺序即依赖顺序（songs 依赖 versionHistory 的旧定数表） */
+    static infoReloadOrder = ['versionHistory', 'songs', 'aliases', 'chapters', 'tips', 'avatar', 'jrrp', 'notice', 'badSave', 'dlc', 'charters']
+
+    /**
+     * 按 watchInfoPath 开关注册监听：每个信息文件只重载它影响的单元；
+     * oldInfo 目录、DLC 目录、演示存档与公共别名快照各自单独监听。
+     */
+    setupInfoWatchers() {
+        void this.closeInfoWatchers()
+        // 清理旧版整目录监听可能残留的注册
+        void fileWatcherRegistry.close('info:directory')
+        if (!Config.getUserCfg('config', 'watchInfoPath')) return
+        /** 文件只关心内容变化；目录额外覆盖增删；两者都跳过 chokidar 初始扫描事件 */
+        const fileEvents = ['change']
+        const watchOptions = { ignoreInitial: true }
+        for (const [name, units] of Object.entries(getInfo.infoReloadMap)) {
+            this.infoWatcherLeases.push(fileWatcherRegistry.watch(
+                `info:file:${name}`,
+                path.join(infoPath, name),
+                () => this.scheduleInfoReload(units),
+                fileEvents,
+                watchOptions,
+            ))
+        }
+        /** 目录监听额外覆盖增删事件，并跳过 chokidar 初始扫描产生的 add/addDir */
+        const dirEvents = ['change', 'add', 'unlink', 'addDir', 'unlinkDir']
+        this.infoWatcherLeases.push(fileWatcherRegistry.watch(
+            'info:dir:oldInfo',
+            oldInfoPath,
+            () => this.scheduleInfoReload(['versionHistory', 'songs']),
+            dirEvents,
+            watchOptions,
+        ))
+        this.infoWatcherLeases.push(fileWatcherRegistry.watch(
+            'info:dir:dlc',
+            DlcInfoPath,
+            () => this.scheduleInfoReload(['dlc']),
+            dirEvents,
+            watchOptions,
+        ))
+        this.infoWatcherLeases.push(fileWatcherRegistry.watch(
+            'info:file:badSave',
+            path.join(pluginResources, '0608badSave', 'save.json'),
+            () => this.scheduleInfoReload(['badSave']),
+            fileEvents,
+            watchOptions,
+        ))
+        this.infoWatcherLeases.push(fileWatcherRegistry.watch(
+            'info:file:approvedAlias',
+            path.join(dataPath, 'alias', 'approved-nicklist.yaml'),
+            () => this.scheduleInfoReload(['aliases']),
+            fileEvents,
+            watchOptions,
+        ))
+    }
+
+    /** 关闭全部信息文件监听器。 */
+    async closeInfoWatchers() {
+        const leases = this.infoWatcherLeases
+        this.infoWatcherLeases = []
+        await Promise.allSettled(leases.map(lease => lease.close()))
+    }
+
+    /**
+     * 合并同一批文件事件后排队重载，避免编辑器连续写入触发多次加载
+     * @param {string[]} units
+     */
+    scheduleInfoReload(units) {
+        for (const unit of units) this.pendingReloadUnits.add(unit)
+        if (this.reloadTimer) return
+        this.reloadTimer = setTimeout(() => {
+            this.reloadTimer = null
+            const pending = [...this.pendingReloadUnits]
+            this.pendingReloadUnits.clear()
+            void this.runInfoReload(pending).catch(err => logger.error('[phi-plugin]热更新曲目信息失败', err))
+        }, 100)
+        this.reloadTimer.unref?.()
+    }
+
+    /**
+     * 串行执行重载，保证与初始化、其它重载不并发
+     * @param {string[]} units
+     * @returns {Promise<void>}
+     */
+    async runInfoReload(units) {
+        const run = this.infoReloadChain.then(() => this.reloadInfoUnits(units))
+        this.infoReloadChain = run.catch(() => undefined)
+        return run
+    }
+
+    /**
+     * 按依赖顺序重载指定单元
+     * @param {string[]} units
+     */
+    async reloadInfoUnits(units) {
+        const wanted = new Set(units)
+        if (wanted.has('songs') && !this.versionHistoryLoaded) wanted.add('versionHistory')
+        this.allLevel = allLevel
+        this.Level = Level
+        for (const unit of getInfo.infoReloadOrder) {
+            if (!wanted.has(unit)) continue
+            switch (unit) {
+                case 'versionHistory': await this.loadVersionHistory(); break
+                case 'songs': await this.loadSongs(); break
+                case 'aliases': await this.loadAliases(); break
+                case 'chapters': await this.loadChapters(); break
+                case 'tips': await this.loadTips(); break
+                case 'avatar': await this.loadAvatar(); break
+                case 'jrrp': await this.loadJrrp(); break
+                case 'notice': await this.loadNotice(); break
+                case 'badSave': await this.loadBadSave(); break
+                case 'dlc': await this.loadDlcInfo(); break
+                case 'charters': await this.loadCharters(); break
+            }
         }
     }
 
+    /** 全量加载曲目信息（启动与更新曲库后调用） */
     async init() {
         if (!fs.existsSync(path.join(originalIllPath, '.git'))) {
             logger.error(`[phi-plugin] 未下载曲绘文件，建议使用 /phi downill 命令进行下载`)
@@ -182,115 +321,33 @@ export default new class getInfo {
             this.reinitRequested = true
             return
         }
+
         this.initIng = true
         this.reinitRequested = false
 
         try {
             logger.info(`[phi-plugin]初始化曲目信息`)
+            this.setupInfoWatchers()
+            await this.runInfoReload([...getInfo.infoReloadOrder])
+            logger.info(`[phi-plugin]初始化曲目信息完成`)
+        } finally {
+            this.initIng = false
+            if (this.reinitRequested) {
+                this.reinitRequested = false
+                queueMicrotask(() => {
+                    void this.init().catch(err => logger.error('[phi-plugin]补跑曲目信息初始化失败', err))
+                })
+            }
+        }
+    }
 
-
-        this.allLevel = allLevel;
-        this.Level = Level;
-        this.tips = [];
-        this.ori_info = {};
-        this.songsid = {};
-        this.idssong = {};
-        this.illlist = [];
-        this.chapNick = {};
-        this.info_by_difficulty = {};
-        this.updatedSong = [];
-        this.updatedChart = {};
+    /** 重载版本历史：oldInfo 目录下的版本信息与定数变更 */
+    async loadVersionHistory() {
         this.versionInfoByLabel = {};
         this.versionInfoByCode = {};
         this.historyDifficultyByVersion = {};
         this.historyDifficultyBySongId = {};
-        this.noticeJson = readFile.FileReader(path.join(infoPath, 'notice.json'));
-        this.badSave = await readFile.FileReader(path.join(pluginResources, '0608badSave', 'save.json'));
-
-
-        /**
-         * @type {Record<string, string[]>}
-         * @description 扩增曲目信息
-         **/
-        this.DLC_Info = {}
-        let files = fs.readdirSync(DlcInfoPath).filter(file => file.endsWith('.json'))
-        for (const file of files) {
-            this.DLC_Info[path.basename(file, '.json')] = await readFile.FileReader(path.join(DlcInfoPath, file))
-        }
-
-        /**
-         * @type {string[]}
-         * @description 头像id
-         */
-        this.avatarid = readFile.FileReader(path.join(infoPath, 'avatar.txt')).replace(/\r/g, '').split('\n')
-
-        /**
-         * @type {string[]}
-         * @description Tips
-         */
-        this.tips = await readFile.FileReader(path.join(infoPath, 'tips.txt')).replace(/\r/g, '').split('\n')
-
-        /**自定义信息 */
-        let user_song = Config.getUserCfg('config', 'otherinfo')
-        if (Config.getUserCfg('config', 'otherinfo')) {
-            for (let i in user_song) {
-                if (user_song[i]['illustration_big']) {
-                    this.illlist.push(user_song[i].song)
-                }
-            }
-        }
-
-        /**
-         * @type {Record<idString, SongsInfo>}
-         * @description SP信息
-         */
-        const sp_json = (await readFile.FileReader(path.join(infoPath, 'spinfo.json')))
-
-        /**
-         * @type {Record<idString, SongsInfo>}
-         * @description SP信息
-         */
-        this.sp_info = {}
-
-        for (let i of fCompute.objectKeys(sp_json)) {
-            const id = /** @type {idString} */(i + '.0');
-            this.sp_info[id] = { ...sp_json[i] }
-            this.sp_info[id].sp_vis = true
-            this.sp_info[id].id = id
-            this.idssong[/** @type {songString} */ (/** @type {unknown} */ (i))] = id
-            this.idssong[this.sp_info[id].song] = id
-            if (this.sp_info[id]?.illustration) {
-                this.illlist.push(this.sp_info[id].id)
-            }
-        }
-
-        /**最高定数 */
-        this.MAX_DIFFICULTY = 0
-
-        /**
-         * 所有曲目曲名列表
-         * @type {songString[]}
-         */
-        this.songlist = []
-
-        /**
-         * 曲目id列表
-         * @type {idString[]}
-         */
-        this.idList = []
-
-        /**
-         * @typedef {Object} notesInfoObject
-         * @property {number} m MaxTime
-         * @property {[tap: number, drag: number, hold: number, flick: number, tot: number][]} d note分布 [tap,drag,hold,flick,tot]
-         * @property {[number,number,number,number]} t note统计 [tap,drag,hold,flick]
-         */
-        /**
-         * note统计
-         * @type {{[x:idStringWithout0]:Record<levelKind, notesInfoObject>}}
-         */
-        let notesInfo = await readFile.FileReader(path.join(infoPath, 'notesInfo.json'))
-
+        this.historyDifficultyByVerDifficulty = {};
 
         const historyVersionList = fs.readdirSync(oldInfoPath)
 
@@ -354,6 +411,91 @@ export default new class getInfo {
 
         }
 
+        /** 上一版本定数表，用于新曲与改谱对比（对应本次重载的版本历史） */
+        this.oldDifList = {}
+        for (let i in oldDif) {
+            this.oldDifList[oldDif[i].id] = {}
+            for (let level of Level) {
+                if (oldDif[i][level]) {
+                    this.oldDifList[oldDif[i].id][level] = Number(oldDif[i][level])
+                }
+            }
+        }
+        this.versionHistoryLoaded = true
+    }
+
+    /** 重载曲库主数据：info.csv / infolist.json / notesInfo.json / oldNotesInfo.json / spinfo.json */
+    async loadSongs() {
+        if (!this.versionHistoryLoaded) await this.loadVersionHistory()
+
+        this.ori_info = {};
+        this.songsid = {};
+        this.idssong = {};
+        this.illlist = [];
+        this.info_by_difficulty = {};
+        this.updatedSong = [];
+        this.updatedChart = {};
+        /**自定义信息 */
+        let user_song = Config.getUserCfg('config', 'otherinfo')
+        if (Config.getUserCfg('config', 'otherinfo')) {
+            for (let i in user_song) {
+                if (user_song[i]['illustration_big']) {
+                    this.illlist.push(user_song[i].song)
+                }
+            }
+        }
+
+        /**
+         * @type {Record<idString, SongsInfo>}
+         * @description SP信息
+         */
+        const sp_json = (await readFile.FileReader(path.join(infoPath, 'spinfo.json')))
+
+        /**
+         * @type {Record<idString, SongsInfo>}
+         * @description SP信息
+         */
+        this.sp_info = {}
+
+        for (let i of fCompute.objectKeys(sp_json)) {
+            const id = /** @type {idString} */(i + '.0');
+            this.sp_info[id] = { ...sp_json[i] }
+            this.sp_info[id].sp_vis = true
+            this.sp_info[id].id = id
+            this.idssong[/** @type {songString} */ (/** @type {unknown} */ (i))] = id
+            this.idssong[this.sp_info[id].song] = id
+            if (this.sp_info[id]?.illustration) {
+                this.illlist.push(this.sp_info[id].id)
+            }
+        }
+
+        /**最高定数 */
+        this.MAX_DIFFICULTY = 0
+
+        /**
+         * 所有曲目曲名列表
+         * @type {songString[]}
+         */
+        this.songlist = []
+
+        /**
+         * 曲目id列表
+         * @type {idString[]}
+         */
+        this.idList = []
+
+        /**
+         * @typedef {Object} notesInfoObject
+         * @property {number} m MaxTime
+         * @property {[tap: number, drag: number, hold: number, flick: number, tot: number][]} d note分布 [tap,drag,hold,flick,tot]
+         * @property {[number,number,number,number]} t note统计 [tap,drag,hold,flick]
+         */
+        /**
+         * note统计
+         * @type {{[x:idStringWithout0]:Record<levelKind, notesInfoObject>}}
+         */
+        let notesInfo = await readFile.FileReader(path.join(infoPath, 'notesInfo.json'))
+
         /**
          * @typedef {Object} csvInfoObject
          * @property {idStringWithout0} id 曲目id
@@ -381,19 +523,9 @@ export default new class getInfo {
          * @type {{[x:idStringWithout0]:Record<levelKind, notesInfoObject>}}
          */
         let oldNotes = await readFile.FileReader(path.join(infoPath, 'oldNotesInfo.json'))
-        /**
-         * @type {Record<idStringWithout0, Partial<Record<levelKind, number>>>}
-         */
-        let OldDifList = {}
-        for (let i in oldDif) {
-            OldDifList[oldDif[i].id] = {}
-            for (let level of this.Level) {
-                if (oldDif[i][level]) {
-                    OldDifList[oldDif[i].id][level] = Number(oldDif[i][level])
-                }
-            }
-        }
 
+        /** 上一版本定数表，来自版本历史 */
+        const OldDifList = this.oldDifList
 
         // console.info(CsvInfo, Csvdif, Jsoninfo)
         for (let i = 0; i < CsvInfo.length; i++) {
@@ -529,6 +661,26 @@ export default new class getInfo {
             console.error('[phi-plugin] MAX_DIFFICULTY 常量未更新，请回报作者！', MAX_DIFFICULTY, this.MAX_DIFFICULTY)
         }
 
+        for (let songId of this.idList) {
+            for (let level of this.allLevel) {
+                let info = this.ori_info[songId]
+                if (!info?.chart?.[level]?.difficulty) continue;
+                const difStr = info.chart[level].difficulty.toFixed(1);
+                if (this.info_by_difficulty[difStr]) {
+                    this.info_by_difficulty[difStr].push({
+                        ...info.chart[level],
+                    })
+                } else {
+                    this.info_by_difficulty[difStr] = [{
+                        ...info.chart[level],
+                    }]
+                }
+            }
+        }
+    }
+
+    /** 重载曲目别名：内置 nicklist.yaml 与公共 approved 快照 */
+    async loadAliases() {
         /**
          * 曲目别名列表 (id不带.0)
          * @type {Record<idStringWithout0, string[]>}
@@ -551,7 +703,11 @@ export default new class getInfo {
 
 
         this.rebuildAliasIndex()
+    }
 
+    /** 重载章节别名 */
+    async loadChapters() {
+        this.chapNick = {};
         /**
          * @type {{[key:string]: string[]}}
          * @description 章节列表，以章节名为key，内容为别名
@@ -567,49 +723,55 @@ export default new class getInfo {
                 }
             }
         }
+    }
 
-        /**
-         * jrrp
-         * @type {Record<'good'|'bad'|'common', string[]>}
-         */
+    /** 重载 tips 列表 */
+    async loadTips() {
+        const raw = await readFile.FileReader(path.join(infoPath, 'tips.txt'))
+        this.tips = String(raw ?? '').replace(/\r/g, '').split('\n')
+    }
+
+    /** 重载头像可选列表 */
+    async loadAvatar() {
+        const raw = await readFile.FileReader(path.join(infoPath, 'avatar.txt'))
+        this.avatarid = String(raw ?? '').replace(/\r/g, '').split('\n')
+    }
+
+    /** 重载 jrrp 词库 */
+    async loadJrrp() {
         this.word = await readFile.FileReader(path.join(infoPath, 'jrrp.json'))
+    }
 
-        for (let songId of this.idList) {
-            for (let level of this.allLevel) {
-                let info = this.ori_info[songId]
-                if (!info?.chart?.[level]?.difficulty) continue;
-                const difStr = info.chart[level].difficulty.toFixed(1);
-                if (this.info_by_difficulty[difStr]) {
-                    this.info_by_difficulty[difStr].push({
-                        ...info.chart[level],
-                    })
-                } else {
-                    this.info_by_difficulty[difStr] = [{
-                        ...info.chart[level],
-                    }]
-                }
-            }
-        }
+    /** 重载公告 */
+    async loadNotice() {
+        this.noticeJson = await readFile.FileReader(path.join(infoPath, 'notice.json'))
+    }
 
+    /** 重载演示存档 */
+    async loadBadSave() {
+        this.badSave = await readFile.FileReader(path.join(pluginResources, '0608badSave', 'save.json'))
+    }
 
-
-            logger.info(`[phi-plugin]初始化曲目信息完成`)
-        } finally {
-            this.initIng = false
-            if (this.reinitRequested) {
-                this.reinitRequested = false
-                queueMicrotask(() => {
-                    void this.init().catch(err => logger.error('[phi-plugin]补跑曲目信息初始化失败', err))
-                })
-            }
+    /** 重载 DLC 扩增曲目信息 */
+    async loadDlcInfo() {
+        /**
+         * @type {Record<string, string[]>}
+         * @description 扩增曲目信息
+         **/
+        this.DLC_Info = {}
+        let files = fs.readdirSync(DlcInfoPath).filter(file => file.endsWith('.json'))
+        for (const file of files) {
+            this.DLC_Info[path.basename(file, '.json')] = await readFile.FileReader(path.join(DlcInfoPath, file))
         }
     }
 
-    /** 关闭曲库目录监听器。 */
+    async loadCharters() {
+        this.charters = await readFile.FileReader(path.join(infoPath, 'charters.json'))
+    }
+
+    /** 关闭曲库监听器。 */
     async close() {
-        const watcherLease = this.infoWatcher
-        this.infoWatcher = undefined
-        if (watcherLease) await watcherLease.close()
+        await this.closeInfoWatchers()
     }
 
     /**
@@ -1015,6 +1177,31 @@ export default new class getInfo {
      */
     SongGetId(song) {
         return this.idssong?.[song]
+    }
+
+    /**
+     * 已确认的谱师真实名录（来源于 https://daogemm.github.io/files/infos/charters.json），按字典序排列
+     * @param {idString} id 曲目 id
+     * @param {levelKind} rank 难度
+     * @returns {string[]} 名录，无数据时为空数组
+     */
+    getCharters(id, rank) {
+        const list = this.charters?.[id]?.[rank]
+        if (!Array.isArray(list)) return []
+        return list.map(name => String(name ?? '').trim()).filter(Boolean).sort()
+    }
+
+    /**
+     * 谱师真实名录的展示文本，无数据时返回空字符串
+     * @param {idString} id 曲目 id
+     * @param {levelKind} rank 难度
+     * @returns {string}
+     */
+    getChartersText(id, rank) {
+        const names = this.getCharters(id, rank)
+        if (!names.length) return ''
+        const plainAscii = names.every(name => /^[\x20-\x7E]+$/.test(name))
+        return names.join(plainAscii ? ', ' : '、')
     }
 
     /**

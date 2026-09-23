@@ -111,7 +111,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi guess` | Guess song from illustration (reply directly) |
 | `#phi (ltr\|letter)` | Guess song via letters (use #open/#ans) |
 | `#phi tipgame` | Guess song via hints (use #tip/#ans) |
-| `#phi (弗一把\|friberg\|fib\|fri) [EZ\|HD\|IN\|AT] [min difficulty, e.g. 14+]` | Friberg song guessing; reply with a song name to compare artist, first-release version (with release date), chapter, original flag, difficulty, BPM and note count (use #ans to reveal); per-player and per-group answer cooldowns, more participants means more attempts |
+| `#phi (弗一把\|friberg\|fib\|fri) [EZ\|HD\|IN\|AT] [min difficulty, e.g. 14+]` | Friberg song guessing; reply with a song name to compare charter (verified names from daogemm.github.io, any shared name counts as close), first-release version (with release date), chapter, original flag, difficulty, BPM and note count (use #ans to reveal); per-player and per-group answer cooldowns, more participants means more attempts |
 | `#phi song xxx` | Query song info (supports aliases) |
 | `#phi chart <song> [difficulty=IN]` | View chart details |
 | `#phi tag <song name> [difficulty=IN] <tag>` | View chart tags, available tags shown in response, default difficulty is IN |
@@ -274,6 +274,7 @@ Special thanks to these sponsors (list may not be fully updated):
 1. This plugin is intended for non-commercial use only.
 2. All images/assets are from the internet and will be removed upon request.
 3. Cloud save system adapted from [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary)
+4. Charter data is sourced from [DP-Tool](https://daogemm.github.io/)
 
 ### Related Projects
 
@@ -283,5 +284,6 @@ Special thanks to these sponsors (list may not be fully updated):
         <td align="center"><a href="https://github.com/yoimiya-kokomi/Yunzai-Bot"><b>Yunzai-Bot</b></a></td>
         <td align="center"><a href="https://github.com/yoimiya-kokomi/Miao-Yunzai"><b>Miao-Yunzai</b></a></td>
         <td align="center"><a href="https://github.com/TimeRainStarSky/Yunzai"><b>TRSS-Yunzai</b></a></td>
+        <td align="center"><a href="https://daogemm.github.io/"><b>DP-Tool</b></a></td>
     </tr>
 </table>

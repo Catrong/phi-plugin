@@ -57,6 +57,7 @@ export const FRIB_GUESS_NUM_TABLE = [8, 9, 10, 12, 14, 17, 20]
  * @typedef {object} fribSongChart
  * @property {number} [difficulty]
  * @property {number} [combo]
+ * @property {string} [charter] 原始谱师名（可能为空）
  */
 
 /**
@@ -68,6 +69,7 @@ export const FRIB_GUESS_NUM_TABLE = [8, 9, 10, 12, 14, 17, 20]
  * @property {string} [bpm]
  * @property {boolean} [isOriginal]
  * @property {Partial<Record<allLevelKind, fribSongChart>>} [chart]
+ * @property {Partial<Record<levelKind, string[]>>} [charters] 已确认的真实谱师名录，来源于 daogemm.github.io
  */
 
 /**
@@ -83,7 +85,7 @@ export const FRIB_GUESS_NUM_TABLE = [8, 9, 10, 12, 14, 17, 20]
  * @property {string} player 猜测玩家
  * @property {string} song 曲名
  * @property {boolean} hit 是否命中答案
- * @property {fribCompareItem} composer 作曲
+ * @property {fribCompareItem} charter 谱师
  * @property {fribCompareItem} version 加入版本
  * @property {fribCompareItem} chapter 所属章节
  * @property {fribCompareItem} original 是否独占
@@ -236,6 +238,88 @@ export function compareText(guess, answer) {
 export function compareBoolean(guess, answer) {
     return {
         state: guess === answer ? FRIB_STATE.SAME : FRIB_STATE.DIFF,
+        arrow: FRIB_ARROW.NONE,
+    }
+}
+
+/** 原谱师名中常见的多人署名分隔符 */
+const CHARTER_SEPARATOR = /\s*(?:&|＆|,|，|、|\/|vs\.?|\+)\s*/i
+
+/**
+ * 拆分原谱师名中的多人署名，单个署名返回单元素数组
+ * @param {unknown} raw
+ * @returns {string[]}
+ */
+export function splitCharterNames(raw) {
+    const text = String(raw ?? '').trim()
+    if (!text) return []
+    return text
+        .split(CHARTER_SEPARATOR)
+        .map(name => name.trim())
+        .filter(Boolean)
+}
+
+/**
+ * 归一化谱师名单：去空白、忽略大小写、去重
+ * @param {string[]} names
+ * @returns {string[]}
+ */
+function normalizeCharterSet(names) {
+    /** @type {string[]} */
+    const result = []
+    for (const raw of names ?? []) {
+        const name = String(raw ?? '').trim().toLowerCase()
+        if (!name || result.includes(name)) continue
+        result.push(name)
+    }
+    return result
+}
+
+/**
+ * 判定用的谱师名单：优先使用已确认的真实名录（按字典序），缺失时拆分原谱师名
+ * @param {fribSongInfo} info
+ * @param {levelKind} level
+ * @returns {string[]}
+ */
+export function charterNameList(info, level) {
+    const verified = info?.charters?.[level]
+    if (Array.isArray(verified)) {
+        const names = verified.map(name => String(name ?? '').trim()).filter(Boolean)
+        if (names.length) return [...names].sort()
+    }
+    return splitCharterNames(info?.chart?.[level]?.charter)
+}
+
+/**
+ * 谱师展示文本：有真实名录时用名录（按字典序），缺失时使用原谱师名
+ * @param {fribSongInfo} info
+ * @param {levelKind} level
+ * @returns {string}
+ */
+export function charterDisplayText(info, level) {
+    const verified = info?.charters?.[level]
+    if (Array.isArray(verified) && verified.some(name => String(name ?? '').trim())) {
+        const names = charterNameList(info, level)
+        const plainAscii = names.every(name => /^[\x20-\x7E]+$/.test(name))
+        return names.join(plainAscii ? ', ' : '、')
+    }
+    return String(info?.chart?.[level]?.charter ?? '').trim()
+}
+
+/**
+ * 谱师名单对比：完全相同为相同，只要两份名单有重合即为相近，否则不同
+ * @param {string[]} guess
+ * @param {string[]} answer
+ * @returns {{ state: string, arrow: string }}
+ */
+export function compareCharterSets(guess, answer) {
+    const guessSet = normalizeCharterSet(guess)
+    const answerSet = normalizeCharterSet(answer)
+    if (!guessSet.length || !answerSet.length) return { state: FRIB_STATE.UNKNOWN, arrow: FRIB_ARROW.NONE }
+    const same = guessSet.length === answerSet.length && guessSet.every(name => answerSet.includes(name))
+    if (same) return { state: FRIB_STATE.SAME, arrow: FRIB_ARROW.NONE }
+    return {
+        state: guessSet.some(name => answerSet.includes(name)) ? FRIB_STATE.NEAR : FRIB_STATE.DIFF,
         arrow: FRIB_ARROW.NONE,
     }
 }
@@ -461,9 +545,9 @@ function buildItem(value, result, sub = '') {
  * @returns {fribRenderRow[]}
  */
 export function toRenderRows(rows) {
-    /** @type {[string, 'composer' | 'version' | 'chapter' | 'original' | 'difficulty' | 'bpm' | 'combo'][]} */
+    /** @type {[string, 'charter' | 'version' | 'chapter' | 'original' | 'difficulty' | 'bpm' | 'combo'][]} */
     const columns = [
-        ['artistCell', 'composer'],
+        ['charterCell', 'charter'],
         ['versionCell', 'version'],
         ['chapterCell', 'chapter'],
         ['originalCell', 'original'],
@@ -507,7 +591,10 @@ export function createFribRow(guess, answer, context) {
         player: context.player,
         song: String(guess?.song ?? ''),
         hit: Boolean(guessSong) && guessSong === answerSong,
-        composer: buildItem(guess?.composer, compareText(guess?.composer, answer?.composer)),
+        charter: buildItem(
+            charterDisplayText(guess, context.level),
+            compareCharterSets(charterNameList(guess, context.level), charterNameList(answer, context.level)),
+        ),
         version: buildItem(guessVersion?.label, version, guessVersion ? formatVersionDate(guessVersion.date) : ''),
         chapter: buildItem(guess?.chapter, compareText(guess?.chapter, answer?.chapter)),
         original: buildItem(originalText(guess?.isOriginal), compareBoolean(guess?.isOriginal === true, answer?.isOriginal === true)),

@@ -199,7 +199,7 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 | `#phi (guess\|猜曲绘) [-l <0-3>]` | 猜曲绘，回答无特殊命令，直接回复，如果不是曲名就不会说话，如果是不正确的曲名会回复。#ans 结束
 | `#phi (ltr\|开字母)` | 根据字母猜曲名，#出/#open... 开指定的字母，#第n个/#nX.xxx 进行回答，#ans 获取答案
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
-| `#phi (弗一把\|friberg\|fib\|fri) [难度=EZ\|HD\|IN\|AT] [定数下限，如 14+]` | 弗一把猜歌，直接回复曲名猜测，每次猜测都会对比 Artist、首次收录版本（含上线时间）、分类、是否独占、定数、BPM、物量与答案的异同，#ans 获取答案；定数与物量以指定难度的谱面为准，回答有个人与群聊冷却，参与人数越多可猜次数越多
+| `#phi (弗一把\|friberg\|fib\|fri) [难度=EZ\|HD\|IN\|AT] [定数下限，如 14+]` | 弗一把猜歌，直接回复曲名猜测，每次猜测都会对比谱师（真实名录来源于 daogemm.github.io，多名谱师有一人重合即视为相近）、首次收录版本（含上线时间）、章节、是否独占、定数、BPM、物量与答案的异同，#ans 获取答案；定数与物量以指定难度的谱面为准，回答有个人与群聊冷却，参与人数越多可猜次数越多
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名
 | `#phi chart <曲名> [难度=IN]` | 查询phigros中某一谱面的详细信息
 | `#phi tag <曲名> [难度=IN] <标签>` | 查看谱面标签，标签可选项见回复说明，难度默认为IN
@@ -373,6 +373,7 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 1. 功能仅限内部交流与小范围使用，请勿将`Yunzai-Bot`及`phi-Plugin`用于任何以盈利为目的的场景.
 2. 图片与其他素材均来自于网络，仅供交流学习使用，如有侵权请联系，会立即删除.
 3. 云存档由 [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary) 改写而来
+4. 谱师数据来源于 [DP-Tool](https://daogemm.github.io/)
 
 ###### 写的不好，轻喷……
 
@@ -380,9 +381,10 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 
 <table>
     <tr>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="https://github.com/yhArcadia/Yunzai-Bot-plugins-index"><b>Yunzai-Bot 相关内容索引</b></a></td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="https://github.com/yoimiya-kokomi/Yunzai-Bot"><b>Yunzai-Bot</b></a></td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="https://github.com/yoimiya-kokomi/Miao-Yunzai"><b>Miao-Yunzai</b></a></td>
-        <td align="center" valign="top" width="35%" nowrap="nowrap"> <a href="https://github.com/TimeRainStarSky/Yunzai"><b>TRSS-Yunzai</b></a></td>
+        <td align="center"> <a href="https://github.com/yhArcadia/Yunzai-Bot-plugins-index"><b>Yunzai-Bot 相关内容索引</b></a></td>
+        <td align="center"> <a href="https://github.com/yoimiya-kokomi/Yunzai-Bot"><b>Yunzai-Bot</b></a></td>
+        <td align="center"> <a href="https://github.com/yoimiya-kokomi/Miao-Yunzai"><b>Miao-Yunzai</b></a></td>
+        <td align="center"> <a href="https://github.com/TimeRainStarSky/Yunzai"><b>TRSS-Yunzai</b></a></td>
+        <td align="center"> <a href="https://daogemm.github.io/"><b>DP-Tool</b></a></td>
     </tr>
 </table>

@@ -8,7 +8,7 @@
 <div class="main">
     <div class="titleRow">
         <div class="title">
-            <p class="phigros-title-font">Phigros</p>
+            <p class="phigros-title-font">Phigros Friberg</p>
             <p class="titleDesc">Guess the Song · 弗一把</p>
         </div>
         <div class="levelBox">
@@ -31,7 +31,7 @@
         <div class="dataRow headRow">
             <div class="cell playerCell"><p>玩家</p></div>
             <div class="cell songCell"><p>歌曲</p></div>
-            <div class="cell artistCell"><p>Artist</p></div>
+            <div class="cell charterCell"><p>谱师</p></div>
             <div class="cell versionCell"><p>Version</p></div>
             <div class="cell chapterCell"><p>章节</p></div>
             <div class="cell originalCell"><p>独占</p></div>
@@ -118,6 +118,7 @@
 
     <div class="tipsRow">
         <p>相近范围：版本前后 {{nearVersion}} 代 · 定数 ±{{nearDifficulty}} · BPM ±{{nearBpm}} · 物量 ±{{nearCombo}}</p>
+        <p>谱师名录来源于 daogemm.github.io，按字典序排列，多名谱师只要有一人重合即视为相近</p>
         <p>本局参与 {{players}} 人 · 发送曲名进行猜测 · /{{cmdhead}} ans 公布答案 · 连续 {{timeout}} 秒无有效猜测后过期</p>
     </div>
 
