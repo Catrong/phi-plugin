@@ -12,7 +12,10 @@ import {
     compareVersion,
     createFribRow,
     formatVersionDate,
+    guessCooldown,
+    guessNumLimit,
     parseBpmRange,
+    parseGuessNumTable,
     parseStartArgs,
     toRenderRows,
 } from '../apps/guessGame/frib19Utils.js'
@@ -198,6 +201,58 @@ test('版本时间按 UTC+8 格式化为日期', () => {
     assert.equal(formatVersionDate(0), '')
     assert.equal(formatVersionDate(undefined), '')
     assert.equal(formatVersionDate('abc'), '')
+})
+
+test('参与人数次数表解析与取值', () => {
+    assert.deepEqual(parseGuessNumTable('8,9,10,12,14,17,20'), [8, 9, 10, 12, 14, 17, 20])
+    assert.deepEqual(parseGuessNumTable(' 8, 9 ,10 '), [8, 9, 10])
+    assert.deepEqual(parseGuessNumTable('8，9，10'), [8, 9, 10])
+    assert.deepEqual(parseGuessNumTable('8 9 10'), [8, 9, 10])
+    assert.deepEqual(parseGuessNumTable('8,abc,,0,-3,9'), [8, 9])
+    assert.deepEqual(parseGuessNumTable(''), [8, 9, 10, 12, 14, 17, 20])
+    assert.deepEqual(parseGuessNumTable(undefined), [8, 9, 10, 12, 14, 17, 20])
+    assert.deepEqual(parseGuessNumTable([8, 9.7]), [8, 9])
+
+    assert.equal(guessNumLimit(1), 8)
+    assert.equal(guessNumLimit(2), 9)
+    assert.equal(guessNumLimit(7), 20)
+    assert.equal(guessNumLimit(8), 20)
+    assert.equal(guessNumLimit(99), 20)
+    assert.equal(guessNumLimit(0), 8)
+    assert.equal(guessNumLimit(3, [5, 6]), 6)
+})
+
+test('回答冷却同时受个人冷却与群冷却约束', () => {
+    const now = 1700000000000
+    assert.deepEqual(
+        guessCooldown({ now, selfSeconds: 30, groupSeconds: 5, lastSelfGuess: 0, lastGroupGuess: 0 }),
+        { kind: '', seconds: 0 },
+    )
+    /** 个人冷却已过 */
+    assert.deepEqual(
+        guessCooldown({ now, selfSeconds: 30, groupSeconds: 5, lastSelfGuess: now - 40000, lastGroupGuess: 0 }),
+        { kind: '', seconds: 0 },
+    )
+    /** 刚回答过：个人剩余 30s 比群剩余 5s 更长 */
+    assert.deepEqual(
+        guessCooldown({ now, selfSeconds: 30, groupSeconds: 5, lastSelfGuess: now, lastGroupGuess: now }),
+        { kind: 'self', seconds: 30 },
+    )
+    /** 个人冷却只剩 1s，此时群冷却更长 */
+    assert.deepEqual(
+        guessCooldown({ now, selfSeconds: 30, groupSeconds: 5, lastSelfGuess: now - 29000, lastGroupGuess: now }),
+        { kind: 'group', seconds: 5 },
+    )
+    /** 自己没答过，但群里刚有人答过 */
+    assert.deepEqual(
+        guessCooldown({ now, selfSeconds: 30, groupSeconds: 5, lastSelfGuess: 0, lastGroupGuess: now }),
+        { kind: 'group', seconds: 5 },
+    )
+    /** 个人冷却更长且刚过一半 */
+    assert.deepEqual(
+        guessCooldown({ now, selfSeconds: 60, groupSeconds: 5, lastSelfGuess: now - 55000, lastGroupGuess: now - 1000 }),
+        { kind: 'self', seconds: 5 },
+    )
 })
 
 test('曲目池只保留拥有对应难度且满足定数下限的曲目', () => {

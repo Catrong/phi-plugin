@@ -157,11 +157,18 @@ GuessTipsTimeout: 600
 GuessTipsAnsTime: 30
 
 #  ************ 【弗一把设置】 *************
-#  单局最大猜测次数
-FribMaxGuess: 8
+#  按参与人数对应的可猜次数，从 1 人起依次填写，用英文逗号分隔；
+#  参与人数超过表的长度时取最后一个值，非法值会被忽略
+FribGuessNumTable: "8,9,10,12,14,17,20"
 
 #  待机超时时长(s)，超时自动公布答案
 FribTimeout: 600
+
+#  个人回答冷却时间(s)，同一人在群里的连续回答间隔
+FribSelfGuessCd: 3
+
+#  群内回答冷却时间(s)，本群所有人共享的回答间隔
+FribGroupGuessCd: 0
 
 #  默认分档难度 EZ HD IN AT
 FribDefaultLevel: "IN"

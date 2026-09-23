@@ -129,8 +129,10 @@
  * @typedef {'GuessTipsTimeout'} GuessTipsTimeout 游戏时长
  * @typedef {'GuessTipsAnsTime'} GuessTipsAnsTime 额外时间
  * 弗一把设置
- * @typedef {'FribMaxGuess'} FribMaxGuess 最大猜测次数
+ * @typedef {'FribGuessNumTable'} FribGuessNumTable 参与人数次数表
  * @typedef {'FribTimeout'} FribTimeout 待机时长
+ * @typedef {'FribSelfGuessCd'} FribSelfGuessCd 个人回答冷却
+ * @typedef {'FribGroupGuessCd'} FribGroupGuessCd 群内回答冷却
  * @typedef {'FribDefaultLevel'} FribDefaultLevel 默认难度
  * @typedef {'FribNearVersion'} FribNearVersion 版本相近范围
  * @typedef {'FribNearDifficulty'} FribNearDifficulty 定数相近范围
@@ -189,8 +191,10 @@
  * |GuessTipsTipNum
  * |GuessTipsTimeout
  * |GuessTipsAnsTime
- * |FribMaxGuess
+ * |FribGuessNumTable
  * |FribTimeout
+ * |FribSelfGuessCd
+ * |FribGroupGuessCd
  * |FribDefaultLevel
  * |FribNearVersion
  * |FribNearDifficulty

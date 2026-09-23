@@ -27,6 +27,9 @@ export const FRIB_LEVELS = /** @type {levelKind[]} */ (['EZ', 'HD', 'IN', 'AT'])
 /** 默认分档难度 */
 export const FRIB_DEFAULT_LEVEL = /** @type {levelKind} */ ('IN')
 
+/** 默认的参与人数次数表：1 人起依次为 8/9/10/12/14/17/20 次，更多人保持最后一个值 */
+export const FRIB_GUESS_NUM_TABLE = [8, 9, 10, 12, 14, 17, 20]
+
 /**
  * @typedef {object} fribVersionInfo
  * @property {string} label 版本号文本，如 3.5.1；早于收录范围时为最早版本号加 -
@@ -107,6 +110,54 @@ function normalizeText(value) {
  */
 function toRange(value) {
     return typeof value === 'number' && Number.isFinite(value) ? { min: value, max: value } : null
+}
+
+/**
+ * 解析参与人数次数表配置，非法或为空时回退默认表
+ * @param {unknown} text 形如 "8,9,10,12,14,17,20"，也接受数字数组
+ * @returns {number[]}
+ */
+export function parseGuessNumTable(text) {
+    const raw = Array.isArray(text) ? text : String(text ?? '').split(/[,，\s]+/)
+    const values = raw
+        .map(value => Number(value))
+        .filter(value => Number.isFinite(value) && value > 0)
+        .map(value => Math.floor(value))
+    return values.length ? values : [...FRIB_GUESS_NUM_TABLE]
+}
+
+/**
+ * 按参与人数取本局可猜次数，人数超过表长时取表内最后一个值
+ * @param {number} players 参与人数
+ * @param {number[]} [table] 次数表
+ * @returns {number}
+ */
+export function guessNumLimit(players, table = FRIB_GUESS_NUM_TABLE) {
+    const list = table.length ? table : FRIB_GUESS_NUM_TABLE
+    const count = Number.isFinite(players) ? Math.floor(players) : 1
+    const index = Math.min(Math.max(count, 1), list.length) - 1
+    return list[index]
+}
+
+/**
+ * 计算回答冷却剩余时间：个人冷却与群冷却同时生效，返回剩余更长的一项
+ * @param {object} options
+ * @param {number} options.now 当前时间戳（毫秒）
+ * @param {number} options.selfSeconds 个人回答冷却秒数
+ * @param {number} options.groupSeconds 群内回答冷却秒数
+ * @param {number} options.lastSelfGuess 本人上次有效回答时间戳（毫秒），未回答过传 0
+ * @param {number} options.lastGroupGuess 群内上次有效回答时间戳（毫秒），未回答过传 0
+ * @returns {{ kind: 'self' | 'group' | '', seconds: number }} kind 为空表示不在冷却中
+ */
+export function guessCooldown(options) {
+    const selfLeft = options.selfSeconds * 1000 - (options.now - options.lastSelfGuess)
+    const groupLeft = options.groupSeconds * 1000 - (options.now - options.lastGroupGuess)
+    if (selfLeft <= 0 && groupLeft <= 0) return { kind: '', seconds: 0 }
+    const selfFirst = selfLeft >= groupLeft
+    return {
+        kind: selfFirst ? 'self' : 'group',
+        seconds: Math.ceil((selfFirst ? selfLeft : groupLeft) / 1000),
+    }
 }
 
 /**

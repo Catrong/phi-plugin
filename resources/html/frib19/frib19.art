@@ -117,8 +117,7 @@
 
     <div class="tipsRow">
         <p>相近范围：版本前后 {{nearVersion}} 代 · 定数 ±{{nearDifficulty}} · BPM ±{{nearBpm}} · 物量 ±{{nearCombo}}</p>
-        <p>版本下方为该版本的上线时间；「{{earliestVersion}}-」表示早于收录范围，只比较早晚、不参与相近判定</p>
-        <p>发送曲名进行猜测 · /{{cmdhead}} ans 公布答案 · 连续 {{timeout}} 秒无有效猜测后过期</p>
+        <p>本局参与 {{players}} 人 · 发送曲名进行猜测 · /{{cmdhead}} ans 公布答案 · 连续 {{timeout}} 秒无有效猜测后过期</p>
     </div>
 
     <div class="createdbox">

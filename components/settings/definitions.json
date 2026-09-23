@@ -467,16 +467,12 @@
     "required": true
   },
   {
-    "key": "FribMaxGuess",
+    "key": "FribGuessNumTable",
     "group": "弗一把设置",
-    "label": "最大猜测次数",
-    "description": "单局弗一把允许的猜测次数，达到次数后公布答案",
-    "type": "number",
-    "min": 1,
-    "max": 99,
-    "step": 1,
-    "format": "integer",
-    "placeholder": "请输入次数",
+    "label": "参与人数次数表",
+    "description": "按参与人数依次对应的可猜次数，用英文逗号分隔，人数超过表长时取最后一个值",
+    "type": "string",
+    "placeholder": "8,9,10,12,14,17,20",
     "required": true
   },
   {
@@ -487,6 +483,30 @@
     "type": "number",
     "min": 30,
     "max": 9999999,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "FribSelfGuessCd",
+    "group": "弗一把设置",
+    "label": "个人回答冷却",
+    "description": "同一个人在群里的连续回答间隔，单位：秒，建议比群冷却更长",
+    "type": "number",
+    "min": 0,
+    "max": 3600,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "FribGroupGuessCd",
+    "group": "弗一把设置",
+    "label": "群内回答冷却",
+    "description": "本群所有人共享的回答间隔，单位：秒，避免刷屏",
+    "type": "number",
+    "min": 0,
+    "max": 3600,
     "placeholder": "请输入时间",
     "unit": "s",
     "required": true

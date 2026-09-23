@@ -13,6 +13,9 @@ import {
     buildSongPool,
     buildVersionIndex,
     createFribRow,
+    guessCooldown,
+    guessNumLimit,
+    parseGuessNumTable,
     parseStartArgs,
     toRenderRows,
 } from './frib19Utils.js'
@@ -30,6 +33,8 @@ import {
  * @property {fribRow[]} rows 猜测记录
  * @property {idString[]} guessedIds 已猜过的曲目
  * @property {idString | null} lastGuessId 本局最近一次被猜测的曲目，用作背景曲绘
+ * @property {number} lastGroupGuessTime 本群上次有效回答时间戳（毫秒）
+ * @property {Record<string, number>} playerGuessTime 各玩家上次有效回答时间戳（毫秒）
  * @property {ReturnType<typeof setTimeout> | null} timer 超时定时器
  * @property {botEvent} event 用于超时播报的事件
  */
@@ -164,6 +169,33 @@ function levelText(level, minDifficulty) {
 }
 
 /**
+ * 记录一次有效回答的时间，供个人冷却与群冷却使用
+ * @param {fribGameData} game
+ * @param {botEvent} e
+ */
+function markGuessed(game, e) {
+    const now = Date.now()
+    game.lastGroupGuessTime = now
+    game.playerGuessTime[String(e.user_id ?? '')] = now
+}
+
+/**
+ * 读取参与人数次数表配置
+ * @returns {number[]}
+ */
+function guessNumTable() {
+    return parseGuessNumTable(Config.getUserCfg('config', 'FribGuessNumTable'))
+}
+
+/**
+ * 按当前参与人数刷新本局可猜次数，参与人数取本局有效回答过的玩家数
+ * @param {fribGameData} game
+ */
+function refreshMaxGuess(game) {
+    game.maxGuess = guessNumLimit(Object.keys(game.playerGuessTime).length, guessNumTable())
+}
+
+/**
  * 结束并清理游戏
  * @param {string} group_id
  * @param {GameList} gameList
@@ -236,6 +268,7 @@ async function renderGame(e, game, showAnswer) {
         levelText: levelText(game.level, game.minDifficulty),
         maxGuess: game.maxGuess,
         round: game.rows.length,
+        players: Object.keys(game.playerGuessTime).length,
         rows: toRenderRows(game.rows),
         answerRow: answerRow ? toRenderRows([answerRow])[0] : null,
         nearVersion: Config.getUserCfg('config', 'FribNearVersion'),
@@ -275,16 +308,18 @@ export default new class frib19 {
             send.send_with_At(e, '获取曲目信息发生未知错误QAQ！')
             return false
         }
-        const maxGuess = numberCfg(Config.getUserCfg('config', 'FribMaxGuess'), 8)
+        const maxGuess = guessNumLimit(1, guessNumTable())
         /** @type {fribGameData} */
         const game = {
             ansId,
             level,
             minDifficulty,
-            maxGuess: Math.max(1, Math.floor(maxGuess)),
+            maxGuess,
             rows: [],
             guessedIds: [],
             lastGuessId: null,
+            lastGroupGuessTime: 0,
+            playerGuessTime: {},
             timer: null,
             event: e,
         }
@@ -292,8 +327,8 @@ export default new class frib19 {
         gameList[group_id] = { gameType: 'frib19' }
         send.reply(e, [
             `下面开始进行弗一把哦！本局按「${levelText(level, minDifficulty)}」谱面对比，定数与物量均以该难度为准嗷！`,
-            `直接发送曲名进行猜测，共有 ${game.maxGuess} 次机会，猜中或次数用尽后公布答案；连续 ${Config.getUserCfg('config', 'FribTimeout')} 秒没有有效猜测会自动结束呐！`,
-            `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 可以提前公布答案哦！`,
+            `直接发送曲名进行猜测，参与的人越多本局可猜次数越多（1 人 ${guessNumLimit(1, guessNumTable())} 次，最多 ${guessNumLimit(99, guessNumTable())} 次）；猜中或次数用尽后公布答案，连续 ${Config.getUserCfg('config', 'FribTimeout')} 秒没有有效猜测会自动结束呐！`,
+            `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 可以提前公布答案哦！回答冷却：个人 ${Config.getUserCfg('config', 'FribSelfGuessCd')}s、群聊 ${Config.getUserCfg('config', 'FribGroupGuessCd')}s。`,
         ])
         refreshTimeout(group_id, gameList)
         return true
@@ -321,6 +356,7 @@ export default new class frib19 {
         if (ids.includes(game.ansId)) {
             game.rows.push(createFribRow(answer, answer, compareContext(playerName(e), game.level)))
             game.lastGuessId = game.ansId
+            markGuessed(game, e)
             try {
                 await send.send_with_At(e, `恭喜你，猜中啦喵！ヾ(≧▽≦*)o`, true)
                 await send.reply(e, ['正确答案是：', await renderGame(e, game, true)])
@@ -338,11 +374,25 @@ export default new class frib19 {
             send.send_with_At(e, `曲目[${getInfo.info(ids[0])?.song ?? msg}]已经猜过啦，换一首试试吧uwu`, true, { recallMsg: 5 })
             return true
         }
+        /** 回答冷却：个人冷却与群冷却同时生效 */
+        const cooldown = guessCooldown({
+            now: Date.now(),
+            selfSeconds: numberCfg(Config.getUserCfg('config', 'FribSelfGuessCd'), 30),
+            groupSeconds: numberCfg(Config.getUserCfg('config', 'FribGroupGuessCd'), 5),
+            lastSelfGuess: game.playerGuessTime[String(e.user_id ?? '')] ?? 0,
+            lastGroupGuess: game.lastGroupGuessTime,
+        })
+        if (cooldown.seconds > 0) {
+            send.send_with_At(e, `${cooldown.kind === 'self' ? '你的' : '群里的'}回答冷却还有 ${cooldown.seconds}s 呐，先耐心等下哇QAQ`, true, { recallMsg: 5 })
+            return true
+        }
         const guessInfo = getInfo.info(guessId)
         if (!guessInfo) return false
         game.rows.push(createFribRow(guessInfo, answer, compareContext(playerName(e), game.level)))
         game.guessedIds.push(guessId)
         game.lastGuessId = guessId
+        markGuessed(game, e)
+        refreshMaxGuess(game)
         refreshTimeout(group_id, gameList)
         if (game.rows.length >= game.maxGuess) {
             try {
