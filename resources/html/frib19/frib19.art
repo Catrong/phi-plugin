@@ -65,7 +65,6 @@
         <div class="dataRow rowAnswer">
             <div class="cell playerCell">
                 <div class="rowIndex answerTag"><p>答案</p></div>
-                <div class="playerName"><p name="pvis">{{answerRow.player}}</p></div>
             </div>
             <div class="cell songCell state-same">
                 <p class="songName" name="pvis">{{answerRow.song}}</p>

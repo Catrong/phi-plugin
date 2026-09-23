@@ -26,6 +26,7 @@ import {
  * @property {number} maxGuess 最大猜测次数
  * @property {fribRow[]} rows 猜测记录
  * @property {idString[]} guessedIds 已猜过的曲目
+ * @property {idString | null} lastGuessId 本局最近一次被猜测的曲目，用作背景曲绘
  * @property {ReturnType<typeof setTimeout> | null} timer 超时定时器
  * @property {botEvent} event 用于超时播报的事件
  */
@@ -180,12 +181,10 @@ async function timeoutGame(group_id, gameList) {
 async function renderGame(e, game, showAnswer) {
     const answer = getInfo.info(game.ansId)
     if (!answer) return '获取曲目信息发生未知错误QAQ！'
-    const illList = getInfo.illlist || []
-    const background = illList.length ? getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]) : undefined
+    /** 背景使用本局最近一次猜测的曲目，尚未产生猜测时使用答案曲绘 */
+    const background = getInfo.getill(game.lastGuessId ?? game.ansId)
     const pluginData = await getNotes.getNotesData(e.user_id)
-    const answerIndex = (getInfo.idList || []).indexOf(game.ansId) + 1
-    const answerPlayer = answerIndex > 0 ? `#${answerIndex}` : '答案'
-    const answerRow = showAnswer ? createFribRow(answer, answer, compareContext(answerPlayer, game.level)) : null
+    const answerRow = showAnswer ? createFribRow(answer, answer, compareContext('', game.level)) : null
     return await picmodle.frib19(e, {
         background,
         theme: pluginData?.theme,
@@ -242,6 +241,7 @@ export default new class frib19 {
             maxGuess: Math.max(1, Math.floor(maxGuess)),
             rows: [],
             guessedIds: [],
+            lastGuessId: null,
             timer: null,
             event: e,
         }
@@ -277,6 +277,7 @@ export default new class frib19 {
         }
         if (ids.includes(game.ansId)) {
             game.rows.push(createFribRow(answer, answer, compareContext(playerName(e), game.level)))
+            game.lastGuessId = game.ansId
             try {
                 await send.send_with_At(e, `恭喜你，猜中啦喵！ヾ(≧▽≦*)o`, true)
                 await send.reply(e, ['正确答案是：', await renderGame(e, game, true)])
@@ -298,6 +299,7 @@ export default new class frib19 {
         if (!guessInfo) return false
         game.rows.push(createFribRow(guessInfo, answer, compareContext(playerName(e), game.level)))
         game.guessedIds.push(guessId)
+        game.lastGuessId = guessId
         refreshTimeout(group_id, gameList)
         if (game.rows.length >= game.maxGuess) {
             try {
