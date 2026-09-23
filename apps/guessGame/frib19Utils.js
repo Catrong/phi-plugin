@@ -30,6 +30,7 @@ export const FRIB_DEFAULT_LEVEL = /** @type {levelKind} */ ('IN')
 /**
  * @typedef {object} fribVersionInfo
  * @property {string} label 版本号文本，如 3.5.1；早于收录范围时为最早版本号加 -
+ * @property {number} date 版本更新时间戳（秒），无数据时为 0
  * @property {number} order 版本在收录历史中的序号；早于收录范围的曲目排在最早版本之前
  * @property {boolean} beforeRange 是否早于收录的最早版本，此类曲目只比较早晚、不判定相近
  */
@@ -39,6 +40,14 @@ export const FRIB_DEFAULT_LEVEL = /** @type {levelKind} */ ('IN')
  * @property {Map<idString, fribVersionInfo | null>} bySong 曲目加入版本，null 表示没有任何收录记录
  * @property {Map<string, number>} orderOfCode 版本编号对应的历史序号
  * @property {string} earliestLabel 收录的最早版本号
+ */
+
+/**
+ * @typedef {object} fribVersionSource
+ * @property {Record<string, { version_label?: string, update_date?: number } | undefined>} [oldVersionInfo] oldInfo 的版本信息，与其它来源冲突时以它为准
+ * @property {Record<string, Record<string, unknown> | undefined>} [oldHistory] oldInfo 的历史定数记录
+ * @property {Record<string, number>} [songVersion] songVersion.csv：曲目 id → 收录版本号
+ * @property {Array<{ version_label?: string, update_date?: number, version_code?: number }>} [taptapUpdates] taptap-updates.json：版本号、更新时间与版本名称
  */
 
 /**
@@ -61,6 +70,7 @@ export const FRIB_DEFAULT_LEVEL = /** @type {levelKind} */ ('IN')
 /**
  * @typedef {object} fribCompareItem
  * @property {string} value 展示文本
+ * @property {string} [sub] 展示在主文本下方的副文本
  * @property {string} state 对比结果
  * @property {string} arrow 箭头方向
  */
@@ -200,44 +210,116 @@ export function compareVersion(guess, answer, tolerance) {
 }
 
 /**
- * 根据历史定数记录推导每首曲目的加入版本。
- * 收录的最早版本中已存在的曲目无法确定加入版本，记为「最早版本号-」，
- * 排在最早版本之前，只参与早晚比较。
- * @param {Record<string, { version_label?: string } | undefined>} versionInfoByCode
- * @param {Record<string, Record<string, unknown> | undefined>} historyDifficultyByVersion
+ * 版本更新时间戳（秒）转 YYYY-MM-DD。
+ * 固定按 UTC+8 输出，避免渲染结果随运行环境时区变化。
+ * @param {unknown} seconds
+ * @returns {string}
+ */
+export function formatVersionDate(seconds) {
+    const ms = Number(seconds) * 1000
+    if (!Number.isFinite(ms) || ms <= 0) return ''
+    const date = new Date(ms + 8 * 60 * 60 * 1000)
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+    const day = String(date.getUTCDate()).padStart(2, '0')
+    return `${date.getUTCFullYear()}-${month}-${day}`
+}
+
+/**
+ * 合并 oldInfo、songVersion.csv 与 taptap-updates.json 推导曲目加入版本。
+ * 版本号与更新时间以 oldInfo 为准；oldInfo 无法确定加入版本（在最早版本内已存在）时
+ * 使用 songVersion.csv；两者都没有时记为「最早版本号-」，只比较早晚、不判定相近。
+ * @param {fribVersionSource} [source]
  * @returns {fribVersionIndex}
  */
-export function buildVersionIndex(versionInfoByCode, historyDifficultyByVersion) {
-    const codes = Object.keys(versionInfoByCode || {})
-        .filter(code => Number.isFinite(Number(code)))
-        .sort((a, b) => Number(a) - Number(b))
+export function buildVersionIndex(source = {}) {
+    const oldVersionInfo = source.oldVersionInfo ?? {}
+    const oldHistory = source.oldHistory ?? {}
+    const songVersion = source.songVersion ?? {}
+    const taptapUpdates = source.taptapUpdates ?? []
+
+    /** 版本号 → 版本名称与更新时间，先铺 taptap，再让 oldInfo 覆盖冲突项 */
+    /** @type {Map<number, { label: string, date: number }>} */
+    const meta = new Map()
+    for (const record of taptapUpdates) {
+        const code = Number(record?.version_code)
+        if (!Number.isFinite(code)) continue
+        meta.set(code, {
+            label: String(record?.version_label ?? code),
+            date: Number(record?.update_date ?? 0),
+        })
+    }
+    for (const key of Object.keys(oldVersionInfo)) {
+        const code = Number(key)
+        if (!Number.isFinite(code)) continue
+        meta.set(code, {
+            label: String(oldVersionInfo[key]?.version_label ?? code),
+            date: Number(oldVersionInfo[key]?.update_date ?? 0),
+        })
+    }
+
+    /** 全部出现过的版本号，按大小排序后作为版本序号 */
+    const codeSet = new Set(meta.keys())
+    for (const key of Object.keys(oldHistory)) {
+        const code = Number(key)
+        if (Number.isFinite(code)) codeSet.add(code)
+    }
+    for (const code of Object.values(songVersion)) {
+        if (Number.isFinite(code)) codeSet.add(code)
+    }
+    const codes = [...codeSet].sort((a, b) => a - b)
     /** @type {Map<string, number>} */
     const orderOfCode = new Map()
-    codes.forEach((code, index) => orderOfCode.set(code, index))
+    codes.forEach((code, index) => orderOfCode.set(String(code), index))
+
+    /** oldInfo 收录的最早版本 */
+    const oldCodes = Object.keys(oldHistory)
+        .map(Number)
+        .filter(Number.isFinite)
+        .sort((a, b) => a - b)
+    const earliestOld = oldCodes[0]
+    /** 曲目在 oldInfo 中首次出现的版本号 */
+    /** @type {Map<string, number>} */
+    const firstInOldInfo = new Map()
+    for (const code of oldCodes) {
+        const songs = oldHistory[String(code)] ?? {}
+        for (const id of Object.keys(songs)) {
+            if (!firstInOldInfo.has(id)) firstInOldInfo.set(id, code)
+        }
+    }
+
+    const earliestMeta = Number.isFinite(earliestOld) ? meta.get(earliestOld) : undefined
+    const earliestLabel = earliestMeta?.label ?? (Number.isFinite(earliestOld) ? String(earliestOld) : '')
+    const earliestOrder = Number.isFinite(earliestOld) ? (orderOfCode.get(String(earliestOld)) ?? 0) : 0
+
     /** @type {Map<idString, fribVersionInfo | null>} */
     const bySong = new Map()
-    const earliest = codes[0]
-    const earliestLabel = String(versionInfoByCode?.[earliest]?.version_label ?? earliest)
-    const earliestOrder = orderOfCode.get(earliest) ?? 0
-    for (const code of codes) {
-        const songs = historyDifficultyByVersion?.[code] ?? {}
-        const versionInfo = versionInfoByCode?.[code]
-        for (const id of Object.keys(songs)) {
-            if (bySong.has(/** @type {idString} */ (id))) continue
-            if (code === earliest) {
-                bySong.set(/** @type {idString} */ (id), {
-                    label: `${earliestLabel}-`,
-                    order: earliestOrder - 1,
-                    beforeRange: true,
-                })
+    const songIds = new Set([...Object.keys(songVersion), ...firstInOldInfo.keys()])
+    for (const id of songIds) {
+        const oldFirst = firstInOldInfo.get(id)
+        const fromCsv = Number(songVersion[id])
+        const knownFromOld = oldFirst !== undefined && oldFirst !== earliestOld
+        /** oldInfo 能确定加入版本时以它为准，否则用 songVersion.csv */
+        const code = knownFromOld ? oldFirst : (Number.isFinite(fromCsv) ? fromCsv : undefined)
+        if (code === undefined) {
+            if (oldFirst === undefined) {
+                bySong.set(/** @type {idString} */ (id), null)
                 continue
             }
             bySong.set(/** @type {idString} */ (id), {
-                label: String(versionInfo?.version_label ?? code),
-                order: orderOfCode.get(code) ?? 0,
-                beforeRange: false,
+                label: `${earliestLabel}-`,
+                date: earliestMeta?.date ?? 0,
+                order: earliestOrder - 1,
+                beforeRange: true,
             })
+            continue
         }
+        const info = meta.get(code)
+        bySong.set(/** @type {idString} */ (id), {
+            label: info?.label ?? String(code),
+            date: info?.date ?? 0,
+            order: orderOfCode.get(String(code)) ?? 0,
+            beforeRange: false,
+        })
     }
     return { bySong, orderOfCode, earliestLabel }
 }
@@ -278,16 +360,6 @@ function versionOf(info, versionIndex) {
 }
 
 /**
- * 版本展示文本，没有任何收录记录时退化为数据未知
- * @param {fribSongInfo} info
- * @param {fribVersionIndex} versionIndex
- * @returns {string}
- */
-function versionLabelOf(info, versionIndex) {
-    return versionOf(info, versionIndex)?.label ?? FRIB_UNKNOWN_TEXT
-}
-
-/**
  * 独占标记展示文本，数据仅在独占曲目上标记 true
  * @param {unknown} isOriginal
  * @returns {string}
@@ -311,12 +383,14 @@ function numberText(value, fixed) {
  * 组合展示文本与对比结果，数据缺失时统一降级为「数据未知」
  * @param {unknown} value
  * @param {{ state: string, arrow: string }} result
+ * @param {string} [sub] 主文本下方的副文本
  * @returns {fribCompareItem}
  */
-function buildItem(value, result) {
+function buildItem(value, result, sub = '') {
     const text = String(value ?? '').trim()
     return {
         value: text || FRIB_UNKNOWN_TEXT,
+        ...(text && sub ? { sub } : {}),
         state: text ? result.state : FRIB_STATE.UNKNOWN,
         arrow: text ? result.arrow : FRIB_ARROW.NONE,
     }
@@ -374,7 +448,8 @@ export function createFribRow(guess, answer, context) {
     const difficulty = compareNumberRange(toRange(guessChart?.difficulty), toRange(answerChart?.difficulty), context.nearDifficulty)
     const combo = compareNumberRange(toRange(guessChart?.combo), toRange(answerChart?.combo), context.nearCombo)
     const bpm = compareNumberRange(parseBpmRange(guess?.bpm), parseBpmRange(answer?.bpm), context.nearBpm)
-    const version = compareVersion(versionOf(guess, context.versionIndex), versionOf(answer, context.versionIndex), context.nearVersion)
+    const guessVersion = versionOf(guess, context.versionIndex)
+    const version = compareVersion(guessVersion, versionOf(answer, context.versionIndex), context.nearVersion)
     const guessSong = normalizeText(guess?.song)
     const answerSong = normalizeText(answer?.song)
     return {
@@ -382,7 +457,7 @@ export function createFribRow(guess, answer, context) {
         song: String(guess?.song ?? ''),
         hit: Boolean(guessSong) && guessSong === answerSong,
         composer: buildItem(guess?.composer, compareText(guess?.composer, answer?.composer)),
-        version: buildItem(versionLabelOf(guess, context.versionIndex), version),
+        version: buildItem(guessVersion?.label, version, guessVersion ? formatVersionDate(guessVersion.date) : ''),
         chapter: buildItem(guess?.chapter, compareText(guess?.chapter, answer?.chapter)),
         original: buildItem(originalText(guess?.isOriginal), compareBoolean(guess?.isOriginal === true, answer?.isOriginal === true)),
         difficulty: buildItem(numberText(guessChart?.difficulty, 1), difficulty),

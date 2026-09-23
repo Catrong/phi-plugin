@@ -52,10 +52,13 @@
             </div>
             {{each row.cells cell}}
             <div class="cell {{cell.cls}} state-{{cell.state}}">
-                <p class="cellValue" name="pvis">{{cell.value}}</p>
-                {{if cell.arrow == 'up'}}<p class="arrow">↑</p>
-                {{else if cell.arrow == 'down'}}<p class="arrow">↓</p>
-                {{else if cell.state == 'same'}}<p class="mark">✓</p>{{/if}}
+                <div class="cellMain">
+                    <p class="cellValue" name="pvis">{{cell.value}}</p>
+                    {{if cell.arrow == 'up'}}<p class="arrow">↑</p>
+                    {{else if cell.arrow == 'down'}}<p class="arrow">↓</p>
+                    {{else if cell.state == 'same'}}<p class="mark">✓</p>{{/if}}
+                </div>
+                {{if cell.sub}}<p class="cellSub" name="pvis">{{cell.sub}}</p>{{/if}}
             </div>
             {{/each}}
         </div>
@@ -72,10 +75,13 @@
             </div>
             {{each answerRow.cells cell}}
             <div class="cell {{cell.cls}} state-{{cell.state}}">
-                <p class="cellValue" name="pvis">{{cell.value}}</p>
-                {{if cell.arrow == 'up'}}<p class="arrow">↑</p>
-                {{else if cell.arrow == 'down'}}<p class="arrow">↓</p>
-                {{else if cell.state == 'same'}}<p class="mark">✓</p>{{/if}}
+                <div class="cellMain">
+                    <p class="cellValue" name="pvis">{{cell.value}}</p>
+                    {{if cell.arrow == 'up'}}<p class="arrow">↑</p>
+                    {{else if cell.arrow == 'down'}}<p class="arrow">↓</p>
+                    {{else if cell.state == 'same'}}<p class="mark">✓</p>{{/if}}
+                </div>
+                {{if cell.sub}}<p class="cellSub" name="pvis">{{cell.sub}}</p>{{/if}}
             </div>
             {{/each}}
         </div>
@@ -111,7 +117,7 @@
 
     <div class="tipsRow">
         <p>相近范围：版本前后 {{nearVersion}} 代 · 定数 ±{{nearDifficulty}} · BPM ±{{nearBpm}} · 物量 ±{{nearCombo}}</p>
-        <p>「{{earliestVersion}}-」表示早于收录的最早版本，只比较早晚、不参与相近判定</p>
+        <p>版本下方为该版本的上线时间；「{{earliestVersion}}-」表示早于收录范围，只比较早晚、不参与相近判定</p>
         <p>发送曲名进行猜测 · /{{cmdhead}} ans 公布答案 · 连续 {{timeout}} 秒无有效猜测后过期</p>
     </div>
 

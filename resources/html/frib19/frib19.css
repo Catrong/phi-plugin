@@ -142,7 +142,7 @@ body p {
 
 .cell {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
@@ -155,6 +155,22 @@ body p {
     font-size: 18px;
     line-height: 1.25;
     white-space: nowrap;
+}
+
+.cellMain {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+}
+
+.cell p.cellSub {
+    margin-top: 3px;
+    font-size: 13px;
+    line-height: 1.1;
+    color: rgba(255, 255, 255, 0.75);
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
 .songCell p,
@@ -187,6 +203,7 @@ body p {
 
 .songCell {
     width: 19%;
+    flex-direction: row;
     justify-content: center;
 }
 
@@ -198,20 +215,16 @@ body p {
     width: 15%;
 }
 
-.artistCell p {
-    font-size: 17px;
-}
-
 .chapterCell {
-    width: 16%;
+    width: 15%;
 }
 
 .versionCell {
-    width: 9%;
+    width: 11%;
 }
 
 .originalCell {
-    width: 8%;
+    width: 7%;
 }
 
 .difficultyCell {

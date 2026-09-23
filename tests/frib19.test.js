@@ -11,6 +11,7 @@ import {
     compareText,
     compareVersion,
     createFribRow,
+    formatVersionDate,
     parseBpmRange,
     parseStartArgs,
     toRenderRows,
@@ -18,7 +19,7 @@ import {
 
 /**
  * 构造版本索引，测试中不关心里层类型
- * @param {[string, { label: string, order: number, beforeRange: boolean } | null][]} entries
+ * @param {[string, { label: string, date?: number, order: number, beforeRange: boolean } | null][]} entries
  * @returns {import('../apps/guessGame/frib19Utils.js').fribVersionIndex}
  */
 function versionIndex(entries) {
@@ -26,7 +27,7 @@ function versionIndex(entries) {
 }
 
 /** 早于收录范围的版本，只比较早晚 */
-const beforeRange = { label: '3.4.0-', order: -1, beforeRange: true }
+const beforeRange = { label: '3.4.0-', date: 0, order: -1, beforeRange: true }
 
 /** @type {import('../apps/guessGame/frib19Utils.js').fribSongInfo} */
 const answer = {
@@ -98,18 +99,18 @@ test('文本与布尔属性对比忽略大小写且不产生箭头', () => {
 })
 
 test('版本对比按收录序号判定相近并处理未知版本', () => {
-    const older = { label: '3.4.0', order: 0, beforeRange: false }
-    const newer = { label: '3.5.1', order: 2, beforeRange: false }
+    const older = { label: '3.4.0', date: 0, order: 0, beforeRange: false }
+    const newer = { label: '3.5.1', date: 0, order: 2, beforeRange: false }
     assert.deepEqual(compareVersion(older, newer, 2), { state: FRIB_STATE.NEAR, arrow: 'up' })
     assert.deepEqual(compareVersion(newer, older, 2), { state: FRIB_STATE.NEAR, arrow: 'down' })
     assert.deepEqual(compareVersion(older, older, 2), { state: FRIB_STATE.SAME, arrow: '' })
-    assert.deepEqual(compareVersion(older, { label: '3.20.0', order: 30, beforeRange: false }, 2), { state: FRIB_STATE.DIFF, arrow: 'up' })
+    assert.deepEqual(compareVersion(older, { label: '3.20.0', date: 0, order: 30, beforeRange: false }, 2), { state: FRIB_STATE.DIFF, arrow: 'up' })
     assert.deepEqual(compareVersion(null, newer, 2), { state: FRIB_STATE.UNKNOWN, arrow: '' })
 })
 
 test('早于收录范围的版本只比较早晚且双方一致时视为相同', () => {
-    const adjacent = { label: '3.4.1', order: 1, beforeRange: false }
-    const far = { label: '3.4.3', order: 3, beforeRange: false }
+    const adjacent = { label: '3.4.1', date: 0, order: 1, beforeRange: false }
+    const far = { label: '3.4.3', date: 0, order: 3, beforeRange: false }
     assert.deepEqual(compareVersion(beforeRange, beforeRange, 2), { state: FRIB_STATE.SAME, arrow: '' })
     assert.deepEqual(compareVersion(adjacent, beforeRange, 2), { state: FRIB_STATE.DIFF, arrow: 'down' })
     assert.deepEqual(compareVersion(beforeRange, adjacent, 2), { state: FRIB_STATE.DIFF, arrow: 'up' })
@@ -117,23 +118,86 @@ test('早于收录范围的版本只比较早晚且双方一致时视为相同',
     assert.deepEqual(compareVersion(adjacent, far, 2), { state: FRIB_STATE.NEAR, arrow: 'up' })
 })
 
-test('版本索引把最早版本内的曲目记为最早版本号加短横', () => {
-    const index = buildVersionIndex(
-        { '92': { version_label: '3.4.0' }, '95': { version_label: '3.4.3' } },
-        { '92': { 'Old.Song': {} }, '95': { 'Old.Song': {}, 'New.Song': {} } },
-    )
-    assert.deepEqual(index.bySong.get(/** @type {any} */ ('Old.Song')), {
+test('版本索引在 oldInfo 无法确定加入版本时回退为最早版本号加短横', () => {
+    const index = buildVersionIndex({
+        oldVersionInfo: {
+            '92': { version_label: '3.4.0', update_date: 1702311672 },
+            '95': { version_label: '3.4.3', update_date: 1703721600 },
+        },
+        oldHistory: {
+            '92': { 'Old.Song.0': {} },
+            '95': { 'Old.Song.0': {}, 'New.Song.0': {} },
+        },
+    })
+    assert.deepEqual(index.bySong.get(/** @type {any} */ ('Old.Song.0')), {
         label: '3.4.0-',
+        date: 1702311672,
         order: -1,
         beforeRange: true,
     })
-    assert.deepEqual(index.bySong.get(/** @type {any} */ ('New.Song')), {
+    assert.deepEqual(index.bySong.get(/** @type {any} */ ('New.Song.0')), {
         label: '3.4.3',
+        date: 1703721600,
         order: 1,
         beforeRange: false,
     })
     assert.equal(index.orderOfCode.get('95'), 1)
     assert.equal(index.earliestLabel, '3.4.0')
+})
+
+test('版本索引以 oldInfo 为准并用 songVersion.csv 与 taptap 补全版本名称和时间', () => {
+    const index = buildVersionIndex({
+        oldVersionInfo: {
+            '95': { version_label: '3.4.3', update_date: 1703721600 },
+            '102': { version_label: '4.0.0', update_date: 1710311672 },
+        },
+        oldHistory: {
+            '95': { 'Old.Song.0': {} },
+            '102': { 'Old.Song.0': {}, 'Late.Song.0': {} },
+        },
+        songVersion: {
+            'Old.Song.0': 6,
+            'Late.Song.0': 95,
+            'Extra.Song.0': 3,
+        },
+        taptapUpdates: [
+            { version_code: 3, version_label: '1.1.0', update_date: 1569440179 },
+            { version_code: 6, version_label: '1.2.1', update_date: 1574408321 },
+            { version_code: 95, version_label: '3.4.3', update_date: 1703721600 },
+            { version_code: 102, version_label: 'taptap-4.0.0', update_date: 1 },
+        ],
+    })
+    /** oldInfo 最早版本内已存在，改用 songVersion.csv 给出的 6，名称与时间取自 taptap */
+    assert.deepEqual(index.bySong.get(/** @type {any} */ ('Old.Song.0')), {
+        label: '1.2.1',
+        date: 1574408321,
+        order: 1,
+        beforeRange: false,
+    })
+    /** 与 songVersion.csv 冲突时以 oldInfo 的 102 为准，名称与时间同样以 oldInfo 为准 */
+    assert.deepEqual(index.bySong.get(/** @type {any} */ ('Late.Song.0')), {
+        label: '4.0.0',
+        date: 1710311672,
+        order: 3,
+        beforeRange: false,
+    })
+    /** 只存在于 songVersion.csv 的曲目 */
+    assert.deepEqual(index.bySong.get(/** @type {any} */ ('Extra.Song.0')), {
+        label: '1.1.0',
+        date: 1569440179,
+        order: 0,
+        beforeRange: false,
+    })
+    assert.equal(index.earliestLabel, '3.4.3')
+    assert.deepEqual([...index.orderOfCode.entries()], [['3', 0], ['6', 1], ['95', 2], ['102', 3]])
+})
+
+test('版本时间按 UTC+8 格式化为日期', () => {
+    assert.equal(formatVersionDate(1567988075), '2019-09-09')
+    assert.equal(formatVersionDate(1710311672), '2024-03-13')
+    assert.equal(formatVersionDate(0), '')
+    assert.equal(formatVersionDate(undefined), '')
+    assert.equal(formatVersionDate('abc'), '')
 })
 
 test('曲目池只保留拥有对应难度且满足定数下限的曲目', () => {
@@ -167,8 +231,8 @@ test('猜测行按相近范围给出颜色状态与箭头', () => {
         player: '废酱',
         level: 'IN',
         versionIndex: versionIndex([
-            ['Answer.Song', { label: '3.5.1', order: 2, beforeRange: false }],
-            ['Guess.Song', { label: '3.4.0', order: 0, beforeRange: false }],
+            ['Answer.Song', { label: '3.5.1', date: 1710311672, order: 2, beforeRange: false }],
+            ['Guess.Song', { label: '1.2.1', date: 1574408321, order: 0, beforeRange: false }],
         ]),
         nearDifficulty: 0.3,
         nearBpm: 20,
@@ -179,7 +243,7 @@ test('猜测行按相近范围给出颜色状态与箭头', () => {
     assert.equal(row.song, 'Guess Song')
     assert.equal(row.hit, false)
     assert.deepEqual(row.composer, { value: 'Other', state: FRIB_STATE.DIFF, arrow: '' })
-    assert.deepEqual(row.version, { value: '3.4.0', state: FRIB_STATE.NEAR, arrow: 'up' })
+    assert.deepEqual(row.version, { value: '1.2.1', sub: '2019-11-22', state: FRIB_STATE.NEAR, arrow: 'up' })
     assert.deepEqual(row.chapter, { value: 'Chapter 5 霓虹灯牌', state: FRIB_STATE.DIFF, arrow: '' })
     assert.deepEqual(row.original, { value: '非独占', state: FRIB_STATE.DIFF, arrow: '' })
     assert.deepEqual(row.difficulty, { value: '15.2', state: FRIB_STATE.NEAR, arrow: 'up' })
@@ -228,8 +292,8 @@ test('早于收录范围的曲目展示最早版本号加短横且只比较早�
         player: '废酱',
         level: /** @type {levelKind} */ ('IN'),
         versionIndex: versionIndex([
-            ['Early.0', { label: '3.4.0-', order: -1, beforeRange: true }],
-            ['Answer.Song', { label: '3.5.1', order: 2, beforeRange: false }],
+            ['Early.0', { label: '3.4.0-', date: 0, order: -1, beforeRange: true }],
+            ['Answer.Song', { label: '3.5.1', date: 0, order: 2, beforeRange: false }],
         ]),
         nearDifficulty: 0.3,
         nearBpm: 20,

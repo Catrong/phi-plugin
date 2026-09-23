@@ -5,6 +5,9 @@ import fCompute from '../../model/game/fCompute.js'
 import send from '../../model/render/send.js'
 import picmodle from '../../model/render/picmodle.js'
 import getPic from '../../model/render/getPic.js'
+import readFile from '../../model/filesystem/getFile.js'
+import { infoPath } from '../../model/filesystem/path.js'
+import path from 'node:path'
 import logger from '../../components/Logger.js'
 import {
     buildSongPool,
@@ -60,17 +63,57 @@ function numberCfg(value, fallback) {
     return Number.isFinite(num) && num >= 0 ? num : fallback
 }
 
+/** songVersion.csv：曲目 id → 首次收录的版本号 */
+const songVersionPath = path.join(infoPath, 'songVersion.csv')
+
+/** taptap-updates.json：版本号、更新时间与版本名称 */
+const taptapUpdatesPath = path.join(infoPath, 'taptap-updates.json')
+
 /**
- * 获取版本索引
+ * 读取 songVersion.csv，键统一补齐 .0 后缀
+ * @returns {Record<string, number>}
+ */
+function loadSongVersion() {
+    const raw = readFile.FileReader(songVersionPath, 'TXT')
+    if (typeof raw !== 'string') return {}
+    /** @type {Record<string, number>} */
+    const result = {}
+    for (const line of raw.replace(/\r/g, '').split('\n').slice(1)) {
+        const comma = line.indexOf(',')
+        if (comma <= 0) continue
+        const id = line.slice(0, comma).trim()
+        const code = Number(line.slice(comma + 1).trim())
+        if (!id || !Number.isFinite(code)) continue
+        result[id.endsWith('.0') ? id : `${id}.0`] = code
+    }
+    return result
+}
+
+/**
+ * 读取 taptap-updates.json
+ * @returns {Array<{ version_label?: string, update_date?: number, version_code?: number }>}
+ */
+function loadTaptapUpdates() {
+    const data = readFile.FileReader(taptapUpdatesPath)
+    return Array.isArray(data) ? data : []
+}
+
+/**
+ * 获取版本索引：oldInfo 为准，songVersion.csv 补充，taptap-updates.json 提供版本名称与时间
  * @returns {fribVersionIndex}
  */
 function getVersionIndex() {
-    const source = getInfo.historyDifficultyByVersion
-    const size = source ? Object.keys(source).length : 0
-    if (versionIndexCache && versionIndexSource === source && versionIndexSize === size) return versionIndexCache
-    versionIndexSource = source
+    const oldHistory = getInfo.historyDifficultyByVersion
+    const size = oldHistory ? Object.keys(oldHistory).length : 0
+    if (versionIndexCache && versionIndexSource === oldHistory && versionIndexSize === size) return versionIndexCache
+    versionIndexSource = oldHistory
     versionIndexSize = size
-    versionIndexCache = buildVersionIndex(getInfo.versionInfoByCode, source)
+    versionIndexCache = buildVersionIndex({
+        oldVersionInfo: getInfo.versionInfoByCode,
+        oldHistory,
+        songVersion: loadSongVersion(),
+        taptapUpdates: loadTaptapUpdates(),
+    })
     return versionIndexCache
 }
 

@@ -111,7 +111,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi guess` | Guess song from illustration (reply directly) |
 | `#phi (ltr\|letter)` | Guess song via letters (use #open/#ans) |
 | `#phi tipgame` | Guess song via hints (use #tip/#ans) |
-| `#phi (弗一把\|friberg\|fib\|fri) [EZ\|HD\|IN\|AT] [min difficulty, e.g. 14+]` | Friberg song guessing; reply with a song name to compare artist, added version, chapter, original flag, difficulty, BPM and note count (use #ans to reveal) |
+| `#phi (弗一把\|friberg\|fib\|fri) [EZ\|HD\|IN\|AT] [min difficulty, e.g. 14+]` | Friberg song guessing; reply with a song name to compare artist, first-release version (with release date), chapter, original flag, difficulty, BPM and note count (use #ans to reveal) |
 | `#phi song xxx` | Query song info (supports aliases) |
 | `#phi chart <song> [difficulty=IN]` | View chart details |
 | `#phi tag <song name> [difficulty=IN] <tag>` | View chart tags, available tags shown in response, default difficulty is IN |
