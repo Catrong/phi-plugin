@@ -331,10 +331,14 @@ export class phiupdate extends phiPluginBase {
 
 
         let repoPath = shellPath(originalIllPath);
+        // --depth=1 把历史截断回单个提交；但被截断的旧提交仍被 reflog 引用而保持可达，
+        // 必须先清掉 reflog 再 repack，才能真正丢弃它们，否则 .git 会随每次更新持续变大。
         let command = [
-            `git -C ${repoPath} fetch --all --prune`,
+            `git -C ${repoPath} fetch --all --prune --depth=1`,
             `git -C ${repoPath} reset --hard origin/main`,
-            `git -C ${repoPath} clean -fd`
+            `git -C ${repoPath} clean -fd`,
+            `git -C ${repoPath} reflog expire --expire=now --expire-unreachable=now --all`,
+            `git -C ${repoPath} repack -a -d -q`
         ].join(" && ");
         this.reply("开始更新曲绘文件，请稍等");
 
