@@ -33,7 +33,7 @@
             <div class="cell songCell"><p>歌曲</p></div>
             <div class="cell artistCell"><p>Artist</p></div>
             <div class="cell versionCell"><p>Version</p></div>
-            <div class="cell chapterCell"><p>分类</p></div>
+            <div class="cell chapterCell"><p>章节</p></div>
             <div class="cell originalCell"><p>独占</p></div>
             <div class="cell difficultyCell"><p>定数</p></div>
             <div class="cell bpmCell"><p>BPM</p></div>
@@ -53,10 +53,11 @@
             {{each row.cells cell}}
             <div class="cell {{cell.cls}} state-{{cell.state}}">
                 <div class="cellMain">
-                    <p class="cellValue" name="pvis">{{cell.value}}</p>
-                    {{if cell.arrow == 'up'}}<p class="arrow">↑</p>
-                    {{else if cell.arrow == 'down'}}<p class="arrow">↓</p>
-                    {{else if cell.state == 'same'}}<p class="mark">✓</p>{{/if}}
+                    <p class="cellValue" name="pvis">{{cell.value}}
+                        {{if cell.arrow == 'up'}}<span class="arrow">↑</span>
+                        {{else if cell.arrow == 'down'}}<span class="arrow">↓</span>
+                        {{else if cell.state == 'same'}}<span class="mark">✓</span>{{/if}}
+                    </p>
                 </div>
                 {{if cell.sub}}<p class="cellSub" name="pvis">{{cell.sub}}</p>{{/if}}
             </div>
