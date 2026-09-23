@@ -16,12 +16,14 @@ body {
     flex-direction: column;
     align-items: center;
     overflow: hidden;
+    background-color: #00000044;
 }
 
 .totalBox {
     /* width: 16000px; */
     position: relative;
     display: flex;
+    padding: 10px;
     /* border: 5px solid; */
 }
 
