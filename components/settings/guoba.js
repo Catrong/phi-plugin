@@ -30,14 +30,14 @@ export function createGuobaSchemas(includeCredentials = true) {
 /** @param {any} config @param {{includeCredentials?: boolean}} [options] */
 export function createGuobaConfigInfo(config, options = {}) {
     const items = shared.editable.filter(item => options.includeCredentials !== false || !item.generated)
+    // 锅巴会解构后单独调用 setConfigData，方法内不能用 this
+    const getConfigData = () => Object.fromEntries(items.map(item => [item.key, config.getUserCfg('config', item.key)]))
     return {
         schemas: createGuobaSchemas(options.includeCredentials !== false),
-        getConfigData() {
-            return Object.fromEntries(items.map(item => [item.key, config.getUserCfg('config', item.key)]))
-        },
+        getConfigData,
         /** @param {Record<string, any>} data */
         setConfigData(data) {
-            const current = this.getConfigData()
+            const current = getConfigData()
             const values = shared.validateSettings({ ...current, ...data })
             for (const [key, value] of Object.entries(values)) {
                 if (current[key] !== value) config.modify('config', key, value)
