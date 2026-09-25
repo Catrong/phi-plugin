@@ -23,7 +23,7 @@ export const LevelNum = {
 export const redisPath = "phiPlugin"
 
 /**最大难度 */
-export const MAX_DIFFICULTY = 17.6
+export const MAX_DIFFICULTY = 17.9
     
 export const APII18NCN = {
     userNotFound: `未找到对应 用户`
