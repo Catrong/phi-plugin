@@ -580,8 +580,11 @@ const adapter = {
      * @param {string} [filename]
      */
     async uploadFile(e, file, filename) {
+        // 各适配器 sendFile 的第二参数均为展示文件名（lib/bot.js 兜底为 (file, name) => sendMsg(segment.file(file, name))），
+        // 此前误将文件名放在第三参数导致被丢弃：QQBot 适配器端会展示为 SDK 自动生成的
+        // “file_<时间戳>.zip”；OneBot 端仅靠磁盘 basename 兜底才显示正常
         if (e?.isGroup) {
-            if (e.group?.sendFile) return e.group.sendFile(file, undefined, filename)
+            if (e.group?.sendFile) return e.group.sendFile(file, filename)
             if (e.group?.fs?.upload) return e.group.fs.upload(file, undefined, filename)
         }
         if (e?.friend?.sendFile) return e.friend.sendFile(file, filename)
