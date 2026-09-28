@@ -11,7 +11,7 @@
     
     <div class="title">
         <div class="l">
-            <img src="{{_res_path}}html/otherimg/Phigros_Icon_3.0.0.png" alt="icon">
+            <img src="{{_res_path}}html/otherimg/Phigros_Icon_4.0.0.png" alt="icon">
             <div class="doc">
                 <p>Phi-Plugin任务列表</p>
                 <p style="font-size: 20px;">{{task_ans}}</p>
