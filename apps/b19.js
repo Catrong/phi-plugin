@@ -1260,8 +1260,8 @@ async function getScore(songId, e, args = {}) {
         if (scoreRanklist) {
             scoreRanklist.users.forEach((/** @type {any} */ item) => {
                 // @ts-ignore
-                item.gameuser.challengeMode = Math.floor(item.gameuser.challengeModeRank / 100);
-                item.gameuser.challengeModeRank = item.gameuser.challengeModeRank % 100;
+                item.gameuser.ChallengeMode = Math.floor(item.gameuser.challengeModeRank / 100);
+                item.gameuser.ChallengeModeRank = item.gameuser.challengeModeRank % 100;
                 item.gameuser.avatar = getInfo.idgetavatar(item.gameuser.avatar);
                 // @ts-ignore
                 item.record.Rating = fCompute.rate(item.record.score, item.record.fc);
