@@ -435,15 +435,9 @@ export default new class getInfo {
         this.info_by_difficulty = {};
         this.updatedSong = [];
         this.updatedChart = {};
-        /**自定义信息 */
-        let user_song = Config.getUserCfg('config', 'otherinfo')
-        if (Config.getUserCfg('config', 'otherinfo')) {
-            for (let i in user_song) {
-                if (user_song[i]['illustration_big']) {
-                    this.illlist.push(user_song[i].song)
-                }
-            }
-        }
+
+        /**额外曲库开关：0:原本 1:原本+额外 2:仅额外 */
+        const otherInfoMode = Config.getUserCfg('config', 'otherinfo')
 
         /**
          * @type {Record<idString, SongsInfo>}
@@ -464,7 +458,7 @@ export default new class getInfo {
             this.sp_info[id].id = id
             this.idssong[/** @type {songString} */ (/** @type {unknown} */ (i))] = id
             this.idssong[this.sp_info[id].song] = id
-            if (this.sp_info[id]?.illustration) {
+            if (otherInfoMode != 2 && this.sp_info[id]?.illustration) {
                 this.illlist.push(this.sp_info[id].id)
             }
         }
@@ -651,9 +645,25 @@ export default new class getInfo {
             if (Jsoninfo[idWithout0]?.chart) {
                 this.ori_info[id].chart = { ...this.ori_info[id].chart, ...Jsoninfo[idWithout0].chart }
             }
-            this.illlist.push(id)
-            this.songlist.push(this.ori_info[id].song)
-            this.idList.push(id)
+            if (otherInfoMode != 2) {
+                this.illlist.push(id)
+                this.songlist.push(this.ori_info[id].song)
+                this.idList.push(id)
+            }
+        }
+
+        /**自定义曲目加入抽取列表：1:原本+额外 2:仅额外 */
+        if (otherInfoMode) {
+            const user_song = Config.getUserCfg('otherinfo') || {}
+            for (const i of fCompute.objectKeys(user_song)) {
+                const song = user_song[i]
+                // 曲绘列表消费方通过 getill 取图，实际读取的是 illustration 字段
+                if (song?.illustration) {
+                    this.illlist.push(/** @type {idString} */ (i))
+                }
+                this.songlist.push(/** @type {songString} */ (song?.song || i))
+                this.idList.push(/** @type {idString} */ (i))
+            }
         }
 
 

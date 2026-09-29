@@ -471,7 +471,7 @@ async function randtask(e, save, task = []) {
     if (await canUseApi(e, 'scoreStatistics')) {
 
         const res = await makeRequest.getAllSongAccAvgB30({
-                songIds: getInfo.idList,
+                songIds: fCompute.objectKeys(getInfo.ori_info),
                 minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                 maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
             }, { event: e })
