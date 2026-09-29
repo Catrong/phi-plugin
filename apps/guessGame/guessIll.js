@@ -270,7 +270,7 @@ export default new class guessIll {
                         return true
                     }
                 } else {
-                    await gameover(e, data)
+                    // 游戏已被 guess/ans 结束并公布答案，无需重复收尾
                     return true
                 }
             }
@@ -334,7 +334,7 @@ export default new class guessIll {
                     return true
                 }
             } else {
-                await gameover(e, data)
+                // 游戏已被 guess/ans 结束并公布答案，无需重复收尾
                 return true
             }
 
@@ -356,7 +356,7 @@ export default new class guessIll {
                     return true
                 }
             } else {
-                await gameover(e, data)
+                // 游戏已被 guess/ans 结束并公布答案，无需重复收尾
                 return true
             }
         }
