@@ -705,7 +705,7 @@ export class phib19 extends phiPluginBase {
         if (await canUseApi(e, 'scoreStatistics')) {
 
             const res = await makeRequest.getAllSongAccAvgB30({
-                    songIds: getInfo.idList,
+                    songIds: fCompute.objectKeys(getInfo.ori_info),
                     minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                     maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
                 }, { event: e })
@@ -730,7 +730,7 @@ export class phib19 extends phiPluginBase {
                 })
             }
             const apfcRes = await makeRequest.getSongsApFcCount({
-                    songId: getInfo.idList || [],
+                    songId: fCompute.objectKeys(getInfo.ori_info),
                     rank: Level,
                     rksRange: {
                         min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,

@@ -333,6 +333,91 @@
     "type": "boolean"
   },
   {
+    "key": "GuessTipDefaultLevel",
+    "group": "猜曲绘设置",
+    "label": "默认难度",
+    "description": "未通过 -l 指定难度时使用的干扰难度；随机为原有加权（0/1/2/3 权重 2/5/2/1）",
+    "type": "select",
+    "options": [
+      {
+        "label": "随机",
+        "value": -1
+      },
+      {
+        "label": "0 · 无干扰",
+        "value": 0
+      },
+      {
+        "label": "1 · 单一干扰",
+        "value": 1
+      },
+      {
+        "label": "2 · 双重干扰",
+        "value": 2
+      },
+      {
+        "label": "3 · 高难干扰",
+        "value": 3
+      }
+    ]
+  },
+  {
+    "key": "GuessTipChapter",
+    "group": "猜曲绘设置",
+    "label": "章节提示",
+    "description": "追加提示是否包含曲目所属章节",
+    "type": "boolean"
+  },
+  {
+    "key": "GuessTipBpm",
+    "group": "猜曲绘设置",
+    "label": "BPM提示",
+    "description": "追加提示是否包含曲目 BPM",
+    "type": "boolean"
+  },
+  {
+    "key": "GuessTipComposer",
+    "group": "猜曲绘设置",
+    "label": "曲师提示",
+    "description": "追加提示是否包含曲目作者（曲师），部分曲师名会直接点明曲目，可按需关闭",
+    "type": "boolean"
+  },
+  {
+    "key": "GuessTipLength",
+    "group": "猜曲绘设置",
+    "label": "时长提示",
+    "description": "追加提示是否包含曲目时长",
+    "type": "boolean"
+  },
+  {
+    "key": "GuessTipIllustrator",
+    "group": "猜曲绘设置",
+    "label": "画师提示",
+    "description": "追加提示是否包含曲绘画师",
+    "type": "boolean"
+  },
+  {
+    "key": "GuessTipChartDifficulty",
+    "group": "猜曲绘设置",
+    "label": "谱面定数提示",
+    "description": "追加提示是否包含谱面定数",
+    "type": "boolean"
+  },
+  {
+    "key": "GuessTipChartCombo",
+    "group": "猜曲绘设置",
+    "label": "谱面物量提示",
+    "description": "追加提示是否包含谱面物量",
+    "type": "boolean"
+  },
+  {
+    "key": "GuessTipChartCharter",
+    "group": "猜曲绘设置",
+    "label": "谱师提示",
+    "description": "追加提示是否包含谱师，特色谱师名会直接点明曲目，建议关闭",
+    "type": "boolean"
+  },
+  {
     "key": "LetterNum",
     "group": "开字母设置",
     "label": "字母条数",

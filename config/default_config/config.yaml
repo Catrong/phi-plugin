@@ -143,6 +143,33 @@ GuessTipRecall: false
 #  猜曲绘提示时间间隔(s)
 GuessTipCd: 15
 
+#  未通过 -l 指定难度时使用的干扰难度 -1:随机 0:无干扰 1:单一干扰 2:双重干扰 3:高难干扰
+GuessTipDefaultLevel: -1
+
+#  追加提示是否包含曲目所属章节
+GuessTipChapter: true
+
+#  追加提示是否包含曲目 BPM
+GuessTipBpm: true
+
+#  追加提示是否包含曲目作者（曲师），部分曲师名会直接点明曲目，可按需关闭
+GuessTipComposer: true
+
+#  追加提示是否包含曲目时长
+GuessTipLength: true
+
+#  追加提示是否包含曲绘画师
+GuessTipIllustrator: true
+
+#  追加提示是否包含谱面定数
+GuessTipChartDifficulty: true
+
+#  追加提示是否包含谱面物量
+GuessTipChartCombo: true
+
+#  追加提示是否包含谱师，特色谱师名会直接点明曲目，建议关闭
+GuessTipChartCharter: true
+
 #  ************ 【提示猜歌设置】 *************
 #  提示猜歌提示的冷却时间间隔(s)
 GuessTipsTipCD: 5
