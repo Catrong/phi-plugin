@@ -68,7 +68,7 @@ const eList = {}
  */
 /**
  * @typedef {import('../guessGame.js').GameList} GameList
- * @typedef {['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']} remainInfoType
+ * @typedef {Array<'chapter'|'bpm'|'composer'|'length'|'illustrator'|'chart'>} remainInfoType
  */
 
 /**
@@ -146,8 +146,14 @@ export default new class guessIll {
 
         let lvMsg = e.msg.match(/-[lL]\s*(\d+)/)?.[0]?.match(/(\d+)/)?.[0]
 
+        // 未通过 -l 指定难度时使用配置的默认难度（-1 为保持原有的加权随机）
+        const defaultLevel = Number(Config.getUserCfg('config', 'GuessTipDefaultLevel'))
         // 根据难度等级生成干扰组合
-        const level = lvMsg ? Number(lvMsg) : fCompute.randFromArray([[0, 2], [1, 5], [2, 2], [3, 1]]);
+        const level = lvMsg
+            ? Number(lvMsg)
+            : (Number.isInteger(defaultLevel) && defaultLevel >= 0 && defaultLevel <= 3
+                ? defaultLevel
+                : fCompute.randFromArray([[0, 2], [1, 5], [2, 2], [3, 1]]));
         const interference = generateInterference(level);
 
         let data = {
@@ -170,8 +176,14 @@ export default new class guessIll {
          * @type {Record<string, string>}
          */
         const known_info = {}
-        /** @type {remainInfoType} */
-        const remain_info = ['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']
+        /**
+         * 本次游戏可给出的追加提示项，按设置中的追加提示开关过滤
+         * @type {remainInfoType}
+         */
+        const remain_info = /** @type {remainInfoType} */ (['chapter', 'bpm', 'composer', 'length', 'illustrator', 'chart']).filter(tip => {
+            if (tip !== 'chart') return Config.getUserCfg('config', TIP_TOGGLE_KEYS[tip])
+            return getEnabledChartTips().length > 0
+        })
         /**
          * 随机给出提示
          * 0: 区域扩大
@@ -225,6 +237,11 @@ export default new class guessIll {
         // 如果存在非模糊类干扰，加入类型4
         if (interference.lineMode || interference.saturate !== 1 || interference.invert !== false || interference.hueRotate !== 0) {
             fnc.push(4)
+        }
+        // 全部追加提示被关闭时，移除文字提示类操作
+        if (!remain_info.length) {
+            const tipIdx = fnc.indexOf(2)
+            if (tipIdx !== -1) fnc.splice(tipIdx, 1)
         }
         logger.info(data)
 
@@ -520,10 +537,40 @@ function blur_down(size, data, fnc) {
 }
 
 /**
+ * 追加提示项对应的开关配置键
+ * @type {Record<'chapter'|'bpm'|'composer'|'length'|'illustrator', configName>}
+ */
+const TIP_TOGGLE_KEYS = {
+    chapter: 'GuessTipChapter',
+    bpm: 'GuessTipBpm',
+    composer: 'GuessTipComposer',
+    length: 'GuessTipLength',
+    illustrator: 'GuessTipIllustrator',
+}
+
+/**
+ * 谱面类提示的子项及对应开关配置键
+ * @type {{key: 'difficulty'|'combo'|'charter', cfg: configName}[]}
+ */
+const CHART_TIP_TYPES = [
+    { key: 'difficulty', cfg: 'GuessTipChartDifficulty' },
+    { key: 'combo', cfg: 'GuessTipChartCombo' },
+    { key: 'charter', cfg: 'GuessTipChartCharter' },
+]
+
+/**
+ * 当前配置允许给出的谱面类提示子项
+ * @returns {typeof CHART_TIP_TYPES}
+ */
+function getEnabledChartTips() {
+    return CHART_TIP_TYPES.filter(t => Config.getUserCfg('config', t.cfg))
+}
+
+/**
  * 获得一个歌曲信息的提示
- * @param {Record<string, string>} known_info 
- * @param {remainInfoType} remain_info 
- * @param {SongsInfo} songs_info 
+ * @param {Record<string, string>} known_info
+ * @param {remainInfoType} remain_info
+ * @param {SongsInfo} songs_info
  * @param {number[]} fnc
  */
 function gave_a_tip(known_info, remain_info, songs_info, fnc) {
@@ -539,6 +586,11 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
         if (!remain_info.length) fnc.splice(fnc.indexOf(2), 1)
 
         if (aim === 'chart') {
+            const enabledTips = getEnabledChartTips()
+            if (!enabledTips.length) {
+                logger.error('Error: no chart tip enabled')
+                return true
+            }
             /**
              * @type {levelKind[]}
              */
@@ -548,18 +600,18 @@ function gave_a_tip(known_info, remain_info, songs_info, fnc) {
 
             known_info[aim] = `\n该曲目的 ${t1} 谱面的`
 
-            switch (fCompute.randInt(0, 2)) {
-                case 0: {
+            switch (enabledTips[fCompute.randInt(0, enabledTips.length - 1)].key) {
+                case 'difficulty': {
                     /**定数 */
                     known_info[aim] += `定数为 ${songs_info[aim][t1]?.['difficulty']}`
                     break
                 }
-                case 1: {
+                case 'combo': {
                     /**物量 */
                     known_info[aim] += `物量为 ${songs_info[aim][t1]?.['combo']}`
                     break
                 }
-                case 2: {
+                case 'charter': {
                     /**谱师 */
                     known_info[aim] += `谱师为 ${songs_info[aim][t1]?.['charter']}`
                     break

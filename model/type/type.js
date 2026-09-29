@@ -115,6 +115,15 @@
  * 猜曲绘设置
  * @typedef {'GuessTipCd'} GuessTipCd 提示间隔
  * @typedef {'GuessTipRecall'} GuessTipRecall 猜曲绘撤回
+ * @typedef {'GuessTipDefaultLevel'} GuessTipDefaultLevel 默认难度
+ * @typedef {'GuessTipChapter'} GuessTipChapter 章节提示开关
+ * @typedef {'GuessTipBpm'} GuessTipBpm BPM提示开关
+ * @typedef {'GuessTipComposer'} GuessTipComposer 曲师提示开关
+ * @typedef {'GuessTipLength'} GuessTipLength 时长提示开关
+ * @typedef {'GuessTipIllustrator'} GuessTipIllustrator 画师提示开关
+ * @typedef {'GuessTipChartDifficulty'} GuessTipChartDifficulty 谱面定数提示开关
+ * @typedef {'GuessTipChartCombo'} GuessTipChartCombo 谱面物量提示开关
+ * @typedef {'GuessTipChartCharter'} GuessTipChartCharter 谱师提示开关
  * 开字母设置
  * @typedef {'LetterNum'} LetterNum 字母条数
  * @typedef {'LetterMarkdown'} LetterMarkdown Markdown格式
@@ -180,6 +189,15 @@
  * |chartPath
  * |GuessTipCd
  * |GuessTipRecall
+ * |GuessTipDefaultLevel
+ * |GuessTipChapter
+ * |GuessTipBpm
+ * |GuessTipComposer
+ * |GuessTipLength
+ * |GuessTipIllustrator
+ * |GuessTipChartDifficulty
+ * |GuessTipChartCombo
+ * |GuessTipChartCharter
  * |LetterNum
  * |LetterMarkdown
  * |LetterIllustration
