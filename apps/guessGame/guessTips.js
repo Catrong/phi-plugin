@@ -1,12 +1,24 @@
 import Config from "../../components/Config.js"
-import fCompute from "../../model/fCompute.js"
-import getInfo from "../../model/getInfo.js"
-import { allLevel } from "../../model/constNum.js"
-import send from "../../model/send.js"
-import picmodle from "../../model/picmodle.js"
-import getPic from "../../model/getPic.js"
+import fCompute from "../../model/game/fCompute.js"
+import getInfo from "../../model/game/getInfo.js"
+import { allLevel } from "../../model/game/constNum.js"
+import send from "../../model/render/send.js"
+import picmodle from "../../model/render/picmodle.js"
+import getPic from "../../model/render/getPic.js"
 import logger from "../../components/Logger.js"
 
+
+
+/**
+ * @typedef {Object} guessIllDataLite
+ * @property {string} illustration 曲绘路径
+ * @property {number} width 展示的宽度
+ * @property {number} height 展示的高度
+ * @property {number} x 展示的X位置
+ * @property {number} y 展示的Y位置
+ * @property {number|boolean} style 是否全局视野 (0/1 or false/true)
+ * @property {string} [ans] 答案图片路径(游戏结束时)
+ */
 class GuessTipsGameData {
     /**
      * @param {idString} songId 
@@ -58,7 +70,7 @@ export default new class guessTips {
     async start(e, gameList) {
         const { group_id } = e;
         if (gameList[group_id]) {
-            e.reply("请不要重复发起哦！", true)
+            send.reply(e, "请不要重复发起哦！", true)
             return false
         }
         /**
@@ -77,11 +89,11 @@ export default new class guessTips {
 
         if (!hasIllIdList.length) {
             logger.error('[phi-plugin] 提示猜歌无有效曲目')
-            e.reply('当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
+            send.reply(e, '当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
             return false
         }
         /**选中的歌曲id */
-        let songId = hasIllIdList[fCompute.randBetween(0, hasIllIdList.length - 1)]
+        let songId = hasIllIdList[fCompute.randInt(0, hasIllIdList.length - 1)]
         let info = getInfo.info(songId)
         if (!info) {
             send.send_with_At(e, '获取曲目信息发生未知错误QAQ！')
@@ -106,25 +118,25 @@ export default new class guessTips {
         tips = tips.splice(0, Config.getUserCfg('config', 'GuessTipsTipNum'))
         /**曲绘区域 */
         /**width */
-        let width = fCompute.randBetween(100, 150)
+        let width = fCompute.randInt(100, 150)
         /**height */
-        let height = fCompute.randBetween(100, 150)
-        let x = fCompute.randBetween(0, 2048 - width)
-        let y = fCompute.randBetween(0, 1080 - height)
+        let height = fCompute.randInt(100, 150)
+        let x = fCompute.randInt(0, 2048 - width)
+        let y = fCompute.randInt(0, 1080 - height)
         gameList[group_id] = { gameType: 'guessTips' }
         tipsGameData[group_id] = new GuessTipsGameData(songId, tips, width, height, x, y,)
         const currentGame = tipsGameData[group_id]
         const startTime = currentGame.startTime
-        e.reply(`下面开始进行提示猜歌哦！可以直接发送曲名进行回答哦！每过${Config.getUserCfg('config', 'GuessTipsTipCD')}秒后可以请求下一条提示，共有${Config.getUserCfg('config', 'GuessTipsTipNum') + 1}条提示嗷！所有提示发送完毕${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒后会自动结束游戏嗷！发送 /${Config.getUserCfg('config', 'cmdhead')} ans 也可以提前结束游戏呐！`)
+        send.reply(e, `下面开始进行提示猜歌哦！可以直接发送曲名进行回答哦！每过${Config.getUserCfg('config', 'GuessTipsTipCD')}秒后可以请求下一条提示，共有${Config.getUserCfg('config', 'GuessTipsTipNum') + 1}条提示嗷！所有提示发送完毕${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒后会自动结束游戏嗷！发送 /${Config.getUserCfg('config', 'cmdhead')} ans 也可以提前结束游戏呐！`)
         /**@type {string[]} */
         let resMsg = []
         for (let i = 0; i < currentGame.tipNum; i++) {
             resMsg.push(`${i + 1}.${currentGame.tips[i]}`)
         }
-        e.reply(resMsg)
+        send.reply(e, resMsg)
         setTimeout(async (startTime) => {
             if (tipsGameData[group_id]?.startTime == startTime) {
-                e.reply([`呜……很遗憾，没有人答对喵！正确答案是：${info.song}`, currentGame.tipNum > currentGame.tips.length ? await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 1, }) : false])
+                send.reply(e, [`呜……很遗憾，没有人答对喵！正确答案是：${info.song}`, currentGame.tipNum > currentGame.tips.length ? await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 1, }) : false])
                 gameover(group_id, gameList)
             }
         }, Config.getUserCfg('config', 'GuessTipsTimeout') * 1000, startTime);
@@ -157,12 +169,12 @@ export default new class guessTips {
                 if (tipsGameData[group_id]?.startTime == startTime) {
                     const currentGame = tipsGameData[group_id]
                     const info = getInfo.info(currentGame.songId)
-                    e.reply([`呜……很遗憾，没有人答对喵！正确答案是：${info?.song}`, await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 1, })])
-                    e.reply(await getPic.GetSongsInfoAtlas(e, currentGame.songId))
+                    send.reply(e, [`呜……很遗憾，没有人答对喵！正确答案是：${info?.song}`, await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 1, })])
+                    send.reply(e, await getPic.GetSongsInfoAtlas(e, currentGame.songId))
                     gameover(group_id, gameList)
                 }
             }, 30 * 1000, currentGame.startTime)
-            e.reply(`接下来是曲绘提示哦！如果在${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒内没有回答正确的话，将会自动公布答案哦！`)
+            send.reply(e, `接下来是曲绘提示哦！如果在${Config.getUserCfg('config', 'GuessTipsAnsTime')}秒内没有回答正确的话，将会自动公布答案哦！`)
             rev.push(await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 0, }))
         } else {
             ++currentGame.tipNum
@@ -172,7 +184,7 @@ export default new class guessTips {
             resMsg += `${i + 1}.${currentGame.tips[i]}\n`
         }
         rev.unshift(resMsg)
-        e.reply(rev)
+        send.reply(e, rev)
     }
 
 
@@ -193,9 +205,9 @@ export default new class guessTips {
                 if (currentGame.songId == id) {
                     send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
                     if (currentGame.tipNum == currentGame.tips.length + 1) {
-                        e.reply(await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 0, }))
+                        send.reply(e, await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 0, }))
                     }
-                    e.reply(await getPic.GetSongsInfoAtlas(e, currentGame.songId))
+                    send.reply(e, await getPic.GetSongsInfoAtlas(e, currentGame.songId))
                     gameover(group_id, gameList)
                     return true
                 }
@@ -222,11 +234,11 @@ export default new class guessTips {
             return false
         }
         const info = getInfo.info(currentGame.songId)
-        e.reply([
+        send.reply(e, [
             `好吧，下面开始公布答案。正确答案是：${info?.song}`,
             currentGame.tipNum > currentGame.tips.length ? await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 1, }) : false
         ])
-        e.reply(await getPic.GetSongsInfoAtlas(e, currentGame.songId))
+        send.reply(e, await getPic.GetSongsInfoAtlas(e, currentGame.songId))
         gameover(group_id, gameList)
     }
 }()

@@ -1,21 +1,22 @@
-import plugin from '../../../lib/plugins/plugin.js';
 import Config from '../components/Config.js';
-import send from '../model/send.js';
-import picmodle from '../model/picmodle.js';
-import getBackup from '../model/getBackup.js';
+import send from '../model/render/send.js';
+import picmodle from '../model/render/picmodle.js';
+import getBackup from '../model/save/getBackup.js';
 import fs from 'node:fs';
-import { backupPath } from '../model/path.js';
+import { backupPath } from '../model/filesystem/path.js';
 import path from 'node:path';
-import fCompute from '../model/fCompute.js';
-import getRksRank from '../model/getRksRank.js';
-import getSave from '../model/getSave.js';
-import { redisPath } from '../model/constNum.js';
+import fCompute from '../model/game/fCompute.js';
+import getRksRank from '../model/game/getRksRank.js';
+import getSave from '../model/save/getSave.js';
+import userCredentialStore from '../model/user/userCredentialStore.js';
+import { redisPath } from '../model/game/constNum.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
+import { redis } from '../components/platform/index.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
-let banSetting = ["help", "bind", "b19", "wb19", "song", "ranklist", "fnc", "tipgame", "guessgame", "ltrgame", "sign", "setting", "dan", "apiSetting"]
+let banSetting = ["help", "bind", "b19", "wb19", "song", "ranklist", "fnc", "tipgame", "guessgame", "ltrgame", "fribgame", "sign", "setting", "dan", "apiSetting"]
 
 export class phiset extends phiPluginBase {
     constructor() {
@@ -93,9 +94,9 @@ export class phiset extends phiPluginBase {
             return false
         }
         send.send_with_At(e, '开始备份，请稍等...')
-        setTimeout(() => {
+        setTimeout(async () => {
             try {
-                getBackup.backup(e)
+                await getBackup.backup(e)
             } catch (err) {
                 logger.info(err)
                 send.send_with_At(e, err)
@@ -160,7 +161,6 @@ export class phiset extends phiPluginBase {
             return false
         }
         let token = await getRksRank.getRankUser(msg - 1, msg)
-        console.info(token)
         send.send_with_At(e, token)
     }
 
@@ -180,8 +180,8 @@ export class phiset extends phiPluginBase {
         }
         /**@type {phigrosToken} */
         const sessionToken = /** @type {any} */ (msg);
-        await getSave.delSaveBySessionToken(sessionToken)
-        await getSave.banSessionToken(sessionToken)
+        await getSave.deleteSaveBySessionToken(sessionToken)
+        await userCredentialStore.banSessionToken(sessionToken)
         send.send_with_At(e, '成功')
     }
 
@@ -201,8 +201,7 @@ export class phiset extends phiPluginBase {
         }
         /**@type {phigrosToken} */
         const sessionToken = /** @type {any} */ (msg);
-        await getSave.allowSessionToken(sessionToken)
-        console.info(await getSave.isBanSessionToken(sessionToken))
+        await userCredentialStore.allowSessionToken(sessionToken)
         send.send_with_At(e, '成功')
     }
 

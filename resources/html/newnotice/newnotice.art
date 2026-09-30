@@ -1,0 +1,47 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/newnotice/newnotice.css">
+{{/block}}
+
+{{block 'main'}}
+{{set notices = $data.info || $data.notices || $data.list || ($data[0] ? [$data[0]] : [])}}
+
+<main class="notice-page">
+    {{if notices.length}}
+    {{each notices notice}}
+    {{set lines = (notice.content || '').split('\n')}}
+    <article class="notice-card">
+        <h1 class="notice-title">{{notice.title}}</h1>
+
+        {{if notice.date}}
+        <div class="notice-date">{{fCompute.formatDate(notice.date * 1000).slice(5, 10)}}</div>
+        {{/if}}
+
+        <section class="notice-content">
+            {{each lines line}}
+            {{if line.trim()}}
+            {{if line.trim().startsWith('#')}}
+            <p class="notice-tags">{{line}}</p>
+            {{else}}
+            <p>{{line}}</p>
+            {{/if}}
+            {{else}}
+            <div class="notice-space"></div>
+            {{/if}}
+            {{/each}}
+        </section>
+
+        {{if notice.image}}
+        <img class="notice-image" src="{{notice.image}}" alt="{{notice.title}}">
+        {{/if}}
+    </article>
+    {{/each}}
+    {{else}}
+    <article class="notice-card empty">
+        <h1 class="notice-title">暂无公告</h1>
+    </article>
+    {{/if}}
+</main>
+{{/block}}
+

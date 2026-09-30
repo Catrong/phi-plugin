@@ -12,7 +12,7 @@
         </div>
 
         {{each items as item}}
-        <div class="setting-group">
+        <div class="setting-group setting-{{item.key}}">
             <div class="setting-head">
                 <p class="setting-title">{{item.title}}</p>
                 <p class="setting-current">当前：{{item.currentTitle}}</p>
@@ -21,7 +21,7 @@
 
             <div class="option-row">
                 {{each item.options as option}}
-                <div class="option-card{{option.selected ? ' selected' : ''}}">
+                <div class="option-card{{option.selected ? ' selected' : ''}}{{option.fullWidth ? ' option-full-width' : ''}}">
                     <div class="option-title-line">
                         <p class="option-title">{{option.title}}</p>
                         {{if option.selected}}

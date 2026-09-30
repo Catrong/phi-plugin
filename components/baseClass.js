@@ -1,11 +1,36 @@
-import plugin from '../../../lib/plugins/plugin.js'
 import Config from './Config.js'
-import send from "../model/send.js";
-import fCompute from '../model/fCompute.js'
-import getInfo from '../model/getInfo.js';
+import send from "../model/render/send.js";
+import fCompute from '../model/game/fCompute.js'
+import getInfo from '../model/game/getInfo.js';
 import logger from './Logger.js';
+import platform from './platform/index.js';
 
-/**@typedef {{msg: string} & Object.<string, any>} botEvent */
+/** @import {PlatformEvent, PlatformMessageInput, PlatformPluginConfig, PlatformUserId} from './platform/types.js' */
+
+const HostPlugin = platform.PluginBase
+const wrappedHandlerSymbol = Symbol('phi.wrappedHandler')
+
+
+/**
+ * @typedef {object} botEventObj
+ * @property {string} msg 消息内容
+ * @property {PlatformUserId} user_id 发送者ID
+ * @property {boolean} isGroup 是否群消息
+ * @property {boolean} isPrivate 是否私聊消息 
+ */
+
+/**
+ * @typedef {object} botEventGroup
+ * @property {true} isGroup 是否群消息
+ * @property {PlatformUserId} group_id 群ID
+ */
+
+/**
+ * @typedef {object} botEventPrivate
+ * @property {true} isPrivate 是否私聊消息
+ */
+
+/**@typedef {PlatformEvent & botEventObj & (botEventGroup | botEventPrivate) & Object.<string, any>} botEvent */
 
 /** 
  * @template {any} T
@@ -13,10 +38,18 @@ import logger from './Logger.js';
  * @property {idString[]} ids 待选择的曲目列表
  * @property {T} options 其他选项
  * @property {mutiNickCallback<T>} callback 选择后的回调函数
+ * @property {NodeJS.Timeout | undefined} timer 超时清理定时器
  **/
 
 /** @type {Record<string, waitToChoseSong<any>>} */
 const wait_to_chose_song = {}
+
+/** @param {string} userId */
+function clearMutiNickState(userId) {
+  const state = wait_to_chose_song[userId]
+  if (state?.timer) clearTimeout(state.timer)
+  delete wait_to_chose_song[userId]
+}
 
 /**
  * @template {any} T
@@ -29,29 +62,13 @@ const wait_to_chose_song = {}
  */
 
 
-export default class phiPluginBase extends plugin {
+export default class phiPluginBase extends HostPlugin {
+  /** @type {botEvent} */
+  e
+
 
   /**
-   * @param {object} config 配置项
-   * @param {string} [config.name="your-plugin"] 插件名称
-   * @param {string} [config.dsc="无"] 插件描述
-   * @param {object} [config.handler] handler配置
-   * @param {string} [config.handler.key] handler支持的事件key
-   * @param {function} [config.handler.fn] handler的处理func
-   * @param {string} [config.namespace] namespace，设置handler时建议设置
-   * @param {string} [config.event="message"] 执行事件，默认message
-   * @param {number} [config.priority=5000] 优先级，数字越小优先级越高
-   * @param {object[]} [config.rule=[]] 命令配置
-   * @param {string} config.rule[].reg 命令正则
-   * @param {string} config.rule[].fnc 命令执行方法
-   * @param {string} [config.rule[].event] 执行事件，默认message
-   * @param {boolean} [config.rule[].log] false时不显示执行日志
-   * @param {string} [config.rule[].permission] 权限 master,owner,admin,all
-   * @param {object} [config.task] 定时任务配置
-   * @param {string} config.task.name 定时任务名称
-   * @param {string} config.task.cron 定时任务cron表达式
-   * @param {string} config.task.fnc 定时任务方法名
-   * @param {boolean} config.task.log false时不显示执行日志
+   * @param {PlatformPluginConfig} config 配置项
    */
   constructor({
     name = "your-plugin",
@@ -70,8 +87,71 @@ export default class phiPluginBase extends plugin {
     });
 
     /** @type {botEvent} */
-    this.e = { msg: '' } // 占位用;
+    this.e = platform.wrapEvent({ msg: '', user_id: '', isGroup: false, isPrivate: true }) // 占位用;
+    this.wrapPlatformHandlers()
 
+  }
+
+  /** @returns {void} */
+  wrapPlatformHandlers() {
+    for (const item of this.rule || []) {
+      if (item?.fnc) this.wrapPlatformHandler(item.fnc)
+    }
+  }
+
+  /**
+   * @param {string} key
+   * @returns {void}
+   */
+  wrapPlatformHandler(key) {
+    const fn = this[key]
+    if (typeof fn !== 'function') return
+    const typedFn = /** @type {Function & Record<symbol, unknown>} */ (fn)
+    if (typedFn[wrappedHandlerSymbol]) return
+    const wrapped = (/** @type {any[]} */ ...args) => {
+      if (args[0] && typeof args[0] === 'object') {
+        args[0] = this.wrapPlatformEvent(args[0])
+      } else if (this.e) {
+        this.e = this.wrapPlatformEvent(this.e)
+      }
+      return typedFn.apply(this, args)
+    }
+    wrapped[wrappedHandlerSymbol] = true
+    this[key] = wrapped
+  }
+
+  /**
+   * @param {botEvent} e
+   * @returns {botEvent}
+   */
+  wrapPlatformEvent(e) {
+    this.e = platform.wrapEvent(e)
+    return this.e
+  }
+
+  /**
+   * @param {PlatformMessageInput} [msg]
+   * @param {boolean} [quote]
+   * @param {Record<string, unknown>} [data]
+   */
+  reply(msg = '', quote = false, data = {}) {
+    return platform.reply(this.e, msg, { quote, ...data })
+  }
+
+  /**
+   * @param {...any} args
+   */
+  setContext(...args) {
+    if (this.e) this.e = platform.wrapEvent(this.e)
+    if (typeof args[0] === 'string') this.wrapPlatformHandler(args[0])
+    return super.setContext?.(...args)
+  }
+
+  /**
+   * @param {...any} args
+   */
+  finish(...args) {
+    return super.finish?.(...args)
   }
 
   /**
@@ -82,28 +162,50 @@ export default class phiPluginBase extends plugin {
    * @param {mutiNickCallback<T>} callback 
    */
   choseMutiNick(e, idList, options, callback) {
+    e = this.wrapPlatformEvent(e)
+    if (idList.length === 0) {
+      send.send_with_At(e, `未找到相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+      return;
+    }
+    if (idList.length === 1) {
+      callback(e, idList[0], options);
+      return;
+    }
     send.send_with_At(e, fCompute.mutiNick(idList));
-    wait_to_chose_song[e.user_id] = {
+    const userId = String(e.user_id)
+    const timeoutSeconds = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
+    clearMutiNickState(userId)
+    const state = wait_to_chose_song[userId] = {
       ids: idList,
       options,
-      callback
+      callback,
+      timer: /** @type {NodeJS.Timeout | undefined} */ (undefined),
     };
-    this.setContext('mutiNick', false, Config.getUserCfg('config', 'mutiNickWaitTimeOut'), '操作超时已取消，请注意@BOT进行回复呐！')
+    if (timeoutSeconds > 0) {
+      state.timer = setTimeout(() => {
+        if (wait_to_chose_song[userId] === state) clearMutiNickState(userId)
+      }, timeoutSeconds * 1000)
+      state.timer?.unref?.()
+    }
+    this.setContext('mutiNick', false, timeoutSeconds, '操作超时已取消，请注意@BOT进行回复呐！')
 
   }
 
   async mutiNick() {
+    this.e = this.wrapPlatformEvent(this.e)
     const { msg } = this.e;
     const num = Number(msg.match(/([0-9]+)/)?.[0]);
-    const ids = wait_to_chose_song[this.e.user_id]?.ids || [];
+    const userId = String(this.e.user_id)
+    const state = wait_to_chose_song[userId]
+    const ids = state?.ids || [];
     if (!num) {
       send.send_with_At(this.e, `请输入正确的序号哦！`);
     } else if (!ids[num - 1]) {
       send.send_with_At(this.e, `未找到${num}所对应的曲目哦！`);
     } else {
-      wait_to_chose_song[this.e.user_id]?.callback(this.e, ids[num - 1], wait_to_chose_song[this.e.user_id]?.options);
-      delete wait_to_chose_song[this.e.user_id];
+      clearMutiNickState(userId)
       this.finish('mutiNick', false)
+      state?.callback(this.e, ids[num - 1], state.options);
       return true;
     }
   }

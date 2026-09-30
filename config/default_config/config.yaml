@@ -11,6 +11,9 @@ timeout: 20000
 #  等待渲染超时时间 ms
 waitingTimeout: 10000
 
+#  等待渲染的队列上限，不含正在渲染的请求；0 为不排队，修改后立即生效
+renderQueueLimit: 32
+
 #  并行渲染数量
 renderNum: 1
 
@@ -37,7 +40,7 @@ listScoreMaxNum: 180
 #  默认使用国际服
 defaultGlobal: false
 
-#  是否监听信息文件变化，如遇监听文件超限请尝试关闭
+#  是否监听信息文件变化（按文件粒度只重载受影响的曲目数据），如遇监听文件超限请尝试关闭
 watchInfoPath: false
 
 #  是否开启曲目评论功能，该功能目前暂无敏感词校验
@@ -47,10 +50,18 @@ allowComment: true
 allowChartTag: false
 
 #  在线曲绘地址
-onLinePhiIllUrl: "https://gh-proxy.com/https://raw.githubusercontent.com/Catrong/phi-plugin-ill/main"
+onLinePhiIllUrl: 1
+#  1: GitHub raw
+#  2: Gitee raw
+#  3: 弦塔资源站
+#  4: cnb.cool
 
 #  下载曲绘地址
-downIllUrl: "https://gh-proxy.com/https://github.com/Catrong/phi-plugin-ill.git"
+downIllUrl: "https://github.com/Catrong/phi-plugin-ill.git"
+
+#  GitHub代理地址，仅在在线曲绘地址使用 GitHub raw 或下载曲绘地址使用 GitHub 时生效
+#  填 false 为不使用代理，也可直接填写代理地址，如 "https://gh-proxy.com"
+githubProxy: "https://gh-proxy.com"
 
 #  是否在更新插件时自动拉取最新曲绘
 autoPullPhiIll: false
@@ -70,14 +81,25 @@ TapTapLoginQRcode: true
 #  命令头
 cmdhead: "phi"
 
-#  Phigros更新信息API地址
-phigrousUpdateUrl: "https://phiupdateinfo.pmya.xyz/"
-
 #  是否启用Phigros联合查分API
 openPhiPluginApi: true
 
-#  检测API状态成功后，是否自动开启API
-autoOpenApi: true
+# 是否允许从 API 获取和安装自定义主题（受上方总开关控制）
+enableCustomThemeApi: true
+
+# 是否允许调用无需用户认证的查分统计与谱面分析接口（受上方总开关控制）
+enableScoreStatisticsApi: true
+
+# 是否允许调用需要用户认证的在线查分接口（受上方总开关和用户个人 API 开关控制）
+enableOnlineScoreApi: true
+
+# 主题市场临时下载链接允许的唯一来源。必须为 HTTPS origin，不含路径。
+themeMarketDownloadOrigin: "https://lyh.org.cn:18473"
+
+# 由查分 API 签发，也可在管理表单中修改；客户端 ID、密钥和版本号须保持匹配。
+apiBotClientId: ""
+apiBotClientSecret: ""
+apiBotSecretVersion: 0
 
 #  输出测试日志
 debug: 0
@@ -95,6 +117,9 @@ otherinfo: 0
 #  ************ 【猜字母设置】 *************
 #  猜字母条数
 LetterNum: 8
+
+#  是否发送开字母、主题市场及 QQ 官方机器人页面的交互式 Markdown 快捷操作
+LetterMarkdown: true
 
 #  猜对后是否发送以及发送什么曲绘 原版 水印版 不发送
 LetterIllustration: "水印版"
@@ -118,6 +143,33 @@ GuessTipRecall: false
 #  猜曲绘提示时间间隔(s)
 GuessTipCd: 15
 
+#  未通过 -l 指定难度时使用的干扰难度 -1:随机 0:无干扰 1:单一干扰 2:双重干扰 3:高难干扰
+GuessTipDefaultLevel: -1
+
+#  追加提示是否包含曲目所属章节
+GuessTipChapter: true
+
+#  追加提示是否包含曲目 BPM
+GuessTipBpm: true
+
+#  追加提示是否包含曲目作者（曲师），部分曲师名会直接点明曲目，可按需关闭
+GuessTipComposer: true
+
+#  追加提示是否包含曲目时长
+GuessTipLength: true
+
+#  追加提示是否包含曲绘画师
+GuessTipIllustrator: true
+
+#  追加提示是否包含谱面定数
+GuessTipChartDifficulty: true
+
+#  追加提示是否包含谱面物量
+GuessTipChartCombo: true
+
+#  追加提示是否包含谱师，特色谱师名会直接点明曲目，建议关闭
+GuessTipChartCharter: true
+
 #  ************ 【提示猜歌设置】 *************
 #  提示猜歌提示的冷却时间间隔(s)
 GuessTipsTipCD: 5
@@ -130,6 +182,35 @@ GuessTipsTimeout: 600
 
 #  发送曲绘后多久公布答案(s)
 GuessTipsAnsTime: 30
+
+#  ************ 【弗一把设置】 *************
+#  按参与人数对应的可猜次数，从 1 人起依次填写，用英文逗号分隔；
+#  参与人数超过表的长度时取最后一个值，非法值会被忽略
+FribGuessNumTable: "8,9,10,12,14,17,20"
+
+#  待机超时时长(s)，超时自动公布答案
+FribTimeout: 600
+
+#  个人回答冷却时间(s)，同一人在群里的连续回答间隔
+FribSelfGuessCd: 3
+
+#  群内回答冷却时间(s)，本群所有人共享的回答间隔
+FribGroupGuessCd: 0
+
+#  默认分档难度 EZ HD IN AT
+FribDefaultLevel: "IN"
+
+#  版本相近范围（前后几代）
+FribNearVersion: 2
+
+#  定数相近范围
+FribNearDifficulty: 0.3
+
+#  BPM相近范围
+FribNearBpm: 20
+
+#  物量相近范围
+FribNearCombo: 200
 
 #  ************ 【其他设置】 *************
 #  认证 Token

@@ -1,0 +1,249 @@
+@import "../common/common.css";
+
+body {
+  width: 1920px;
+  height: 1080px;
+  --g3: 1.7320508075688772;
+}
+
+.blackCover {
+  --triangleSide: 200px;
+  --triangleEdgeWidth: 5px;
+  --triangleEdgeColor: #ffffff33;
+  --triangleFillColor: #000;
+
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  background: #000000;
+  z-index: 0;
+}
+
+.blackCover__triangleGrid {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.background {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  z-index: 0;
+}
+
+.background img {
+  filter: none;
+  --l: linear-gradient(125deg, #00000000 45%, #000000 60%);
+  -webkit-mask-image: var(--l);
+  mask-image: var(--l);
+  z-index: 1;
+}
+
+.backBox {
+  --boxH: 90px;
+  --boxW: 250px;
+  width: var(--boxW);
+  height: var(--boxH);
+  position: absolute;
+
+  left: calc(var(--boxW) * -0.3);
+  top: 50px;
+
+  --dropW: 10px;
+  --trans: 5px;
+  --mainC: #d0fffc;
+  --otherC: #00a2ff;
+  filter: drop-shadow(calc(var(--trans) * -1) 0 var(--dropW) var(--mainC))
+    drop-shadow(var(--trans) 0 var(--dropW) var(--otherC));
+
+  transform: rotate3d(1, 0.8, 0, 50deg);
+}
+
+.sixP {
+  --edgeW: 6px;
+  --slantedEdgeL: calc(var(--boxH) / var(--g3));
+  --horizontalEdgeL: calc(var(--boxW) - var(--slantedEdgeL));
+  --slantedEdgeX: calc(var(--slantedEdgeL) / 2);
+  position: relative;
+  width: var(--boxW);
+  height: var(--boxH);
+  clip-path: polygon(
+    var(--slantedEdgeX) 0,
+    calc(100% - var(--slantedEdgeX)) 0,
+    100% 50%,
+    calc(100% - var(--slantedEdgeX)) 100%,
+    var(--slantedEdgeX) 100%,
+    0 50%
+  );
+
+  --dropW: 4px;
+  filter: drop-shadow(0 0 var(--dropW) color-mix(in srgb, var(--mainC) 33%, #0000))
+    drop-shadow(0 0 var(--dropW) color-mix(in srgb, var(--mainC) 66%, #0000))
+    drop-shadow(0 0 var(--dropW) color-mix(in srgb, var(--mainC) 99%, #0000))
+    drop-shadow(0 0 var(--dropW) var(--mainC));
+}
+
+.sixP__edge {
+  position: absolute;
+  display: block;
+  height: var(--edgeW);
+  background: var(--mainC);
+  transform-origin: left top;
+}
+
+.sixP__edge--top,
+.sixP__edge--bottom {
+  width: var(--horizontalEdgeL);
+}
+
+.sixP__edge--top {
+  top: 0;
+  left: var(--slantedEdgeX);
+}
+
+.sixP__edge--right-top,
+.sixP__edge--right-bottom,
+.sixP__edge--left-top,
+.sixP__edge--left-bottom {
+  width: var(--slantedEdgeL);
+}
+
+.sixP__edge--right-top {
+  top: 0;
+  left: calc(var(--boxW) - var(--slantedEdgeX));
+  transform: rotate(60deg);
+}
+
+.sixP__edge--right-bottom {
+  top: calc(var(--boxH) / 2);
+  left: var(--boxW);
+  transform: rotate(120deg);
+}
+
+.sixP__edge--bottom {
+  top: var(--boxH);
+  left: calc(var(--boxW) - var(--slantedEdgeX));
+  transform: rotate(180deg);
+}
+
+.sixP__edge--left-bottom {
+  top: var(--boxH);
+  left: var(--slantedEdgeX);
+  transform: rotate(240deg);
+}
+
+.sixP__edge--left-top {
+  top: calc(var(--boxH) / 2);
+  left: 0;
+  transform: rotate(300deg);
+}
+
+.backBox_threeP {
+  --p: 0.85;
+  height: calc(var(--boxH) * var(--p) / 2);
+  width: calc(var(--boxH) * var(--p) / var(--g3));
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(60%, 0);
+
+  background-color: var(--mainC);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  overflow: hidden;
+}
+
+.songNameBox {
+  top: 200px;
+
+  --boxH: 150px;
+  --boxW: 1000px;
+
+  height: var(--boxH);
+  width: var(--boxW);
+
+  position: absolute;
+  --mainC: #d0fffc;
+  --otherC: #0015ff;
+}
+
+.songNameBoxBorder {
+  position: absolute;
+  background: linear-gradient(90deg, var(--mainC) 70%, #ffffff00 100%);
+  width: 100%;
+  height: 3px;
+  z-index: 10;
+}
+
+.songNameBoxBorder_top {
+  top: 0;
+}
+
+.songNameBoxBorder_bottom {
+  bottom: 0;
+}
+
+.songNameBox_threePBox {
+  height: 50%;
+  position: absolute;
+  display: flex;
+}
+
+.songNameBox_threePBox_top {
+  top: 0;
+}
+
+.songNameBox_threePBox_bottom {
+  bottom: 0;
+  align-items: flex-end;
+}
+
+.songNameBox_threeP {
+  --edgeW: 3px;
+  --innerH: calc(var(--boxH) + var(--edgeW) * 1);
+  --triangleW: calc(var(--innerH) / var(--g3));
+  position: relative;
+  width: var(--triangleW);
+  height: calc(var(--innerH) / 2);
+  background-color: color-mix(in srgb, var(--otherC) 50%, #0000);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  margin-left: calc((var(--triangleW)) / -2 - var(--edgeW) * 1);
+}
+
+.songNameBox_threeP_t {
+  transform: rotate(180deg);
+}
+
+.songNameBox_threeP_l {
+  opacity: 0.5;
+}
+
+.songNameBox_threeP__edge {
+  position: absolute;
+  display: block;
+  width: var(--triangleW);
+  height: var(--edgeW);
+  background: color-mix(in srgb, var(--mainC) 50%, #0000);
+  transform-origin: left top;
+}
+
+.songNameBox_threeP__edge--top {
+  top: 0;
+  left: 0;
+}
+
+.songNameBox_threeP__edge--right {
+  top: 0;
+  left: calc(var(--triangleW));
+  transform: rotate(120deg);
+}
+
+.songNameBox_threeP__edge--left {
+  top: calc(var(--boxH) / 2);
+  left: calc(var(--triangleW) / 2 - var(--edgeW) * 0.25);
+  transform: rotate(240deg);
+}

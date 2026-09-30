@@ -1,11 +1,17 @@
 {
-  "include": ["**/*.js"],
+  "include": ["**/*.js", "**/*.d.ts"],
   "exclude": [
     "dist",
+    "client-dist",
     "node_modules",
     "logs",
     "ssl",
     "data",
+    "backup",
+    "tem",
+    "temp",
+    "lib/tem.js",
+    "resources/html",
     "resources/info/*.csv"
   ],
   "compilerOptions": {

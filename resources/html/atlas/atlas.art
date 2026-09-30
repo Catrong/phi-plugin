@@ -39,7 +39,7 @@
                         <div class="rankbkg">
                             <div class="sqr"></div>
                             {{each chart}}
-                            <div class="sqr rank-{{$index}}" style="background-color: rgba({{$value.rgba}});"></div>
+                            <div class="sqr rank-{{$index}}" style="background: {{fCompute.rgbaToGradient($value.rgba)}};"></div>
                             {{/each}}
                         </div>
                         <div class="rank">
@@ -184,6 +184,10 @@
     <div class="ver">
         <p>{{Version.ver}}</p>
     </div>
+</div>
+<div class="copyright">
+    <p>*Phi-Plugin不是Phigros官方项目，与南京鸽游网络有限公司及Phigros官方不存在授权、合作或运营关系。
+    </p>
 </div>
 <div class="snow-box"> </div>
 

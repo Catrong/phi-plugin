@@ -1,23 +1,25 @@
 // import get from '../model/getdata.js'
-import common from "../../../lib/common/common.js"
+import common from "../components/common.js"
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import getInfo from '../model/getInfo.js'
-import getPic from '../model/getPic.js'
-import picmodle from '../model/picmodle.js'
-import fCompute from '../model/fCompute.js'
-import getBanGroup from '../model/getBanGroup.js';
-import { allLevel, Level, LevelNum } from '../model/constNum.js'
-import getComment from '../model/getComment.js'
-import getSave from '../model/getSave.js'
+import send from '../model/render/send.js'
+import getInfo from '../model/game/getInfo.js'
+import getPic from '../model/render/getPic.js'
+import picmodle from '../model/render/picmodle.js'
+import fCompute from '../model/game/fCompute.js'
+import getBanGroup from '../model/user/getBanGroup.js';
+import { allLevel, Level, LevelNum } from '../model/game/constNum.js'
+import getComment from '../model/game/getComment.js'
+import getSave from '../model/save/getSave.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
 import Version from '../components/Version.js'
-import makeRequest from '../model/makeRequest.js'
-import makeRequestFnc from '../model/makeRequestFnc.js'
+import makeRequest from '../model/api/makeRequest.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
-import SongsInfo from '../model/class/SongsInfo.js'
-import Chart from "../model/class/Chart.js"
-import getNotes from "../model/getNotes.js"
+import SongsInfo from '../model/game/SongsInfo.js'
+import Chart from "../model/game/Chart.js"
+import getNotes from "../model/user/getNotes.js"
+import { canUseApi } from '../model/user/apiPermission.js'
+import TapInfo from "../model/integrations/getInfoFromTap.js"
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -79,7 +81,7 @@ export class phisong extends phiPluginBase {
                     fnc: 'tips'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)new$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)newlog$`,
                     fnc: 'newSong'
                 },
                 {
@@ -89,6 +91,10 @@ export class phisong extends phiPluginBase {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(table|定数表)\\s*[0-9]+\\s*(-v\\s*\\S*)?$`,
                     fnc: 'table'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(dif[Hh]is(tory)?|历史定数).*$`,
+                    fnc: 'difHis'
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(comment|cmt|评论|评价)[\\s\\S]*$`,
@@ -109,6 +115,10 @@ export class phisong extends phiPluginBase {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(addtag|subtag|retag).*$`,
                     fnc: 'addtag'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)newnotice$`,
+                    fnc: 'newNotice'
                 }
             ]
         })
@@ -171,7 +181,14 @@ export class phisong extends phiPluginBase {
         const patterns = {
             'bpm': {
                 'regex': /bpm([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
-                'predicate': (item, bottom, top) => (item?.['bpm'] ? bottom <= item['bpm'] && item['bpm'] <= top : false)
+                'predicate': (item, bottom, top) => {
+                    // 优先使用 bpmList（变速曲目）
+                    if (item?.['bpmList'] && Array.isArray(item['bpmList']) && item['bpmList'].length) {
+                        return item['bpmList'].some(bpm => bottom <= bpm && bpm <= top);
+                    }
+                    // 回退到原来的单值 bpm
+                    return item?.['bpm'] ? bottom <= item['bpm'] && item['bpm'] <= top : false;
+                }
             },
             'difficulty': {
                 'regex': /(difficulty|dif|定数|难度|定级)([\s:：,，/|~是为]*)([0-9.]+(\s*-\s*[0-9.]+)?)/,
@@ -251,7 +268,7 @@ export class phisong extends phiPluginBase {
                 send.pick_send(e, await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
 
             } else {
-                e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
+                send.reply(e, await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
             }
         } else {
             let Resmsg = [`当前筛选：${filters.bpm ? `\nBPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `\n定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? `\n物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`]
@@ -264,7 +281,7 @@ export class phisong extends phiPluginBase {
                 }
                 Resmsg.push(msg)
             }
-            e.reply(await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目喵！`))
+            send.reply(e, await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目喵！`))
         }
 
     }
@@ -276,7 +293,7 @@ export class phisong extends phiPluginBase {
      */
     async setnick(e) {
         if (!(e.is_admin || e.isMaster)) {
-            e.reply("只有管理员可以设置别名哦！")
+            send.reply(e, "只有管理员可以设置别名哦！")
             return true
         }
         let msg = e.msg.replace(/[#/](.*?)(设置别名|setnic(k?))(\s*)/g, "")
@@ -294,19 +311,19 @@ export class phisong extends phiPluginBase {
             if (P0Ids[0]) {
                 P0Id = P0Ids[0]
             } else {
-                e.reply(`输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
+                send.reply(e, `输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
                 return true
             }
             if (P0Id in getInfo.fuzzysongsnick(parts[1], 1)) {
                 /**已经添加过该别名 */
-                e.reply(`${P0Id} 已经有 ${parts[1]} 这个别名了哦！`)
+                send.reply(e, `${P0Id} 已经有 ${parts[1]} 这个别名了哦！`)
                 return true
             } else {
                 getInfo.setnick(P0Id, parts[1])
-                e.reply("设置完成！")
+                send.reply(e, "设置完成！")
             }
         } else {
-            e.reply(`输入有误哦！请按照\n原名（或已有别名） ---> 别名\n的格式发送哦！`)
+            send.reply(e, `输入有误哦！请按照\n原名（或已有别名） ---> 别名\n的格式发送哦！`)
         }
         return true
     }
@@ -531,7 +548,7 @@ export class phisong extends phiPluginBase {
             return false
         }
 
-        send.send_with_At(e, getInfo.tips[fCompute.randBetween(0, getInfo.tips.length - 1)])
+        send.send_with_At(e, getInfo.tips[fCompute.randInt(0, getInfo.tips.length - 1)])
     }
 
     /**
@@ -647,9 +664,8 @@ export class phisong extends phiPluginBase {
         const ans = []
         let msg = ''
         try {
-            /**@type {any} */
-            let info = await (await fetch(Config.getUserCfg('config', 'phigrousUpdateUrl'))).json()
-            msg += `最新版本：${info?.data?.list?.[0]?.version_label}\n更新信息：\n${info?.data?.list?.[0]?.whatsnew?.text?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
+            let info = await TapInfo.PgrUpdateInfo();
+            msg += `最新版本：${info?.[0]?.version}\n更新信息：\n${info?.[0]?.rawHtml?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
         } catch (e) { }
         msg += `信息文件版本：${Version.phigros}\n`
         ans.push([{ cnt: '新曲速递', col: 4 }]);
@@ -715,7 +731,7 @@ export class phisong extends phiPluginBase {
             ans,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur')
         });
-        send.send_with_At(e, newSongImg);
+        send.send_with_At(e, [newSongImg, msg]);
     }
 
     /**
@@ -730,10 +746,12 @@ export class phisong extends phiPluginBase {
             return false
         }
         let ans = '直播速递：\n'
-        try {
-            let info = await makeRequest.liveInfo();
+        const info = await makeRequest.liveInfo({ event: e })
+        if (info) {
             ans += info;
-        } catch (e) { ans += '发生错误，请稍后再试。' }
+        } else {
+            ans += '发生错误，请稍后再试。'
+        }
 
         send.send_with_At(e, ans)
     }
@@ -828,11 +846,98 @@ export class phisong extends phiPluginBase {
     }
 
     /**
+     * /difhis(tory) <song>
+     * @param {botEvent} e 
+     * @returns 
+     */
+    async difHis(e) {
+        if (await getBanGroup.get(e, 'table')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+        const songstr = e.msg.replace(fCompute.getRexWithCmdHead('difhis(tory)?'), '')
+        this.choseMutiNick(e, getInfo.fuzzysongsnick(songstr), {}, async (e, id) => {
+            const difhistory = getInfo.historyDifficultyBySongId[id];
+            const verinfo = getInfo.versionInfoByCode;
+            if (!difhistory) {
+                send.send_with_At(e, `未找到 ${songstr} 的相关历史定数信息QAQ！`)
+                return
+            }
+
+            let minDateNum = Infinity;
+            let minDateInfo = null;
+
+            /**@type {Record<levelKind, {version: string, date: string, dateNum: number, difficulty: number }[]>} */
+            const hisData = { AT: [], IN: [], HD: [], EZ: [] };
+
+            for (let v of fCompute.objectKeys(difhistory)) {
+                const vinfo = verinfo[v];
+                const vdata = difhistory[v];
+                if (!vinfo || !vdata) continue;
+                for (let l of fCompute.objectKeys(vdata)) {
+                    hisData[l].push({
+                        version: vinfo.version_label,
+                        date: fCompute.formatDate(vinfo.update_date * 1000, 'YYYY-MM-DD'),
+                        dateNum: vinfo.update_date,
+                        difficulty: vdata[l],
+                    })
+                    if (vinfo.update_date < minDateNum) {
+                        minDateNum = vinfo.update_date;
+                        minDateInfo = vinfo;
+                    }
+                }
+            }
+            /**
+             * 折线图数据
+             * @type {{color: string, data: {x: number, y: number}[]}[]}
+             */
+            const lineData = []
+
+            for (let l of Level) {
+                if (!hisData[l].length) continue;
+                hisData[l] = hisData[l].sort((a, b) => b.dateNum - a.dateNum);
+
+                for (let i = hisData[l].length - 1; i > 0; --i) {
+                    if (i < hisData[l].length - 1 && hisData[l][i].difficulty === hisData[l][i + 1].difficulty) {
+                        hisData[l].splice(i, 1);
+                        ++i;
+                    }
+                }
+                lineData.push({
+                    color: levelColor(l).replace('33', ''),
+                    data: hisData[l].map(d => ({
+                        x: d.dateNum,
+                        y: d.difficulty,
+                        xLabel: 'v' + d.version,
+                        yLabel: d.difficulty.toFixed(1),
+                        visX: true,
+                        visY: true,
+                    }))
+                })
+            }
+
+            const picData = {
+                illustration: getInfo.getill(id),
+                song: getInfo.info(id)?.song || id,
+                updateDate: fCompute.formatDate(minDateNum * 1000, 'YYYY-MM-DD'),
+                updateLable: minDateInfo?.version_label || '',
+                hisData,
+                lineData: JSON.stringify(lineData),
+                theme: (await getNotes.getNotesData(e.user_id))?.theme || 'star',
+            }
+
+            send.send_with_At(e, await picmodle.common(e, 'difficultyHistory', picData));
+        })
+    }
+
+    /**
      * 
      * @param {botEvent} e 
      * @returns 
      */
     async comment(e) {
+
+        const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'comment') || !(await Config.getUserCfg('config', 'allowComment'))) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -845,7 +950,7 @@ export class phisong extends phiPluginBase {
             return true
         }
 
-        const sessionToken = await getSave.get_user_token(e.user_id);
+        const sessionToken = await credentials.getSessionToken()
 
         if (!sessionToken) {
             send.send_with_At(e, `请先绑定sessionToken哦！`)
@@ -924,63 +1029,59 @@ export class phisong extends phiPluginBase {
 
         let songId = songInfo.id;
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi') && save.apiId) {
-            try {
-                /**@type {import("../model/makeRequest.js").APIUpdateCommentObject} */
-                let cmtobj = {
-                    songId: songInfo.id,
-                    rank: rankKind,
-                    apiUserId: save.apiId,
-                    rks: save.saveInfo.summary.rankingScore,
-                    score: 0,
-                    acc: 0,
-                    fc: false,
-                    challenge: save.saveInfo.summary.challengeModeRank,
-                    time: new Date().toISOString(),
-                    comment: comment
-                };
-                let songRecord = save.getSongsRecord(songId);
-                const record = songRecord?.[rankNum];
-                if (!songInfo.sp_vis && record?.score) {
-                    let { phi, b19_list } = await save.getB19(27)
-                    let spInfo = '';
+        if (save.apiId && await canUseApi(e)) {
+            const apiUserId = save.apiId
+            /**@type {import("../model/api/makeRequest.js").APIUpdateCommentObject} */
+            let cmtobj = {
+                songId: songInfo.id,
+                rank: rankKind,
+                apiUserId,
+                rks: save.saveInfo.summary.rankingScore,
+                score: 0,
+                acc: 0,
+                fc: false,
+                challenge: save.saveInfo.summary.challengeModeRank,
+                time: new Date().toISOString(),
+                comment: comment
+            };
+            let songRecord = save.getSongsRecord(songId);
+            const record = songRecord?.[rankNum];
+            if (!songInfo.sp_vis && record?.score) {
+                let { phi, b19_list } = await save.getB19(e, 27)
+                let spInfo = '';
 
-                    for (let i = 0; i < phi.length; ++i) {
-                        const x = phi[i];
-                        if (!x) continue;
-                        if (x.id == songId && x.rank == rankKind) {
-                            spInfo = `Perfect ${i + 1}`;
-                            break;
-                        }
+                for (let i = 0; i < phi.length; ++i) {
+                    const x = phi[i];
+                    if (!x) continue;
+                    if (x.id == songId && x.rank == rankKind) {
+                        spInfo = `Perfect ${i + 1}`;
+                        break;
                     }
-                    if (!spInfo && record.score == 1000000) {
-                        spInfo = 'All Perfect';
+                }
+                if (!spInfo && record.score == 1000000) {
+                    spInfo = 'All Perfect';
+                }
+                for (let i = 0; i < b19_list.length; ++i) {
+                    if (b19_list[i].id == songId && b19_list[i].rank == rankKind) {
+                        spInfo = spInfo ? spInfo + ` & Best ${i + 1}` : `Best ${i + 1}`;
+                        break;
                     }
-                    for (let i = 0; i < b19_list.length; ++i) {
-                        if (b19_list[i].id == songId && b19_list[i].rank == rankKind) {
-                            spInfo = spInfo ? spInfo + ` & Best ${i + 1}` : `Best ${i + 1}`;
-                            break;
-                        }
-                    }
-                    cmtobj = {
-                        ...cmtobj,
-                        score: record.score,
-                        acc: record.acc,
-                        fc: record.fc,
-                        spInfo,
-                    }
-                };
-                await makeRequest.addComment({
-                    token: sessionToken,
-                    data: { comment: cmtobj }
-                });
+                }
+                cmtobj = {
+                    ...cmtobj,
+                    score: record.score,
+                    acc: record.acc,
+                    fc: record.fc,
+                    spInfo,
+                }
+            };
+            const apiAddResult = await credentials.addComment(cmtobj)
+            if (apiAddResult) {
                 send.send_with_At(e, `在线评论成功！φ(゜▽゜*)♪`);
                 return true;
-            } catch (error) {
-                logger.warn(`[phi-plugin] API评论失败`, error)
             }
         }
-        /**@type {import("../model/getComment.js").commentObject} */
+        /**@type {import("../model/game/getComment.js").commentObject} */
         let cmtobj = {
             sessionToken: save.session,
             userObjectId: save.saveInfo.objectId,
@@ -997,7 +1098,7 @@ export class phisong extends phiPluginBase {
         let songRecord = save.getSongsRecord(songId);
         const record = songRecord?.[rankNum];
         if (!songInfo.sp_vis && record?.score) {
-            let { phi, b19_list } = await save.getB19(27)
+            let { phi, b19_list } = await save.getB19(e, 27)
             let spInfo = '';
 
             for (let i = 0; i < phi.length; ++i) {
@@ -1040,12 +1141,13 @@ export class phisong extends phiPluginBase {
      * @returns 
      */
     async recallComment(e) {
+        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'recallComment') || !(await Config.getUserCfg('config', 'allowComment'))) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
         }
         let save;
-        const sessionToken = await getSave.get_user_token(e.user_id);
+        const sessionToken = await credentials.getSessionToken()
         if (!e.isMaster) {
             save = await send.getsave_result(e);
             if (!save) {
@@ -1067,13 +1169,11 @@ export class phisong extends phiPluginBase {
 
         let comment = getComment.getByCommentId(commentId)
         if (!comment) {
-            if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-                try {
-                    await makeRequest.delComment({ token: sessionToken, comment_id: commentId });
+            if (await canUseApi(e)) {
+                const delResult = await credentials.deleteComment(commentId)
+                if (delResult) {
                     send.send_with_At(e, `删除在线评论成功！φ(゜▽゜*)♪`);
                     return true;
-                } catch (error) {
-                    logger.warn(`[phi-plugin] API删除评论失败`, error)
                 }
             }
             send.send_with_At(e, `没有找到ID为${commentId}的评论QAQ！`);
@@ -1096,6 +1196,7 @@ export class phisong extends phiPluginBase {
      * @returns 
      */
     async myComment(e) {
+        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'myComment')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -1107,9 +1208,9 @@ export class phisong extends phiPluginBase {
             return true
         }
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi') && (save.session || save.apiId)) {
-            try {
-                const comments = await makeRequest.getCommentsByUserId(makeRequestFnc.makePlatform(e));
+        if ((save.session || save.apiId) && await canUseApi(e)) {
+            const comments = await credentials.getCommentsByUserId()
+            if (comments) {
 
                 if (comments && comments.length > 0) {
                     let msg = `您的评论列表：\nID | 曲目 | 难度 | 内容 | 时间\n`;
@@ -1121,11 +1222,21 @@ export class phisong extends phiPluginBase {
                     send.send_with_At(e, `您还没有评论哦！`);
                 }
                 return true;
-            } catch (error) {
-                logger.warn(`[phi-plugin] 获取用户评论失败`, error)
             }
         }
         return false;
+    }
+
+    /**
+     * 获取Phigros最新公告
+     * @param {*} e BotEvent
+     */
+    async newNotice(e) {
+        const info = await TapInfo.PgrTapNotice(1);
+        if (info) {
+            const img = await picmodle.common(e, 'newnotice', info);
+            send.send_with_At(e, img);
+        }
     }
 }
 
@@ -1149,9 +1260,13 @@ async function songInfo(page, addComment, id, e) {
         return `发生未知错误QAQ！请回报管理员！`;
     }
     if (await Config.getUserCfg('config', 'allowComment') && (addComment || page)) {
-        let commentData;
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-            commentData = await makeRequest.getCommentsBySongId({ song_id: infoData.id });
+        /** @type {any[]} */
+        let commentData = [];
+        if (await canUseApi(e)) {
+            commentData = (await makeRequest.getCommentsBySongId(
+                { song_id: infoData.id },
+                { event: e },
+            )) || [];
             for (const item of commentData) {
                 item.PlayerId = (item.PlayerId && item.PlayerId.length > 15) ? item.PlayerId.slice(0, 12) + '...' : item.PlayerId;
                 item.avatar = getInfo.idgetavatar(item.avatar || '');
@@ -1257,7 +1372,7 @@ function randClg(clgNum, chartList) {
         if (!chartList[difList[i]]) {
             logger.error(difList[i], chartList)
         }
-        let tem = chartList[difList[i]].splice(fCompute.randBetween(0, chartList[difList[i]].length - 1), 1)[0]
+        let tem = chartList[difList[i]].splice(fCompute.randInt(0, chartList[difList[i]].length - 1), 1)[0]
         ans.push(tem)
     }
     // console.info(clgNum, ans)

@@ -20,7 +20,7 @@
             <div class="dot right top"></div>
             <div class="dot right bottom"></div>
             <div class="info-content">
-                <div class="info-box">
+                <div class="info-box{{charterReal ? ' has-charter' : ''}}">
                     <div class="content-title">
                         <p>Basic Information</p>
                     </div>
@@ -29,6 +29,10 @@
                         <p>时长 {{length}}</p>
                         <p>难度 {{rank}} {{difficulty}}</p>
                         <p>谱师 {{charter}}</p>
+                        {{if charterReal}}
+                        <p class="charter-real">（{{charterReal}}）</p>
+                        <p class="charter-source">谱师名录来源于 daogemm.github.io，按字典序排列</p>
+                        {{/if}}
                     </div>
                 </div>
                 <div class="notes-box">

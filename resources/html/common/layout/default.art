@@ -15,14 +15,44 @@
 
     {{block 'css'}}
     {{/block}}
+
+    {{if themeInfo && themeInfo.cssUrl && themeInfo.cssMode == "overlay"}}
+    <link rel="stylesheet" href="{{themeInfo.cssUrl}}">
+    {{/if}}
+
+    {{if themeInfo}}
+    <!-- 清单中的颜色和字体置于页面/主题 CSS 之后，保证清单配置优先。 -->
+    <style>
+        {{if themeInfo.fontUrl}}
+        @font-face { font-family: "phi-theme"; src: url("{{@ themeInfo.fontUrl}}") format("truetype"); }
+        {{/if}}
+        {{if themeInfo.colors}}
+        :root {
+            {{if themeInfo.colors.AT}}--AT: {{themeInfo.colors.AT}}; --phi-theme-AT: {{themeInfo.colors.AT}}; --phi-theme-AT-dark: color-mix(in srgb, {{themeInfo.colors.AT}} 50%, black);{{/if}}
+            {{if themeInfo.colors.IN}}--IN: {{themeInfo.colors.IN}}; --phi-theme-IN: {{themeInfo.colors.IN}}; --phi-theme-IN-dark: color-mix(in srgb, {{themeInfo.colors.IN}} 50%, black);{{/if}}
+            {{if themeInfo.colors.HD}}--HD: {{themeInfo.colors.HD}}; --phi-theme-HD: {{themeInfo.colors.HD}}; --phi-theme-HD-dark: color-mix(in srgb, {{themeInfo.colors.HD}} 50%, black);{{/if}}
+            {{if themeInfo.colors.EZ}}--EZ: {{themeInfo.colors.EZ}}; --phi-theme-EZ: {{themeInfo.colors.EZ}}; --phi-theme-EZ-dark: color-mix(in srgb, {{themeInfo.colors.EZ}} 50%, black);{{/if}}
+        }
+        {{/if}}
+        {{if themeInfo.fontUrl}}
+        body { font-family: "phi-theme", "PHI", "NOTO", "NotoSansJP", "HIMALAYA", "NotoSansMath-Regular"; }
+        {{/if}}
+        {{if themeInfo.backgroundUrl}}
+        body > .background:not(.theme-background) { display: none; }
+        {{/if}}
+    </style>
+    {{/if}}
     <title>phi-plugin</title>
 </head>
 
 <body class="elem-{{element || elem || `hydro`}} {{displayMode || mode || `default`}}-mode  {{bodyClass}}" {{@sys.scale}}>
 
 
-    <div class="background">
-        {{if theme == "star"}}
+    <div class="background theme-background">
+        {{if themeInfo && themeInfo.backgroundUrl}}
+        <img src="{{themeInfo.backgroundUrl}}" alt="主题背景"
+            style="object-fit: cover; min-width: 100%;">
+        {{else if theme == "star"}}
         <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
         <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
             style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
@@ -90,8 +120,204 @@
             }
 
         }
-        window.onload = adjustFontSize
-        window.onresize = adjustFontSize
+        
+        // 将颜色转为半透明（用于虚线）
+        function lightenColor(hex, alpha = 0.4) {
+          // 支持 #RRGGBB 格式
+          const r = parseInt(hex.slice(1, 3), 16)
+          const g = parseInt(hex.slice(3, 5), 16)
+          const b = parseInt(hex.slice(5, 7), 16)
+          return `rgba(${r},${g},${b},${alpha})`
+        }
+
+        // 绘制定数变化折线图的函数
+        // lines: { data: [{x, xLabel, visX, y, yLabel, visY}], color: string }[]
+        function drawDifficultyChart(svgId, lines) {
+          // 获取SVG元素
+          const svg = document.getElementById(svgId)
+          if (!svg) {
+            console.error("SVG元素未找到:", svgId)
+            return
+          }
+
+          // 清空SVG内容
+          svg.innerHTML = ""
+
+          // 设置SVG尺寸
+          const width = parseInt(svg.getAttribute("width")) || 800
+          const height = parseInt(svg.getAttribute("height")) || 400
+
+          // 定义边距
+          const margin = { top: 30, right: 30, bottom: 50, left: 60 }
+          const innerWidth = width - margin.left - margin.right
+          const innerHeight = height - margin.top - margin.bottom
+
+          // 创建主绘图区域组
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g")
+          g.setAttribute("transform", `translate(${margin.left},${margin.top})`)
+          svg.appendChild(g)
+
+          // 汇总所有折线的数据，计算全局范围
+          const allData = lines.flatMap(l => l.data)
+          const xValues = allData.map(d => d.x)
+          const yValues = allData.map(d => d.y)
+          const xMin = Math.min(...xValues)
+          const xMax = Math.max(...xValues)
+          const yMin = Math.min(...yValues)
+          const yMax = Math.max(...yValues)
+
+          // 添加一些边距，避免数据点落在轴上
+          const xPadding = (xMax - xMin) * 0.1 || 1
+          const yPadding = (yMax - yMin) * 0.1 || 1
+          const xScaleMin = xMin - xPadding
+          const xScaleMax = xMax + xPadding
+          const yScaleMin = yMin - yPadding
+          const yScaleMax = yMax + yPadding
+
+          // 缩放函数
+          const xScale = value => {
+            return ((value - xScaleMin) / (xScaleMax - xScaleMin)) * innerWidth
+          }
+          const yScale = value => {
+            return innerHeight - ((value - yScaleMin) / (yScaleMax - yScaleMin)) * innerHeight
+          }
+
+          // 绘制X轴
+          const xAxis = document.createElementNS("http://www.w3.org/2000/svg", "line")
+          xAxis.setAttribute("x1", 0)
+          xAxis.setAttribute("y1", innerHeight)
+          xAxis.setAttribute("x2", innerWidth)
+          xAxis.setAttribute("y2", innerHeight)
+          xAxis.setAttribute("stroke", "white")
+          xAxis.setAttribute("stroke-width", 1)
+          g.appendChild(xAxis)
+
+          // 绘制Y轴
+          const yAxis = document.createElementNS("http://www.w3.org/2000/svg", "line")
+          yAxis.setAttribute("x1", 0)
+          yAxis.setAttribute("y1", 0)
+          yAxis.setAttribute("x2", 0)
+          yAxis.setAttribute("y2", innerHeight)
+          yAxis.setAttribute("stroke", "white")
+          yAxis.setAttribute("stroke-width", 1)
+          g.appendChild(yAxis)
+
+          // 绘制X轴刻度
+          const xTicks = 5
+          for (let i = 0; i <= xTicks; i++) {
+            const value = xScaleMin + (i / xTicks) * (xScaleMax - xScaleMin)
+            const x = xScale(value)
+            const tick = document.createElementNS("http://www.w3.org/2000/svg", "line")
+            tick.setAttribute("x1", x)
+            tick.setAttribute("y1", innerHeight)
+            tick.setAttribute("x2", x)
+            tick.setAttribute("y2", innerHeight + 6)
+            tick.setAttribute("stroke", "white")
+            g.appendChild(tick)
+          }
+
+          // 绘制Y轴刻度
+          const yTicks = 5
+          for (let i = 0; i <= yTicks; i++) {
+            const value = yScaleMin + (i / yTicks) * (yScaleMax - yScaleMin)
+            const y = yScale(value)
+            const tick = document.createElementNS("http://www.w3.org/2000/svg", "line")
+            tick.setAttribute("x1", -6)
+            tick.setAttribute("y1", y)
+            tick.setAttribute("x2", 0)
+            tick.setAttribute("y2", y)
+            tick.setAttribute("stroke", "white")
+            g.appendChild(tick)
+          }
+
+          // 遍历每条折线
+          lines.forEach(line => {
+            const data = line.data
+            const color = line.color || "#64B5F6"
+            const dashColor = lightenColor(color, 0.4)
+
+            // 绘制折线路径
+            if (data.length > 1) {
+              let pathData = ""
+              data.forEach((d, i) => {
+                const x = xScale(d.x)
+                const y = yScale(d.y)
+                if (i === 0) {
+                  pathData += `M ${x} ${y}`
+                } else {
+                  pathData += ` L ${x} ${y}`
+                }
+              })
+              const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+              path.setAttribute("d", pathData)
+              path.setAttribute("fill", "none")
+              path.setAttribute("stroke", color)
+              path.setAttribute("stroke-width", 2)
+              g.appendChild(path)
+            }
+
+            // 绘制数据点、虚线和标签
+            data.forEach(d => {
+              const x = xScale(d.x)
+              const y = yScale(d.y)
+
+              // 绘制数据点
+              const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+              circle.setAttribute("cx", x)
+              circle.setAttribute("cy", y)
+              circle.setAttribute("r", 4)
+              circle.setAttribute("fill", color)
+              g.appendChild(circle)
+
+              // 如果visX为true，绘制向X轴的虚线并标注xLabel
+              if (d.visX) {
+                const dashLine = document.createElementNS("http://www.w3.org/2000/svg", "line")
+                dashLine.setAttribute("x1", x)
+                dashLine.setAttribute("y1", y)
+                dashLine.setAttribute("x2", x)
+                dashLine.setAttribute("y2", innerHeight)
+                dashLine.setAttribute("stroke", dashColor)
+                dashLine.setAttribute("stroke-width", 1)
+                dashLine.setAttribute("stroke-dasharray", "4,2")
+                g.appendChild(dashLine)
+
+                const label = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                label.setAttribute("x", x)
+                label.setAttribute("y", innerHeight + 15)
+                label.setAttribute("text-anchor", "middle")
+                label.setAttribute("font-size", "11px")
+                label.setAttribute("fill", color)
+                label.textContent = d.xLable || d.xLabel || ""
+                g.appendChild(label)
+              }
+
+              // 如果visY为true，绘制向Y轴的虚线并标注yLabel
+              if (d.visY) {
+                const dashLine = document.createElementNS("http://www.w3.org/2000/svg", "line")
+                dashLine.setAttribute("x1", x)
+                dashLine.setAttribute("y1", y)
+                dashLine.setAttribute("x2", 0)
+                dashLine.setAttribute("y2", y)
+                dashLine.setAttribute("stroke", dashColor)
+                dashLine.setAttribute("stroke-width", 1)
+                dashLine.setAttribute("stroke-dasharray", "4,2")
+                g.appendChild(dashLine)
+
+                const label = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                label.setAttribute("x", -10)
+                label.setAttribute("y", y)
+                label.setAttribute("text-anchor", "end")
+                label.setAttribute("dominant-baseline", "middle")
+                label.setAttribute("font-size", "11px")
+                label.setAttribute("fill", color)
+                label.textContent = d.yLable || d.yLabel || ""
+                g.appendChild(label)
+              }
+            })
+          })
+        }
+        window.addEventListener("DOMContentLoaded", adjustFontSize);
+        window.addEventListener("resize", adjustFontSize);
     </script>
 </body>
 

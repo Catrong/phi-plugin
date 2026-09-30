@@ -1,13 +1,15 @@
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import picmodle from '../model/picmodle.js'
-import getFile from '../model/getFile.js'
+import send from '../model/render/send.js'
+import picmodle from '../model/render/picmodle.js'
+import getFile from '../model/filesystem/getFile.js'
 import path from 'path'
-import { infoPath } from '../model/path.js'
-import getBanGroup from '../model/getBanGroup.js';
+import { infoPath } from '../model/filesystem/path.js'
+import getBanGroup from '../model/user/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
-import getNotes from '../model/getNotes.js'
-import getInfo from '../model/getInfo.js'
+import getNotes from '../model/user/getNotes.js'
+import getInfo from '../model/game/getInfo.js'
+import { getApiAccessState } from '../model/user/apiPermission.js'
+import { sendQuickCommands, helpQuickCommands, apiHelpQuickCommands } from '../model/game/markdown.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -56,13 +58,14 @@ export class phihelp extends phiPluginBase {
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await getNotes.getNotesData(e.user_id)
-        e.reply(await picmodle.help(e, {
+        send.reply(e, await picmodle.help(e, {
             helpGroup: helpGroup,
             cmdHead: head || null,
             isMaster: e.isMaster,
             background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
             theme: pluginData?.theme || 'star'
         }), true)
+        await sendQuickCommands(e, helpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), '帮助页常用操作')
         return true
     }
 
@@ -78,7 +81,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        send.send_with_At(e, `sessionToken有关帮助：\n【推荐】：扫码登录TapTap获取token\n指令：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n【基础方法】https://www.kdocs.cn/l/catqcMM9UR5Y\n绑定sessionToken指令：\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+        send.send_with_At(e, `sessionToken有关帮助：\n【推荐】：扫码登录TapTap获取token\n指令：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n【基础方法】详见《Phigros非官方查分指引》：https://kdocs.cn/l/cvMDjWPTNaz4\n绑定sessionToken指令：\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
     }
 
     /**
@@ -92,20 +95,26 @@ export class phihelp extends phiPluginBase {
         //     send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
         //     return false
         // }
-        if (!Config.getUserCfg('config', 'openPhiPluginApi')) {
-            send.send_with_At(e, `这里没有连接查分平台哦！`)
+        const apiAccess = await getApiAccessState(e)
+        if (!apiAccess.enabled) {
+            send.send_with_At(e, !apiAccess.globalEnabled
+                ? '这里没有连接查分平台哦！'
+                : !apiAccess.capabilityEnabled
+                    ? 'Bot 主人已关闭在线查分功能。'
+                    : '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。')
             return false
         }
 
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await getNotes.getNotesData(e.user_id)
-        e.reply(await picmodle.help(e, {
+        send.reply(e, await picmodle.help(e, {
             helpGroup: apiHelp,
             cmdHead: head || null,
             isMaster: e.isMaster,
             background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
             theme: pluginData?.theme || 'star'
         }), true)
+        await sendQuickCommands(e, apiHelpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), 'API帮助快捷操作')
     }
 }

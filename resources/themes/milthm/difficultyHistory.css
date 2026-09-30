@@ -1,0 +1,42 @@
+:root {
+  --milthm-panel: rgba(16, 16, 24, 0.72);
+  --milthm-radius: 14px;
+}
+
+.ill-box,
+.title-content,
+.dif-box,
+.a-num {
+  border-radius: var(--milthm-radius);
+  overflow: hidden;
+}
+
+.title-content,
+.ver-box {
+  background: var(--milthm-panel);
+}
+
+.AT-box {
+  --bg-color: linear-gradient(90deg, color-mix(in srgb, var(--AT) 72%, transparent), transparent);
+}
+
+.IN-box {
+  --bg-color: linear-gradient(90deg, color-mix(in srgb, var(--IN) 72%, transparent), transparent);
+}
+
+.HD-box {
+  --bg-color: linear-gradient(90deg, color-mix(in srgb, var(--HD) 72%, transparent), transparent);
+}
+
+.EZ-box {
+  --bg-color: linear-gradient(90deg, color-mix(in srgb, var(--EZ) 72%, transparent), transparent);
+}
+
+.title p,
+.content p,
+.dif-box p,
+.num-box p,
+.update-ver p,
+.update-date p {
+  line-height: 1;
+}

@@ -1,139 +1,225 @@
 body {
-    height: 1300px;
+  height: 1300px;
 }
 
 .left,
 .right {
-    height: 1100px;
+  height: 1100px;
 }
 
 .song_Id {
-    width: 102%;
-    height: 40;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #0079ab66;
+  width: 102%;
+  height: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0079ab66;
 }
 
 .song_Id p {
-    font-size: 30px;
-    white-space: nowrap;
+  font-size: 30px;
+  white-space: nowrap;
 }
 
 .LEGACY {
-    background: #7700ff88;
+  background: #7700ff88;
 }
 
 .AT {
-    background: #9c9c9c88;
+  background: #9c9c9c88;
 }
 
 .IN {
-    background: #ff616188;
+  background: #ff616188;
 }
 
 .HD {
-    background: #009dff88;
+  background: #009dff88;
 }
 
 .EZ {
-    background: #7ae07a88;
+  background: #7ae07a88;
 }
 
 .rank_dif_1 {
-    /* background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%); */
-    background: linear-gradient(-75deg,#80808088 0% , #9c9c9c88 25%, #00000000 25%, #00000000 27%, #ff000088 27%, #ff616188 50%, #00000000 50%, #00000000 52%, #009dff88 52%, #4dbbff88 74%, #00000000 74%, #00000000 76%, #00ff0088 76%, #4dff4d88 100%);
-    margin-top: 20px;
-    width: 98%;
-    height: 100px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
+  /* background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%); */
+  background: linear-gradient(
+    -75deg,
+    #80808088 0%,
+    #9c9c9c88 25%,
+    #00000000 25%,
+    #00000000 27%,
+    #ff000088 27%,
+    #ff616188 50%,
+    #00000000 50%,
+    #00000000 52%,
+    #009dff88 52%,
+    #4dbbff88 74%,
+    #00000000 74%,
+    #00000000 76%,
+    #00ff0088 76%,
+    #4dff4d88 100%
+  );
+  margin-top: 20px;
+  width: 98%;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .rank_dif_0 {
-    /* background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%); */
-    background: linear-gradient(-75deg, #ff000088 0%, #ff616188 33%, #00000000 33%, #00000000 35%, #009dff88 35%, #4dbbff88 66%, #00000000 66%, #00000000 68%, #00ff0088 68%, #4dff4d88 100%);
-    margin-top: 20px;
-    width: 98%;
-    height: 100px;
-    display: flex;
-    justify-content: space-around;
+  /* background: linear-gradient(-75deg, #9c9c9c88 24%, #ff616188 28%, #ff616188 49%, #009dff88 53%, #009dff88 72%, #7ae07a88 76%); */
+  background: linear-gradient(
+    -75deg,
+    #ff000088 0%,
+    #ff616188 33%,
+    #00000000 33%,
+    #00000000 35%,
+    #009dff88 35%,
+    #4dbbff88 66%,
+    #00000000 66%,
+    #00000000 68%,
+    #00ff0088 68%,
+    #4dff4d88 100%
+  );
+  margin-top: 20px;
+  width: 98%;
+  height: 100px;
+  display: flex;
+  justify-content: space-around;
 }
 
 .a_rank {
-    display: flex;
-    width: 100px;
-    flex-direction: column;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  width: 100px;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .a_rank_dif {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    flex-direction: row;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: row;
 }
 
 .a_rank_dif p {
-    font-size: 40px;
+  font-size: 40px;
 }
 
 .a_rank_name {
-    display: flex;
-    width: 100%;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
 .a_rank_name p {
-    font-size: 20px;
+  font-size: 20px;
+}
+
+.data_bnpn {
+  display: flex;
+  width: 22%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  filter: drop-shadow(-2px 2px 0px #ffffff80) drop-shadow(2px -2px 0px #ffffff80);
+}
+
+.phiN,
+.bestN {
+  white-space: nowrap;
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+  width: 90%;
+  color: #808080;
+  background: #80808080;
+  font-size: 15px;
+  align-items: center;
+}
+
+.phiN {
+  left: 10%;
+}
+
+.phiN.active {
+  color: white;
+  background: #9eaa0080;
+}
+
+.bestN {
+  left: 0;
+}
+
+.bestN.active {
+  color: white;
+  background: #0077aa80;
+}
+
+.phiN-num,
+.bestN-num {
+  font-family: "Aldrich", "PHI";
+  color: #808080;
+  font-size: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.active .phiN-num {
+  color: var(--phi-color);
+}
+
+.active .bestN-num {
+  color: var(--fc-color);
 }
 
 .data_score {
-    position: relative;
-    display: flex;
-    width: inherit;
-    justify-content: center;
+  position: relative;
+  display: flex;
+  width: 80%;
+  justify-content: center;
 }
 
 .data_score p {
-    font-size: 70px;
+  font-size: 70px;
 }
 
 .data_mid {
-    display: flex;
-    height: 18%;
-    align-items: center;
-    justify-content: space-around;
+  display: flex;
+  height: 18%;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .data_rks {
-    height: 100%;
-    display: flex;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .data_acc {
-    height: 100%;
-    display: flex;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .data_rks p,
 .data_acc p {
-    font-size: 27px;
+  font-size: 27px;
 }
 
 .data_rks p {
-    color: yellow;
+  color: yellow;
 }
 
 .data_acc p {
-    color: white;
+  color: white;
 }
 
 .suggest {
@@ -191,159 +277,159 @@ body {
 }
 
 .data_bottom {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    width: 80%;
-    height: 32%;
-    font-size: 21px;
-    flex-direction: column;
-    left: 18%;
-    bottom: 3%;
-    flex-wrap: wrap;
-    align-items: center;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  height: 32%;
+  font-size: 21px;
+  flex-direction: column;
+  left: 18%;
+  bottom: 3%;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .APCount,
 .FCCount {
-    height: 50%;
-    font-size: 26px;
-    display: flex;
-    align-items: center;
+  height: 50%;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
 }
 
 .APCount {
-    color: var(--phi-color);
+  color: var(--phi-color);
 }
 
 .FCCount {
-    color: var(--fc-color);
+  color: var(--fc-color);
 }
 
 .total {
-    color: white;
-    font-size: 28px;
-    height: 1px;
-    display: flex;
-    align-items: center;
+  color: white;
+  font-size: 28px;
+  height: 1px;
+  display: flex;
+  align-items: center;
 }
 
 .count {
-    color: white;
-    font-size: 42px;
-    height: 95%;
+  color: white;
+  font-size: 42px;
+  height: 95%;
 }
 
 #NEW {
-    background: #00000000;
+  background: #00000000;
 }
 
 .no_info {
-    position: absolute;
-    width: 100%;
-    height: 93%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 93%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .no_info p {
-    font-size: 80px;
+  font-size: 80px;
 }
 
 .scoreHistory {
-    width: 93%;
-    height: auto;
-    max-height: 34%;
-    display: flex;
-    margin-top: 20px;
-    background-color: #87ceeb5e;
-    border: skyblue 1px solid;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: center;
-    align-content: center;
-    flex-direction: row;
-    padding-top: 1%;
-    padding-bottom: 1%;
-    overflow: hidden;
+  width: 93%;
+  height: auto;
+  max-height: 34%;
+  display: flex;
+  margin-top: 20px;
+  background-color: #87ceeb5e;
+  border: skyblue 1px solid;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  overflow: hidden;
 }
 
 .oneHistory {
-    width: 22%;
-    height: 80px;
-    position: relative;
-    margin-top: 2%;
-    margin-bottom: 0%;
-    border: 1px solid skyblue;
+  width: 22%;
+  height: 80px;
+  position: relative;
+  margin-top: 2%;
+  margin-bottom: 0%;
+  border: 1px solid skyblue;
 }
 
 .HistoryDate {
-    position: absolute;
-    display: flex;
-    width: 100%;
-    justify-content: flex-end;
-    align-items: flex-end;
-    bottom: 100%;
+  position: absolute;
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: flex-end;
+  bottom: 100%;
 }
 
 .HistoryDate p {
-    line-height: 18px;
+  line-height: 18px;
 }
 
 .HistoryRating {
-    position: absolute;
-    display: flex;
-    width: 35%;
-    height: 67%;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  display: flex;
+  width: 35%;
+  height: 67%;
+  align-items: center;
+  justify-content: center;
 }
 
 .HistoryRating img {
-    max-width: 100%;
-    max-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .HistoryScore {
-    position: absolute;
-    display: flex;
-    width: 65%;
-    right: 0;
-    height: 67%;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  display: flex;
+  width: 65%;
+  right: 0;
+  height: 67%;
+  justify-content: center;
+  align-items: center;
 }
 
 .HistoryScore p {
-    font-size: 29px;
-    line-height: 50px;
+  font-size: 29px;
+  line-height: 50px;
 }
 
 .HistoryAcc {
-    position: absolute;
-    display: flex;
-    bottom: 1px;
-    width: 65%;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  display: flex;
+  bottom: 1px;
+  width: 65%;
+  justify-content: center;
+  align-items: center;
 }
 
 .HistoryAcc p {
-    font-size: 20px;
-    color: yellow;
+  font-size: 20px;
+  color: yellow;
 }
 
 .HistoryRks {
-    position: absolute;
-    display: flex;
-    bottom: 1px;
-    right: 0px;
-    width: 35%;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  display: flex;
+  bottom: 1px;
+  right: 0px;
+  width: 35%;
+  justify-content: center;
+  align-items: center;
 }
 
 .HistoryRks p {
-    font-size: 20px;
+  font-size: 20px;
 }

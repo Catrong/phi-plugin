@@ -11,6 +11,7 @@
             <div class="ill-box">
                 <div class="ill">
                     <img src="{{song.illustration}}" alt="{{song.illustration}}">
+                    <div class="ill-shadow"></div>
                 </div>
                 <div class="info-box">
                     <div class="song_name">

@@ -10,7 +10,7 @@
             {
                 "title": "/unbind",
                 "eg": "/unbind",
-                "desc": "在 Bot 上删除储存的你的存档以及成绩记录，需要二次确认<br>eg: /unbind"
+                "desc": "仅清除当前 Bot 本地保存的 sessionToken、API ID、存档和历史，不修改 API 平台绑定；需要二次确认<br>eg: /unbind"
             },
             {
                 "title": "/tk help",
@@ -195,6 +195,81 @@
         ]
     },
     {
+        "group": "别名提案",
+        "list": [
+            {
+                "title": "/alias submit<br>/别名 提案",
+                "eg": "/alias submit <曲目> | <别名> | [私密备注]",
+                "desc": "提交曲目别名提案，仅限私聊并需要绑定 sessionToken<br>eg: /alias submit Glaciaxion | 冰川 | 常用简称"
+            },
+            {
+                "title": "/alias mine<br>/别名 我的",
+                "eg": "/alias mine",
+                "desc": "查询自己提交的别名提案及当前审核状态"
+            },
+            {
+                "title": "/alias public<br>/别名 公审",
+                "eg": "/alias public",
+                "desc": "查询正在公开投票的别名提案、申请理由和当前票数"
+            },
+            {
+                "title": "/alias appeal<br>/别名 申诉",
+                "eg": "/alias appeal <提案ID> | <理由>",
+                "desc": "为被私密拒绝的提案申请公开评审，仅限私聊，理由需要 10-500 字"
+            },
+            {
+                "title": "/alias vote<br>/别名 投票",
+                "eg": "/alias vote <提案ID> <赞成|反对>",
+                "desc": "参与别名提案公开投票，也可用 yes/no、1/-1 表示意见"
+            },
+            {
+                "title": "/alias unvote<br>/别名 撤票",
+                "eg": "/alias unvote <提案ID>",
+                "desc": "撤回自己对指定别名提案的公开投票"
+            }
+        ]
+    },
+    {
+        "group": "API 操作",
+        "list": [
+            {
+                "title": "/apihelp",
+                "eg": "/apihelp",
+                "desc": "查看 phi-api 绑定、权限与账号管理的详细帮助"
+            },
+            {
+                "title": "/bind <查分ID>",
+                "eg": "/bind <查分ID>",
+                "desc": "将当前 Bot 平台账号绑定到已有 phi-api 查分账号<br>eg: /bind 123456"
+            },
+            {
+                "title": "/setApiToken",
+                "eg": "/setApiToken <新Token>",
+                "desc": "设置或更新 phi-api 的 API Token，需要本地已绑定 Phigros SSTK"
+            },
+            {
+                "title": "/tkls<br>/lstk",
+                "eg": "/tkls",
+                "desc": "查看 phi-api 账号当前绑定的全部平台账号，需要 Phigros SSTK 权限"
+            },
+            {
+                "title": "/auth",
+                "eg": "/auth <API Token>",
+                "desc": "使用 API Token 验证账号并获取、保存对应的 Phigros SSTK，请注意保护返回的凭据"
+            },
+            {
+                "title": "/apiset",
+                "eg": "/apiset [设置项] [开|关]",
+                "desc": "查看或修改数据收集、排行榜、数据聚合、PlayerId 搜索和 UserId 搜索权限<br>eg: /apiset 排行榜 关"
+            },
+            {
+                "title": "/clearApiData",
+                "eg": "/clearApiData",
+                "desc": "永久注销 phi-api 账号并清除云端数据，需要 Phigros SSTK 权限及二次确认"
+            }
+        ]
+    },
+    {
         "group": "娱乐 & 设定",
         "list": [
             {
@@ -213,9 +288,19 @@
                 "desc": "提示猜歌，回答直接发曲目，识别后 Bot 会回复正确与否"
             },
             {
+                "title": "/弗一把<br>/friberg",
+                "eg": "/friberg [难度] [定数下限] (直接回答) /ans",
+                "desc": "弗一把猜歌，每次猜测都会对比曲目属性，逐步逼近正确答案<br>eg1: /friberg<br>eg2: /弗一把 IN 14+<br>eg3: /fib 14.3"
+            },
+            {
                 "title": "/theme",
                 "eg": "/theme [0-3]",
                 "desc": "切换主题，作用于 pgr update list task<br>0：默认&ensp;&ensp;&ensp;1：寒冬<br>2：使一颗心免于哀伤<br>3：大师赛2eg: /theme 1"
+            },
+            {
+                "title": "/market",
+                "eg": "/market | /market list [关键词] [页码] | /market detail <slug>",
+                "desc": "浏览主题市场目录和主题详情，目录支持关键词筛选与分页"
             },
             {
                 "title": "/myset",
@@ -339,7 +424,17 @@
             {
                 "title": "/unban",
                 "eg": "/unban <功能>",
-                "desc": "恢复使用某一类功能\n可选参数: all help bind b19 wb19 song ranklist fnc tipgame guessgame ltrgame sign setting dan"
+                "desc": "恢复使用某一类功能\n可选参数: all help bind b19 wb19 song ranklist fnc tipgame guessgame ltrgame fribgame sign setting dan"
+            },
+            {
+                "title": "/updateUserToken",
+                "eg": "/updateUserToken",
+                "desc": "将当前 Bot 保存的用户 sessionToken 批量同步到 phi-api"
+            },
+            {
+                "title": "/updateComment",
+                "eg": "/updateComment",
+                "desc": "将当前 Bot 保存的本地评论批量同步到 phi-api"
             }
         ]
     }

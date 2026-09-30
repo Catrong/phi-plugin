@@ -16,12 +16,14 @@ body {
     flex-direction: column;
     align-items: center;
     overflow: hidden;
+    background-color: #00000044;
 }
 
 .totalBox {
     /* width: 16000px; */
     position: relative;
     display: flex;
+    padding: 10px;
     /* border: 5px solid; */
 }
 
@@ -327,6 +329,39 @@ body {
     color: var(--text-color-light);
     text-shadow: 1px 1px 1px var(--text-color-dark);
     margin: 0px 0px 0px 2rem;
+}
+
+/* 谱师真实名录（daogemm.github.io）：换行显示在谱师下方，过长时折行 */
+.content p.charter-real {
+    font-size: 40px;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.content p.charter-source {
+    font-size: 26px;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+    opacity: 0.72;
+}
+
+/* 额外多出两行谱师信息时整体收紧，保证信息区不被裁切 */
+.info-box.has-charter .content-title p {
+    font-size: 52px;
+}
+
+.info-box.has-charter .content p {
+    font-size: 42px;
+}
+
+.info-box.has-charter .content p.charter-real {
+    font-size: 34px;
+}
+
+.info-box.has-charter .content p.charter-source {
+    font-size: 22px;
 }
 
 .chart-info {

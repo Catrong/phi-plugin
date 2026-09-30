@@ -1,24 +1,36 @@
-import common from '../../../lib/common/common.js'
+import common from '../components/common.js'
 import Config from '../components/Config.js';
-import send from '../model/send.js';
-import picmodle from '../model/picmodle.js'
-import ScoreHistory from '../model/class/scoreHistory.js';
-import fCompute from '../model/fCompute.js';
-import getInfo from '../model/getInfo.js';
-import getSave from '../model/getSave.js';
-import { allLevel, APII18NCN, LevelNum } from '../model/constNum.js';
-import getNotes from '../model/getNotes.js';
-import getPic from '../model/getPic.js';
-import getBanGroup from '../model/getBanGroup.js';
-import getSaveFromApi from '../model/getSaveFromApi.js';
-import makeRequest from '../model/makeRequest.js';
-import makeRequestFnc from '../model/makeRequestFnc.js';
-import getUpdateSave from '../model/getUpdateSave.js';
+import send from '../model/render/send.js';
+import picmodle from '../model/render/picmodle.js'
+import ScoreHistory from '../model/save/scoreHistory.js';
+import fCompute from '../model/game/fCompute.js';
+import getInfo from '../model/game/getInfo.js';
+import { allLevel, LevelNum } from '../model/game/constNum.js';
+import getNotes from '../model/user/getNotes.js';
+import getPic from '../model/render/getPic.js';
+import getBanGroup from '../model/user/getBanGroup.js';
+import makeRequest from '../model/api/makeRequest.js';
+import { buildGameRecordPayload } from '../model/api/gameRecordPayload.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
-import LevelRecordInfo from '../model/class/LevelRecordInfo.js';
-import SongsInfo from '../model/class/SongsInfo.js';
+import LevelRecordInfo from '../model/game/LevelRecordInfo.js';
+import SongsInfo from '../model/game/SongsInfo.js';
 import Version from '../components/Version.js';
+import { canUseApi } from '../model/user/apiPermission.js';
+import { UserCredentials } from '../model/user/userCredentials.js';
+import {
+    buildRksHistogram,
+    getB30AnalysisRecords,
+} from '../model/game/b30Analysis.js';
+import {
+    sendQuickCommands,
+    scoreQuickCommands,
+    b19AnalysisQuickCommands,
+    singleScoreQuickCommands,
+    suggestQuickCommands,
+    chapterQuickCommands,
+    achievementQuickCommands,
+} from '../model/game/markdown.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -31,7 +43,7 @@ export class phib19 extends phiPluginBase {
     constructor() {
         super({
             name: 'phi-b19',
-            dsc: 'phiros b19查询',
+            dsc: 'phigros b30查询',
             event: 'message',
             priority: 1000,
             rule: [
@@ -44,7 +56,7 @@ export class phib19 extends phiPluginBase {
                     fnc: 'p30'
                 },
                 {
-                    reg: `^[#/杠刚钢纲](${Config.getUserCfg('config', 'cmdhead')})(\\s*)[a(arc)啊阿批屁劈]\\s*((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
+                    reg: `^[#/杠刚钢纲](${Config.getUserCfg('config', 'cmdhead')})(\\s*)[a啊阿批屁劈]\\s*((b|B)[0-9]+|[比必币]([0-9]+|三零))$`,
                     fnc: 'arcgrosB19'
                 },
                 {
@@ -81,6 +93,7 @@ export class phib19 extends phiPluginBase {
      * @returns 
      */
     async b19(e) {
+        const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'b19')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -92,11 +105,12 @@ export class phib19 extends phiPluginBase {
         let askOtherId = msg.match(/-id\s+([0-9]+)/i)
         msg = msg.replace(askOtherId?.[0] || '', '')
 
-        if (askOtherId && Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (askOtherId && await canUseApi(e)) {
             let otherId = /** @type {apiUserId} */ (askOtherId[1]);
 
             try {
-                save = await getUpdateSave.getUIDSaveFromApi(otherId);
+                save = await credentials.getCloudSaveByApiId(otherId);
+                if (!save) throw new Error('API未返回存档')
             } catch (err) {
                 send.send_with_At(e, `获取用户 ${otherId} 的存档失败！请确认该用户公开了存档且ID正确喵！\n错误信息：${err}`);
                 return true;
@@ -141,12 +155,37 @@ export class phib19 extends phiPluginBase {
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
         if (!Config.getUserCfg('config', 'isGuild')) {
-            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
         }
 
 
-        let save_b19 = await save.getB19(nnum, { avgType: plugin_data.b30AvgKind, color: plugin_data.b30AvgColor })
+        let save_b19 = await save.getB19(e, nnum, { avgType: plugin_data.b30AvgKind, color: plugin_data.b30AvgColor })
         let stats = await save.getStats()
+
+        let b30Analysis = null
+        if (plugin_data.showB30Analysis !== false && nnum == 33) {
+            const records = getB30AnalysisRecords(save_b19)
+            const histogram = buildRksHistogram(records)
+            const apiEnabled = await canUseApi(e, 'scoreStatistics')
+            let tagAnalysis = null
+            if (apiEnabled && records.length) {
+                tagAnalysis = askOtherId
+                    ? await makeRequest.getB30TagAnalysis(
+                        { api_user_id: /** @type {apiUserId} */ (askOtherId[1]) },
+                        { event: e },
+                    )
+                    : await makeRequest.getB30TagAnalysis(
+                        { gameRecord: buildGameRecordPayload(save.gameRecord) },
+                        { event: e },
+                    )
+            }
+            b30Analysis = {
+                histogram,
+                tagAnalysis,
+                showTags: apiEnabled,
+                histogramWide: !apiEnabled,
+            }
+        }
 
         const spInfo = [];
 
@@ -210,12 +249,13 @@ export class phib19 extends phiPluginBase {
             gameuser,
             nnum,
             stats,
-            spInfo
+            spInfo,
+            b30Analysis,
         }
-        const isAp1st = Date.now() > 1774972800000 && Date.now() < 1775059200000
-        const img = (isAp1st && nnum == 33 && save_b19.b19_list.length == 33) ? (await picmodle.common(e, 'b19', { ...data, theme: 'default' }, 'b19666')) : await picmodle.common(e, 'b19', data)
+        const img = await picmodle.b19(e, data)
         res.unshift(img);
         send.send_with_At(e, res)
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -242,9 +282,8 @@ export class phib19 extends phiPluginBase {
         }
 
 
-        let numMsg = e.msg.match(/^.*?(p|x|fc)[0-9]+/i)?.[0]
-
-        let nnum = Number(numMsg?.replace(/^.*?(p|x|fc)/i, '') || 33)
+        let match = e.msg.match(/^.*?(p|x|fc)\s*([0-9]+)/i)
+        let nnum = Number(match?.[2] || 33)
         if (!nnum) {
             nnum = 33
         }
@@ -252,7 +291,7 @@ export class phib19 extends phiPluginBase {
         nnum = Math.max(nnum, 33)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
-        let bksong = e.msg.replace(/^.*?(p|x|fc)[0-9]+\s*/i, '')
+        let bksong = e.msg.replace(/^.*?(p|x|fc)\s*[0-9]+\s*/i, '')
 
         if (bksong) {
             let songId = getInfo.fuzzysongsnick(bksong)[0]
@@ -268,12 +307,12 @@ export class phib19 extends phiPluginBase {
 
 
         if (!Config.getUserCfg('config', 'isGuild'))
-            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
         let save_b19;
         let spInfo = [];
 
-        const type = e.msg.match(/^.*?(p|x|fc)([0-9]+)/i)?.[1].toLowerCase();
+        const type = e.msg.match(/^.*?(p|x|fc)\s*([0-9]+)/i)?.[1].toLowerCase();
         switch (type) {
             case 'p': {
                 save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [100, 100] }])
@@ -338,6 +377,7 @@ export class phib19 extends phiPluginBase {
         let res = [await picmodle.b19(e, data)]
         res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         send.send_with_At(e, res)
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -372,7 +412,7 @@ export class phib19 extends phiPluginBase {
         nnum = Math.max(nnum, 30)
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
-        let save_b19 = await save.getB19(nnum)
+        let save_b19 = await save.getB19(e, nnum)
 
         let money = save.gameProgress.money
         let gameuser = {
@@ -404,6 +444,7 @@ export class phib19 extends phiPluginBase {
         }
 
         send.send_with_At(e, await picmodle.arcgros_b19(e, data))
+        await sendQuickCommands(e, b19AnalysisQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩分析快捷操作')
     }
 
     /**
@@ -443,7 +484,7 @@ export class phib19 extends phiPluginBase {
 
 
         if (!Config.getUserCfg('config', 'isGuild'))
-            e.reply("正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
 
         let save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [acc, 100] }])
         let stats = await save.getStats()
@@ -483,6 +524,7 @@ export class phib19 extends phiPluginBase {
         let res = [await picmodle.b19(e, data)]
         res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         send.send_with_At(e, res)
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
 
     }
 
@@ -506,7 +548,7 @@ export class phib19 extends phiPluginBase {
         let numMsg = e.msg.replace(/[#/](.*?)(best)(\s*)/g, '')
 
         if (Number(numMsg) % 1 != 0) {
-            await e.reply(`${numMsg}不是个数字吧！`, true)
+            await send.reply(e, `${numMsg}不是个数字吧！`, true)
             return true
         }
 
@@ -515,7 +557,7 @@ export class phib19 extends phiPluginBase {
         if (!num)
             num = 19 //未指定默认b19
 
-        const { b19_list, phi } = await save.getB19(num)
+        const { b19_list, phi } = await save.getB19(e, num)
 
 
         let Remsg = []
@@ -549,8 +591,9 @@ export class phib19 extends phiPluginBase {
             send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
             send.pick_send(e, await common.makeForwardMsg(e, Remsg, undefined))
         } else {
-            e.reply(await common.makeForwardMsg(e, Remsg, undefined))
+            send.reply(e, await common.makeForwardMsg(e, Remsg, undefined))
         }
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
 
@@ -650,7 +693,7 @@ export class phib19 extends phiPluginBase {
 
         let info = getInfo.ori_info
 
-        const { com_rks, phi } = await save.getB19(1000, { avgType: "none" });
+        const { com_rks, phi } = await save.getB19(e, 1000, { avgType: "none" });
 
         /**@type {Record<idString, Record<levelKind, number>>} */
         const allTaskList = {};
@@ -659,14 +702,14 @@ export class phib19 extends phiPluginBase {
          */
         const phiTaskList = [];
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e, 'scoreStatistics')) {
 
-            try {
-                const res = await makeRequest.getAllSongAccAvgB30({
-                    songIds: getInfo.idList,
+            const res = await makeRequest.getAllSongAccAvgB30({
+                    songIds: fCompute.objectKeys(getInfo.ori_info),
                     minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                     maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                })
+                }, { event: e })
+            if (res) {
                 const ids = fCompute.objectKeys(res)
                 ids.forEach(id => {
                     if (!info[id]) {
@@ -685,19 +728,17 @@ export class phib19 extends phiPluginBase {
                         }
                     })
                 })
-            } catch (err) {
-                logger.error(`[phi-plugin][api-getAllSongAccAvgB30]`, err);
             }
-            try {
-                const res = await makeRequest.getSongsApFcCount({
-                    songId: getInfo.idList || [],
+            const apfcRes = await makeRequest.getSongsApFcCount({
+                    songId: fCompute.objectKeys(getInfo.ori_info),
                     rank: Level,
                     rksRange: {
                         min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
                         max: Math.floor((com_rks + 0.05) / 0.05) * 0.05
                     }
-                })
-                const ids = fCompute.objectKeys(res);
+                }, { event: e })
+            if (apfcRes) {
+                const ids = fCompute.objectKeys(apfcRes);
                 ids.forEach(id => {
                     if (!info[id]) {
                         return;
@@ -714,21 +755,19 @@ export class phib19 extends phiPluginBase {
                         if ((save.gameRecord?.[id]?.[LevelNum[lv]]?.score || 0) >= 1e6) {
                             return;
                         }
-                        if (res[id][lv].apCount > 0) {
+                        if (apfcRes[id][lv].apCount > 0) {
                             phiTaskList.push({
                                 id,
                                 level: lv,
-                                total: res[id][lv].total || 0,
+                                total: apfcRes[id][lv].total || 0,
                                 // diff: diff,
-                                apCount: res[id][lv].apCount || 0,
+                                apCount: apfcRes[id][lv].apCount || 0,
                                 ...songInfo,
                                 illustration: getInfo.getill(id, 'low') ?? '',
                             });
                         }
                     })
                 })
-            } catch (err) {
-                logger.error(`[phi-plugin][api-getSongsApFcCount]`, err);
             }
         }
 
@@ -800,7 +839,7 @@ export class phib19 extends phiPluginBase {
             head_title: "推分建议",
             song: data,
             phisong: phidata,
-            background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
+            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
             theme: plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
@@ -809,6 +848,7 @@ export class phib19 extends phiPluginBase {
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             // dan: await get.getDan(e.user_id)
         }))
+        await sendQuickCommands(e, suggestQuickCommands(Config.getUserCfg('config', 'cmdhead')), '推分建议快捷操作')
 
     }
 
@@ -938,6 +978,7 @@ export class phib19 extends phiPluginBase {
             chapName: msg == 'ALL' ? 'AllSong' : chap,
             chapIll: getInfo.getChapIll(msg == 'ALL' ? 'AllSong' : chap),
         }))
+        await sendQuickCommands(e, chapterQuickCommands(Config.getUserCfg('config', 'cmdhead')), '章节成绩快捷操作')
 
     }
 
@@ -1043,6 +1084,7 @@ export class phib19 extends phiPluginBase {
         }
 
         send.send_with_At(e, await picmodle.common(e, 'table', data));
+        await sendQuickCommands(e, achievementQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成就页快捷操作')
     }
 }
 
@@ -1055,6 +1097,7 @@ export class phib19 extends phiPluginBase {
  */
 async function getScore(songId, e, args = {}) {
 
+    const credentials = UserCredentials.fromEvent(e)
 
     const save = await send.getsave_result(e)
 
@@ -1085,18 +1128,19 @@ async function getScore(songId, e, args = {}) {
      * @type {songRecordHistory | undefined}
      */
     let HistoryData = undefined;
-    if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+    if (await canUseApi(e)) {
         try {
-            HistoryData = await getSaveFromApi.getSongHistory(e, songId)
+            HistoryData = await credentials.getCloudSongHistory(songId)
+            if (!HistoryData) HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
         } catch (err) {
             logger.warn(`[phi-plugin] API ERR`, err)
-            HistoryData = (await getSave.getHistory(e.user_id))?.scoreHistory[songId]
+            HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
         }
     } else {
-        HistoryData = (await getSave.getHistory(e.user_id))?.scoreHistory[songId]
+        HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
     }
 
-    /** @type {(import('../model/class/scoreHistory.js').extendedScoreHistoryDetail | {date_new: string})[]} */
+    /** @type {(import('../model/save/scoreHistory.js').extendedScoreHistoryDetail | {date_new: string})[]} */
     let history = []
 
     if (HistoryData) {
@@ -1135,8 +1179,6 @@ async function getScore(songId, e, args = {}) {
         data.scoreData[level] = {};
         data.scoreData[level].difficulty = info.chart[level].difficulty
     }
-
-
     data.illustration = getInfo.getill(songId)
     // console.info(ans)
     /**
@@ -1183,22 +1225,43 @@ async function getScore(songId, e, args = {}) {
         }
     })
 
+    // 处理每个难度的P/B位
+    const { phi, b19_list } = await save.getB19(e, 27, { avgType: 'none', allPhi: true })
+
+    phi.forEach((item, index) => {
+        if (item?.id == songId) {
+            data.scoreData[item.rank].phiN = Math.min(3, index + 1);
+        }
+    });
+
+    b19_list.forEach((item, index) => {
+        if (item.id == songId) {
+            data.scoreData[item.rank].b19N = Math.min(27, index + 1);
+        }
+    });
+
+
     maxRank = args?.dif || maxRank
 
     data.Rks = Number(save.saveInfo.summary.rankingScore).toFixed(4)
 
-    if (Config.getUserCfg('config', 'openPhiPluginApi') && !args?.unRank) {
-        try {
-            const scoreRanklist = await makeRequest.getScoreRanklistByUser({
-                ...makeRequestFnc.makePlatform(e),
+    if (!args?.unRank && await canUseApi(e)) {
+        const credentials = UserCredentials.fromEvent(e)
+        const scoreRanklist = await credentials.getScoreRanklistByUser(
+            {
                 songId,
                 rank: maxRank || 'IN',
                 orderBy: args?.orderBy || 'acc'
-            });
-            scoreRanklist.users.forEach(item => {
+            },
+            {
+                ignoreUnboundError: true,
+            }
+        )
+        if (scoreRanklist) {
+            scoreRanklist.users.forEach((/** @type {any} */ item) => {
                 // @ts-ignore
-                item.gameuser.challengeMode = Math.floor(item.gameuser.challengeModeRank / 100);
-                item.gameuser.challengeModeRank = item.gameuser.challengeModeRank % 100;
+                item.gameuser.ChallengeMode = Math.floor(item.gameuser.challengeModeRank / 100);
+                item.gameuser.ChallengeModeRank = item.gameuser.challengeModeRank % 100;
                 item.gameuser.avatar = getInfo.idgetavatar(item.gameuser.avatar);
                 // @ts-ignore
                 item.record.Rating = fCompute.rate(item.record.score, item.record.fc);
@@ -1213,37 +1276,27 @@ async function getScore(songId, e, args = {}) {
             data.ranklist = scoreRanklist;
             // @ts-ignore
             data.ranklist.selected = maxRank;
-        } catch (err) {
-            // @ts-ignore
-            if (err?.message != APII18NCN.userNotFound) {
-                logger.warn(`[phi-plugin] API错误 getScoreRanklistByUser`)
-                logger.warn(err)
-            }
         }
-        try {
-            const apFcCount = await makeRequest.getSongApFcCount({ songId });
-            if (apFcCount) {
+        const apFcCount = await makeRequest.getSongApFcCount({ songId }, { event: e })
+        if (apFcCount) {
 
-                for (let level of Level) {
-                    if (!info.chart[level]) break;
-                    const count = apFcCount[level];
-                    if (!count || !count.total) continue;
-                    data.scoreData[level].apFcCount = {
-                        ap: count.apCount / count.total,
-                        fc: count.fcCount / count.total,
-                        total: count.total
-                    };
-                }
-
+            for (let level of Level) {
+                if (!info.chart[level]) break;
+                const count = apFcCount[level];
+                if (!count || !count.total) continue;
+                data.scoreData[level].apFcCount = {
+                    ap: count.apCount / count.total,
+                    fc: count.fcCount / count.total,
+                    total: count.total
+                };
             }
-        } catch (err) {
-            logger.warn(`[phi-plugin] API错误 getSongApFcCount`)
-            logger.warn(err)
+
         }
     }
 
 
     send.send_with_At(e, await picmodle.score(e, data, 1))
+    await sendQuickCommands(e, singleScoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '单曲成绩快捷操作')
 
 }
 

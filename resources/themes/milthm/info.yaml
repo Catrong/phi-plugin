@@ -1,0 +1,45 @@
+# 主题包名称
+name: "Milthm"
+# 主题包id，用于内部标识
+id: "milthm"
+# 作者
+Author: "Temmie"
+# 描述，用于#myset中显示
+description: "所有词语，都是雨的旋律"
+# 自定义字体，放在主题包目录中，未定义或者没有则回退默认
+font: "font.ttf"
+# 自定义背景，放在主题包目录中，未定义或者没有则回退默认
+background: "bg.png"
+# 自定义评级图标，放在主题包目录中，未定义或者没有则回退默认
+icon:
+  phi: "phi.png"
+  FC: "FC.png"
+  V: "V.png"
+  S: "S.png"
+  A: "A.png"
+  B: "B.png"
+  C: "C.png"
+  F: "F.png"
+# 自定义四难度标签基础色，放在主题包目录中，未定义或者没有则回退默认
+color:
+  AT: "#555555"
+  IN: "#7b5ea7"
+  HD: "#5b9bd5"
+  EZ: "#7ecb8a"
+# 自定义模板文件，仅作用于 B19。
+template: "b19.art"
+# 按渲染页面加载覆盖样式；可使用 app 或 app/template，完整键优先。
+# 未配置的页面保留插件默认 CSS 和字体，但仍会使用上方配置的背景与难度颜色。
+css:
+  b19: "b19.css"
+  sign: "sign.css"
+  update: "update.css"
+  clg: "clg.css"
+  arcgrosB19: "arcgrosB19.css"
+  suggest: "suggest.css"
+  table: "table.css"
+  list: "list.css"
+  historyB30: "historyB30.css"
+  setting: "setting.css"
+  difficultyHistory: "difficultyHistory.css"
+  help: "help.css"

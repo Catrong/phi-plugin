@@ -52,7 +52,7 @@ body p {
     position: absolute;
     flex-direction: column;
     align-items: center;
-    left: 4.5%;
+    left: 2.5%;
     /* top: 7%; */
     transform: perspective(600px) rotateY(3deg);
 }
@@ -364,12 +364,12 @@ body p {
 }
 
 .right {
-    width: 51.2%;
+    width: 57.5%;
     display: flex;
     position: absolute;
     flex-direction: column;
     align-items: center;
-    right: 4.5%;
+    right: 2.5%;
     /* top: 7%; */
     transform: perspective(600px) rotateY(-2.3deg);
 }
@@ -599,6 +599,7 @@ circle {
 
 .Rating {
     height: 71px;
+    width: 72px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -652,7 +653,7 @@ circle {
 
 .stats-rating-group {
     display: flex;
-    width: 370px;
+    width: 54%;
     height: 86px;
     left: 330px;
     top: 35px;
@@ -728,6 +729,21 @@ circle {
 .createdbox {
     margin-top: 60px;
     margin-bottom: 30px;
+}
+
+.copyright {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    writing-mode: horizontal-tb;
+    z-index: 1;
+}
+
+.copyright p {
+    color: white;
+    font-size: 20px;
+    text-align: center;
 }
 
 .phi-plugin p {

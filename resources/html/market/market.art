@@ -1,0 +1,86 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/market/market.css">
+{{/block}}
+
+{{block 'main'}}
+<main class="market-page">
+    <header class="market-header">
+        <div>
+            <p class="eyebrow">PHI THEME MARKET</p>
+            <h1>主题市场</h1>
+            <p class="subtitle">{{localOnly ? '当前为本地离线模式，仅展示已安装的自定义主题。' : '发现社区主题，为你的查分页面换一种节奏。'}}</p>
+        </div>
+        <div class="market-meta">
+            <span class="count">{{page}} / {{pageCount}} 页 · 共 {{total}} 个主题</span>
+            {{if query}}<span class="query">“{{query}}”</span>{{/if}}
+        </div>
+    </header>
+
+    {{if themes.length}}
+    <section class="theme-grid">
+        {{each themes as item}}
+        <article class="theme-card{{item.featured ? ' featured' : ''}}">
+            <div class="cover-wrap">
+                {{if item.cover}}
+                <img class="cover" src="{{item.cover}}" alt="{{item.name}}">
+                {{else}}
+                <div class="cover-fallback"><span>{{item.name.slice(0, 1)}}</span></div>
+                {{/if}}
+                {{if item.featured}}<span class="featured-label">推荐</span>{{/if}}
+            </div>
+            <div class="theme-body">
+                <div class="theme-title-row">
+                    <h2>{{item.name}}</h2>
+                    <div class="theme-status">
+                        {{if item.slug === currentTheme}}<span class="policy policy-current">当前使用</span>{{/if}}
+                        {{if item.local}}
+                        <span class="policy policy-local">本地</span>
+                        {{else}}
+                        <span class="policy policy-{{item.downloadPolicy}}">{{item.downloadPolicy === 'public' ? '公开' : '需授权'}}</span>
+                        {{/if}}
+                        {{if item.botDownloadAllowed === true}}
+                        <span class="policy policy-available">可用</span>
+                        {{else}}
+                        <span class="policy policy-denied">不可用</span>
+                        {{/if}}
+                    </div>
+                </div>
+                <p class="slug">{{item.slug}}</p>
+                <p class="summary">{{item.summary || item.description || '暂无主题简介'}}</p>
+                {{if item.botDownloadAllowed === false}}
+                <p class="download-notice">{{if item.local}}Bot 主人设置的主题范围不允许使用该本地主题。{{else}}此 Bot 当前无权下载该主题。<br>前往 market.lyh.org.cn 查看{{/if}}</p>
+                {{/if}}
+                <div class="tags">
+                    {{each item.tags as tag}}<span>{{tag}}</span>{{/each}}
+                </div>
+                <div class="theme-footer">
+                    <span>v{{item.version || '--'}}</span>
+                    <span>{{item.author || '社区作者'}}</span>
+                </div>
+            </div>
+        </article>
+        {{/each}}
+    </section>
+    {{else}}
+    <section class="empty-state">
+        <div class="empty-mark">φ</div>
+        <h2>没有找到主题</h2>
+        <p>{{localOnly ? '当前没有符合条件的本地自定义主题。' : '换个关键词试试，或稍后再打开市场目录。'}}</p>
+    </section>
+    {{/if}}
+
+    <section class="market-commands">
+        <h2>相关命令</h2>
+        <div class="command-grid">
+            <code>/{{commandHead}} market [页码]</code><span>查看主题列表</span>
+            <code>/{{commandHead}} market list &lt;关键词&gt; [页码]</code><span>搜索主题</span>
+            <code>/{{commandHead}} market detail &lt;slug&gt;</code><span>查看主题详情</span>
+            <code>/{{commandHead}} market &lt;slug&gt;</code><span>{{localOnly ? '使用本地主题' : '下载并使用主题'}}</span>
+            <code>/{{commandHead}}pr · /{{commandHead}}上一页</code><span>返回上一页</span>
+            <code>/{{commandHead}}nx · /{{commandHead}}下一页</code><span>前往下一页</span>
+        </div>
+    </section>
+
+</main>
+{{/block}}

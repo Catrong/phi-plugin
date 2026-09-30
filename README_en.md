@@ -13,8 +13,9 @@
 [![Bilibili](https://img.shields.io/badge/Bilibili-就是不会告诉你-A4CAFA?style=flat-square&logo=bilibili&logoColor=white&labelColor=ff69b4)](https://space.bilibili.com/403342249)
 [![Stars](https://img.shields.io/github/stars/Catrong/phi-plugin?style=flat-square&color=yellow&label=Star)](../../stargazers)
 
-![version](https://img.shields.io/badge/Plugin_Version-1.0.1-9cf?style=flat-square)
-![version](https://img.shields.io/badge/Phigros-3.19.0-9cf?style=flat-square)  
+![version](https://img.shields.io/badge/Plugin_Version-1.0.3-9cf?style=flat-square)
+![version](https://img.shields.io/badge/Phigros-4.0.0-9cf?style=flat-square)  
+![version](https://img.shields.io/badge/PhigrosVer-155-9cf?style=flat-square)
 [![YunzaiBot](https://img.shields.io/badge/Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Yunzai-Bot)
 [![MiaoYunzai](https://img.shields.io/badge/Miao--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/yoimiya-kokomi/Miao-Yunzai)
 [![TrssYunzai](https://img.shields.io/badge/TRSS--Yunzai-v3.0-9cf?style=flat-square&logo=dependabot)](/TimeRainStarSky/Yunzai)
@@ -87,7 +88,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | :- | :- |
 | `#phi help` | Show help |
 | `#phi (gb\|cn)?bind <token>` | Bind sessionToken (supports CN/Global, default is CN) |
-| `#phi unbind` | Remove sessionToken & records |
+| `#phi unbind` | Clear the current Bot's local sessionToken, API ID, save, and history only; API platform bindings are unchanged |
 | `#phi clean` | Delete all records |
 | `#phi update` | Update save data |
 | `#phi (rks\|pgr\|b30)` | Query Rks (provides b30 results) |
@@ -104,13 +105,14 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi best1(+)` | Text-based b30 (up to b99) |
 | `#phi score xxx  [-dif (EZ\|HD\|IN\|AT)] [-or (acc\|score\|fc\|time)] [-unrank]` | Get single score & improvement tips (parameters for score ranking, API required) |
 | `#phi suggest` | Get songs that can increase Rks by +0.01 |
-| `#phi (ranklist\|ranking) [rank]` | Rks leaderboard |
+| `#phi ranklist [rank]` | Rks leaderboard |
 | `#phi rankfind <rks>` | Find how many users have higher RKS than the queried RKS |
 | `#phi data` | Check user data count |
 | `#phi guess` | Guess song from illustration (reply directly) |
 | `#phi (ltr\|letter)` | Guess song via letters (use #open/#ans) |
-| `#phi (tipgame\|hint)` | Guess song via hints (use #tip/#ans) |
-| `#phi (song\|song) xxx` | Query song info (supports aliases) |
+| `#phi tipgame` | Guess song via hints (use #tip/#ans) |
+| `#phi (弗一把\|friberg\|fib\|fri) [EZ\|HD\|IN\|AT] [min difficulty, e.g. 14.1, 14.1+, or attached like fib14.3 — all mean that constant or above]` | Friberg song guessing; reply with a song name to compare charter (verified names from daogemm.github.io; when both sides have verified names, any shared name counts as close), first-release version (with release date), chapter, original flag, difficulty, BPM and note count (use #ans to reveal); per-player and per-group answer cooldowns, more participants means more attempts |
+| `#phi song xxx` | Query song info (supports aliases) |
 | `#phi chart <song> [difficulty=IN]` | View chart details |
 | `#phi tag <song name> [difficulty=IN] <tag>` | View chart tags, available tags shown in response, default difficulty is IN |
 | `#phi settag <song name> [difficulty=IN] <tag>` | Tag a chart, recommended to use /tag to query tag list first, default difficulty is IN |
@@ -118,6 +120,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi mycmt` | View own cloud comments |
 | `#phi recmt <ID>` | Delete comment (owner/admin) |
 | `#phi (table\|ratings) <rating>` | Phigros rating table |
+| `#phi (difHis\|历史定数)` | Query song rating history |
 | `#phi new` | Check new songs |
 | `#phi tips` | Random tips |
 | `#phi jrrp` | Daily luck |
@@ -126,7 +129,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi randclg [total] [difficulty] ([rating range])` | Random challenge (e.g., /rand 40 (IN 13-15)) |
 | `#phi ill xxx` | View song illustration |
 | `#phi search <criteria>` | Search songs by BPM/rating/notes |
-| `#phi theme [0-2]` | Switch themes (affects b30/update/randclg/sign/task) |
+| `#phi theme [number]` | Switch themes; page styles are applied according to the theme package |
 | `#phi myset <field> <value>` | View/modify user settings, value supports selection by number (e.g., /myset theme 1) |
 | `sign/sign` | Daily check-in |
 | `task/mytasks` | View tasks |
@@ -149,6 +152,8 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | `#phi allow <token>` | Unban sessionToken |
 | `#phi (set\|set)<feature><value>` | Modify settings |
 | `#phi ban <feature>` | Disable features |
+| `#phi botClaimLink` | **Owner command** Get a Bot platform claim link that is valid for 15 minutes; private chat is recommended |
+| `#phi resetApiBot` | **Owner command** Issue a new API Bot identity; only use this if the credentials are lost or revoked, or when intentionally replacing the identity |
 
 <details open>  
 <summary>Ban Parameters</summary>
@@ -168,6 +173,7 @@ Note: `#` can be replaced with `/`. Command headers are customizable.
 | tipgame | Hint game | /tipgame |
 | guessgame | Guess game | /guess |
 | ltrgame | Letter game | /letter /ltr |
+| fribgame | Friberg game | /friberg /fib /fri |
 | sign | Social | /sign /send /task /retask /jrrp |
 | setting | Settings | /theme |
 | dan | Dan authentication | /dan /danupdate |
@@ -182,11 +188,26 @@ API features can be manually enabled/disabled in settings. When enabled, it auto
 | `#phi bind <userId>` | Enable score query API, bind API account
 | `#phi setApiToken <token>` | Set API Token
 | `#phi tokenList` | Get list of currently bound platforms
-| `#phi tokenManage (delete) <platform number> (-f)?` | Delete bound platform, -f to skip confirmation
 | `#phi auth <api Token>` | Get sessionToken via API Token
-| `#phi clearApiData` | Clear API data
+| `#phi clearApiData` | Permanently delete the phi-api account and cloud data; requires Phigros SSTK permission and confirmation
 | `#phi updateHistory` | Update historical scores from BOT to API server
 | `#phi updateUserToken` | **Owner command** Upload current BOT user tokens to API server
+
+#### Claiming the Bot Platform Identity (Bot Owner)
+
+Claiming associates this phi-plugin deployment with your signed-in web account so that you can view its status and binding statistics and manage it from the web dashboard. The Bot is already active after it successfully registers with the API; leaving it unclaimed does not disable the Bot or user score queries.
+
+Claim procedure:
+
+1. Update phi-plugin to a version that supports Bot platform authentication and make sure `openPhiPluginApi` is enabled.
+2. Start or restart the Bot once. If the plugin has no API Bot identity, it automatically registers with the API and writes the credentials to the local configuration. Never disclose or manually send `apiBotClientSecret`.
+3. As the Bot owner, send `#phi botClaimLink` (or `#phi 获取Bot认领链接`) in a **private chat** with the Bot.
+4. Open the returned claim link within 15 minutes. If you are not signed in on the website, sign in first and then continue from the original claim page.
+5. Verify the Bot name and `clientId` shown on the page, then confirm the claim. You can then view and manage the Bot from the Bot management page in the web dashboard.
+
+A claim link is single-use. If it expires or has already been used, send the command again to obtain a new one. When the command is sent in a group chat, the plugin does not post the link in the group; it writes the link to the Bot console instead. Using a private chat is recommended.
+
+`#phi resetApiBot` (or `#phi 重置API Bot身份`) issues a completely new `clientId` and secret and replaces the current Bot identity. This is not part of the normal claim procedure. Only use it if the local credentials are lost, the identity has been revoked by the API, or you intentionally want to replace the Bot identity. The new identity must be claimed again. To prevent sensitive information from leaking, when this command is used in a group chat, the new identity details and claim link are written only to the Bot console.
 
 #### Detailed Permission Explanation:
 
@@ -253,6 +274,7 @@ Special thanks to these sponsors (list may not be fully updated):
 1. This plugin is intended for non-commercial use only.
 2. All images/assets are from the internet and will be removed upon request.
 3. Cloud save system adapted from [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary)
+4. Charter data is sourced from [DP-Tool](https://daogemm.github.io/)
 
 ### Related Projects
 
@@ -262,5 +284,6 @@ Special thanks to these sponsors (list may not be fully updated):
         <td align="center"><a href="https://github.com/yoimiya-kokomi/Yunzai-Bot"><b>Yunzai-Bot</b></a></td>
         <td align="center"><a href="https://github.com/yoimiya-kokomi/Miao-Yunzai"><b>Miao-Yunzai</b></a></td>
         <td align="center"><a href="https://github.com/TimeRainStarSky/Yunzai"><b>TRSS-Yunzai</b></a></td>
+        <td align="center"><a href="https://daogemm.github.io/"><b>DP-Tool</b></a></td>
     </tr>
 </table>

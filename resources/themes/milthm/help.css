@@ -1,0 +1,36 @@
+:root {
+  --milthm-panel: rgba(16, 16, 24, 0.72);
+  --milthm-panel-soft: color-mix(in srgb, var(--HD) 24%, transparent);
+  --milthm-border: rgba(184, 218, 236, 0.28);
+  --milthm-radius: 14px;
+}
+
+.line {
+  box-sizing: border-box;
+  background-color: var(--milthm-panel);
+  border: 1px solid var(--milthm-border);
+  border-radius: var(--milthm-radius);
+  overflow: hidden;
+}
+
+.order,
+.song,
+.right {
+  background: var(--milthm-panel-soft);
+}
+
+.order {
+  border-color: var(--milthm-border);
+}
+
+.order p,
+.up p,
+.desc p,
+.box-title,
+.box-value {
+  line-height: 1;
+}
+
+.Master {
+  background: color-mix(in srgb, var(--IN) 72%, transparent);
+}

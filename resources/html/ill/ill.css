@@ -12,6 +12,16 @@ body p {
     font-family: 'PHI', 'HIMALAYA';
 }
 
+.shadow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 66px;
+    background: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0.1) 40px, transparent 66px);
+    pointer-events: none;
+}
+
 .box {
     height: 1080;
     display: flex;
@@ -33,8 +43,9 @@ body p {
     margin-left: 13px;
 }
 
-.phi img {
-    height: 100%;
+.phi p {
+    font-size: 40px;
+    font-family: "Aldrich";
 }
 
 .line {
@@ -59,7 +70,6 @@ body p {
     height: 40%;
     display: flex;
     align-items: center;
-    text-shadow: 0px 0px 5px #000;
 }
 
 .info p {

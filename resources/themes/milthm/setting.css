@@ -1,0 +1,37 @@
+:root {
+  --milthm-panel: rgba(16, 16, 24, 0.74);
+  --milthm-border: rgba(184, 218, 236, 0.28);
+  --milthm-radius: 14px;
+}
+
+.lineBox {
+  border: 1px solid var(--milthm-border);
+  border-radius: var(--milthm-radius);
+  clip-path: none;
+  overflow: hidden;
+}
+
+.line {
+  background: var(--milthm-panel);
+}
+
+.title p,
+.info p,
+.space p,
+.drc p {
+  line-height: 1;
+}
+
+.right {
+  width: 130px;
+}
+
+.space {
+  width: 80px;
+  border-radius: 12px;
+  clip-path: none;
+}
+
+.square {
+  background: var(--HD);
+}

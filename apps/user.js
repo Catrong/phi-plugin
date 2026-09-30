@@ -1,19 +1,24 @@
 import Config from '../components/Config.js'
-import send from '../model/send.js'
-import picmodle from '../model/picmodle.js'
-import getInfo from '../model/getInfo.js'
-import getSave from '../model/getSave.js'
-import fCompute from '../model/fCompute.js'
-import getBanGroup from '../model/getBanGroup.js';
-import LevelRecordInfo from '../model/class/LevelRecordInfo.js'
-import getSaveFromApi from '../model/getSaveFromApi.js'
+import send from '../model/render/send.js'
+import picmodle from '../model/render/picmodle.js'
+import getInfo from '../model/game/getInfo.js'
+import fCompute from '../model/game/fCompute.js'
+import getBanGroup from '../model/user/getBanGroup.js';
+import LevelRecordInfo from '../model/game/LevelRecordInfo.js'
 import phiPluginBase from '../components/baseClass.js'
 import logger from '../components/Logger.js'
-import { Level, MAX_DIFFICULTY } from '../model/constNum.js'
-import getNotes from '../model/getNotes.js'
-import getUpdateSave from '../model/getUpdateSave.js'
-import analyzeSaveHistory from '../model/analyzeSaveHistory.js'
-import ScoreHistory from '../model/class/scoreHistory.js'
+import { Level, MAX_DIFFICULTY } from '../model/game/constNum.js'
+import getNotes from '../model/user/getNotes.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
+import analyzeSaveHistory from '../model/save/analyzeSaveHistory.js'
+import ScoreHistory from '../model/save/scoreHistory.js'
+import { canUseApi } from '../model/user/apiPermission.js'
+import {
+    sendQuickCommands,
+    scoreQuickCommands,
+    userListQuickCommands,
+    historyQuickCommands,
+} from '../model/game/markdown.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -66,16 +71,17 @@ export class phiuser extends phiPluginBase {
             return false
         }
 
-        let User = await getSave.getSave(e.user_id);
-        if (User) {
-            if (User.gameProgress) {
-                let data = User.gameProgress.money
-                send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PB ` : ''}${data[3] ? `${data[3]}TB ` : ''}${data[2] ? `${data[2]}GB ` : ''}${data[1] ? `${data[1]}MB ` : ''}${data[0] ? `${data[0]}KB ` : ''}`)
-            } else {
-                send.send_with_At(e, `请先更新数据哦！\n/${Config.getUserCfg('config', 'cmdhead')} update`)
-            }
+
+        let save = await send.getsave_result(e)
+
+        if (!save) {
+            return true
+        }
+        if (save.gameProgress) {
+            let data = save.gameProgress.money
+            send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PB ` : ''}${data[3] ? `${data[3]}TB ` : ''}${data[2] ? `${data[2]}GB ` : ''}${data[1] ? `${data[1]}MB ` : ''}${data[0] ? `${data[0]}KB ` : ''}`)
         } else {
-            send.send_with_At(e, `请先绑定sessionToken哦！\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>\n如果不知道自己的Token可以通过扫码绑定哦！\n如果不知道命令可以用/phihelp查看哦！`)
+            send.send_with_At(e, `请先更新数据哦！\n/${Config.getUserCfg('config', 'cmdhead')} update`)
         }
         return true
     }
@@ -85,6 +91,7 @@ export class phiuser extends phiPluginBase {
      * @param {botEvent} e
      */
     async info(e) {
+        const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'info')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
@@ -101,7 +108,7 @@ export class phiuser extends phiPluginBase {
             }
         }
         if (!bksong) {
-            bksong = getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)], 'blur')
+            bksong = getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)], 'blur')
         }
 
         let save = await send.getsave_result(e, 1.0)
@@ -110,13 +117,17 @@ export class phiuser extends phiPluginBase {
             return true
         }
 
+        // /info 使用独立的 userinfo/userinfo 渲染目标，需把当前用户主题传入渲染数据，
+        // 主题管理器才能命中主题包中的完整页面键。
+        const pluginData = await getNotes.getNotesData(e.user_id)
+
         let stats = await save.getStats()
 
         let money = save.gameProgress.money
         let userbackground = await fCompute.getBackground(save.gameuser.background)
 
         if (!userbackground) {
-            e.reply(`ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
+            send.reply(e, `ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
             logger.error(`未找到${save.gameuser.background}对应的曲绘！`)
         }
 
@@ -137,17 +148,22 @@ export class phiuser extends phiPluginBase {
 
         let user_data;
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
+        if (await canUseApi(e)) {
             try {
-                user_data = await getSaveFromApi.getHistory(e, ['data', 'rks', 'scoreHistory']);
+                user_data = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
+                if (!user_data) user_data = await credentials.getLocalHistory()
             } catch (error) {
                 logger.info('通过phi-plugin API获取历史记录失败，改为本地存储获取')
-                user_data = await getSave.getHistory(e.user_id);
+                user_data = await credentials.getLocalHistory()
             }
         } else {
-            user_data = await getSave.getHistory(e.user_id);
+            user_data = await credentials.getLocalHistory()
         }
 
+        if (!user_data) {
+            send.send_with_At(e, '没有找到可用的历史记录，请先更新存档。')
+            return true
+        }
         let { rks_history, data_history, rks_range, data_range, rks_date, data_date } = user_data.getRksAndDataLine()
 
 
@@ -255,12 +271,15 @@ export class phiuser extends phiPluginBase {
             acc_rks_range: acc_rks_range,
             acc_rks_AccRange: acc_rks_AccRange_position,
             background: bksong,
+            theme: pluginData?.theme || 'star',
         }
 
         // console.info(acc_rks_AccRange_position)
 
-        let kind = Number(e.msg.replace(/\/.*info/g, ''))
+        const infoVersion = e.msg.match(new RegExp(`^[#/](?:${Config.getUserCfg('config', 'cmdhead')})\\s*info([12])?`, 'i'))?.at(-1)
+        const kind = Number(infoVersion || 0)
         send.send_with_At(e, await picmodle.user_info(e, data, kind))
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -425,7 +444,7 @@ export class phiuser extends phiPluginBase {
         let illustration = await fCompute.getBackground(save.gameuser.background)
 
         if (!illustration) {
-            e.reply(`ERROR: 未找到[${save.gameuser.background}]背景的有关信息！`)
+            send.reply(e, `ERROR: 未找到[${save.gameuser.background}]背景的有关信息！`)
             logger.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
@@ -473,7 +492,7 @@ export class phiuser extends phiPluginBase {
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             rks: save.saveInfo.summary.rankingScore,
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)], 'blur'),
+            background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)], 'blur'),
         }
 
         // let remsg = ''
@@ -487,6 +506,7 @@ export class phiuser extends phiPluginBase {
 
 
         send.send_with_At(e, await picmodle.lvsco(e, data))
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -617,7 +637,7 @@ export class phiuser extends phiPluginBase {
         send.send_with_At(e, await picmodle.list(e, {
             head_title: "成绩筛选",
             song: data,
-            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)]),
+            background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
             theme: plugin_data?.theme || 'star',
             PlayerId: save.saveInfo.PlayerId,
             Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
@@ -627,6 +647,7 @@ export class phiuser extends phiPluginBase {
             // dan: await get.getDan(e.user_id),
             request: request
         }))
+        await sendQuickCommands(e, userListQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩筛选快捷操作')
 
     }
 
@@ -635,6 +656,8 @@ export class phiuser extends phiPluginBase {
      * @param {botEvent} e 
      */
     async analyze2025SaveHistory(e) {
+
+        const credentials = UserCredentials.fromEvent(e)
 
 
         if (await getBanGroup.get(e, 'analyze2025SaveHistory')) {
@@ -649,7 +672,7 @@ export class phiuser extends phiPluginBase {
             return true
         }
 
-        const history = await getUpdateSave.getHistoryFromApi(e, ['challengeModeRank', 'data', 'rks', 'scoreHistory']);
+        const history = await credentials.getHistoryFromApi(['challengeModeRank', 'data', 'rks', 'scoreHistory'])
 
         if (!history) {
             return true;
@@ -659,8 +682,9 @@ export class phiuser extends phiPluginBase {
 
         send.send_with_At(e, await picmodle.analyzeSaveHistory(e, {
             stats,
-            background: getInfo.getill(getInfo.illlist[fCompute.randBetween(0, getInfo.illlist.length - 1)]),
+            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
         }));
+        await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
     }
 
     /**
@@ -669,6 +693,7 @@ export class phiuser extends phiPluginBase {
      * @returns 
      */
     async hisb30(e) {
+        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'hisb30')) {
             send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
             return false
@@ -680,7 +705,7 @@ export class phiuser extends phiPluginBase {
             return true
         }
 
-        const history = await getUpdateSave.getHistoryFromApi(e, ['scoreHistory']);
+        const history = await credentials.getHistoryFromApi(['scoreHistory'])
 
         if (!history) {
             return true;
@@ -910,9 +935,10 @@ export class phiuser extends phiPluginBase {
         send.send_with_At(e, await picmodle.common(e, 'historyB30', {
             gameuser,
             rows,
-            background: getInfo.getill(illList[fCompute.randBetween(0, illList.length - 1)]),
+            background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
             theme: pluginData?.theme || 'star',
         }))
+        await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
 
     }
 

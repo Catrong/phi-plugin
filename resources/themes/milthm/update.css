@@ -1,0 +1,68 @@
+:root {
+  --milthm-panel: rgba(16, 16, 24, 0.7);
+  --milthm-border: rgba(184, 218, 236, 0.26);
+  --milthm-radius: 14px;
+  --milthm-radius-sm: 8px;
+}
+
+.title .r,
+.svg-box,
+.abox {
+  border: 1px solid var(--milthm-border);
+  border-radius: var(--milthm-radius);
+}
+
+.title .r,
+.svg-box {
+  background-color: var(--milthm-panel);
+}
+
+.imgbox,
+.namebox,
+.namebox_ed,
+.namebox_un,
+.songsinfo,
+.songsinfo_ed,
+.songsinfo_un {
+  border-radius: var(--milthm-radius-sm);
+}
+
+.title .r .Challenge-r,
+.title .r .Challenge-r_1 {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.title .r .Challenge-r > *,
+.title .r .Challenge-r_1 > * {
+  grid-area: 1 / 1;
+}
+
+.title .r .Challenge-r img,
+.title .r .Challenge-r_1 img {
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.title .r .Challenge-r p,
+.title .r .Challenge-r_1 p {
+  z-index: 1;
+  margin: 0;
+  line-height: 1;
+  transform: translateY(-0.3em);
+}
+
+.coinbox,
+.coinbox_un {
+  border-radius: var(--milthm-radius-sm);
+}
+
+.coinbox {
+  background: color-mix(in srgb, var(--EZ) 72%, transparent);
+}
+
+.coinbox_un {
+  background: color-mix(in srgb, var(--IN) 72%, transparent);
+}

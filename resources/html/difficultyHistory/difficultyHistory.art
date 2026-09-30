@@ -1,0 +1,102 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/difficultyHistory/difficultyHistory.css" />
+{{/block}}
+
+{{block 'main'}}
+<div class="background">
+  <img src="{{illustration}}" alt="曲绘-模糊" />
+</div>
+
+<div class="header">
+  <div class="ill-box">
+    <img src="{{illustration}}" alt="曲绘" />
+  </div>
+  <div class="title-box">
+    <div class="white-bar"></div>
+    <div class="title-content">
+      <div class="title">
+        <p>上线版本&日期</p>
+      </div>
+      <div class="content">
+        <p>版本: v{{updateLable}}</p>
+        <p>日期: {{updateDate}}</p>
+      </div>
+      <div class="title">
+        <p>定数变化折线图</p>
+      </div>
+      <div class="content">
+        <div class="chart-container">
+          <svg id="difficultyChart" width="800" height="250"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="difficulty">
+  {{each hisData as e rank}}
+  {{if e.length > 0}}
+  <div class="{{rank}}-box a-box">
+    <div class="dif-box clip-box">
+      <p>{{rank}}</p>
+    </div>
+    <div class="data-box">
+      {{each e as item}}
+      <div class="a-num">
+        <div class="num-box clip-box">
+          <p>{{item.difficulty.toFixed(1)}}</p>
+        </div>
+        <div class="ver-box clip-box">
+          <div class="update-ver">
+            <p>v{{item.version}}</p>
+          </div>
+          <div class="update-date">
+            <p>{{item.date}}</p>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+  {{/each}}
+</div>
+
+<div class="createdbox">
+  <div class="phi-plugin">
+    <p>{{_plugin}}</p>
+  </div>
+  <div class="ver">
+    <p>{{Version.ver}}</p>
+  </div>
+</div>
+
+<script>
+  // 测试示例数据 - 多条折线
+  const sampleLines = {{#lineData}};
+  
+  // 页面加载后绘制图表
+  window.addEventListener("DOMContentLoaded", () => {
+    drawDifficultyChart("difficultyChart", sampleLines)
+  })
+</script>
+
+{{if theme == "snow"}}
+<div class="snow-box"></div>
+<script>
+  themeSnow()
+</script>
+{{else if theme == "topText" || theme == "foolsDay"}}
+<div class="topTextBox" id="topTextBox"></div>
+<script>
+  themeTopText()
+</script>
+{{else if theme == "star"}}
+<canvas id="stars"></canvas>
+<script>
+  themeStar()
+</script>
+{{/if}}
+{{/block}}

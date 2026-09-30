@@ -1,17 +1,20 @@
-import Save from '../model/class/Save.js'
-import fCompute from '../model/fCompute.js'
-import getInfo from '../model/getInfo.js'
-import getRksRank from '../model/getRksRank.js'
-import getSave from '../model/getSave.js'
-import send from '../model/send.js'
-import picmodle from '../model/picmodle.js'
+import Save from '../model/save/Save.js'
+import fCompute from '../model/game/fCompute.js'
+import getInfo from '../model/game/getInfo.js'
+import getRksRank from '../model/game/getRksRank.js'
+import getSave from '../model/save/getSave.js'
+import send from '../model/render/send.js'
+import picmodle from '../model/render/picmodle.js'
 import Config from '../components/Config.js'
-import getBanGroup from '../model/getBanGroup.js';
-import makeRequest from '../model/makeRequest.js'
-import makeRequestFnc from '../model/makeRequestFnc.js'
-import saveHistory from '../model/class/saveHistory.js'
+import getBanGroup from '../model/user/getBanGroup.js';
+import makeRequest from '../model/api/makeRequest.js'
+import saveHistory from '../model/save/saveHistory.js'
 import phiPluginBase from '../components/baseClass.js'
+import { canUseApi } from '../model/user/apiPermission.js';
 import logger from '../components/Logger.js'
+import platform from '../components/platform/index.js'
+import { UserCredentials } from '../model/user/userCredentials.js'
+import { sendQuickCommands, rankQuickCommands } from '../model/game/markdown.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -55,41 +58,36 @@ export class phiRankList extends phiPluginBase {
 
 
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-            try {
-                let data = {
-                    Title: "RankingScore排行榜",
-                    totDataNum: 0,
-                    // @ts-ignore
-                    BotNick: Bot.nickname,
-                    /** @type {rankingListObject[]} */
-                    users: [],
-                    me: {},
-                }
-                /**请求的排名 */
-                let msg = e.msg.match(/\d+/)
-                let api_ranklist = null
-                if (msg) {
-                    api_ranklist = await makeRequest.getRanklistRank({ request_rank: Number(msg[0]) })
-                } else {
-                    api_ranklist = await makeRequest.getRanklistUser(makeRequestFnc.makePlatform(e))
-                }
+        if (await canUseApi(e)) {
+            const credentials = UserCredentials.fromEvent(e)
+            let data = {
+                Title: "RankingScore排行榜",
+                totDataNum: 0,
+                BotNick: platform.getBotNickname(e),
+                /** @type {rankingListObject[]} */
+                users: [],
+                me: {},
+            }
+            /**请求的排名 */
+            let msg = e.msg.match(/\d+/)
+            const api_ranklist = msg
+                ? await makeRequest.getRanklistRank({ request_rank: Number(msg[0]) }, { event: e })
+                : await credentials.getRanklistUser()
+            if (api_ranklist) {
                 data.totDataNum = api_ranklist.totDataNum;
                 for (let item of api_ranklist.users) {
                     data.users.push({ ...await makeSmallLine(item), index: item.index, me: item.me })
                 }
-                data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history))
+                data.me = await makeLargeLine(new Save(api_ranklist.me.save), new saveHistory(api_ranklist.me.history), e)
                 send.send_with_At(e, [await picmodle.common(e, 'rankingList', data), `总数据量：${data.totDataNum}\n`])
+                await sendQuickCommands(e, rankQuickCommands(Config.getUserCfg('config', 'cmdhead')), '排行榜快捷操作')
                 return true
-            } catch (err) {
-                logger.warn(`[phi-plugin] API ERR`, err)
             }
         }
         let data = {
             Title: "RankingScore排行榜",
             totDataNum: 0,
-            // @ts-ignore
-            BotNick: Bot.nickname,
+            BotNick: platform.getBotNickname(e),
             /** @type {rankingListObject[]} */
             users: [],
             me: {},
@@ -137,12 +135,13 @@ export class phiRankList extends phiPluginBase {
                 data.users.push({ ...await makeSmallLine(save), index: Math.max(index + rankNum - 1, index + 1), me: myTk === save.getSessionToken() })
                 if (myTk === sessionToken) {
                     let history = await getSave.getHistoryBySessionToken(save.getSessionToken())
-                    data.me = await makeLargeLine(save, history)
+                    data.me = await makeLargeLine(save, history, e)
                 }
             }
         }
 
         send.send_with_At(e, [`总数据量：${data.totDataNum}\n`, await picmodle.common(e, 'rankingList', data)])
+        await sendQuickCommands(e, rankQuickCommands(Config.getUserCfg('config', 'cmdhead')), '排行榜快捷操作')
     }
 
     /**
@@ -162,14 +161,12 @@ export class phiRankList extends phiPluginBase {
             return false
         }
 
-        if (Config.getUserCfg('config', 'openPhiPluginApi')) {
-            try {
-                makeRequest.getRanklistRks({ request_rks: rks }).then((res) => {
-                    send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)
-                })
+        if (await canUseApi(e, 'scoreStatistics')) {
+            const res = await makeRequest.getRanklistRks({ request_rks: rks }, { event: e })
+            if (res) {
+                send.send_with_At(e, `当前服务器记录中一共有 ${res.rksRank}/${res.totNum} 位玩家的 rks 大于 ${rks}！`)
+                await sendQuickCommands(e, rankQuickCommands(Config.getUserCfg('config', 'cmdhead')), '排行榜快捷操作')
                 return true
-            } catch (err) {
-                logger.warn(`[phi-plugin] API ERR`, err)
             }
         }
 
@@ -177,7 +174,8 @@ export class phiRankList extends phiPluginBase {
 
         let rank = await getRksRank.getRankByRks(rks)
 
-        send.send_with_At(e, `当前服务器记录中一共有 ${rank}/${totDataNum} 位玩家的 rks 大于 ${rks}！`)
+        send.send_with_At(e, `当前服务器记录中一共有 ${totDataNum - rank + 1}/${totDataNum} 位玩家的 rks 大于等于 ${rks}！`)
+        await sendQuickCommands(e, rankQuickCommands(Config.getUserCfg('config', 'cmdhead')), '排行榜快捷操作')
 
         return true
     }
@@ -195,7 +193,6 @@ export class phiRankList extends phiPluginBase {
     //         return false
     //     }
 
-    //     let list = await getSave.getGod()
     //     let plugin_data = await getNotes.getPluginData(e.user_id)
     //     let data = {
     //         Title: "封神榜",
@@ -232,8 +229,9 @@ export class phiRankList extends phiPluginBase {
  * 创建一个详细对象
  * @param {Save} save 
  * @param {saveHistory} history
+ * @param {botEvent} e
  */
-async function makeLargeLine(save, history) {
+async function makeLargeLine(save, history, e) {
     if (!save) {
         return {
             playerId: "无效用户"
@@ -260,7 +258,7 @@ async function makeLargeLine(save, history) {
             })
         }
     })
-    let b30Data = await save.getB19(33)
+    let b30Data = await save.getB19(e, 33)
     let b30list = {
         P3: {
             title: 'Perfect 3',
@@ -313,7 +311,7 @@ async function makeLargeLine(save, history) {
 
 /**
  * 创建一个简略对象
- * @param {Save | import('../model/makeRequest.js').UserItem} save 
+ * @param {Save | import('../model/api/makeRequest.js').UserItem} save 
  */
 async function makeSmallLine(save) {
     if (!save) {

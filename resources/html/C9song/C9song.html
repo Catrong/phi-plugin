@@ -1,0 +1,140 @@
+<head>
+  <link rel="stylesheet" href="./C9song.css" />
+</head>
+
+<body>
+  <div class="blackCover"></div>
+  <div class="background">
+    <img src="../../original_ill/ill/Ajourneytothemoonlight.Yesod.png" alt="{{background}}" />
+  </div>
+
+  <div class="backBox">
+    <div class="sixP">
+      <i class="sixP__edge sixP__edge--top"></i>
+      <i class="sixP__edge sixP__edge--right-top"></i>
+      <i class="sixP__edge sixP__edge--right-bottom"></i>
+      <i class="sixP__edge sixP__edge--bottom"></i>
+      <i class="sixP__edge sixP__edge--left-bottom"></i>
+      <i class="sixP__edge sixP__edge--left-top"></i>
+    </div>
+    <div class="backBox_threeP"></div>
+  </div>
+
+  <div class="songNameBox">
+    <div class="songNameBoxBorder songNameBoxBorder_top"></div>
+    <div class="songNameBoxBorder songNameBoxBorder_bottom"></div>
+    <div class="songNameBox_threePBox songNameBox_threePBox_top">
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_l"></div>
+    </div>
+    <div class="songNameBox_threePBox songNameBox_threePBox_bottom">
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+      <div class="songNameBox_threeP songNameBox_threeP_t"></div>
+      <div class="songNameBox_threeP"></div>
+    </div>
+  </div>
+
+  <script>
+    const svgNamespace = "http://www.w3.org/2000/svg"
+
+    const createSvgElement = (tagName, attributes) => {
+      const element = document.createElementNS(svgNamespace, tagName)
+      Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value))
+      return element
+    }
+
+    const renderBlackCoverTriangleGrid = () => {
+      const cover = document.querySelector(".blackCover")
+      if (!cover) return
+
+      const style = getComputedStyle(cover)
+      const side = parseFloat(style.getPropertyValue("--triangleSide"))
+      const edgeWidth = parseFloat(style.getPropertyValue("--triangleEdgeWidth"))
+      if (side <= 0 || edgeWidth < 0) return
+
+      const triangleHeight = (side * Math.sqrt(3)) / 2
+      const halfSide = side / 2
+      const patternHeight = triangleHeight * 2
+      const patternId = "blackCoverTrianglePattern"
+      const grid = createSvgElement("svg", {
+        class: "blackCover__triangleGrid",
+        viewBox: `0 0 ${cover.clientWidth} ${cover.clientHeight}`,
+        preserveAspectRatio: "none",
+        "aria-hidden": "true",
+      })
+      const definitions = createSvgElement("defs", {})
+      const pattern = createSvgElement("pattern", {
+        id: patternId,
+        width: side,
+        height: patternHeight,
+        patternUnits: "userSpaceOnUse",
+      })
+      const patternFill = createSvgElement("rect", {
+        width: side,
+        height: patternHeight,
+        fill: style.getPropertyValue("--triangleFillColor").trim(),
+      })
+      const patternEdges = createSvgElement("path", {
+        d: [
+          `M 0 0 H ${side}`,
+          `M 0 ${triangleHeight} H ${side}`,
+          `M 0 0 L ${halfSide} ${triangleHeight} L ${side} 0`,
+          `M ${halfSide} ${triangleHeight} L 0 ${patternHeight}`,
+          `M ${halfSide} ${triangleHeight} L ${side} ${patternHeight}`,
+        ].join(" "),
+        fill: "none",
+        stroke: style.getPropertyValue("--triangleEdgeColor").trim(),
+        "stroke-width": edgeWidth,
+        "stroke-linejoin": "miter",
+      })
+      const gridFill = createSvgElement("rect", {
+        width: "100%",
+        height: "100%",
+        fill: `url(#${patternId})`,
+      })
+
+      pattern.append(patternFill, patternEdges)
+      definitions.appendChild(pattern)
+      grid.append(definitions, gridFill)
+      cover.querySelector(":scope > .blackCover__triangleGrid")?.remove()
+      cover.appendChild(grid)
+    }
+
+    renderBlackCoverTriangleGrid()
+
+    const triangleEdgeDirections = ["top", "right", "left"]
+
+    document.querySelectorAll(".songNameBox_threeP").forEach(triangle => {
+      triangleEdgeDirections.forEach(direction => {
+        const edgeClass = `songNameBox_threeP__edge--${direction}`
+        if (triangle.querySelector(`:scope > .${edgeClass}`)) return
+
+        const edge = document.createElement("i")
+        edge.className = `songNameBox_threeP__edge ${edgeClass}`
+        triangle.appendChild(edge)
+      })
+    })
+  </script>
+</body>
