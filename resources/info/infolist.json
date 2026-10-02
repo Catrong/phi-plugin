@@ -1792,6 +1792,60 @@
         "bpm": "145",
         "length": "2:22",
         "chapter": "Single-单曲 精选集"
+    },
+    "TrueHomeTrueWorldRework.816ThreeNumbers": {
+        "bpm": "220",
+        "length": "2:52",
+        "chapter": "Chapter 9 穹顶孤舟",
+        "isOriginal": true
+    },
+    "Ametrine.GRYSCLMIssionary": {
+        "bpm": "180",
+        "length": "2:52",
+        "chapter": "Chapter 9 穹顶孤舟",
+        "isOriginal": true
+    },
+    "Petrichor.voidMournfinale": {
+        "bpm": "163",
+        "length": "2:45",
+        "chapter": "Chapter 9 穹顶孤舟",
+        "isOriginal": true
+    },
+    "ハテ.rNFrums": {
+        "bpm": "220.5",
+        "length": "2:54",
+        "chapter": "Chapter 9 穹顶孤舟",
+        "isOriginal": true
+    },
+    "DesultorySignals.technoplanet": {
+        "bpm": "202",
+        "length": "2:30",
+        "chapter": "Chapter 9 穹顶孤舟",
+        "isOriginal": true
+    },
+    "Message.くるぶっこちゃん": {
+        "bpm": "220",
+        "length": "2:48",
+        "chapter": "Chapter 9 穹顶孤舟",
+        "chart": {
+            "SP": {
+                "rgba": "212,167,180,1",
+                "difficulty": "?",
+                "tap": "220",
+                "hold": "108",
+                "flick": "72",
+                "drag": "200",
+                "combo": "600",
+                "charter": "?"
+            }
+        },
+        "isOriginal": true
+    },
+    "WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい": {
+        "bpm": "219",
+        "length": "2:42",
+        "chapter": "Chapter 9 穹顶孤舟",
+        "isOriginal": true
     }
 }
 
