@@ -1113,7 +1113,7 @@ export default new class getInfo {
             logger.warn(id, '背景不存在')
             ans = path.join(imgPath, 'phigros.png')
         } else {
-            if (id == 'WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい' && level) {
+            if (id == 'WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい.0' && level) {
                 ans = ans.replace(id.replace(/.0$/, '.png'), '')
                 ans = path.join(ans, level, id.replace(/.0$/, '.png'))
             }
