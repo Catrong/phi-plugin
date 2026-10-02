@@ -178,6 +178,23 @@ export default class fCompute {
     }
 
     /**
+     * 定数显示文本：数值统一保留一位小数（整数补 .0），非数值原样返回
+     *
+     * 图鉴里 chart 的 difficulty 可能是数值（正常难度），也可能是 "?" / emoji
+     * 这类展示用文本（SP、LY 等附加谱面），所以不能直接 toFixed。
+     * @param {number|string|null|undefined} value 定数
+     * @returns {string} 15 -> '15.0'，15.6 -> '15.6'，'?' -> '?'
+     */
+    static formatDifficulty(value) {
+        if (value === null || value === undefined) return ''
+        if (typeof value === 'number') return Number.isFinite(value) ? value.toFixed(1) : ''
+        const text = String(value).trim()
+        if (!text) return ''
+        const num = Number(text)
+        return Number.isFinite(num) ? num.toFixed(1) : text
+    }
+
+    /**
      * 转换时间格式
      * @param {Date|string|number} date 时间
      * @returns {string} -100d

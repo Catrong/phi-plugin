@@ -49,7 +49,7 @@
                             {{each chart}}
                             <div class="pBox">
                                 <p name="pvis">{{$index}}</p>
-                            <p>{{$value.difficulty}}</p>
+                            <p>{{fCompute.formatDifficulty($value.difficulty)}}</p>
                             </div>
                             {{/each}}
                         </div>
