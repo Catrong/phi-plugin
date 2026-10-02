@@ -1328,7 +1328,15 @@ function randClg(clgNum, chartList) {
     let difList = null;
     let rand1 = [], rand2 = []
     // console.info(getInfo.MAX_DIFFICULTY)
-    for (let i = 1; i <= Math.min(getInfo.MAX_DIFFICULTY, clgNum - 2); i++) {
+    /**
+     * 候选难度的下界。
+     * 4.0.1 起存在 0.5 定数的谱面（向下取整为难度 0），
+     * 总评因此可以低到 0+1+1=2，不能再写死从 1 开始。
+     */
+    const difKeys = fCompute.objectKeys(chartList).map(Number).filter((n) => Number.isFinite(n))
+    const minDif = difKeys.length ? Math.min(...difKeys) : 1
+    // 上界：另两张都取最低难度时，最大的一张最多是 clgNum - 2 * minDif
+    for (let i = minDif; i <= Math.min(getInfo.MAX_DIFFICULTY, clgNum - 2 * minDif); i++) {
         // console.info(i, chartList[i])
         if (chartList[i]) {
             rand1.push(i)
