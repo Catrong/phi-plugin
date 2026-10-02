@@ -326,7 +326,7 @@ export default class Save {
                 const y = phi[i];
                 if (!y) continue;
                 sum_rks += Number(y.rks) //计算rks
-                y.illustration = getInfo.getill(y.id)
+                y.illustration = getInfo.getill(y.id, 'common', y.rank)
                 y.suggest = "无法推分"
             }
         }
@@ -384,7 +384,7 @@ export default class Save {
                 rkslist[i].suggest = "无法推分"
             }
             /**曲绘 */
-            rkslist[i].illustration = getInfo.getill(rkslist[i].id, 'common')
+            rkslist[i].illustration = getInfo.getill(rkslist[i].id, 'common', rkslist[i].rank)
             /**b19列表 */
             b19_list.push(rkslist[i])
             b19Ids.push(rkslist[i].id);
@@ -584,7 +584,7 @@ export default class Save {
                     const y = phi[i];
                     if (!y) continue;
                     sum_rks += Number(y.rks) //计算rks
-                    y.illustration = getInfo.getill(y.id)
+                    y.illustration = getInfo.getill(y.id, 'common', y.rank)
                     y.suggest = "无法推分"
                 }
             }
@@ -630,7 +630,7 @@ export default class Save {
                 x.suggest = "无法推分"
             }
             /**曲绘 */
-            x.illustration = getInfo.getill(x.id, 'common')
+            x.illustration = getInfo.getill(x.id, 'common', x.rank)
             /**b19列表 */
             b19_list.push(x)
         }

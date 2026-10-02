@@ -620,7 +620,7 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
         for (let i in task_data) {
             if (task_data[i]) {
                 // @ts-ignore
-                task_data[i].illustration = getInfo.getill(task_data[i].song)
+                task_data[i].illustration = getInfo.getill(task_data[i].song, 'low', task_data[i].request.rank)
                 if (task_data[i].request.type == 'acc') {
                     // @ts-ignore
                     task_data[i].request.value = task_data[i].request.value.toFixed(2) + '%'

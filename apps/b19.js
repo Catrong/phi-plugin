@@ -705,10 +705,10 @@ export class phib19 extends phiPluginBase {
         if (await canUseApi(e, 'scoreStatistics')) {
 
             const res = await makeRequest.getAllSongAccAvgB30({
-                    songIds: fCompute.objectKeys(getInfo.ori_info),
-                    minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                    maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                }, { event: e })
+                songIds: fCompute.objectKeys(getInfo.ori_info),
+                minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+            }, { event: e })
             if (res) {
                 const ids = fCompute.objectKeys(res)
                 ids.forEach(id => {
@@ -730,13 +730,13 @@ export class phib19 extends phiPluginBase {
                 })
             }
             const apfcRes = await makeRequest.getSongsApFcCount({
-                    songId: fCompute.objectKeys(getInfo.ori_info),
-                    rank: Level,
-                    rksRange: {
-                        min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                        max: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                    }
-                }, { event: e })
+                songId: fCompute.objectKeys(getInfo.ori_info),
+                rank: Level,
+                rksRange: {
+                    min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                    max: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                }
+            }, { event: e })
             if (apfcRes) {
                 const ids = fCompute.objectKeys(apfcRes);
                 ids.forEach(id => {
@@ -763,7 +763,7 @@ export class phib19 extends phiPluginBase {
                                 // diff: diff,
                                 apCount: apfcRes[id][lv].apCount || 0,
                                 ...songInfo,
-                                illustration: getInfo.getill(id, 'low') ?? '',
+                                illustration: getInfo.getill(id, 'low', lv) ?? '',
                             });
                         }
                     })
@@ -811,7 +811,7 @@ export class phib19 extends phiPluginBase {
                         difficulty: difficulty,
                         ...x,
                         rank: Level[lv],
-                        illustration: getInfo.getill(id, 'low') ?? '',
+                        illustration: getInfo.getill(id, 'low', Level[lv]) ?? '',
                         suggest: x.suggest,
                         avg: allTaskList[id]?.[Level[lv]] || 0,
                     })
@@ -1074,7 +1074,7 @@ export class phib19 extends phiPluginBase {
                     }
                     return ({
                         rank: chart.rank,
-                        illustration: getInfo.getill(chart.id, 'low'),
+                        illustration: getInfo.getill(chart.id, 'low', chart.rank),
                         score: playerRecord?.acc || 0,
                     })
                 }) || [],

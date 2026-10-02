@@ -445,7 +445,7 @@ export class phisong extends phiPluginBase {
                         songsname.push({
                             ...getInfo.ori_info[id].chart[level],
                             rank: level,
-                            illustration: getInfo.getill(id),
+                            illustration: getInfo.getill(id, 'common', level),
                             song: getInfo.ori_info[id].song,
                             illustrator: getInfo.ori_info[id].illustrator,
                             composer: getInfo.ori_info[id].composer,
@@ -624,7 +624,7 @@ export class phisong extends phiPluginBase {
                     song: info.song,
                     rank: res[i].rank,
                     difficulty: res[i].difficulty,
-                    illustration: getInfo.getill(info.id),
+                    illustration: getInfo.getill(info.id, 'common', res[i].rank),
                     ...info.chart[res[i].rank]
                 })
             }
@@ -835,7 +835,7 @@ export class phisong extends phiPluginBase {
                 difficulty: difStr.toFixed(1),
                 songs: info_by_difficulty[difStr.toFixed(1)]?.map(chart => ({
                     rank: chart.rank,
-                    illustration: getInfo.getill(chart.id, 'low'),
+                    illustration: getInfo.getill(chart.id, 'low', chart.rank),
                 })) || []
             })
 
