@@ -692,6 +692,7 @@ Cthugha.USAO:
   - 地狱火
   - 旧日
   - 红烧骷髅头
+  - 骷髅头着火
 energytrixxx.KAH:
   - xxx
   - 能量
@@ -812,6 +813,7 @@ OnAndOn.ETIAfeatJenga:
   - OAO
   - 自由飞奔
   - 勇往直前
+  - 小鸟游六花
 DataErr0r.Cosmograph:
   - 2015冠军
   - 心态王
@@ -1148,6 +1150,7 @@ TriumphRegret.typeMARS:
   - 火枪手
   - 吉诺拿手枪
   - 吉诺打枪
+  - 穿越火线
 DiamondEyes.SYNTHETIC:
   - 钻石眼
   - 星空眼
@@ -1697,6 +1700,7 @@ Schadenfreude.ZxNX:
   - sf
   - 幸灾乐祸
   - 四川的腐乳
+  - 四川豆腐乳
 Letempsperdu.Daison:
   - 逝去的时光
   - 流逝的时间
@@ -2180,6 +2184,7 @@ Cristalisia.onoken:
   - 水晶圣歌
   - 核艺味
   - 结晶
+  - "352"
 Locomotive.K:
   - 机车
   - 火车
@@ -2399,7 +2404,11 @@ ExoplanetaryMirage.かめりあ:
   - 异星幻景
   - 海市蜃楼
   - 系外蜃楼
+  - 系外蜃景
   - 穹顶鸠
+  - 黑洞鸠
+  - 系
+  - 仁王盾
   - 九鸟打狙
   - 九鸟架狙
   - 鸠鸠架狙
@@ -2408,31 +2417,68 @@ ExoplanetaryMirage.かめりあ:
   - 米垃圾
 AboutTheUniverse.SOTUIMIssionary:
   - ATU
+  - abo
   - 关于宇宙
   - 穹顶之上
   - 宇宙之上
   - 宇宙
   - 关宇
+  - 关羽
   - 关于穹顶
 EntrancetotheChaos.打打だいずvssiromaru:
   - 混沌入口
+  - 馄饨入口
   - 混沌之门
+  - 混沌之扉
+  - 混的入
   - 超市入口
   - 穹顶吉诺
+  - gino伸手
+  - gino魔王
   - chaos
   - toChaos
   - ettc
   - ETC
+  - Ftom
   - 进入超市
   - 吉诺超市
   - 超市
 Cryogenic.CamelliaftPetraGurin:
-  - if公交车
   - 低温学
+  - 极低温
+  - if公交车
 Evanescent.LeaF:
   - 消散
   - 瞬逝
   - 瞬息即逝
+  - 转瞬即逝
 Implexrough.Silentroommommy:
   - Implex
   - 强硬交织
+ハテ.rNFrums:
+  - 八亏
+  - 八元
+  - 八铁
+  - 八亍
+  - 果て
+  - hate
+Petrichor.voidMournfinale:
+  - 骗退款
+WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい:
+  - 好结局
+  - 快乐结局
+  - happy ending
+  - HE
+DesultorySignals.technoplanet:
+  - DS
+  - 杂乱信号
+  - 零散信号
+  - 断续信号
+  - 断续讯号
+TrueHomeTrueWorldRework.816ThreeNumbers:
+  - thtw
+Ametrine.GRYSCLMIssionary:
+  - 紫黄晶
+  - 黄紫晶
+  - 紫黄水晶
+  - 黄紫水晶
