@@ -768,9 +768,10 @@ export class phisong extends phiPluginBase {
             return false
         }
 
-        let dif = Number(e.msg.match(/[0-9]+/)?.[0])
+        const difMatch = e.msg.match(/[0-9]+/)
+        let dif = Number(difMatch?.[0])
 
-        if (!dif) {
+        if (!difMatch) {
             send.send_with_At(e, `请输入定数嗷！\n/格式：${Config.getUserCfg('config', 'cmdhead')} table <定数>`, true)
             return false
         }
@@ -780,10 +781,7 @@ export class phisong extends phiPluginBase {
             return false
         }
 
-        if (dif < 1) {
-            send.send_with_At(e, `定数不能小于 1 QAQ！`)
-            return false
-        }
+        // 定数下限为 0（4.0.1 起存在 0.5 定数的谱面，向下取整为 0 级）
 
         let matchVersion = e.msg.match(/-v\s*(\S+)/i)?.[1];
         let matchVerCode = 0;
