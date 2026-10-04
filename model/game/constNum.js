@@ -24,7 +24,16 @@ export const redisPath = "phiPlugin"
 
 /**最大难度 */
 export const MAX_DIFFICULTY = 18.0
-    
+
+/**
+ * 课题模式颜色档位名称。
+ * 下标即 challengeModeRank 的百位以上部分（ChallengeMode =
+ * Math.floor(challengeModeRank / 100)），0 白表示没有课题成绩，
+ * 1-5 依次为 绿/蓝/红/金/彩。
+ * @type {string[]}
+ */
+export const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
+
 export const APII18NCN = {
     userNotFound: `未找到对应 用户`
 }

@@ -3,7 +3,8 @@ import logger from '../../components/Logger.js'
 import Version from '../../components/Version.js'
 import PhigrosUser from '../../lib/PhigrosUser.js'
 import { canUseApi } from '../user/apiPermission.js'
-import { Level, LevelNum, MAX_DIFFICULTY } from '../game/constNum.js'
+import { Level, LevelNum } from '../game/constNum.js'
+import { checkSaveRecord, checkSaveSummary, fallbackSongLimits } from '../game/songLimits.js'
 import fCompute from '../game/fCompute.js'
 import getInfo from '../game/getInfo.js'
 import getRksRank from '../game/getRksRank.js'
@@ -84,10 +85,11 @@ export default class Save {
             /**背景 */
             background: data.gameuser?.background || '',
         }
-        if (checkIg(this)) {
+        const saveProblem = checkIg(this)
+        if (saveProblem) {
             getRksRank.delUserRks(this.session)
-            logger.error(`封禁tk ${this.session}`)
-            throw new Error(`您的存档rks异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
+            logger.error(`封禁tk ${this.session} 存档异常：${saveProblem}`)
+            throw new Error(`您的存档数据异常（${saveProblem}），该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
         }
         /**
          * @type {Record<idString, (LevelRecordInfo|null)[]>}
@@ -108,19 +110,18 @@ export default class Save {
                 // this.gameRecord[id][level] = new (import('./LevelRecordInfo')).default(data.gameRecord[id][level], id, level)
 
                 if (!ignore) {
-                    if (data.gameRecord[id][level].acc > 100 || data.gameRecord[id][level].acc < 0) {
-                        // Starduster.Quree EZ难度 远古存档BUG特判
-                        if (id == "Starduster.Quree.0" && level == 0 && data.gameRecord[id][level].acc <= 102.57 && data.gameRecord[id][level].acc >= 0) {
+                    const rawRecord = data.gameRecord[id][level]
+                    const recordProblem = checkSaveRecord(rawRecord)
+                    if (!recordProblem.ok) {
+                        /** Starduster.Quree EZ难度 远古存档BUG特判：acc 略微超过 100 属正常 */
+                        const stardusterBug = id == "Starduster.Quree.0" && level == 0
+                            && recordProblem.field == 'acc' && Number(rawRecord.acc) <= 102.57
+                        if (stardusterBug) {
                             continue
                         }
-                        logger.error(`acc > 100 封禁tk ${this.session}`)
+                        logger.error(`封禁tk ${this.session} 成绩异常：${id} ${level} ${recordProblem.reason}`)
                         getRksRank.delUserRks(this.session)
-                        throw new Error(`您的存档 acc 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}\n${id} ${level} ${data.gameRecord[id][level].acc}`)
-                    }
-                    if (data.gameRecord[id][level].score > 1000000 || data.gameRecord[id][level].score < 0) {
-                        logger.error(`score > 1000000 封禁tk ${this.session}`)
-                        getRksRank.delUserRks(this.session)
-                        throw new Error(`您的存档 score 异常，该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}\n${id} ${level} ${data.gameRecord[id][level].score}`)
+                        throw new Error(`您的存档数据异常（${id} ${Level[level]} ${recordProblem.reason}），该 token 已禁用，如有异议请联系机器人管理员。\n${this.session}`)
                     }
                 }
                 this.gameRecord[id][level] = new LevelRecordInfo(data.gameRecord[id][level], id, level)
@@ -904,20 +905,34 @@ function checkLimit(record, limit) {
 }
 
 /**
+ * 反作弊使用的理论上限。
+ *
+ * rks 与课题分都可能因游戏版本变化而超过插件当前定数表算出的上限
+ * （定数被削、或插件还没跟上新版本），所以只有在存档版本与插件
+ * 当前版本号完全一致时才使用定数表上限，否则退回保守上限，避免误封。
+ * @param {Save} save
+ * @returns {import('../game/songLimits.js').songLimitsObject}
+ */
+function antiCheatLimits(save) {
+    const limits = getInfo.getSongLimits()
+    if (limits.fallback) return limits
+
+    const saveVer = Number(save.saveInfo?.summary?.gameVersion)
+    const knownVer = Number(Version.phigrosVerNum)
+    if (!Number.isFinite(saveVer) || !Number.isFinite(knownVer) || !knownVer || saveVer != knownVer) {
+        return fallbackSongLimits()
+    }
+    return limits
+}
+
+/**
  * 检查是否非法存档
- * @param {Save} save 
- * @returns 
+ * @param {Save} save
+ * @returns {string} 通过时返回空串，否则返回具体原因
  */
 function checkIg(save) {
-    if (save.saveInfo.summary.rankingScore > MAX_DIFFICULTY) return true
-    if (!save.saveInfo.summary.rankingScore && save.saveInfo.summary.rankingScore != 0) return true
-    /**课题等级上限，随游戏版本变化：Phigros 4.0.1 新增18级谱面后由51升至52 */
-    if (save.saveInfo.summary.challengeModeRank % 100 > 52) return true
-    if (save.saveInfo.summary.challengeModeRank < 0) return true
-    if (save.saveInfo.summary.challengeModeRank % 100 == 0 && save.saveInfo.summary.challengeModeRank != 0) return true
-    if (Math.floor(save.saveInfo.summary.challengeModeRank / 100) == 0 && save.saveInfo.summary.challengeModeRank != 0) return true
-    if (save.saveInfo.summary.challengeModeRank % 1 != 0) return true
-    return false
+    const { ok, reason } = checkSaveSummary(save.saveInfo?.summary, antiCheatLimits(save))
+    return ok ? '' : reason
 }
 
 
