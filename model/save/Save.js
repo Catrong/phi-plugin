@@ -911,7 +911,8 @@ function checkLimit(record, limit) {
 function checkIg(save) {
     if (save.saveInfo.summary.rankingScore > MAX_DIFFICULTY) return true
     if (!save.saveInfo.summary.rankingScore && save.saveInfo.summary.rankingScore != 0) return true
-    if (save.saveInfo.summary.challengeModeRank % 100 > 51) return true
+    /**课题等级上限，随游戏版本变化：Phigros 4.0.1 新增18级谱面后由51升至52 */
+    if (save.saveInfo.summary.challengeModeRank % 100 > 52) return true
     if (save.saveInfo.summary.challengeModeRank < 0) return true
     if (save.saveInfo.summary.challengeModeRank % 100 == 0 && save.saveInfo.summary.challengeModeRank != 0) return true
     if (Math.floor(save.saveInfo.summary.challengeModeRank / 100) == 0 && save.saveInfo.summary.challengeModeRank != 0) return true

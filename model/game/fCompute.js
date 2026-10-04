@@ -65,6 +65,23 @@ export default class fCompute {
     }
 
     /**
+     * 计算谱面的越级线（acc百分比阈值）
+     * @param {number} drag 谱面Drag数
+     * @param {number} flick 谱面Flick数
+     * @param {number} combo 谱面总物量
+     * @param {boolean} withFlick 是否计入Flick
+     * @returns {number} 越级线，成绩acc低于该值判定为越级
+     */
+    static getOverLevelLine(drag, flick, combo, withFlick) {
+        if (!combo || combo <= 0) {
+            /**无物量数据时按无Drag/Flick处理 */
+            return 98.5
+        }
+        const count = Number(drag) + (withFlick ? Number(flick) : 0)
+        return 98.5 + 1.5 * count / combo
+    }
+
+    /**
      * 发送文件
      * @param {*} e 
      * @param {string | Buffer} file
