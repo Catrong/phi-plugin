@@ -1,7 +1,7 @@
 // 函数名与聊天指令不一致时，在此声明公开名称及业务入口文本。
 /** @type {Record<string, Record<string, string | { name: string, text: string, bare?: boolean }>>} */
 const names = {
-    b19: { b19: 'b30', arcgrosB19: 'ab30', lmtAcc: 'lmtacc', bestn: 'best', singlescore: 'score' },
+    b19: { b19: 'b30', arcgrosB19: 'ab30', lmtAcc: 'lmtacc', overLevelB30: '越级b30', bestn: 'best', singlescore: 'score' },
     help: { tkhelp: { name: 'tkhelp', text: 'tk help' }, apihelp: { name: 'apihelp', text: 'api help' } },
     session: { getSstk: { name: 'sessiontoken', text: 'sessionToken' } },
     update: { update: 'gx', ill_update: 'downill' },
@@ -69,6 +69,7 @@ const commandFunctions = {
         "p30",
         "arcgrosB19",
         "lmtAcc",
+        "overLevelB30",
         "bestn",
         "singlescore",
         "suggest",

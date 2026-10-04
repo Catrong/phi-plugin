@@ -64,6 +64,10 @@ export class phib19 extends phiPluginBase {
                     fnc: 'lmtAcc'
                 },
                 {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)越级.*$`,
+                    fnc: 'overLevelB30'
+                },
+                {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
                     fnc: 'bestn'
                 },
@@ -523,6 +527,124 @@ export class phib19 extends phiPluginBase {
 
         let res = [await picmodle.b19(e, data)]
         res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+        send.send_with_At(e, res)
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+
+    }
+
+    /**
+     * 越级b30：仅保留"越级"成绩(acc低于 98.5%+1.5×(Dr[+Fk])占比)的bestN分表
+     * @param {botEvent} e
+     * @returns
+     */
+    async overLevelB30(e) {
+        if (await getBanGroup.get(e, 'b19')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return false
+        }
+
+        let err = save.checkNoInfo()
+
+        if (err.length) {
+            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
+        }
+
+        /**是否计入Flick */
+        let withFlick = /(?:越级\s*(?:b\s*)?[0-9]*\s*)(flick|fl|fk|划键|划)\s*$/i.test(e.msg)
+
+        /**显示数量，默认30 */
+        let nnum = Number(e.msg.match(/越级\s*(?:b\s*)?([0-9]*)/i)?.[1])
+        if (!nnum) {
+            nnum = 30
+        }
+        nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
+
+        /**预先合并曲目信息，避免逐条成绩查找时重复展开 */
+        const allCharts = { ...getInfo.ori_info, ...getInfo.sp_info }
+
+        /**越级判定：acc低于 98.5+1.5×(Dr[+Fk])/总物量 */
+        let overLevelLimit = [{
+            type: 'custom',
+            value: (record) => {
+                const chart = allCharts[record.id]?.chart?.[record.rank]
+                record.overLevelLine = fCompute.getOverLevelLine(chart?.drag, chart?.flick, chart?.combo, withFlick)
+                return record.acc < record.overLevelLine
+            }
+        }]
+
+        let save_b19 = await save.getBestWithLimit(nnum, overLevelLimit, false)
+
+        if (!save_b19.b19_list.length) {
+            send.send_with_At(e, withFlick
+                ? '没有找到越级的成绩喵！(计入Flick时所有成绩的acc均不低于越级线)'
+                : '没有找到越级的成绩喵！(不计Flick时所有成绩的acc均不低于越级线)')
+            return true
+        }
+
+        let plugin_data = await getNotes.getNotesData(e.user_id)
+
+        if (!Config.getUserCfg('config', 'isGuild'))
+            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+
+        let stats = await save.getStats()
+
+        /**越级线显示与配色，分段同推分建议 */
+        for (let x of save_b19.b19_list) {
+            if (x.overLevelLine == undefined) continue
+            x.suggest = x.overLevelLine.toFixed(2) + '%'
+            if (x.overLevelLine < 98.5) {
+                x.suggestType = 0
+            } else if (x.overLevelLine < 99) {
+                x.suggestType = 1
+            } else if (x.overLevelLine < 99.5) {
+                x.suggestType = 2
+            } else if (x.overLevelLine < 99.7) {
+                x.suggestType = 3
+            } else if (x.overLevelLine < 99.85) {
+                x.suggestType = 4
+            } else {
+                x.suggestType = 5
+            }
+        }
+
+        let money = save.gameProgress.money
+        let gameuser = {
+            avatar: getInfo.idgetavatar(save.gameuser.avatar),
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save.saveInfo.summary.rankingScore,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: save.gameuser.selfIntro,
+            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
+        }
+
+        let data = {
+            b19_list: save_b19.b19_list,
+            PlayerId: gameuser.PlayerId,
+            Rks: save.saveInfo.summary.rankingScore.toFixed(4),
+            Date: save.saveInfo.summary.updatedAt,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+            theme: plugin_data?.theme || 'star',
+            gameuser,
+            nnum,
+            stats,
+            spInfo: [
+                `越级标准：acc < 98.5% + 1.5×(${withFlick ? 'Dr+Fk' : 'Dr'})占比${withFlick ? '（计入Flick）' : '（不计Flick）'}`,
+                '成绩旁的百分比为该谱面的越级线',
+            ],
+        }
+
+        let res = [await picmodle.b19(e, data)]
+        let sum_rks = save_b19.b19_list.reduce((sum, x) => sum + Number(x?.rks || 0), 0)
+        res.push(`越级成绩均rks: ${(sum_rks / save_b19.b19_list.length).toFixed(4)}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
         send.send_with_At(e, res)
         await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
 

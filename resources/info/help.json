@@ -88,6 +88,11 @@
                 "desc": "计算筛去小于输入的acc值的成绩后的玩家RKS值 <br>eg: /lmtacc 98.5"
             },
             {
+                "title": "/越级b30",
+                "eg": "/越级b30 [数量] [flick]",
+                "desc": "筛选acc低于越级线(98.5%+1.5×Dr占比，附加 flick/fl/fk/划/划键 参数时计入Flick)的成绩构造b30分表，成绩旁百分比为该谱面越级线 <br>eg: /越级b30 50 flick"
+            },
+            {
                 "title": "/bestN",
                 "eg": "/best <1-99>",
                 "desc": "获取文字版 B<N> 成绩，私聊获取完整版，建议私聊使用<br>eg: /best 19"
