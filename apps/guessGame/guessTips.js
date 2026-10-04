@@ -203,12 +203,13 @@ export default new class guessTips {
         if (songId[0]) {
             for (let id of songId) {
                 if (currentGame.songId == id) {
+                    /** 先结束游戏，避免发送结算消息期间并发的猜中重复结算 */
+                    gameover(group_id, gameList)
                     send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
                     if (currentGame.tipNum == currentGame.tips.length + 1) {
                         send.reply(e, await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 0, }))
                     }
                     send.reply(e, await getPic.GetSongsInfoAtlas(e, currentGame.songId))
-                    gameover(group_id, gameList)
                     return true
                 }
             }
@@ -234,6 +235,8 @@ export default new class guessTips {
             return false
         }
         const info = getInfo.info(currentGame.songId)
+        /** 先结束游戏，避免发送结算消息期间并发的 ans 重复结算 */
+        gameover(group_id, gameList)
         send.reply(e, [
             `好吧，下面开始公布答案。正确答案是：${info?.song}`,
             currentGame.tipNum > currentGame.tips.length ? await picmodle.guess(e, { ...currentGame.ill, blur: 0, style: 1, }) : false
