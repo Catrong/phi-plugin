@@ -5,7 +5,7 @@ import picmodle from '../model/render/picmodle.js'
 import ScoreHistory from '../model/save/scoreHistory.js';
 import fCompute from '../model/game/fCompute.js';
 import getInfo from '../model/game/getInfo.js';
-import { allLevel, LevelNum } from '../model/game/constNum.js';
+import { allLevel, ChallengeModeName, LevelNum } from '../model/game/constNum.js';
 import getNotes from '../model/user/getNotes.js';
 import getPic from '../model/render/getPic.js';
 import getBanGroup from '../model/user/getBanGroup.js';
@@ -33,8 +33,6 @@ import {
 } from '../model/game/markdown.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
-
-const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
 
 /**@type {levelKind[]} */
 const Level = ['EZ', 'HD', 'IN', 'AT'] //存档的难度映射

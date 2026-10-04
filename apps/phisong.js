@@ -571,7 +571,8 @@ export class phisong extends phiPluginBase {
 
         // console.info(songAsk, songReq)
 
-        let { isask, range } = fCompute.match_request(arg, 51)
+        // 课题总值上限由当前定数表推算，不再写死旧版本的 51
+        let { isask, range } = fCompute.match_request(arg, getInfo.getSongLimits().maxChallenge)
 
         let NumList = []
         for (let i = range[0]; i <= range[1]; i++) {

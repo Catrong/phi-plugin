@@ -5,6 +5,7 @@ import Config from '../../components/Config.js'
 import SongsInfo from './SongsInfo.js'
 import fs from 'fs'
 import { allLevel, Level, MAX_DIFFICULTY } from './constNum.js'
+import { computeSongLimits } from './songLimits.js'
 import fCompute from './fCompute.js'
 import logger from '../../components/Logger.js'
 import fileWatcherRegistry from '../../components/FileWatcherRegistry.js'
@@ -155,6 +156,9 @@ export default new class getInfo {
 
         this.initIng = false
         this.reinitRequested = false
+
+        /** 定数表推算出的理论上限，懒计算，曲库重载后失效 @type {import('./songLimits.js').songLimitsObject | null} */
+        this.songLimits = null
 
         /** 已注册的信息文件监听 @type {{close: () => Promise<void>}[]} */
         this.infoWatcherLeases = []
@@ -424,6 +428,27 @@ export default new class getInfo {
         this.versionHistoryLoaded = true
     }
 
+    /**
+     * 当前定数表推算出的理论上限（最大 rks、最大课题总值）。
+     * 懒计算并缓存，定数表重载后失效；定数表为空时返回保守上限。
+     * @returns {import('./songLimits.js').songLimitsObject}
+     */
+    getSongLimits() {
+        let limits = this.songLimits
+        if (!limits) {
+            /** @type {Chart[]} */
+            const charts = []
+            for (const difficulty of fCompute.objectKeys(this.info_by_difficulty)) {
+                for (const chart of this.info_by_difficulty[difficulty] || []) {
+                    if (chart) charts.push(chart)
+                }
+            }
+            limits = computeSongLimits(charts)
+            this.songLimits = limits
+        }
+        return limits
+    }
+
     /** 重载曲库主数据：info.csv / infolist.json / notesInfo.json / oldNotesInfo.json / spinfo.json */
     async loadSongs() {
         if (!this.versionHistoryLoaded) await this.loadVersionHistory()
@@ -435,6 +460,8 @@ export default new class getInfo {
         this.info_by_difficulty = {};
         this.updatedSong = [];
         this.updatedChart = {};
+        /** 定数表变了，重算理论上限 */
+        this.songLimits = null;
 
         /**额外曲库开关：0:原本 1:原本+额外 2:仅额外 */
         const otherInfoMode = Config.getUserCfg('config', 'otherinfo')
