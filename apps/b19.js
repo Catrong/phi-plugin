@@ -636,10 +636,7 @@ export class phib19 extends phiPluginBase {
             gameuser,
             nnum,
             stats,
-            spInfo: [
-                `越级标准：acc < 98.5% + 1.5×(${withFlick ? 'Dr+Fk' : 'Dr'})占比${withFlick ? '（计入Flick）' : '（不计Flick）'}`,
-                '成绩旁的百分比为该谱面的越级线',
-            ],
+            spInfo: [`越级线=98.5+1.5×${withFlick ? '(Dr+Fk)' : 'Dr'}占比`],
         }
 
         let res = [await picmodle.b19(e, data)]
