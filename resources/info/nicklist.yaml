@@ -2353,6 +2353,8 @@ DerSchneid.Ωμεγα:
   - 尚竟之勇
   - 跳一跳2
   - DS
+  - 小DS
+  - DS2
   - 切割
   - 大师赛3
   - pmt3
@@ -2416,6 +2418,7 @@ ExoplanetaryMirage.かめりあ:
   - 九鸟架狙
   - 鸠鸠架狙
   - 谁玩屁股肉我杀谁
+  - 鸠儿狙击怕过谁
   - 韩国男团
   - 米垃圾
 AboutTheUniverse.SOTUIMIssionary:
@@ -2426,6 +2429,7 @@ AboutTheUniverse.SOTUIMIssionary:
   - 宇宙之上
   - 宇宙
   - 关宇
+  - 关宇之歌
   - 关羽
   - 关于穹顶
 EntrancetotheChaos.打打だいずvssiromaru:
@@ -2468,6 +2472,7 @@ Implexrough.Silentroommommy:
   - 八千
   - "8000"
   - 八杆
+  - bug
   - 八行
   - 八于
   - 八爷
@@ -2481,9 +2486,13 @@ Implexrough.Silentroommommy:
   - 哈特
 Petrichor.voidMournfinale:
   - Petri
+  - ptr
+  - ptc
   - 雨土气息
   - 初雨气息
   - 初雨之息
+  - 雨后泥土香
+  - 潮土油
   - 骗退款
   - void
 WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい:
@@ -2493,10 +2502,12 @@ WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あ
   - 完结撒花
   - 谢幕曲
   - 终点列车
+  - 主线尾声
   - happy ending
   - 现实
   - HE
 DesultorySignals.technoplanet:
+  - DS9
   - 大DS
   - 杂乱信号
   - 零散信号
@@ -2507,6 +2518,7 @@ DesultorySignals.technoplanet:
   - 鸠信号
   - DS
   - 九鸟打大蛇
+  - 九鸟搓螺旋丸
 TrueHomeTrueWorldRework.816ThreeNumbers:
   - thtw
   - 世家
@@ -2519,4 +2531,5 @@ Ametrine.GRYSCLMIssionary:
 Message.くるぶっこちゃん:
   - 消息
   - 信息
+  - 鸠打电报
   - 马杀鸡
