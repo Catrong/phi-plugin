@@ -282,6 +282,29 @@
     "type": "boolean"
   },
   {
+    "key": "enableAliasSyncTask",
+    "group": "系统设置",
+    "label": "状态别名同步任务",
+    "description": "是否开启 Bot 状态心跳、API 消息拉取与正式别名快照同步的定时任务，受 API 总开关控制，修改后立即生效",
+    "type": "boolean"
+  },
+  {
+    "key": "aliasSyncTaskCron",
+    "group": "系统设置",
+    "label": "同步任务周期",
+    "description": "同步任务的 cron 表达式（6 位含秒），如 0 * * * * ? 为每分钟；修改后重载插件或重启生效。仅 Yunzai 平台生效，Koishi 按固定间隔执行",
+    "type": "string",
+    "format": "cron",
+    "placeholder": "0 * * * * ?"
+  },
+  {
+    "key": "aliasSyncTaskLog",
+    "group": "系统设置",
+    "label": "同步任务日志",
+    "description": "是否在每次任务触发时打印开始处理/完成日志，默认关闭以免刷屏，异常日志不受影响，修改后立即生效",
+    "type": "boolean"
+  },
+  {
     "key": "mutiNickWaitTimeOut",
     "group": "系统设置",
     "label": "多个曲目回复序号等待时长",

@@ -6,8 +6,9 @@ import makeRequest from '../model/api/makeRequest.js'
 import userCredentialStore from '../model/user/userCredentialStore.js'
 import { aliasProposal } from '../apps/aliasProposal.js'
 import botSyncService from '../model/api/botSyncService.js'
+import { bindHostSettings, writeHostSetting } from '../components/settings/host.js'
 
-test('provides a callable scheduled-task handler for the Yunzai loader', async () => {
+test('provides a configurable scheduled-task handler for the Yunzai loader', async () => {
     const originalInitialize = aliasProposalService.initialize
     const originalScheduledTask = aliasProposalService.scheduledTask
     const originalBotInitialize = botSyncService.initialize
@@ -17,6 +18,9 @@ test('provides a callable scheduled-task handler for the Yunzai loader', async (
     aliasProposalService.scheduledTask = async () => { calls++ }
     botSyncService.initialize = async () => {}
     botSyncService.scheduledTask = async () => { calls++ }
+    /** @type {Record<string, any>[]} */
+    const writes = []
+    const unbind = bindHostSettings({ enableAliasSyncTask: false, aliasSyncTaskLog: false }, values => writes.push(values))
     try {
         const plugin = new aliasProposal()
         const task = /** @type {import('../components/platform/types.js').PlatformTask} */ (plugin.task)
@@ -24,8 +28,15 @@ test('provides a callable scheduled-task handler for the Yunzai loader', async (
         assert.equal(task.interval, 60_000)
         assert.equal(typeof task.fnc, 'function')
         await /** @type {() => Promise<unknown>} */ (task.fnc)()
+        assert.equal(calls, 0)
+        assert.equal(writeHostSetting('enableAliasSyncTask', true), true)
+        await /** @type {() => Promise<unknown>} */ (task.fnc)()
         assert.equal(calls, 2)
+        assert.equal(task.log, false)
+        writeHostSetting('aliasSyncTaskLog', true)
+        assert.equal(task.log, true)
     } finally {
+        unbind()
         aliasProposalService.initialize = originalInitialize
         aliasProposalService.scheduledTask = originalScheduledTask
         botSyncService.initialize = originalBotInitialize
