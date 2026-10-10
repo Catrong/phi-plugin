@@ -96,6 +96,30 @@ test('Guoba saves validated shared fields and preserves channel-mode dependency'
     assert.throws(() => config.setConfigData({ themeMarketDownloadOrigin: 'http://example.com/path' }))
 })
 
+test('sync task settings expose switches and validate the cron expression', () => {
+    const schemas = Object.fromEntries(createGuobaSchemas().map(item => [item.field, item]))
+    assert.equal(schemas.enableAliasSyncTask.component, 'Switch')
+    assert.equal(schemas.aliasSyncTaskLog.component, 'Switch')
+    assert.equal(schemas.aliasSyncTaskCron.component, 'Input')
+    assert.equal(shared.defaults.aliasSyncTaskCron, '0 * * * * ?')
+    assert.equal(shared.isValidCron('0 * * * * ?'), true)
+    assert.equal(shared.isValidCron('0 30 4 * * ?'), true)
+    assert.equal(shared.isValidCron('*/10 * * * *'), true)
+    assert.equal(shared.isValidCron('0 0 ? * MON'), true)
+    assert.equal(shared.isValidCron('每分钟'), false)
+    assert.equal(shared.isValidCron('0 * * *'), false)
+    const values = { ...shared.defaults }
+    const config = createGuobaConfigInfo({
+        getUserCfg: (/** @type {string} */ _name, /** @type {string} */ key) => values[key],
+        modify: (/** @type {string} */ _name, /** @type {string} */ key, /** @type {any} */ value) => { values[key] = value },
+    })
+    assert.throws(() => config.setConfigData({ aliasSyncTaskCron: 'every minute' }))
+    config.setConfigData({ aliasSyncTaskCron: '0 */5 * * * ?', enableAliasSyncTask: false, aliasSyncTaskLog: true })
+    assert.equal(values.aliasSyncTaskCron, '0 */5 * * * ?')
+    assert.equal(values.enableAliasSyncTask, false)
+    assert.equal(values.aliasSyncTaskLog, true)
+})
+
 test('Koishi settings reach existing readers and command writes return to the host', async () => {
     const { default: config } = await import('../components/Config.js')
     const configFile = new URL('../config/config/config.yaml', import.meta.url)

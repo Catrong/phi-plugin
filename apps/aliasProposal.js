@@ -4,23 +4,41 @@ import send from '../model/render/send.js'
 import getInfo from '../model/game/getInfo.js'
 import aliasProposalService from '../model/api/aliasProposalService.js'
 import botSyncService from '../model/api/botSyncService.js'
+import shared from '../components/settings/shared.cjs'
+import logger from '../components/Logger.js'
 
 /** @import {PlatformEvent} from '../components/platform/types.js' */
 /** @import {AliasProposalRecord, AliasProposalStatus} from '../model/type/aliasProposal.js' */
 
 const getHead = () => Config.getUserCfg('config', 'cmdhead')
 const getPrefix = () => `^[#/](${getHead()})(\\s*)(别名|alias)(\\s*)`
+const DEFAULT_TASK_CRON = '0 * * * * ?'
 
-/** @returns {import('../components/platform/types.js').PlatformTask} */
+/**
+ * 创建 Bot 状态与正式别名同步定时任务。
+ * 开关和日志开关在每次触发时读取，修改后立即生效（Yunzai 每次触发都会重读 task.log）；
+ * cron 由 Yunzai 在注册时固化，修改后重载插件生效。
+ * @returns {import('../components/platform/types.js').PlatformTask}
+ */
 export function createAliasProposalTask() {
+    const configuredCron = /** @type {string} */ (Config.getUserCfg('config', 'aliasSyncTaskCron')) || DEFAULT_TASK_CRON
+    const cron = shared.isValidCron(configuredCron) ? configuredCron : DEFAULT_TASK_CRON
+    if (cron !== configuredCron) {
+        logger.warn(`[phi-plugin] 同步任务周期配置无效：${configuredCron}，已回退为 ${DEFAULT_TASK_CRON}`)
+    }
     return {
         name: 'phi-Bot状态与正式别名同步',
         fnc: async () => {
+            if (!Config.getUserCfg('config', 'enableAliasSyncTask')) return
             await botSyncService.scheduledTask()
             await aliasProposalService.scheduledTask()
         },
-        cron: '0 * * * * ?',
+        cron,
         interval: 60_000,
+        // false 时 Yunzai 会把开始处理/完成日志降级为 debug，仅保留异常输出
+        get log() {
+            return Boolean(Config.getUserCfg('config', 'aliasSyncTaskLog'))
+        },
     }
 }
 
