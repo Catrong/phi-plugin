@@ -246,6 +246,13 @@
     "type": "boolean"
   },
   {
+    "key": "SimpleBindReply",
+    "group": "系统设置",
+    "label": "绑定精简回复",
+    "description": "开启后绑定流程仅发送二维码、绑定成功提示、成绩更新图与API不可用提示，避免官方Bot被动回复超出条数限制（群聊5条/私信4条）",
+    "type": "boolean"
+  },
+  {
     "key": "cmdhead",
     "group": "系统设置",
     "label": "命令头",

@@ -78,6 +78,9 @@ WordSuggImg: false
 #  登录TapTap绑定是否发送二维码
 TapTapLoginQRcode: true
 
+#  绑定流程精简回复，开启后仅发送二维码、绑定成功提示、成绩更新图与API不可用提示，避免官方Bot被动回复超出条数限制
+SimpleBindReply: false
+
 #  命令头
 cmdhead: "phi"
 

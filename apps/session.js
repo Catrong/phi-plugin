@@ -78,6 +78,9 @@ export class phisstk extends phiPluginBase {
         const allowApi = await canUseApi(e)
         let apiBindingSucceeded = false
 
+        /**精简回复模式：仅发送二维码、绑定成功提示、成绩更新图与API不可用提示，避免官方Bot被动回复超出条数限制 */
+        const simpleReply = Config.getUserCfg('config', 'SimpleBindReply')
+
         let localPhigrosToken = await credentials.getSessionToken()
 
         if (!sessionToken) {
@@ -89,7 +92,7 @@ export class phisstk extends phiPluginBase {
                     send.send_with_At(e, resMsg)
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                    if (updateData && history) await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作')
+                    if (updateData && history) await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作', { simpleReply })
                     else send.send_with_At(e, '绑定已成功，但暂时无法读取 API 存档，请稍后执行更新。')
                     return true
                 }
@@ -159,7 +162,7 @@ export class phisstk extends phiPluginBase {
                 }
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
-                        send.send_with_At(e, `二维码已扫描，请确认登录`, false, { recallMsg: 10 });
+                        if (!simpleReply) send.send_with_At(e, `二维码已扫描，请确认登录`, false, { recallMsg: 10 });
                         platform.recall(e, qrCodeMsg)
                         flag = true;
                     }
@@ -187,7 +190,7 @@ export class phisstk extends phiPluginBase {
 
         sessionToken = sessionToken || localPhigrosToken
 
-        if (!Config.getUserCfg('config', 'isGuild')) {
+        if (!simpleReply && !Config.getUserCfg('config', 'isGuild')) {
 
             send.reply(e, "正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
             // return true
@@ -207,7 +210,7 @@ export class phisstk extends phiPluginBase {
                     }
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                    if (updateData && history) await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作')
+                    if (updateData && history) await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作', { simpleReply })
                     else send.send_with_At(e, '绑定已成功，但暂时无法读取 API 存档，请稍后执行更新。')
                     return true
                 }
@@ -226,7 +229,7 @@ export class phisstk extends phiPluginBase {
             if (!updateData) return true;
             send.send_with_At(e, `${apiBindingSucceeded ? '' : 'API绑定不可用，已按当前 Bot 本地状态完成绑定。\n'}请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
             let history = await credentials.getLocalHistory()
-            await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作')
+            await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作', { simpleReply })
         } catch (error) {
             logger.error(error)
             send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
@@ -480,7 +483,7 @@ function comWidth(num) {
  * @param {{save:Save, added_rks_notes: number[]}} updateData
  * @param {saveHistory} history
  */
-async function build(e, updateData, history, quickCommands = updateQuickCommands, quickCommandsTitle = '更新页快捷操作') {
+async function build(e, updateData, history, quickCommands = updateQuickCommands, quickCommandsTitle = '更新页快捷操作', { simpleReply = false } = {}) {
 
     let { added_rks_notes, save } = updateData
 
@@ -660,7 +663,7 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
     }
 
     send.send_with_At(e, [await picmodle.update(e, data), `PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`])
-    await sendQuickCommands(e, quickCommands(Config.getUserCfg('config', 'cmdhead')), quickCommandsTitle)
+    if (!simpleReply) await sendQuickCommands(e, quickCommands(Config.getUserCfg('config', 'cmdhead')), quickCommandsTitle)
 
     return false
 }
