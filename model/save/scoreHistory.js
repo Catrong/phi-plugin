@@ -37,9 +37,10 @@ export default class ScoreHistory {
      * @param {allLevelKind} level 难度
      * @param {ScoreDetail} now 
      * @param {ScoreDetail} [old=undefined]
+     * @param {'common'|'low'} [illustrationKind='common'] 展示曲绘清晰度
      * @returns {extendedScoreHistoryDetail} 扩展后的成绩信息
      */
-    static extend(songId, level, now, old = undefined) {
+    static extend(songId, level, now, old = undefined, illustrationKind = 'common') {
         let song = getInfo.idgetsong(songId) || songId
         let nowAcc = Number(now[0])
         let oldAcc = old ? Number(old[0]) : undefined
@@ -49,7 +50,7 @@ export default class ScoreHistory {
             return {
                 song: song,
                 rank: level,
-                illustration: getInfo.getill(songId, 'common', level),
+                illustration: getInfo.getill(songId, illustrationKind, level),
                 Rating: fCompute.rate(now[1], now[3]),
                 rks_new: fCompute.rks(nowAcc, info.chart[level].difficulty),
                 rks_old: oldAcc ? fCompute.rks(oldAcc, info.chart[level].difficulty) : undefined,
@@ -65,7 +66,7 @@ export default class ScoreHistory {
             return {
                 song: song,
                 rank: level,
-                illustration: getInfo.getill(songId, 'common', level),
+                illustration: getInfo.getill(songId, illustrationKind, level),
                 Rating: fCompute.rate(now[1], now[3]),
                 acc_new: nowAcc,
                 acc_old: old ? oldAcc : undefined,
