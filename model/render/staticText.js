@@ -1,7 +1,9 @@
+import { measureText, measureLineHeight } from './fontMetrics.js'
+
 /**
  * Shotium 没有页面脚本，固定标题栏不能依赖 DOM 测量缩字号。
- * 这里按字符类别保守估算宽度；主题字体的真实字宽可能不同，模板仍用
- * CSS 省略号兜底，宁可保留可读的字号，也不把很长的标题缩成细线。
+ * fitPvis 读取自带字体度量；fitLine/fitBox 保留保守估算，供旧模块及自定义
+ * 字体兜底。固定标题仍遵守可读字号下限，不把很长的标题缩成细线。
  */
 /** @param {unknown} value */
 function textUnits(value) {
@@ -87,4 +89,61 @@ function fitBox(text, width, height, maximum, minimum, lineHeight = 1.2) {
     return Math.max(min, Math.min(max, Math.floor(low * 10) / 10))
 }
 
-export default { fitLine, fitBox }
+/**
+ * 对齐原 pvis 脚本的整数字号收缩，使用自带字体的真实 advance 和 normal 行高。
+ * 自定义主题字体可关闭字体测量，继续用保守字宽；达到可读下限后由模板兜底。
+ * @param {unknown} text @param {number} width @param {number} height
+ * @param {number} maximum @param {number} minimum
+ * @param {{nowrap?: boolean, breakWords?: boolean, lineHeight?: number, useFontMetrics?: boolean}} [options]
+ */
+function fitPvis(text, width, height, maximum, minimum, options = {}) {
+    const max = Number.isFinite(maximum) && maximum > 0 ? maximum : 16
+    const min = Number.isFinite(minimum) && minimum > 0 ? Math.min(minimum, max) : 1
+    if (!(Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0)) return min
+    const value = String(text ?? '').replace(/<br\s*\/?\s*>/gi, '\n').replace(/<[^>]*>/g, '')
+        .replace(/&(?:nbsp|#160);/gi, ' ').replace(/&(?:ensp|#8194);/gi, '\u2002').replace(/&amp;/gi, '&')
+        .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&quot;/gi, '"').replace(/&#39;/g, "'")
+    const measure = options.useFontMetrics === false ? textUnits : measureText
+    const leading = Number.isFinite(options.lineHeight) && /** @type {number} */ (options.lineHeight) > 0
+        ? /** @type {number} */ (options.lineHeight) : options.useFontMetrics === false ? 1.5 : measureLineHeight(value)
+    const paragraphs = value.replace(/\r\n?/g, '\n').split('\n').map(line => line.replace(/[\t\f ]+/g, ' ').trim())
+    /** @param {number} size */
+    const fits = size => {
+        let lines = 0
+        for (const paragraph of paragraphs) {
+            lines++
+            if (options.nowrap) {
+                if (Math.round(measure(paragraph) * size) > Math.round(width)) return false
+                continue
+            }
+            let row = 0
+            const words = paragraph.match(/[\x21-\x7e]+|\s+|[^\x00-\x7f]/gu) || []
+            for (const word of words) {
+                const advance = measure(word) * size
+                if (/^\s+$/u.test(word)) { if (row) row += advance; continue }
+                if (Math.round(advance) > Math.round(width)) {
+                    if (!options.breakWords) return false
+                    for (const char of word) {
+                        const unit = measure(char) * size
+                        if (row && row + unit > width) { lines++; row = 0 }
+                        row += unit
+                    }
+                } else {
+                    if (row && row + advance > width) { lines++; row = 0 }
+                    row += advance
+                }
+            }
+        }
+        return lines * Math.round(size * leading) <= Math.round(height)
+    }
+    if (fits(max)) return max
+    let low = Math.ceil(min), high = Math.floor(max)
+    while (low <= high) {
+        const middle = Math.floor((low + high) / 2)
+        if (fits(middle)) low = middle + 1
+        else high = middle - 1
+    }
+    return Math.max(min, high)
+}
+
+export default { fitLine, fitBox, fitPvis }

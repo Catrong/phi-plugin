@@ -64,3 +64,23 @@ test('Shotium 设置值、帮助描述和一言可完整展示，Puppeteer 保�
 test('静态文字辅助模块未重载时，多行模板仍可渲染', () => {
     for (const page of /** @type {(keyof typeof fixtures)[]} */ (Object.keys(fixtures))) assert.ok(render(page, true, false).includes('<body'))
 })
+
+test('Shotium 普通帮助和设置保留原有盒子，一言和简介沿用字体的 normal 行高', () => {
+    const help = art(`${resources}/html/help/help.art`, {
+        ...common, renderNoJs: true, staticText,
+        helpGroup: [{ group: '帮助', list: [{ title: '/update', eg: '/update', desc: '更新游戏存档' }] }],
+    })
+    assert.match(help, /<div class="line">/)
+    assert.doesNotMatch(help, /font-size: 23px|line-height: 1\.25/)
+    const setting = art(`${resources}/html/setting/setting.art`, {
+        ...common, renderNoJs: true, staticText,
+        data: [{ type: 'space', label: '图片质量', value: '95', drc: '%' }],
+    })
+    assert.match(setting, /<div class="line">/)
+    assert.match(setting, /style="font-size: 15px"/)
+    assert.match(render('setting', true), /<div class="line setting-expanded">/)
+    for (const page of /** @type {(keyof typeof fixtures)[]} */ (['userinfo', 'rankingList', 'jrrp', 'sign'])) {
+        const html = render(page, true)
+        assert.doesNotMatch(html, /white-space: normal; overflow-wrap: anywhere; line-height: 1\.2/)
+    }
+})

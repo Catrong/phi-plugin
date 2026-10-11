@@ -3,14 +3,14 @@
 <link rel="stylesheet" href="{{_res_path}}html/setting/setting.css">
 {{if renderNoJs}}
 <style>
-    .line { min-height: 50px; }
-    .square { flex-shrink: 0; }
-    .left { flex: 1; min-width: 0; padding: 7px 8px 7px 0; }
-    .title { height: auto; }
-    .left p { white-space: normal; overflow-wrap: anywhere; }
-    .right { position: relative; right: auto; height: auto; min-width: 0; width: 180px; flex-shrink: 0; margin-right: 12px; }
-    .space.setting-value { width: 140px; height: auto; min-height: 25px; box-sizing: border-box; padding: 5px 14px; }
-    .space.setting-value p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.25; text-align: center; }
+    .setting-expanded { min-height: 50px; }
+    .setting-expanded .square { flex-shrink: 0; }
+    .setting-expanded .left { flex: 1; min-width: 0; padding: 7px 8px 7px 0; }
+    .setting-expanded .title { height: auto; }
+    .setting-expanded .left p { white-space: normal; overflow-wrap: anywhere; }
+    .setting-expanded .right { position: relative; right: auto; height: auto; min-width: 0; width: 180px; flex-shrink: 0; margin-right: 12px; }
+    .setting-expanded .space.setting-value { width: 140px; height: auto; min-height: 25px; box-sizing: border-box; padding: 5px 14px; }
+    .setting-expanded .space.setting-value p { width: 100%; white-space: normal; overflow-wrap: anywhere; text-align: center; }
 </style>
 {{/if}}
 {{/block}}
@@ -35,7 +35,9 @@
 <div class="box">
     {{each data as value}}
     <div class="lineBox{{value.type == "divider"?" divider":''}}">
-        <div class="line">
+        {{set valueOptions = ({ breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) })}}
+        {{set expandedValue = renderNoJs && value.type == 'space' && typeof staticText !== 'undefined' && (staticText.fitPvis ? staticText.fitPvis(value.value, 65, 25, 15, 1, valueOptions) : staticText.fitLine(value.value, 65, 15, 1)) < 12}}
+        <div class="line{{expandedValue ? ' setting-expanded' : ''}}">
             <div class="square"></div>
             <div class="left">
                 <div class="title">
@@ -48,7 +50,7 @@
             <div class="right">
                 {{if value.type == "space"}}
                 <div class="space{{renderNoJs ? ' setting-value' : ''}}">
-                    <p name="pvis">{{value.value}}</p>
+                    <p name="pvis"{{if renderNoJs && !expandedValue && typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(value.value, 65, 25, 15, 12, valueOptions) : staticText.fitLine(value.value, 65, 15, 12)}}px"{{/if}}>{{value.value}}</p>
                 </div>
                 <div class="drc">
                     <p>{{value.drc}}</p>

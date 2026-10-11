@@ -130,6 +130,7 @@
             console.log(songName.scrollWidth, parentElement.offsetWidth, songName.scrollHeight, parentElement.offsetHeight)
             return songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight
         }
+        const originalFontStyles = new WeakMap();
         function adjustFontSize() {
             //获取p元素
             let a = document.getElementsByName('pvis')
@@ -139,6 +140,9 @@
 
                 if (!songName) continue
 
+                // 每次按模板原字号重新测，避免先用回退字体缩小后无法恢复。
+                if (!originalFontStyles.has(songName)) originalFontStyles.set(songName, songName.style.fontSize);
+                else songName.style.fontSize = originalFontStyles.get(songName);
 
                 /*调整曲目名称字体大小*/
                 let parentElement = songName.parentElement
@@ -357,7 +361,11 @@
             })
           })
         }
-        window.addEventListener("DOMContentLoaded", adjustFontSize);
+        window.addEventListener("DOMContentLoaded", () => {
+            adjustFontSize();
+            // 本地字体也会异步加载；等待实际字体再执行同一套宽高约束。
+            if (document.fonts) document.fonts.ready.then(adjustFontSize);
+        });
         window.addEventListener("resize", adjustFontSize);
     </script>
     {{/if}}

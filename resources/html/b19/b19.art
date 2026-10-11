@@ -5,6 +5,12 @@
 <link rel="stylesheet" href="{{themeInfo.cssUrl}}">
 {{else}}
 <link rel="stylesheet" href="{{_res_path}}html/b19/b19.css">
+{{if renderNoJs}}
+<style>
+    /* 中文 Chromium 的小号字体关键字最低为 12px，静态引擎需要显式值。 */
+    .num p, .Nosignal .client p { font-size: 12px; }
+</style>
+{{/if}}
 {{/if}}
 {{/block}}
 
@@ -18,7 +24,7 @@
         </div>
         <div class="playerId">
             {{if renderNoJs && staticText}}
-            <p name="pvis" class="phi-fit-line" title="{{gameuser.PlayerId}}" style="font-size: {{staticText.fitLine(gameuser.PlayerId, 292, 32, 18)}}px">{{#gameuser.PlayerId}}</p>
+            <p name="pvis" class="phi-fit-line" title="{{gameuser.PlayerId}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(gameuser.PlayerId, 306, 64, 32, 18, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(gameuser.PlayerId, 305, 32, 18)}}px">{{#gameuser.PlayerId}}</p>
             {{else}}
             <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{#gameuser.PlayerId}}</p>
             {{/if}}
@@ -123,7 +129,7 @@
         <div class="info-{{song.rank}}">
             <div class="songname">
                 {{if renderNoJs && staticText}}
-                <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitLine(song.song, 164, 15, 11)}}px">{{song.song}}</p>
+                <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(song.song, 168, 23, 15, 11, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(song.song, 167, 15, 11)}}px">{{song.song}}</p>
                 {{else}}
                 <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{song.song}}</p>
                 {{/if}}
@@ -261,7 +267,7 @@
         <div class="info-{{song.rank}}">
             <div class="songname">
                 {{if renderNoJs && staticText}}
-                <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitLine(song.song, 164, 15, 11)}}px">{{song.song}}</p>
+                <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(song.song, 168, 23, 15, 11, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(song.song, 167, 15, 11)}}px">{{song.song}}</p>
                 {{else}}
                 <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{song.song}}</p>
                 {{/if}}

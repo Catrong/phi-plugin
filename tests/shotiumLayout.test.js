@@ -10,16 +10,17 @@ const composer = '这是很长的合作曲师名称 / Long Composer Name'
 const song = { song: longTitle, composer, num: 1, rank: 'IN', difficulty: 15.5, rks: 15,
     illustration: 'test.png', Rating: 'phi', score: 1000000, acc: 100, suggest: '100%', suggestType: 2 }
 
-/** @param {string} page @param {boolean} renderNoJs @param {boolean} [includeStaticText] */
-function render(page, renderNoJs, includeStaticText = true) {
+/** @param {string} page @param {boolean} renderNoJs @param {boolean} [includeStaticText] @param {string} [title] @param {Partial<typeof staticText>} [textHelper] @param {boolean} [customFont] */
+function render(page, renderNoJs, includeStaticText = true, title = longTitle, textHelper = staticText, customFont = false) {
+    const entry = { ...song, song: title, composer: title === longTitle ? composer : 'Camellia' }
     return art(`${resources}/html/${page}/${page}.art`, {
         _res_path: resources + '/', defaultLayout: `${resources}/html/common/layout/default.art`,
-        renderNoJs, ...(renderNoJs && includeStaticText ? { staticText } : {}), theme: 'default', themeInfo: null,
+        renderNoJs, ...(renderNoJs && includeStaticText ? { staticText: textHelper } : {}), theme: 'default', themeInfo: customFont ? { fontUrl: 'theme-font.ttf' } : null,
         sys: { scale: '' }, Version: { ver: 'test' }, _plugin: 'phi-plugin',
-        gameuser: { PlayerId: longTitle, avatar: 'Introduction', rks: 15, ChallengeMode: 1, ChallengeModeRank: 45, data: '10 MiB' },
-        Date: '2026-10-11', stats: [], phi: [song], b19_list: [song], head_title: '长曲名列表',
-        song: page === 'suggest' ? Array.from({ length: 6 }, () => [{ ...song, suggest: 99.85 }]) : [song],
-        phisong: [{ ...song, level: 'IN', chart: { IN: { difficulty: 15.5 } }, apCount: 4, total: 4 }],
+        gameuser: { PlayerId: title, avatar: 'Introduction', rks: 15, ChallengeMode: 1, ChallengeModeRank: 45, data: '10 MiB' },
+        Date: '2026-10-11', stats: [], phi: [entry], b19_list: [entry], head_title: '长曲名列表',
+        song: page === 'suggest' ? Array.from({ length: 6 }, () => [{ ...entry, suggest: 99.85 }]) : [entry],
+        phisong: [{ ...entry, level: 'IN', chart: { IN: { difficulty: 15.5 } }, apCount: 4, total: 4 }],
     })
 }
 
@@ -33,6 +34,34 @@ test('静态标题适配保留短曲名字号，长中英混合及 emoji 标题�
     assert.equal(staticText.fitLine('', 164, 15, 11), 15)
     assert.equal(staticText.fitLine('<b>Short</b>', 164, 15, 11), 15)
     assert.equal(staticText.fitLine('e\u0301', 20, 15, 11), staticText.fitLine('e', 20, 15, 11))
+})
+
+test('固定卡片兼容旧字号 helper，自定义主题字体使用估算回退', () => {
+    const { fitPvis, ...legacy } = staticText
+    for (const page of ['b19', 'list', 'suggest']) {
+        assert.ok(render(page, true, true, "Rrhar'il", legacy).includes('1000000'))
+        let calls = 0
+        const custom = { ...staticText, fitPvis: (/** @type {Parameters<typeof fitPvis>} */ ...args) => {
+            calls++
+            assert.equal(args[5]?.useFontMetrics, false)
+            return fitPvis(...args)
+        } }
+        assert.ok(render(page, true, true, "Rrhar'il", custom, true).includes('1000000'))
+        assert.ok(calls > 0)
+    }
+})
+
+test('常规短标题保留原字体行高，字号贴合 Puppeteer 的原盒子约束', () => {
+    const b19 = render('b19', true, true, "Rrhar'il")
+    assert.match(b19, /style="font-size: 32px"/)
+    assert.match(b19, /title="Rrhar&#39;il" style="font-size: 15px"/)
+    assert.match(b19, /\.num p, \.Nosignal \.client p \{ font-size: 12px; \}/)
+    assert.match(render('list', true, true, "Rrhar'il"), /title="Rrhar&#39;il - Camellia" style="font-size: 8px"/)
+    assert.match(render('suggest', true, true, "Rrhar'il"), /title="Rrhar&#39;il - Camellia" style="font-size: 10px"/)
+    assert.match(render('b19', true, true, 'A long English song name'), /title="A long English song name" style="font-size: 14px"/)
+    for (const page of ['b19', 'list', 'suggest']) {
+        assert.doesNotMatch(render(page, true, true, "Rrhar'il"), /line-height: 1\.15/)
+    }
 })
 
 test('静态字号只返回有限正数，异常预算和小数字号仍遵守范围', () => {
@@ -65,9 +94,11 @@ test('Shotium 固定卡片仅对标题显式缩放省略，编号和难度不会
     }
     assert.match(render('b19', true), /style="font-size: 18px"/)
     assert.match(render('b19', true), /style="font-size: 11px"/)
-    assert.match(render('list', true), /style="font-size: 9px; line-height: 1\.15"/)
+    assert.match(render('list', true), /style="font-size: 8px"/)
+    assert.match(render('list', true), /\.song_name \[name="pvis"\] \{ font-size: 8px; \}/)
     assert.equal((render('suggest', true).match(/name="pvis" class="phi-fit-line" title="/g) || []).length, 7)
-    assert.match(render('suggest', true), /style="font-size: 9px; line-height: 1\.15"/)
+    assert.match(render('suggest', true), /style="font-size: 9px"/)
+    assert.doesNotMatch(render('suggest', true), /line-height: 1\.15/)
 })
 
 test('模板先热更新而旧渲染模块未重载时仍能出图，使用单行兜底', () => {

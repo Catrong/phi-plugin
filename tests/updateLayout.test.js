@@ -9,11 +9,11 @@ const longTitle = '很长的任务曲名 Mixed English and 中文 😀'
 const record = { song: "Rrhar'il", illustration: 'song.png', Rating: 'S', rank: 'IN',
     score_new: 927131, acc_new: 99.2069, rks_new: 15.7305 }
 
-/** @param {boolean} renderNoJs @param {boolean} [helper] */
-function render(renderNoJs, helper = true) {
+/** @param {boolean} renderNoJs @param {boolean} [helper] @param {Partial<typeof staticText>} [textHelper] */
+function render(renderNoJs, helper = true, textHelper = staticText) {
     return art(`${resources}/html/update/update.art`, {
         defaultLayout: `${resources}/html/common/layout/default.art`, _res_path: resources + '/',
-        renderNoJs, ...(helper ? { staticText } : {}), theme: 'default', themeInfo: null,
+        renderNoJs, ...(helper ? { staticText: textHelper } : {}), theme: 'default', themeInfo: null,
         sys: { scale: '' }, _plugin: 'Phi-Plugin', Version: { ver: 'test' },
         PlayerId: '这是一个很长的玩家名字 Very Long Player ID', Rks: 14.3822, added_rks_notes: [],
         ChallengeMode: 2, ChallengeModeRank: 40, Notes: 0, Date: '2026/10/11 15:32:46',
@@ -29,13 +29,14 @@ function render(renderNoJs, helper = true) {
     })
 }
 
-test('Shotium update 固定标题栏使用可读字号，评级、任务及无评级标题分别留出正确空间', () => {
+test('Shotium update 曲名按原字体行高缩至 10px，保留评级、任务及无评级标题的原盒子', () => {
     const html = render(true)
-    assert.match(html, /title="Rrhar&#39;il" style="font-size: 13px"/)
+    assert.match(html, /title="Rrhar&#39;il" style="font-size: 10px"/)
     assert.match(html, /title="很长的任务曲名[^"\n]+" style="font-size: 10px"/)
     assert.match(html, /namebox without-rating/)
-    assert.match(html, /\.record_box \.songsname p \{ font-size: 13px; line-height: 1\.1;/)
-    assert.match(html, /max-height: 16px/)
+    assert.match(html, /\.record_box \.songsname p \{ font-size: 10px; max-width: 100%;/)
+    assert.match(html, /\.record_box \.box_title-right p \{ font-size: 12px; \}/)
+    assert.doesNotMatch(html, /\.record_box \.songsname \{ height:|\.record_box \.new-box|\.record_box \.without-rating/)
     assert.match(html, /title="Player:[^"\n]+" style="font-size: 12px"/)
     assert.equal((html.match(/class="box_title compact-date"/g) || []).length, 1, '只对单首日期和计数同处一栏的组上下错开')
     assert.ok(html.includes('927131'))
@@ -46,9 +47,11 @@ test('Shotium update 固定标题栏使用可读字号，评级、任务及无�
 })
 
 test('update 模板先热更新时有静态字号兜底，Puppeteer 继续使用原有字体脚本', () => {
-    assert.match(render(true, false), /\.record_box \.songsname p \{ font-size: 13px;/)
+    assert.match(render(true, false), /\.record_box \.songsname p \{ font-size: 10px;/)
     const puppeteer = render(false, false)
     assert.doesNotMatch(puppeteer, /max-height: 16px|compact-date|without-rating|title="Player:/)
     assert.match(puppeteer, /function adjustFontSize/)
     assert.match(puppeteer, /<p name="pvis">Rrhar&#39;il<\/p>/)
+    const { fitPvis, ...legacy } = staticText
+    assert.match(render(true, true, legacy), /title="Rrhar&#39;il" style="font-size: 10px"/)
 })
