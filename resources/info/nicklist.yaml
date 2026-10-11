@@ -569,6 +569,7 @@ Chronostasis.黒皇帝:
   - 黒皇帝：时停
   - 时空凝滞
   - 🤫⚙
+  - 颗秒
 DeadSoul.SoundSouler:
   - 死鬼
   - 死魂
@@ -692,6 +693,7 @@ Cthugha.USAO:
   - 地狱火
   - 旧日
   - 红烧骷髅头
+  - 骷髅头着火
 energytrixxx.KAH:
   - xxx
   - 能量
@@ -812,6 +814,7 @@ OnAndOn.ETIAfeatJenga:
   - OAO
   - 自由飞奔
   - 勇往直前
+  - 小鸟游六花
 DataErr0r.Cosmograph:
   - 2015冠军
   - 心态王
@@ -1148,6 +1151,7 @@ TriumphRegret.typeMARS:
   - 火枪手
   - 吉诺拿手枪
   - 吉诺打枪
+  - 穿越火线
 DiamondEyes.SYNTHETIC:
   - 钻石眼
   - 星空眼
@@ -1478,6 +1482,7 @@ mechanted.rareguy:
   - 今明
 CraveWave.LandRoot:
   - CW
+  - 狂波
   - 奢望之浪
   - 渴望的浪潮
   - 欲望
@@ -1697,6 +1702,7 @@ Schadenfreude.ZxNX:
   - sf
   - 幸灾乐祸
   - 四川的腐乳
+  - 四川豆腐乳
 Letempsperdu.Daison:
   - 逝去的时光
   - 流逝的时间
@@ -1992,7 +1998,7 @@ AvataarReincarnationofKalpa.ScarletteakaCrYmson:
   - 蓝复生
   - 卡尔帕转世
   - 转世化身
-  - 化生～劫之轮回～
+  - 蓝色蝴蝶
   - 阿凡达
   - 卡帕转世
   - 转世
@@ -2180,6 +2186,7 @@ Cristalisia.onoken:
   - 水晶圣歌
   - 核艺味
   - 结晶
+  - "352"
 Locomotive.K:
   - 机车
   - 火车
@@ -2277,6 +2284,7 @@ AfterZABANIYAMUGEdit.Daily天利:
   - きくお
   - kikuo
   - 砸玻璃
+  - 敲打玻璃碎
   - 砸钢琴
   - 锅碗瓢盆
   - 人面魔蛛
@@ -2345,6 +2353,8 @@ DerSchneid.Ωμεγα:
   - 尚竟之勇
   - 跳一跳2
   - DS
+  - 小DS
+  - DS2
   - 切割
   - 大师赛3
   - pmt3
@@ -2399,40 +2409,127 @@ ExoplanetaryMirage.かめりあ:
   - 异星幻景
   - 海市蜃楼
   - 系外蜃楼
+  - 系外蜃景
+  - 星外虚舟
   - 穹顶鸠
+  - 黑洞鸠
+  - 仁王盾
   - 九鸟打狙
   - 九鸟架狙
   - 鸠鸠架狙
   - 谁玩屁股肉我杀谁
+  - 鸠儿狙击怕过谁
   - 韩国男团
   - 米垃圾
 AboutTheUniverse.SOTUIMIssionary:
   - ATU
+  - abo
   - 关于宇宙
   - 穹顶之上
   - 宇宙之上
   - 宇宙
   - 关宇
+  - 关宇之歌
+  - 关羽
   - 关于穹顶
 EntrancetotheChaos.打打だいずvssiromaru:
   - 混沌入口
+  - 馄饨入口
   - 混沌之门
+  - 混沌之扉
+  - 混的入
   - 超市入口
   - 穹顶吉诺
+  - gino伸手
+  - gino魔王
   - chaos
   - toChaos
   - ettc
   - ETC
+  - Ftom
   - 进入超市
   - 吉诺超市
   - 超市
 Cryogenic.CamelliaftPetraGurin:
-  - if公交车
   - 低温学
+  - 极低温
+  - if公交车
 Evanescent.LeaF:
   - 消散
   - 瞬逝
   - 瞬息即逝
+  - 转瞬即逝
 Implexrough.Silentroommommy:
   - Implex
   - 强硬交织
+ハテ.rNFrums:
+  - 八亏
+  - 八元
+  - 八块钱
+  - 八铁
+  - 八亍
+  - 八干
+  - 八千
+  - "8000"
+  - 八杆
+  - bug
+  - 八行
+  - 八于
+  - 八爷
+  - 果て
+  - 尽头
+  - 末路
+  - hate
+  - 恨
+  - 憎恶
+  - 讨厌
+  - 哈特
+Petrichor.voidMournfinale:
+  - Petri
+  - ptr
+  - ptc
+  - 雨土气息
+  - 初雨气息
+  - 初雨之息
+  - 雨后泥土香
+  - 潮土油
+  - 骗退款
+  - void
+WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい:
+  - 好结局
+  - 快乐结局
+  - 完美结局
+  - 完结撒花
+  - 谢幕曲
+  - 终点列车
+  - 主线尾声
+  - happy ending
+  - 现实
+  - HE
+DesultorySignals.technoplanet:
+  - DS9
+  - 大DS
+  - 杂乱信号
+  - 零散信号
+  - 散逸信号
+  - 断续信号
+  - 断续讯号
+  - 剑圣鸠
+  - 鸠信号
+  - DS
+  - 九鸟打大蛇
+  - 九鸟搓螺旋丸
+TrueHomeTrueWorldRework.816ThreeNumbers:
+  - thtw
+  - 世家
+Ametrine.GRYSCLMIssionary:
+  - 紫黄晶
+  - 黄紫晶
+  - 紫黄水晶
+  - 黄紫水晶
+  - Ame
+Message.くるぶっこちゃん:
+  - 消息
+  - 信息
+  - 鸠打电报
+  - 马杀鸡

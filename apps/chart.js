@@ -580,7 +580,7 @@ async function getChartImg(e, id, options) {
 
   /** @type {ChartRenderInfo} */
   const chartInfo = {
-    illustration: info.illustration,
+    illustration: getInfo.getill(info.id, 'common', rank),
     song: info.song,
     length: info.length,
     rank: rank,
@@ -607,7 +607,7 @@ async function getChartImg(e, id, options) {
   await send.send_with_At(e, [img, `${info.song} - ${rank}\n谱师：${info.chart[rank].charter}`])
   const commandHead = Config.getUserCfg('config', 'cmdhead')
   await sendQuickCommands(e, [
-    { command: `/${commandHead} chart ${info.id} ${rank}`, label: '重新查看' },
+    { command: `/${commandHead} chart ${info.id} ${rank}`, label: '其他难度' },
     { command: `/${commandHead} tag ${info.id} ${rank}`, label: '查看标签' },
     { command: `/${commandHead} help`, label: '帮助' },
   ], '谱面操作')

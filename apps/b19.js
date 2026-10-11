@@ -5,7 +5,7 @@ import picmodle from '../model/render/picmodle.js'
 import ScoreHistory from '../model/save/scoreHistory.js';
 import fCompute from '../model/game/fCompute.js';
 import getInfo from '../model/game/getInfo.js';
-import { allLevel, LevelNum } from '../model/game/constNum.js';
+import { allLevel, ChallengeModeName, LevelNum } from '../model/game/constNum.js';
 import getNotes from '../model/user/getNotes.js';
 import getPic from '../model/render/getPic.js';
 import getBanGroup from '../model/user/getBanGroup.js';
@@ -34,8 +34,6 @@ import {
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
-const ChallengeModeName = ['白', '绿', '蓝', '红', '金', '彩']
-
 /**@type {levelKind[]} */
 const Level = ['EZ', 'HD', 'IN', 'AT'] //存档的难度映射
 
@@ -62,6 +60,10 @@ export class phib19 extends phiPluginBase {
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)lmtacc.*$`,
                     fnc: 'lmtAcc'
+                },
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)越级.*$`,
+                    fnc: 'overLevelB30'
                 },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)best(\\s*)[1-9]?[0-9]?$`,
@@ -529,6 +531,121 @@ export class phib19 extends phiPluginBase {
     }
 
     /**
+     * 越级b30：仅保留"越级"成绩(acc低于 98.5%+1.5×(Dr[+Fk])占比)的bestN分表
+     * @param {botEvent} e
+     * @returns
+     */
+    async overLevelB30(e) {
+        if (await getBanGroup.get(e, 'b19')) {
+            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            return false
+        }
+
+        let save = await send.getsave_result(e)
+        if (!save) {
+            return false
+        }
+
+        let err = save.checkNoInfo()
+
+        if (err.length) {
+            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
+        }
+
+        /**是否计入Flick */
+        let withFlick = /(?:越级\s*(?:b\s*)?[0-9]*\s*)(flick|fl|fk|划键|划)\s*$/i.test(e.msg)
+
+        /**显示数量，默认30 */
+        let nnum = Number(e.msg.match(/越级\s*(?:b\s*)?([0-9]*)/i)?.[1])
+        if (!nnum) {
+            nnum = 30
+        }
+        nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
+
+        /**预先合并曲目信息，避免逐条成绩查找时重复展开 */
+        const allCharts = { ...getInfo.ori_info, ...getInfo.sp_info }
+
+        /**越级判定：acc低于 98.5+1.5×(Dr[+Fk])/总物量 */
+        let overLevelLimit = [{
+            type: 'custom',
+            value: (record) => {
+                const chart = allCharts[record.id]?.chart?.[record.rank]
+                record.overLevelLine = fCompute.getOverLevelLine(chart?.drag, chart?.flick, chart?.combo, withFlick)
+                return record.acc < record.overLevelLine
+            }
+        }]
+
+        let save_b19 = await save.getBestWithLimit(nnum, overLevelLimit, false)
+
+        if (!save_b19.b19_list.length) {
+            send.send_with_At(e, withFlick
+                ? '没有找到越级的成绩喵！(计入Flick时所有成绩的acc均不低于越级线)'
+                : '没有找到越级的成绩喵！(不计Flick时所有成绩的acc均不低于越级线)')
+            return true
+        }
+
+        let plugin_data = await getNotes.getNotesData(e.user_id)
+
+        if (!Config.getUserCfg('config', 'isGuild'))
+            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+
+        let stats = await save.getStats()
+
+        /**越级线显示与配色，分段同推分建议 */
+        for (let x of save_b19.b19_list) {
+            if (x.overLevelLine == undefined) continue
+            x.suggest = x.overLevelLine.toFixed(2) + '%'
+            if (x.overLevelLine < 98.5) {
+                x.suggestType = 0
+            } else if (x.overLevelLine < 99) {
+                x.suggestType = 1
+            } else if (x.overLevelLine < 99.5) {
+                x.suggestType = 2
+            } else if (x.overLevelLine < 99.7) {
+                x.suggestType = 3
+            } else if (x.overLevelLine < 99.85) {
+                x.suggestType = 4
+            } else {
+                x.suggestType = 5
+            }
+        }
+
+        let money = save.gameProgress.money
+        let gameuser = {
+            avatar: getInfo.idgetavatar(save.gameuser.avatar),
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            rks: save.saveInfo.summary.rankingScore,
+            data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
+            selfIntro: save.gameuser.selfIntro,
+            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
+        }
+
+        let data = {
+            b19_list: save_b19.b19_list,
+            PlayerId: gameuser.PlayerId,
+            Rks: save.saveInfo.summary.rankingScore.toFixed(4),
+            Date: save.saveInfo.summary.updatedAt,
+            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
+            theme: plugin_data?.theme || 'star',
+            gameuser,
+            nnum,
+            stats,
+            spInfo: [`越级线=98.5+1.5×${withFlick ? '(Dr+Fk)' : 'Dr'}占比`],
+        }
+
+        let res = [await picmodle.b19(e, data)]
+        let sum_rks = save_b19.b19_list.reduce((sum, x) => sum + Number(x?.rks || 0), 0)
+        res.push(`越级成绩均rks: ${(sum_rks / save_b19.b19_list.length).toFixed(4)}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+        send.send_with_At(e, res)
+        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+
+    }
+
+    /**
      * 获取bestn文字版
      * @param {botEvent} e 
      * @returns 
@@ -705,10 +822,10 @@ export class phib19 extends phiPluginBase {
         if (await canUseApi(e, 'scoreStatistics')) {
 
             const res = await makeRequest.getAllSongAccAvgB30({
-                    songIds: fCompute.objectKeys(getInfo.ori_info),
-                    minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                    maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                }, { event: e })
+                songIds: fCompute.objectKeys(getInfo.ori_info),
+                minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+            }, { event: e })
             if (res) {
                 const ids = fCompute.objectKeys(res)
                 ids.forEach(id => {
@@ -730,13 +847,13 @@ export class phib19 extends phiPluginBase {
                 })
             }
             const apfcRes = await makeRequest.getSongsApFcCount({
-                    songId: fCompute.objectKeys(getInfo.ori_info),
-                    rank: Level,
-                    rksRange: {
-                        min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                        max: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                    }
-                }, { event: e })
+                songId: fCompute.objectKeys(getInfo.ori_info),
+                rank: Level,
+                rksRange: {
+                    min: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                    max: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                }
+            }, { event: e })
             if (apfcRes) {
                 const ids = fCompute.objectKeys(apfcRes);
                 ids.forEach(id => {
@@ -763,7 +880,7 @@ export class phib19 extends phiPluginBase {
                                 // diff: diff,
                                 apCount: apfcRes[id][lv].apCount || 0,
                                 ...songInfo,
-                                illustration: getInfo.getill(id, 'low') ?? '',
+                                illustration: getInfo.getill(id, 'low', lv) ?? '',
                             });
                         }
                     })
@@ -811,7 +928,7 @@ export class phib19 extends phiPluginBase {
                         difficulty: difficulty,
                         ...x,
                         rank: Level[lv],
-                        illustration: getInfo.getill(id, 'low') ?? '',
+                        illustration: getInfo.getill(id, 'low', Level[lv]) ?? '',
                         suggest: x.suggest,
                         avg: allTaskList[id]?.[Level[lv]] || 0,
                     })
@@ -997,9 +1114,10 @@ export class phib19 extends phiPluginBase {
             return false
         }
 
-        let dif = Number(e.msg.match(/[0-9]+/)?.[0])
+        const difMatch = e.msg.match(/[0-9]+/)
+        let dif = Number(difMatch?.[0])
 
-        if (!dif) {
+        if (!difMatch) {
             send.send_with_At(e, `请输入定数嗷！\n/格式：${Config.getUserCfg('config', 'cmdhead')} table <定数>`, true)
             return false
         }
@@ -1009,10 +1127,7 @@ export class phib19 extends phiPluginBase {
             return false
         }
 
-        if (dif < 1) {
-            send.send_with_At(e, `定数不能小于 1 QAQ！`)
-            return false
-        }
+        // 定数下限为 0（4.0.1 起存在 0.5 定数的谱面，向下取整为 0 级）
 
         let matchVersion = e.msg.match(/-v\s*(\S+)/i)?.[1];
         let matchVerCode = 0;
@@ -1074,7 +1189,7 @@ export class phib19 extends phiPluginBase {
                     }
                     return ({
                         rank: chart.rank,
-                        illustration: getInfo.getill(chart.id, 'low'),
+                        illustration: getInfo.getill(chart.id, 'low', chart.rank),
                         score: playerRecord?.acc || 0,
                     })
                 }) || [],

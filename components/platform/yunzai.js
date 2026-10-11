@@ -584,11 +584,26 @@ const adapter = {
         // 此前误将文件名放在第三参数导致被丢弃：QQBot 适配器端会展示为 SDK 自动生成的
         // “file_<时间戳>.zip”；OneBot 端仅靠磁盘 basename 兜底才显示正常
         if (e?.isGroup) {
-            if (e.group?.sendFile) return e.group.sendFile(file, filename)
-            if (e.group?.fs?.upload) return e.group.fs.upload(file, undefined, filename)
+            if (e.group?.sendFile) return this.checkUploadRet(await e.group.sendFile(file, filename))
+            if (e.group?.fs?.upload) return this.checkUploadRet(await e.group.fs.upload(file, undefined, filename))
         }
-        if (e?.friend?.sendFile) return e.friend.sendFile(file, filename)
+        if (e?.friend?.sendFile) return this.checkUploadRet(await e.friend.sendFile(file, filename))
         return false
+    },
+
+    /**
+     * 校验发送通道返回值：QQBot 官 Bot 适配器发送失败不抛错，错误收进返回值
+     * rets.error（其余适配器返回 message_id 字符串/true，无 error 字段）。
+     * 上传失败时抛出真实错误，避免调用方把失败当成功
+     * @param {unknown} ret sendFile/fs.upload 的返回值
+     * @returns {unknown} 原返回值
+     */
+    checkUploadRet(ret) {
+        if (ret && Array.isArray(ret.error) && ret.error.length && !ret.message_id?.length) {
+            const err = ret.error[0]
+            throw err instanceof Error ? err : new Error(err?.message || String(err))
+        }
+        return ret
     },
 
     /**

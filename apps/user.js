@@ -610,7 +610,7 @@ export class phiuser extends phiPluginBase {
                 data.push({
                     ...record[lv],
                     ...info,
-                    illustration: getInfo.getill(id, 'low'),
+                    illustration: getInfo.getill(id, 'low', Level[lv]),
                     difficulty: difficulty,
                     rank: Level[lv]
                 });
@@ -900,7 +900,7 @@ export class phiuser extends phiPluginBase {
                 const songs = [];
                 changeB30Result[time].forEach(item => {
                     songs.push({
-                        ill: getInfo.getill(item.id, 'low'),
+                        ill: getInfo.getill(item.id, 'low', item.rank),
                         rank: item.rank,
                         newPhi: item.newPhi,
                         newB27: item.newB27,

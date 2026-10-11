@@ -49,7 +49,7 @@ export default class ScoreHistory {
             return {
                 song: song,
                 rank: level,
-                illustration: getInfo.getill(songId),
+                illustration: getInfo.getill(songId, 'common', level),
                 Rating: fCompute.rate(now[1], now[3]),
                 rks_new: fCompute.rks(nowAcc, info.chart[level].difficulty),
                 rks_old: oldAcc ? fCompute.rks(oldAcc, info.chart[level].difficulty) : undefined,
@@ -65,7 +65,7 @@ export default class ScoreHistory {
             return {
                 song: song,
                 rank: level,
-                illustration: getInfo.getill(songId),
+                illustration: getInfo.getill(songId, 'common', level),
                 Rating: fCompute.rate(now[1], now[3]),
                 acc_new: nowAcc,
                 acc_old: old ? oldAcc : undefined,

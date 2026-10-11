@@ -53,7 +53,7 @@ export default class LevelRecordInfo {
         }
         /** @type {songString} */
         this.song = info.song //曲名
-        this.illustration = getInfo.getill(id) //曲绘链接
+        this.illustration = getInfo.getill(id, 'common', this.rank) //曲绘链接
 
         if (!ver || this.rank == 'LEGACY') {
             //未指定版本或难度为LGC，使用当前版本信息

@@ -181,6 +181,7 @@ export interface PlatformTask {
     cron?: string
     /** Koishi 调度周期（毫秒）；Yunzai 使用 cron。 */
     interval?: number
+    /** 是否输出执行日志；Yunzai 每次触发重读，false 时把开始处理/完成日志降级为 debug。 */
     log?: boolean
     [key: string]: unknown
 }

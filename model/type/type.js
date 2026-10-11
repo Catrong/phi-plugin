@@ -107,6 +107,9 @@
  * @typedef {'enableCustomThemeApi'} enableCustomThemeApi 是否启用自定义主题 API
  * @typedef {'enableScoreStatisticsApi'} enableScoreStatisticsApi 是否启用免认证查分统计 API
  * @typedef {'enableOnlineScoreApi'} enableOnlineScoreApi 是否启用需认证在线查分 API
+ * @typedef {'enableAliasSyncTask'} enableAliasSyncTask 是否开启 Bot 状态与正式别名同步定时任务
+ * @typedef {'aliasSyncTaskCron'} aliasSyncTaskCron 同步任务执行周期
+ * @typedef {'aliasSyncTaskLog'} aliasSyncTaskLog 是否打印同步任务执行日志
  * @typedef {'themeMarketDownloadOrigin'} themeMarketDownloadOrigin 主题市场下载来源
  * @typedef {'debug'} debug 输出测试日志
  * @typedef {'otherinfo'} otherinfo 曲库
@@ -182,6 +185,9 @@
  * |enableCustomThemeApi
  * |enableScoreStatisticsApi
  * |enableOnlineScoreApi
+ * |enableAliasSyncTask
+ * |aliasSyncTaskCron
+ * |aliasSyncTaskLog
  * |themeMarketDownloadOrigin
  * |debug
  * |otherinfo

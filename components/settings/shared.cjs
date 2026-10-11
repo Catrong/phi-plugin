@@ -49,6 +49,11 @@ function normalizeSettings(input) {
     return result
 }
 
+/** 5~6 段标准 cron 表达式（Yunzai 含秒），用于拦截会导致任务静默失效的值。 @param {unknown} value */
+function isValidCron(value) {
+    return typeof value === 'string' && /^[\d*,\-/?A-Za-z]+(?: +[\d*,\-/?A-Za-z]+){4,5}$/.test(value)
+}
+
 /** @param {Record<string, any>} input */
 function validateSettings(input) {
     const result = normalizeSettings(input)
@@ -73,8 +78,9 @@ function validateSettings(input) {
             try { url = new URL(value) } catch { invalid() }
             if (!url || url.protocol !== 'https:' || url.origin !== value) invalid()
         }
+        if (item.format === 'cron' && !isValidCron(value)) invalid()
     }
     return result
 }
 
-module.exports = { definitions, defaults, editable, fields, readGeneratedSettings, normalizeSettings, validateSettings }
+module.exports = { definitions, defaults, editable, fields, readGeneratedSettings, normalizeSettings, validateSettings, isValidCron }

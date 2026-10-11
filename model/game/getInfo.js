@@ -5,6 +5,7 @@ import Config from '../../components/Config.js'
 import SongsInfo from './SongsInfo.js'
 import fs from 'fs'
 import { allLevel, Level, MAX_DIFFICULTY } from './constNum.js'
+import { computeSongLimits } from './songLimits.js'
 import fCompute from './fCompute.js'
 import logger from '../../components/Logger.js'
 import fileWatcherRegistry from '../../components/FileWatcherRegistry.js'
@@ -152,9 +153,12 @@ export default new class getInfo {
 
         /**@type {Save | null} */
         this.badSave = null;
-        
+
         this.initIng = false
         this.reinitRequested = false
+
+        /** 定数表推算出的理论上限，懒计算，曲库重载后失效 @type {import('./songLimits.js').songLimitsObject | null} */
+        this.songLimits = null
 
         /** 已注册的信息文件监听 @type {{close: () => Promise<void>}[]} */
         this.infoWatcherLeases = []
@@ -424,6 +428,27 @@ export default new class getInfo {
         this.versionHistoryLoaded = true
     }
 
+    /**
+     * 当前定数表推算出的理论上限（最大 rks、最大课题总值）。
+     * 懒计算并缓存，定数表重载后失效；定数表为空时返回保守上限。
+     * @returns {import('./songLimits.js').songLimitsObject}
+     */
+    getSongLimits() {
+        let limits = this.songLimits
+        if (!limits) {
+            /** @type {Chart[]} */
+            const charts = []
+            for (const difficulty of fCompute.objectKeys(this.info_by_difficulty)) {
+                for (const chart of this.info_by_difficulty[difficulty] || []) {
+                    if (chart) charts.push(chart)
+                }
+            }
+            limits = computeSongLimits(charts)
+            this.songLimits = limits
+        }
+        return limits
+    }
+
     /** 重载曲库主数据：info.csv / infolist.json / notesInfo.json / oldNotesInfo.json / spinfo.json */
     async loadSongs() {
         if (!this.versionHistoryLoaded) await this.loadVersionHistory()
@@ -435,6 +460,8 @@ export default new class getInfo {
         this.info_by_difficulty = {};
         this.updatedSong = [];
         this.updatedChart = {};
+        /** 定数表变了，重算理论上限 */
+        this.songLimits = null;
 
         /**额外曲库开关：0:原本 1:原本+额外 2:仅额外 */
         const otherInfoMode = Config.getUserCfg('config', 'otherinfo')
@@ -659,10 +686,10 @@ export default new class getInfo {
                 const song = user_song[i]
                 // 曲绘列表消费方通过 getill 取图，实际读取的是 illustration 字段
                 if (song?.illustration) {
-                    this.illlist.push(/** @type {idString} */ (i))
+                    this.illlist.push(/** @type {idString} */(i))
                 }
-                this.songlist.push(/** @type {songString} */ (song?.song || i))
-                this.idList.push(/** @type {idString} */ (i))
+                this.songlist.push(/** @type {songString} */(song?.song || i))
+                this.idList.push(/** @type {idString} */(i))
             }
         }
 
@@ -1068,9 +1095,10 @@ export default new class getInfo {
      * 获取曲绘，返回地址，曲目id
      * @param {idString} id 曲目id，带.0
      * @param {'common'|'blur'|'low'} [kind='common'] 清晰度
+     * @param {allLevelKind|'SP'|undefined} [level=undefined] 等级
      * @return {string} 网址或文件地址
     */
-    getill(id, kind = 'common') {
+    getill(id, kind = 'common', level = undefined) {
         const songsinfo = this.all_info()[id]
         let ans = songsinfo?.illustration
         let reg = /^(?:(http|https|ftp):\/\/)((?:[\w-]+\.)+[a-z0-9]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?$/i
@@ -1089,13 +1117,14 @@ export default new class getInfo {
                         ans = path.join(originalIllPath, "illLow", id.replace(/.0$/, '.png'))
                     }
                 } else {
-                    if (kind == 'common') {
-                        ans = this.getOnlinePhiIllUrl('ill', id.replace(/.0$/, '.png'))
-                    } else if (kind == 'blur') {
-                        ans = this.getOnlinePhiIllUrl('illBlur', id.replace(/.0$/, '.png'))
-                    } else if (kind == 'low') {
-                        ans = this.getOnlinePhiIllUrl('illLow', id.replace(/.0$/, '.png'))
-                    }
+                    // 不使用在线曲绘
+                    // if (kind == 'common') {
+                    //     ans = this.getOnlinePhiIllUrl('ill', id.replace(/.0$/, '.png'))
+                    // } else if (kind == 'blur') {
+                    //     ans = this.getOnlinePhiIllUrl('illBlur', id.replace(/.0$/, '.png'))
+                    // } else if (kind == 'low') {
+                    //     ans = this.getOnlinePhiIllUrl('illLow', id.replace(/.0$/, '.png'))
+                    // }
                 }
             } else {
                 if (fs.existsSync(path.join(originalIllPath, "SP", songsinfo.id.replace(/.0$/, '.png')))) {
@@ -1110,6 +1139,11 @@ export default new class getInfo {
         if (!ans) {
             logger.warn(id, '背景不存在')
             ans = path.join(imgPath, 'phigros.png')
+        } else {
+            if (id == 'WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい.0' && level) {
+                ans = ans.replace(id.replace(/.0$/, '.png'), '')
+                ans = path.join(ans, level, id.replace(/.0$/, '.png'))
+            }
         }
         return ans
     }

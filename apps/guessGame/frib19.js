@@ -36,6 +36,7 @@ import {
  * @property {idString | null} lastGuessId 本局最近一次被猜测的曲目，用作背景曲绘
  * @property {number} lastGroupGuessTime 本群上次有效回答时间戳（毫秒）
  * @property {Record<string, number>} playerGuessTime 各玩家上次有效回答时间戳（毫秒）
+ * @property {boolean} settled 是否已进入结算（并发下防止重复结算）
  * @property {ReturnType<typeof setTimeout> | null} timer 超时定时器
  * @property {botEvent} event 用于超时播报的事件
  */
@@ -235,8 +236,21 @@ function refreshMaxGuess(game) {
 function endGame(group_id, gameList) {
     const game = fribGameData[group_id]
     if (game?.timer) clearTimeout(game.timer)
+    if (game) game.settled = true
     delete fribGameData[group_id]
     delete gameList[group_id]
+}
+
+/**
+ * 标记本局进入结算；已经被结算过则返回 false。
+ * 结算需要发送若干条消息，期间可能有并发猜测到达，用它保证只结算一次。
+ * @param {fribGameData} game
+ * @returns {boolean}
+ */
+function beginSettle(game) {
+    if (game.settled) return false
+    game.settled = true
+    return true
 }
 
 /**
@@ -266,6 +280,7 @@ async function timeoutGame(group_id, gameList) {
     const game = fribGameData[group_id]
     if (!game) return
     /** 先结算占位，避免渲染期间被猜中/ans 抢先结算后重复播报 */
+    if (!beginSettle(game)) return
     endGame(group_id, gameList)
     const answer = getInfo.info(game.ansId)
     try {
@@ -352,6 +367,7 @@ export default new class frib19 {
             lastGuessId: null,
             lastGroupGuessTime: 0,
             playerGuessTime: {},
+            settled: false,
             timer: null,
             event: e,
         }
@@ -386,9 +402,12 @@ export default new class frib19 {
             return false
         }
         if (ids.includes(game.ansId)) {
+            /** 先占位结算，避免发图期间其他人再猜中一次 */
+            if (!beginSettle(game)) return true
             game.rows.push(createFribRow(withCharters(answer), withCharters(answer), compareContext(playerName(e), game.level)))
             game.lastGuessId = game.ansId
             markGuessed(game, e)
+            endGame(group_id, gameList)
             try {
                 await send.send_with_At(e, `恭喜你，猜中啦喵！ヾ(≧▽≦*)o`, true)
                 await send.reply(e, await renderGame(e, game, true))
@@ -398,11 +417,11 @@ export default new class frib19 {
             } catch (err) {
                 logger.error('[phi-plugin][frib19]结算消息发送失败')
                 logger.error(err)
-            } finally {
-                endGame(group_id, gameList)
             }
             return true
         }
+        /** 已在结算中的猜测不再计入 */
+        if (game.settled) return true
         const guessId = ids.find(id => !game.guessedIds.includes(id))
         if (!guessId) {
             send.send_with_At(e, `曲目[${getInfo.info(ids[0])?.song ?? msg}]已经猜过啦，换一首试试吧uwu`, true, { recallMsg: 5 })
@@ -429,17 +448,21 @@ export default new class frib19 {
         refreshMaxGuess(game)
         refreshTimeout(group_id, gameList)
         if (game.rows.length >= game.maxGuess) {
+            /** 先占位结算，避免并发的另一次猜测也走到结算 */
+            if (!beginSettle(game)) return true
+            endGame(group_id, gameList)
             try {
                 await send.reply(e, [`很遗憾，猜测次数用完了喵！正确答案是：${answer.song}`, await renderGame(e, game, true)])
             } catch (err) {
                 logger.error('[phi-plugin][frib19]结算消息发送失败')
                 logger.error(err)
-            } finally {
-                endGame(group_id, gameList)
             }
             return true
         }
-        await send.reply(e, await renderGame(e, game, false))
+        const image = await renderGame(e, game, false)
+        /** 渲染期间本局可能已被他人结算，此时不再补发这张图 */
+        if (fribGameData[group_id] !== game) return true
+        await send.reply(e, image)
         return true
     }
 
@@ -452,14 +475,15 @@ export default new class frib19 {
         const group_id = groupKey(e)
         const game = fribGameData[group_id]
         if (!game) return false
+        /** 先占位结算，避免公布答案期间有人猜中而重复结算 */
+        if (!beginSettle(game)) return false
         const answer = getInfo.info(game.ansId)
+        endGame(group_id, gameList)
         try {
             await send.reply(e, [`好吧，下面开始公布答案。正确答案是：${answer?.song}`, await renderGame(e, game, true)])
         } catch (err) {
             logger.error('[phi-plugin][frib19]结算消息发送失败')
             logger.error(err)
-        } finally {
-            endGame(group_id, gameList)
         }
         return true
     }
