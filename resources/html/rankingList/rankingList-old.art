@@ -1,0 +1,171 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+    <link rel="stylesheet" href="{{_res_path}}html/rankingList/rankingList.css">
+{{/block}}
+
+{{block 'main'}}
+
+    <div class="background">
+        <img src="{{me.backgroundurl}}" alt="{{me.backgroundurl}}" />
+    </div>
+    <div class="list">
+        <div class="list_bkg"></div>
+        {{each users user}}
+        {{if user.backgroundurl}}
+        <div class="aUser{{user.me?' you':''}}">
+            <div class="profileIll">
+                {{if !user.me}}
+                <img
+                    src="{{user.backgroundurl}}"
+                    alt="{{user.backgroundurl}}"
+                />
+                {{/if}}
+            </div>
+            <div class="avatar_box">
+                <div class="avatar">
+                    <img
+                        src="{{_res_path}}html/avatar/{{user.avatar}}.png"
+                        alt="{{user.avatar}}"
+                    />
+                </div>
+            </div>
+            <div class="num">
+                <p>#{{user.index}}</p>
+            </div>
+            <div class="playerId">
+                <p name="pvis">{{#user.playerId}}</p>
+            </div>
+            <div class="clgBox">
+                <div class="Challenge">
+                    <img src="{{_res_path}}html/otherimg/{{user.ChallengeMode}}.png" alt="{{user.ChallengeMode}}">
+                    <p>{{user.ChallengeModeRank}}</p>
+                </div>
+            </div>
+            <div class="rks">
+                <p>{{user.rks.toFixed(4)}}</p>
+            </div>
+        </div>
+        {{else}}
+        <div class="aUser{{user.me?' you':''}}">
+            <div class="playerId">
+                <p name="pvis">NO INFO</p>
+            </div>
+        </div>
+        {{/if}}
+        {{/each}}
+    </div>
+    <div class="info">
+        <div class="txt_box">
+            <p>Updated at:</p>
+            <p>{{me.updated}}</p>
+        </div>
+        <div class="player_profile_box">
+            {{if me.selfIntro}}
+            <p name="pvis">{{#me.selfIntro}}</p>
+            {{else}}
+            <p style="color: #005273;" name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
+            {{/if}}
+        </div>
+        <div class="rks_line">
+            <div class="svg-box">
+                {{if me.rks_history?.[0]}}
+                <div class="value_box">
+                    <p>{{me.rks_range[1].toFixed(4)}}</p>
+                    <p>{{me.rks_range[0].toFixed(4)}}</p>
+                </div>
+                <div class="line-box">
+                    <div class="line">
+                        <svg>
+                            <defs>
+                                <marker id="dot" viewBox="0 0 10 10" markerWidth="8" markerHeight="8" refX="2" refY="2">
+                                    <circle cx="2" cy="2" r="1"></circle>
+                                </marker>
+                            </defs>
+                            {{each me.rks_history}}
+                            <line x1="{{$value[0]}}%" y1="{{$value[1]}}%" x2="{{$value[2]}}%" y2="{{$value[3]}}%">
+                            </line>
+                            {{/each}}
+                        </svg>
+                    </div>
+                    <div class="date_box">
+                        <p>{{me.rks_date[0]}}</p>
+                        <p>{{me.rks_date[1]}}</p>
+                    </div>
+                </div>
+                {{else}}
+                <p>NO_INFO</p>
+                {{/if}}
+            </div>
+        </div>
+        <div class="clg_info">
+            <p>ChallengeMode History</p>
+        </div>
+        <div class="clg_list_box">
+            <div class="clg_line"></div>
+            <div class="clg_list">
+                {{each me.clg_list clg}}
+                <div class="a_clg_box">
+                    <div class="clg_box">
+                        <div class="Challenge">
+                            <img src="{{_res_path}}html/otherimg/{{clg.ChallengeMode}}.png" alt="{{clg.ChallengeMode}}">
+                            <p>{{clg.ChallengeModeRank}}</p>
+                        </div>
+                    </div>
+                    <p>{{clg.date}}</p>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="b30list">
+            {{each me.b30list e index}}
+            <div class="b30Alist {{index}}">
+                <p>{{e.title}}</p>
+                {{if e.list.length}}
+                <% for (var i = 0; i < e.list.length; i++) { %>
+                    {{set song = e.list[i]}}
+                    {{if song}}
+                    <div class="ill_box">
+                        <img
+                            src="{{song.illustration}}"
+                            alt="{{song.illustration}}"
+                        />
+                        <div class="b30_dif {{song.rank}}-BKG">
+                            <p>{{song.rank}} {{song.difficulty.toFixed(1)}}</p>
+                        </div>
+                        <div class="Rating">
+                            <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="ill_box">
+                        <p>NO INFO</p>
+                    </div>
+                    {{/if}}
+                <% } %>
+                {{else}}
+                    <div class="ill_box">
+                        <p>NO INFO</p>
+                    </div>
+                    <div class="ill_box">
+                        <p>NO INFO</p>
+                    </div>
+                    <div class="ill_box">
+                        <p>NO INFO</p>
+                    </div>
+                {{/if}}
+
+            </div>
+            {{/each}}
+        </div>
+        <div class="createdbox">
+            <div class="phi-plugin">
+                <p>{{_plugin}}</p>
+            </div>
+            <div class="ver">
+                <p>{{Version.ver}}</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+{{/block}}
