@@ -1,10 +1,4 @@
-import { createRequire } from 'node:module'
-
-const require = createRequire(import.meta.url)
-/** @type {typeof import('echarts') | undefined} */
-let echarts
-
-// 仅缓存雷达 SVG，不持有 ECharts 实例；同时限制条目和字节数，避免长期运行积累。
+// 仅缓存直接生成的雷达 SVG；同时限制条目和字节数，避免长期运行积累。
 const MAX_RADAR_ENTRIES = 64
 const MAX_RADAR_BYTES = 2 * 1024 * 1024
 const MAX_RADAR_ENTRY_BYTES = 128 * 1024
@@ -201,10 +195,12 @@ function difficulty(input, width = 800, height = 250) {
 /**
  * @typedef {{ name: string, value: number }} ChartWord
  * @typedef {{ width?: number, height?: number, fontSize?: number, showValue?: boolean }} RadarOptions
+ * @typedef {{ rows: string[], cos: number, sin: number, width: number, height: number, fontSize: number, x: number, top: number, anchor: 'start' | 'middle' | 'end' }} RadarLabel
  */
 
 /**
- * ECharts 的服务端 SVG 模式保留原雷达图样式，Shotium 无需执行 JS。
+ * 保留原雷达图的方向、五层网格、配色和标签排版，直接生成 SVG。
+ * Shotium 无需执行 JS，宿主也无需加载图表引擎或创建图表实例。
  * 少于三个标签时展示横条，避免不完整的雷达坐标系隐藏有效数据。
  * @param {ChartWord[] | null | undefined} input
  * @param {number} [maximum]
@@ -231,55 +227,94 @@ function radar(input, maximum, options = {}) {
     const key = JSON.stringify([words, maximum, width, height, fontSize, !!options.showValue])
     const cached = cachedRadar(key)
     if (cached !== undefined) return cached
-    // 使用生产构建，避免内部刻度诊断写入宿主日志；Puppeteer 或非雷达请求无需加载它。
-    echarts ||= /** @type {typeof import('echarts')} */ (require('echarts/dist/echarts.min.js'))
-    const maxLabelWidth = Math.max(fontSize * 2, Math.min(160, width * 0.22))
-    const labels = words.map(word => {
-        const rows = wrapLabel(word.name, fontSize, maxLabelWidth)
-        if (options.showValue) {
-            // 把括号与票数作为整体，避免换行拆成“换手( / 5)”。
-            const value = `(${word.value})`
-            const last = rows.length - 1
-            if (textWidth(rows[last] + value, fontSize) <= maxLabelWidth) rows[last] += value
-            else rows.push(value)
-        }
-        return rows
-    })
+    const centerX = width / 2, centerY = height / 2
     const nameGap = 12, edge = 8
-    let radius = Math.min(width, height) * 0.3
-    labels.forEach((rows, index) => {
+    const axes = words.map((_, index) => {
+        // SVG 的 y 轴向下；第一轴向上，之后逆时针，与原图表一致。
         const angle = Math.PI / 2 + index * Math.PI * 2 / words.length
-        const cos = Math.abs(Math.cos(angle)), sin = Math.abs(Math.sin(angle))
-        const labelWidth = Math.max(...rows.map(row => textWidth(row, fontSize)))
-        const labelHeight = rows.length * fontSize * 1.2
-        if (cos > 0.001) radius = Math.min(radius, (width / 2 - labelWidth - edge) / cos - nameGap)
-        if (sin > 0.001) radius = Math.min(radius, (height / 2 - labelHeight * (cos < 0.001 ? 1 : 0.5) - edge) / sin - nameGap)
+        return { cos: Math.cos(angle), sin: Math.sin(angle) }
     })
-    const chart = echarts.init(null, null, { renderer: 'svg', ssr: true, width, height })
-    try {
-        chart.setOption({
-            animation: false,
-            radar: {
-                indicator: words.map((word, index) => ({
-                    name: labels[index].join('\n'),
-                    max: Number.isFinite(maximum) && Number(maximum) > 0 ? Math.max(Number(maximum), word.value) : Math.max(word.value * 1.2, 1),
-                })),
-                shape: 'polygon', splitNumber: 5, radius: Math.max(20, radius), axisNameGap: nameGap,
-                axisName: { color: '#fff', fontFamily: 'PHI,NOTO,sans-serif', fontSize, lineHeight: fontSize * 1.2 },
-                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.3)' } },
-                splitArea: { show: true, areaStyle: { color: ['rgba(255,255,255,0.05)', 'rgba(255,255,255,0.1)'] } },
-                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.5)' } },
-            },
-            series: [{ type: 'radar', data: [{ value: words.map(word => word.value),
-                lineStyle: { color: 'rgba(100,200,255,0.8)', width: 2 },
-                areaStyle: { color: 'rgba(100,200,255,0.3)' },
-                itemStyle: { color: 'rgba(100,200,255,1)' },
-            }] }],
+    /** @type {RadarLabel[]} */
+    let labels = []
+    let radius = 20
+    // 普通标签使用配置字号；密集标签逐步缩小，保留全部名称和票数。
+    for (let size = fontSize; size >= 10; size--) {
+        const maxLabelWidth = Math.max(size * 2, Math.min(160, width * 0.22))
+        labels = words.map((word, index) => {
+            const rows = wrapLabel(word.name, size, maxLabelWidth)
+            if (options.showValue) {
+                // 把括号与票数作为整体，避免换行拆成“换手( / 5)”。
+                const value = `(${word.value})`
+                const last = rows.length - 1
+                if (textWidth(rows[last] + value, size) <= maxLabelWidth) rows[last] += value
+                else rows.push(value)
+            }
+            const labelWidth = Math.max(...rows.map(row => textWidth(row, size)))
+            const labelHeight = rows.length * size * 1.2
+            // 极长文本也完整保留；仅当一个标签本身超出画布时再整体缩小。
+            const fit = Math.min(1, (width - edge * 2) / Math.max(1, labelWidth), (height - edge * 2) / labelHeight)
+            return { rows, ...axes[index], width: labelWidth * fit, height: labelHeight * fit,
+                fontSize: size * fit, x: 0, top: 0, anchor: /** @type {'middle'} */ ('middle') }
         })
-        return cacheRadar(key, chart.renderToSVGString().replace('<svg ', '<svg role="img" aria-label="谱面标签雷达图" style="width:100%;height:100%;display:block" '))
-    } finally {
-        chart.dispose()
+        radius = Math.min(width, height) * 0.3
+        for (const label of labels) {
+            const cos = Math.abs(label.cos), sin = Math.abs(label.sin)
+            if (cos > 0.001) radius = Math.min(radius, (width / 2 - label.width - edge) / cos - nameGap)
+            if (sin > 0.001) radius = Math.min(radius, (height / 2 - label.height * (cos < 0.001 ? 1 : 0.5) - edge) / sin - nameGap)
+        }
+        radius = Math.max(20, radius)
+        for (const label of labels) {
+            label.anchor = Math.abs(label.cos) < 0.001 ? 'middle' : label.cos > 0 ? 'start' : 'end'
+            const x = centerX + label.cos * (radius + nameGap)
+            const y = centerY - label.sin * (radius + nameGap)
+            const offset = label.anchor === 'start' ? 0 : label.anchor === 'end' ? label.width : label.width / 2
+            const left = Math.max(edge, Math.min(width - edge - label.width, x - offset))
+            label.x = left + offset
+            const top = y - (Math.abs(label.cos) < 0.001 ? (label.sin > 0 ? label.height : 0) : label.height / 2)
+            label.top = Math.max(edge, Math.min(height - edge - label.height, top))
+        }
+        const crowded = labels.some((label, index) => labels.slice(index + 1).some(other => {
+            const left = label.x - (label.anchor === 'start' ? 0 : label.anchor === 'end' ? label.width : label.width / 2)
+            const otherLeft = other.x - (other.anchor === 'start' ? 0 : other.anchor === 'end' ? other.width : other.width / 2)
+            return left < otherLeft + other.width + 4 && left + label.width + 4 > otherLeft
+                && label.top < other.top + other.height + 4 && label.top + label.height + 4 > other.top
+        }))
+        if (!crowded) break
     }
+
+    /** @param {number} fraction */
+    const points = fraction => axes.map(axis => `${coord(centerX + axis.cos * radius * fraction)},${coord(centerY - axis.sin * radius * fraction)}`).join(' ')
+    /** @param {number} fraction */
+    const polygonPath = fraction => 'M' + points(fraction).replace(/ /g, 'L') + 'Z'
+    const content = ['<g font-family="PHI,NOTO,sans-serif">']
+    for (let step = 1; step <= 5; step++) {
+        // 挖掉内圈，避免嵌套半透明面叠加后改变原来的交替底色。
+        const band = polygonPath(step / 5) + (step > 1 ? polygonPath((step - 1) / 5) : '')
+        content.push(`<path d="${band}" fill="white" fill-opacity="${step % 2 ? 0.05 : 0.1}" fill-rule="evenodd"/>`)
+    }
+    for (let step = 1; step <= 5; step++) {
+        content.push(`<polygon class="phi-chart-radar-grid" points="${points(step / 5)}" fill="none" stroke="white" stroke-opacity="0.3"/>`)
+    }
+    for (const axis of axes) {
+        content.push(`<line class="phi-chart-radar-axis" x1="${centerX}" y1="${centerY}" x2="${coord(centerX + axis.cos * radius)}" y2="${coord(centerY - axis.sin * radius)}" stroke="white" stroke-opacity="0.5"/>`)
+    }
+    const values = words.map((word, index) => {
+        // 无统一最大值时，各轴沿用 max(value * 1.2, 1)；先求比例可避免极大有限数溢出。
+        const fraction = Number.isFinite(maximum) && Number(maximum) > 0
+            ? word.value / Math.max(Number(maximum), word.value) : Math.min(word.value, 1 / 1.2)
+        return { x: coord(centerX + axes[index].cos * radius * fraction), y: coord(centerY - axes[index].sin * radius * fraction) }
+    })
+    // 原面积颜色的 alpha 0.3 与默认 opacity 0.7 叠乘，保持实际显示透明度。
+    content.push(`<polygon class="phi-chart-radar-shape" points="${values.map(point => `${point.x},${point.y}`).join(' ')}" fill="#64c8ff" fill-opacity="0.21" stroke="#64c8ff" stroke-opacity="0.8" stroke-width="2"/>`)
+    for (const point of values) content.push(`<circle class="phi-chart-radar-point" cx="${point.x}" cy="${point.y}" r="4" fill="#64c8ff"/>`)
+    for (const label of labels) {
+        label.rows.forEach((row, index) => {
+            const y = label.top + label.fontSize * 1.2 * (index + 0.5)
+            content.push(`<text class="phi-chart-radar-label" x="${coord(label.x)}" y="${coord(y)}" text-anchor="${label.anchor}" dominant-baseline="central" font-size="${coord(label.fontSize)}" fill="white">${escapeXml(row)}</text>`)
+        })
+    }
+    content.push('</g>')
+    return cacheRadar(key, svg(content.join(''), width, height, '谱面标签雷达图'))
 }
 
 export default { difficulty, radar }

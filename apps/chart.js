@@ -580,7 +580,7 @@ async function getChartImg(e, id, options) {
 
   /** @type {ChartRenderInfo} */
   const chartInfo = {
-    illustration: getInfo.getill(info.id, 'common', rank),
+    illustration: getInfo.getill(info.id, 'blur', rank),
     song: info.song,
     length: info.length,
     rank: rank,

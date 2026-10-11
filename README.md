@@ -155,28 +155,6 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 
 </details>
 
-#### 渲染器配置
-
-Yunzai 可在 `plugins/phi-plugin/config/config/config.yaml` 中切换渲染器，也可通过 Guoba 的“渲染设置”选择，或使用主人指令 `/phi set渲染器Shotium`、`/phi set渲染器Puppeteer`。
-
-Koishi 使用插件设置表单或 `koishi.yml` 中的 `renderer`；`shotium` 调用 Shotium Node.js SDK，`puppeteer` 从 Koishi Puppeteer 服务读取 Chrome 路径，再启动插件独立浏览器。`auto` 跟随宿主实际使用的渲染器：Yunzai 检查当前渲染器配置，Koishi 检查有效的 Shotium 渲染服务；使用 Shotium 时复用宿主，否则使用插件独立 Puppeteer。Koishi 没有统一的渲染器配置，未提供兼容 Shotium 服务时会走 Puppeteer 后备。默认仍为 `puppeteer`。
-
-```yaml
-# Puppeteer（默认）：puppeteer；Shotium：shotium；自动跟随宿主：auto
-renderer: shotium
-renderNum: 1
-timeout: 20000
-```
-
-Yunzai 保存后动态生效，无需重启 Bot；正在执行的请求继续完成，后续请求使用新的渲染器。默认 `puppeteer` 保留插件独立浏览器行为；`shotium` 要求 Yunzai 宿主已启用 Shotium，复用其渲染服务。Koishi 的渲染设置保存后原位切换；重载或卸载时先停止接单，等待旧工作并回收插件的连接、浏览器与监听器，宿主渲染服务继续由 Koishi 管理。
-
-`renderNum` 是插件渲染队列的并发上限，`renderQueueLimit` 是等待队列上限，均可动态调整。Yunzai Shotium 复用宿主渲染器，Koishi Shotium 由插件管理原生实例，并发请求共享渲染资源。`timeout` 控制单次渲染超时，`waitingTimeout` 控制等待空闲槽位的超时。
-
-`randerQuality` 控制 JPEG/WebP 的压缩质量，保存后对后续截图生效，PNG 不受影响。数值越高，细节越清晰、文件越大；可用 `95` 兼顾清晰度与体积，`100` 保留更高质量。`renderScale` 控制图片尺寸，保持 `100` 使用模板原尺寸。
-
-Shotium 使用一次容器选择避免重复加载页面。默认 B19 和列表的长标题会静态调整字号，并在最小可读字号下以单行省略，避免遮挡成绩；内置图表按空间安排标签，重复雷达图复用有界 SVG 缓存。
-
-Shotium 使用静态 HTML 渲染，插件内置的图表会先转换为 SVG 图片后交给所选 Shotium 后端。自定义主题的页面 JavaScript 不会执行；依赖 JavaScript 的主题请使用 `puppeteer`。
 
 ---
 

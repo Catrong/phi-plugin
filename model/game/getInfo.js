@@ -1154,6 +1154,11 @@ export default new class getInfo {
                 ans = path.join(ans, level, id.replace(/.0$/, '.png'))
             }
         }
+        // 部分旧曲绘包或分难度曲绘没有低清/模糊版本，避免返回不存在的文件。
+        if ((kind === 'low' || kind === 'blur') && !reg.test(ans) && !fs.existsSync(ans)) {
+            const fallback = this.getill(id, 'common', level)
+            ans = reg.test(fallback) || fs.existsSync(fallback) ? fallback : path.join(imgPath, 'phigros.png')
+        }
         return ans
     }
 

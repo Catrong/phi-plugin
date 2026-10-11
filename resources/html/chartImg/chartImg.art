@@ -1,6 +1,12 @@
 {{extend defaultLayout}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/chartImg/chartImg.css">
+    {{if theme != 'star' && (!themeInfo || !themeInfo.backgroundUrl)}}
+    <style>
+        /* 本页已有曲绘背景，避免重复绘制整页模糊背景。 */
+        .theme-background { display: none; }
+    </style>
+    {{/if}}
     {{if !renderNoJs}}
     <script src="{{_res_path}}html/chartInfo/echarts.js"></script>
     <script src="{{_res_path}}html/chartInfo/echarts-wordcloud.min.js"></script>

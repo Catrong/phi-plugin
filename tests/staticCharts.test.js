@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
-import { createRequire } from 'node:module'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
+import vm from 'node:vm'
 import art from 'art-template'
 import staticCharts from '../model/render/staticCharts.js'
 
@@ -35,6 +35,42 @@ function renderData(renderNoJs, theme = 'default') {
 /** @param {string} page @param {boolean} renderNoJs @param {string} [theme] */
 function render(page, renderNoJs, theme) {
     return art.render(fs.readFileSync(`${resources}/html/${page}/${page}.art`, 'utf8'), renderData(renderNoJs, theme))
+}
+
+/** 使用真实模块源码取得隔离缓存，避免给生产接口增加测试用诊断字段。 */
+function isolatedRadarCache() {
+    const source = fs.readFileSync(path.resolve(import.meta.dirname, '../model/render/staticCharts.js'), 'utf8')
+        .replace('export default { difficulty, radar }', 'globalThis.fixture = { charts: { difficulty, radar }, cache: radarCache, bytes: () => radarCacheBytes }')
+    const context = vm.createContext({ Buffer })
+    new vm.Script(source).runInContext(context)
+    return /** @type {{charts: typeof staticCharts, cache: Map<string, {svg: string, bytes: number}>, bytes: () => number}} */ (context.fixture)
+}
+
+/** @param {string} result */
+function radarGeometry(result) {
+    const axes = [...result.matchAll(/class="phi-chart-radar-axis" x1="([^"]+)" y1="([^"]+)" x2="([^"]+)" y2="([^"]+)"/g)]
+        .map(match => ({ cx: Number(match[1]), cy: Number(match[2]), x: Number(match[3]), y: Number(match[4]) }))
+    const points = [...result.matchAll(/class="phi-chart-radar-point" cx="([^"]+)" cy="([^"]+)" r="([^"]+)"/g)]
+        .map(match => ({ x: Number(match[1]), y: Number(match[2]), radius: Number(match[3]) }))
+    return { axes, points }
+}
+
+/** @param {string} text */
+function decodeXml(text) {
+    const entities = { lt: '<', gt: '>', quot: '"', apos: "'", amp: '&' }
+    return text.replace(/&(lt|gt|quot|apos|amp);/g, (_, entity) => entities[/** @type {keyof typeof entities} */ (entity)])
+}
+
+/** @param {string} result */
+function radarLabelBoxes(result) {
+    return [...result.matchAll(/class="phi-chart-radar-label" x="([^"]+)" y="([^"]+)" text-anchor="([^"]+)"[^>]*font-size="([^"]+)"[^>]*>([^<]*)<\/text>/g)]
+        .map(match => {
+            const x = Number(match[1]), y = Number(match[2]), size = Number(match[4])
+            const text = decodeXml(match[5])
+            const width = Array.from(text).reduce((sum, char) => sum + (/^[\x20-\x7e]$/.test(char) ? 0.64 : 1.05) * size, 0)
+            const left = x - (match[3] === 'end' ? width : match[3] === 'middle' ? width / 2 : 0)
+            return { text, size, left, right: left + width, top: y - size * 0.6, bottom: y + size * 0.6 }
+        })
 }
 
 test('静态定数图保留折线、节点和版本标签，JSON 与数组输入一致', () => {
@@ -86,7 +122,7 @@ test('密集定数图保留全部节点并把版本标签错开放置，两端�
     assert.doesNotMatch(result, /font-size="11"/)
 })
 
-test('普通页面、定数图及空/少标签不会提前加载 ECharts', () => {
+test('普通页面、定数图和完整雷达图均不加载 ECharts', () => {
     const result = spawnSync(process.execPath, ['--input-type=module', '-e', `
         import { createRequire } from 'node:module';
         const require = createRequire(import.meta.url);
@@ -96,7 +132,7 @@ test('普通页面、定数图及空/少标签不会提前加载 ECharts', () =>
         charts.radar([{ name: '单标签', value: 1 }]);
         if (require.cache[require.resolve('echarts/dist/echarts.min.js')]) process.exit(1);
         charts.radar([{ name: '一', value: 1 }, { name: '二', value: 2 }, { name: '三', value: 3 }]);
-        if (!require.cache[require.resolve('echarts/dist/echarts.min.js')]) process.exit(2);
+        if (Object.keys(require.cache).some(file => file.replaceAll(String.fromCharCode(92), '/').includes('/echarts/'))) process.exit(2);
     `], { cwd: path.resolve(import.meta.dirname, '..'), encoding: 'utf8' })
     assert.equal(result.status, 0, result.stderr)
 })
@@ -138,66 +174,109 @@ test('长中文雷达标签折行后完整保留名称和票数，括号不会�
 })
 
 test('雷达缓存按内容命中，数据、显示选项变化会生成新的 SVG', () => {
-    const echarts = createRequire(import.meta.url)('echarts/dist/echarts.min.js')
-    const init = echarts.init
-    let calls = 0
-    echarts.init = (/** @type {any} */ dom, /** @type {any} */ theme, /** @type {any} */ options) => { calls++; return init(dom, theme, options) }
-    try {
-        const words = [{ name: '缓存多指', value: 11 }, { name: '缓存交互', value: 8 }, { name: '缓存纵连', value: 6 }]
-        const base = staticCharts.radar(words, 12, { width: 550, height: 400, fontSize: 22 })
-        assert.equal(staticCharts.radar(JSON.parse(JSON.stringify(words)), 12, { height: 400, fontSize: 22, width: 550 }), base)
-        assert.equal(calls, 1)
-        words[0].value = 9
-        const updated = staticCharts.radar(words, 12, { width: 550, height: 400, fontSize: 22 })
-        assert.notEqual(updated, base)
-        const variants = [
-            staticCharts.radar(words, 20, { width: 550, height: 400, fontSize: 22 }),
-            staticCharts.radar(words, 12, { width: 560, height: 400, fontSize: 22 }),
-            staticCharts.radar(words, 12, { width: 550, height: 410, fontSize: 22 }),
-            staticCharts.radar(words, 12, { width: 550, height: 400, fontSize: 24 }),
-            staticCharts.radar(words, 12, { width: 550, height: 400, fontSize: 22, showValue: true }),
-        ]
-        for (const variant of variants) assert.notEqual(variant, updated)
-        assert.equal(calls, 7)
-    } finally { echarts.init = init }
+    const { charts, cache } = isolatedRadarCache()
+    const words = [{ name: '缓存多指', value: 11 }, { name: '缓存交互', value: 8 }, { name: '缓存纵连', value: 6 }]
+    const base = charts.radar(words, 12, { width: 550, height: 400, fontSize: 22 })
+    const entry = cache.values().next().value
+    assert.equal(charts.radar(JSON.parse(JSON.stringify(words)), 12, { height: 400, fontSize: 22, width: 550 }), base)
+    assert.equal(cache.size, 1)
+    assert.equal(cache.values().next().value, entry, '命中应复用原缓存条目')
+    words[0].value = 9
+    const updated = charts.radar(words, 12, { width: 550, height: 400, fontSize: 22 })
+    assert.notEqual(updated, base)
+    const variants = [
+        charts.radar(words, 20, { width: 550, height: 400, fontSize: 22 }),
+        charts.radar(words, 12, { width: 560, height: 400, fontSize: 22 }),
+        charts.radar(words, 12, { width: 550, height: 410, fontSize: 22 }),
+        charts.radar(words, 12, { width: 550, height: 400, fontSize: 24 }),
+        charts.radar(words, 12, { width: 550, height: 400, fontSize: 22, showValue: true }),
+    ]
+    for (const variant of variants) assert.notEqual(variant, updated)
+    assert.equal(cache.size, 7)
 })
 
 test('雷达缓存淘汰旧内容，不保留超出字节上限的 SVG', () => {
-    const echarts = createRequire(import.meta.url)('echarts/dist/echarts.min.js')
-    const init = echarts.init
-    let calls = 0
+    const { charts, cache, bytes } = isolatedRadarCache()
     /** @param {number} index */
     const words = index => [{ name: `淘汰${index}`, value: 2 }, { name: '二', value: 3 }, { name: '三', value: 1 }]
-    echarts.init = (/** @type {any} */ dom, /** @type {any} */ theme, /** @type {any} */ options) => { calls++; return init(dom, theme, options) }
-    try {
-        staticCharts.radar(words(0), 8)
-        for (let index = 1; index <= 64; index++) staticCharts.radar(words(index), 8)
-        assert.equal(calls, 65)
-        staticCharts.radar(words(64), 8)
-        assert.equal(calls, 65)
-        staticCharts.radar(words(0), 8)
-        assert.equal(calls, 66, '超过 64 项后最旧内容应重新生成')
-        echarts.init = () => ({ setOption() {}, renderToSVGString: () => '<svg >' + 'x'.repeat(128 * 1024) + '</svg>', dispose() {} })
-        const large = staticCharts.radar(words(1000), 8)
-        let repeated = false
-        echarts.init = () => {
-            repeated = true
-            return { setOption() {}, renderToSVGString: () => large, dispose() {} }
+    charts.radar(words(0), 8)
+    const firstKey = cache.keys().next().value
+    for (let index = 1; index <= 64; index++) charts.radar(words(index), 8)
+    assert.equal(cache.size, 64)
+    assert.equal(cache.has(/** @type {string} */ (firstKey)), false)
+    const oldestKey = cache.keys().next().value
+    charts.radar(words(1), 8)
+    assert.notEqual(cache.keys().next().value, oldestKey, '命中应更新最近使用顺序')
+    charts.radar(words(65), 8)
+    assert.equal(cache.has(/** @type {string} */ (oldestKey)), true, '最近命中的内容应保留')
+
+    const largeWords = [{ name: '长'.repeat(6000), value: 2 }, { name: '二', value: 3 }, { name: '三', value: 1 }]
+    const beforeBytes = bytes()
+    const large = charts.radar(largeWords, 8)
+    assert.ok(Buffer.byteLength(large) > 128 * 1024)
+    assert.equal(bytes(), beforeBytes, '过大的 SVG 应跳过缓存')
+    assert.equal(cache.size, 64)
+
+    const bounded = isolatedRadarCache()
+    for (let index = 0; index < 40; index++) {
+        bounded.charts.radar([{ name: '长'.repeat(3000) + index, value: 2 }, { name: '二', value: 3 }, { name: '三', value: 1 }], 8)
+        assert.ok(bounded.bytes() <= 2 * 1024 * 1024)
+    }
+    assert.ok(bounded.cache.size > 0 && bounded.cache.size < 40, '总字节限额应在条目限额之前生效')
+    assert.equal([...bounded.cache.values()].reduce((total, entry) => total + entry.bytes, 0), bounded.bytes())
+})
+
+test('雷达方向、五圈网格和默认节点大小与原图一致，统一最大值按轴归一化', () => {
+    const words = [0, 4, 12, 24].map((value, index) => ({ name: `轴${index}`, value }))
+    const result = staticCharts.radar(words, 12, { width: 450, height: 430 })
+    assert.equal((result.match(/class="phi-chart-radar-grid"/g) || []).length, 5)
+    const { axes, points } = radarGeometry(result)
+    assert.equal(axes.length, 4)
+    assert.equal(points.length, 4)
+    assert.ok(axes[0].y < axes[0].cy && axes[1].x < axes[1].cx && axes[2].y > axes[2].cy && axes[3].x > axes[3].cx)
+    const expected = [0, 1 / 3, 1, 1]
+    points.forEach((point, index) => {
+        const axis = axes[index]
+        const fraction = Math.hypot(point.x - axis.cx, point.y - axis.cy) / Math.hypot(axis.x - axis.cx, axis.y - axis.cy)
+        assert.ok(Math.abs(fraction - expected[index]) < 0.001)
+        assert.equal(point.radius, 4)
+    })
+    assert.equal(words[3].value, 24, '归一化不能改动调用者的数据')
+})
+
+test('未设置最大值时保留各轴 max(value*1.2,1)，异常数据不产生无效坐标', () => {
+    const words = [0, 0.5, 6, Number.MAX_VALUE].map((value, index) => ({ name: `轴${index}`, value }))
+    const result = staticCharts.radar(words)
+    const { axes, points } = radarGeometry(result)
+    const expected = [0, 0.5, 1 / 1.2, 1 / 1.2]
+    points.forEach((point, index) => {
+        const axis = axes[index]
+        const fraction = Math.hypot(point.x - axis.cx, point.y - axis.cy) / Math.hypot(axis.x - axis.cx, axis.y - axis.cy)
+        assert.ok(Math.abs(fraction - expected[index]) < 0.001)
+    })
+    assert.doesNotMatch(result, /NaN|Infinity/)
+    const invalid = staticCharts.radar(/** @type {any} */ ([null, { name: '负数', value: -1 }, { name: '无穷', value: Infinity }, { name: '非数', value: NaN }, ...words]))
+    assert.equal(radarGeometry(invalid).points.length, 4)
+    assert.equal(invalid, result)
+})
+
+test('密集雷达保留所有轴和标签，自动调整字号且不越过画布边界', () => {
+    const words = Array.from({ length: 24 }, (_, index) => ({ name: `标签${index + 1}`, value: index + 1 }))
+    const result = staticCharts.radar(words, 24, { width: 450, height: 430, fontSize: 30, showValue: true })
+    assert.equal(radarGeometry(result).points.length, words.length)
+    const boxes = radarLabelBoxes(result)
+    const text = boxes.map(box => box.text).join('')
+    for (const word of words) assert.ok(text.includes(`${word.name}(${word.value})`))
+    assert.ok(boxes.every(box => box.size < 30), '密集标签应缩小字号')
+    boxes.forEach(box => {
+        assert.ok(box.left >= 7.9 && box.right <= 442.1 && box.top >= 7.9 && box.bottom <= 422.1, JSON.stringify(box))
+    })
+    for (let index = 0; index < boxes.length; index++) {
+        for (const other of boxes.slice(index + 1)) {
+            const box = boxes[index]
+            assert.ok(box.right <= other.left + 0.1 || box.left >= other.right - 0.1 || box.bottom <= other.top + 0.1 || box.top >= other.bottom - 0.1, `${box.text} 与 ${other.text} 重叠`)
         }
-        staticCharts.radar(words(1000), 8)
-        assert.equal(repeated, true, '过大的 SVG 应跳过缓存')
-        let byteLimitedCalls = 0
-        echarts.init = () => {
-            byteLimitedCalls++
-            return { setOption() {}, renderToSVGString: () => '<svg >' + 'x'.repeat(70 * 1024) + '</svg>', dispose() {} }
-        }
-        for (let index = 2000; index < 2040; index++) staticCharts.radar(words(index), 8)
-        assert.equal(byteLimitedCalls, 40)
-        staticCharts.radar(words(2039), 8)
-        assert.equal(byteLimitedCalls, 40)
-        staticCharts.radar(words(2000), 8)
-        assert.equal(byteLimitedCalls, 41, '少于 64 项但总字节超过 2 MiB 时也应淘汰旧内容')
-    } finally { echarts.init = init }
+    }
 })
 
 test('Shotium 模板在服务器生成图表，Puppeteer 保留原脚本', () => {
