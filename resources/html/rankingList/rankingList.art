@@ -1,6 +1,11 @@
 {{extend defaultLayout}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/rankingList/rankingList.css">
+    {{if renderNoJs}}
+    <style>
+        .player_profile_box p { white-space: normal; overflow-wrap: anywhere; line-height: 1.2; }
+    </style>
+    {{/if}}
 {{/block}}
 
 {{block 'main'}}
@@ -33,7 +38,7 @@
                 <p>#{{user.index}}</p>
             </div>
             <div class="playerId">
-                <p name="pvis">{{#user.playerId}}</p>
+                <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{if typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitLine(user.playerId, 400, 40, 14)}}px"{{/if}}{{/if}}>{{#user.playerId}}</p>
             </div>
             <div class="clgBox">
                 <div class="Challenge">
@@ -61,7 +66,7 @@
         </div>
         <div class="player_profile_box">
             {{if me.selfIntro}}
-            <p name="pvis">{{#me.selfIntro}}</p>
+            <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitBox(me.selfIntro, 405, 290, 35, 14, 1.2)}}px"{{/if}}>{{#me.selfIntro}}</p>
             {{else}}
             <p style="color: #005273;" name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
             {{/if}}

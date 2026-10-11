@@ -31,6 +31,12 @@ export function setPlatformAdapter(adapter = {}) {
             ...(adapter.logger || {}),
         },
     }
+    return currentAdapter
+}
+
+/** 只释放本次绑定的平台，迟到的旧实例不能清理新 Context。 @param {PlatformAdapter} expectedAdapter */
+export function clearPlatformAdapter(expectedAdapter) {
+    if (currentAdapter === expectedAdapter) currentAdapter = /** @type {any} */ (undefined)
 }
 
 /**

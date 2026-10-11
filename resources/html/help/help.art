@@ -2,6 +2,23 @@
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/help/help.css">
+{{if renderNoJs}}
+<style>
+    .help_box { align-items: stretch; }
+    .line { height: auto; min-height: 121px; }
+    .order { height: auto; padding: 6px; }
+    .order p { font-size: 23px; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }
+    .info_box { height: auto; min-width: 0; }
+    .up { height: auto; min-height: 25px; align-items: stretch; white-space: normal; }
+    .num { height: auto; flex-shrink: 0; }
+    .song { height: auto; min-width: 0; padding-top: 3px; padding-bottom: 3px; }
+    .song p { font-size: 16px; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; }
+    .down { height: auto; min-height: 90px; flex: 1; }
+    .desc { height: auto; align-items: flex-start; }
+    .desc p { font-size: 15px; line-height: 1.35; white-space: normal; overflow-wrap: anywhere; }
+    .desc img { max-width: 100%; height: auto; }
+</style>
+{{/if}}
 
 {{/block}}
 {{block 'main'}}

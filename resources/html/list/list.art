@@ -16,7 +16,7 @@
         <div class="line">
             <div class="song_name">
                 <div class="num"><span name="pvis">{{$index + 1}}</span></div>
-                <div class="song"><span name="pvis">{{line.song}} - {{line.composer}}</span></div>
+                <div class="song">{{if renderNoJs && staticText}}<span name="pvis" class="phi-fit-line" title="{{line.song}} - {{line.composer}}" style="font-size: {{staticText.fitLine(line.song + ' - ' + line.composer, 179, 10, 9)}}px; line-height: 1.15">{{line.song}} - {{line.composer}}</span>{{else}}<span name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{line.song}} - {{line.composer}}</span>{{/if}}</div>
                 <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
             </div>
             <div class="ill_box">

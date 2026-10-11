@@ -34,7 +34,7 @@ let Version = {
     yunzai: yunzai_ver,
 };
 
-const versionWatcher = fileWatcherRegistry.watch('version:readme', README_path, () => {
+function updateVersion() {
     try {
         const logs = fs.readFileSync(README_path, 'utf8')
         currentVersion = 'v' + (/插件版本\-([0-9\.]+)/.exec(logs)?.[1] ?? '')
@@ -46,10 +46,21 @@ const versionWatcher = fileWatcherRegistry.watch('version:readme', README_path, 
     } catch (e) {
         logger.error(e)
     }
-})
+}
+
+let versionWatcher = fileWatcherRegistry.watch('version:readme', README_path, updateVersion)
 
 Object.defineProperty(Version, 'close', {
     value: () => versionWatcher.close(),
+    enumerable: false,
+})
+
+Object.defineProperty(Version, 'reopen', {
+    value: () => {
+        Version.yunzai = `v${platform.getPackageVersion()}`
+        updateVersion()
+        versionWatcher = fileWatcherRegistry.watch('version:readme', README_path, updateVersion)
+    },
     enumerable: false,
 })
 

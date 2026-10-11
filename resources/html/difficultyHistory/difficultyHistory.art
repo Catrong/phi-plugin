@@ -28,7 +28,11 @@
       </div>
       <div class="content">
         <div class="chart-container">
+          {{if renderNoJs}}
+          {{@ staticCharts.difficulty(lineData, 800, 250)}}
+          {{else}}
           <svg id="difficultyChart" width="800" height="250"></svg>
+          {{/if}}
         </div>
       </div>
     </div>
@@ -73,6 +77,7 @@
   </div>
 </div>
 
+{{if !renderNoJs}}
 <script>
   // 测试示例数据 - 多条折线
   const sampleLines = {{#lineData}};
@@ -82,6 +87,7 @@
     drawDifficultyChart("difficultyChart", sampleLines)
   })
 </script>
+{{/if}}
 
 {{if theme == "snow"}}
 <div class="snow-box"></div>

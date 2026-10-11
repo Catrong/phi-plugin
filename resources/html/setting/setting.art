@@ -1,6 +1,18 @@
 {{extend defaultLayout}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/setting/setting.css">
+{{if renderNoJs}}
+<style>
+    .line { min-height: 50px; }
+    .square { flex-shrink: 0; }
+    .left { flex: 1; min-width: 0; padding: 7px 8px 7px 0; }
+    .title { height: auto; }
+    .left p { white-space: normal; overflow-wrap: anywhere; }
+    .right { position: relative; right: auto; height: auto; min-width: 0; width: 180px; flex-shrink: 0; margin-right: 12px; }
+    .space.setting-value { width: 140px; height: auto; min-height: 25px; box-sizing: border-box; padding: 5px 14px; }
+    .space.setting-value p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.25; text-align: center; }
+</style>
+{{/if}}
 {{/block}}
 
 {{block 'main'}}
@@ -35,7 +47,7 @@
             </div>
             <div class="right">
                 {{if value.type == "space"}}
-                <div class="space">
+                <div class="space{{renderNoJs ? ' setting-value' : ''}}">
                     <p name="pvis">{{value.value}}</p>
                 </div>
                 <div class="drc">

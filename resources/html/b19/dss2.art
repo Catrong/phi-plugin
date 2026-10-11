@@ -2,6 +2,13 @@
 
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/b19/dss2.css">
+{{if renderNoJs}}
+<style>
+  body .songname p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.1; }
+  body .titlePlayerInfo .playerId { width: 70%; }
+  body .titlePlayerInfo .playerId p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.1; }
+</style>
+{{/if}}
 {{/block}}
 
 {{block 'main'}}
@@ -23,7 +30,7 @@
     </div>
     <div class="titlePlayerInfo">
       <div class="playerId">
-        <p name="pvis" class="weight-font">{{#gameuser.PlayerId}}</p>
+        <p name="pvis" class="weight-font"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(gameuser.PlayerId, 740, 130, 80, 24, 1.1) : 32}}px"{{/if}}>{{#gameuser.PlayerId}}</p>
       </div>
       <div class="rks">
         <div class="clgBox">
@@ -89,7 +96,7 @@
       
       <div class="info-AT">
         <div class="songname">
-          <p name="pvis">{{song.song}}</p>
+          <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(song.song, 172, 34, 25, 10, 1.1) : 11}}px"{{/if}}>{{song.song}}</p>
         </div>
         <div class="acc-box">
           <div class="acc">
@@ -174,7 +181,7 @@
       
       <div class="info-AT">
         <div class="songname">
-          <p name="pvis">{{song.song}}</p>
+          <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(song.song, 172, 34, 25, 10, 1.1) : 11}}px"{{/if}}>{{song.song}}</p>
         </div>
         <div class="acc-box">
           <div class="acc">
@@ -238,7 +245,7 @@
       
       <div class="info-AT">
         <div class="songname">
-          <p name="pvis">{{song.song}}</p>
+          <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(song.song, 172, 34, 25, 10, 1.1) : 11}}px"{{/if}}>{{song.song}}</p>
         </div>
         <div class="acc-box">
           <div class="acc">

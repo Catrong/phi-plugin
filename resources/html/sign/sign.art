@@ -1,6 +1,11 @@
 {{extend defaultLayout}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/sign/sign.css" />
+{{if renderNoJs}}
+<style>
+    .quoteText p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.2; }
+</style>
+{{/if}}
 {{/block}}
 
 {{block 'main'}}
@@ -79,7 +84,7 @@
 
       <div class="quoteCard clip-box leftAbsolute">
         <p class="cardTitle leftAbsolute">每日一言</p>
-        <div class="quoteText leftAbsolute"><p name="pvis">{{quote}}</p></div>
+        <div class="quoteText leftAbsolute"><p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitBox(quote, 960, 66, 28, 14, 1.2)}}px"{{/if}}>{{quote}}</p></div>
       </div>
     </div>
 

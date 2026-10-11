@@ -17,7 +17,11 @@
             <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
         </div>
         <div class="playerId">
-            <p name="pvis">{{#gameuser.PlayerId}}</p>
+            {{if renderNoJs && staticText}}
+            <p name="pvis" class="phi-fit-line" title="{{gameuser.PlayerId}}" style="font-size: {{staticText.fitLine(gameuser.PlayerId, 292, 32, 18)}}px">{{#gameuser.PlayerId}}</p>
+            {{else}}
+            <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{#gameuser.PlayerId}}</p>
+            {{/if}}
         </div>
         <div class="rks clip-box">
             <p>{{gameuser.rks.toFixed(4)}}</p>
@@ -118,7 +122,11 @@
         </div>
         <div class="info-{{song.rank}}">
             <div class="songname">
-                <p name="pvis">{{song.song}}</p>
+                {{if renderNoJs && staticText}}
+                <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitLine(song.song, 164, 15, 11)}}px">{{song.song}}</p>
+                {{else}}
+                <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{song.song}}</p>
+                {{/if}}
             </div>
             <div class="songinfo">
                 <div class="Rating">
@@ -252,7 +260,11 @@
         </div>
         <div class="info-{{song.rank}}">
             <div class="songname">
-                <p name="pvis">{{song.song}}</p>
+                {{if renderNoJs && staticText}}
+                <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitLine(song.song, 164, 15, 11)}}px">{{song.song}}</p>
+                {{else}}
+                <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{song.song}}</p>
+                {{/if}}
             </div>
             <div class="songinfo">
                 <div class="Rating">

@@ -1,6 +1,15 @@
 {{extend defaultLayout}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/atlas/atlas.css">
+{{if renderNoJs}}
+<style>
+    .charts-box .txt { height: auto; min-height: 32px; align-items: flex-end; margin-top: 12px; }
+    .charts-box .txt .sqrt { flex-shrink: 0; }
+    .charts-box .txt .line { height: auto; min-height: 32px; }
+    .charts-box .txt .line p, .comment p { white-space: normal; overflow-wrap: anywhere; line-height: 1.3; }
+    .comment { max-height: none; padding: 12px 24px; box-sizing: border-box; }
+</style>
+{{/if}}
 
 {{/block}}
 
@@ -14,11 +23,11 @@
             <div class="info-box">
                 <div class="name-box clip-box">
                     <div class="song">
-                        <p name="pvis">{{song}}</p>
+                        <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{if typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitLine(song, 548, 48, 18)}}px"{{/if}}{{/if}}>{{song}}</p>
                         <!-- <p style="font-size: 45px;">{{song}}</p> -->
                     </div>
                     <div class="composer">
-                        <p name="pvis">{{composer}}</p>
+                        <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{if typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitLine(composer, 520, 25, 14)}}px"{{/if}}{{/if}}>{{composer}}</p>
                     </div>
                 </div>
                 <div class="charts-box">
@@ -65,7 +74,7 @@
                             </div>
                             {{each chart}}
                             <div class="charter">
-                                <p name="pvis">{{$value.charter}}</p>
+                                <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{if typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitLine($value.charter, 440, 30, 14)}}px"{{/if}}{{/if}}>{{$value.charter}}</p>
                             </div>
                             <div class="chart-info">
                                 <p>{{$value.tap}}</p>

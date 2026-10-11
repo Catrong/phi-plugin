@@ -80,6 +80,8 @@
  * @typedef {'onLinePhiIllUrl'} onLinePhiIllUrl 在线曲绘来源
  * @typedef {'githubProxy'} githubProxy GitHub代理
  * @typedef {'downIllUrl'} downIllUrl 下载曲绘来源
+ * @typedef {'renderer'} renderer 渲染器
+ * @typedef {'puppeteer' | 'shotium' | 'auto'} rendererKind 渲染器配置值
  * @typedef {'renderScale'} renderScale 渲染精度
  * @typedef {'randerQuality'} randerQuality 渲染质量
  * @typedef {'timeout'} timeout 渲染超时时间
@@ -159,6 +161,7 @@
  * @typedef {onLinePhiIllUrl
  * |githubProxy
  * |downIllUrl
+ * |renderer
  * |renderScale
  * |randerQuality
  * |timeout

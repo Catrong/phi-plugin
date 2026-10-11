@@ -42,6 +42,23 @@
         {{/if}}
     </style>
     {{/if}}
+    {{if renderNoJs}}
+    <style>
+        /* 页面保留自己的换行规则；只有显式声明的固定标题栏允许单行省略。 */
+        body [name="pvis"] { min-width: 0; max-width: 100%; }
+        body .phi-fit-line[name="pvis"] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .phi-static-theme { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
+        .phi-static-stars {
+            background-image: radial-gradient(circle, #fff9 1px, transparent 2px), radial-gradient(circle, #9dd7ff88 1px, transparent 2px), radial-gradient(circle, #fff6 1.5px, transparent 3px);
+            background-size: 131px 173px, 227px 193px, 367px 293px;
+            background-position: 31px 47px, 97px 131px, 173px 53px;
+        }
+        .phi-static-theme .snow { width: 2.5%; }
+        .phi-static-theme .snow img { width: 100%; }
+        .phi-static-theme.topTextBox p { font-size: 18px; opacity: .35; filter: blur(1px); }
+        body > canvas#stars, body > .snow-box, body > .topTextBox:not(.phi-static-theme) { display: none; }
+    </style>
+    {{/if}}
     <title>phi-plugin</title>
 </head>
 
@@ -65,6 +82,7 @@
         {{/if}}
     </div>
 
+    {{if !renderNoJs}}
     <script>
         var _res_path = "{{_res_path}}";
     </script>
@@ -76,13 +94,36 @@
     {{else if theme == "star"}}
     <script src="{{_res_path}}html/common/theme/star/star.js"></script>
     {{/if}}
+    {{/if}}
 
     <!-- <div class="container" id="container"> -->
     {{block 'main'}}{{/block}}
+    {{if renderNoJs}}
+    {{if theme == "star"}}
+    <div class="phi-static-theme phi-static-stars" aria-hidden="true"></div>
+    {{else if theme == "snow"}}
+    <div class="phi-static-theme" aria-hidden="true">
+        {{set staticFlakes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]}}
+        {{each staticFlakes index}}
+        <div class="snow" style="left: {{(index * 37 + 11) % 100}}%; top: {{(index * 23 + 7) % 100}}%; transform: rotate({{index * 47}}deg); opacity: .6;">
+            <img src="{{_res_path}}html/otherimg/snow{{index % 4 + 1}}.png" alt="">
+        </div>
+        {{/each}}
+    </div>
+    {{else if theme == "topText" || theme == "foolsDay"}}
+    <div class="phi-static-theme topTextBox" aria-hidden="true">
+        {{set staticThemeTexts = ['等待超时，请稍后重试QAQ!', '渲染失败QAQ!', '格式错误QAQ!', '未找到符合条件的谱面QAQ!', '更新失败QAQ!', '未找到存档QAQ!', '等待超时，请稍后重试QAQ!', '格式错误QAQ!']}}
+        {{each staticThemeTexts text index}}
+        <p style="left: {{(index * 37 + 5) % 90}}%; top: {{(index * 23 + 5) % 75}}%;">{{text}}</p>
+        {{/each}}
+    </div>
+    {{/if}}
+    {{/if}}
     <!-- <div class="copyright">{{@sys.copyright}}</div> -->
     <!-- </div> -->
     <!-- 曲目名称自适应name-box的宽度 -->
 
+    {{if !renderNoJs}}
     <script>
         function isBiggerThanParent(songName, parentElement) {
             console.log(songName, parentElement)
@@ -319,6 +360,7 @@
         window.addEventListener("DOMContentLoaded", adjustFontSize);
         window.addEventListener("resize", adjustFontSize);
     </script>
+    {{/if}}
 </body>
 
 </html>

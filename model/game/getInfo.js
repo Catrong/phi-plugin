@@ -168,6 +168,7 @@ export default new class getInfo {
         this.pendingReloadUnits = new Set()
         /** @type {ReturnType<typeof setTimeout> | null} */
         this.reloadTimer = null
+        this.infoWatchersClosed = false
         /** @type {Record<string, Partial<Record<levelKind, number>>>} 上一版本定数表，用于新曲与改谱对比 */
         this.oldDifList = {}
         /** @type {boolean} 版本历史是否已加载 */
@@ -206,6 +207,7 @@ export default new class getInfo {
      * oldInfo 目录、DLC 目录、演示存档与公共别名快照各自单独监听。
      */
     setupInfoWatchers() {
+        this.infoWatchersClosed = false
         void this.closeInfoWatchers()
         // 清理旧版整目录监听可能残留的注册
         void fileWatcherRegistry.close('info:directory')
@@ -266,6 +268,7 @@ export default new class getInfo {
      * @param {string[]} units
      */
     scheduleInfoReload(units) {
+        if (this.infoWatchersClosed) return
         for (const unit of units) this.pendingReloadUnits.add(unit)
         if (this.reloadTimer) return
         this.reloadTimer = setTimeout(() => {
@@ -808,7 +811,13 @@ export default new class getInfo {
 
     /** 关闭曲库监听器。 */
     async close() {
+        this.infoWatchersClosed = true
+        if (this.reloadTimer) clearTimeout(this.reloadTimer)
+        this.reloadTimer = null
+        this.pendingReloadUnits.clear()
+        this.reinitRequested = false
         await this.closeInfoWatchers()
+        await this.infoReloadChain
     }
 
     /**

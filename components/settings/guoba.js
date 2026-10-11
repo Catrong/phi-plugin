@@ -35,13 +35,17 @@ export function createGuobaConfigInfo(config, options = {}) {
     return {
         schemas: createGuobaSchemas(options.includeCredentials !== false),
         getConfigData,
-        /** @param {Record<string, any>} data */
-        setConfigData(data) {
+        /**
+         * @param {Record<string, any>} data
+         * @param {{Result?: {ok: (data: Record<string, any>, message: string) => any}}} [context]
+         */
+        setConfigData(data, context = {}) {
             const current = getConfigData()
             const values = shared.validateSettings({ ...current, ...data })
             for (const [key, value] of Object.entries(values)) {
                 if (current[key] !== value) config.modify('config', key, value)
             }
+            return context.Result?.ok({}, '配置已保存') || { ok: true, message: '配置已保存' }
         },
     }
 }

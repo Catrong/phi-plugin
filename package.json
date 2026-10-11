@@ -45,11 +45,22 @@
     "node-csv": "^0.1.2",
     "node-fetch": "^3.3.2",
     "pinyin-pro": "^3.15.4",
-    "puppeteer": "^24.16.2",
     "qrcode": "^1.5.4",
     "single-line-log": "^1.1.2",
     "ulid": "^3.0.1",
     "yaml": "^2.8.0"
+  },
+  "peerDependencies": {
+    "@pixel.js/shotium": "^0.12.2",
+    "puppeteer": "^24.16.2"
+  },
+  "peerDependenciesMeta": {
+    "@pixel.js/shotium": {
+      "optional": true
+    },
+    "puppeteer": {
+      "optional": true
+    }
   },
   "keywords": [
     "云崽",

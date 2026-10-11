@@ -1,8 +1,24 @@
 {{extend defaultLayout}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/chartImg/chartImg.css">
+    {{if !renderNoJs}}
     <script src="{{_res_path}}html/chartInfo/echarts.js"></script>
     <script src="{{_res_path}}html/chartInfo/echarts-wordcloud.min.js"></script>
+    {{/if}}
+    {{if renderNoJs}}
+    <style>
+        /* 静态 SVG 与文本参与布局，信息较多时面板按实际内容增长。 */
+        .chart-info { height: auto; min-height: 500px; }
+        .chart-info > .box-content, .chart-info .info-content { height: auto; }
+        .chart-info .info-box, .chart-info .words-box, .chart-info .notes-bar { height: auto; min-width: 0; }
+        .chart-info .info-box .content p { overflow-wrap: anywhere; }
+        .chart-info .notes-content p { white-space: nowrap; }
+        .chart-info .words { position: static; width: 100%; height: 430px; }
+        .chart-info .box-tip { position: static; align-self: flex-end; margin: 8px 0 12px; }
+        .chart-info .box-tip p { font-size: 36px; }
+        .chart-info .bar-box { height: 350px; flex: none; }
+    </style>
+    {{/if}}
 {{/block}}
 {{block 'main'}}
     <div class="background">
@@ -69,7 +85,11 @@
                     <div class="box-tip">
                         <p>{{tip}}</p>
                     </div>
-                    <div class="words" id="words"></div>
+                    <div class="words" id="words">
+                        {{if renderNoJs}}
+                        {{@ staticCharts.radar(words, wordsMaxValue, { width: 450, height: 430, fontSize: 30, showValue: true })}}
+                        {{/if}}
+                    </div>
                 </div>
                 <div class="notes-bar">
                     <div class="content-title">
@@ -104,6 +124,7 @@
             </div>
         </div>
     </div>
+    {{if !renderNoJs}}
     <script>
         var chart = echarts.init(document.getElementById("words"), {renderer: 'svg'});
         // 准备雷达图数据
@@ -170,4 +191,5 @@
             ]
         });
     </script>
+    {{/if}}
 {{/block}}

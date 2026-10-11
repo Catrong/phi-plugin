@@ -2,6 +2,11 @@
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css">
+{{if renderNoJs}}
+<style>
+    .Player_profile_box p { white-space: normal; overflow-wrap: anywhere; line-height: 1.2; }
+</style>
+{{/if}}
 
 {{/block}}
 {{block 'main'}}
@@ -29,7 +34,7 @@
                         <p>ID</p>
                     </div>
                     <div class="Player_Id-right">
-                        <p name="pvis">{{#gameuser.PlayerId}}</p>
+                        <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{if typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitLine(gameuser.PlayerId, 510, 60, 20)}}px"{{/if}}{{/if}}>{{#gameuser.PlayerId}}</p>
                     </div>
                 </div>
             </div>
@@ -74,7 +79,7 @@
         </div>
         <div class="Player_profile_box">
             {{if gameuser.selfIntro}}
-            <p color='white' name="pvis">{{#gameuser.selfIntro}}</p>
+            <p color='white' name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitBox(gameuser.selfIntro, 630, 265, 60, 16, 1.2)}}px"{{/if}}>{{#gameuser.selfIntro}}</p>
             {{else}}
             <p color='skyblue' name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
             {{/if}}

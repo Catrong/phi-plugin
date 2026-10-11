@@ -236,6 +236,13 @@ export interface PlatformRendererBase {
 
 export type PlatformRendererBaseConstructor = new (config?: PlatformRendererConfig) => PlatformRendererBase
 
+export interface PlatformHostRenderer {
+    id?: string
+    type?: string
+    render(name: string, data?: Record<string, any>): MaybePromise<Buffer | Uint8Array | (Buffer | Uint8Array)[] | false>
+    [key: string]: any
+}
+
 export interface PlatformAdapter {
     name: PlatformName
     PluginBase: PlatformPluginBaseConstructor
@@ -245,6 +252,11 @@ export interface PlatformAdapter {
     logger: PlatformLogger
     segment: PlatformSegment
     getBotConfig(): PlatformBotConfig
+    /** 获取宿主共享渲染器；调用方不得关闭或重启它。 */
+    getHostRenderer?(name: string): Promise<PlatformHostRenderer | null>
+    /** 宿主当前启用的渲染器；仅用于自动模式，不推测未安装的服务。 */
+    getActiveRendererName?(): string
+    hasPuppeteerService?(): boolean
     getPackageVersion(): string
     getBotNickname(e?: PlatformEvent): string
     getAdapterName(e?: PlatformEvent): string

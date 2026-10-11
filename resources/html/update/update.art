@@ -3,6 +3,23 @@
 
 <link rel="stylesheet" href="{{_res_path}}html/update/update.css">
 
+{{if renderNoJs}}
+<style>
+    /* 曲名栏约 15px 高，静态渲染不能依赖页面脚本把 23.5px 字体缩小。 */
+    .record_box .songsname { height: 100%; box-sizing: border-box; padding: 0 2px; min-width: 0; }
+    .record_box .songsname p { font-size: 13px; line-height: 1.1; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .record_box .without-rating .songsname, .record_box .namebox_ed .songsname, .record_box .namebox_un .songsname { width: 100%; }
+    .record_box .new-box { height: 100%; align-items: center; }
+    .record_box .new-box img { height: 100%; max-height: 16px; max-width: 100%; object-fit: contain; }
+    .title .r > p:first-child { max-width: 100%; font-size: 16px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .record_box .box_title-left p { max-width: 100%; font-size: 13px; }
+    .record_box .compact-date .box_title-left { height: 12px; align-self: flex-start; }
+    .record_box .compact-date .box_title-left p { font-size: 11px; line-height: 1.05; }
+    .record_box .compact-date .box_title-right { height: 12px; bottom: 0; align-items: flex-end; }
+    .record_box .compact-date .box_title-right p { font-size: 10px; line-height: 1.05; }
+</style>
+{{/if}}
+
 {{/block}}
 
 
@@ -11,7 +28,11 @@
     
     <div class="title">
         <div class="r">
+            {{if renderNoJs && staticText}}
+            <p name="pvis" class="phi-fit-line" title="Player: {{PlayerId}}" style="font-size: {{staticText.fitLine('Player: ' + PlayerId, 294, 16, 12)}}px">Player: {{#PlayerId}}</p>
+            {{else}}
             <p>Player: {{#PlayerId}}</p>
+            {{/if}}
             <p>RankingScore: {{Rks}}
                 {{if added_rks_notes[0]}} <span
                     style="color: {{added_rks_notes[0].includes('+')?'gold':'red'}};">{{added_rks_notes[0]}}</span>{{/if}}
@@ -105,13 +126,21 @@
                     {{if song.finished}}
                     <div class="namebox_ed">
                         <div class="songsname">
+                            {{if renderNoJs && staticText}}
+                            <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitLine(song.song, 128, 13, 10)}}px">{{song.song}}</p>
+                            {{else}}
                             <p name="pvis">{{song.song}}</p>
+                            {{/if}}
                         </div>
                     </div>
                     {{else}}
                     <div class="namebox_un">
                         <div class="songsname">
+                            {{if renderNoJs && staticText}}
+                            <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitLine(song.song, 128, 13, 10)}}px">{{song.song}}</p>
+                            {{else}}
                             <p name="pvis">{{song.song}}</p>
+                            {{/if}}
                         </div>
                     </div>
                     {{/if}}
@@ -145,7 +174,7 @@
         {{each box_line time_line}}
         <div class="title_box">
             {{each time_line date}}
-            <div class="box_title" style="width: {{date.width}}px;filter: drop-shadow(0px 2px 2px {{date.color}});">
+            <div class="box_title{{if renderNoJs && date.date && date.update_num > 1 && date.width <= 150}} compact-date{{/if}}" style="width: {{date.width}}px;filter: drop-shadow(0px 2px 2px {{date.color}});">
                 <div class="box_title-right-down" style="background-color: {{date.color}};"></div>
                 {{if date.date}}
                 <div class="box_title-left" style="background-color: {{date.color}};">
@@ -173,14 +202,18 @@
                 </div>
                 {{/if}}
                 <div class="infobox">
-                    <div class="namebox">
+                    <div class="namebox{{if renderNoJs && !song.Rating}} without-rating{{/if}}">
                         {{if song.Rating}}
                         <div class="new-box">
                             <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
                         </div>
                         {{/if}}
                         <div class="songsname">
+                            {{if renderNoJs && staticText}}
+                            <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitLine(song.song, song.Rating ? 106 : 128, 13, 10)}}px">{{song.song}}</p>
+                            {{else}}
                             <p name="pvis">{{song.song}}</p>
+                            {{/if}}
                         </div>
                     </div>
                     <div class="songsinfo">

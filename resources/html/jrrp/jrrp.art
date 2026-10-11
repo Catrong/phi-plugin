@@ -1,6 +1,11 @@
 {{extend defaultLayout}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/jrrp/jrrp.css">
+{{if renderNoJs}}
+<style>
+    .sentences p, .from p { width: calc(100% - 30px); white-space: normal; overflow-wrap: anywhere; line-height: 1.2; text-align: center; }
+</style>
+{{/if}}
 
 {{/block}}
 
@@ -49,10 +54,10 @@
         {{/each}}
     </div>
     <div class="sentences">
-        <p name="pvis">{{sentence.hitokoto}}</p>
+        <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitBox(sentence.hitokoto, 1180, 72, 40, 18, 1.2)}}px"{{/if}}>{{sentence.hitokoto}}</p>
     </div>
     <div class="from">
-        <p name="pvis">——「{{sentence.from}}」</p>
+        <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitBox('——「' + sentence.from + '」', 485, 44, 40, 16, 1.2)}}px"{{/if}}>——「{{sentence.from}}」</p>
     </div>
 
 {{/block}}

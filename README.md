@@ -71,6 +71,8 @@ pnpm install -P
 > pnpm config set registry https://registry.npmmirror.com
 >```
 
+渲染器 SDK 现为按需提供的可选依赖。默认 Puppeteer 通常直接使用 Yunzai 宿主安装的 `puppeteer`（兼容 24.x）；若提示缺少该包，请在宿主根目录执行 `pnpm add puppeteer@^24.16.2`。选择 Shotium 时复用宿主服务，无需在本插件另装 Shotium SDK。
+
 #### Koishi 安装
 
 <details>
@@ -94,13 +96,23 @@ node ./external/phi-plugin/scripts/install-koishi.cjs --dry-run
 node /path/to/install-koishi.cjs --root /path/to/koishi-app
 # 更新本体并重新安装（仅允许干净 Git 工作区，快进更新）
 node ./external/phi-plugin/scripts/install-koishi.cjs --update
+# 只安装 Shotium 后端，首次安装也可使用此参数
+node ./external/phi-plugin/scripts/install-koishi.cjs --renderer shotium
+# 准备两种后端，自动跟随宿主使用 Shotium，否则使用 Puppeteer
+node ./external/phi-plugin/scripts/install-koishi.cjs --renderer auto
+# 准备并切换到 Koishi Puppeteer 服务
+node ./external/phi-plugin/scripts/install-koishi.cjs --renderer puppeteer
 ```
 
-包管理器优先按宿主唯一的锁文件识别，也可用 `--manager npm`、`--manager yarn` 或 `--manager pnpm` 指定。Yarn 需要 2+ 且使用 `nodeLinker: node-modules`。非默认 YAML 配置可用 `--config 文件路径` 指定。
+包管理器优先按宿主唯一的锁文件识别，也可用 `--manager npm`、`--manager yarn` 或 `--manager pnpm` 指定。Yarn 需要 2+ 且使用 `nodeLinker: node-modules`。pnpm 的本地链接不安装本体公共依赖，安装器会先用随 Node.js 提供的 npm 7+ 补齐本体公共运行依赖，跳过渲染器 peers、安装脚本和 npm 锁文件；宿主继续使用 pnpm，本体 `package.json` 和原锁文件均不修改。非默认 YAML 配置可用 `--config 文件路径` 指定。
 
 安装前会将待修改的已有宿主文件和包装文件备份至宿主 `.phi-plugin-install-backups/`。安装失败时可据此恢复；脚本不会自动回滚已安装的依赖，也不会自动重启 Koishi。安装成功后请重启 Koishi 并刷新 WebUI。
 
-请在控制台启用一个 `database` 服务。缺少 Puppeteer 时脚本会添加其依赖和配置，但保留已有服务的禁用状态。安装过程跳过浏览器下载，请通过 Koishi Puppeteer 服务配置可用的 Chrome / Chromium 路径。
+请在控制台启用一个 `database` 服务。`--renderer` 省略时保留已有 phi-plugin 实例的 `renderer`，首次安装默认 `puppeteer`。选择 `shotium` 只安装 `@pixel.js/shotium` SDK，使用本插件管理的原生渲染器，无需 Puppeteer 服务或 Chrome。SDK 需要 Node.js 18+，由包管理器按系统与架构安装原生包，请保留 optionalDependencies。
+
+选择 `puppeteer` 会按需补齐 Puppeteer SDK、Koishi Puppeteer 服务依赖与配置；选择 `auto` 会准备两种后端，并补齐 Puppeteer 作为未检测到宿主 Shotium 时的后备。两者均保留已有服务、浏览器路径和禁用状态。安装过程跳过浏览器下载，请通过 Koishi Puppeteer 服务配置可用的 Chrome / Chromium 路径。Shotium 为可选 SDK，Puppeteer 服务为可选注入，未安装或启用所选后端时会明确提示缺少依赖。
+
+以后在 Koishi 设置的“渲染设置”中选择渲染器，也可修改 `koishi.yml` 对应 phi-plugin 实例的 `renderer`。保存后原位切换渲染器及并发、超时、质量设置，无需重载插件或重启宿主；旧请求继续完成，后续请求使用新后端。缺少所选服务或 SDK 时拒绝此次切换并保留当前后端。切换到尚未安装的后端前，可重新执行安装器选择该后端；安装器会保留之前已安装的另一后端，方便后续切换。
 
 若原先使用独立版本的同名`koishi-plugin-phi-plugin`插件，请先迁移，脚本不会覆盖它。
 
@@ -142,6 +154,29 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 已有仓库执行 `git pull --ff-only`，保留当前分支和远程配置；有未提交修改或无法快进时停止，不强制覆盖。曲绘库尚未下载时，按已保存的 `downIllUrl` 和 `githubProxy` 克隆。插件更新完成后请重载插件，若依赖发生变化则重新运行安装脚本。按钮不会自动重启 Koishi；接入此控制台扩展无需改动本体 `package.json`。
 
 </details>
+
+#### 渲染器配置
+
+Yunzai 可在 `plugins/phi-plugin/config/config/config.yaml` 中切换渲染器，也可通过 Guoba 的“渲染设置”选择，或使用主人指令 `/phi set渲染器Shotium`、`/phi set渲染器Puppeteer`。
+
+Koishi 使用插件设置表单或 `koishi.yml` 中的 `renderer`；`shotium` 调用 Shotium Node.js SDK，`puppeteer` 从 Koishi Puppeteer 服务读取 Chrome 路径，再启动插件独立浏览器。`auto` 跟随宿主实际使用的渲染器：Yunzai 检查当前渲染器配置，Koishi 检查有效的 Shotium 渲染服务；使用 Shotium 时复用宿主，否则使用插件独立 Puppeteer。Koishi 没有统一的渲染器配置，未提供兼容 Shotium 服务时会走 Puppeteer 后备。默认仍为 `puppeteer`。
+
+```yaml
+# Puppeteer（默认）：puppeteer；Shotium：shotium；自动跟随宿主：auto
+renderer: shotium
+renderNum: 1
+timeout: 20000
+```
+
+Yunzai 保存后动态生效，无需重启 Bot；正在执行的请求继续完成，后续请求使用新的渲染器。默认 `puppeteer` 保留插件独立浏览器行为；`shotium` 要求 Yunzai 宿主已启用 Shotium，复用其渲染服务。Koishi 的渲染设置保存后原位切换；重载或卸载时先停止接单，等待旧工作并回收插件的连接、浏览器与监听器，宿主渲染服务继续由 Koishi 管理。
+
+`renderNum` 是插件渲染队列的并发上限，`renderQueueLimit` 是等待队列上限，均可动态调整。Yunzai Shotium 复用宿主渲染器，Koishi Shotium 由插件管理原生实例，并发请求共享渲染资源。`timeout` 控制单次渲染超时，`waitingTimeout` 控制等待空闲槽位的超时。
+
+`randerQuality` 控制 JPEG/WebP 的压缩质量，保存后对后续截图生效，PNG 不受影响。数值越高，细节越清晰、文件越大；可用 `95` 兼顾清晰度与体积，`100` 保留更高质量。`renderScale` 控制图片尺寸，保持 `100` 使用模板原尺寸。
+
+Shotium 使用一次容器选择避免重复加载页面。默认 B19 和列表的长标题会静态调整字号，并在最小可读字号下以单行省略，避免遮挡成绩；内置图表按空间安排标签，重复雷达图复用有界 SVG 缓存。
+
+Shotium 使用静态 HTML 渲染，插件内置的图表会先转换为 SVG 图片后交给所选 Shotium 后端。自定义主题的页面 JavaScript 不会执行；依赖 JavaScript 的主题请使用 `puppeteer`。
 
 ---
 

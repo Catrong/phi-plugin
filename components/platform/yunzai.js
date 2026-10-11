@@ -334,6 +334,16 @@ const adapter = {
 
     logger: createLogger(globalThis.logger),
 
+    getActiveRendererName() {
+        return String(yunzaiCfgModule?.default?.renderer?.name || 'puppeteer').trim().toLowerCase()
+    },
+
+    async getHostRenderer(name) {
+        // 按需加载，普通 Puppeteer 模式与非 Yunzai 环境不加载宿主渲染后端。
+        const module = await optionalImport('../../../../lib/renderer/loader.js')
+        return module?.default?.getRenderer?.(name) || null
+    },
+
     segment: {
         image(data) {
             return nativeSegment?.image ? nativeSegment.image(data) : createPhiSegment('image', { data })

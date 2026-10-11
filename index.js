@@ -5,7 +5,7 @@ const isKoishi = getPlatformAdapter()?.name === 'koishi' || detectEnvironment() 
 const koishi = isKoishi ? await import('./koishi.js') : undefined
 
 export const name = 'phi-plugin'
-export const inject = { required: ['database', 'puppeteer'] }
+export const inject = { required: ['database'], optional: ['puppeteer', 'shotium'] }
 export const Config = koishi?.Config
 /** @param {any} ctx @param {any} [config] */
 export async function apply(ctx, config) {

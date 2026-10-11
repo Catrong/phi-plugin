@@ -1,4 +1,7 @@
-import puppeteer from './puppeteer.js'
+import LazyRenderer, { validateRendererDependencies } from './lazyRenderer.js'
+import staticCharts from './staticCharts.js'
+import staticText from './staticText.js'
+import { randomUUID } from 'node:crypto'
 import { Data, Version, Plugin_Name, Display_Plugin_Name, Config } from '../../components/index.js'
 import { _path, pluginResources, imgPath, tempPath } from '../filesystem/path.js'
 import fCompute from '../game/fCompute.js'
@@ -13,9 +16,9 @@ import RenderPressureHistory from './renderPressureHistory.js'
 
 /**@import {botEvent} from '../../components/baseClass.js' */
 
-export default await new class picmodle {
+export class PicModel {
 
-    constructor() {
+    constructor({ registerCleanup = true } = {}) {
         /**
          * 空闲渲染器下标
          * @type {number[]}
@@ -32,10 +35,28 @@ export default await new class picmodle {
          */
         this.rendering = new Set()
         /**
-         * puppeteer实例池
-         * @type {import('./puppeteer.js').PhiRenderer[]}
+         * 渲染器槽位；忙碌槽位在当前请求完成后才替换或缩减。
+         * @type {(import('./puppeteer.js').PhiRenderer | undefined)[]}
          */
         this.puppeteer = []
+        this.poolManaged = true
+        this.poolId = randomUUID()
+        this.rendererSequence = 0
+        /** @type {(string | undefined)[]} */
+        this.rendererKeys = []
+        /** @type {Set<number>} */
+        this.leased = new Set()
+        /** @type {Map<import('./puppeteer.js').PhiRenderer, Promise<void>>} */
+        this.retired = new Map()
+        /** @type {{renderer: 'puppeteer' | 'shotium', requested: 'puppeteer' | 'shotium' | 'auto', source: 'host' | 'local', count: number, timeout: number} | undefined} */
+        this.rendererSettings = undefined
+        /** @type {unknown} */
+        this.sessionOwner = undefined
+        /** @type {Promise<void> | null} */
+        this.sessionClosePromise = null
+        /** @type {Set<() => void>} */
+        this.drainers = new Set()
+        this.invalidRenderer = ''
         this.tot = 0
         this.pressureWindowStartedAt = new Date().toISOString()
         this.pressureCompleted = 0
@@ -46,7 +67,7 @@ export default await new class picmodle {
         this.pressureHistory = new RenderPressureHistory()
         this.shuttingDown = false
         this.closePromise = null
-        registerProcessCleanup(() => this.close(), () => this.forceClose())
+        if (registerCleanup) registerProcessCleanup(() => this.close(), () => this.forceClose())
     }
 
     async init() {
@@ -63,15 +84,100 @@ export default await new class picmodle {
             logger.error(`[Phi-Plugin][清理临时文件失败]`)
             logger.error(err)
         }
-        /** 初始化渲染器槽位；Chromium 在非 Canvas 页面首次渲染时按需启动。 */
-        let num = Config.getUserCfg('config', 'renderNum')
-        for (let i = 0; i < num; i++) {
-            this.puppeteer.push(new puppeteer({
-                puppeteerTimeout: Config.getUserCfg('config', 'timeout')
-            }, `${i}`))
-            this.idle.push(i)
-        }
+        this.refreshRenderers()
         return this;
+    }
+
+    /** 每次分配和归还都读取最新配置，兼容 YAML 监听与宿主面板即时更新。 */
+    /** @param {Record<string, any>} [patch] */
+    getRendererSettings(patch = {}) {
+        const defaults = Config.getdefSet('config')
+        const values = { ...defaults, ...Config.getConfig('config'), ...patch }
+        const selected = String(values.renderer || 'puppeteer').trim().toLowerCase()
+        if (!['puppeteer', 'shotium', 'auto'].includes(selected) && this.invalidRenderer !== selected) {
+            logger.warn(`[Phi-Plugin] 无效的渲染器配置「${selected}」，使用 Puppeteer`)
+        }
+        this.invalidRenderer = selected
+        const count = Number(values.renderNum)
+        const timeout = Number(values.timeout)
+        const requested = /** @type {'puppeteer' | 'shotium' | 'auto'} */ (['shotium', 'auto'].includes(selected) ? selected : 'puppeteer')
+        const followsHost = requested === 'auto' && platform.getActiveRendererName?.() === 'shotium'
+        const renderer = requested === 'shotium' || followsHost ? 'shotium' : 'puppeteer'
+        return {
+            renderer: /** @type {'puppeteer' | 'shotium'} */ (renderer),
+            requested,
+            source: /** @type {'host' | 'local'} */ (renderer === 'shotium' && (followsHost || platform.name === 'yunzai') ? 'host' : 'local'),
+            count: Number.isSafeInteger(count) && count >= 1 && count <= 10 ? count : defaults.renderNum,
+            timeout: Number.isFinite(timeout) && timeout >= 0 ? timeout : defaults.timeout,
+        }
+    }
+
+    /** 在 Koishi 同步 accept 回调里拒绝缺依赖的新后端，提交前不启动引擎。 @param {Record<string, any>} [patch] */
+    validateRendererSettings(patch = {}) {
+        const settings = this.getRendererSettings(patch)
+        validateRendererDependencies(settings)
+        return settings
+    }
+
+    /** @param {{renderer: 'puppeteer' | 'shotium', source?: 'host' | 'local', count: number, timeout: number}} settings */
+    createRenderer(settings) {
+        // 换回 Puppeteer 时使用新 profile，旧实例关闭期间也不会争用 profile 锁。
+        return new LazyRenderer(settings, { puppeteerTimeout: settings.timeout }, `${this.poolId}-${this.rendererSequence++}`)
+    }
+
+    /** @param {import('./puppeteer.js').PhiRenderer} renderer */
+    retireRenderer(renderer) {
+        if (this.retired.has(renderer)) return
+        const task = Promise.resolve().then(() => renderer.shutdown()).then(() => {
+            this.retired.delete(renderer)
+        }, err => {
+            // 关闭失败的实例继续保留给退出阶段的同步回收。
+            logger.error('[Phi-Plugin] 旧渲染器回收失败', err)
+        })
+        this.retired.set(renderer, task)
+    }
+
+    /** 不替换已经分配的槽位，排队请求保持 FIFO 并在分配时使用最新后端。 */
+    refreshRenderers() {
+        if (!this.poolManaged || this.shuttingDown) return
+        const settings = this.getRendererSettings()
+        const key = `${settings.renderer}:${settings.timeout}:${settings.source}`
+        const changed = !this.rendererSettings || this.rendererSettings.renderer !== settings.renderer
+            || this.rendererSettings.count !== settings.count || this.rendererSettings.source !== settings.source
+            || this.rendererSettings.requested !== settings.requested
+        this.rendererSettings = settings
+        const size = Math.max(settings.count, this.puppeteer.length)
+        for (let idx = 0; idx < size; idx++) {
+            if (this.leased.has(idx)) continue
+            const old = this.puppeteer[idx]
+            if (idx >= settings.count) {
+                delete this.puppeteer[idx]
+                delete this.rendererKeys[idx]
+                if (old) this.retireRenderer(old)
+            } else if (!old || this.rendererKeys[idx] !== key) {
+                this.puppeteer[idx] = this.createRenderer(settings)
+                this.rendererKeys[idx] = key
+                if (old) this.retireRenderer(old)
+            }
+        }
+        while (this.puppeteer.length > settings.count && !this.leased.has(this.puppeteer.length - 1)) {
+            this.puppeteer.pop()
+            this.rendererKeys.pop()
+        }
+        this.idle = Array.from({ length: settings.count }, (_, idx) => idx).filter(idx => !this.leased.has(idx))
+        if (changed) logger.info(`[Phi-Plugin] 渲染器配置已生效：${settings.requested === 'auto' ? '自动 → ' : ''}${settings.renderer}（${settings.source === 'host' ? '宿主' : '插件独立'}），并发上限 ${settings.count}`)
+        this.dispatchWaiters()
+    }
+
+    /** 把可用槽位依次交给现有等待请求，避免新请求插队。 */
+    dispatchWaiters() {
+        while (this.idle.length && this.waiters.length && this.leased.size < (this.rendererSettings?.count || Infinity)) {
+            const waiter = this.waiters.shift()
+            if (!waiter || waiter.settled) continue
+            const idx = /** @type {number} */ (this.idle.shift())
+            this.leased.add(idx)
+            waiter.done(idx)
+        }
     }
 
     /**
@@ -82,7 +188,12 @@ export default await new class picmodle {
      */
     acquire(timeout) {
         if (this.shuttingDown) return Promise.resolve(-1)
-        if (this.idle.length) return Promise.resolve(/** @type {number} */(this.idle.shift()))
+        this.refreshRenderers()
+        if (this.idle.length && (!this.poolManaged || this.leased.size < (this.rendererSettings?.count || 1))) {
+            const idx = /** @type {number} */ (this.idle.shift())
+            this.leased?.add(idx)
+            return Promise.resolve(idx)
+        }
         const configuredLimit = Number(Config.getUserCfg('config', 'renderQueueLimit'))
         const queueLimit = Number.isSafeInteger(configuredLimit) && configuredLimit >= 0 && configuredLimit <= 1000
             ? configuredLimit : Config.getdefSet('config').renderQueueLimit
@@ -117,7 +228,15 @@ export default await new class picmodle {
      * @param {number} idx
      */
     release(idx) {
-        if (this.shuttingDown) return
+        this.leased?.delete(idx)
+        if (this.shuttingDown) {
+            this.notifyDrained()
+            return
+        }
+        if (this.poolManaged) {
+            this.refreshRenderers()
+            return
+        }
         while (this.waiters.length) {
             const waiter = this.waiters.shift()
             if (!waiter || waiter.settled) continue
@@ -125,6 +244,54 @@ export default await new class picmodle {
             return
         }
         this.idle.push(idx)
+    }
+
+    notifyDrained() {
+        if (this.leased?.size || this.rendering.size) return
+        for (const resolve of this.drainers || []) resolve()
+        this.drainers?.clear()
+    }
+
+    /** 已分配给微任务但尚未进入 screenshot 的槽位也必须纳入在途统计。 @returns {Promise<void>} */
+    waitForDrain() {
+        if (!this.leased.size && !this.rendering.size) return Promise.resolve()
+        return new Promise(resolve => this.drainers.add(resolve))
+    }
+
+    /** 同一个 ESM 导出在 Koishi 重载后继续使用；只重建槽位，不重载业务模块。 @param {unknown} owner */
+    async beginSession(owner) {
+        if (this.sessionOwner === owner && !this.shuttingDown) return
+        if (this.sessionOwner !== undefined && !this.shuttingDown) throw new Error('phi-plugin 已有活动的渲染会话')
+        if (this.sessionClosePromise) await this.sessionClosePromise
+        if (this.closePromise) await this.closePromise
+        if (this.puppeteer.length) await this.close()
+        this.puppeteer = []
+        this.rendererKeys = []
+        this.rendererSettings = undefined
+        this.idle = []
+        this.waiters = []
+        this.leased.clear()
+        this.retired.clear()
+        this.sessionOwner = owner
+        this.shuttingDown = false
+        this.closePromise = null
+        this.sessionClosePromise = null
+        this.poolId = randomUUID()
+        this.refreshRenderers()
+    }
+
+    /** 停接单，先让旧请求结束，再释放槽位；旧 owner 不能关闭新会话。 @param {unknown} owner */
+    async endSession(owner) {
+        if (this.sessionOwner !== owner) return
+        if (this.sessionClosePromise) return this.sessionClosePromise
+        this.shuttingDown = true
+        this.idle = []
+        while (this.waiters.length) this.waiters.shift()?.done(-1)
+        this.sessionClosePromise = (async () => {
+            await this.waitForDrain()
+            await this.close()
+        })()
+        return this.sessionClosePromise
     }
 
     /**
@@ -415,8 +582,14 @@ export default await new class picmodle {
                 if (t?.themeInfo) themeInfo = t.themeInfo
             }
 
+            const quality = Number(params.quality ?? Config.getUserCfg('config', 'randerQuality'))
             let data = {
                 ...params,
+                quality: Number.isFinite(quality) && quality >= 1 && quality <= 100
+                    ? Math.round(quality) : Config.getdefSet('config').randerQuality,
+                renderNoJs: this.rendererKeys?.[puppeteerNum]?.startsWith('shotium:') || false,
+                staticCharts,
+                staticText,
                 themeInfo,
                 saveId: (params.saveId || params.save_id || tpl),
                 tplFile,
@@ -440,10 +613,12 @@ export default await new class picmodle {
             }
 
             /** 返回图片信息 */
-            const img = await this.puppeteer[puppeteerNum].screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
+            const renderer = this.puppeteer[puppeteerNum]
+            if (!renderer) throw new Error('渲染器槽位不可用')
+            const img = await renderer.screenshot(`${Plugin_Name}/${app}/${tpl}`, data)
             if (!img) throw new Error('截图返回为空')
             this.pressureCompleted += 1
-            return segment.image(img)
+            return Array.isArray(img) ? img.map(image => segment.image(image)) : segment.image(img)
         } catch (err) {
             this.pressureFailed += 1
             logger.error(`[Phi-Plugin][渲染失败]`, id)
@@ -467,7 +642,7 @@ export default await new class picmodle {
         const endedAt = new Date().toISOString()
         const snapshot = {
             windowStartedAt: this.pressureWindowStartedAt,
-            capacity: Math.max(1, this.puppeteer.length),
+            capacity: this.rendererSettings?.count || Math.max(1, this.puppeteer.length),
             active: this.rendering.size,
             queued: this.waiters.length,
             maxActive: Math.max(this.pressureMaxActive, this.rendering.size),
@@ -488,22 +663,21 @@ export default await new class picmodle {
 
     async restart() {
         if (this.shuttingDown) return
-        let num = Config.getUserCfg('config', 'renderNum')
-        const tasks = []
-        for (let i = 0; i < num; i++) {
-            if (this.puppeteer[i]) tasks.push(this.puppeteer[i].restart(true))
-        }
-        await Promise.allSettled(tasks)
+        this.refreshRenderers()
+        await Promise.allSettled(this.puppeteer.filter(renderer => !!renderer).map(renderer => renderer.restart(true)))
     }
 
-    /** 停止接单、清空等待队列并关闭全部 Chromium 实例。 */
+    /** 停止接单、清空等待队列并释放全部插件渲染资源。 */
     async close() {
         if (this.closePromise) return this.closePromise
         this.shuttingDown = true
         this.idle = []
         while (this.waiters.length) this.waiters.shift()?.done(-1)
-        this.closePromise = Promise.allSettled(this.puppeteer.map(renderer => renderer.shutdown()))
-            .then(() => undefined)
+        this.closePromise = (async () => {
+            const tasks = this.puppeteer.filter(renderer => !!renderer)
+                .map(renderer => Promise.resolve().then(() => renderer.shutdown()))
+            await Promise.allSettled([...tasks, ...(this.retired?.values() || [])])
+        })()
         return this.closePromise
     }
 
@@ -511,7 +685,13 @@ export default await new class picmodle {
     forceClose() {
         this.shuttingDown = true
         this.idle = []
-        for (const renderer of this.puppeteer) renderer.forceShutdown()
+        for (const renderer of new Set([...this.puppeteer, ...(this.retired?.keys() || [])])) renderer?.forceShutdown()
     }
 
-}().init()
+}
+
+const rendererPool = new PicModel()
+// Koishi 先预检后端，再由 owner 会话开放渲染；初始化失败不能留下匿名活动池。
+export default platform.name === 'koishi'
+    ? Object.assign(rendererPool, { shuttingDown: true })
+    : await rendererPool.init()
