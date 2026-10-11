@@ -133,6 +133,19 @@ LetterNum: 8
 #  是否发送开字母、主题市场及 QQ 官方机器人页面的交互式 Markdown 快捷操作
 LetterMarkdown: true
 
+#  是否尝试将 QQ 官方机器人快捷按钮附加到图片消息；关闭时图片与按钮分开发送
+#  合并模式需要宿主提供 imageToUrl，或配置下面的图床脚本返回公网地址
+#  phi-plugin 本身不监听图片端口；使用 QQ 适配器内置文件服务时，请在适配器账号配置填写公网 serverAddress
+#  serverAddress 不能填写 127.0.0.1/localhost，公网入口通常使用 80/443，实际端口由宿主文件服务或反向代理决定
+QuickCommandMergeImage: false
+
+#  可选的快捷指令图床上传脚本路径；脚本需返回公网 http(s) 图片地址，脚本自行上传，不要求 phi-plugin 开放端口
+#  可额外返回 width、height；无法读取实际尺寸时合并模式会自动回退为分开发送
+QuickCommandImageHostScript: ''
+
+#  快捷指令图床上传超时时间(ms)
+QuickCommandImageHostTimeout: 10000
+
 #  猜对后是否发送以及发送什么曲绘 原版 水印版 不发送
 LetterIllustration: "水印版"
 

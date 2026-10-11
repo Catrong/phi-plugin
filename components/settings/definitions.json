@@ -466,6 +466,32 @@
     "type": "boolean"
   },
   {
+    "key": "QuickCommandMergeImage",
+    "group": "快捷指令设置",
+    "label": "快捷按钮合并图片",
+    "description": "将 QQ 官方机器人快捷按钮附加到图片消息；需要宿主提供 imageToUrl 或图床脚本返回公网地址。phi-plugin 不监听端口；使用适配器内置文件服务时，请在适配器账号配置填写公网 serverAddress，不能填 127.0.0.1/localhost，关闭时图片与按钮分开发送",
+    "type": "boolean"
+  },
+  {
+    "key": "QuickCommandImageHostScript",
+    "group": "快捷指令设置",
+    "label": "快捷指令图床脚本",
+    "description": "可选的 ES 模块路径（相对插件根目录）；导出 upload 或 default 函数，接收图片 Buffer 并返回公网 http(s) 地址，脚本自行上传，不要求 phi-plugin 开放端口",
+    "type": "string",
+    "placeholder": "留空则仅使用宿主 imageToUrl，未提供时自动回退分开发送"
+  },
+  {
+    "key": "QuickCommandImageHostTimeout",
+    "group": "快捷指令设置",
+    "label": "图床上传超时",
+    "description": "快捷指令图床脚本的最大执行时间",
+    "type": "number",
+    "min": 1000,
+    "max": 120000,
+    "unit": "ms",
+    "required": true
+  },
+  {
     "key": "LetterIllustration",
     "group": "开字母设置",
     "label": "发送曲绘",

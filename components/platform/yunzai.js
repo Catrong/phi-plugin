@@ -345,6 +345,15 @@ const adapter = {
             if (nativeSegment?.markdown) return nativeSegment.markdown(text)
             return createPhiSegment('markdown', { text })
         },
+        button(...rows) {
+            // Some QQBot adapters expose button() only inside their own loader,
+            // after phi-plugin has already initialized the platform layer. Keep a
+            // raw Yunzai button segment as a compatible fallback so the adapter's
+            // converter can still turn it into a QQ keyboard.
+            return nativeSegment?.button
+                ? nativeSegment.button(...rows)
+                : { type: 'button', data: rows }
+        },
         text(text) {
             return createPhiSegment('text', { text })
         },

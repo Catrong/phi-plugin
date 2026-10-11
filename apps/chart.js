@@ -9,7 +9,7 @@ import logger from '../components/Logger.js';
 import { UserCredentials } from '../model/user/userCredentials.js';
 import { canUseApi, getApiAccessState } from '../model/user/apiPermission.js'
 import platform from '../components/platform/index.js'
-import { sendQuickCommands } from '../model/game/markdown.js'
+import { sendWithQuickCommands } from '../model/game/markdown.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
 /** @import {ChartTagSongRankResponse, ChartTagTreeNode, chartsTagResponseData, chartsTagVoteCountMap} from '../model/api/makeRequest.js' */
@@ -604,9 +604,9 @@ async function getChartImg(e, id, options) {
     chartImg: getInfo.getChartImg(info.id, rank),
   });
 
-  await send.send_with_At(e, [img, `${info.song} - ${rank}\n谱师：${info.chart[rank].charter}`])
+  const chartMessage = [img, `${info.song} - ${rank}\n谱师：${info.chart[rank].charter}`]
   const commandHead = Config.getUserCfg('config', 'cmdhead')
-  await sendQuickCommands(e, [
+  await sendWithQuickCommands(e, chartMessage, [
     { command: `/${commandHead} chart ${info.id} ${rank}`, label: '其他难度' },
     { command: `/${commandHead} tag ${info.id} ${rank}`, label: '查看标签' },
     { command: `/${commandHead} help`, label: '帮助' },
@@ -674,9 +674,9 @@ async function getChartTags(e, id, options) {
     })
   });
 
-  await send.send_with_At(e, resMsg.join('\n'));
+  const chartTagMessage = resMsg.join('\n');
   const commandHead = Config.getUserCfg('config', 'cmdhead')
-  await sendQuickCommands(e, [
+  await sendWithQuickCommands(e, chartTagMessage, [
     { command: `/${commandHead} chart ${info.id} ${rank}`, label: '查看谱面' },
     { command: `/${commandHead} settag ${info.id} ${rank}`, label: '提交标签' },
     { command: `/${commandHead} help`, label: '帮助' },

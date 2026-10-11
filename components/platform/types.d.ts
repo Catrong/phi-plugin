@@ -39,6 +39,7 @@ export interface PlatformSegment {
     at(userId: PlatformUserId): PlatformMessageOutput | PhiAtSegment
     markdown(text: string): PlatformMessageOutput | PhiMarkdownSegment
     text(text: string): PlatformMessageOutput | PhiTextSegment
+    button?(...rows: unknown[]): PlatformMessageOutput
     [key: string]: unknown
 }
 
