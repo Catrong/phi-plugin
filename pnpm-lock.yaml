@@ -29,6 +29,9 @@ importers:
       crypto-js:
         specifier: ^4.1.1
         version: 4.2.0
+      css-select:
+        specifier: ^6.0.0
+        version: 6.0.0
       csv:
         specifier: ^6.3.6
         version: 6.6.3
@@ -38,6 +41,9 @@ importers:
       echarts-wordcloud:
         specifier: ^2.1.0
         version: 2.1.0(echarts@5.6.0)
+      htmlparser2:
+        specifier: ^10.1.0
+        version: 10.1.0
       iconv-lite:
         specifier: ^0.6.3
         version: 0.6.3
@@ -1193,6 +1199,58 @@ packages:
   zrender@5.6.1:
     resolution: {integrity: sha512-OFXkDJKcrlx5su2XbzJvj/34Q3m6PvyCZkVPHGYpcCJ52ek4U/ymZyfuV1nKE23AyBJ51E/6Yr0mhZ7xGTO4ag==, tarball: https://registry.npmjs.org/zrender/-/zrender-5.6.1.tgz}
 
+  css-select@6.0.0:
+    resolution:
+      integrity: sha512-rZZVSLle8v0+EY8QAkDWrKhpgt6SA5OtHsgBnsj6ZaLb5dmDVOWUDtQitd9ydxxvEjhewNudS6eTVU7uOyzvXw==
+
+  boolbase@1.0.0:
+    resolution:
+      integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
+
+  css-what@7.0.0:
+    resolution:
+      integrity: sha512-wD5oz5xibMOPHzy13CyGmogB3phdvcDaB5t0W/Nr5Z2O/agcB8YwOz6e2Lsp10pNDzBoDO9nVa3RGs/2BttpHQ==
+    engines:
+      node: ">= 6"
+
+  domhandler@5.0.3:
+    resolution:
+      integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==
+    engines:
+      node: ">= 4"
+
+  domelementtype@2.3.0:
+    resolution:
+      integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==
+
+  domutils@3.2.2:
+    resolution:
+      integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==
+
+  dom-serializer@2.0.0:
+    resolution:
+      integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==
+
+  entities@4.5.0:
+    resolution:
+      integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
+    engines:
+      node: ">=0.12"
+
+  nth-check@2.1.1:
+    resolution:
+      integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==
+
+  htmlparser2@10.1.0:
+    resolution:
+      integrity: sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==
+
+  entities@7.0.1:
+    resolution:
+      integrity: sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==
+    engines:
+      node: ">=0.12"
+
 snapshots:
 
   '@babel/code-frame@7.29.7':
@@ -2313,3 +2371,48 @@ snapshots:
   zrender@5.6.1:
     dependencies:
       tslib: 2.3.0
+
+  css-select@6.0.0:
+    dependencies:
+      boolbase: 1.0.0
+      css-what: 7.0.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      nth-check: 2.1.1
+
+  boolbase@1.0.0: {}
+
+  css-what@7.0.0: {}
+
+  domhandler@5.0.3:
+    dependencies:
+      domelementtype: 2.3.0
+
+  domelementtype@2.3.0: {}
+
+  domutils@3.2.2:
+    dependencies:
+      dom-serializer: 2.0.0
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+
+  dom-serializer@2.0.0:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      entities: 4.5.0
+
+  entities@4.5.0: {}
+
+  nth-check@2.1.1:
+    dependencies:
+      boolbase: 1.0.0
+
+  htmlparser2@10.1.0:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      entities: 7.0.1
+
+  entities@7.0.1: {}

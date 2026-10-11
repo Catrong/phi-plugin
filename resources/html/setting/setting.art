@@ -1,4 +1,8 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [65, 25, 15, 12, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.setting-expanded': false
+})}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/setting/setting.css">
 {{if renderNoJs}}
@@ -35,8 +39,7 @@
 <div class="box">
     {{each data as value}}
     <div class="lineBox{{value.type == "divider"?" divider":''}}">
-        {{set valueOptions = ({ breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) })}}
-        {{set expandedValue = renderNoJs && value.type == 'space' && typeof staticText !== 'undefined' && (staticText.fitPvis ? staticText.fitPvis(value.value, 65, 25, 15, 1, valueOptions) : staticText.fitLine(value.value, 65, 15, 1)) < 12}}
+        {{set expandedValue = renderNoJs && value.type == 'space' && typeof staticText !== 'undefined' && staticText.fitRule && staticText.fitRule(value.value, pvis.default, { minimum: 1 }) < 12}}
         <div class="line{{expandedValue ? ' setting-expanded' : ''}}">
             <div class="square"></div>
             <div class="left">
@@ -50,7 +53,7 @@
             <div class="right">
                 {{if value.type == "space"}}
                 <div class="space{{renderNoJs ? ' setting-value' : ''}}">
-                    <p name="pvis"{{if renderNoJs && !expandedValue && typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(value.value, 65, 25, 15, 12, valueOptions) : staticText.fitLine(value.value, 65, 15, 12)}}px"{{/if}}>{{value.value}}</p>
+                    <p name="pvis">{{value.value}}</p>
                 </div>
                 <div class="drc">
                     <p>{{value.drc}}</p>

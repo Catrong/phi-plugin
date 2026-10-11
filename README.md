@@ -73,6 +73,8 @@ pnpm install -P
 
 渲染器 SDK 现为按需提供的可选依赖。默认 Puppeteer 通常直接使用 Yunzai 宿主安装的 `puppeteer`（兼容 24.x）；若提示缺少该包，请在宿主根目录执行 `pnpm add puppeteer@^24.16.2`。选择 Shotium 时复用宿主服务，无需在本插件另装 Shotium SDK。
 
+模板维护者可参考 [Shotium 文字适配规则](docs/pvis.md)：在 `.art` 开头声明 `pvis`，正文保留 `name="pvis"`，由渲染入口统一补上字号。
+
 #### Koishi 安装
 
 <details>

@@ -1,4 +1,9 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.playerId': [306, 64, 32, 18, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.songname': [168, 23, 15, 11, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 
 {{block 'css'}}
 {{if themeInfo && themeInfo.cssUrl && themeInfo.cssMode == "replace"}}
@@ -23,11 +28,7 @@
             <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
         </div>
         <div class="playerId">
-            {{if renderNoJs && staticText}}
-            <p name="pvis" class="phi-fit-line" title="{{gameuser.PlayerId}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(gameuser.PlayerId, 306, 64, 32, 18, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(gameuser.PlayerId, 305, 32, 18)}}px">{{#gameuser.PlayerId}}</p>
-            {{else}}
-            <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{#gameuser.PlayerId}}</p>
-            {{/if}}
+            <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{gameuser.PlayerId}}"{{/if}}>{{#gameuser.PlayerId}}</p>
         </div>
         <div class="rks clip-box">
             <p>{{gameuser.rks.toFixed(4)}}</p>
@@ -128,11 +129,7 @@
         </div>
         <div class="info-{{song.rank}}">
             <div class="songname">
-                {{if renderNoJs && staticText}}
-                <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(song.song, 168, 23, 15, 11, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(song.song, 167, 15, 11)}}px">{{song.song}}</p>
-                {{else}}
-                <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{song.song}}</p>
-                {{/if}}
+                <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.song}}"{{/if}}>{{song.song}}</p>
             </div>
             <div class="songinfo">
                 <div class="Rating">
@@ -266,11 +263,7 @@
         </div>
         <div class="info-{{song.rank}}">
             <div class="songname">
-                {{if renderNoJs && staticText}}
-                <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(song.song, 168, 23, 15, 11, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(song.song, 167, 15, 11)}}px">{{song.song}}</p>
-                {{else}}
-                <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{song.song}}</p>
-                {{/if}}
+                <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.song}}"{{/if}}>{{song.song}}</p>
             </div>
             <div class="songinfo">
                 <div class="Rating">

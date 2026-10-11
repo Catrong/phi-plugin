@@ -1,4 +1,10 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.order': [142, 119, 30, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.song': [200.48, 24.2, 18, 10, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.desc': [211.45, 96.8, 15, 12, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/help/help.css">
@@ -16,7 +22,6 @@
 
 {{/block}}
 {{block 'main'}}
-    {{set pvisOptions = ({ breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) })}}
     
     {{each helpGroup group}}
     {{if group.auth!="master"||isMaster}}
@@ -27,13 +32,13 @@
         {{each group.list help idx}}
         {{set helpTitle = cmdHead ? help.title.replace(/[\/杠钢刚]/g,`/${cmdHead} `) : help.title}}
         {{set helpExample = cmdHead ? (help.eg || help.title).replace(/[\/杠钢刚]/g,`/${cmdHead} `) : (help.eg || help.title)}}
-        {{set expandedHelp = renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox && (staticText.fitPvis ? staticText.fitPvis(help.desc && help.desc.replace(/\s/g,'&ensp;'), 211.45, 96.8, 15, 1, pvisOptions) : staticText.fitBox(help.desc, 211, 96.8, 15, 1, 1.5)) < 12}}
+        {{set expandedHelp = renderNoJs && typeof staticText !== 'undefined' && staticText.fitRule && staticText.fitRule(help.desc && help.desc.replace(/\s/g,'&ensp;'), pvis['.desc'], { minimum: 1 }) < 12}}
         <div class="line{{expandedHelp ? ' help-expanded' : ''}}">
             <div class="order">
                 {{if cmdHead}}
-                <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(helpTitle, 142, 119, 30, 14, pvisOptions) : staticText.fitBox(helpTitle, 142, 119, 30, 14, 1.5)}}px"{{/if}}>{{#helpTitle}}</p>
+                <p name="pvis">{{#helpTitle}}</p>
                 {{else}}
-                <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(helpTitle, 142, 119, 30, 14, pvisOptions) : staticText.fitBox(helpTitle, 142, 119, 30, 14, 1.5)}}px"{{/if}}>{{#helpTitle}}</p>
+                <p name="pvis">{{#helpTitle}}</p>
                 {{/if}}
             </div>
             <div class="info_box">
@@ -41,9 +46,9 @@
                     <div class="num">{{idx + 1}}</div>
                     <div class="song">
                         {{if cmdHead}}
-                        <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(helpExample, 200.48, 24.2, 18, 10, { nowrap: true, useFontMetrics: pvisOptions.useFontMetrics }) : staticText.fitLine(helpExample, 200, 16, 10)}}px"{{/if}}>{{#helpExample}}</p>
+                        <p name="pvis">{{#helpExample}}</p>
                         {{else}}
-                        <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(helpExample, 200.48, 24.2, 18, 10, { nowrap: true, useFontMetrics: pvisOptions.useFontMetrics }) : staticText.fitLine(helpExample, 200, 16, 10)}}px"{{/if}}>{{#helpExample}}</p>
+                        <p name="pvis">{{#helpExample}}</p>
                         {{/if}}
                     </div>
                     <!-- <div class="Master">Master</div> -->
@@ -51,7 +56,7 @@
                 <div class="down">
                     <div class="desc">
                         {{if help.desc}}
-                        <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(help.desc.replace(/\s/g,'&ensp;'), 211.45, 96.8, 15, 12, pvisOptions) : staticText.fitBox(help.desc, 211, 96.8, 15, 12, 1.5)}}px"{{/if}}>{{#help.desc.replace(/\s/g,'&ensp;')}}</p>
+                        <p name="pvis">{{#help.desc.replace(/\s/g,'&ensp;')}}</p>
                         {{/if}}
                         {{if help.img}}
                         <img src="{{_res_path}}html/otherimg/{{help.img}}" alt="{{help.img}}">

@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url'
 import platform from '../../components/platform/index.js'
 import logger from '../../components/Logger.js'
 import { pluginRoot } from '../filesystem/path.js'
+import { dealPvisTemplate } from './pvisTemplate.js'
 
 const Renderer = platform.RendererBase
 const CAPTURE_SELECTOR = '#container, body:not(:has(#container))'
@@ -230,7 +231,7 @@ export default class KoishiShotium extends Renderer {
     /** 缓存命中后的新 name 也需要输出目录。 @param {string} name @param {ScreenshotData} data */
     dealTpl(name, data) {
         fs.mkdirSync(path.join(String(this.dir || './temp/html'), name), { recursive: true })
-        return (/** @type {(name: string, data: ScreenshotData) => string | false} */ (super.dealTpl)).call(this, name, data)
+        return dealPvisTemplate(this, name, data, /** @type {(name: string, data: ScreenshotData) => string | false} */ (super.dealTpl))
     }
 
     /** @param {string} file */

@@ -1,4 +1,5 @@
 {{extend defaultLayout}}
+{{set pvis = [296, 60, 32, 12, 1.1]}}
 
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/historyB30/historyB30.css" />
@@ -19,7 +20,7 @@
       <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}" />
     </div>
     <div class="playerId">
-      <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(gameuser.PlayerId, 296, 60, 32, 12, 1.1) : 16}}px"{{/if}}>{{#gameuser.PlayerId}}</p>
+      <p name="pvis">{{#gameuser.PlayerId}}</p>
     </div>
     <div class="rks clip-box">
       <p>{{gameuser.rks.toFixed(4)}}</p>

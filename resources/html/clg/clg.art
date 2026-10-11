@@ -1,4 +1,5 @@
 {{extend defaultLayout}}
+{{set pvis = [600, 76, 56, 22, 1.1]}}
 {{block 'css'}}
     <link rel="stylesheet" type="text/css" href="{{_res_path}}html/clg/clg.css">
     {{if renderNoJs}}
@@ -20,7 +21,7 @@
                 </div>
                 <div class="info-box">
                     <div class="song_name">
-                        <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(song.song, 600, 76, 56, 22, 1.1) : 24}}px"{{/if}}>{{song.song}}</p>
+                        <p name="pvis">{{song.song}}</p>
                     </div>
                 </div>
             </div>

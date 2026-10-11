@@ -250,3 +250,34 @@ test('Shotium 在成功及失败后精确清理临时 HTML，保留原始模板�
         await fs.rm(outputDir, { recursive: true, force: true })
     }
 })
+
+
+test('Shotium 在宿主截图前应用本请求的 pvis 配置，缓存保留原 art', async () => {
+    const name = `phi-shotium-pvis-${process.pid}`
+    const outputDir = path.resolve('temp', 'html', name)
+    const host = {
+        id: 'shotium',
+        /** @param {string} name @param {any} data */
+        async render(name, data) {
+            return Buffer.from(await fs.readFile(this.dealTpl(name, data), 'utf8'))
+        },
+        /** @param {string} _name @param {any} _data @returns {string} */
+        dealTpl(_name, _data) { throw new Error('不可使用宿主模板缓存') },
+    }
+    try {
+        await withHost(host, async (renderer, root) => {
+            const file = path.join(root, 'page.art')
+            const source = '{{set pvis = [200, 60, large ? 30 : 20, 10, 1.1]}}<p name="pvis">Short</p>'
+            await fs.writeFile(file, source)
+            const first = await renderer.screenshot(name, { tplFile: file, renderNoJs: true, large: true })
+            const second = await renderer.screenshot(name, { tplFile: file, renderNoJs: true, large: false })
+            assert.ok(Buffer.isBuffer(first) && Buffer.isBuffer(second))
+            assert.match(first.toString(), /font-size: 30px/)
+            assert.match(second.toString(), /font-size: 20px/)
+            assert.equal((/** @type {Record<string, string>} */ (renderer.html))[file], source)
+            assert.deepEqual(await fs.readdir(outputDir), [])
+        })
+    } finally {
+        await fs.rm(outputDir, { recursive: true, force: true })
+    }
+})

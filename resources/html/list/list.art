@@ -1,4 +1,8 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.song_name .song': [186, 12, 10, 8, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/list/list.css">
@@ -22,7 +26,7 @@
         <div class="line">
             <div class="song_name">
                 <div class="num"><span name="pvis">{{$index + 1}}</span></div>
-                <div class="song">{{if renderNoJs && staticText}}<span name="pvis" class="phi-fit-line" title="{{line.song}} - {{line.composer}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(line.song + ' - ' + line.composer, 186, 12, 10, 8, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(line.song + ' - ' + line.composer, 185, 8, 8)}}px">{{line.song}} - {{line.composer}}</span>{{else}}<span name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{line.song}} - {{line.composer}}</span>{{/if}}</div>
+                <div class="song"><span name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{line.song}} - {{line.composer}}"{{/if}}>{{line.song}} - {{line.composer}}</span></div>
                 <div class="dif {{line.rank}}"><span name="pvis">{{line.difficulty}}</span></div>
             </div>
             <div class="ill_box">

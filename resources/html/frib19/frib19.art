@@ -1,4 +1,15 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.cellValue': [65, 25, 18, 12, null, { method: 'line' }],
+    '.versionCell .cellValue': [110, 25, 18, 12, null, { method: 'line' }],
+    '.bpmCell .cellValue': [65, 25, 18, 9, null, { method: 'line' }],
+    '.cellMain:has(.arrow, .mark) .cellValue': [43, 25, 18, 12, null, { method: 'line' }],
+    '.versionCell .cellMain:has(.arrow, .mark) .cellValue': [88, 25, 18, 12, null, { method: 'line' }],
+    '.bpmCell .cellMain:has(.arrow, .mark) .cellValue': [43, 25, 18, 9, null, { method: 'line' }],
+    '.charterCell': false,
+    '.chapterCell': false
+})}}
 
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/frib19/frib19.css">
@@ -67,7 +78,7 @@
             <div class="cell {{cell.cls}} state-{{cell.state}}">
                 <div class="cellMain">
                     {{if renderNoJs}}
-                    <p class="cellValue" name="pvis"{{if staticText && cell.cls != 'charterCell' && cell.cls != 'chapterCell'}} style="font-size: {{staticText.fitLine(cell.value, (cell.cls == 'versionCell' ? 110 : 65) - ((cell.arrow == 'up' || cell.arrow == 'down' || cell.state == 'same') ? 22 : 0), 18, cell.cls == 'bpmCell' ? 9 : 12)}}px"{{/if}}>{{cell.value}}</p>
+                    <p class="cellValue" name="pvis">{{cell.value}}</p>
                     {{if cell.arrow == 'up'}}<span class="arrow">↑</span>
                     {{else if cell.arrow == 'down'}}<span class="arrow">↓</span>
                     {{else if cell.state == 'same'}}<span class="mark">✓</span>{{/if}}
@@ -97,7 +108,7 @@
             {{each answerRow.cells cell}}
             <div class="cell {{cell.cls}} state-{{cell.state}}">
                 <div class="cellMain">
-                    <p class="cellValue" name="pvis"{{if renderNoJs && staticText && cell.cls != 'charterCell' && cell.cls != 'chapterCell'}} style="font-size: {{staticText.fitLine(cell.value, (cell.cls == 'versionCell' ? 110 : 65) - ((cell.arrow == 'up' || cell.arrow == 'down' || cell.state == 'same') ? 22 : 0), 18, cell.cls == 'bpmCell' ? 9 : 12)}}px"{{/if}}>{{cell.value}}</p>
+                    <p class="cellValue" name="pvis">{{cell.value}}</p>
                     {{if cell.arrow == 'up'}}<p class="arrow">↑</p>
                     {{else if cell.arrow == 'down'}}<p class="arrow">↓</p>
                     {{else if cell.state == 'same'}}<p class="mark">✓</p>{{/if}}

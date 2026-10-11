@@ -1,4 +1,8 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [1228.8, 81, 40, 18, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.from': [517, 50, 40, 16, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/jrrp/jrrp.css">
 {{if renderNoJs}}
@@ -10,7 +14,6 @@
 {{/block}}
 
 {{block 'main'}}
-    {{set pvisOptions = ({ breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) })}}
     <div class="jrrpBkg">
         <img src="{{bkg}}" alt="{{bkg}}">
     </div>
@@ -54,10 +57,10 @@
         {{/each}}
     </div>
     <div class="sentences">
-        <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(sentence.hitokoto, 1228.8, 81, 40, 18, pvisOptions) : staticText.fitBox(sentence.hitokoto, 1228.8, 81, 40, 18, 1.5)}}px"{{/if}}>{{sentence.hitokoto}}</p>
+        <p name="pvis">{{sentence.hitokoto}}</p>
     </div>
     <div class="from">
-        <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis('——「' + sentence.from + '」', 517, 50, 40, 16, pvisOptions) : staticText.fitBox('——「' + sentence.from + '」', 517, 50, 40, 16, 1.5)}}px"{{/if}}>——「{{sentence.from}}」</p>
+        <p name="pvis">——「{{sentence.from}}」</p>
     </div>
 
 {{/block}}

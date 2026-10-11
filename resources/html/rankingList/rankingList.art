@@ -1,4 +1,9 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.aUser:has(.profileIll) .playerId': [417.08, 64.8, 40, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.player_profile_box p:not([style])': [435.11, 313.2, 35, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/rankingList/rankingList.css">
     {{if renderNoJs}}
@@ -9,7 +14,6 @@
 {{/block}}
 
 {{block 'main'}}
-    {{set pvisOptions = ({ breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) })}}
     <div class="background">
         <img src="{{me.backgroundurl}}" alt="{{me.backgroundurl}}" />
     </div>
@@ -38,7 +42,7 @@
                 <p>#{{user.index}}</p>
             </div>
             <div class="playerId">
-                <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined'}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(user.playerId, 417.08, 64.8, 40, 14, pvisOptions) : staticText.fitLine(user.playerId, 417, 40, 14)}}px"{{/if}}>{{#user.playerId}}</p>
+                <p name="pvis">{{#user.playerId}}</p>
             </div>
             <div class="clgBox">
                 <div class="Challenge">
@@ -66,7 +70,7 @@
         </div>
         <div class="player_profile_box">
             {{if me.selfIntro}}
-            <p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(me.selfIntro, 435.11, 313.2, 35, 14, pvisOptions) : staticText.fitBox(me.selfIntro, 435, 313.2, 35, 14, 1.5)}}px"{{/if}}>{{#me.selfIntro}}</p>
+            <p name="pvis">{{#me.selfIntro}}</p>
             {{else}}
             <p style="color: #005273;" name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
             {{/if}}

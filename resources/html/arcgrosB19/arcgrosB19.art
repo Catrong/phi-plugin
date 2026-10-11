@@ -1,4 +1,8 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [160, 24, 16, 9, 1.1],
+    '.player_id': [188, 44, 24, 10, 1.1]
+})}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/arcgrosB19/arcgrosB19.css">
     {{if renderNoJs}}
@@ -23,7 +27,7 @@
         </div>
         <div class="player_idBox">
             <div class="player_id">
-                <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(gameuser.PlayerId, 188, 44, 24, 10, 1.1) : 14}}px"{{/if}}>{{#gameuser.PlayerId}}</p>
+                <p name="pvis">{{#gameuser.PlayerId}}</p>
             </div>
         </div>
         <div class="player_avatar">
@@ -98,7 +102,7 @@
             <div class="borad_down_box">
                 <div class="borad_down">
                     <div class="name">
-                        <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(song.song, 160, 24, 16, 9, 1.1) : 10}}px"{{/if}}>{{song.song}}</p>
+                        <p name="pvis">{{song.song}}</p>
                     </div>
                 </div>
             </div>
@@ -162,7 +166,7 @@
             <div class="borad_down_box">
                 <div class="borad_down">
                     <div class="name">
-                        <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(song.song, 160, 24, 16, 9, 1.1) : 10}}px"{{/if}}>{{song.song}}</p>
+                        <p name="pvis">{{song.song}}</p>
                     </div>
                 </div>
             </div>

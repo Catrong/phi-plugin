@@ -1,4 +1,5 @@
 {{extend defaultLayout}}
+{{set pvis = [1037.75, 69, 28, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/sign/sign.css" />
 {{if renderNoJs}}
@@ -9,7 +10,6 @@
 {{/block}}
 
 {{block 'main'}}
-  {{set pvisOptions = ({ breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) })}}
   <div class="backGlass clip-box"></div>
   <div class="dashboard">
     <div class="playerInfo leftAbsolute">
@@ -85,7 +85,7 @@
 
       <div class="quoteCard clip-box leftAbsolute">
         <p class="cardTitle leftAbsolute">每日一言</p>
-        <div class="quoteText leftAbsolute"><p name="pvis"{{if renderNoJs && typeof staticText !== 'undefined' && staticText.fitBox}} style="font-size: {{staticText.fitPvis ? staticText.fitPvis(quote, 1037.75, 69, 28, 14, pvisOptions) : staticText.fitBox(quote, 1037.75, 69, 28, 14, 1.5)}}px"{{/if}}>{{quote}}</p></div>
+        <div class="quoteText leftAbsolute"><p name="pvis">{{quote}}</p></div>
       </div>
     </div>
 

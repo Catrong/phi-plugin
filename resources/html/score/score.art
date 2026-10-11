@@ -1,4 +1,10 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [ranklist ? 580 : 670, 62, 30, 15, 1.1],
+    '.Player_Id-right': [ranklist ? 450 : 530, 78, 60, 18, 1.1],
+    '.CLG': [ranklist ? 250 : 290, 54, 38, 16, 1.1],
+    '.rankUserName': [250, 46, 40, 12, 1.1]
+})}}
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css">
@@ -30,7 +36,7 @@
         </div>
         <div class="basic-box">
             <div class="song_Id">
-                <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(songName, ranklist ? 580 : 670, 62, 30, 15, 1.1) : 16}}px"{{/if}}>{{songName}}</p>
+                <p name="pvis">{{songName}}</p>
             </div>
             <div class="basic-img">
                 <img src="{{illustration}}" alt="{{illustration}}">
@@ -44,7 +50,7 @@
                         <p>ID</p>
                     </div>
                     <div class="Player_Id-right">
-                        <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(PlayerId, ranklist ? 450 : 530, 78, 60, 18, 1.1) : 20}}px"{{/if}}>{{#PlayerId}}</p>
+                        <p name="pvis">{{#PlayerId}}</p>
                     </div>
                 </div>
             </div>
@@ -73,7 +79,7 @@
                 </div>
                 {{if CLGMOD}}
                 <div class="Player_data_value CLG{{EX ? ' colorful' : ''}}" id="Player_data_right">
-                    <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(CLGMOD, ranklist ? 250 : 290, 54, 38, 16, 1.1) : 18}}px"{{/if}}>{{CLGMOD}}</p>
+                    <p name="pvis">{{CLGMOD}}</p>
                 </div>
                 {{/if}}
             </div>
@@ -227,7 +233,7 @@
             </div>
             <div class="rankUserInfo">
                 <div class="rankUserName">
-                    <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(user.gameuser.PlayerId, 250, 46, 40, 12, 1.1) : 14}}px"{{/if}}>{{user.gameuser.PlayerId}}</p>
+                    <p name="pvis">{{user.gameuser.PlayerId}}</p>
                 </div>
                 <div class="rankUserRks">
                     <p>{{user.gameuser.rankingScore.toFixed(4)}}</p>

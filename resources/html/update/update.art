@@ -1,4 +1,9 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.title .r > p:first-child': [304, 24, 16, 12, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.songsname': [113, 16, 23.5, 10, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/update/update.css">
@@ -26,11 +31,7 @@
     
     <div class="title">
         <div class="r">
-            {{if renderNoJs && staticText}}
-            <p name="pvis" class="phi-fit-line" title="Player: {{PlayerId}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis('Player: ' + PlayerId, 304, 24, 16, 12, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine('Player: ' + PlayerId, 294, 16, 12)}}px">Player: {{#PlayerId}}</p>
-            {{else}}
-            <p>Player: {{#PlayerId}}</p>
-            {{/if}}
+            <p{{if renderNoJs}} name="pvis" class="phi-fit-line" title="Player: {{PlayerId}}"{{/if}}>Player: {{#PlayerId}}</p>
             <p>RankingScore: {{Rks}}
                 {{if added_rks_notes[0]}} <span
                     style="color: {{added_rks_notes[0].includes('+')?'gold':'red'}};">{{added_rks_notes[0]}}</span>{{/if}}
@@ -124,21 +125,13 @@
                     {{if song.finished}}
                     <div class="namebox_ed">
                         <div class="songsname">
-                            {{if renderNoJs && staticText}}
-                            <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(song.song, 113, 16, 23.5, 10, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(song.song, 113, 10, 10)}}px">{{song.song}}</p>
-                            {{else}}
-                            <p name="pvis">{{song.song}}</p>
-                            {{/if}}
+                            <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.song}}"{{/if}}>{{song.song}}</p>
                         </div>
                     </div>
                     {{else}}
                     <div class="namebox_un">
                         <div class="songsname">
-                            {{if renderNoJs && staticText}}
-                            <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(song.song, 113, 16, 23.5, 10, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(song.song, 113, 10, 10)}}px">{{song.song}}</p>
-                            {{else}}
-                            <p name="pvis">{{song.song}}</p>
-                            {{/if}}
+                            <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.song}}"{{/if}}>{{song.song}}</p>
                         </div>
                     </div>
                     {{/if}}
@@ -207,11 +200,7 @@
                         </div>
                         {{/if}}
                         <div class="songsname">
-                            {{if renderNoJs && staticText}}
-                            <p name="pvis" class="phi-fit-line" title="{{song.song}}" style="font-size: {{staticText.fitPvis ? staticText.fitPvis(song.song, 113, 16, 23.5, 10, { nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }) : staticText.fitLine(song.song, 113, 10, 10)}}px">{{song.song}}</p>
-                            {{else}}
-                            <p name="pvis">{{song.song}}</p>
-                            {{/if}}
+                            <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.song}}"{{/if}}>{{song.song}}</p>
                         </div>
                     </div>
                     <div class="songsinfo">

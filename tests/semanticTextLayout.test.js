@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import path from 'node:path'
 import test from 'node:test'
-import art from 'art-template'
+import art from '../model/render/pvisTemplate.js'
 import staticText from '../model/render/staticText.js'
 
 const resources = path.resolve(import.meta.dirname, '../resources').replace(/\\/g, '/')

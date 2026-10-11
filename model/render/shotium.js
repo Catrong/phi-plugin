@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import logger from '../../components/Logger.js'
 import platform from '../../components/platform/index.js'
+import { dealPvisTemplate } from './pvisTemplate.js'
 
 const Renderer = platform.RendererBase
 // 一次查询优先取容器；没有容器时才匹配 body，避免缺少 #container 的模板加载两遍。
@@ -115,7 +116,7 @@ export default class Shotium extends Renderer {
     /** @param {string} name @param {ScreenshotData} data */
     dealTpl(name, data) {
         fs.mkdirSync(path.join(String(this.dir || './temp/html'), name), { recursive: true })
-        return (/** @type {(name: string, data: ScreenshotData) => string | false} */ (super.dealTpl)).call(this, name, data)
+        return dealPvisTemplate(this, name, data, /** @type {(name: string, data: ScreenshotData) => string | false} */ (super.dealTpl))
     }
 
     /** 共享引擎由宿主管理，插件的重启操作不触碰其生命周期。 */

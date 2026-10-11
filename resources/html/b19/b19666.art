@@ -1,4 +1,9 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [160, 22, 15, 9, 1.1],
+    '.playerId': [296, 60, 32, 12, 1.1],
+    '.num': false
+})}}
 
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/b19/b19666.css">
@@ -22,7 +27,7 @@
             <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="{{gameuser.avatar}}">
         </div>
         <div class="playerId">
-            <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(gameuser.PlayerId, 296, 60, 32, 12, 1.1) : 16}}px"{{/if}}>{{#gameuser.PlayerId}}</p>
+            <p name="pvis">{{#gameuser.PlayerId}}</p>
         </div>
         <div class="rks clip-box">
             <p>{{gameuser.rks.toFixed(4)}}</p>
@@ -123,7 +128,7 @@
         </div>
         <div class="info-{{song.rank}}">
             <div class="songname">
-                <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(song.song, 160, 22, 15, 9, 1.1) : 9}}px"{{/if}}>{{song.song}}</p>
+                <p name="pvis">{{song.song}}</p>
             </div>
             <div class="songinfo">
                 <div class="Rating">
@@ -257,7 +262,7 @@
         </div>
         <div class="info-{{song.rank}}">
             <div class="songname">
-                <p name="pvis"{{if renderNoJs}} style="font-size: {{staticText && staticText.fitBox ? staticText.fitBox(song.song, 160, 22, 15, 9, 1.1) : 9}}px"{{/if}}>{{song.song}}</p>
+                <p name="pvis">{{song.song}}</p>
             </div>
             <div class="songinfo">
                 <div class="Rating">

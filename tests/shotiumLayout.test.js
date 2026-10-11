@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import path from 'node:path'
 import test from 'node:test'
-import art from 'art-template'
+import art from '../model/render/pvisTemplate.js'
 import staticText from '../model/render/staticText.js'
 
 const resources = path.resolve(import.meta.dirname, '../resources').replace(/\\/g, '/')
@@ -101,12 +101,15 @@ test('Shotium 固定卡片仅对标题显式缩放省略，编号和难度不会
     assert.doesNotMatch(render('suggest', true), /line-height: 1\.15/)
 })
 
-test('模板先热更新而旧渲染模块未重载时仍能出图，使用单行兜底', () => {
+test('模板未传文字辅助模块时仍保留完整标题和有效的单行字号', () => {
     for (const page of ['b19', 'list', 'suggest']) {
         const html = render(page, true, false)
         assert.match(html, /body \.phi-fit-line\[name="pvis"\] \{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; \}/)
         assert.match(html, /name="pvis" class="phi-fit-line"/)
         assert.ok(html.includes('1000000'))
-        assert.doesNotMatch(html, /name="pvis" class="phi-fit-line" title="/)
+        const titles = /name="pvis" class="phi-fit-line" title="[^"]+" style="font-size: ([\d.]+)px"/g
+        const sizes = [...html.matchAll(titles)].map(match => Number(match[1]))
+        assert.ok(sizes.length > 0 && sizes.every(size => Number.isFinite(size) && size > 0))
+        assert.deepEqual(sizes, [...render(page, true).matchAll(titles)].map(match => Number(match[1])))
     }
 })
