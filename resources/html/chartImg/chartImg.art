@@ -27,7 +27,7 @@
     {{/if}}
 {{/block}}
 {{block 'main'}}
-    <div class="background">
+    <div class="background{{if illustrationPreBlurred && (!themeInfo || !themeInfo.cssUrl)}} chart-background-preblurred{{/if}}">
         <img src="{{illustration}}" alt="曲绘-模糊">
     </div>
     <div class="backBlock">
