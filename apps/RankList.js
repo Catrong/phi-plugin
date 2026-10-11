@@ -277,6 +277,7 @@ async function makeLargeLine(save, history, e) {
             list: b30Data.b19_list.slice(27, 30)
         }
     }
+    let money = save.gameProgress.money
     return {
         backgroundurl: getInfo.getBackground(save?.gameuser?.background),
         avatar: getInfo.idgetavatar(save.saveInfo.summary.avatar) || 'Introduction',
@@ -288,6 +289,8 @@ async function makeLargeLine(save, history, e) {
         selfIntro: fCompute.convertRichText(save?.gameuser?.selfIntro),
         rks_history: lineData.rks_history,
         rks_range: lineData.rks_range,
+        created: fCompute.formatDate(save.saveInfo.createdAt),
+        data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
         rks_date: lineData.rks_date,
         b30list: b30list,
         clg_list: clgHistory,
