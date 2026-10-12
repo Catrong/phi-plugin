@@ -127,6 +127,47 @@ test('Shotium 单图及分页只捕获一次，仍由宿主引擎处理并累加
     })
 })
 
+test('Shotium 单参数宿主收到选择器和全部选项，clip 分页仍保留原调用', async () => {
+    /** @type {Record<string, any>[]} */
+    const captures = []
+    const options = { file: 'template.html', type: 'jpeg', scale: 1.25, quality: 95, viewport: { width: 800, height: 600 } }
+    const host = {
+        id: 'shotium', renderNum: 0,
+        /** @param {Record<string, any>} captureOptions */
+        async shot(captureOptions) {
+            assert.equal(this, host)
+            assert.equal(arguments.length, 1, '单参数宿主不可丢弃第二个参数中的选择器')
+            captures.push(captureOptions)
+            return { image: Buffer.from(captureOptions.selector ? 'full' : 'tile') }
+        },
+        /** @param {Record<string, any>} _options @returns {any} */
+        shotContainer(_options) { throw new Error('不可重复加载模板') },
+        /** @param {string} _name @param {Record<string, any>} captureOptions @param {number} pageHeight */
+        async screenshotPages(_name, captureOptions, pageHeight) {
+            const result = await this.shot({ ...captureOptions, clip: { x: 0, y: 0, width: 1200, height: pageHeight } })
+            this.renderNum++
+            return [result.image]
+        },
+        /** @param {string} name @param {Record<string, any>} data */
+        async render(name, data) {
+            if (data.multiPage) return this.screenshotPages(name, options, data.multiPageHeight)
+            const result = await this.shotContainer(options)
+            this.renderNum++
+            return result.image
+        },
+    }
+    await withHost(host, async renderer => {
+        assert.deepEqual(await renderer.screenshot('page', {}), Buffer.from('full'))
+        assert.deepEqual(await renderer.screenshot('page', { multiPage: true, multiPageHeight: 123 }), [Buffer.from('tile')])
+        assert.deepEqual(captures, [
+            { ...options, selector: '#container, body:not(:has(#container))' },
+            { ...options, clip: { x: 0, y: 0, width: 1200, height: 123 } },
+        ])
+        assert.equal(host.renderNum, 2)
+        assert.equal(Object.hasOwn(options, 'selector'), false)
+    })
+})
+
 test('Shotium owns reliable template cache and closes only its template watchers', async () => {
     const name = `phi-shotium-template-${process.pid}`
     const outputDir = path.resolve('temp', 'html', name)

@@ -78,8 +78,12 @@ export default class Shotium extends Renderer {
                     return file
                 }
                 if (canSelectOnce && key === 'shotContainer') {
-                    return (/** @type {string} */ method, /** @type {Record<string, any>} */ options) =>
-                        target.shot(method, { ...options, selector: CAPTURE_SELECTOR })
+                    // 宿主存在 shotContainer(options) 和 shotContainer(method, options)
+                    // 两种接口。按本次实参转发，不能把选择器放进被宿主忽略的参数。
+                    return (/** @type {string | Record<string, any>} */ methodOrOptions, /** @type {Record<string, any>} */ options) =>
+                        typeof methodOrOptions === 'string'
+                            ? target.shot(methodOrOptions, { ...options, selector: CAPTURE_SELECTOR })
+                            : target.shot({ ...methodOrOptions, selector: CAPTURE_SELECTOR })
                 }
                 const value = Reflect.get(target, key, target)
                 // 分页方法内部也要走本次请求的选择器，同时通过 Proxy 将计数写回宿主。
