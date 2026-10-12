@@ -9,7 +9,7 @@ import phiPluginBase from '../components/baseClass.js';
 import getNotes from '../model/user/getNotes.js'
 import getInfo from '../model/game/getInfo.js'
 import { getApiAccessState } from '../model/user/apiPermission.js'
-import { sendQuickCommands, helpQuickCommands, apiHelpQuickCommands } from '../model/game/markdown.js'
+import { sendWithQuickCommands, helpQuickCommands, apiHelpQuickCommands } from '../model/game/markdown.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -58,14 +58,13 @@ export class phihelp extends phiPluginBase {
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await getNotes.getNotesData(e.user_id)
-        send.reply(e, await picmodle.help(e, {
+        await sendWithQuickCommands(e, await picmodle.help(e, {
             helpGroup: helpGroup,
             cmdHead: head || null,
             isMaster: e.isMaster,
             background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
             theme: pluginData?.theme || 'star'
-        }), true)
-        await sendQuickCommands(e, helpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), '帮助页常用操作')
+        }), helpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), '帮助页常用操作', { quote: true })
         return true
     }
 
@@ -108,13 +107,12 @@ export class phihelp extends phiPluginBase {
         let head = Config.getUserCfg('config', 'cmdhead')
         head = head.match(RegExp(head))[0]
         let pluginData = await getNotes.getNotesData(e.user_id)
-        send.reply(e, await picmodle.help(e, {
+        await sendWithQuickCommands(e, await picmodle.help(e, {
             helpGroup: apiHelp,
             cmdHead: head || null,
             isMaster: e.isMaster,
             background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
             theme: pluginData?.theme || 'star'
-        }), true)
-        await sendQuickCommands(e, apiHelpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), 'API帮助快捷操作')
+        }), apiHelpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), 'API帮助快捷操作', { quote: true })
     }
 }

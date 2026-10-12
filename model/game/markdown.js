@@ -1,6 +1,7 @@
 import { Config, logger, segment } from '../../components/index.js'
 import send from '../render/send.js'
 import platform from '../../components/platform/index.js'
+import { readImageDimensions, uploadQuickCommandImage } from './quickCommandImageHost.js'
 
 
 /** @import {botEvent} from '../../components/baseClass.js' */
@@ -31,11 +32,8 @@ export function commandInput(text, show) {
     return `<qqbot-cmd-input text="${escapeCommandAttribute(text)}" show="${escapeCommandAttribute(show)}" reference="false" />`
 }
 
-/**
- * 构建 QQ 官方消息接口的指令键盘，作为旧客户端不识别 qqbot-cmd-input 时的兼容入口。
- * @param {{command:string,label:string}[]} commands
- */
-function buildQuickCommandKeyboard(commands) {
+/** @param {{command:string,label:string}[]} commands */
+function normalizeQuickCommands(commands) {
     const unique = []
     const seen = new Set()
     for (const item of commands || []) {
@@ -46,23 +44,99 @@ function buildQuickCommandKeyboard(commands) {
         seen.add(command)
         unique.push({ command, label })
     }
+    return unique
+}
+
+/** @param {{title?:string,commands:{command:string,label:string}[]}[]} sections */
+function normalizeQuickCommandSections(sections) {
+    const seen = new Set()
+    return (sections || []).map(section => {
+        const commands = []
+        for (const item of section?.commands || []) {
+            if (!item?.command || !item?.label) continue
+            const command = String(item.command).trim()
+            const label = String(item.label).trim()
+            if (!command || !label || seen.has(command)) continue
+            seen.add(command)
+            commands.push({ command, label })
+        }
+        return { title: String(section?.title || ''), commands }
+    }).filter(section => section.commands.length)
+}
+
+/** @param {{command:string,label:string}[][]} rows */
+function buildQuickCommandKeyboardRows(rows) {
+    const normalizedRows = (rows || []).filter(row => row?.length).slice(0, 5)
+    if (!normalizedRows.length) return undefined
+    return {
+        content: {
+            rows: normalizedRows.map((row, rowIndex) => ({
+                buttons: row.slice(0, 5).map((item, offset) => ({
+                    id: `phi-quick-${rowIndex}-${offset}`,
+                    render_data: { label: item.label, visited_label: item.label, style: 1 },
+                    action: {
+                        type: 1,
+                        permission: { type: 2 },
+                        data: item.command,
+                        unsupport_tips: '当前 QQ 版本不支持指令按钮，请手动发送指令。',
+                    },
+                })),
+            })),
+        },
+    }
+}
+
+/**
+ * 构建 QQ 官方消息接口的指令键盘。
+ * 回调型按钮点击后直接把命令交给 QQBot 事件处理链，不经过输入框。
+ * @param {{command:string,label:string}[]} commands
+ */
+export function buildQuickCommandKeyboard(commands) {
+    const unique = normalizeQuickCommands(commands)
     if (!unique.length) return undefined
     const rows = []
-    for (let index = 0; index < unique.length && rows.length < 5; index += 3) {
-        rows.push({
-            buttons: unique.slice(index, index + 3).map((item, offset) => ({
-                id: `phi-quick-${index + offset}`,
-                render_data: { label: item.label, style: 1 },
-                action: {
-                    type: 2,
-                    permission: { type: 2 },
-                    data: item.command,
-                    unsupport_tips: '当前 QQ 版本不支持指令按钮，请手动发送指令。',
-                },
-            })),
-        })
+    for (let index = 0; index < unique.length && rows.length < 5; index += 3) rows.push(unique.slice(index, index + 3))
+    return buildQuickCommandKeyboardRows(rows)
+}
+
+/** @param {{command:string,label:string}[][]} rows */
+function buildQuickCommandButtonSegment(rows) {
+    if (typeof segment.button !== 'function') return undefined
+    const buttonRows = rows.slice(0, 5).map(row => row.slice(0, 5).map(item => ({
+            text: item.label,
+            callback: item.command,
+        })))
+    if (!buttonRows.length) return undefined
+    try {
+        return segment.button(...buttonRows)
+    } catch {
+        return undefined
     }
-    return { content: { rows } }
+}
+
+/** @param {{command:string,label:string}[]} commands @param {{title?:string,commands:{command:string,label:string}[]}[]} [sections] */
+function quickCommandRows(commands, sections = undefined) {
+    if (sections) return normalizeQuickCommandSections(sections).map(section => section.commands)
+    const unique = normalizeQuickCommands(commands)
+    const rows = []
+    for (let index = 0; index < unique.length && rows.length < 5; index += 3) {
+        rows.push(unique.slice(index, index + 3))
+    }
+    return rows
+}
+
+/** @param {botEvent} e @param {{command:string,label:string}[]} commands @param {string} [title] @param {{title?:string,commands:{command:string,label:string}[]}[]} [sections] */
+function quickCommandMessage(e, commands, title = '快捷操作', sections = undefined) {
+    const rows = quickCommandRows(commands, sections)
+    const button = buildQuickCommandButtonSegment(rows)
+    const keyboard = buildQuickCommandKeyboardRows(rows)
+    // QQ 群聊消息要求有非空消息载体；空格不会显示，但可以承载按钮。
+    const carrier = segment.markdown(' ')
+    return {
+        message: button ? [carrier, button] : carrier,
+        data: button ? {} : keyboard ? { keyboard } : quickCommandReplyData(e, commands),
+        title,
+    }
 }
 
 /** @param {botEvent} e @param {{command:string,label:string}[]} commands */
@@ -70,6 +144,69 @@ function quickCommandReplyData(e, commands) {
     if (!isOfficialBot(e)) return {}
     const keyboard = buildQuickCommandKeyboard(commands)
     return keyboard ? { keyboard } : {}
+}
+
+
+/** @param {unknown} value */
+function imageData(value) {
+    if (!value || typeof value !== 'object') return undefined
+    const item = /** @type {any} */ (value)
+    if (item.__phiSegment && item.type === 'image') return item.data
+    if (item.type === 'image') return item.data ?? item.file ?? item.url
+    return undefined
+}
+
+/**
+ * 将图片段转换为单个 Markdown 图片段，使支持图床的适配器可以把图片和键盘放在同一条消息中。
+ * 优先使用宿主提供的 imageToUrl，再使用 phi-plugin 的图床脚本。
+ * @param {botEvent} e
+ * @param {*} message
+ */
+async function prepareMergedQuickCommandMessage(e, message) {
+    const hostConverter = e?.bot?.imageToUrl || globalThis.Bot?.imageToUrl
+    let hasImage = false
+    let failed = false
+    /** @param {unknown} data */
+    const convert = async data => {
+        if (typeof hostConverter === 'function') {
+            try {
+                const result = await hostConverter.call(e?.bot || globalThis.Bot, data)
+                const value = typeof result === 'string' ? { url: result } : result
+                if (value?.url && /^https?:\/\//i.test(value.url)) {
+                    const dimensions = await readImageDimensions(data)
+                    return { ...value, width: value.width || dimensions?.width, height: value.height || dimensions?.height }
+                }
+            } catch (error) {
+                logger.warn('[phi-plugin] 宿主图片转公网地址失败，尝试配置图床脚本', error)
+            }
+        }
+        return uploadQuickCommandImage(data)
+    }
+    /** @param {*} value @returns {Promise<*>} */
+    const walk = async value => {
+        const data = imageData(value)
+        if (data === undefined) {
+            if (Array.isArray(value)) return Promise.all(value.map(walk))
+            return value
+        }
+        hasImage = true
+        const source = typeof data === 'string' && /^https?:\/\//i.test(data)
+            ? { url: data }
+            : await convert(data)
+        if (!source?.url) {
+            failed = true
+            return value
+        }
+        const width = Number(source.width) > 0 ? Number(source.width) : undefined
+        const height = Number(source.height) > 0 ? Number(source.height) : undefined
+        if (!width || !height) {
+            failed = true
+            logger.warn('[phi-plugin] 快捷指令合并图片缺少实际尺寸，已回退为分开发送')
+            return value
+        }
+        return segment.markdown(`![快捷操作图片 #${width}px #${height}px](${source.url})`)
+    }
+    return { message: await walk(message), ready: !hasImage || !failed }
 }
 
 /**
@@ -119,14 +256,33 @@ export function buildQuickCommandMarkdown(commands, title = '快捷操作') {
  */
 export async function sendQuickCommands(e, commands, title = '快捷操作') {
     if (!isOfficialBot(e) || !Config.getUserCfg('config', 'LetterMarkdown')) return
-    const markdown = buildQuickCommandMarkdown(commands, title)
-    if (!markdown) return
+    const normalized = normalizeQuickCommands(commands)
+    if (!normalized.length) return
+    const quickMessage = quickCommandMessage(e, normalized, title)
     try {
-        const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(markdown), false, quickCommandReplyData(e, commands)))
-        if (sent?.error?.length) logger.warn('[phi-plugin] 快捷操作 Markdown 发送失败')
+        const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, quickMessage.message, false, quickMessage.data))
+        if (sent?.error?.length) logger.warn('[phi-plugin] 快捷操作按钮发送失败')
     } catch (error) {
-        logger.warn('[phi-plugin] 快捷操作 Markdown 发送失败', error)
+        logger.warn('[phi-plugin] 快捷操作按钮发送失败', error)
     }
+}
+
+/**
+ * 发送带有“确认/取消”回调按钮的确认提示。
+ * QQ 官方机器人点击后直接把“确认”或“取消”交给当前上下文；其他适配器保留文本回复流程。
+ * @param {botEvent} e
+ * @param {string} text
+ */
+export async function sendConfirmationPrompt(e, text) {
+    if (!isOfficialBot(e) || !Config.getUserCfg('config', 'LetterMarkdown')) {
+        return send.send_with_At(e, `${text}\n请回复“确认”或“取消”。`)
+    }
+    const button = buildQuickCommandButtonSegment([[
+        { command: '确认', label: '确认' },
+        { command: '取消', label: '取消' },
+    ]])
+    if (!button) return send.send_with_At(e, `${text}\n请回复“确认”或“取消”。`)
+    return send.send_with_At(e, [segment.markdown(`${text}\n请点击下方按钮。`), button])
 }
 
 /**
@@ -144,18 +300,81 @@ export function buildQuickCommandSectionsMarkdown(sections, title = '快捷操�
     return blocks.join('\n\n')
 }
 
-/** 向 QQ 官方机器人发送分组快捷操作菜单。 */
+/**
+ * 向 QQ 官方机器人发送分组快捷操作菜单。
+ * @param {botEvent} e
+ * @param {{title:string,commands:{command:string,label:string}[]}[]} sections
+ * @param {string} [title]
+ */
 export async function sendQuickCommandSections(e, sections, title = '快捷操作') {
     if (!isOfficialBot(e) || !Config.getUserCfg('config', 'LetterMarkdown')) return
-    const markdown = buildQuickCommandSectionsMarkdown(sections, title)
-    if (!markdown) return
-    const commands = (sections || []).flatMap(section => section?.commands || [])
+    const normalizedSections = normalizeQuickCommandSections(sections)
+    const commands = normalizedSections.flatMap(section => section.commands)
+    if (!normalizeQuickCommands(commands).length) return
+    const quickMessage = quickCommandMessage(e, commands, title, normalizedSections)
     try {
-        const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(markdown), false, quickCommandReplyData(e, commands)))
-        if (sent?.error?.length) logger.warn('[phi-plugin] 快捷操作 Markdown 发送失败')
+        const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, quickMessage.message, false, quickMessage.data))
+        if (sent?.error?.length) logger.warn('[phi-plugin] 快捷操作按钮发送失败')
     } catch (error) {
-        logger.warn('[phi-plugin] 快捷操作 Markdown 发送失败', error)
+        logger.warn('[phi-plugin] 快捷操作按钮发送失败', error)
     }
+}
+
+/**
+ * 发送主消息及其快捷按钮。合并模式把按钮附加在同一次发送中，
+ * 由 QQ 适配器负责把图片转换为 Markdown 图片；适配器不支持时调用方可回退到分离模式。
+ * @param {botEvent} e
+ * @param {*} message
+ * @param {{command:string,label:string}[]} commands
+ * @param {string} [title]
+ * @param {{quote?:boolean,sections?:{title?:string,commands:{command:string,label:string}[]}[]}} [options]
+ */
+export async function sendWithQuickCommands(e, message, commands, title = '快捷操作', options = {}) {
+    if (!isOfficialBot(e) || !Config.getUserCfg('config', 'LetterMarkdown')) {
+        return send.send_with_At(e, message, Boolean(options.quote))
+    }
+    const merge = Config.getUserCfg('config', 'QuickCommandMergeImage') === true
+    const normalized = normalizeQuickCommands(commands)
+    if (!normalized.length) {
+        if (merge) {
+            const prepared = await prepareMergedQuickCommandMessage(e, message)
+            if (prepared.ready) return send.send_with_At(e, prepared.message, Boolean(options.quote))
+        }
+        return send.send_with_At(e, message, Boolean(options.quote))
+    }
+
+    if (merge) {
+        const quickMessage = quickCommandMessage(e, normalized, title, options.sections)
+        const prepared = await prepareMergedQuickCommandMessage(e, message)
+        if (!prepared.ready) {
+            logger.warn('[phi-plugin] 合并模式没有可用的公网图片地址，已回退为分开发送')
+            await send.send_with_At(e, message, Boolean(options.quote))
+            return options.sections ? sendQuickCommandSections(e, options.sections, title) : sendQuickCommands(e, normalized, title)
+        }
+        const mergedMessage = prepared.message
+        const mergedTail = quickMessage.data?.keyboard
+            ? []
+            : (Array.isArray(quickMessage.message) ? quickMessage.message.slice(1) : [quickMessage.message])
+        const payload = Array.isArray(mergedMessage)
+            ? [...mergedMessage, ...mergedTail]
+            : [mergedMessage, ...mergedTail]
+        try {
+            const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.send_with_At(e, payload, Boolean(options.quote), quickMessage.data))
+            if (sent?.error?.length) throw new Error('QQ 适配器拒绝合并消息')
+            return sent
+        } catch (error) {
+            logger.warn('[phi-plugin] 快捷按钮与图片合并失败，已回退为分开发送', error)
+        }
+    }
+
+    await send.send_with_At(e, message, Boolean(options.quote))
+    return options.sections ? sendQuickCommandSections(e, options.sections, title) : sendQuickCommands(e, normalized, title)
+}
+
+/** @param {botEvent} e @param {*} message @param {{title?:string,commands:{command:string,label:string}[]}[]} sections @param {string} [title] @param {{quote?:boolean}} [options] */
+export function sendWithQuickCommandSections(e, message, sections, title = '快捷操作', options = {}) {
+    const commands = (sections || []).flatMap(section => section?.commands || [])
+    return sendWithQuickCommands(e, message, commands, title, { ...options, sections })
 }
 
 /** @param {string} commandHead */
@@ -169,7 +388,7 @@ function pageCommand(commandHead, command) {
     return head && command ? `/${head} ${command}` : ''
 }
 
-/** 帮助页：按功能类别提供最常用的入口。 */
+/** @param {string} commandHead */
 export function helpQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'b27'), label: 'B27成绩' },
@@ -181,7 +400,7 @@ export function helpQuickCommands(commandHead) {
     ]
 }
 
-/** 用户设置页：快捷入口必须能直接执行对应设置。 */
+/** @param {string} commandHead */
 export function userSettingQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'myset theme 0'), label: '主题风格' },
@@ -193,55 +412,56 @@ export function userSettingQuickCommands(commandHead) {
     ]
 }
 
-/** 用户设置页：每个设置区域单独展示该区域的全部选项。 */
+/** @param {string} commandHead */
 export function userSettingQuickCommandSections(commandHead) {
+    /** @param {string} setting @param {number|string} value */
     const command = (setting, value) => pageCommand(commandHead, `myset ${setting} ${value}`)
     return [
         {
             title: '主题风格',
             commands: [
-                { command: command('theme', 0), label: '[0]默认' },
-                { command: command('theme', 1), label: '[1]寒冬' },
-                { command: command('theme', 2), label: '[2]使一颗心免于哀伤' },
-                { command: command('theme', 3), label: '[3]大师赛2' },
+                { command: command('theme', 0), label: '主题0' },
+                { command: command('theme', 1), label: '主题1' },
+                { command: command('theme', 2), label: '主题2' },
+                { command: command('theme', 3), label: '主题3' },
             ],
         },
         {
             title: 'B30统计数据展示',
             commands: [
-                { command: command('avgkind', 0), label: '[0]全部统计' },
-                { command: command('avgkind', 1), label: '[1]仅B30' },
-                { command: command('avgkind', 2), label: '[2]仅Top' },
-                { command: command('avgkind', 3), label: '[3]隐藏' },
+                { command: command('avgkind', 0), label: '统计全' },
+                { command: command('avgkind', 1), label: '统计B' },
+                { command: command('avgkind', 2), label: '统计T' },
+                { command: command('avgkind', 3), label: '统计隐' },
             ],
         },
         {
             title: 'B30均值条配色',
             commands: [
-                { command: command('avgcolor', 0), label: '[0]红' },
-                { command: command('avgcolor', 1), label: '[1]金' },
-                { command: command('avgcolor', 2), label: '[2]蓝' },
-                { command: command('avgcolor', 3), label: '[3]绿' },
+                { command: command('avgcolor', 0), label: '配色红' },
+                { command: command('avgcolor', 1), label: '配色金' },
+                { command: command('avgcolor', 2), label: '配色蓝' },
+                { command: command('avgcolor', 3), label: '配色绿' },
             ],
         },
         {
             title: 'API功能开关',
             commands: [
-                { command: command('api', 0), label: '[0]启用' },
-                { command: command('api', 1), label: '[1]禁用' },
+                { command: command('api', 0), label: 'API开' },
+                { command: command('api', 1), label: 'API关' },
             ],
         },
         {
             title: 'B30统计分析',
             commands: [
-                { command: command('B30分析', 0), label: '[0]显示' },
-                { command: command('B30分析', 1), label: '[1]隐藏' },
+                { command: command('B30分析', 0), label: '分析显' },
+                { command: command('B30分析', 1), label: '分析隐' },
             ],
         },
     ]
 }
 
-/** API 用户设置页。 */
+/** @param {string} commandHead */
 export function apiSettingQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'apiset'), label: '刷新设置' },
@@ -251,7 +471,7 @@ export function apiSettingQuickCommands(commandHead) {
     ]
 }
 
-/** API 帮助页。 */
+/** @param {string} commandHead */
 export function apiHelpQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'bind qrcode'), label: '扫码绑定' },
@@ -262,7 +482,7 @@ export function apiHelpQuickCommands(commandHead) {
     ]
 }
 
-/** Bot 全局设置页。 */
+/** @param {string} commandHead */
 export function configQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, '设置'), label: '全局设置' },
@@ -273,7 +493,7 @@ export function configQuickCommands(commandHead) {
     ]
 }
 
-/** 成绩页通用入口，使用 B27 作为默认成绩概览。 */
+/** @param {string} commandHead */
 export function scoreQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'b27'), label: 'B27成绩' },
@@ -283,7 +503,7 @@ export function scoreQuickCommands(commandHead) {
     ]
 }
 
-/** 更新存档结果页。 */
+/** @param {string} commandHead */
 export function updateQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'b27'), label: 'B27成绩' },
@@ -294,7 +514,7 @@ export function updateQuickCommands(commandHead) {
     ]
 }
 
-/** 成绩筛选页。 */
+/** @param {string} commandHead */
 export function userListQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'list'), label: '全部成绩' },
@@ -304,7 +524,7 @@ export function userListQuickCommands(commandHead) {
     ]
 }
 
-/** 存档历史页。 */
+/** @param {string} commandHead */
 export function historyQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, '2025history'), label: '年度总结' },
@@ -315,7 +535,7 @@ export function historyQuickCommands(commandHead) {
     ]
 }
 
-/** B19 衍生分析页。 */
+/** @param {string} commandHead */
 export function b19AnalysisQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'b27'), label: 'B27成绩' },
@@ -326,7 +546,7 @@ export function b19AnalysisQuickCommands(commandHead) {
     ]
 }
 
-/** 单曲成绩页。 */
+/** @param {string} commandHead */
 export function singleScoreQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'list'), label: '成绩筛选' },
@@ -336,7 +556,7 @@ export function singleScoreQuickCommands(commandHead) {
     ]
 }
 
-/** 推分建议页。 */
+/** @param {string} commandHead */
 export function suggestQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'suggest'), label: '刷新建议' },
@@ -346,7 +566,7 @@ export function suggestQuickCommands(commandHead) {
     ]
 }
 
-/** 章节成绩页。 */
+/** @param {string} commandHead */
 export function chapterQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'chap ALL'), label: '全部章节' },
@@ -357,7 +577,7 @@ export function chapterQuickCommands(commandHead) {
     ]
 }
 
-/** 定数成就页。 */
+/** @param {string} commandHead */
 export function achievementQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'achievement 1'), label: '查看低定数' },
@@ -368,7 +588,7 @@ export function achievementQuickCommands(commandHead) {
     ]
 }
 
-/** 绑定/更新页。 */
+/** @param {string} commandHead */
 export function sessionQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'update'), label: '更新存档' },
@@ -379,7 +599,7 @@ export function sessionQuickCommands(commandHead) {
     ]
 }
 
-/** 排行榜页。 */
+/** @param {string} commandHead */
 export function rankQuickCommands(commandHead) {
     return [
         { command: pageCommand(commandHead, 'ranklist'), label: '排行榜' },
@@ -444,15 +664,20 @@ function marketQuickCommands(themes, pagination = {}) {
  * @param {botEvent} e
  * @param {{slug:string,name:string,botDownloadAllowed:boolean|null}[]} themes
  * @param {{page?:number,pageCount?:number}} [pagination]
+ * @param {*} [message]
  */
-export async function sendMarketQuickCommands(e, themes, pagination = {}) {
-    if (!Config.getUserCfg('config', 'LetterMarkdown')) return
-    const markdown = buildMarketQuickMarkdown(themes, pagination)
-    if (!markdown) return
+export async function sendMarketQuickCommands(e, themes, pagination = {}, message = undefined) {
+    if (!isOfficialBot(e) || !Config.getUserCfg('config', 'LetterMarkdown')) return
+    const commands = marketQuickCommands(themes, pagination)
+    if (!normalizeQuickCommands(commands).length) return
+    if (message !== undefined && Config.getUserCfg('config', 'QuickCommandMergeImage') === true) {
+        return sendWithQuickCommands(e, message, commands, '本页主题快捷操作')
+    }
+    const quickMessage = quickCommandMessage(e, commands, '本页主题快捷操作')
     try {
-        const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(markdown), false, quickCommandReplyData(e, marketQuickCommands(themes, pagination))))
-        if (sent?.error?.length) logger.warn('[phi-plugin][主题市场] Markdown 发送失败')
+        const sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, quickMessage.message, false, quickMessage.data))
+        if (sent?.error?.length) logger.warn('[phi-plugin][主题市场] 快捷按钮发送失败')
     } catch (error) {
-        logger.warn('[phi-plugin][主题市场] Markdown 发送失败', error)
+        logger.warn('[phi-plugin][主题市场] 快捷按钮发送失败', error)
     }
 }

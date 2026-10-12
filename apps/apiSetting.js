@@ -15,7 +15,7 @@ import { getApiAccessState } from '../model/user/apiPermission.js'
 import fCompute from '../model/game/fCompute.js'
 import platform from '../components/platform/index.js'
 import getNotes from '../model/user/getNotes.js'
-import { sendQuickCommands, apiSettingQuickCommands } from '../model/game/markdown.js'
+import { sendConfirmationPrompt, sendWithQuickCommands, apiSettingQuickCommands } from '../model/game/markdown.js'
 
 
 /**@import {botEvent} from '../components/baseClass.js' */
@@ -323,7 +323,7 @@ export class phihelp extends phiPluginBase {
         }
 
         this.setContext('confirmClearApiData', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
-        send.send_with_At(e, '注销 phi-api 账号将永久清除云端账号及全部数据，且无法恢复！真的要这么做吗？（确认/取消）')
+        sendConfirmationPrompt(e, '注销 phi-api 账号将永久清除云端账号及全部数据，且无法恢复！真的要这么做吗？')
 
         return true
     }
@@ -582,13 +582,12 @@ export class phihelp extends phiPluginBase {
             return buildItem(key, String(userSetting[key]))
         })
 
-        send.send_with_At(e, await picmodle.common(e, 'setting', {
+        await sendWithQuickCommands(e, await picmodle.common(e, 'setting', {
             pageTitle: 'Phi-Plugin API 用户设置',
             pageDescription: '以下设置会同步到查分平台账户权限。',
             items: items,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
             theme: pluginData?.theme || 'default'
-        }, 'userSetting'))
-        await sendQuickCommands(e, apiSettingQuickCommands(Config.getUserCfg('config', 'cmdhead')), 'API设置快捷操作')
+        }, 'userSetting'), apiSettingQuickCommands(Config.getUserCfg('config', 'cmdhead')), 'API设置快捷操作')
     }
 }

@@ -18,7 +18,7 @@ import getInfo from '../game/getInfo.js'
 
 /** @typedef {{platform_name: string, platform_id: string, create_at: string, update_at: string, authentication: number, authentication_label?: string, binding_type?: 'bot'|'legacy', bot_display_name?: string, migration_notice?: string|null}} PlatformBindingInfo */
 /** @typedef {{data: any, user_id: number, phigros_token: string, api_token: string, create_at: string, update_at: string, platform_data: PlatformBindingInfo[]}} PlatformBindingsResponse */
-/** @typedef {{ignoreUnboundError?: boolean}} UserCredentialApiOptions */
+/** @typedef {{ignoreUnboundError?: boolean, notifyUser?: boolean}} UserCredentialApiOptions */
 /** @import {botEvent} from "../../components/baseClass.js" */
 /**
  * 单个平台事件用户的凭证与存档操作入口。
@@ -83,6 +83,7 @@ export class UserCredentials {
         return {
             event: this.requireEvent(),
             ignoreUnboundError: options.ignoreUnboundError ? true : false,
+            notifyUser: options.notifyUser,
         }
     }
 
@@ -208,7 +209,7 @@ export class UserCredentials {
                 errorPrefix: binding.token
                     ? 'API绑定暂时不可用，将仅更新当前 Bot 的本地绑定状态。'
                     : undefined,
-                notifyUser: Boolean(binding.token),
+                notifyUser: options.notifyUser ?? Boolean(binding.token),
             },
         )
         if (!data) return null
@@ -737,7 +738,7 @@ export class UserCredentials {
      * @param {boolean} [isGlobal] 是否使用国际服
      * @returns {Promise<any>} 更新后的存档及增量统计
      */
-    async getUpdatedSaveFromLocal(sessionToken = undefined, isGlobal = undefined) {
+    async getUpdatedSaveFromLocal(sessionToken = undefined, isGlobal = undefined, options = {}) {
         const event = this.requireEvent()
         const old = await this.getLocalSave()
         sessionToken = sessionToken ?? old?.session
@@ -748,14 +749,14 @@ export class UserCredentials {
             await user.getSaveInfo()
             await user.buildRecord()
             if (getInfo.badSave && new Save(user).equalRecord(getInfo.badSave)) {
-                notifyUser(event, '请注意，TapTap目前的云存档API疑似存在问题，已阻止本次更新，请在确保游戏内数据正常的情况下，覆盖云存档并尝试更新，如若依旧失败请耐心等待恢复。')
+                if (options.notifyUser !== false) notifyUser(event, '请注意，TapTap目前的云存档API疑似存在问题，已阻止本次更新，请在确保游戏内数据正常的情况下，覆盖云存档并尝试更新，如若依旧失败请耐心等待恢复。')
                 return old ? { save: old, added_rks_notes: [0, 0] } : undefined
             }
         } catch (error) {
             const message = platform.getAdapterName(event) === 'QQBot'
                 ? '更新失败！QAQ\n请稍后重试'
                 : `更新失败！QAQ\n${error}`
-            notifyUser(event, message)
+            if (options.notifyUser !== false) notifyUser(event, message)
             logger.error(error)
             return undefined
         }
@@ -763,13 +764,13 @@ export class UserCredentials {
         try {
             await this.putLocalSave(user)
         } catch (error) {
-            notifyUser(event, `保存存档失败！${error}`)
+            if (options.notifyUser !== false) notifyUser(event, `保存存档失败！${error}`)
             logger.error(error)
             return undefined
         }
 
         if (old?.session && old.session !== user.session) {
-            notifyUser(event, `检测到新的sessionToken，将自动更换本地绑定。如果需要删除当前 Bot 本地保存的存档和历史，请使用 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋。`)
+            if (options.notifyUser !== false) notifyUser(event, `检测到新的sessionToken，将自动更换本地绑定。如果需要删除当前 Bot 本地保存的存档和历史，请使用 ⌈/${Config.getUserCfg('config', 'cmdhead')} unbind⌋。`)
         }
 
         const now = new Save(user)
@@ -787,8 +788,8 @@ export class UserCredentials {
      * @param {boolean} [isGlobal] 是否使用国际服
      * @returns 本地更新结果；token 校验或存档更新失败时返回 `null`
      */
-    async bindLocallyWithSessionToken(sessionToken, isGlobal = undefined) {
-        const updateData = await this.getUpdatedSaveFromLocal(sessionToken, isGlobal)
+    async bindLocallyWithSessionToken(sessionToken, isGlobal = undefined, options = {}) {
+        const updateData = await this.getUpdatedSaveFromLocal(sessionToken, isGlobal, options)
         if (!updateData) return null
         await this.useSessionToken(sessionToken)
         return updateData

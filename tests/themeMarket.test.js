@@ -669,16 +669,16 @@ test('market-installed detail is online-first and only connection errors use loc
     }
 })
 
-test('market page sends one safe Markdown action row for each displayed theme', async () => {
+test('market page sends one keyboard carrier for each displayed theme', async () => {
     const themes = [
         { slug: 'ocean-salt', name: 'Ocean "Salt"', botDownloadAllowed: true },
         { slug: 'restricted-theme', name: 'Restricted | Theme', botDownloadAllowed: false },
     ]
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
-    /** @type {any[]} */ const replies = []
+    /** @type {{message:any,data:any}[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'custom' : key === 'LetterMarkdown')
-    send.reply = async (_event, message) => { replies.push(message); return {} }
+    send.reply = async (_event, message, _quote, data) => { replies.push({ message, data }); return {} }
     try {
         const markdown = buildMarketQuickMarkdown(/** @type {any} */(themes), { page: 2, pageCount: 3 })
         assert.match(markdown, /Ocean "Salt" \| <qqbot-cmd-input text="\/custom market detail ocean-salt" show="查看详情"/)
@@ -689,10 +689,12 @@ test('market page sends one safe Markdown action row for each displayed theme', 
         assert.match(markdown, /text="\/customnx" show="下一页"/)
         assert.equal((markdown.match(/^\|/gm) || []).length, themes.length + 4)
 
-        await sendMarketQuickCommands(/** @type {any} */({}), /** @type {any} */(themes))
+        await sendMarketQuickCommands(/** @type {any} */({ bot: { adapter: 'qqbot' } }), /** @type {any} */(themes))
         assert.equal(replies.length, 1)
-        assert.equal(replies[0]?.type, 'markdown')
-        assert.match(replies[0]?.text || '', /\/custom market ocean-salt/)
+        const carrier = replies[0]?.message?.find?.(item => item?.type === 'markdown') || replies[0]?.message
+        assert.equal(carrier?.type, 'markdown')
+        assert.equal(carrier?.text ?? carrier?.data, ' ')
+        assert.match(JSON.stringify(replies[0]?.message), /"callback":"\/custom market detail ocean-salt"/)
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
@@ -707,16 +709,16 @@ test('market page sends no quick-command text when Markdown is disabled or fails
     try {
         Config.getUserCfg = /** @type {any} */ (() => false)
         send.reply = async () => { calls++; return {} }
-        await sendMarketQuickCommands(/** @type {any} */({}), themes)
+        await sendMarketQuickCommands(/** @type {any} */({ bot: { adapter: 'qqbot' } }), themes)
         assert.equal(calls, 0)
 
         Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
         send.reply = async () => { calls++; throw new Error('markdown unavailable') }
-        await sendMarketQuickCommands(/** @type {any} */({}), themes)
+        await sendMarketQuickCommands(/** @type {any} */({ bot: { adapter: 'qqbot' } }), themes)
         assert.equal(calls, 1)
 
         send.reply = async () => { calls++; return { error: [new Error('markdown rejected')] } }
-        await sendMarketQuickCommands(/** @type {any} */({}), themes)
+        await sendMarketQuickCommands(/** @type {any} */({ bot: { adapter: 'qqbot' } }), themes)
         assert.equal(calls, 2)
 
         const { createGuobaSchemas } = await import('../components/settings/guoba.js')

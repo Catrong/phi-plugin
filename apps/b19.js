@@ -24,6 +24,7 @@ import {
 } from '../model/game/b30Analysis.js';
 import {
     sendQuickCommands,
+    sendWithQuickCommands,
     scoreQuickCommands,
     b19AnalysisQuickCommands,
     singleScoreQuickCommands,
@@ -256,8 +257,7 @@ export class phib19 extends phiPluginBase {
         }
         const img = await picmodle.b19(e, data)
         res.unshift(img);
-        send.send_with_At(e, res)
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        await sendWithQuickCommands(e, res, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -378,8 +378,7 @@ export class phib19 extends phiPluginBase {
 
         let res = [await picmodle.b19(e, data)]
         res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        send.send_with_At(e, res)
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        await sendWithQuickCommands(e, res, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -445,8 +444,7 @@ export class phib19 extends phiPluginBase {
             nnum: nnum,
         }
 
-        send.send_with_At(e, await picmodle.arcgros_b19(e, data))
-        await sendQuickCommands(e, b19AnalysisQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩分析快捷操作')
+        await sendWithQuickCommands(e, await picmodle.arcgros_b19(e, data), b19AnalysisQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩分析快捷操作')
     }
 
     /**
@@ -525,8 +523,7 @@ export class phib19 extends phiPluginBase {
 
         let res = [await picmodle.b19(e, data)]
         res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        send.send_with_At(e, res)
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        await sendWithQuickCommands(e, res, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
 
     }
 
@@ -640,8 +637,7 @@ export class phib19 extends phiPluginBase {
         let res = [await picmodle.b19(e, data)]
         let sum_rks = save_b19.b19_list.reduce((sum, x) => sum + Number(x?.rks || 0), 0)
         res.push(`越级成绩均rks: ${(sum_rks / save_b19.b19_list.length).toFixed(4)}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        send.send_with_At(e, res)
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        await sendWithQuickCommands(e, res, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
 
     }
 
@@ -952,7 +948,7 @@ export class phib19 extends phiPluginBase {
 
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
-        send.send_with_At(e, await picmodle.common(e, 'suggest', {
+        await sendWithQuickCommands(e, await picmodle.common(e, 'suggest', {
             head_title: "推分建议",
             song: data,
             phisong: phidata,
@@ -964,8 +960,7 @@ export class phib19 extends phiPluginBase {
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             // dan: await get.getDan(e.user_id)
-        }))
-        await sendQuickCommands(e, suggestQuickCommands(Config.getUserCfg('config', 'cmdhead')), '推分建议快捷操作')
+        }), suggestQuickCommands(Config.getUserCfg('config', 'cmdhead')), '推分建议快捷操作')
 
     }
 
@@ -1086,7 +1081,7 @@ export class phib19 extends phiPluginBase {
             }
         }
 
-        send.send_with_At(e, await picmodle.chap(e, {
+        await sendWithQuickCommands(e, await picmodle.chap(e, {
             player: { id: save.saveInfo.PlayerId },
             count,
             song_box,
@@ -1094,8 +1089,7 @@ export class phib19 extends phiPluginBase {
             num: rank.EZ,
             chapName: msg == 'ALL' ? 'AllSong' : chap,
             chapIll: getInfo.getChapIll(msg == 'ALL' ? 'AllSong' : chap),
-        }))
-        await sendQuickCommands(e, chapterQuickCommands(Config.getUserCfg('config', 'cmdhead')), '章节成绩快捷操作')
+        }), chapterQuickCommands(Config.getUserCfg('config', 'cmdhead')), '章节成绩快捷操作')
 
     }
 
@@ -1198,8 +1192,7 @@ export class phib19 extends phiPluginBase {
 
         }
 
-        send.send_with_At(e, await picmodle.common(e, 'table', data));
-        await sendQuickCommands(e, achievementQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成就页快捷操作')
+        await sendWithQuickCommands(e, await picmodle.common(e, 'table', data), achievementQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成就页快捷操作')
     }
 }
 
@@ -1410,8 +1403,7 @@ async function getScore(songId, e, args = {}) {
     }
 
 
-    send.send_with_At(e, await picmodle.score(e, data, 1))
-    await sendQuickCommands(e, singleScoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '单曲成绩快捷操作')
+    await sendWithQuickCommands(e, await picmodle.score(e, data, 1), singleScoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '单曲成绩快捷操作')
 
 }
 

@@ -130,6 +130,9 @@
  * 开字母设置
  * @typedef {'LetterNum'} LetterNum 字母条数
  * @typedef {'LetterMarkdown'} LetterMarkdown Markdown格式
+ * @typedef {'QuickCommandMergeImage'} QuickCommandMergeImage 快捷按钮与图片合并
+ * @typedef {'QuickCommandImageHostScript'} QuickCommandImageHostScript 快捷指令图床脚本
+ * @typedef {'QuickCommandImageHostTimeout'} QuickCommandImageHostTimeout 快捷指令图床超时
  * @typedef {'LetterIllustration'} LetterIllustration 发送曲绘
  * @typedef {'LetterRevealCd'} LetterRevealCd 字母提示间隔
  * @typedef {'LetterGuessCd'} LetterGuessCd 字母开启间隔
@@ -206,6 +209,9 @@
  * |GuessTipChartCharter
  * |LetterNum
  * |LetterMarkdown
+ * |QuickCommandMergeImage
+ * |QuickCommandImageHostScript
+ * |QuickCommandImageHostTimeout
  * |LetterIllustration
  * |LetterRevealCd
  * |LetterGuessCd

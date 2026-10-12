@@ -15,7 +15,7 @@ import {
     getLocalThemeDetail,
     isThemeSlug,
 } from '../model/theme/catalog.js'
-import { sendMarketQuickCommands, sendQuickCommands } from '../model/game/markdown.js'
+import { isOfficialBot, sendMarketQuickCommands, sendWithQuickCommands } from '../model/game/markdown.js'
 import { isApiConnectionError } from '../model/api/phiApiErrors.js'
 import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
 import { isApiCapabilityConfigured } from '../model/user/apiPermission.js'
@@ -89,13 +89,21 @@ export class phiMarket extends phiPluginBase {
         }
         catalog ||= getLocalThemeCatalog(query, page)
         const pluginData = await getNotes.getNotesData(e.user_id)
-        await send.send_with_At(e, await picmodle.market(e, {
+        const marketMessage = await picmodle.market(e, {
             ...catalog,
             currentTheme: pluginData?.theme || 'default',
             commandHead,
-        }))
+        })
         setMarketPageState(e, query, catalog.page, catalog.pageCount, catalog.localOnly === true)
-        await sendMarketQuickCommands(e, catalog.themes, catalog)
+        const mergeQuickCommands = Config.getUserCfg('config', 'QuickCommandMergeImage') === true
+            && isOfficialBot(e)
+            && Config.getUserCfg('config', 'LetterMarkdown')
+        if (mergeQuickCommands) {
+            await sendMarketQuickCommands(e, catalog.themes, catalog, marketMessage)
+        } else {
+            await send.send_with_At(e, marketMessage)
+            await sendMarketQuickCommands(e, catalog.themes, catalog)
+        }
     }
 
     /** @param {botEvent} e */
@@ -183,12 +191,11 @@ export class phiMarket extends phiPluginBase {
                 }
                 if (!detail) throw new Error('local_theme_not_found')
                 const pluginData = await getNotes.getNotesData(e.user_id)
-                send.send_with_At(e, await picmodle.marketDetail(e, {
+                await sendWithQuickCommands(e, await picmodle.marketDetail(e, {
                     theme: pluginData?.theme || 'default',
                     detail,
                     commandHead,
-                }))
-                await sendQuickCommands(e, [
+                }), [
                     { command: `/${commandHead} market ${themeId}`, label: '使用主题' },
                     { command: `/${commandHead} market`, label: '返回市场' },
                 ], '主题操作')

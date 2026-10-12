@@ -14,7 +14,7 @@ import analyzeSaveHistory from '../model/save/analyzeSaveHistory.js'
 import ScoreHistory from '../model/save/scoreHistory.js'
 import { canUseApi } from '../model/user/apiPermission.js'
 import {
-    sendQuickCommands,
+    sendWithQuickCommands,
     scoreQuickCommands,
     userListQuickCommands,
     historyQuickCommands,
@@ -278,8 +278,7 @@ export class phiuser extends phiPluginBase {
 
         const infoVersion = e.msg.match(new RegExp(`^[#/](?:${Config.getUserCfg('config', 'cmdhead')})\\s*info([12])?`, 'i'))?.at(-1)
         const kind = Number(infoVersion || 0)
-        send.send_with_At(e, await picmodle.user_info(e, data, kind))
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        await sendWithQuickCommands(e, await picmodle.user_info(e, data, kind), scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -505,8 +504,7 @@ export class phiuser extends phiPluginBase {
         // remsg += `φ:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`
 
 
-        send.send_with_At(e, await picmodle.lvsco(e, data))
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        await sendWithQuickCommands(e, await picmodle.lvsco(e, data), scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
     /**
@@ -634,7 +632,7 @@ export class phiuser extends phiPluginBase {
         request.push(`ACC ${acc_range[0]}-${acc_range[1]}`);
 
 
-        send.send_with_At(e, await picmodle.list(e, {
+        await sendWithQuickCommands(e, await picmodle.list(e, {
             head_title: "成绩筛选",
             song: data,
             background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
@@ -646,8 +644,7 @@ export class phiuser extends phiPluginBase {
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
             // dan: await get.getDan(e.user_id),
             request: request
-        }))
-        await sendQuickCommands(e, userListQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩筛选快捷操作')
+        }), userListQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩筛选快捷操作')
 
     }
 
@@ -680,11 +677,10 @@ export class phiuser extends phiPluginBase {
 
         const stats = analyzeSaveHistory(history);
 
-        send.send_with_At(e, await picmodle.analyzeSaveHistory(e, {
+        await sendWithQuickCommands(e, await picmodle.analyzeSaveHistory(e, {
             stats,
             background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
-        }));
-        await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
+        }), historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
     }
 
     /**
@@ -932,13 +928,12 @@ export class phiuser extends phiPluginBase {
             // dan: dan,
         }
 
-        send.send_with_At(e, await picmodle.common(e, 'historyB30', {
+        await sendWithQuickCommands(e, await picmodle.common(e, 'historyB30', {
             gameuser,
             rows,
             background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
             theme: pluginData?.theme || 'star',
-        }))
-        await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
+        }), historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
 
     }
 

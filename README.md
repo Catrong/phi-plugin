@@ -166,6 +166,56 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 * [ ] ……
 ---
 
+### QQ 官方机器人快捷按钮与图片合并
+
+快捷按钮默认与图片分开发送，不需要开放新的端口。需要合并时，将 `QuickCommandMergeImage` 设置为 `true`。
+
+在 TRSS-Yunzai + QQBot-Plugin 环境中，图片会临时放在 Yunzai 的 `/File/` 路由。Yunzai 本机继续监听 `2536`，公网反向代理需要把 `/File/` 转发到 `127.0.0.1:2536`，例如：
+
+```nginx
+location ^~ /File/ {
+    proxy_pass http://127.0.0.1:2536;
+}
+```
+
+然后将 `config/config/server.yaml` 的地址设置为公网地址，例如：
+
+```yaml
+url: https://example.com:8443
+port: 2536
+```
+
+QQBot-Plugin 账号还必须使用原生 Markdown 按钮模式。编辑 `config/QQBot.yaml`，将对应机器人设置为：
+
+```yaml
+markdown:
+  "1905296418": raw
+```
+
+`legacy` 模式会主动忽略按钮消息段，只发送图片或普通文本；修改后需要重启 Yunzai。
+
+如果 QQ 官方机器人的被动回复额度较紧，可以开启 `SimpleBindReply: true`。扫码绑定流程会隐藏“二维码已扫描”“正在绑定”、sessionToken 提醒和快捷按钮，只保留二维码、绑定结果、更新图，以及 API 不可用时的一条提示；该开关只对 QQBot 的扫码绑定生效。
+
+如果使用 `QuickCommandImageHostScript`，脚本直接把图片上传到图床并返回公网 `http(s)` 地址，也不需要为 phi-plugin 开放端口。脚本可以导出 `default` 或 `upload`：
+
+合并消息会把图片的实际宽高写入 Markdown。插件可以从本地 Buffer、文件路径或图床脚本返回值读取尺寸；如果图床只返回地址且本地图片无法读取尺寸，会自动退回图片和按钮分开发送，避免使用错误的默认比例导致图片被裁切。图床脚本也可以显式返回 `width`、`height`：
+
+```js
+export default async function upload(data, { filename, mimeType }) {
+    // 上传 data（Buffer），返回公网图片地址
+    return { url: 'https://img.example.com/result.png', width: 640, height: 360 }
+}
+```
+
+在 TRSS-Yunzai 中也可以复用 Yunzai 自带的临时文件服务，脚本放在 `config/quick-command-image-host.mjs`：
+
+```js
+export default async function upload(data, { filename }) {
+    const url = await Bot.fileToUrl(data, { name: filename, time: 300000 })
+    return { url: String(url) }
+}
+```
+
 ### 功能
 
 以下#均可用/代替，命令头可自定义
