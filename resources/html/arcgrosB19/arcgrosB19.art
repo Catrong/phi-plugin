@@ -1,6 +1,19 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [160, 24, 16, 9, 1.1],
+    '.player_id': [188, 44, 24, 10, 1.1]
+})}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/arcgrosB19/arcgrosB19.css">
+    {{if renderNoJs}}
+    <style>
+        body .name p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.1; }
+        body .player_id p { white-space: normal; overflow-wrap: anywhere; line-height: 1.1; text-align: right; }
+        body .box { padding-bottom: 64px; }
+        body .arc_created { left: 24px; right: 24px; bottom: 8px; }
+        body .arc_created p { white-space: normal; }
+    </style>
+    {{/if}}
 {{/block}}
 {{block 'main'}}
 

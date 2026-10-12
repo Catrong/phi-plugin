@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@pixel.js/shotium':
+        specifier: ^0.12.2
+        version: 0.12.2
       archiver:
         specifier: ^7.0.1
         version: 7.0.1
@@ -16,7 +19,7 @@ importers:
         version: 4.13.4
       axios:
         specifier: ^1.11.0
-        version: 1.20.0
+        version: 1.20.0(debug@4.4.3)
       chalk:
         specifier: ^5.6.2
         version: 5.6.2
@@ -26,6 +29,9 @@ importers:
       crypto-js:
         specifier: ^4.1.1
         version: 4.2.0
+      css-select:
+        specifier: ^6.0.0
+        version: 6.0.0
       csv:
         specifier: ^6.3.6
         version: 6.6.3
@@ -35,6 +41,9 @@ importers:
       echarts-wordcloud:
         specifier: ^2.1.0
         version: 2.1.0(echarts@5.6.0)
+      htmlparser2:
+        specifier: ^10.1.0
+        version: 10.1.0
       iconv-lite:
         specifier: ^0.6.3
         version: 0.6.3
@@ -101,6 +110,63 @@ packages:
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==, tarball: https://registry.npmjs.org/@isaacs/cliui/-/cliui-8.0.2.tgz}
     engines: {node: '>=12'}
+
+  '@pixel.js/shotium-darwin-arm64@0.12.2':
+    resolution: {integrity: sha512-ZAPfW7t8L2an32E5LJxD56ZkXKTL/okMA2pukJ9cGNjB8d0/nXKc/uME8gPvAFi6P2pBCKHgqc4ZMkodYy7gAg==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@pixel.js/shotium-darwin-x64@0.12.2':
+    resolution: {integrity: sha512-Fhc7LsdNrgDlOjErpMT8Cxq2cPuku/2S8/wDXB5aPekTVicOhYohLmyRKwJ3XzMfr84p3ohYSCMO3XSpgWVhgA==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@pixel.js/shotium-linux-arm64-musl@0.12.2':
+    resolution: {integrity: sha512-/iwoj6jHGvXMMClYZpbAGvWhYhysm8aZPXbKNwrKc+q/wUT/vb3PLmtNYkIW+4EYbyAK9i3QFYp5c2HvVxNRFQ==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@pixel.js/shotium-linux-arm64@0.12.2':
+    resolution: {integrity: sha512-4Ybx5Y/tvAkCy09yd68iMwbsj8br+hnzPwrXYEIS+4NNbfFUkCy81y4I1/qs707rsq7s65RXEl+uSC84dZJfLw==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@pixel.js/shotium-linux-x64-musl@0.12.2':
+    resolution: {integrity: sha512-nMqej/RUlh27xM4w1YyAzdSn5vHYo95gLXfK7NJi/to8IZ313zb6NipyDtJFz0qyS3Wcp6ojmMXiHkaJbMhUWA==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@pixel.js/shotium-linux-x64@0.12.2':
+    resolution: {integrity: sha512-mGtQIB/lpvtl3OdwDGAMty/aNaQJPYp6rdWjP6gguCV4hCi3uh9Rveq1tFlUngj36iQ21cvd9b/xw0+gM7RK2w==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@pixel.js/shotium-win32-arm64@0.12.2':
+    resolution: {integrity: sha512-RQCAS1uITjfeNslnYsCBKhmAHjUMLTeVwqfVCDrRJPxvS69Mx+FvM3nkETXq8C7Q88JtqnSK/FVvktpMYHrSmQ==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@pixel.js/shotium-win32-x64@0.12.2':
+    resolution: {integrity: sha512-uaSestcMgCp3iTNRocX/lbti/fnBTIYulbaxqSXTZ9xZdHzvZS8r0srjECEd985AG37eitUecHJdJQ4TKADidg==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [win32]
+
+  '@pixel.js/shotium@0.12.2':
+    resolution: {integrity: sha512-ZSffcuU05FMuXkGQ2AU8JQ4RPZHGbeNvn426qJ5vlHrtYSzNxkfqLhRZkRr/ZbQZOg4E2cTErLShVgBrTVrj2g==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==, tarball: https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz}
@@ -1133,6 +1199,58 @@ packages:
   zrender@5.6.1:
     resolution: {integrity: sha512-OFXkDJKcrlx5su2XbzJvj/34Q3m6PvyCZkVPHGYpcCJ52ek4U/ymZyfuV1nKE23AyBJ51E/6Yr0mhZ7xGTO4ag==, tarball: https://registry.npmjs.org/zrender/-/zrender-5.6.1.tgz}
 
+  css-select@6.0.0:
+    resolution:
+      integrity: sha512-rZZVSLle8v0+EY8QAkDWrKhpgt6SA5OtHsgBnsj6ZaLb5dmDVOWUDtQitd9ydxxvEjhewNudS6eTVU7uOyzvXw==
+
+  boolbase@1.0.0:
+    resolution:
+      integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
+
+  css-what@7.0.0:
+    resolution:
+      integrity: sha512-wD5oz5xibMOPHzy13CyGmogB3phdvcDaB5t0W/Nr5Z2O/agcB8YwOz6e2Lsp10pNDzBoDO9nVa3RGs/2BttpHQ==
+    engines:
+      node: ">= 6"
+
+  domhandler@5.0.3:
+    resolution:
+      integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==
+    engines:
+      node: ">= 4"
+
+  domelementtype@2.3.0:
+    resolution:
+      integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==
+
+  domutils@3.2.2:
+    resolution:
+      integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==
+
+  dom-serializer@2.0.0:
+    resolution:
+      integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==
+
+  entities@4.5.0:
+    resolution:
+      integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
+    engines:
+      node: ">=0.12"
+
+  nth-check@2.1.1:
+    resolution:
+      integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==
+
+  htmlparser2@10.1.0:
+    resolution:
+      integrity: sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==
+
+  entities@7.0.1:
+    resolution:
+      integrity: sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==
+    engines:
+      node: ">=0.12"
+
 snapshots:
 
   '@babel/code-frame@7.29.7':
@@ -1151,6 +1269,41 @@ snapshots:
       strip-ansi-cjs: strip-ansi@6.0.1
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
+
+  '@pixel.js/shotium-darwin-arm64@0.12.2':
+    optional: true
+
+  '@pixel.js/shotium-darwin-x64@0.12.2':
+    optional: true
+
+  '@pixel.js/shotium-linux-arm64-musl@0.12.2':
+    optional: true
+
+  '@pixel.js/shotium-linux-arm64@0.12.2':
+    optional: true
+
+  '@pixel.js/shotium-linux-x64-musl@0.12.2':
+    optional: true
+
+  '@pixel.js/shotium-linux-x64@0.12.2':
+    optional: true
+
+  '@pixel.js/shotium-win32-arm64@0.12.2':
+    optional: true
+
+  '@pixel.js/shotium-win32-x64@0.12.2':
+    optional: true
+
+  '@pixel.js/shotium@0.12.2':
+    optionalDependencies:
+      '@pixel.js/shotium-darwin-arm64': 0.12.2
+      '@pixel.js/shotium-darwin-x64': 0.12.2
+      '@pixel.js/shotium-linux-arm64': 0.12.2
+      '@pixel.js/shotium-linux-arm64-musl': 0.12.2
+      '@pixel.js/shotium-linux-x64': 0.12.2
+      '@pixel.js/shotium-linux-x64-musl': 0.12.2
+      '@pixel.js/shotium-win32-arm64': 0.12.2
+      '@pixel.js/shotium-win32-x64': 0.12.2
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -1185,7 +1338,6 @@ snapshots:
   '@types/yauzl@2.10.3':
     dependencies:
       '@types/node': 22.20.3
-    optional: true
 
   abort-controller@3.0.0:
     dependencies:
@@ -1258,9 +1410,9 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios@1.20.0:
+  axios@1.20.0(debug@4.4.3):
     dependencies:
-      follow-redirects: 1.16.0
+      follow-redirects: 1.16.0(debug@4.4.3)
       form-data: 4.0.6
       https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
@@ -1558,7 +1710,9 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  follow-redirects@1.16.0: {}
+  follow-redirects@1.16.0(debug@4.4.3):
+    optionalDependencies:
+      debug: 4.4.3
 
   foreground-child@3.3.1:
     dependencies:
@@ -2217,3 +2371,48 @@ snapshots:
   zrender@5.6.1:
     dependencies:
       tslib: 2.3.0
+
+  css-select@6.0.0:
+    dependencies:
+      boolbase: 1.0.0
+      css-what: 7.0.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      nth-check: 2.1.1
+
+  boolbase@1.0.0: {}
+
+  css-what@7.0.0: {}
+
+  domhandler@5.0.3:
+    dependencies:
+      domelementtype: 2.3.0
+
+  domelementtype@2.3.0: {}
+
+  domutils@3.2.2:
+    dependencies:
+      dom-serializer: 2.0.0
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+
+  dom-serializer@2.0.0:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      entities: 4.5.0
+
+  entities@4.5.0: {}
+
+  nth-check@2.1.1:
+    dependencies:
+      boolbase: 1.0.0
+
+  htmlparser2@10.1.0:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      entities: 7.0.1
+
+  entities@7.0.1: {}

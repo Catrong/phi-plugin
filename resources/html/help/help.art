@@ -1,11 +1,27 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.order': [142, 119, 30, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.song': [200.48, 24.2, 18, 10, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.desc': [211.45, 96.8, 15, 12, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/help/help.css">
+{{if renderNoJs}}
+<style>
+    .help-expanded .info_box, .help-expanded .song { min-width: 0; }
+    .order p, .desc p { white-space: normal; overflow-wrap: anywhere; }
+    .help-expanded { height: auto; min-height: 121px; align-items: stretch; }
+    .help-expanded .order, .help-expanded .info_box, .help-expanded .desc { height: auto; }
+    .help-expanded .up { height: 24.2px; flex-shrink: 0; }
+    .help-expanded .down { height: auto; min-height: 96.8px; }
+    .help-expanded .desc img { max-width: 100%; height: auto; }
+</style>
+{{/if}}
 
 {{/block}}
 {{block 'main'}}
-
     
     {{each helpGroup group}}
     {{if group.auth!="master"||isMaster}}
@@ -14,12 +30,15 @@
         <div class="help-group">——·{{group.group}}·——</div>
         {{if len > 0}}
         {{each group.list help idx}}
-        <div class="line">
+        {{set helpTitle = cmdHead ? help.title.replace(/[\/杠钢刚]/g,`/${cmdHead} `) : help.title}}
+        {{set helpExample = cmdHead ? (help.eg || help.title).replace(/[\/杠钢刚]/g,`/${cmdHead} `) : (help.eg || help.title)}}
+        {{set expandedHelp = renderNoJs && typeof staticText !== 'undefined' && staticText.fitRule && staticText.fitRule(help.desc && help.desc.replace(/\s/g,'&ensp;'), pvis['.desc'], { minimum: 1 }) < 12}}
+        <div class="line{{expandedHelp ? ' help-expanded' : ''}}">
             <div class="order">
                 {{if cmdHead}}
-                <p name="pvis">{{#help.title.replace(/[\/杠钢刚]/g,`/${cmdHead} `)}}</p>
+                <p name="pvis">{{#helpTitle}}</p>
                 {{else}}
-                <p name="pvis">{{#help.title}}</p>
+                <p name="pvis">{{#helpTitle}}</p>
                 {{/if}}
             </div>
             <div class="info_box">
@@ -27,9 +46,9 @@
                     <div class="num">{{idx + 1}}</div>
                     <div class="song">
                         {{if cmdHead}}
-                        <p name="pvis">{{#(help.eg || help.title).replace(/[\/杠钢刚]/g,`/${cmdHead} `)}}</p>
+                        <p name="pvis">{{#helpExample}}</p>
                         {{else}}
-                        <p name="pvis">{{#(help.eg || help.title)}}</p>
+                        <p name="pvis">{{#helpExample}}</p>
                         {{/if}}
                     </div>
                     <!-- <div class="Master">Master</div> -->

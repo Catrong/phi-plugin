@@ -1,5 +1,18 @@
 [
   {
+    "key": "renderer",
+    "group": "渲染设置",
+    "label": "渲染器",
+    "description": "Puppeteer 使用插件独立浏览器；Shotium 复用 Yunzai 宿主或使用 Koishi SDK；自动模式在宿主启用 Shotium 时跟随，否则使用独立 Puppeteer；保存后动态生效",
+    "type": "select",
+    "options": [
+      { "label": "Puppeteer", "value": "puppeteer" },
+      { "label": "Shotium", "value": "shotium" },
+      { "label": "自动跟随宿主", "value": "auto" }
+    ],
+    "required": true
+  },
+  {
     "key": "renderScale",
     "group": "渲染设置",
     "label": "渲染精度",
@@ -15,7 +28,7 @@
     "key": "randerQuality",
     "group": "渲染设置",
     "label": "渲染质量",
-    "description": "对所有的图片生效，设置渲染的质量",
+    "description": "JPEG/WebP 压缩质量，保存后动态生效；数值越高，细节越清晰、图片越大，PNG 不受影响",
     "type": "number",
     "min": 1,
     "max": 100,
@@ -27,7 +40,7 @@
     "key": "timeout",
     "group": "渲染设置",
     "label": "渲染超时时间",
-    "description": "对所有的图片生效，超时后重启puppeteer，单位ms",
+    "description": "渲染请求超时时间，单位 ms；Puppeteer 超时后回收插件浏览器，Shotium 不关闭宿主渲染器，修改后动态生效",
     "type": "number",
     "min": 1000,
     "max": 120000,
@@ -64,10 +77,12 @@
     "key": "renderNum",
     "group": "渲染设置",
     "label": "并行渲染数量",
-    "description": "并行数量越多，占用的资源越多，建议谨慎修改，修改后重启生效",
+    "description": "插件渲染队列的并发上限；Puppeteer 使用独立浏览器，Shotium 请求共享宿主或守护进程，修改后动态生效",
     "type": "number",
     "min": 1,
     "max": 10,
+    "step": 1,
+    "format": "integer",
     "placeholder": "请输入并行渲染数量",
     "required": true
   },

@@ -8,6 +8,16 @@ body {
     height: auto;
 }
 
+/* 已预模糊曲绘直接绘制，以黑底合成保持原 brightness(50%) 的暗度，避免整页滤镜表面。 */
+.chart-background-preblurred {
+    background-color: black;
+}
+
+.chart-background-preblurred img {
+    filter: none;
+    opacity: 0.5;
+}
+
 .backBlock {
     margin: 0;
     padding: 0;

@@ -1,6 +1,12 @@
 {{extend defaultLayout}}
+{{set pvis = [600, 76, 56, 22, 1.1]}}
 {{block 'css'}}
     <link rel="stylesheet" type="text/css" href="{{_res_path}}html/clg/clg.css">
+    {{if renderNoJs}}
+    <style>
+        body .song_name p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.1; }
+    </style>
+    {{/if}}
 {{/block}}
 
 {{block 'main'}}

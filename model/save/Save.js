@@ -327,7 +327,7 @@ export default class Save {
                 const y = phi[i];
                 if (!y) continue;
                 sum_rks += Number(y.rks) //计算rks
-                y.illustration = getInfo.getill(y.id, 'common', y.rank)
+                y.illustration = getInfo.getill(y.id, 'low', y.rank)
                 y.suggest = "无法推分"
             }
         }
@@ -336,7 +336,8 @@ export default class Save {
          * 所有成绩
          * @type {(LevelRecordInfo & Partial<otherLevelRecordInfo>)[]}
          */
-        let rkslist = this.getRecord()
+        // 卡片曲绘与展示字段只写入本次结果，保留存档中单曲用途的原图。
+        let rkslist = this.getRecord().map(record => ({ ...record }))
         /**真实 rks */
         let userrks = this.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则的最小上升rks */
@@ -385,7 +386,7 @@ export default class Save {
                 rkslist[i].suggest = "无法推分"
             }
             /**曲绘 */
-            rkslist[i].illustration = getInfo.getill(rkslist[i].id, 'common', rkslist[i].rank)
+            rkslist[i].illustration = getInfo.getill(rkslist[i].id, 'low', rkslist[i].rank)
             /**b19列表 */
             b19_list.push(rkslist[i])
             b19Ids.push(rkslist[i].id);
@@ -585,7 +586,7 @@ export default class Save {
                     const y = phi[i];
                     if (!y) continue;
                     sum_rks += Number(y.rks) //计算rks
-                    y.illustration = getInfo.getill(y.id, 'common', y.rank)
+                    y.illustration = getInfo.getill(y.id, 'low', y.rank)
                     y.suggest = "无法推分"
                 }
             }
@@ -595,7 +596,8 @@ export default class Save {
          * 所有成绩
          * @type {(LevelRecordInfo & {suggestType?: number, suggest?: string, num?: number|string})[]}
          */
-        let rkslist = this.getRecord()
+        // 条件 Best 列表同样使用卡片副本，不改变存档中的曲绘与排序缓存。
+        let rkslist = this.getRecord().map(record => ({ ...record }))
         /**真实 rks */
         let userrks = this.saveInfo.summary.rankingScore
         /**考虑屁股肉四舍五入原则的最小上升rks */
@@ -631,7 +633,7 @@ export default class Save {
                 x.suggest = "无法推分"
             }
             /**曲绘 */
-            x.illustration = getInfo.getill(x.id, 'common', x.rank)
+            x.illustration = getInfo.getill(x.id, 'low', x.rank)
             /**b19列表 */
             b19_list.push(x)
         }

@@ -1,7 +1,27 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.title .r > p:first-child': [304, 24, 16, 12, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.songsname': [113, 16, 23.5, 10, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/update/update.css">
+
+{{if renderNoJs}}
+<style>
+    /* 保留原标题栏与评级图标的几何，normal 行高下曲名由原脚本缩至 10px。 */
+    .record_box .songsname { min-width: 0; }
+    .record_box .songsname p { font-size: 10px; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .title .r > p:first-child { max-width: 100%; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .record_box .box_title-left p { max-width: 100%; font-size: 13px; }
+    .record_box .box_title-right p { font-size: 12px; }
+    .record_box .compact-date .box_title-left { height: 12px; align-self: flex-start; }
+    .record_box .compact-date .box_title-left p { font-size: 11px; line-height: 1.05; }
+    .record_box .compact-date .box_title-right { height: 12px; bottom: 0; align-items: flex-end; }
+    .record_box .compact-date .box_title-right p { font-size: 10px; line-height: 1.05; }
+</style>
+{{/if}}
 
 {{/block}}
 
@@ -11,7 +31,7 @@
     
     <div class="title">
         <div class="r">
-            <p>Player: {{#PlayerId}}</p>
+            <p{{if renderNoJs}} name="pvis" class="phi-fit-line" title="Player: {{PlayerId}}"{{/if}}>Player: {{#PlayerId}}</p>
             <p>RankingScore: {{Rks}}
                 {{if added_rks_notes[0]}} <span
                     style="color: {{added_rks_notes[0].includes('+')?'gold':'red'}};">{{added_rks_notes[0]}}</span>{{/if}}
@@ -105,13 +125,13 @@
                     {{if song.finished}}
                     <div class="namebox_ed">
                         <div class="songsname">
-                            <p name="pvis">{{song.song}}</p>
+                            <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.song}}"{{/if}}>{{song.song}}</p>
                         </div>
                     </div>
                     {{else}}
                     <div class="namebox_un">
                         <div class="songsname">
-                            <p name="pvis">{{song.song}}</p>
+                            <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.song}}"{{/if}}>{{song.song}}</p>
                         </div>
                     </div>
                     {{/if}}
@@ -145,7 +165,7 @@
         {{each box_line time_line}}
         <div class="title_box">
             {{each time_line date}}
-            <div class="box_title" style="width: {{date.width}}px;filter: drop-shadow(0px 2px 2px {{date.color}});">
+            <div class="box_title{{if renderNoJs && date.date && date.update_num > 1 && date.width <= 150}} compact-date{{/if}}" style="width: {{date.width}}px;filter: drop-shadow(0px 2px 2px {{date.color}});">
                 <div class="box_title-right-down" style="background-color: {{date.color}};"></div>
                 {{if date.date}}
                 <div class="box_title-left" style="background-color: {{date.color}};">
@@ -173,14 +193,14 @@
                 </div>
                 {{/if}}
                 <div class="infobox">
-                    <div class="namebox">
+                    <div class="namebox{{if renderNoJs && !song.Rating}} without-rating{{/if}}">
                         {{if song.Rating}}
                         <div class="new-box">
                             <img src="{{_res_path}}html/otherimg/{{song.Rating}}.png" alt="{{song.Rating}}">
                         </div>
                         {{/if}}
                         <div class="songsname">
-                            <p name="pvis">{{song.song}}</p>
+                            <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.song}}"{{/if}}>{{song.song}}</p>
                         </div>
                     </div>
                     <div class="songsinfo">

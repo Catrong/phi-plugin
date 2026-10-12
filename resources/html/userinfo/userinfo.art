@@ -1,11 +1,20 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.Player_Id-right': [553.6, 83, 60, 20, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.Player_profile_box [color="white"]': [658.75, 290.4, 60, 16, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
 
 <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css">
+{{if renderNoJs}}
+<style>
+    .Player_Id-right p, .Player_profile_box p { white-space: normal; overflow-wrap: anywhere; }
+</style>
+{{/if}}
 
 {{/block}}
 {{block 'main'}}
-
     {{if background}}
     <div class="background">
         <img src="{{background}}" alt="{{background}}">

@@ -15,7 +15,24 @@ const rawReplySymbol = Symbol('phi.koishiRawReply')
 const rawSessionSymbol = Symbol('phi.koishiSession')
 const wrappedSymbol = Symbol('phi.koishiWrapped')
 const contextStoreSymbol = Symbol('phi.koishiContexts')
+const adapterOwnerSymbol = Symbol('phi.koishiAdapterOwner')
+const taskOwnerSymbol = Symbol('phi.koishiTaskOwner')
+/** @type {KoishiRuntimeAdapter | undefined} */
+let activeKoishiAdapter
 const require = createRequire(import.meta.url)
+
+/** @param {any} instance @param {string} key @param {KoishiRuntimeAdapter} owner */
+function trackHandler(instance, key, owner) {
+    const handler = instance[key]
+    if (typeof handler !== 'function' || handler[taskOwnerSymbol] === owner) return
+    const wrapped = /** @this {any} @param {...any} args */ function (...args) { return owner.runTask(handler, this, args) }
+    wrapped[taskOwnerSymbol] = owner
+    instance[key] = wrapped
+}
+
+/**
+ * @typedef {PlatformAdapter & {fromSession(session: any): PlatformEvent, stop(): void, drain(): Promise<void>, close(): Promise<void>, trackRenderer(renderer: KoishiRenderer): void, trackInstance(instance: any): void, trackTimer(timer: ReturnType<typeof setTimeout>): void, releaseTimer(timer: ReturnType<typeof setTimeout>): void, isStopped(): boolean, runTask(callback: Function, receiver: any, args: any[]): Promise<any>}} KoishiRuntimeAdapter
+ */
 
 /** @param {unknown} data */
 function imageSource(data) {
@@ -250,6 +267,7 @@ export class KoishiRenderer {
         /** @type {Record<string, import('chokidar').FSWatcher>} */
         this.watcher = {}
         mkdirs(this.dir)
+        activeKoishiAdapter?.trackRenderer(this)
     }
 
     /**
@@ -326,14 +344,25 @@ export class KoishiRenderer {
  *
  * @param {any} ctx Koishi Context
  * @param {KoishiAdapterOptions} [options]
- * @returns {PlatformAdapter & {fromSession(session: any): PlatformEvent}}
+ * @returns {KoishiRuntimeAdapter}
  */
 export function createKoishiAdapter(ctx, options = {}) {
     const h = getH(ctx, options)
     const logger = createLogger(ctx, options)
     const redis = createRedis(ctx, options, logger)
+    /** @type {Set<ReturnType<typeof setTimeout>>} */
+    const timers = new Set()
+    /** @type {Set<Map<string, any>>} */
+    const contextStores = new Set()
+    /** @type {Set<KoishiRenderer>} */
+    const renderers = new Set()
+    /** @type {Set<Promise<any>>} */
+    const tasks = new Set()
+    let stopped = false
+    /** @type {Promise<void> | null} */
+    let closePromise = null
 
-    /** @type {PlatformAdapter & {fromSession(session: any): PlatformEvent}} */
+    /** @type {KoishiRuntimeAdapter} */
     const adapter = {
         name: 'koishi',
         PluginBase: /** @type {import('./types.js').PlatformPluginBaseConstructor} */ (/** @type {unknown} */ (class KoishiPluginBase {
@@ -361,7 +390,10 @@ export function createKoishiAdapter(ctx, options = {}) {
                 this.priority = priority
                 this.task = task
                 this.rule = rule
+                // 业务基类在 ESM 缓存中保留；新实例绑定新 Context，老实例仍绑定原 Context。
+                this[adapterOwnerSymbol] = activeKoishiAdapter || adapter
                 this[contextStoreSymbol] = new Map()
+                this[adapterOwnerSymbol].trackInstance(this)
             }
 
             /**
@@ -371,7 +403,7 @@ export function createKoishiAdapter(ctx, options = {}) {
              */
             reply(msg = '', quote = false, data = {}) {
                 if (!this.e) return false
-                return adapter.reply(this.e, msg, { quote, ...data })
+                return this[adapterOwnerSymbol].reply(this.e, msg, { quote, ...data })
             }
 
             /**
@@ -382,21 +414,26 @@ export function createKoishiAdapter(ctx, options = {}) {
              */
             setContext(name, isGroup = false, timeout = 0, timeoutMsg = '') {
                 if (!this.e) return false
+                const owner = this[adapterOwnerSymbol]
+                if (owner.isStopped()) return false
+                trackHandler(this, name, owner)
                 const event = this.e
                 const key = contextKey(this.e, isGroup)
                 const store = /** @type {Map<string, any>} */ (this[contextStoreSymbol])
                 const old = store.get(key)
-                if (old?.timer) clearTimeout(old.timer)
+                if (old?.timer) { clearTimeout(old.timer); owner.releaseTimer(old.timer) }
 
                 const timer = timeout > 0
                     ? setTimeout(() => {
+                        if (timer) owner.releaseTimer(timer)
                         const current = store.get(key)
                         if (!current || current.name !== name) return
                         store.delete(key)
-                        if (timeoutMsg) adapter.reply(event, timeoutMsg).catch?.(() => { })
+                        if (timeoutMsg) owner.reply(event, timeoutMsg).catch?.(() => { })
                     }, timeout * 1000)
                     : null
                 timer?.unref?.()
+                if (timer) owner.trackTimer(timer)
                 store.set(key, { name, isGroup, timer })
                 return true
             }
@@ -411,7 +448,7 @@ export function createKoishiAdapter(ctx, options = {}) {
                 const store = /** @type {Map<string, any>} */ (this[contextStoreSymbol])
                 const current = store.get(key)
                 if (!current || (name && current.name !== name)) return false
-                if (current.timer) clearTimeout(current.timer)
+                if (current.timer) { clearTimeout(current.timer); this[adapterOwnerSymbol].releaseTimer(current.timer) }
                 store.delete(key)
                 return true
             }
@@ -428,6 +465,16 @@ export function createKoishiAdapter(ctx, options = {}) {
         redis,
         rootPath: options.rootPath || process.cwd(),
         logger,
+        async getHostRenderer(name) {
+            return name === 'shotium' && ctx?.shotium?.id === 'shotium' && typeof ctx.shotium.render === 'function'
+                ? ctx.shotium : null
+        },
+        getActiveRendererName() {
+            return ctx?.shotium?.id === 'shotium' && typeof ctx.shotium.render === 'function' ? 'shotium' : 'puppeteer'
+        },
+        hasPuppeteerService() {
+            return Boolean(ctx?.puppeteer)
+        },
         segment: {
             image(data) {
                 data = imageSource(data)
@@ -621,10 +668,13 @@ export function createKoishiAdapter(ctx, options = {}) {
                     : false
 
             const recallSeconds = Number(recallMsg || 0)
-            if (sent && recallSeconds > 0) {
-                setTimeout(() => {
+            if (sent && recallSeconds > 0 && !stopped) {
+                const timer = setTimeout(() => {
+                    timers.delete(timer)
                     this.recall(event, sent).catch?.(() => { })
-                }, recallSeconds * 1000).unref?.()
+                }, recallSeconds * 1000)
+                timer.unref?.()
+                timers.add(timer)
             }
             return sent
         },
@@ -761,6 +811,43 @@ export function createKoishiAdapter(ctx, options = {}) {
         async restartBot() {
             return false
         },
+
+        trackRenderer(renderer) { renderers.add(renderer) },
+        trackInstance(instance) { contextStores.add(instance[contextStoreSymbol]) },
+        trackTimer(timer) { timers.add(timer) },
+        releaseTimer(timer) { timers.delete(timer) },
+        isStopped() { return stopped },
+        async runTask(callback, receiver, args) {
+            if (stopped) return false
+            const task = Promise.resolve(callback.apply(receiver, args))
+            tasks.add(task)
+            try { return await task } finally { tasks.delete(task) }
+        },
+        stop() {
+            stopped = true
+            for (const timer of timers) clearTimeout(timer)
+            timers.clear()
+            for (const store of contextStores) store.clear()
+        },
+        async drain() { await Promise.allSettled([...tasks]) },
+        close() {
+            if (closePromise) return closePromise
+            this.stop()
+            closePromise = (async () => {
+                await this.drain()
+                const watchers = new Set([...renderers].flatMap(renderer => Object.values(renderer.watcher)))
+                await Promise.allSettled([...watchers].map(watcher => watcher.close()))
+                for (const renderer of renderers) {
+                    renderer.watcher = {}
+                    renderer.html = {}
+                    renderer.htmlIdentity = {}
+                }
+                renderers.clear()
+                contextStores.clear()
+                if (activeKoishiAdapter === adapter) activeKoishiAdapter = undefined
+            })()
+            return closePromise
+        },
     }
 
     return adapter
@@ -774,8 +861,8 @@ export function createKoishiAdapter(ctx, options = {}) {
  */
 export function useKoishiAdapter(ctx, options = {}) {
     const adapter = createKoishiAdapter(ctx, options)
-    setPlatformAdapter(adapter)
-    return adapter
+    activeKoishiAdapter = adapter
+    return /** @type {KoishiRuntimeAdapter} */ (setPlatformAdapter(adapter))
 }
 
 /**
@@ -792,6 +879,17 @@ export function registerKoishiApps(ctx, apps, adapter, options = {}) {
         .map(([key, App]) => ({ key, instance: typeof App === 'function' ? new App() : App }))
         .filter(({ instance }) => Boolean(instance))
         .sort((a, b) => Number(a.instance.priority ?? 5000) - Number(b.instance.priority ?? 5000))
+    for (const { instance } of entries) {
+        const handlers = new Set((instance.rule || []).map((/** @type {any} */ rule) => rule.fnc))
+        if (typeof instance.task?.fnc === 'string') handlers.add(instance.task.fnc)
+        else if (typeof instance.task?.fnc === 'function') {
+            const handler = instance.task.fnc
+            instance.task = { ...instance.task, fnc: /** @param {...any} args */ function (...args) { return adapter.runTask(handler, this, args) } }
+        }
+        for (const key of handlers) {
+            trackHandler(instance, key, adapter)
+        }
+    }
     registerCommands(ctx, entries, adapter, block, options.cmdhead ?? sharedSettings.defaults.cmdhead, {
         commands: options.koishiShortcuts?.filter(key => key.startsWith('command:')).map(key => key.slice(8)) ?? options.koishiShortcutCommands,
         categories: options.koishiShortcuts?.filter(key => key.startsWith('category:')).map(key => key.slice(9)) ?? options.koishiShortcutCategories,

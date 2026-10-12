@@ -1,7 +1,13 @@
 {{extend defaultLayout}}
+{{set pvis = [330, 60, 32, 14, 1.1]}}
 
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/table/table.css">
+{{if renderNoJs}}
+<style>
+  body .playerId p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.1; text-align: center; }
+</style>
+{{/if}}
 {{/block}}
 
 {{block 'main'}}

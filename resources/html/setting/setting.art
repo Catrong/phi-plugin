@@ -1,6 +1,22 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [65, 25, 15, 12, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.setting-expanded': false
+})}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/setting/setting.css">
+{{if renderNoJs}}
+<style>
+    .setting-expanded { min-height: 50px; }
+    .setting-expanded .square { flex-shrink: 0; }
+    .setting-expanded .left { flex: 1; min-width: 0; padding: 7px 8px 7px 0; }
+    .setting-expanded .title { height: auto; }
+    .setting-expanded .left p { white-space: normal; overflow-wrap: anywhere; }
+    .setting-expanded .right { position: relative; right: auto; height: auto; min-width: 0; width: 180px; flex-shrink: 0; margin-right: 12px; }
+    .setting-expanded .space.setting-value { width: 140px; height: auto; min-height: 25px; box-sizing: border-box; padding: 5px 14px; }
+    .setting-expanded .space.setting-value p { width: 100%; white-space: normal; overflow-wrap: anywhere; text-align: center; }
+</style>
+{{/if}}
 {{/block}}
 
 {{block 'main'}}
@@ -23,7 +39,8 @@
 <div class="box">
     {{each data as value}}
     <div class="lineBox{{value.type == "divider"?" divider":''}}">
-        <div class="line">
+        {{set expandedValue = renderNoJs && value.type == 'space' && typeof staticText !== 'undefined' && staticText.fitRule && staticText.fitRule(value.value, pvis.default, { minimum: 1 }) < 12}}
+        <div class="line{{expandedValue ? ' setting-expanded' : ''}}">
             <div class="square"></div>
             <div class="left">
                 <div class="title">
@@ -35,7 +52,7 @@
             </div>
             <div class="right">
                 {{if value.type == "space"}}
-                <div class="space">
+                <div class="space{{renderNoJs ? ' setting-value' : ''}}">
                     <p name="pvis">{{value.value}}</p>
                 </div>
                 <div class="drc">

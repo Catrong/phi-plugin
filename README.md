@@ -71,6 +71,10 @@ pnpm install -P
 > pnpm config set registry https://registry.npmmirror.com
 >```
 
+渲染器 SDK 现为按需提供的可选依赖。默认 Puppeteer 通常直接使用 Yunzai 宿主安装的 `puppeteer`（兼容 24.x）；若提示缺少该包，请在宿主根目录执行 `pnpm add puppeteer@^24.16.2`。选择 Shotium 时复用宿主服务，无需在本插件另装 Shotium SDK。
+
+模板维护者可参考 [Shotium 文字适配规则](docs/pvis.md)：在 `.art` 开头声明 `pvis`，正文保留 `name="pvis"`，由渲染入口统一补上字号。
+
 #### Koishi 安装
 
 <details>
@@ -94,13 +98,23 @@ node ./external/phi-plugin/scripts/install-koishi.cjs --dry-run
 node /path/to/install-koishi.cjs --root /path/to/koishi-app
 # 更新本体并重新安装（仅允许干净 Git 工作区，快进更新）
 node ./external/phi-plugin/scripts/install-koishi.cjs --update
+# 只安装 Shotium 后端，首次安装也可使用此参数
+node ./external/phi-plugin/scripts/install-koishi.cjs --renderer shotium
+# 准备两种后端，自动跟随宿主使用 Shotium，否则使用 Puppeteer
+node ./external/phi-plugin/scripts/install-koishi.cjs --renderer auto
+# 准备并切换到 Koishi Puppeteer 服务
+node ./external/phi-plugin/scripts/install-koishi.cjs --renderer puppeteer
 ```
 
-包管理器优先按宿主唯一的锁文件识别，也可用 `--manager npm`、`--manager yarn` 或 `--manager pnpm` 指定。Yarn 需要 2+ 且使用 `nodeLinker: node-modules`。非默认 YAML 配置可用 `--config 文件路径` 指定。
+包管理器优先按宿主唯一的锁文件识别，也可用 `--manager npm`、`--manager yarn` 或 `--manager pnpm` 指定。Yarn 需要 2+ 且使用 `nodeLinker: node-modules`。pnpm 的本地链接不安装本体公共依赖，安装器会先用随 Node.js 提供的 npm 7+ 补齐本体公共运行依赖，跳过渲染器 peers、安装脚本和 npm 锁文件；宿主继续使用 pnpm，本体 `package.json` 和原锁文件均不修改。非默认 YAML 配置可用 `--config 文件路径` 指定。
 
 安装前会将待修改的已有宿主文件和包装文件备份至宿主 `.phi-plugin-install-backups/`。安装失败时可据此恢复；脚本不会自动回滚已安装的依赖，也不会自动重启 Koishi。安装成功后请重启 Koishi 并刷新 WebUI。
 
-请在控制台启用一个 `database` 服务。缺少 Puppeteer 时脚本会添加其依赖和配置，但保留已有服务的禁用状态。安装过程跳过浏览器下载，请通过 Koishi Puppeteer 服务配置可用的 Chrome / Chromium 路径。
+请在控制台启用一个 `database` 服务。`--renderer` 省略时保留已有 phi-plugin 实例的 `renderer`，首次安装默认 `puppeteer`。选择 `shotium` 只安装 `@pixel.js/shotium` SDK，使用本插件管理的原生渲染器，无需 Puppeteer 服务或 Chrome。SDK 需要 Node.js 18+，由包管理器按系统与架构安装原生包，请保留 optionalDependencies。
+
+选择 `puppeteer` 会按需补齐 Puppeteer SDK、Koishi Puppeteer 服务依赖与配置；选择 `auto` 会准备两种后端，并补齐 Puppeteer 作为未检测到宿主 Shotium 时的后备。两者均保留已有服务、浏览器路径和禁用状态。安装过程跳过浏览器下载，请通过 Koishi Puppeteer 服务配置可用的 Chrome / Chromium 路径。Shotium 为可选 SDK，Puppeteer 服务为可选注入，未安装或启用所选后端时会明确提示缺少依赖。
+
+以后在 Koishi 设置的“渲染设置”中选择渲染器，也可修改 `koishi.yml` 对应 phi-plugin 实例的 `renderer`。保存后原位切换渲染器及并发、超时、质量设置，无需重载插件或重启宿主；旧请求继续完成，后续请求使用新后端。缺少所选服务或 SDK 时拒绝此次切换并保留当前后端。切换到尚未安装的后端前，可重新执行安装器选择该后端；安装器会保留之前已安装的另一后端，方便后续切换。
 
 若原先使用独立版本的同名`koishi-plugin-phi-plugin`插件，请先迁移，脚本不会覆盖它。
 
@@ -142,6 +156,7 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 已有仓库执行 `git pull --ff-only`，保留当前分支和远程配置；有未提交修改或无法快进时停止，不强制覆盖。曲绘库尚未下载时，按已保存的 `downIllUrl` 和 `githubProxy` 克隆。插件更新完成后请重载插件，若依赖发生变化则重新运行安装脚本。按钮不会自动重启 Koishi；接入此控制台扩展无需改动本体 `package.json`。
 
 </details>
+
 
 ---
 

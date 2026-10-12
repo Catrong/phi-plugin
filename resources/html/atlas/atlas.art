@@ -1,6 +1,24 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.name-box .song': [563, 72, 48, 18, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.name-box .composer': [547, 50, 25, 14, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.charts-box .txt .line': [538, 82, 20, 12, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.charts-box .charter': [470, 40, 20, 14, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.charts-box .expanded-info .line': false
+})}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/atlas/atlas.css">
+{{if renderNoJs}}
+<style>
+    .charts-box .txt .sqrt { flex-shrink: 0; }
+    .charts-box .txt .line p, .comment p { white-space: normal; overflow-wrap: anywhere; }
+    .charts-box .expanded-info { height: auto; min-height: 32px; }
+    .charts-box .expanded-info .line { height: auto; min-height: 80px; }
+    .charts-box .expanded-info .line p { font-size: 12px; }
+    .comment { max-height: none; }
+</style>
+{{/if}}
 
 {{/block}}
 
@@ -14,18 +32,18 @@
             <div class="info-box">
                 <div class="name-box clip-box">
                     <div class="song">
-                        <p name="pvis">{{song}}</p>
+                        <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{song}}</p>
                         <!-- <p style="font-size: 45px;">{{song}}</p> -->
                     </div>
                     <div class="composer">
-                        <p name="pvis">{{composer}}</p>
+                        <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{composer}}</p>
                     </div>
                 </div>
                 <div class="charts-box">
                     <div class="length">
                         <p name="pvis">{{length}}</p>
                     </div>
-                    <div class="txt">
+                    <div class="txt{{renderNoJs && spinfo && typeof staticText !== 'undefined' && staticText.fitRule && staticText.fitRule(spinfo, pvis['.charts-box .txt .line'], { minimum: 1 }) < 12 ? ' expanded-info' : ''}}">
                         <div class="sqrt">
                             <p>SONG'S_INFO</p>
                         </div>
@@ -65,7 +83,7 @@
                             </div>
                             {{each chart}}
                             <div class="charter">
-                                <p name="pvis">{{$value.charter}}</p>
+                                <p name="pvis"{{if renderNoJs}} class="phi-fit-line"{{/if}}>{{$value.charter}}</p>
                             </div>
                             <div class="chart-info">
                                 <p>{{$value.tap}}</p>

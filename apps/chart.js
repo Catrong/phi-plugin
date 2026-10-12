@@ -10,6 +10,7 @@ import { UserCredentials } from '../model/user/userCredentials.js';
 import { canUseApi, getApiAccessState } from '../model/user/apiPermission.js'
 import platform from '../components/platform/index.js'
 import { sendQuickCommands } from '../model/game/markdown.js'
+import { originalIllPath } from '../model/filesystem/path.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
 /** @import {ChartTagSongRankResponse, ChartTagTreeNode, chartsTagResponseData, chartsTagVoteCountMap} from '../model/api/makeRequest.js' */
@@ -65,6 +66,7 @@ import { sendQuickCommands } from '../model/game/markdown.js'
 /**
  * @typedef {object} ChartRenderInfo
  * @property {string} illustration 曲绘
+ * @property {boolean} illustrationPreBlurred 曲绘是否来自已预模糊的本地曲绘目录
  * @property {string} song 曲名
  * @property {string} length 曲目时长
  * @property {levelKind} rank 难度
@@ -578,9 +580,14 @@ async function getChartImg(e, id, options) {
     }
   }
 
+  const illustration = getInfo.getill(info.id, 'blur', rank)
+  // getill('blur') 可能回退原图；只有明确来自预模糊目录的资源才省略二次模糊。
+  const blurDirectory = `${originalIllPath.replace(/\\/g, '/')}/illBlur/`
+
   /** @type {ChartRenderInfo} */
   const chartInfo = {
-    illustration: getInfo.getill(info.id, 'common', rank),
+    illustration,
+    illustrationPreBlurred: illustration.replace(/\\/g, '/').startsWith(blurDirectory),
     song: info.song,
     length: info.length,
     rank: rank,

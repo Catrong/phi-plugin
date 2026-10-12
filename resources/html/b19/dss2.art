@@ -1,7 +1,18 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [172, 34, 25, 10, 1.1],
+    '.playerId': [740, 130, 80, 24, 1.1]
+})}}
 
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/b19/dss2.css">
+{{if renderNoJs}}
+<style>
+  body .songname p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.1; }
+  body .titlePlayerInfo .playerId { width: 70%; }
+  body .titlePlayerInfo .playerId p { width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.1; }
+</style>
+{{/if}}
 {{/block}}
 
 {{block 'main'}}

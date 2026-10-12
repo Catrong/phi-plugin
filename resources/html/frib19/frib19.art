@@ -1,7 +1,31 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.cellValue': [65, 25, 18, 12, null, { method: 'line' }],
+    '.versionCell .cellValue': [110, 25, 18, 12, null, { method: 'line' }],
+    '.bpmCell .cellValue': [65, 25, 18, 9, null, { method: 'line' }],
+    '.cellMain:has(.arrow, .mark) .cellValue': [43, 25, 18, 12, null, { method: 'line' }],
+    '.versionCell .cellMain:has(.arrow, .mark) .cellValue': [88, 25, 18, 12, null, { method: 'line' }],
+    '.bpmCell .cellMain:has(.arrow, .mark) .cellValue': [43, 25, 18, 9, null, { method: 'line' }],
+    '.charterCell': false,
+    '.chapterCell': false
+})}}
 
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/frib19/frib19.css">
+{{if renderNoJs}}
+<style>
+    /* 表格信息允许换行，日期与方向标记不能随值一起被裁切。 */
+    .tableBox .cell { min-width: 0; }
+    .tableBox .cellMain { height: auto; flex: 0 0 auto; gap: 4px; }
+    .tableBox .cellValue, .tableBox .songName { min-width: 0; flex: 0 1 auto; white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+    .tableBox .cellSub { flex: 0 0 auto; white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+    .tableBox .playerName { height: auto; min-height: 0; }
+    .tableBox .playerName p { white-space: normal; overflow-wrap: anywhere; }
+    .tableBox .cellMain .arrow, .tableBox .cellMain .mark, .tableBox .songCell > .mark { flex: 0 0 18px; width: 18px; margin-left: 0; white-space: nowrap; overflow: visible; font-size: 18px; }
+    .tableBox .versionCell .cellValue, .tableBox .difficultyCell .cellValue, .tableBox .comboCell .cellValue, .tableBox .bpmCell .cellValue { font-variant-numeric: tabular-nums; }
+</style>
+{{/if}}
 {{/block}}
 
 {{block 'main'}}
@@ -53,11 +77,18 @@
             {{each row.cells cell}}
             <div class="cell {{cell.cls}} state-{{cell.state}}">
                 <div class="cellMain">
+                    {{if renderNoJs}}
+                    <p class="cellValue" name="pvis">{{cell.value}}</p>
+                    {{if cell.arrow == 'up'}}<span class="arrow">↑</span>
+                    {{else if cell.arrow == 'down'}}<span class="arrow">↓</span>
+                    {{else if cell.state == 'same'}}<span class="mark">✓</span>{{/if}}
+                    {{else}}
                     <p class="cellValue" name="pvis">{{cell.value}}
                         {{if cell.arrow == 'up'}}<span class="arrow">↑</span>
                         {{else if cell.arrow == 'down'}}<span class="arrow">↓</span>
                         {{else if cell.state == 'same'}}<span class="mark">✓</span>{{/if}}
                     </p>
+                    {{/if}}
                 </div>
                 {{if cell.sub}}<p class="cellSub" name="pvis">{{cell.sub}}</p>{{/if}}
             </div>

@@ -240,7 +240,11 @@ export class FallbackRenderer {
  * @param {any} Base
  */
 export function withReliableTemplateCache(Base) {
-    return class extends Base {
+    // TRSS 把 dealTpl 绑定为宿主的静态方法，实例属性还会遮住插件子类的
+    // dealTpl，绕过 pvis 与模板资源回收。该接口使用插件自己的模板实例，
+    // 浏览器/Shotium 引擎仍按原路径由宿主管理。
+    const TemplateBase = typeof Base.prototype.dealTpl === 'function' ? Base : FallbackRenderer
+    return class extends TemplateBase {
         /** @param {...any} args */
         constructor(...args) {
             super(...args)
@@ -333,6 +337,16 @@ const adapter = {
     rootPath: process.cwd(),
 
     logger: createLogger(globalThis.logger),
+
+    getActiveRendererName() {
+        return String(yunzaiCfgModule?.default?.renderer?.name || 'puppeteer').trim().toLowerCase()
+    },
+
+    async getHostRenderer(name) {
+        // 按需加载，普通 Puppeteer 模式与非 Yunzai 环境不加载宿主渲染后端。
+        const module = await optionalImport('../../../../lib/renderer/loader.js')
+        return module?.default?.getRenderer?.(name) || null
+    },
 
     segment: {
         image(data) {

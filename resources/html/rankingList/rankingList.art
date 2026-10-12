@@ -1,13 +1,23 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.Player_Id-right #Player_Id': [458.25, 83, 60, 20, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.Player_profile_box #profile': [564, 211.2, 60, 16, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.rankUserName': [350, 140, 35, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css" />
     <link rel="stylesheet" href="{{_res_path}}html/score/score.css" />
     <link rel="stylesheet" href="{{_res_path}}html/rankingList/RankList.css" />
+    {{if renderNoJs}}
+    <style>
+        .Player_Id-right #Player_Id, .Player_profile_box #profile, .rankUserName p { white-space: normal; overflow-wrap: anywhere; }
+    </style>
+    {{/if}}
 {{/block}}
 
 {{block 'main'}}
 
-<body style="scale: 1">
     <div class="background">
         <img
             src="{{me.backgroundurl}}"
@@ -32,8 +42,7 @@
                         <p>ID</p>
                     </div>
                     <div class="Player_Id-right">
-                        <p id="Player_Id">
-                            {{#me.playerId}}</p>
+                        <p id="Player_Id" name="pvis">{{#(me.playerId || 'NO INFO')}}</p>
                     </div>
                 </div>
             </div>
@@ -49,7 +58,7 @@
                     <p>RKS</p>
                 </div>
                 <div class="Player_data_value" id="Player_data_left">
-                    <p>{{me.rks.toFixed(4)}}</p>
+                    <p>{{me.rks != null && typeof me.rks.toFixed == 'function' ? me.rks.toFixed(4) : '---'}}</p>
                 </div>
             </div>
             <div class="Player_data_line-right">
@@ -74,7 +83,7 @@
             </div>
         </div>
         <div class="Player_profile_box">
-            <font color='white' id="profile">{{#me.selfIntro.replace(/\n\r?/g,'<br>')}}</font>
+            <p color="white" id="profile" name="pvis">{{#(me.selfIntro || '介个人的简介被胡桃吃掉惹……').replace(/\r\n?|\n/g, '<br>')}}</p>
         </div>
         <div class="createdbox">
             <div class="phi-plugin">
@@ -103,7 +112,7 @@
             {{each me.b30list e index}}
             <div class="b30Alist {{index}}">
                 <p>{{e.title}}</p>
-                {{if e.list.length}}
+                {{if e.list && e.list.length}}
                 <% for (var i = 0; i < e.list.length; i++) { %>
                     {{set song = e.list[i]}}
                     {{if song}}
@@ -166,6 +175,7 @@
             </div>
         </div>
         <div class="svg-box">
+            {{if me.rks_history?.length && me.rks_range?.length >= 2 && typeof me.rks_range[0] == 'number' && typeof me.rks_range[1] == 'number' && me.rks_date?.length >= 2}}
             <div class="value_box">
                 <p>{{me.rks_range[1].toFixed(4)}}</p>
                 <p>{{me.rks_range[0].toFixed(4)}}</p>
@@ -189,8 +199,9 @@
                     <p>{{me.rks_date[1]}}</p>
                 </div>
             </div>
-        </div>
-        
+            {{else}}
+            <p>NO INFO</p>
+            {{/if}}
         </div>
     </div>
     <div class="ranklist">
@@ -225,7 +236,7 @@
                     <p name="pvis">{{#user.playerId}}</p>
                 </div>
                 <div class="rankUserRks">
-                    <p>{{user.rks.toFixed(4)}}</p>
+                    <p>{{user.rks != null && typeof user.rks.toFixed == 'function' ? user.rks.toFixed(4) : '---'}}</p>
                 </div>
                 <div class="rankUserClg">
                     <div class="Challenge">
@@ -250,60 +261,4 @@
         {{/if}}
         {{/each}}
     </div>
-    <!-- 曲目名称自适应name-box的宽度 -->
-    <script>
-        function adjustFontSize() {
-            //获取p元素
-            var a = document.getElementsByName("pvis");
-            for (var i = 0; i < a.length; ++i) {
-                const songName = a[i];
-                if (!songName) continue;
-
-                /*调整曲目名称字体大小*/
-                var parentElement = songName.parentElement;
-
-                var maxFontSize = 23.5; //设置最大字体大小
-
-                //如果字体宽度小于父元素宽度，则增大字体大小
-                while (
-                    songName.scrollWidth < parentElement.offsetWidth &&
-                    songName.scrollHeight < parentElement.offsetHeight
-                ) {
-                    var style = window
-                        .getComputedStyle(songName, null)
-                        .getPropertyValue("font-size");
-                    var fontSize = parseFloat(style);
-
-                    //检查是否已经达到最大字体大小
-                    if (fontSize >= maxFontSize) {
-                        break;
-                    }
-
-                    songName.style.fontSize = fontSize + 1 + "px";
-                }
-
-                //如果字体宽度大于父元素宽度，则减小字体大小
-                while (
-                    songName.scrollWidth > parentElement.offsetWidth ||
-                    songName.scrollHeight > parentElement.offsetHeight
-                ) {
-                    var style = window
-                        .getComputedStyle(songName, null)
-                        .getPropertyValue("font-size");
-                    var fontSize = parseFloat(style);
-
-                    //检查是否已经达到最小字体大小
-                    if (fontSize <= 10) {
-                        break;
-                    }
-
-                    songName.style.fontSize = fontSize - 1 + "px";
-                }
-            }
-        }
-        window.onload = adjustFontSize;
-        window.onresize = adjustFontSize;
-    </script>
-</body>
-{{/block}}</content>
-<parameter name="filePath">d:\Yunzai\plugins\phi-plugin\resources\html\rankingList\RankList.art
+{{/block}}

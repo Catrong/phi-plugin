@@ -15,6 +15,28 @@ test('central definitions cover every YAML setting exactly once', () => {
     assert.deepEqual([...keys].sort(), Object.keys(shared.defaults).sort())
 })
 
+test('renderer selection is shared by both forms and rejects unsupported backends', () => {
+    assert.equal(shared.defaults.renderer, 'puppeteer')
+    const renderer = createGuobaSchemas().find(item => item.field === 'renderer')
+    assert.equal(renderer.component, 'RadioGroup')
+    assert.deepEqual(renderer.componentProps.options.map((/** @type {{ value: string }} */ option) => option.value), ['puppeteer', 'shotium', 'auto'])
+    assert.equal(schema({ renderer: 'shotium' }).renderer, 'shotium')
+    assert.equal(schema({ renderer: 'auto' }).renderer, 'auto')
+    assert.throws(() => schema({ renderer: 'unsupported' }))
+    const values = { ...shared.defaults }
+    const panel = createGuobaConfigInfo({
+        getUserCfg: (/** @type {string} */ _name, /** @type {string} */ key) => values[key],
+        modify: (/** @type {string} */ _name, /** @type {string} */ key, /** @type {any} */ value) => { values[key] = value },
+    })
+    panel.setConfigData({ renderer: 'shotium', renderNum: 2 })
+    assert.equal(values.renderer, 'shotium')
+    assert.equal(values.renderNum, 2)
+    assert.throws(() => panel.setConfigData({ renderer: 'unsupported' }))
+    assert.throws(() => panel.setConfigData({ renderNum: 1.5 }))
+    assert.equal(values.renderer, 'shotium')
+    assert.equal(values.renderNum, 2)
+})
+
 test('Koishi maintenance buttons precede settings and are not persistent configuration defaults', () => {
     const buttons = schema.list?.[0]?.dict
     assert.ok(buttons)

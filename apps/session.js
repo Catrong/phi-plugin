@@ -527,7 +527,7 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
             if (!history) continue
             for (let i = 0; i < history.length; i++) {
                 let score_date = fCompute.formatDate(ScoreHistory.date(history[i]))
-                let score_info = ScoreHistory.extend(id, level, history[i], i ? history[i - 1] : undefined)
+                let score_info = ScoreHistory.extend(id, level, history[i], i ? history[i - 1] : undefined, 'low')
                 if (time_vis[score_date] == undefined) {
                     time_vis[score_date] = tot_update.length
                     tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })
@@ -647,7 +647,7 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
         Date: fCompute.formatDate(now.saveInfo.summary.updatedAt),
         ChallengeMode: (now.saveInfo.summary.challengeModeRank - (now.saveInfo.summary.challengeModeRank % 100)) / 100,
         ChallengeModeRank: now.saveInfo.summary.challengeModeRank % 100,
-        background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
+        background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))], 'low'),
         box_line: box_line,
         update_ans: newnum ? `更新了${newnum}份成绩` : `未收集到新成绩`,
         Notes: pluginData?.money || 0,

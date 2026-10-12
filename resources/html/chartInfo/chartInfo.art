@@ -1,7 +1,9 @@
 <head>
     <link rel="stylesheet" href="{{_res_path}}html/chartInfo/chartInfo.css" type="text/css" />
+    {{if !renderNoJs}}
     <script src="{{_res_path}}html/chartInfo/echarts.js"></script>
     <script src="{{_res_path}}html/chartInfo/echarts-wordcloud.min.js"></script>
+    {{/if}}
 </head>
 
 <body>
@@ -109,7 +111,11 @@
                         <div class="box-tip">
                             <p>{{tip}}</p>
                         </div>
-                        <div class="words" id="words"></div>
+                        <div class="words" id="words">
+                            {{if renderNoJs}}
+                            {{@ staticCharts.radar(words, undefined, { width: 1000, height: 270, fontSize: 18 })}}
+                            {{/if}}
+                        </div>
                     </div>
                     <div class="notes-bar">
                         <div class="content-title">
@@ -153,6 +159,7 @@
             <p>{{Version.ver}}</p>
         </div>
     </div>
+    {{if !renderNoJs}}
     <script>
         var chart = echarts.init(document.getElementById("words"));
         
@@ -219,4 +226,5 @@
             ]
         });
     </script>
+    {{/if}}
 </body>

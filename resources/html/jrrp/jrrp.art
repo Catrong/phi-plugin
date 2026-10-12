@@ -1,11 +1,19 @@
 {{extend defaultLayout}}
+{{set pvis = ({
+    default: [1228.8, 81, 40, 18, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.from': [517, 50, 40, 16, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/jrrp/jrrp.css">
+{{if renderNoJs}}
+<style>
+    .sentences p, .from p { white-space: normal; overflow-wrap: anywhere; }
+</style>
+{{/if}}
 
 {{/block}}
 
 {{block 'main'}}
-
     <div class="jrrpBkg">
         <img src="{{bkg}}" alt="{{bkg}}">
     </div>
