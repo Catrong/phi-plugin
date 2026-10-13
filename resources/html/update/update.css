@@ -258,6 +258,7 @@ circle {
 .box_title-left {
     width: 135px;
     height: 100%;
+    white-space: nowrap;
     display: flex;
     align-items: center;
     justify-content: center;
