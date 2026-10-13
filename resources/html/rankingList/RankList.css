@@ -41,7 +41,7 @@ body {
 
 .ranking {
     position: absolute;
-    top: -26%;
+    top: -23%;
     left: -0.35%;
     height: 25%;
     display: flex;
@@ -539,11 +539,18 @@ circle {
     margin: 0;
 }
 
-
 .phi-plugin p {
-    font-size: 35px;
+    font-size: 76px;
+    text-shadow: 0 0 20px rgb(0 186 255);
 }
 
 .ver p {
-    font-size: 20px;
+    font-size: 40px;
+    text-shadow: 0 0 20
+    px #fff700;
+}
+
+.copyright {
+    width: 100%;
+    margin-top: 20px;
 }

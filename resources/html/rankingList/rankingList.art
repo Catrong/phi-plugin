@@ -79,7 +79,7 @@
                 <p>DATA</p>
             </div>
             <div class="Player_box_value">
-                <p id="data">{{me.data}}</p>
+                <p name="pvis" id="data">{{me.data}}</p>
             </div>
         </div>
         <div class="Player_profile_box">
@@ -202,6 +202,10 @@
             {{else}}
             <p>NO INFO</p>
             {{/if}}
+        </div>
+        <div class="copyright">
+            <p>*Phi-Plugin不是Phigros官方项目，与南京鸽游网络有限公司及Phigros官方不存在授权、合作或运营关系。
+            </p>
         </div>
     </div>
     <div class="ranklist">
