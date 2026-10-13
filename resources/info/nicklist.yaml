@@ -2344,6 +2344,7 @@ SnowDance.悠叶いのり:
   - 萝莉降临日
   - 萝的降日
 DerSchneid.Ωμεγα:
+  - DS2
   - 法官2
   - 教官2
   - 法官二
@@ -2354,7 +2355,6 @@ DerSchneid.Ωμεγα:
   - 跳一跳2
   - DS
   - 小DS
-  - DS2
   - 切割
   - 大师赛3
   - pmt3
@@ -2413,7 +2413,6 @@ ExoplanetaryMirage.かめりあ:
   - 星外虚舟
   - 穹顶鸠
   - 黑洞鸠
-  - 仁王盾
   - 九鸟打狙
   - 九鸟架狙
   - 鸠鸠架狙
@@ -2476,6 +2475,7 @@ Implexrough.Silentroommommy:
   - 八行
   - 八于
   - 八爷
+  - 八史
   - 果て
   - 尽头
   - 末路
@@ -2484,6 +2484,13 @@ Implexrough.Silentroommommy:
   - 憎恶
   - 讨厌
   - 哈特
+  - 暗黑萝莉
+  - 岩浆下落
+  - 岩浆下降
+  - 房主生气岩浆下降
+  - 谱师生气噪域下降
+  - 噪域下降
+  - 房主生气岩浆下落
 Petrichor.voidMournfinale:
   - Petri
   - ptr
@@ -2494,6 +2501,9 @@ Petrichor.voidMournfinale:
   - 雨后泥土香
   - 潮土油
   - 骗退款
+  - 香潮泥
+  - 丁达尔效应
+  - 宠物富有或
   - void
 WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい:
   - 好结局
@@ -2503,6 +2513,8 @@ WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あ
   - 谢幕曲
   - 终点列车
   - 主线尾声
+  - 南京地铁
+  - 十月新番
   - happy ending
   - 现实
   - HE
@@ -2519,17 +2531,28 @@ DesultorySignals.technoplanet:
   - DS
   - 九鸟打大蛇
   - 九鸟搓螺旋丸
+  - 九鸟一刀999
+  - 九鸟砍我
+  - 九鸟砍龙逼
+  - 鸠肘击
+  - at18
 TrueHomeTrueWorldRework.816ThreeNumbers:
   - thtw
   - 世家
+  - 真家真世界
 Ametrine.GRYSCLMIssionary:
   - 紫黄晶
   - 黄紫晶
   - 紫黄水晶
   - 黄紫水晶
   - Ame
+  - 小蝴蝶
+  - 美国人
 Message.くるぶっこちゃん:
   - 消息
   - 信息
   - 鸠打电报
   - 马杀鸡
+  - 2U
+  - 鸠表白
+  - 致以爱意

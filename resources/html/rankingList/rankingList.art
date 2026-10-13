@@ -79,7 +79,7 @@
                 <p>DATA</p>
             </div>
             <div class="Player_box_value">
-                <p name="pvis" id="data">{{me.data}}</p>
+                <p id="data" name="pvis">{{me.data}}</p>
             </div>
         </div>
         <div class="Player_profile_box">
