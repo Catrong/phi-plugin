@@ -124,6 +124,7 @@ test('Shotium 为 DATA 单行缩字，存档体积超出宽度时不再溢出行
     const region = regions(html, 'Player_box_value')[0]
     const longRegion = regions(overflowHtml, 'Player_box_value')[0]
     assert.ok(region.includes('1024 MiB'), '存档体积应保留完整原文')
+    assert.match(html, /body \[name="pvis"\] \{ min-width: 0; max-width: 100%; \}/)
     assert.equal(fontSize(region, 18, 60), 60, '短体积保持模板原字号')
     assert.ok(longRegion.includes(data))
     assert.ok(fontSize(longRegion, 18, 60) < fontSize(region, 18, 60), '超宽体积必须缩小字号')

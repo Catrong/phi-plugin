@@ -53,6 +53,30 @@ test('Shotium 多行正文保留显式换行和完整文本，只有昵称等横
     assert.match(render('atlas', true), /版本 3\.19\.4<br>日期 2026-07-03/)
 })
 
+test('两页 DATA 各自限定格子宽度，超长体积单行缩字而不是溢出格子', () => {
+    const volume = '1023.99 GiB 1023.99 MiB 1023.99 KiB'
+    /** @param {string} page @param {string} value */
+    const dataFontSize = (page, value) => {
+        const fixture = page === 'userinfo'
+            ? { ...fixtures.userinfo, gameuser: { ...fixtures.userinfo.gameuser, data: value } }
+            : { ...fixtures.rankingList, me: { ...fixtures.rankingList.me, data: value } }
+        const html = art(`${resources}/html/${page}/${page}.art`, { ...common, ...fixture, renderNoJs: true, staticText })
+        assert.match(html, /body \[name="pvis"\] \{ min-width: 0; max-width: 100%; \}/, `${page} 必须保留共享的宽度边界`)
+        const region = html.match(/<div class="Player_box_value">([\s\S]*?)<\/div>/)?.[1]
+        assert.ok(region, `${page} 必须渲染 DATA 区域`)
+        const tag = [...region.matchAll(/<[^/][^>]*>/g)].map(match => match[0]).find(value => /\bname="pvis"/.test(value))
+        assert.ok(tag, `${page} 的 DATA 必须保留自适应标记`)
+        const size = Number(tag.match(/font-size:\s*([\d.]+)px/)?.[1])
+        assert.ok(Number.isFinite(size) && size >= 18 && size <= 60, `${page} 字号 ${size} 应在 18 至 60 之间`)
+        return size
+    }
+    for (const page of ['userinfo', 'rankingList']) {
+        assert.equal(dataFontSize(page, '1024 MiB'), 60, `${page} 短体积保持模板原字号`)
+        assert.ok(dataFontSize(page, volume) < 60, `${page} 超宽体积必须缩小字号`)
+    }
+    assert.ok(dataFontSize('userinfo', volume) >= dataFontSize('rankingList', volume), '更窄的排行榜格子不应得到更大字号')
+})
+
 test('Shotium 设置值、帮助描述和一言可完整展示，Puppeteer 保留脚本缩放路径', () => {
     const setting = render('setting', true)
     assert.ok(setting.includes(fixtures.setting.data[0].value))
