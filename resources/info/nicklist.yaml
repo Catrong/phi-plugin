@@ -1003,6 +1003,7 @@ RainySeason.AbyssIdols:
 RainyHeart.BelieverInYou阿卡姆巫师:
   - 雨心
   - 雨之心
+  - rh
 HumaN.SOTUI:
   - 人
   - 人类
@@ -2495,6 +2496,7 @@ Petrichor.voidMournfinale:
   - Petri
   - ptr
   - ptc
+  - 润土
   - 雨土气息
   - 初雨气息
   - 初雨之息
@@ -2514,6 +2516,7 @@ WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あ
   - 终点列车
   - 主线尾声
   - 南京地铁
+  - 地铁站
   - 十月新番
   - happy ending
   - 现实
@@ -2535,6 +2538,9 @@ DesultorySignals.technoplanet:
   - 九鸟砍我
   - 九鸟砍龙逼
   - 鸠肘击
+  - 最终反击
+  - 反击的决意
+  - 五言绝句
   - at18
 TrueHomeTrueWorldRework.816ThreeNumbers:
   - thtw
