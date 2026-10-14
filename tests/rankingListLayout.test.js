@@ -115,6 +115,20 @@ test('Shotium 分别适配玩家名、完整多行简介与排行榜名字，长
     fontSize(ranked[2], 14, 35)
 })
 
+test('Shotium 为 DATA 单行缩字，存档体积超出宽度时不再溢出行外', () => {
+    const html = render(true)
+    const overflow = fixture()
+    const data = '1023.99 GiB 1023.99 MiB 1023.99 KiB 1023.99 PiB'
+    overflow.me.data = data
+    const overflowHtml = render(true, overflow)
+    const region = regions(html, 'Player_box_value')[0]
+    const longRegion = regions(overflowHtml, 'Player_box_value')[0]
+    assert.ok(region.includes('1024 MiB'), '存档体积应保留完整原文')
+    assert.equal(fontSize(region, 18, 60), 60, '短体积保持模板原字号')
+    assert.ok(longRegion.includes(data))
+    assert.ok(fontSize(longRegion, 18, 60) < fontSize(region, 18, 60), '超宽体积必须缩小字号')
+})
+
 test('空简介、无历史和无效存档仍能安全出图，不产生非法字号与历史坐标', () => {
     const base = fixture()
     const empty = { ...base, users: [], me: { ...base.me, selfIntro: '', rks_history: [],

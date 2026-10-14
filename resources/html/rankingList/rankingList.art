@@ -3,7 +3,8 @@
     default: false,
     '.Player_Id-right #Player_Id': [458.25, 83, 60, 20, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
     '.Player_profile_box #profile': [564, 211.2, 60, 16, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
-    '.rankUserName': [350, 140, 35, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+    '.rankUserName': [350, 140, 35, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.Player_box_value #data': [564, 90, 60, 18, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
 })}}
 {{block 'css'}}
     <link rel="stylesheet" href="{{_res_path}}html/userinfo/userinfo.css" />
