@@ -249,12 +249,15 @@ async function makeLargeLine(save, history, e) {
      * @type {{ ChallengeMode: number; ChallengeModeRank: number; date: string; }[]}
      */
     let clgHistory = []
-    history.challengeModeRank.forEach((item, index, array) => {
-        if (!index || item.value != array[index - 1].value) {
+    /**兼容 v4 的 dateValue 与旧版数组结构 */
+    const challengeModeHistory = Array.isArray(history.challengeModeRank?.data) ? history.challengeModeRank.data : []
+    challengeModeHistory.forEach((item, index, array) => {
+        const value = item[1]
+        if (!index || value != array[index - 1][1]) {
             clgHistory.push({
-                ChallengeMode: Math.floor(item.value / 100),
-                ChallengeModeRank: item.value % 100,
-                date: fCompute.formatDateToNow(item.date)
+                ChallengeMode: Math.floor(value / 100),
+                ChallengeModeRank: value % 100,
+                date: fCompute.formatDateToNow(item[0])
             })
         }
     })

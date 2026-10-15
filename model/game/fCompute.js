@@ -1,7 +1,7 @@
 import Config from '../../components/Config.js'
 import logger from '../../components/Logger.js'
 import LevelRecordInfo from './LevelRecordInfo.js'
-import { MAX_DIFFICULTY } from './constNum.js'
+import { Level, MAX_DIFFICULTY } from './constNum.js'
 import getInfo from './getInfo.js'
 import platform from '../../components/platform/index.js'
 
@@ -635,30 +635,69 @@ export default class fCompute {
         return /**@type {(keyof T)[]} */(Object.keys(record));
     }
 
+
     /**
-     * 
-     * @param {{phi: LevelRecordInfo[], b27: LevelRecordInfo[]}} b30List 
-     * @param {LevelRecordInfo[]} newRecords 
+     * 根据游戏记录和难度信息计算B30
+     * @param {gameRecord} records 
+     * @param {import('./getInfo.js').versionInfoObject} [diffInfo] 成绩对应版本的定数信息，省略时使用当前定数
+     * @returns {{rks: number, phi: LevelRecordInfo[], best: LevelRecordInfo[]}}
      */
-    static updateB30(b30List, newRecords) {
-        let phi = [...b30List.phi];
-        let b27 = [...b30List.b27];
-        newRecords = newRecords.sort((a, b) => b.rks - a.rks);
-        const newPhis = newRecords.filter(record => record.acc >= 100);
+    static getB30(records, diffInfo) {
+        const allRecords = [];
+        for (const id of this.objectKeys(records)) {
+            const levelRecords = records[id];
+            if (!levelRecords) continue;
+            for (let i = 0; i < Level.length; i++) {
+                const record = levelRecords[i];
+                if (!record) continue;
+                allRecords.push(new LevelRecordInfo(record, id, i, diffInfo?.version_code));
+            }
+        }
 
-        const newPhiKeys = newPhis.map(item => `${item.id}-${item.difficulty}`);
-        const newRecordKeys = newRecords.map(item => `${item.id}-${item.difficulty}`);
+        const best = allRecords.sort((a, b) => b.rks - a.rks);
 
-        phi = phi.filter(item => !newPhiKeys.includes(`${item.id}-${item.difficulty}`));
-        b27 = b27.filter(item => !newRecordKeys.includes(`${item.id}-${item.difficulty}`));
+        const phi = best.filter(record => record.acc >= 100);
 
-        phi.push(...newPhis);
-        phi = phi.sort((a, b) => b.rks - a.rks);
-        phi = phi.slice(0, 3);
-        b27.push(...newRecords);
-        b27 = b27.sort((a, b) => b.rks - a.rks);
-        b27 = b27.slice(0, 27);
-        return { phi, b27 };
+        let rks = 0;
+
+        /**RKS = (最高27个单曲RKS + 最高3个phi单曲RKS) / 30 */
+        for (let i = 0; i < 27 && i < best.length; i++) {
+            rks += best[i].rks;
+        }
+
+        for (let i = 0; i < 3 && i < phi.length; i++) {
+            rks += phi[i].rks;
+        }
+
+        return { rks: rks / 30, phi, best };
+    }
+
+    /**
+     * 查找最后一个 <= target 的位置
+     * @template T
+     * @template U
+     * @param {T[]} arr 
+     * @param {U} target 
+     * @param {(a: T, b: U) => number} compareFn 
+     * @returns 
+     */
+    static binarySearch(arr, target, compareFn) {
+        let left = 0;
+        let right = arr.length;
+
+        // 查找第一个 > target 的位置
+        while (left < right) {
+            const mid = left + Math.floor((right - left) / 2);
+
+            if (compareFn(arr[mid], target) <= 0) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        // left - 1 即最后一个 <= target 的位置
+        return left > 0 ? left - 1 : undefined;
     }
 
     /**

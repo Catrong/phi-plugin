@@ -195,7 +195,7 @@ function endpointErrorLogging(path) {
  * 当前用户数据
  * @typedef {Object} MeData
  * @property {oriSave} save 存档数据
- * @property {saveHistoryObject} history 用户历史记录
+ * @property {saveHistoryObjectV3} history 用户历史记录
  */
 
 /**
@@ -735,21 +735,21 @@ export default class makeRequest {
      * @overload
      * @param {baseAu} params
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<saveHistoryObject>}
+     * @returns {Promise<saveHistoryObjectV3>}
      */
     /**
-     * @template {keyof saveHistoryObject} K
+     * @template {keyof saveHistoryObjectV3} K
      * @overload
      * @param {baseAu & {request: K[]}} params
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<Pick<saveHistoryObject, K> | null>}
+     * @returns {Promise<Pick<saveHistoryObjectV3, K> | null>}
      */
     /**
      * 获取用户data历史记录
-     * @template {keyof saveHistoryObject} K
+     * @template {keyof saveHistoryObjectV3} K
      * @param {baseAu & {request?: K[]}} params
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<Partial<saveHistoryObject> | null>}
+     * @returns {Promise<Partial<saveHistoryObjectV3> | null>}
      */
     static async getHistory(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
         return (await makeFetch(burl('/get/history/history'), params, 'POST', options))?.data ?? null

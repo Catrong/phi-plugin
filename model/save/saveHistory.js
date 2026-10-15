@@ -1,7 +1,8 @@
-import { allLevel, LevelNum, MAX_DIFFICULTY } from "../game/constNum.js"
+import { allLevel, MAX_DIFFICULTY } from "../game/constNum.js"
 import Save from "./Save.js"
 import fCompute from "../game/fCompute.js";
-import LevelRecordInfo from "../game/LevelRecordInfo.js";
+import dateValue from "./dateVaule.js";
+import getInfo from "../game/getInfo.js";
 
 /**
  * @template T
@@ -9,95 +10,145 @@ import LevelRecordInfo from "../game/LevelRecordInfo.js";
  * @property {Date} date - 日期
  * @property {T} value - 值
  */
+/**
+ * @template T
+ * @typedef {Array<[date: Date, value: T]>} formatedHistoryArray
+ */
 export default class saveHistory {
+
+
+    /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
+    /**v1.1,更正scoreHistory */
+    /**v2,由于曲名错误，删除所有记录，曲名使用id记录 */
+    /**v3,添加课题模式历史记录 */
+    /**v4,更改运行时scoreHistory结构，拒绝v2及以前的格式，使用更紧凑的序列化结构，消除0608坏档影响 */
+    /**历史记录版本号 */
+    version = 4
+
+    /**@type {Record<idString, Partial<Record<allLevelKind, dateValue<[acc: number, score: number, fc: 0|1]>>>>} */
+    scoreHistory = {}
+
+    /**@type {dateValue<[number, number, number, number, number]>} */
+    data = new dateValue();
+
+    /**@type {dateValue<number>} */
+    challengeModeRank = new dateValue();
+
+    /**@type {dateValue<number>} */
+    rks = new dateValue();
 
     /**
      * 
-     * @param { (saveHistoryObject & {version?: number}) } data 
+     * @param {saveHistoryObjectV3 | saveHistoryObjectV4 | null} [oridata] 
      */
-    constructor(data) {
+    constructor(oridata) {
 
-        const ids = fCompute.objectKeys(data?.scoreHistory || {})
 
-        for (const id of ids) {
-            const record = data?.scoreHistory?.[id];
-            if (!record) continue;
-            for (const level of allLevel) {
-                if (!record[level]) continue;
-                record[level].forEach(item => {
-                    //@ts-ignore
-                    item[2] = new Date(item[2]);
-                })
-            }
+        /**API 按字段过滤只回传部分字段时不含 version，此时按结构推断 */
+        const version = Number(oridata?.version) || detectHistoryVersion(oridata)
+        if (!version) return
+
+        /**检查版本：v1 及以前的结构不可靠，不导入 */
+        if (version < 2) {
+            return;
         }
-
-        /**
-         * @type {{[id:idString]: Partial<Record<allLevelKind, ScoreDetail[]>>}}
-         * @property {Array<[number, number, Date, boolean]>} [acc, score, date, fc] acc为4位小数，score为整数，date为日期，fc为boolean
-         */
-        //@ts-ignore
-        this.scoreHistory = data?.scoreHistory || {};
-        /**
-         * @type {formatedHistoryBaseObject<number[]>[]}
-         * @description data货币变更记录 
-        */
-        this.data = [];
-
-        data?.data?.forEach(item => {
-            this.data.push({
-                date: new Date(item.date),
-                value: item.value
-            })
-        })
-
-        /**
-         * @type {formatedHistoryBaseObject<number>[]}
-         * @description rks变更记录
-         */
-        this.rks = [];
-
-        data?.rks?.forEach(item => {
-            this.rks.push({
-                date: new Date(item.date),
-                value: item.value
-            })
-        });
-
-        /**
-         * @type {formatedHistoryBaseObject<number>[]}
-         * @description 课题模式成绩
-         */
-        this.challengeModeRank = [];
-
-        data?.challengeModeRank?.forEach(item => {
-            this.challengeModeRank.push({
-                date: new Date(item.date),
-                value: item.value
-            })
-        });
-        /**v1.0,取消对当次更新内容的存储，取消对task的记录，更正scoreHistory */
-        /**v1.1,更正scoreHistory */
-        /**v2,由于曲名错误，删除所有记录，曲名使用id记录 */
-        /**v3,添加课题模式历史记录 */
-        /**历史记录版本号 */
-        this.version = data?.version
-        /**民间考核 */
-
-        /**检查版本 */
-        if (!this.version || this.version < 2) {
-            if (this.scoreHistory) {
-                for (let i in this.scoreHistory) {
-                    if (!i.includes('.0')) {
-                        this.scoreHistory = {}
+        if (version < 4) {
+            /**导入 v2/v3 版本逻辑 */
+            if (oridata.data) {
+                /**data货币 */
+                for (const item of oridata.data) {
+                    this.data.push(new Date(item.date), item.value)
+                }
+                this.data.sort();
+            }
+            if (oridata.scoreHistory) {
+                /**详细分数 */
+                const ids = fCompute.objectKeys(oridata?.scoreHistory || {})
+                for (const id of ids) {
+                    const record = oridata?.scoreHistory?.[id];
+                    if (!record) continue;
+                    // 初始化分数历史
+                    this.scoreHistory[id] = {}
+                    for (const level of allLevel) {
+                        if (!record[level]) continue;
+                        // 初始化该难度的分数历史
+                        this.scoreHistory[id][level] = new dateValue();
+                        for (const item of record[level]) {
+                            // item[2] = new Date(item[2])
+                            this.scoreHistory[id][level].push(
+                                new Date(item[2]),
+                                createHistoryV4(item[0], item[1], item[3])
+                            );
+                        }
+                        this.scoreHistory[id][level].sort();
                     }
-                    break
                 }
             }
-            this.version = 2
+            if (oridata.challengeModeRank) {
+                /**课题模式成绩 */
+                for (const item of oridata.challengeModeRank) {
+                    this.challengeModeRank.push(new Date(item.date), item.value)
+                }
+                this.challengeModeRank.sort();
+            }
+            if (oridata.rks) {
+                /**rks历史记录，仅保留4位小数 */
+                for (const item of oridata.rks) {
+                    this.rks.push(new Date(item.date), Number(Number(item.value).toFixed(4)))
+                }
+                this.rks.sort();
+            }
+            this.version = 4
+        } else {
+            /**导入 v4 版本逻辑 */
+            if (oridata.data) {
+                /**data货币 */
+                this.data.fromJson(oridata.data)
+            }
+            if (oridata.challengeModeRank) {
+                /**课题模式成绩 */
+                this.challengeModeRank.fromJson(oridata.challengeModeRank)
+            }
+            if (oridata.rks) {
+                /**rks历史记录 */
+                this.rks.fromJson(oridata.rks)
+            }
+            if (oridata.scoreHistory) {
+                /**详细分数 */
+                const ids = fCompute.objectKeys(oridata?.scoreHistory || {})
+                for (const id of ids) {
+                    const record = oridata?.scoreHistory?.[id];
+                    if (!record) continue;
+                    // 初始化分数历史
+                    this.scoreHistory[id] = {}
+                    for (const level of allLevel) {
+                        if (!record[level]) continue;
+                        // 初始化该难度的分数历史
+                        this.scoreHistory[id][level] = new dateValue();
+                        this.scoreHistory[id][level].fromJson(record[level])
+                    }
+                }
+            }
         }
-        if (this.version < 3) {
-            this.challengeModeRank = []
-            this.version = 3
+        this.version = 4
+    }
+
+    toJSON() {
+        /**@type {Record<idString, Partial<Record<allLevelKind, dateValueJSON<[acc: number, score: number, fc: 0|1]>>>>} */
+        const scoreHistory = {}
+        for (const id of fCompute.objectKeys(this.scoreHistory)) {
+            scoreHistory[id] = {}
+            for (const level of allLevel) {
+                if (!this.scoreHistory[id][level]) continue
+                scoreHistory[id][level] = this.scoreHistory[id][level].toJson()
+            }
+        }
+        return {
+            version: this.version,
+            rks: this.rks.toJson(),
+            data: this.data.toJson(),
+            challengeModeRank: this.challengeModeRank.toJson(),
+            scoreHistory
         }
     }
 
@@ -106,35 +157,15 @@ export default class saveHistory {
      * @param {saveHistory} data 另一个 History 存档
      */
     add(data) {
-        this.data = merge(this.data, data.data)
-        this.rks = merge(this.rks, data.rks)
-        this.challengeModeRank = merge(this.challengeModeRank, data.challengeModeRank)
-        const ids = fCompute.objectKeys(data.scoreHistory || {})
-        for (let id of ids) {
+        this.data.merge(data.data)
+        this.challengeModeRank.merge(data.challengeModeRank)
+        this.rks.merge(data.rks)
+        for (const id of fCompute.objectKeys(data.scoreHistory || {})) {
             if (!this.scoreHistory[id]) this.scoreHistory[id] = {}
             for (let dif of allLevel) {
-                if (this.scoreHistory[id] && this.scoreHistory[id][dif]) {
-                    if (data.scoreHistory[id][dif]) {
-                        this.scoreHistory[id][dif] = [...this.scoreHistory[id][dif], ...data.scoreHistory[id][dif]]
-                        this.scoreHistory[id][dif].sort((a, b) => {
-                            return openHistory(a).date.getTime() - openHistory(b).date.getTime()
-                        })
-                    }
-                } else {
-                    this.scoreHistory[id][dif] = data.scoreHistory[id][dif]
-                }
-                if (!this.scoreHistory[id][dif]) continue
-                let i = 1
-                while (i < this.scoreHistory[id][dif].length) {
-                    let last = openHistory(this.scoreHistory[id][dif][i - 1])
-                    let now = openHistory(this.scoreHistory[id][dif][i])
-                    if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
-                        // console.info(last.date.toISOString(), now.date.toISOString())
-                        this.scoreHistory[id][dif].splice(i, 1)
-                    } else {
-                        ++i
-                    }
-                }
+                if (!data.scoreHistory[id][dif]) continue
+                if (!this.scoreHistory[id][dif]) this.scoreHistory[id][dif] = new dateValue()
+                this.scoreHistory[id][dif].merge(data.scoreHistory[id][dif])
             }
         }
     }
@@ -144,135 +175,48 @@ export default class saveHistory {
      * @param {Save} save 新存档
      */
     update(save) {
+        const newDate = save.saveInfo.modifiedAt.iso
         /**更新单曲成绩 */
         const ids = fCompute.objectKeys(save.gameRecord || {})
-        for (let id of ids) {
+        for (const id of ids) {
             if (!this.scoreHistory[id]) this.scoreHistory[id] = {}
             for (let i in save.gameRecord[id]) {
                 /**难度映射 */
                 let level = allLevel[i]
-                /**
-                 * 提取成绩
-                 * @type {LevelRecordInfo & {date?: Date} | null}
-                 */
-                let now = save.gameRecord[id][i]
-                if (!now) continue
-                now.date = save.saveInfo.modifiedAt.iso
+                /**提取成绩 */
+                const newRecord = save.gameRecord[id][i];
+                /**新存档该难度无成绩 */
+                if (!newRecord) continue
+                /**历史记录仅保留4位小数 */
+                const newDetail = createHistoryV4(newRecord.acc, newRecord.score, newRecord.fc)
                 /**本地无记录 */
                 if (!this.scoreHistory[id][level] || !this.scoreHistory[id][level].length) {
-                    this.scoreHistory[id][level] = [createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc)];
+                    this.scoreHistory[id][level] = new dateValue()
+                    this.scoreHistory[id][level].push(newDate, newDetail)
                     continue
                 }
-                /**新存档该难度无成绩 */
-                if (!save.gameRecord[id][i]) continue
-                /**本地记录日期为递增 */
-                for (let i = this.scoreHistory[id][level].length - 1; i >= 0; --i) {
-                    /**第i项记录 */
-                    let old = openHistory(this.scoreHistory[id][level][i])
-                    // console.info(old.date.toISOString(), new Date(now.date).toISOString(), old.date.toISOString() == new Date(now.date).toISOString())
-                    /**日期完全相同则认为已存储 */
-                    if (old.score == now.score && old.acc == now.acc && old.fc == now.fc) {
-                        /**标记已处理 */
-                        now = null
-                        break
-                    }
-                    /**找到第一个日期小于新成绩的日期 */
-                    if (old.date < new Date(now.date)) {
-                        /**历史记录acc仅保存4位，检查是否与第一个小于该日期的记录一致 */
-                        if (old.acc != Number(now.acc.toFixed(4)) || old.score != now.score || old.fc != now.fc) {
-                            /**不一致在第i项插入 */
-                            this.scoreHistory[id][level].splice(i, 0, createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc))
-                        }
-                        /**标记已处理 */
-                        now = null
-                        break
-                    }
-                }
-                /**未被处理，有该难度记录，说明日期早于本地记录 */
-                if (now) {
-                    // console.info(11)
-                    this.scoreHistory[id][level].unshift(createHistory(now.acc, now.score, save.saveInfo.modifiedAt.iso, now.fc))
-                }
-                /**查重 */
-                let j = 1
-                while (j < this.scoreHistory[id][level].length) {
-                    let last = openHistory(this.scoreHistory[id][level][j - 1])
-                    let now = openHistory(this.scoreHistory[id][level][j])
-                    if (last.score == now.score && last.acc == now.acc && last.fc == now.fc) {
-                        // console.info(last.date.toISOString(), now.date.toISOString())
-                        this.scoreHistory[id][level].splice(j, 1)
-                    } else {
-                        ++j
-                    }
-                }
+                /**成绩未变化则不记录 */
+                addHistoryIfChanged(this.scoreHistory[id][level], newDate, newDetail, isSameScoreDetail)
             }
-        }
-        /**更新rks记录 */
-        for (let i = this.rks.length - 1; i >= 0; i--) {
-            if (save.saveInfo.modifiedAt.iso > new Date(this.rks[i].date)) {
-                if (!this.rks[i + 1] || (this.rks[i].value != save.saveInfo.summary.rankingScore || this.rks[i + 1]?.value != save.saveInfo.summary.rankingScore)) {
-                    this.rks.splice(i + 1, 0, {
-                        date: save.saveInfo.modifiedAt.iso,
-                        value: save.saveInfo.summary.rankingScore
-                    })
-                }
-                break
-            }
-        }
-        if (!this.rks.length) {
-            this.rks.push({
-                date: save.saveInfo.modifiedAt.iso,
-                value: save.saveInfo.summary.rankingScore
-            })
         }
         /**更新data记录 */
-        for (let i = this.data.length - 1; i >= 0; i--) {
-            if (save.saveInfo.modifiedAt.iso > new Date(this.data[i].date)) {
-                if (!this.data[i + 1] || (checkValue(this.data[i].value, save.gameProgress.money) && checkValue(this.data[i + 1]?.value, save.gameProgress.money))) {
-                    this.data.splice(i + 1, 0, {
-                        date: save.saveInfo.modifiedAt.iso,
-                        value: save.gameProgress.money
-                    })
-                }
-                break
-            }
-        }
-        if (!this.data.length) {
-            this.data.push({
-                date: save.saveInfo.modifiedAt.iso,
-                value: save.gameProgress.money
-            })
-        }
+        addHistoryIfChanged(this.data, newDate, save.gameProgress.money)
+
         /**更新课题模式记录 */
-        for (let i = this.challengeModeRank.length - 1; i >= 0; i--) {
-            if (save.saveInfo.modifiedAt.iso > new Date(this.challengeModeRank[i].date)) {
-                let clg = save.saveInfo.summary.challengeModeRank
-                if (clg != this.challengeModeRank[i].value && (this.challengeModeRank[i + 1]?.value != clg)) {
-                    this.challengeModeRank.splice(i + 1, 0, {
-                        date: save.saveInfo.modifiedAt.iso,
-                        value: save.saveInfo.summary.challengeModeRank
-                    })
-                }
-                break
-            }
-        }
-        if (!this.challengeModeRank.length) {
-            this.challengeModeRank.push({
-                date: save.saveInfo.modifiedAt.iso,
-                value: save.saveInfo.summary.challengeModeRank
-            })
-        }
+        addHistoryIfChanged(this.challengeModeRank, newDate, save.saveInfo.summary.challengeModeRank)
+
+        /**更新rks记录，仅保留4位小数 */
+        addHistoryIfChanged(this.rks, newDate, Number(Number(save.saveInfo.summary.rankingScore).toFixed(4)), isSameNumber)
     }
 
     /**
      * 根据给定日期还原该日期前最新的存档状态
-     * @param {Date|string} date 目标日期
-     * @returns {{ gameRecord: Record<idString, (LevelRecordInfo | null)[]>, money: number[], rks: number, challengeModeRank: number, version: number }}
+     * @param {Date} targetDate 目标日期
+     * @returns {{ gameRecord: Record<idString, (ori_record | null)[]>, money: [number, number, number, number, number], rks: number, challengeModeRank: number, version: number }}
      */
-    restoreToDate(date) {
-        const targetDate = new Date(date)
+    restoreToDate(targetDate) {
 
-        /** @type {Record<idString, (LevelRecordInfo | null)[]>} */
+        /** @type {Record<idString, (ori_record | null)[]>} */
         const gameRecord = {}
         const ids = fCompute.objectKeys(this.scoreHistory)
 
@@ -289,24 +233,15 @@ export default class saveHistory {
                     continue
                 }
 
-                // 二分查找最后一个 <= targetDate 的记录（records 按日期升序）
-                let selected = null
-                for (const record of records) {
-                    const recordDate = new Date(record[2])
-                    if (recordDate <= targetDate) {
-                        selected = record
-                    } else {
-                        break
-                    }
-                }
+                // 查找目标日期前最新的成绩
+                const selected = records.find(targetDate);
 
                 if (selected) {
-                    const opened = openHistory(selected)
-                    gameRecord[id][levelIdx] = new LevelRecordInfo(
-                        { acc: opened.acc, score: opened.score, fc: opened.fc },
-                        id,
-                        levelIdx
-                    )
+                    gameRecord[id][levelIdx] = {
+                        acc: selected[1][0],
+                        score: selected[1][1],
+                        fc: selected[1][2] === 1
+                    }
                 } else {
                     gameRecord[id][levelIdx] = null
                 }
@@ -314,32 +249,16 @@ export default class saveHistory {
         }
 
         // 2. 还原 data 货币数量
-        let money = null
-        for (let i = this.data.length - 1; i >= 0; i--) {
-            if (this.data[i].date <= targetDate) {
-                money = this.data[i].value
-                break
-            }
-        }
+        let money = this.data.find(targetDate)?.[1]
         if (!money) money = [0, 0, 0, 0, 0]
 
-        // 3. 还原 rks
-        let rks = 0
-        for (let i = this.rks.length - 1; i >= 0; i--) {
-            if (this.rks[i].date <= targetDate) {
-                rks = this.rks[i].value
-                break
-            }
-        }
+        // 3. 还原 challengeModeRank
+        let challengeModeRank = this.challengeModeRank.find(targetDate)?.[1]
+        if (!challengeModeRank) challengeModeRank = 0
 
-        // 4. 还原 challengeModeRank
-        let challengeModeRank = 0
-        for (let i = this.challengeModeRank.length - 1; i >= 0; i--) {
-            if (this.challengeModeRank[i].date <= targetDate) {
-                challengeModeRank = this.challengeModeRank[i].value
-                break
-            }
-        }
+        // 4. 按目标日期对应的历史版本定数计算 RKS（仅保留4位小数）
+        const versionInfo = getInfo.getVersionDifficultyByDate(targetDate)
+        const rks = Number(fCompute.getB30(gameRecord, versionInfo).rks.toFixed(4))
 
         return {
             gameRecord,
@@ -358,15 +277,15 @@ export default class saveHistory {
     async getSongsLastRecord(id) {
         let t = { ...this.scoreHistory[id] }
         /**
-         * @type {Partial<Record<allLevelKind, LevelRecordInfo & {date?: Date}>>}
+         * @type {Partial<Record<allLevelKind, ori_record & {date?: Date}>>}
          */
         const result = {}
         for (let level of allLevel) {
             if (!t[level]) continue
-            const lastRecord = t[level] ? openHistory(t[level][t[level].length - 1]) : null
+            const lastRecord = t[level].end
             if (!lastRecord) continue
-            let date = lastRecord?.date
-            result[level] = new LevelRecordInfo(lastRecord, id, LevelNum[level])
+            let date = lastRecord[0];
+            result[level] = openHistoryV4(lastRecord[1]);
             result[level].date = date
         }
         return result
@@ -396,24 +315,26 @@ export default class saveHistory {
 
         /**@type {formatedHistoryBaseObject<number>[]} */
         let rks_history_ = []
-        let user_rks_data = this.rks
+        let user_rks_data = this.rks.data
         let rks_range = [MAX_DIFFICULTY, 0]
         /** @type {[dateBegin: number, dateAfter: number]} */
         let rks_date = [0, 0];
         let rks_history = []
 
         if (user_rks_data.length) {
-            rks_date = [new Date(user_rks_data[0].date).getTime(), 0]
+            rks_date = [new Date(user_rks_data[0][0]).getTime(), 0]
             user_rks_data.forEach((item, i) => {
-                item.date = new Date(item.date)
-                if (i <= 1 || item.value != rks_history_[rks_history_.length - 2].value) {
-                    rks_history_.push(item)
-                    rks_range[0] = Math.min(rks_range[0], item.value)
-                    rks_range[1] = Math.max(rks_range[1], item.value)
+                if (i <= 1 || item[1] != rks_history_[rks_history_.length - 2].value) {
+                    rks_history_.push({
+                        date: item[0],
+                        value: item[1]
+                    })
+                    rks_range[0] = Math.min(rks_range[0], item[1])
+                    rks_range[1] = Math.max(rks_range[1], item[1])
                 } else {
-                    rks_history_[rks_history_.length - 1].date = item.date
+                    rks_history_[rks_history_.length - 1].date = item[0]
                 }
-                rks_date[1] = item.date.getTime()
+                rks_date[1] = item[0].getTime()
             })
 
             rks_history_.forEach((item, i) => {
@@ -444,7 +365,7 @@ export default class saveHistory {
 
         /**@type {formatedHistoryBaseObject<number>[]} */
         let data_history_ = []
-        let user_data_data = this.data
+        let user_data_data = this.data.data
         const data_range_num = [1e16, 0]
         const data_range = ['', '']
         /** @type {[dateBegin: number, dateAfter: number] | []} */
@@ -453,13 +374,12 @@ export default class saveHistory {
         let data_history = []
 
         if (user_data_data.length) {
-            data_date = [new Date(user_data_data[0].date).getTime(), 0]
+            data_date = [new Date(user_data_data[0][0]).getTime(), 0]
             user_data_data.forEach((item, i) => {
-                const value = item.value
+                const value = item[1]
                 const totValue = (((value[4] * 1024 + value[3]) * 1024 + value[2]) * 1024 + value[1]) * 1024 + value[0]
-                item.date = new Date(item.date)
                 const temObj = {
-                    date: item.date,
+                    date: item[0],
                     value: totValue
                 }
                 if (i <= 1 || temObj.value != data_history_[data_history_.length - 2].value) {
@@ -467,9 +387,9 @@ export default class saveHistory {
                     data_range_num[0] = Math.min(data_range_num[0], totValue)
                     data_range_num[1] = Math.max(data_range_num[1], totValue)
                 } else {
-                    data_history_[data_history_.length - 1].date = item.date
+                    data_history_[data_history_.length - 1].date = item[0]
                 }
-                data_date[1] = item.date.getTime()
+                data_date[1] = item[0].getTime()
             })
 
             data_history_.forEach((item, i) => {
@@ -517,28 +437,6 @@ export default class saveHistory {
 }
 
 /**
- * 数组合并按照 date 排序并去重
- * @param {formatedHistoryBaseObject<any>[]} m 
- * @param {formatedHistoryBaseObject<any>[]} n 
- */
-function merge(m, n) {
-    let t = m.concat(n)
-    t.sort((a, b) => {
-        return new Date(a.date).getTime() - new Date(b.date).getTime()
-    })
-    let i = 1
-    while (i < t.length - 1) {
-        /**因绘制折线图需要，需要保留同一值两端 */
-        if (checkValue(t[i].value, t[i - 1].value) && checkValue(t[i].value, t[i + 1].value)) {
-            t.splice(i, 1)
-        } else {
-            ++i
-        }
-    }
-    return t
-}
-
-/**
  * 
  * @param {number} acc 
  * @param {number} score 
@@ -546,7 +444,7 @@ function merge(m, n) {
  * @param {boolean} fc 
  * @returns {ScoreDetail}
  */
-function createHistory(acc, score, date, fc) {
+function createHistoryV3(acc, score, date, fc) {
     return [acc.toFixed(4), score, date.toISOString(), fc]
 }
 
@@ -555,13 +453,71 @@ function createHistory(acc, score, date, fc) {
  * 展开信息
  * @param {ScoreDetail} data 历史成绩
  */
-function openHistory(data) {
+function openHistoryV3(data) {
     return {
         acc: Number(data[0]),
         score: Number(data[1]),
         date: new Date(data[2]),
         fc: Boolean(data[3])
     }
+}
+
+/**
+ * v4 成绩历史记录：acc 仅保留4位小数
+ * @param {number} acc 
+ * @param {number} score 
+ * @param {boolean | number} fc 
+ * @returns {[acc: number, score: number, fc: 0 | 1]}
+ */
+function createHistoryV4(acc, score, fc) {
+    return [Number(Number(acc).toFixed(4)), score, fc ? 1 : 0]
+}
+
+/**
+ * 
+ * @param {[acc: number, score: number, fc: number]} data 
+ * @returns {ori_record}
+ */
+function openHistoryV4(data) {
+    return {
+        acc: Number(data[0]),
+        score: Number(data[1]),
+        fc: Boolean(data[2])
+    }
+}
+
+/**
+ * 根据数据结构推断历史记录版本
+ * API 的 /get/history 支持按字段过滤，只回传被请求的字段，
+ * 因此对象里可能没有 version，需要按结构识别
+ * @param {any} data 
+ * @returns {number} 识别出的版本号，无法识别时为 0
+ */
+function detectHistoryVersion(data) {
+    if (!data) return 0
+    const scoreHistory = data.scoreHistory
+    if (scoreHistory) {
+        for (const id of fCompute.objectKeys(scoreHistory)) {
+            const record = scoreHistory[id]
+            if (!record) continue
+            for (const level of fCompute.objectKeys(record)) {
+                const first = record[level]?.[0]
+                if (!Array.isArray(first)) continue
+                /**v4 紧凑结构：[年份, [月份, [日, [当天毫秒, 值]]]] */
+                if (typeof first[0] === 'number' && Array.isArray(first[1])) return 4
+                /**v3 结构：[acc, score, date, fc] */
+                if (first.length >= 3) return 3
+            }
+        }
+    }
+    /**仅有序列表时：v4 为 [日期, 值]，v3 为 {date, value} */
+    for (const key of ['rks', 'data', 'challengeModeRank']) {
+        const series = data[key]
+        if (Array.isArray(series) && series.length) {
+            return Array.isArray(series[0]) ? 4 : 3
+        }
+    }
+    return 0
 }
 
 /**
@@ -583,4 +539,48 @@ function checkValue(a, b) {
         if (a[i] != b[i]) return false
     }
     return true
+}
+
+/**
+ * 仅在值发生变化时记录历史点，避免同一值反复堆积
+ * @template T
+ * @param {dateValue<T>} series 目标序列
+ * @param {Date | string} date 记录时间
+ * @param {T} value 当前值
+ * @param {(a: T, b: T) => boolean} [isEqual] 相等判断，默认按值比较
+ */
+function addHistoryIfChanged(series, date, value, isEqual = checkValue) {
+    const index = series.findIndex(date)
+    /**同一时间戳：仅在值变化时覆盖 */
+    if (index !== undefined && new Date(series.data[index][0]).getTime() === new Date(date).getTime()) {
+        if (!isEqual(series.data[index][1], value)) series.data[index][1] = value
+        return
+    }
+    /**与相邻记录的值相同则不记录 */
+    if (index !== undefined && isEqual(series.data[index][1], value)) return
+    const next = index === undefined ? series.data[0] : series.data[index + 1]
+    if (next && isEqual(next[1], value)) return
+    series.add(date, value)
+}
+
+/**
+ * 数值是否相同（历史记录仅保留 4 位小数）
+ * @param {number} a 
+ * @param {number} b 
+ * @returns {boolean}
+ */
+function isSameNumber(a, b) {
+    return Number(Number(a).toFixed(4)) === Number(Number(b).toFixed(4))
+}
+
+/**
+ * 单曲成绩是否相同（历史记录的 acc 仅保留 4 位小数）
+ * @param {[acc: number, score: number, fc: number]} a 
+ * @param {[acc: number, score: number, fc: number]} b 
+ * @returns {boolean}
+ */
+function isSameScoreDetail(a, b) {
+    return isSameNumber(a[0], b[0])
+        && Number(a[1]) === Number(b[1])
+        && Boolean(a[2]) === Boolean(b[2])
 }

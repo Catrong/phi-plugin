@@ -69,6 +69,7 @@ export default class Save {
             /**第八章各曲目解锁 */
             chapter8SongUnlocked: data.gameProgress.chapter8SongUnlocked
         } : {
+            /**@type {[number, number, number, number, number]} */
             money: [0, 0, 0, 0, 0]
         }
         this.gameuser = {
@@ -395,15 +396,15 @@ export default class Save {
 
         let com_rks = sum_rks / 30
 
-        if (option.avgType !== 'none' && await canUseApi(e, 'scoreStatistics') !== false) {
+        if (option.avgType !== 'none' && await canUseApi(e, 'scoreStatistics')) {
             try {
 
                 if (!option.avgType || option.avgType === "all") {
                     const res = await makeRequest.getAllSongAccAvg({
-                            songIds: b19Ids,
-                            minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                            maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                        }, { event: e })
+                        songIds: b19Ids,
+                        minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                        maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                    }, { event: e })
                     if (!res) {
                         throw new Error('avg-getAllSongAccAvg failed')
                     }
@@ -450,10 +451,10 @@ export default class Save {
                     }
                 } else if (option.avgType === "b30") {
                     const res = await makeRequest.getAllSongAccAvgB30({
-                            songIds: b19Ids,
-                            minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                            maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                        }, { event: e })
+                        songIds: b19Ids,
+                        minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                        maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                    }, { event: e })
                     if (!res) {
                         throw new Error('avg-getAllSongAccAvgB30 failed')
                     }
@@ -475,11 +476,11 @@ export default class Save {
                     }
                 } else if (option.avgType === "top") {
                     const res = await makeRequest.getAllSongAccRank({
-                            queries: b19Dual,
-                            dimension: ["all", "b30"],
-                            minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                            maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-                        }, { event: e })
+                        queries: b19Dual,
+                        dimension: ["all", "b30"],
+                        minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+                        maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+                    }, { event: e })
                     if (!res) {
                         throw new Error('avg-getAllSongAccRank failed')
                     }
@@ -519,8 +520,8 @@ export default class Save {
         if (saveVer &&
             !isNaN(saveVer) &&
             saveVer < Number(Version.phigrosVerNum) &&
-            getInfo.versionInfoByCode[`${saveVer}`]) {
-            const oldGameRecord = buildGameRecord(this.gameRecord, `${saveVer}`);
+            getInfo.versionInfoByCode[saveVer]) {
+            const oldGameRecord = buildGameRecord(this.gameRecord, saveVer);
             const addCp = (/**@type {(LevelRecordInfo & Partial<otherLevelRecordInfo>) | undefined} */record) => {
                 if (!record) return;
                 const oldRecord = oldGameRecord[record.id]?.[LevelNum[record.rank]]
@@ -941,7 +942,7 @@ function checkIg(save) {
 /**
  * 
  * @param {Record<idString, (ori_record|null)[]>} data 
- * @param {string} ver 
+ * @param {number} ver verCode
  */
 function buildGameRecord(data, ver) {
 

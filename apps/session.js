@@ -523,11 +523,12 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
     for (let id of fCompute.objectKeys(history.scoreHistory)) {
         const tem = history.scoreHistory[id]
         for (let level of allLevel) {
-            const history = tem[level]
-            if (!history) continue
-            for (let i = 0; i < history.length; i++) {
-                let score_date = fCompute.formatDate(ScoreHistory.date(history[i]))
-                let score_info = ScoreHistory.extend(id, level, history[i], i ? history[i - 1] : undefined, 'low')
+            /**兼容 v4 的 dateValue 与旧版数组结构 */
+            const levelRecords = ScoreHistory.toScoreDetails(tem[level])
+            if (!levelRecords.length) continue
+            for (let i = 0; i < levelRecords.length; i++) {
+                let score_date = fCompute.formatDate(ScoreHistory.date(levelRecords[i]))
+                let score_info = ScoreHistory.extend(id, level, levelRecords[i], i ? levelRecords[i - 1] : undefined, 'low')
                 if (time_vis[score_date] == undefined) {
                     time_vis[score_date] = tot_update.length
                     tot_update.push({ date: score_date, color: getRandomBgColor(), update_num: 0, song: [] })

@@ -1260,11 +1260,11 @@ async function getScore(songId, e, args = {}) {
 
     if (HistoryData) {
         for (let i of allLevel) {
-            if (!HistoryData[i]) continue
-            HistoryData[i].forEach((item) => {
+            /**兼容 v4 的 dateValue 与 API 返回的旧版数组结构 */
+            for (const item of ScoreHistory.toScoreDetails(HistoryData[i])) {
                 const tem = ScoreHistory.extend(songId, i, item)
                 history.push({ ...tem, date_new: fCompute.formatDate(tem.date_new) })
-            })
+            }
         }
     }
 

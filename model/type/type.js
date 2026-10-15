@@ -316,7 +316,7 @@
  * @property {string} completed
  * @property {number} songUpdateInfo
  * @property {number} challengeModeRank
- * @property {number[]} money
+ * @property {[number, number, number, number, number]} money
  * @property {number} unlockFlagOfSpasmodic
  * @property {number} unlockFlagOfIgallta
  * @property {number} unlockFlagOfRrharil
@@ -378,12 +378,26 @@
 
 /**
  * 玩家存档历史数据对象
- * @typedef {Object} saveHistoryObject
- * @property {BaseHistoryObject<number[]>[]} [data] - 成绩记录数组（包含日期和五个数值的元组）
+ * @typedef {Object} saveHistoryObjectV3
+ * @property {BaseHistoryObject<[number, number, number, number, number]>[]} [data] - 成绩记录数组（包含日期和五个数值的元组）
  * @property {BaseHistoryObject<number>[]} [rks] - RKS(评级分数)历史记录数组
  * @property {scoreHistoryObject} [scoreHistory] - 成绩历史数据（按歌曲ID和难度分类的详细记录）
  * @property {BaseHistoryObject<number>[]} [challengeModeRank] - 课题模式排名记录
- * @property {number} [version] - 数据版本号
+ * @property {undefined | 0 | 1 | 2 | 3} [version] - 数据版本号
+ */
+
+/**
+ * @template T
+ * @typedef {[year: number, months: [month: number, days: [date: number, values: [time: number, value: T][]][]][]][]} dateValueJSON
+ */
+
+/**
+ * @typedef {Object} saveHistoryObjectV4
+ * @property {4} version - 数据版本号
+ * @property {dateValueJSON<number>} rks - RKS(评级分数)历史记录数组
+ * @property {dateValueJSON<[number, number, number, number, number]>} data - 成绩记录数组（包含日期和五个数值的元组）
+ * @property {dateValueJSON<number>} challengeModeRank - 课题模式排名历史记录数组
+ * @property {Record<idString, Partial<Record<allLevelKind, dateValueJSON<[acc: number, score: number, fc: 0|1]>>>>} scoreHistory - 成绩历史数据（按歌曲ID和难度分类的详细记录）
  */
 
 /**

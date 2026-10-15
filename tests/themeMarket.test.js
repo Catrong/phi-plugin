@@ -18,6 +18,7 @@ import themePolicy from '../model/theme/policy.js'
 import { themesDir } from '../model/theme/paths.js'
 import themeUseService, { ThemeUseService } from '../model/theme/useService.js'
 import makeRequest from '../model/api/makeRequest.js'
+import autoSeekApi from '../model/api/autoSeekApi.js'
 import {
     downloadThemeArchive,
     getAvailableMarketTheme,
@@ -417,6 +418,9 @@ test('market slug command lets a regular user download and select the theme', as
     /** @type {string[]} */ const used = []
     /** @type {any[]} */ const useOptions = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'phi' : ['openPhiPluginApi', 'enableCustomThemeApi'].includes(key))
+    /** 主题市场是否可用同时取决于 API 的运行时状态 */
+    const originalApiState = autoSeekApi.openPhiPluginApi
+    autoSeekApi.openPhiPluginApi = true
     getBanGroup.get = async () => false
     getNotes.getNotesData = async () => /** @type {any} */(pluginData)
     getNotes.putNotesData = (_userId, data) => data === pluginData
@@ -443,6 +447,7 @@ test('market slug command lets a regular user download and select the theme', as
         getNotes.putNotesData = originals.putNotesData
         send.send_with_At = originals.send
         themeUseService.use = originals.use
+        autoSeekApi.openPhiPluginApi = originalApiState
     }
 })
 
@@ -544,6 +549,13 @@ test('market command falls back to local custom themes when API is disabled or u
         if (key === 'LetterMarkdown') return false
         return undefined
     })
+    /** API 开关同时作用于配置值与运行时状态（主题市场读的是后者） */
+    const originalApiState = autoSeekApi.openPhiPluginApi
+    const setApiEnabled = (value) => {
+        apiEnabled = value
+        autoSeekApi.openPhiPluginApi = value
+    }
+    setApiEnabled(false)
     getBanGroup.get = async () => false
     getNotes.getNotesData = async () => /** @type {any} */({ theme: 'default' })
     makeRequest.getThemeMarketList = async () => {
@@ -563,7 +575,7 @@ test('market command falls back to local custom themes when API is disabled or u
         assert.equal(catalogs[0]?.localOnly, true)
         assert.equal(catalogs[0]?.themes.some((/** @type {any} */ theme) => theme.slug === 'milthm'), true)
 
-        apiEnabled = true
+        setApiEnabled(true)
         assert.equal(await command.market(event('/phi market')), true)
         assert.equal(onlineCalls, 1)
         assert.equal(catalogs[1]?.localOnly, true)
@@ -576,7 +588,7 @@ test('market command falls back to local custom themes when API is disabled or u
         assert.equal(onlineCalls, 2)
         assert.equal(catalogs[2]?.localOnly, true)
 
-        apiEnabled = false
+        setApiEnabled(false)
         assert.equal(await command.market(event('/phi market detail milthm')), true)
         assert.equal(details[0]?.detail.local, true)
         assert.equal(details[0]?.detail.slug, 'milthm')
@@ -589,6 +601,7 @@ test('market command falls back to local custom themes when API is disabled or u
         picmodle.marketDetail = originals.marketDetail
         send.send_with_At = originals.sendWithAt
         send.reply = originals.reply
+        autoSeekApi.openPhiPluginApi = originalApiState
     }
 })
 
@@ -746,6 +759,9 @@ test('market shorthand navigation preserves the current query and page state', a
         if (key === 'LetterMarkdown') return false
         return undefined
     })
+    /** 主题市场是否可用同时取决于 API 的运行时状态 */
+    const originalApiState = autoSeekApi.openPhiPluginApi
+    autoSeekApi.openPhiPluginApi = true
     getBanGroup.get = async () => false
     getNotes.getNotesData = async () => /** @type {any} */({ theme: 'default' })
     makeRequest.getThemeMarketList = async () => ({
@@ -786,6 +802,7 @@ test('market shorthand navigation preserves the current query and page state', a
         picmodle.market = originals.market
         send.send_with_At = originals.sendWithAt
         send.reply = originals.reply
+        autoSeekApi.openPhiPluginApi = originalApiState
     }
 })
 

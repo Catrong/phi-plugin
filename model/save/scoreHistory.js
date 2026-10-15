@@ -99,4 +99,21 @@ export default class ScoreHistory {
     static date(data) {
         return new Date(data[2])
     }
+
+    /**
+     * 兼容 v4（dateValue）与 v3（ScoreDetail[]）的成绩历史结构，
+     * 统一展开为旧版 ScoreDetail 数组 [acc, score, date, fc]
+     * @param {any} levelData 单曲单难度的历史记录
+     * @returns {ScoreDetail[]}
+     */
+    static toScoreDetails(levelData) {
+        if (!levelData) return []
+        if (Array.isArray(levelData.data)) {
+            return /**@type {ScoreDetail[]} */(levelData.data.map(([date, detail]) => [
+                detail[0], detail[1], date, Boolean(detail[2])
+            ]))
+        }
+        if (Array.isArray(levelData)) return levelData
+        return []
+    }
 }
