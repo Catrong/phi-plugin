@@ -560,6 +560,8 @@ export function createKoishiAdapter(ctx, options = {}) {
             const isPrivate = Boolean(session?.isDirect || session?.subtype === 'private' || (!guildId && channelId && channelId === userId))
             const groupId = isPrivate ? '' : (guildId || channelId)
             const content = stringifyId(session?.stripped?.content || session?.content || session?.message || '')
+            // Koishi 用权限等级表达主人：等级 4 及以上就是控制台里的管理员（master）。
+            const authority = Number(session?.user?.authority ?? session?.authority ?? 0)
 
             /** @type {PlatformEvent} */
             const event = {
@@ -574,6 +576,7 @@ export function createKoishiAdapter(ctx, options = {}) {
                 chatId: groupId || channelId || userId,
                 groupId: groupId || undefined,
                 chatType: isPrivate ? 'private' : 'group',
+                isMaster: authority >= 4,
                 text: content,
                 session,
                 bot: {
