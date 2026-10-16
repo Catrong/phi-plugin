@@ -691,7 +691,7 @@ async function picData(save, plugin_data, e) {
             let t = plugin_data.task[i]
             if (!t) continue
             const songInfo = getInfo.ori_info?.[t.song];
-            let ill = getInfo.getill(t.song)
+            let ill = getInfo.getill(t.song, 'low', t.request?.rank)
             let songName = songInfo?.song || t.song
             let meta = `${t.request?.rank || ''} ${songInfo?.chart?.[t.request.rank]?.difficulty || ''} · ${(t.request?.type || '').toUpperCase()} ${t.request?.value ?? ''} · +${t.reward || 0} Notes`
             dailyTasks.push({
