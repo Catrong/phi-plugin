@@ -103,6 +103,7 @@ export default class ScoreHistory {
 
     /**
      * 展开 v4 成绩历史（dateValue 实例或 dateValueJSON）为 ScoreDetail 数组 [acc, score, date, fc]
+     * 输入来自已判定的 v4 历史，直接信任其结构
      * @param {any} levelData 单曲单难度的历史记录
      * @returns {ScoreDetail[]}
      */
@@ -113,9 +114,6 @@ export default class ScoreHistory {
                 detail[0], detail[1], date, Boolean(detail[2])
             ]))
         }
-        if (!Array.isArray(levelData)) return []
-        /**v4 dateValueJSON 结构：[[年份, [月份, [日, [当天毫秒, 值]]]]] */
-        if (typeof levelData[0]?.[0] !== 'number' || !Array.isArray(levelData[0]?.[1])) return []
         return new dateValue().fromJson(levelData).map(([date, detail]) => [
             detail[0], detail[1], date, Boolean(detail[2])
         ])

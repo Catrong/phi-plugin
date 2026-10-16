@@ -65,7 +65,7 @@ export default class dateValue {
     /**@type {[Date, any][]} */
     const result = [];
 
-    for (const [year, months] of json) {
+    for (const [year, months] of json || []) {
       for (const [month, days] of months) {
         for (const [day, points] of days) {
           for (const [time, value] of points) {

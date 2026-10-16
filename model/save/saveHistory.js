@@ -55,9 +55,17 @@ export default class saveHistory {
             this.timezone = oridata.timezone
         }
 
-        /**历史记录版本号；v1 及以前的结构不可靠，不导入 */
-        const version = Number(oridata?.version)
-        if (!version || version < 2) {
+        /**
+         * 版本判定：历史数据的 version 曾用 4 表示旧结构（与现在的 v4 紧凑结构同名不同义），
+         * 因此按结构优先识别；显式声明 v1 及以前的记录以曲名为 key，结构不可靠，直接跳过
+         */
+        const declaredVersion = Number(oridata?.version) || 0
+        const version = declaredVersion && declaredVersion < 2
+            ? declaredVersion
+            : detectHistoryVersion(oridata) || declaredVersion || 0
+
+        /**检查版本：v1 及以前的结构不可靠，不导入 */
+        if (version < 2) {
             return;
         }
         if (version < 4) {
@@ -479,6 +487,49 @@ function openHistoryV4(data) {
         score: Number(data[1]),
         fc: Boolean(data[2])
     }
+}
+
+/**
+ * 通过数据结构特征判断历史记录版本（唯一判定入口）
+ * 不能只看 version：旧版的 4 表示「删除 DAN」，结构仍是 v3。
+ * 特征（scoreHistory 每条记录逐项计票，有序序列取首元素）：
+ * - v4：[年份, [月份, [日, [当天毫秒, 值]]]]、[日期, 值]
+ * - v3：[acc, score, date, fc]、{ date, value }
+ * @param {any} data 
+ * @returns {number} 识别出的版本号，无法识别时为 0
+ */
+function detectHistoryVersion(data) {
+    if (!data) return 0
+    let v4 = 0
+    let v3 = 0
+
+    const scoreHistory = data.scoreHistory
+    if (scoreHistory && typeof scoreHistory === 'object') {
+        for (const id of fCompute.objectKeys(scoreHistory)) {
+            const record = scoreHistory[id]
+            if (!record || typeof record !== 'object') continue
+            for (const level of fCompute.objectKeys(record)) {
+                const first = record[level]?.[0]
+                if (!Array.isArray(first)) continue
+                if (typeof first[0] === 'number' && Array.isArray(first[1])) v4++
+                else if (first.length >= 3) v3++
+            }
+        }
+    }
+
+    for (const key of ['rks', 'data', 'challengeModeRank']) {
+        const series = data[key]
+        if (!Array.isArray(series) || !series.length) continue
+        const first = series[0]
+        if (Array.isArray(first)) v4++
+        else if (first && typeof first === 'object') v3++
+    }
+
+    if (v4 && !v3) return 4
+    if (v3 && !v4) return 3
+    // 理论上不会混用；出现混合时取票数多的一方
+    if (v4 && v3) return v4 >= v3 ? 4 : 3
+    return 0
 }
 
 /**
