@@ -249,7 +249,7 @@ async function makeLargeLine(save, history, e) {
      * @type {{ ChallengeMode: number; ChallengeModeRank: number; date: string; }[]}
      */
     let clgHistory = []
-    /**兼容 v4 的 dateValue 与旧版数组结构 */
+    /**v4 历史：dateValue 实例 */
     const challengeModeHistory = Array.isArray(history.challengeModeRank?.data) ? history.challengeModeRank.data : []
     challengeModeHistory.forEach((item, index, array) => {
         const value = item[1]

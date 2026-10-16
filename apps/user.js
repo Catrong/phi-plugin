@@ -257,6 +257,9 @@ export class phiuser extends phiPluginBase {
         // console.info(acc_rks_data_)
         // console.info(acc_rks_range)
 
+        /**历史记录的展示时区：来源时区缺失时用运行环境时区 */
+        const historyTimezone = user_data?.getTimezone?.() ?? fCompute.timezoneOffset()
+
         let data = {
             gameuser: gameuser,
             userstats: stats,
@@ -264,8 +267,8 @@ export class phiuser extends phiPluginBase {
             data_history: data_history,
             rks_range: rks_range,
             data_range: data_range,
-            data_date: [fCompute.formatDate(data_date[0]), fCompute.formatDate(data_date[1])],
-            rks_date: [fCompute.formatDate(rks_date[0]), fCompute.formatDate(rks_date[1])],
+            data_date: [fCompute.formatDate(data_date[0], undefined, historyTimezone), fCompute.formatDate(data_date[1], undefined, historyTimezone)],
+            rks_date: [fCompute.formatDate(rks_date[0], undefined, historyTimezone), fCompute.formatDate(rks_date[1], undefined, historyTimezone)],
             acc_rks_data: acc_rks_data_,
             acc_rks_range: acc_rks_range,
             acc_rks_AccRange: acc_rks_AccRange_position,
@@ -926,9 +929,12 @@ export class phiuser extends phiPluginBase {
          */
         const rows = [];
 
+        /**历史记录的展示时区：来源时区缺失时用运行环境时区 */
+        const historyTimezone = history?.getTimezone?.() ?? fCompute.timezoneOffset()
+
         times.reverse().forEach(time => {
             if (changeB30Result[time]) {
-                const date = fCompute.formatDate(Number(time));
+                const date = fCompute.formatDate(Number(time), undefined, historyTimezone);
 
                 /** @type {hisb30Songs[]} */
                 const songs = [];

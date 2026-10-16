@@ -642,8 +642,9 @@ export class UserCredentials {
         return result
     }
 
-    /**hu
-     * 从 API 获取当前用户指定字段的历史记录。
+    /**
+     * 从 API 获取当前用户指定字段的历史记录（v4 端点 `/get/history/historyV4`）。
+     * 响应固定含 `version` 与 `timezone`，由 saveHistory 直接消费。
      * @template {keyof saveHistoryObjectV3} K
      * @param {K[]} [fields] 需要返回的历史字段
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
@@ -659,33 +660,17 @@ export class UserCredentials {
     }
 
     /**
-     * 从 API 获取当前用户的成绩历史，支持全部成绩、单曲或单难度三种粒度。
-     * @overload
-     * @param {idString} songId
-     * @param {levelKind} difficulty
-     * @returns {Promise<ScoreDetail[]>}
-     */
-    /**
-     * @overload
-     * @param {idString} songId
-     * @param {undefined} [difficulty]
-     * @returns {Promise<songRecordHistory>}
-     */
-    /**
-     * @overload
-     * @param {undefined} [songId]
-     * @param {undefined} [difficulty]
-     * @returns {Promise<scoreHistoryObject>}
-     */
-    /**
-     * 从 API 获取当前用户的成绩历史。
+     * 从 API 获取当前用户的成绩历史（v4 端点 `/get/history/recordV4`），支持全部成绩、单曲或单难度三种粒度。
+     * 返回 v4 紧凑结构（dateValue）与记录方 `timezone`；
+     * 调用方可用 `ScoreHistory.toScoreDetails()` 展开为 `[acc, score, date, fc]`，
+     * 并按 `timezone` 校准时间展示。
      * @param {idString} [songId] 曲目 ID
      * @param {levelKind} [difficulty] 难度
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
-     * @returns {Promise<ScoreDetail[] | songRecordHistory | scoreHistoryObject | null>} 成绩历史；失败返回 `null`
+     * @returns {Promise<{ data: any, timezone: string } | null>} 成绩历史与记录方时区；失败返回 `null`
      */
     async getCloudSongHistory(songId, difficulty = undefined, options = {}) {
-        return makeRequest.getHistoryRecord(
+        const response = await makeRequest.getHistoryRecord(
             {
                 ...(await this.platformParams(true)),
                 ...(songId ? { song_id: songId } : {}),
@@ -693,6 +678,8 @@ export class UserCredentials {
             },
             this.endpointOptions(options),
         )
+        if (!response) return null
+        return { data: response.data ?? null, timezone: response.timezone }
     }
 
     // 云端存档同步与本地增量计算。

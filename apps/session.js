@@ -501,6 +501,9 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
      */
     let time_vis = {}
 
+    /**历史记录的展示时区：来源时区缺失时用运行环境时区 */
+    const historyTimezone = history?.getTimezone?.() ?? fCompute.timezoneOffset()
+
     /**
      * 总信息
      * @type {{date:string,
@@ -523,11 +526,11 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
     for (let id of fCompute.objectKeys(history.scoreHistory)) {
         const tem = history.scoreHistory[id]
         for (let level of allLevel) {
-            /**兼容 v4 的 dateValue 与旧版数组结构 */
+            /**v4 历史：dateValue 实例 */
             const levelRecords = ScoreHistory.toScoreDetails(tem[level])
             if (!levelRecords.length) continue
             for (let i = 0; i < levelRecords.length; i++) {
-                let score_date = fCompute.formatDate(ScoreHistory.date(levelRecords[i]))
+                let score_date = fCompute.formatDate(ScoreHistory.date(levelRecords[i]), undefined, historyTimezone)
                 let score_info = ScoreHistory.extend(id, level, levelRecords[i], i ? levelRecords[i - 1] : undefined, 'low')
                 if (time_vis[score_date] == undefined) {
                     time_vis[score_date] = tot_update.length
@@ -539,7 +542,7 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
         }
     }
 
-    let newnum = tot_update[time_vis[fCompute.formatDate(now.saveInfo.modifiedAt.iso)]]?.update_num || 0
+    let newnum = tot_update[time_vis[fCompute.formatDate(now.saveInfo.modifiedAt.iso, undefined, historyTimezone)]]?.update_num || 0
 
     tot_update.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
@@ -659,7 +662,7 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
         // dan: await get.getDan(e.user_id),
         added_rks_notes: displayAddedRksNotes,
         theme: pluginData?.theme || 'star',
-        rks_date: [fCompute.formatDate(rks_date[0]), fCompute.formatDate(rks_date[1])],
+        rks_date: [fCompute.formatDate(rks_date[0], undefined, historyTimezone), fCompute.formatDate(rks_date[1], undefined, historyTimezone)],
         rks_history, rks_range,
     }
 

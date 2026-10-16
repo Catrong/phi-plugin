@@ -49,38 +49,26 @@ function toDate(value) {
 }
 
 /**
- * 归一化历史序列：兼容 v4（dateValue 实例）与 v3（{date, value}[]）
+ * 归一化历史序列（dateValue 实例）
  * @param {any} source
  * @returns {{date: Date | null, value: any}[]}
  */
 function valueSeriesEntries(source) {
-  const list = Array.isArray(source) ? source : (Array.isArray(source?.data) ? source.data : []);
-  return list.map((item) => Array.isArray(item)
-    ? { date: toDate(item[0]), value: item[1] }
-    : { date: toDate(item?.date), value: item?.value });
+  const list = Array.isArray(source?.data) ? source.data : [];
+  return list.map((item) => ({ date: toDate(item[0]), value: item[1] }));
 }
 
 /**
- * 归一化单曲成绩历史：兼容 v4（[日期, [acc, score, fc]]）与 v3（[acc, score, date, fc]）
+ * 归一化单曲成绩历史（v4：`[日期, [acc, score, fc]]`）
  * @param {any} source
  * @returns {{date: Date | null, acc: number | null, score: number | null, fc: boolean}[]}
  */
 function scoreSeriesEntries(source) {
-  if (Array.isArray(source?.data)) {
-    return source.data.map(([date, detail]) => {
-      const item = Array.isArray(detail) ? detail : [];
-      return { date: toDate(date), acc: toNumber(item[0]), score: toNumber(item[1]), fc: Boolean(item[2]) };
-    });
-  }
-  if (Array.isArray(source)) {
-    return source.map((item) => ({
-      date: toDate(item[2]),
-      acc: toNumber(item[0]),
-      score: toNumber(item[1]),
-      fc: Boolean(item[3])
-    }));
-  }
-  return [];
+  if (!Array.isArray(source?.data)) return [];
+  return source.data.map(([date, detail]) => {
+    const item = Array.isArray(detail) ? detail : [];
+    return { date: toDate(date), acc: toNumber(item[0]), score: toNumber(item[1]), fc: Boolean(item[2]) };
+  });
 }
 
 /**

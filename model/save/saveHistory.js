@@ -38,18 +38,26 @@ export default class saveHistory {
     rks = new dateValue();
 
     /**
+     * 生成该历史记录的运行环境 UTC 偏移（+HH:MM）。
+     * 仅作来源元信息，日期分量始终按 UTC 读写；为 null 时在序列化时补当前环境值。
+     * @type {string | null}
+     */
+    timezone = null
+
+    /**
      * 
      * @param {saveHistoryObjectV3 | saveHistoryObjectV4 | null} [oridata] 
      */
     constructor(oridata) {
+        if (!oridata) return
+        /**时区偏移仅作来源元信息，随数据保留 */
+        if (typeof oridata?.timezone === 'string' && oridata.timezone) {
+            this.timezone = oridata.timezone
+        }
 
-
-        /**API 按字段过滤只回传部分字段时不含 version，此时按结构推断 */
-        const version = Number(oridata?.version) || detectHistoryVersion(oridata)
-        if (!version) return
-
-        /**检查版本：v1 及以前的结构不可靠，不导入 */
-        if (version < 2) {
+        /**历史记录版本号；v1 及以前的结构不可靠，不导入 */
+        const version = Number(oridata?.version)
+        if (!version || version < 2) {
             return;
         }
         if (version < 4) {
@@ -145,6 +153,8 @@ export default class saveHistory {
         }
         return {
             version: this.version,
+            /**来源元信息缺失时补当前运行环境时区 */
+            timezone: this.timezone || fCompute.timezoneOffset(),
             rks: this.rks.toJson(),
             data: this.data.toJson(),
             challengeModeRank: this.challengeModeRank.toJson(),
@@ -153,10 +163,21 @@ export default class saveHistory {
     }
 
     /**
+     * 该历史记录用于展示的时区偏移（+HH:MM）
+     * 未记录来源时区时使用运行环境时区
+     * @returns {string}
+     */
+    getTimezone() {
+        return this.timezone || fCompute.timezoneOffset()
+    }
+
+    /**
      * 合并记录
      * @param {saveHistory} data 另一个 History 存档
      */
     add(data) {
+        /**自身没有来源时区时，采用被合并方的来源时区 */
+        if (!this.timezone && data?.timezone) this.timezone = data.timezone
         this.data.merge(data.data)
         this.challengeModeRank.merge(data.challengeModeRank)
         this.rks.merge(data.rks)
@@ -437,32 +458,6 @@ export default class saveHistory {
 }
 
 /**
- * 
- * @param {number} acc 
- * @param {number} score 
- * @param {Date} date 
- * @param {boolean} fc 
- * @returns {ScoreDetail}
- */
-function createHistoryV3(acc, score, date, fc) {
-    return [acc.toFixed(4), score, date.toISOString(), fc]
-}
-
-
-/**
- * 展开信息
- * @param {ScoreDetail} data 历史成绩
- */
-function openHistoryV3(data) {
-    return {
-        acc: Number(data[0]),
-        score: Number(data[1]),
-        date: new Date(data[2]),
-        fc: Boolean(data[3])
-    }
-}
-
-/**
  * v4 成绩历史记录：acc 仅保留4位小数
  * @param {number} acc 
  * @param {number} score 
@@ -484,40 +479,6 @@ function openHistoryV4(data) {
         score: Number(data[1]),
         fc: Boolean(data[2])
     }
-}
-
-/**
- * 根据数据结构推断历史记录版本
- * API 的 /get/history 支持按字段过滤，只回传被请求的字段，
- * 因此对象里可能没有 version，需要按结构识别
- * @param {any} data 
- * @returns {number} 识别出的版本号，无法识别时为 0
- */
-function detectHistoryVersion(data) {
-    if (!data) return 0
-    const scoreHistory = data.scoreHistory
-    if (scoreHistory) {
-        for (const id of fCompute.objectKeys(scoreHistory)) {
-            const record = scoreHistory[id]
-            if (!record) continue
-            for (const level of fCompute.objectKeys(record)) {
-                const first = record[level]?.[0]
-                if (!Array.isArray(first)) continue
-                /**v4 紧凑结构：[年份, [月份, [日, [当天毫秒, 值]]]] */
-                if (typeof first[0] === 'number' && Array.isArray(first[1])) return 4
-                /**v3 结构：[acc, score, date, fc] */
-                if (first.length >= 3) return 3
-            }
-        }
-    }
-    /**仅有序列表时：v4 为 [日期, 值]，v3 为 {date, value} */
-    for (const key of ['rks', 'data', 'challengeModeRank']) {
-        const series = data[key]
-        if (Array.isArray(series) && series.length) {
-            return Array.isArray(series[0]) ? 4 : 3
-        }
-    }
-    return 0
 }
 
 /**

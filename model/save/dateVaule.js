@@ -1,20 +1,22 @@
 
 // 原始数据格式：
 // [
-//   [new Date("2026-10-15T10:00:00"), 10],
-//   [new Date("2026-10-15T11:00:00"), 20],
-//   [new Date("2026-10-16T12:00:00"), 30],
+//   [new Date("2026-10-15T10:00:00Z"), 10],
+//   [new Date("2026-10-15T11:00:00Z"), 20],
+//   [new Date("2026-10-16T12:00:00Z"), 30],
 // ]
 
 // 输出结构：
 // [
 //   [2026, [
 //     [10, [
-//       [15, [10, 20]],
-//       [16, [30]]
+//       [15, [[36000000, 10], [39600000, 20]]],
+//       [16, [[43200000, 30]]]
 //     ]]
 //   ]]
 // ]
+
+// 日期分组统一按 UTC 分量读写，序列化结果与运行环境时区无关。
 /**
  * 规范化日期输入
  * @param {Date | string | number} date 
@@ -67,7 +69,7 @@ export default class dateValue {
       for (const [month, days] of months) {
         for (const [day, points] of days) {
           for (const [time, value] of points) {
-            const date = new Date(year, month - 1, day);
+            const date = new Date(Date.UTC(year, month - 1, day));
 
             // 将当天毫秒偏移量还原为具体时间
             date.setTime(date.getTime() + time);
@@ -100,16 +102,16 @@ export default class dateValue {
 
     for (const [rawDate, value] of sorted) {
       const date = toDate(rawDate);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
+      const year = date.getUTCFullYear();
+      const month = date.getUTCMonth() + 1;
+      const day = date.getUTCDate();
 
       // 当天的毫秒偏移量，精确到毫秒
       const time =
-        date.getHours() * 3600000 +
-        date.getMinutes() * 60000 +
-        date.getSeconds() * 1000 +
-        date.getMilliseconds();
+        date.getUTCHours() * 3600000 +
+        date.getUTCMinutes() * 60000 +
+        date.getUTCSeconds() * 1000 +
+        date.getUTCMilliseconds();
 
       // 获取或创建年份节点
       let yearNode = result[result.length - 1];

@@ -377,7 +377,7 @@
  */
 
 /**
- * 玩家存档历史数据对象
+ * 玩家存档历史数据对象（v2/v3 旧结构，仅用于读取既有数据并在构造时升级为 v4）
  * @typedef {Object} saveHistoryObjectV3
  * @property {BaseHistoryObject<[number, number, number, number, number]>[]} [data] - 成绩记录数组（包含日期和五个数值的元组）
  * @property {BaseHistoryObject<number>[]} [rks] - RKS(评级分数)历史记录数组
@@ -392,8 +392,14 @@
  */
 
 /**
+ * v4 单条成绩记录：acc 保留 4 位小数，fc 为 0 | 1，日期由 dateValueJSON 承载
+ * @typedef {[acc: number, score: number, fc: 0|1]} scoreDetailV4
+ */
+
+/**
  * @typedef {Object} saveHistoryObjectV4
  * @property {4} version - 数据版本号
+ * @property {string} timezone - 生成该历史记录的运行环境 UTC 偏移（+HH:MM），仅作来源元信息
  * @property {dateValueJSON<number>} rks - RKS(评级分数)历史记录数组
  * @property {dateValueJSON<[number, number, number, number, number]>} data - 成绩记录数组（包含日期和五个数值的元组）
  * @property {dateValueJSON<number>} challengeModeRank - 课题模式排名历史记录数组
