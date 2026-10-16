@@ -69,6 +69,7 @@ const templateIdentity = stat => `${stat.dev}:${stat.ino}:${stat.mtimeMs}:${stat
  * @typedef {object} KoishiRegisterOptions
  * @property {boolean} [block=true] 处理到匹配规则后是否阻断后续 middleware。
  * @property {string} [cmdhead] 当前命令头，空字符串表示不注册根分组。
+ * @property {boolean} [koishiDiscordCommands] Discord 斜线指令总开关；非 true 时不下发任何斜线指令。
  * @property {string[]} [koishiShortcutCommands] 直接显示在快捷菜单中的功能 ID。
  * @property {string[]} [koishiShortcutCategories] 快捷菜单中显示的分类 ID。
  * @property {string[] | null} [koishiShortcuts] 树形选择；null 时兼容旧版两组配置。
@@ -866,6 +867,18 @@ export function useKoishiAdapter(ctx, options = {}) {
 }
 
 /**
+ * 总开关关闭（默认）时忽略勾选，不下发任何斜线指令；同步空快照会顺带清空 Discord 远端菜单。
+ * @param {KoishiRegisterOptions} options
+ */
+function resolveDiscordShortcuts(options) {
+    if (options.koishiDiscordCommands !== true) return { commands: [], categories: [] }
+    return {
+        commands: options.koishiShortcuts?.filter(key => key.startsWith('command:')).map(key => key.slice(8)) ?? options.koishiShortcutCommands ?? [],
+        categories: options.koishiShortcuts?.filter(key => key.startsWith('category:')).map(key => key.slice(9)) ?? options.koishiShortcutCategories ?? [],
+    }
+}
+
+/**
  * 将现有 `apps` 指令注册到 Koishi 命令管线，普通消息和上下文保留为 middleware。
  *
  * @param {any} ctx
@@ -890,10 +903,7 @@ export function registerKoishiApps(ctx, apps, adapter, options = {}) {
             trackHandler(instance, key, adapter)
         }
     }
-    registerCommands(ctx, entries, adapter, block, options.cmdhead ?? sharedSettings.defaults.cmdhead, {
-        commands: options.koishiShortcuts?.filter(key => key.startsWith('command:')).map(key => key.slice(8)) ?? options.koishiShortcutCommands,
-        categories: options.koishiShortcuts?.filter(key => key.startsWith('category:')).map(key => key.slice(9)) ?? options.koishiShortcutCategories,
-    })
+    registerCommands(ctx, entries, adapter, block, options.cmdhead ?? sharedSettings.defaults.cmdhead, resolveDiscordShortcuts(options))
     const instances = entries.map(({ instance }) => instance)
     registerKoishiTasks(ctx, instances, adapter.logger)
     return instances

@@ -1,23 +1,6 @@
 import { createRequire } from 'node:module'
 
 const { Universal } = createRequire(import.meta.url)('koishi')
-/** @type {WeakMap<object, () => void>} */
-const schedulers = new WeakMap()
-
-/** Discord 4.6.2 会将 HTTP 错误包装成 `[429] { ... }`，retry_after 的单位为秒。
- * @param {any} error
- * @returns {number | undefined} 等待毫秒数；非限流错误不重试。
- */
-export function discordRetryDelay(error) {
-    const message = String(error?.message ?? error)
-    if (Number(error?.response?.status ?? error?.status) !== 429 && !/^\[429\]\s/.test(message)) return
-    let data = error?.response?.data
-    if (!data) {
-        try { data = JSON.parse(message.slice(message.indexOf('{'))) } catch { /* 缺少有效正文时采用保守退避。 */ }
-    }
-    const seconds = Number(data?.retry_after)
-    return Number.isFinite(seconds) && seconds >= 0 ? Math.ceil(seconds * 1000) + 250 : 30_000
-}
 
 /** Discord 的名称限制适用于每个层级，而非整个点分名称。 @param {string} name */
 export function validateDiscordName(name) {
@@ -28,7 +11,7 @@ export function validateDiscordName(name) {
     }
 }
 
-/** 校验完整快照；失败时不发送部分指令，以免覆盖其他插件。 @param {any[]} commands */
+/** 校验计划树；仅用于注册前提示，超限不再中断注册。 @param {any[]} commands */
 export function validateDiscordCommands(commands) {
     if (commands.length > 100) throw new Error(`Discord 全局斜线指令超过 100 个：${commands.length}`)
     /** @param {any} command @param {number} depth @param {string} parent */
@@ -62,98 +45,25 @@ export function commandSnapshot(ctx) {
 }
 
 /**
- * 调度器属于宿主，跨插件重载共用；旧注册移除和新注册合并成一次同步。
- * 根上下文销毁时取消；网络请求串行执行，期间的变更在下一轮读取最新快照。
+ * 只向 Koishi 报备：由 Commander 依 `slash` 标记生成快照并交给适配器，
+ * 上传时机、重复请求、限流退避与空树清空全部由 Koishi 与平台适配器负责。
+ *
  * @param {any} ctx
- * @param {number} [delay]
+ * @returns {number} 已请求同步的在线机器人数量
  */
-export function scheduleCommandSync(ctx, delay = 500) {
-    const root = ctx.root
-    let schedule = schedulers.get(root)
-    if (!schedule) {
-        let stopped = false
-        let running = false
-        let pending = false
-        // Cordis 会按上下文创建 Bot 代理，不能用对象身份保存跨重载的冷却状态。
-        /** @type {Map<string, {retryAt: number, signature?: string}>} */
-        const states = new Map()
-        /** @type {ReturnType<typeof setTimeout> | undefined} */
-        let timer
-        const logger = root.logger('phi-plugin')
-        /** @param {number} wait */
-        const arm = wait => {
-            if (timer) clearTimeout(timer)
-            timer = setTimeout(() => { void run().catch(error => logger.warn('指令同步失败：%s', error)) }, Math.min(Math.max(0, wait), 2_147_483_647))
-            timer.unref?.()
+export function requestCommandSync(ctx) {
+    const logger = ctx.logger('phi-plugin')
+    /** @param {any} bot */
+    const report = bot => (/** @type {any} */ error) => logger.warn('指令同步失败 (%s:%s)：%s', bot.platform, bot.selfId, error)
+    let count = 0
+    for (const bot of ctx.bots || []) {
+        if (bot.status !== Universal.Status.ONLINE || typeof bot.updateCommands !== 'function') continue
+        count++
+        try {
+            Promise.resolve(ctx.$commander.updateCommands(bot)).catch(report(bot))
+        } catch (error) {
+            report(bot)(error)
         }
-        const run = async () => {
-            timer = undefined
-            if (stopped || running) return
-            running = true
-            pending = false
-            let retryAt = Infinity
-            try {
-                const bots = root.bots.filter((/** @type {any} */ bot) => bot.status === Universal.Status.ONLINE
-                    && typeof bot.updateCommands === 'function' && (bot.platform !== 'discord' || bot.config.slash !== false))
-                const commands = commandSnapshot(root)
-                const signature = JSON.stringify(commands)
-                for (const bot of bots) {
-                    if (stopped) break
-                    const identity = `${bot.platform}:${bot.selfId}`
-                    let state = states.get(identity)
-                    if (!state) states.set(identity, state = { retryAt: 0 })
-                    if (state.signature === signature) {
-                        if (bot.platform === 'discord') bot.commands = commands
-                        continue
-                    }
-                    if (state.retryAt > Date.now()) {
-                        retryAt = Math.min(retryAt, state.retryAt)
-                        continue
-                    }
-                    const previousCommands = bot.commands
-                    try {
-                        if (bot.platform === 'discord') validateDiscordCommands(commands)
-                        // Discord 4.6.2 会忽略空数组，最后一个指令卸载时需显式清空远端。
-                        if (bot.platform === 'discord' && !commands.length) {
-                            await bot.internal.bulkOverwriteGlobalApplicationCommands(bot.selfId, [])
-                            bot.commands = []
-                        } else {
-                            await bot.updateCommands(commands)
-                        }
-                        state.signature = signature
-                        state.retryAt = 0
-                    } catch (error) {
-                        // 适配器在 HTTP 成功前就更新 commands，失败时恢复旧交互映射。
-                        if (bot.platform === 'discord' && bot.commands === commands) bot.commands = previousCommands
-                        const wait = bot.platform === 'discord' ? discordRetryDelay(error) : undefined
-                        if (wait !== undefined) {
-                            state.retryAt = Date.now() + wait
-                            retryAt = Math.min(retryAt, state.retryAt)
-                            logger.warn('Discord 指令同步限流 (%s)，%s 秒后自动重试最新指令', bot.selfId, (wait / 1000).toFixed(1))
-                        } else {
-                            state.retryAt = 0
-                            logger.warn('指令同步失败 (%s:%s)：%s', bot.platform, bot.selfId, error)
-                        }
-                    }
-                }
-            } finally {
-                running = false
-                if (pending && !stopped) schedule?.()
-                else if (!stopped && Number.isFinite(retryAt)) arm(retryAt - Date.now())
-            }
-        }
-        schedule = () => {
-            if (stopped) return
-            pending = true
-            arm(delay)
-        }
-        schedulers.set(root, schedule)
-        root.on('dispose', () => {
-            stopped = true
-            if (timer) clearTimeout(timer)
-            schedulers.delete(root)
-        })
     }
-    schedule()
-    ctx.on('dispose', schedule)
+    return count
 }

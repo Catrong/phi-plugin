@@ -26,3 +26,13 @@ test('显式声明 v1 的历史不被导入', () => {
     })
     assert.deepEqual(history.toJSON().scoreHistory, {})
 })
+
+test('1899-11-30 损坏残留会在解析时清理', () => {
+    const damaged = new saveHistory({
+        version: 4,
+        rks: [[1899, [[11, [[30, [[0, 15]]]]]]], [1899, [[11, [[30, [[0, 15]]]]]]], [2024, [[1, [[15, [[36000000, 16]]]]]]]],
+        scoreHistory: { 'song.0': { EZ: [[1899, [[11, [[30, [[0, [99.5, 1000000, 1]]]]]]]], [2024, [[1, [[15, [[36000000, [99.5, 1000000, 1]]]]]]]]] } },
+    })
+    assert.deepEqual(damaged.rks.data.map(item => item[0].toISOString()), ['2024-01-15T10:00:00.000Z'])
+    assert.deepEqual(damaged.scoreHistory['song.0'].EZ.data.map(item => item[0].toISOString()), ['2024-01-15T10:00:00.000Z'])
+})

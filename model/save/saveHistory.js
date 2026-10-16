@@ -204,7 +204,14 @@ export default class saveHistory {
      * @param {Save} save 新存档
      */
     update(save) {
-        const newDate = save.saveInfo.modifiedAt.iso
+        /**
+         * 存档时间缺失或畸形时（例如云存档不返回 modifiedAt，或为 0/null）不记录任何历史点：
+         * Invalid Date 会被序列化成 null 分量、回读时归一化成 1899-11-30，0 则变成 1970 年
+         */
+        const newDate = new Date(save.saveInfo?.modifiedAt?.iso)
+        if (!Number.isFinite(newDate.getTime()) || newDate.getUTCFullYear() < 2000) {
+            return
+        }
         /**更新单曲成绩 */
         const ids = fCompute.objectKeys(save.gameRecord || {})
         for (const id of ids) {

@@ -170,6 +170,10 @@ const commandFunctions = {
 const shortcutCommands = Object.entries(commandFunctions).flatMap(([key, functions]) => functions.map(fnc => ({
     id: key + '.' + fnc, key, ...commandSpec(key, fnc),
 })))
-const defaultShortcutCommands = shortcutCommands.filter(item => commonCommands.includes(item.name)).map(item => item.id)
-const defaultShortcutCategories = Object.keys(commandCategories)
+// 初始不勾选任何入口：新装或未配置时不注册 Discord 斜线指令，避免触发 Discord 全局 100 条上限。
+// 需要斜线指令时先在“Koishi 快捷指令”中打开总开关，再按需勾选功能与分类。
+/** @type {string[]} */
+const defaultShortcutCommands = []
+/** @type {string[]} */
+const defaultShortcutCategories = []
 module.exports = { commandSpec, commonCommands, commandCategories, shortcutCommands, defaultShortcutCommands, defaultShortcutCategories }

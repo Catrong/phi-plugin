@@ -74,6 +74,9 @@ export default class dateValue {
             // 将当天毫秒偏移量还原为具体时间
             date.setTime(date.getTime() + time);
 
+            // 清理损坏残留：年月日缺失时会归一化成 1899-11-30 这类远古日期（Phigros 2019 年才上线）
+            if (!Number.isFinite(date.getTime()) || date.getUTCFullYear() < 2000) continue;
+
             result.push([date, value]);
           }
         }
@@ -102,6 +105,10 @@ export default class dateValue {
 
     for (const [rawDate, value] of sorted) {
       const date = toDate(rawDate);
+
+      // Invalid Date 的分量会被 JSON 序列化成 null，回读时变成 1899-11-30；这里直接不输出
+      if (!Number.isFinite(date.getTime())) continue;
+
       const year = date.getUTCFullYear();
       const month = date.getUTCMonth() + 1;
       const day = date.getUTCDate();

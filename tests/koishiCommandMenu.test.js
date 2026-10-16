@@ -6,7 +6,8 @@ import test from 'node:test'
 import { registerCommands } from '../components/platform/koishiCommands.js'
 import { createKoishiAdapter, registerKoishiApps } from '../components/platform/koishi.js'
 import { commandSnapshot, validateDiscordCommands } from '../components/platform/koishiCommandSync.js'
-import { commandSpec, commonCommands, shortcutCommands, defaultShortcutCommands, defaultShortcutCategories } from '../components/platform/koishiCommandNames.js'
+import { captureWarnings } from './fixtures/logCapture.js'
+import { commandCategories, commandSpec, commonCommands, shortcutCommands } from '../components/platform/koishiCommandNames.js'
 
 const require = createRequire(import.meta.url)
 const { App, Bot, h } = /** @type {any} */ (require('koishi'))
@@ -181,14 +182,19 @@ test('empty shortcuts remove exported menu and configuration reload restores def
     } finally { await fork.dispose(); await app.stop() }
 })
 
-test('selected functions and nonempty categories obey the combined Discord limit before registration', async () => {
+test('menus outside the Discord limits only warn and registration completes', async () => {
     const app = new App()
     await app.start()
+    const logs = captureWarnings()
     try {
-        assert.throws(() => registerCommands(app, actualRules('p', []), /** @type {any} */ ({}), true, 'p', {
-            commands: [...defaultShortcutCommands, 'phisong.alias'], categories: defaultShortcutCategories,
-        }), /超过 25/)
-        assert.equal(app.$commander.get('p'), undefined)
+        /** 9 个常用入口加 16 个非空分类恰好占满 25 项，再多一个顶层功能即超限。 */
+        const commonIds = shortcutCommands.filter(item => commonCommands.includes(item.name)).map(item => item.id)
+        assert.equal(commonIds.length, 9)
+        registerCommands(app, actualRules('p', []), /** @type {any} */ ({}), true, 'p', {
+            commands: [...commonIds, 'phisong.alias'], categories: Object.keys(commandCategories),
+        })
+        assert.ok(app.$commander.get('p'), '超限不再中断注册，交由适配器处理')
+        assert.ok(logs.some(text => text.includes('超过 25')), logs.join(' | '))
     } finally { await app.stop() }
 })
 
@@ -197,7 +203,7 @@ test('unified tree selection overrides old fields and preserves independent cate
     await app.start()
     const apps = Object.fromEntries(actualRules('p', []).map(({ key, instance }) => [key, instance]))
     const fork = app.plugin((/** @type {any} */ ctx, /** @type {any} */ config) => {
-        registerKoishiApps(ctx, apps, /** @type {any} */ ({}), { cmdhead: 'p', koishiShortcutCommands: ['help.help'], koishiShortcutCategories: [], ...config })
+        registerKoishiApps(ctx, apps, /** @type {any} */ ({}), { cmdhead: 'p', koishiDiscordCommands: true, koishiShortcutCommands: ['help.help'], koishiShortcutCategories: [], ...config })
     }, { koishiShortcuts: ['category:b19', 'command:b19.b19'] })
     try {
         assert.deepEqual(commandSnapshot(app)[0].children.map((/** @type {any} */ item) => item.name).sort(), ['p.b30', 'p.scores'])

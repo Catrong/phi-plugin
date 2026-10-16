@@ -49,7 +49,7 @@ test('Koishi maintenance buttons precede settings and are not persistent configu
 test('Guoba and Koishi expose the same editable fields and YAML defaults', () => {
     const guobaFields = createGuobaSchemas().filter(item => item.field).map(item => item.field).sort()
     const koishiDefaults = schema({})
-    assert.deepEqual(Object.keys(koishiDefaults).filter(key => !key.startsWith('koishiShortcut')).sort(), guobaFields)
+    assert.deepEqual(Object.keys(koishiDefaults).filter(key => !key.startsWith('koishi')).sort(), guobaFields)
     for (const item of shared.editable) {
         if (!item.generated) assert.equal(koishiDefaults[item.key], shared.defaults[item.key], item.key)
     }
@@ -65,6 +65,9 @@ test('Koishi shortcut tree exposes independent groups and commands and retains l
     assert.ok(group?.dict)
     assert.equal(group.dict.koishiShortcutCommands.meta.hidden, true)
     assert.equal(group.dict.koishiShortcutCategories.meta.hidden, true)
+    assert.equal(group.dict.koishiDiscordCommands.meta.hidden, undefined)
+    assert.equal(schema({}).koishiDiscordCommands, false)
+    assert.equal(schema({ koishiDiscordCommands: true }).koishiDiscordCommands, true)
     const tree = group.dict.koishiShortcuts
     assert.equal(tree.meta.role, 'phi-plugin-shortcuts')
     const scores = tree.meta.extra.tree.find((/** @type {any} */ item) => item.id === 'category:b19')
@@ -77,11 +80,13 @@ test('Koishi shortcut tree exposes independent groups and commands and retains l
     assert.throws(() => schema({ koishiShortcuts: ['command:missing'] }))
     assert.deepEqual(schema({}).koishiShortcutCommands, defaultShortcutCommands)
     assert.deepEqual(schema({}).koishiShortcutCategories, defaultShortcutCategories)
+    assert.deepEqual(defaultShortcutCommands, [], '初始不勾选任何快捷指令')
+    assert.deepEqual(defaultShortcutCategories, [], '初始不勾选任何快捷分类')
     assert.ok(shortcutCommands.some((/** @type {any} */ item) => item.id === 'b19.b19' && item.name === 'b30'))
     assert.deepEqual(schema({ koishiShortcutCommands: [], koishiShortcutCategories: [] }).koishiShortcutCommands, [])
     assert.throws(() => schema({ koishiShortcutCommands: ['nonexistent'] }))
     assert.throws(() => schema({ koishiShortcutCategories: ['nonexistent'] }))
-    assert.ok(!createGuobaSchemas().some(item => item.field?.startsWith('koishiShortcut')))
+    assert.ok(!createGuobaSchemas().some(item => item.field?.startsWith('koishi')))
 })
 
 test('Koishi schema preserves numeric choices, booleans and validates bounds', () => {
