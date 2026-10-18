@@ -188,7 +188,7 @@ function theoryEntry(chart, num) {
         num,
         id: chart.id,
         song: getInfo.idgetsong(chart.id) || chart.id,
-        illustration: getInfo.getill(chart.id, 'common', chart.rank),
+        illustration: getInfo.getill(chart.id, 'low', chart.rank),
         rank: chart.rank,
         difficulty: chart.difficulty,
         /**满分成绩的等效rks即定数 */

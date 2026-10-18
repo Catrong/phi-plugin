@@ -684,7 +684,7 @@ export class phiuser extends phiPluginBase {
 
         send.send_with_At(e, await picmodle.analyzeSaveHistory(e, {
             stats,
-            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
+            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)], 'blur'),
         }));
         await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
     }
