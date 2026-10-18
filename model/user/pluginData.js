@@ -32,7 +32,7 @@ export default class PluginData {
    * @param {any} data 初始化数据
    */
   constructor(data) {
-    this.money = isNaN(data?.money) ? 0 : data.money
+    this.money = PluginData.normalizeMoney(data?.money)
     this.sign_in = data?.sign_in || "Wed Apr 03 2024 23:03:52 GMT+0800 (中国标准时间)"
     /**
      * 签到记录（YYYY-MM-DD），用于渲染签到日历与累计签到天数
@@ -77,6 +77,18 @@ export default class PluginData {
 
     /**@type {boolean} 是否展示 B30 统计分析 */
     this.showB30Analysis = data?.showB30Analysis !== false
+  }
+
+  /**
+   * Note 数量恒为非负整数。对历史浮点/非法脏数据就近取整自愈，
+   * 避免早期转账漏洞留下的 7.890000000000001 之类数值继续参与运算。
+   * @param {unknown} value
+   * @returns {number}
+   */
+  static normalizeMoney(value) {
+    const num = Number(value)
+    if (!Number.isFinite(num) || num <= 0) return 0
+    return Math.round(num)
   }
 
   /**
