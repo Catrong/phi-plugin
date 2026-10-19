@@ -305,13 +305,15 @@ export class phimoney extends phiPluginBase {
         } else {
             num = Number(msg)
         }
-        if (isNaN(num)) {
-            send.send_with_At(e, `非法数字：${msg}${tmp}`, true)
+        // Note 恒为正整数，拒绝小数、0、负数与非数字
+        if (!Number.isInteger(num) || num <= 0) {
+            send.send_with_At(e, `非法数量！转账数量只能是正整数${tmp}`, true)
             return true
         }
 
         if (!target) {
             send.send_with_At(e, `格式错误！请指定目标${tmp}`, true);
+            return true
         }
 
         try {
@@ -341,29 +343,25 @@ export class phimoney extends phiPluginBase {
             return true
         }
 
-
         if (sender_data.money < num) {
             send.send_with_At(e, `你当前的Note数量不够哦！\n当前Note: ${sender_data.money}`)
             return true
         }
 
-        if (!isFinite(num) || num < 0) {
-            send.send_with_At(e, "你看看你输入的是正常数字嘛！");
-            return true;
-        }
-
-        target_data.money += Math.ceil(num * 0.8)
 
         let sender_old = sender_data.money
         let target_old = target_data.money
 
+        const received = Math.ceil(num * 0.8)
+        target_data.money += received
         sender_data.money -= num
+
         getNotes.putNotesData(e.user_id, sender_data)
 
         getNotes.putNotesData(target, target_data)
         let target_card = await platform.pickMember(e, target)
         const targetName = target_card?.nickname || target_card?.card || target
-        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.money}\n${targetName}的Note: ${target_old} + ${Math.ceil(num * 0.8)} = ${target_data.money}`)
+        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.money}\n${targetName}的Note: ${target_old} + ${received} = ${target_data.money}`)
     }
 
     /**
@@ -691,7 +689,7 @@ async function picData(save, plugin_data, e) {
             let t = plugin_data.task[i]
             if (!t) continue
             const songInfo = getInfo.ori_info?.[t.song];
-            let ill = getInfo.getill(t.song)
+            let ill = getInfo.getill(t.song, 'low', t.request?.rank)
             let songName = songInfo?.song || t.song
             let meta = `${t.request?.rank || ''} ${songInfo?.chart?.[t.request.rank]?.difficulty || ''} · ${(t.request?.type || '').toUpperCase()} ${t.request?.value ?? ''} · +${t.reward || 0} Notes`
             dailyTasks.push({

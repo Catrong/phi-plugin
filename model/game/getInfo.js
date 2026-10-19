@@ -13,60 +13,62 @@ import Chart from './Chart.js'
 import Save from '../save/Save.js'
 
 
-export default new class getInfo {
+/**
+ * @typedef csvDifObject
+ * @property {idStringWithout0} id 曲目id
+ * @property {string} EZ EZ难度
+ * @property {string} HD HD难度
+ * @property {string} IN IN难度
+ * @property {string} [AT] AT难度
+ */
 
+/**
+ * @typedef {Object} updatedChartObject
+ * @property {number|number[]|undefined} tap
+ * @property {number|number[]|undefined} drag
+ * @property {number|number[]|undefined} hold
+ * @property {number|number[]|undefined} flick
+ * @property {number|number[]|undefined} difficulty
+ * @property {number|number[]|undefined} combo
+ * @property {boolean|undefined} isNew
+ */
 
+/**
+ * @typedef {object} versionInfoObject
+ * @property {string} version_label 版本号
+ * @property {number} update_date 版本更新时间戳(秒)
+ * @property {string} whatsnew 版本更新内容
+ * @property {number} version_code 版本号（整数）
+ * @property {string} version 版本号（整数）字符版
+ * 
+ */
 
-    /**
-     * @typedef csvDifObject
-     * @property {idStringWithout0} id 曲目id
-     * @property {string} EZ EZ难度
-     * @property {string} HD HD难度
-     * @property {string} IN IN难度
-     * @property {string} [AT] AT难度
-     */
+/**
+ * @typedef {Record<idString, csvDifObject>} versionDifficultyRecord
+ */
 
-    /**
-     * @typedef {Object} updatedChartObject
-     * @property {number|number[]|undefined} tap
-     * @property {number|number[]|undefined} drag
-     * @property {number|number[]|undefined} hold
-     * @property {number|number[]|undefined} flick
-     * @property {number|number[]|undefined} difficulty
-     * @property {number|number[]|undefined} combo
-     * @property {boolean|undefined} isNew
-     */
+/**
+ * @typedef {{[versionCode: string]: Record<idString, csvDifObject>}} historyDifficultyByVersionObject
+ */
 
-    /**
-     * @typedef {object} versionInfoObject
-     * @property {string} version_label 版本号
-     * @property {number} update_date 版本更新时间戳(秒)
-     * @property {string} whatsnew 版本更新内容
-     * @property {number} version_code 版本号（整数）
-     * @property {string} version 版本号（整数）字符版
-     * 
-     */
+/**
+ * @typedef {Record<idString, {[versionCode: string]: Record<levelKind, number>}>} historyDifficultyBySongIdObject
+ */
 
-    /**
-     * @typedef {{[versionCode: string]: Record<idString, csvDifObject>}} historyDifficultyByVersionObject
-     */
+/**
+ * @typedef {string & { readonly brand: unique symbol }} kongYouId 空游的id
+ * 
+ * @typedef {Object} kongYouSongListObject
+ * @property {idString} id 曲目id
+ * @property {kongYouId} kyId 空游id
+ * @property {object} videoLink 攻略链接
+ * @property {string} videoLink.ez EZ难度攻略链接
+ * @property {string} videoLink.hd HD难度攻略链接
+ * @property {string} videoLink.in IN难度攻略链接
+ * @property {string} videoLink.at AT难度攻略链接
+ */
 
-    /**
-     * @typedef {Record<idString, {[versionCode: string]: Record<levelKind, number>}>} historyDifficultyBySongIdObject
-     */
-
-    /**
-     * @typedef {string & { readonly brand: unique symbol }} kongYouId 空游的id
-     * 
-     * @typedef {Object} kongYouSongListObject
-     * @property {idString} id 曲目id
-     * @property {kongYouId} kyId 空游id
-     * @property {object} videoLink 攻略链接
-     * @property {string} videoLink.ez EZ难度攻略链接
-     * @property {string} videoLink.hd HD难度攻略链接
-     * @property {string} videoLink.in IN难度攻略链接
-     * @property {string} videoLink.at AT难度攻略链接
-     */
+class getInfo {
 
     constructor() {
         /**
@@ -138,6 +140,9 @@ export default new class getInfo {
 
         /** @type {{[versionCode: string]: versionInfoObject}} */
         this.versionInfoByCode = {}
+
+        /** @type {[Date,versionInfoObject][]} */
+        this.versionInfoByDate = []
 
         /** @type {historyDifficultyByVersionObject} */
         this.historyDifficultyByVersion = {}
@@ -352,6 +357,7 @@ export default new class getInfo {
     async loadVersionHistory() {
         this.versionInfoByLabel = {};
         this.versionInfoByCode = {};
+        this.versionInfoByDate = [];
         this.historyDifficultyByVersion = {};
         this.historyDifficultyBySongId = {};
         this.historyDifficultyByVerDifficulty = {};
@@ -385,7 +391,7 @@ export default new class getInfo {
             })
             this.versionInfoByCode[ver] = verInfo
             this.versionInfoByLabel[verInfo.version_label] = verInfo
-
+            this.versionInfoByDate.push([new Date(verInfo.update_date * 1000), verInfo])
             this.historyDifficultyByVersion[ver] = difInfo
 
             this.historyDifficultyByVerDifficulty[ver] = {}
@@ -417,6 +423,9 @@ export default new class getInfo {
             }
 
         }
+
+        /**确保 versionInfoByDate 已按日期排序 */
+        this.versionInfoByDate.sort((a, b) => a[0].getTime() - b[0].getTime());
 
         /** 上一版本定数表，用于新曲与改谱对比（对应本次重载的版本历史） */
         this.oldDifList = {}
@@ -1302,7 +1311,21 @@ export default new class getInfo {
         }
     }
 
-}()
+    /**
+     * 根据日期获取定数表
+     * @param {Date} date 
+     * @returns {versionInfoObject | undefined}
+     */
+    getVersionDifficultyByDate(date) {
+        const index = fCompute.binarySearch(this.versionInfoByDate, date, (a, b) => a[0].getTime() - b.getTime())
+        /**index 为 0 时同样有效（最早的历史版本） */
+        if (index !== undefined) {
+            return this.versionInfoByDate[index][1];
+        }
+        return undefined;
+    }
+
+}
 
 /**
  * 
@@ -1312,3 +1335,7 @@ export default new class getInfo {
 function idWithout0ToIdWith0(idWithout0) {
     return /** @type {idString} */(idWithout0 + '.0')
 }
+
+
+
+export default new getInfo()

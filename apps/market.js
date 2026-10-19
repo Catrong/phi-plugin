@@ -18,7 +18,7 @@ import {
 import { sendMarketQuickCommands, sendQuickCommands } from '../model/game/markdown.js'
 import { isApiConnectionError } from '../model/api/phiApiErrors.js'
 import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
-import { isApiCapabilityConfigured } from '../model/user/apiPermission.js'
+import { isApiCapabilityEnabled } from '../model/user/apiPermission.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
 
@@ -80,7 +80,7 @@ export class phiMarket extends phiPluginBase {
     async renderMarketCatalog(e, query, page, forceLocal = false) {
         const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
         let catalog
-        if (!forceLocal && isApiCapabilityConfigured('customTheme')) {
+        if (!forceLocal && isApiCapabilityEnabled('customTheme')) {
             try {
                 catalog = await fetchThemeCatalog(query, page)
             } catch (/** @type {any} */ error) {
@@ -169,7 +169,7 @@ export class phiMarket extends phiPluginBase {
             try {
                 const localTheme = localDetail ? themeManager.getTheme(themeId) : null
                 let detail = localDetail
-                const shouldFetchOnline = isApiCapabilityConfigured('customTheme')
+                const shouldFetchOnline = isApiCapabilityEnabled('customTheme')
                     && isThemeSlug(themeId)
                     && (!localDetail || localTheme?.marketInstalled)
                 if (shouldFetchOnline) {
@@ -212,7 +212,7 @@ export class phiMarket extends phiPluginBase {
             send.send_with_At(e, '主题 slug 格式无效。')
             return true
         }
-        if (!localTheme && !isApiCapabilityConfigured('customTheme')) {
+        if (!localTheme && !isApiCapabilityEnabled('customTheme')) {
             send.send_with_At(e, '当前为本地离线模式，该主题尚未下载，暂时无法使用。')
             return true
         }

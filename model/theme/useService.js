@@ -23,7 +23,7 @@ import {
     freshInstallRateLimiter,
     marketInstallCoordinator,
 } from './installGuard.js'
-import { isApiCapabilityConfigured } from '../user/apiPermission.js'
+import { isApiCapabilityEnabled } from '../user/apiPermission.js'
 
 const SLUG_RE = /^[a-z][a-z0-9_-]{0,119}$/
 
@@ -88,7 +88,7 @@ export class ThemeUseService {
         this.getTheme = dependencies.getTheme || getAvailableMarketTheme
         this.install = dependencies.install || installLatestMarketTheme
         this.marketEnabled = dependencies.marketEnabled
-            || (() => isApiCapabilityConfigured('customTheme'))
+            || (() => isApiCapabilityEnabled('customTheme'))
     }
 
     /** @param {any} theme @param {any} [detail] */

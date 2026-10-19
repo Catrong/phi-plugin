@@ -1,5 +1,6 @@
 import fCompute from "../game/fCompute.js"
 import getInfo from "../game/getInfo.js"
+import dateValue from "./dateVaule.js"
 
 
 /**
@@ -98,5 +99,23 @@ export default class ScoreHistory {
      */
     static date(data) {
         return new Date(data[2])
+    }
+
+    /**
+     * 展开 v4 成绩历史（dateValue 实例或 dateValueJSON）为 ScoreDetail 数组 [acc, score, date, fc]
+     * 输入来自已判定的 v4 历史，直接信任其结构
+     * @param {any} levelData 单曲单难度的历史记录
+     * @returns {ScoreDetail[]}
+     */
+    static toScoreDetails(levelData) {
+        if (!levelData) return []
+        if (Array.isArray(levelData.data)) {
+            return /**@type {ScoreDetail[]} */(levelData.data.map(([date, detail]) => [
+                detail[0], detail[1], date, Boolean(detail[2])
+            ]))
+        }
+        return new dateValue().fromJson(levelData).map(([date, detail]) => [
+            detail[0], detail[1], date, Boolean(detail[2])
+        ])
     }
 }

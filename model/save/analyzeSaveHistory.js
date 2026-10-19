@@ -49,6 +49,29 @@ function toDate(value) {
 }
 
 /**
+ * 归一化历史序列（dateValue 实例）
+ * @param {any} source
+ * @returns {{date: Date | null, value: any}[]}
+ */
+function valueSeriesEntries(source) {
+  const list = Array.isArray(source?.data) ? source.data : [];
+  return list.map((item) => ({ date: toDate(item[0]), value: item[1] }));
+}
+
+/**
+ * 归一化单曲成绩历史（v4：`[日期, [acc, score, fc]]`）
+ * @param {any} source
+ * @returns {{date: Date | null, acc: number | null, score: number | null, fc: boolean}[]}
+ */
+function scoreSeriesEntries(source) {
+  if (!Array.isArray(source?.data)) return [];
+  return source.data.map(([date, detail]) => {
+    const item = Array.isArray(detail) ? detail : [];
+    return { date: toDate(date), acc: toNumber(item[0]), score: toNumber(item[1]), fc: Boolean(item[2]) };
+  });
+}
+
+/**
  * 本地日期 key：YYYY-MM-DD
  * @param {Date} d
  */
@@ -108,7 +131,6 @@ function pickBest(map, compare) {
   }
   return best;
 }
-
 /**
  * @param {Map<string, number>} map
  * @param {number} n
@@ -140,16 +162,9 @@ export function analyzeSaveHistory(history) {
   for (const id of fCompute.objectKeys(scoreHistory)) {
     const perSong = scoreHistory[id] || {};
     for (const level of fCompute.objectKeys(perSong)) {
-      const arr = perSong[level];
-      if (!Array.isArray(arr)) continue;
-      for (const item of arr) {
-        if (!Array.isArray(item) || item.length < 4) continue;
-        const acc = toNumber(item[0]);
-        const score = toNumber(item[1]);
-        const date = toDate(item[2]);
-        const fc = Boolean(item[3]);
-        if (acc == null || score == null || !date) continue;
-        scoreEvents.push({ id, level, acc, score, fc, date });
+      for (const item of scoreSeriesEntries(perSong[level])) {
+        if (item.acc == null || item.score == null || !item.date) continue;
+        scoreEvents.push({ id, level, acc: item.acc, score: item.score, fc: item.fc, date: item.date });
       }
     }
   }
@@ -158,20 +173,20 @@ export function analyzeSaveHistory(history) {
   /**
    * rks/data/challenge 事件（用于更新次数、天数、增减统计）
    */
-  const rksEvents = (Array.isArray(history?.rks) ? history.rks : [])
-    .map((x) => ({ date: toDate(x?.date), value: toNumber(x?.value) }))
+  const rksEvents = valueSeriesEntries(history?.rks)
+    .map((x) => ({ date: x.date, value: toNumber(x.value) }))
     .filter((x) => x.date && x.value != null)
     .map((x) => /** @type {{date: Date, value: number}} */({ date: x.date, value: x.value }));
   rksEvents.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-  const dataEvents = (Array.isArray(history?.data) ? history.data : [])
-    .map((x) => ({ date: toDate(x?.date), bytes: dataArrayToBytes(x?.value) }))
+  const dataEvents = valueSeriesEntries(history?.data)
+    .map((x) => ({ date: x.date, bytes: dataArrayToBytes(x.value) }))
     .filter((x) => x.date && x.bytes != null)
     .map((x) => /** @type {{date: Date, bytes: number}} */({ date: x.date, bytes: x.bytes }));
   dataEvents.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-  const challengeEvents = (Array.isArray(history?.challengeModeRank) ? history.challengeModeRank : [])
-    .map((x) => ({ date: toDate(x?.date), value: toNumber(x?.value) }))
+  const challengeEvents = valueSeriesEntries(history?.challengeModeRank)
+    .map((x) => ({ date: x.date, value: toNumber(x.value) }))
     .filter((x) => x.date && x.value != null)
     .map((x) => /** @type {{date: Date, value: number}} */({ date: x.date, value: x.value }));
   challengeEvents.sort((a, b) => a.date.getTime() - b.date.getTime());

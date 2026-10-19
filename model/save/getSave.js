@@ -65,7 +65,7 @@ export default class LocalSaveRepository {
     /**
      * 保存 sessionToken 对应的本地历史。
      * @param {phigrosToken} sessionToken Phigros sessionToken
-     * @param {saveHistory | saveHistoryObject | object} data 历史记录
+     * @param {saveHistory | saveHistoryObjectV3 | object} data 历史记录
      */
     static async putHistoryBySessionToken(sessionToken, data) {
         if (!sessionToken) throw new Error('sessionToken is undefined')

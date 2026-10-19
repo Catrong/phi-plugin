@@ -195,7 +195,7 @@ function endpointErrorLogging(path) {
  * 当前用户数据
  * @typedef {Object} MeData
  * @property {oriSave} save 存档数据
- * @property {saveHistoryObject} history 用户历史记录
+ * @property {saveHistoryObjectV3} history 用户历史记录
  */
 
 /**
@@ -732,56 +732,29 @@ export default class makeRequest {
     }
 
     /**
-     * @overload
-     * @param {baseAu} params
+     * 获取用户历史记录（v4 端点，响应固定含 `version` 与 `timezone`）
+     * @template {keyof saveHistoryObjectV4} K
+     * @param {baseAu & {request?: K[]}} params 只过滤 data/rks/scoreHistory/challengeModeRank
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<saveHistoryObject>}
-     */
-    /**
-     * @template {keyof saveHistoryObject} K
-     * @overload
-     * @param {baseAu & {request: K[]}} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<Pick<saveHistoryObject, K> | null>}
-     */
-    /**
-     * 获取用户data历史记录
-     * @template {keyof saveHistoryObject} K
-     * @param {baseAu & {request?: K[]}} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<Partial<saveHistoryObject> | null>}
+     * @returns {Promise<Partial<saveHistoryObjectV4> | null>}
      */
     static async getHistory(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return (await makeFetch(burl('/get/history/history'), params, 'POST', options))?.data ?? null
+        return (await makeFetch(burl('/get/history/historyV4'), params, 'POST', options))?.data ?? null
     }
 
     /**
-     * @overload
-     * @param {baseAu} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<{data: scoreHistoryObject}>}
-     */
-    /**
-     * @overload
-     * @param {baseAu & { song_id: idString }} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<{ data: songRecordHistory }>}
-     */
-    /**
-     * @overload
-     * @param {baseAu & { song_id: idString, rank: levelKind }} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<{ data: ScoreDetail[] }>}
-     */
-    /**
-     * 获取用户成绩历史记录
+     * 获取用户成绩历史记录（v4 端点）
+     * 返回完整响应体：`data` 为 v4 紧凑结构，顶层固定带 `version` 与 `timezone`
      * @param {baseAu & {song_id?: idString, rank?: levelKind}} params
+     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
      * @returns {Promise<{
-     *   data: ScoreDetail[] | songRecordHistory | scoreHistoryObject
-     * }>}
+     *   data: any,
+     *   version: number,
+     *   timezone: string
+     * } | null>}
      */
     static async getHistoryRecord(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return (await makeFetch(burl('/get/history/record'), params, 'POST', options))?.data ?? null
+        return await makeFetch(burl('/get/history/recordV4'), params, 'POST', options) ?? null
     }
 
     /**

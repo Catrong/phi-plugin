@@ -147,6 +147,10 @@ export interface PlatformEvent {
     chatId?: PlatformChatId
     groupId?: PlatformChatId
     chatType?: PlatformChatType
+    /** 是否为机器人主人：Koishi 端按权限等级映射（等级 ≥ 4 视为管理员），Yunzai 端由框架提供。 */
+    isMaster?: boolean
+    /** 原始平台会话对象：Koishi 端为 Session，Yunzai 端为框架事件。 */
+    session?: any
     text?: string
     logFnc?: string
     reply?(msg?: PlatformMessageInput, quote?: boolean, data?: Record<string, unknown>): MaybePromise<any>

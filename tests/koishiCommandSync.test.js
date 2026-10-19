@@ -2,8 +2,9 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import test from 'node:test'
 import { setTimeout as pause } from 'node:timers/promises'
-import { commandSnapshot, discordRetryDelay, scheduleCommandSync, validateDiscordCommands, validateDiscordName } from '../components/platform/koishiCommandSync.js'
+import { commandSnapshot, validateDiscordCommands, validateDiscordName } from '../components/platform/koishiCommandSync.js'
 import { registerCommands } from '../components/platform/koishiCommands.js'
+import { captureWarnings } from './fixtures/logCapture.js'
 
 const require = createRequire(import.meta.url)
 const { App, Bot, Universal } = /** @type {any} */ (require('koishi'))
@@ -12,14 +13,6 @@ const { Discord } = require('@satorijs/adapter-discord')
 /** @param {string} name @param {any[]} [children] */
 const node = (name, children = []) => ({ name, children, arguments: [], options: [], description: {} })
 
-test('Discord retry_after is parsed in seconds from adapter and HTTP errors', () => {
-    assert.equal(discordRetryDelay(new Error('[429] {"message":"You are being rate limited.","retry_after":15.336,"global":false}')), 15586)
-    assert.equal(discordRetryDelay({ response: { status: 429, data: { retry_after: 2, global: true } } }), 2250)
-    assert.equal(discordRetryDelay(new Error('[429] invalid JSON')), 30000)
-    assert.equal(discordRetryDelay({ status: 429, response: { data: { retry_after: -1 } } }), 30000)
-    assert.equal(discordRetryDelay(new Error('[403] {"retry_after":2}')), undefined)
-    assert.equal(discordRetryDelay(new Error('network error')), undefined)
-})
 /** @param {string} key @param {number} [count] */
 function entries(key, count = 1) {
     /** @type {any} */
@@ -85,200 +78,52 @@ test('whole-tree conflict fallback follows empty, p, phi, phigros, phi-plugin an
     } finally { await app.stop() }
 })
 
-test('invalid planned registrations leave no partial commands', async () => {
+test('invalid Discord names still abort registration before touching the host', async () => {
     const app = new App()
     await app.start()
     try {
-        assert.throws(() => registerCommands(app, entries('demo', 26), /** @type {any} */ ({}), true, 'phi'), /25/)
-        assert.equal(app.$commander.get('phi'), undefined)
         assert.throws(() => registerCommands(app, entries('demo'), /** @type {any} */ ({}), true, 'a'.repeat(33)), /指令名无效/)
-        assert.equal(commandSnapshot(app).length, 0)
-        const modules = Array.from({ length: 26 }, (_, i) => entries(`m${i}`)[0])
-        assert.throws(() => registerCommands(app, modules, /** @type {any} */ ({}), true, 'phi'), /25/)
-        assert.equal(commandSnapshot(app).length, 0)
-        for (let i = 0; i < 100; i++) app.command(`other${i}`)
-        assert.throws(() => registerCommands(app, entries('demo'), /** @type {any} */ ({}), true, 'phi'), /100/)
         assert.equal(app.$commander.get('phi'), undefined)
+        assert.equal(commandSnapshot(app).length, 0)
     } finally { await app.stop() }
 })
 
-test('rapid head reloads send one complete snapshot; unload removes stale commands and empty snapshot clears Discord', async () => {
+test('menus outside the Discord limits only warn and still register', async () => {
     const app = new App()
-    /** @type {any[]} */
+    await app.start()
+    const logs = captureWarnings()
+    try {
+        registerCommands(app, entries('demo', 26), /** @type {any} */ ({}), true, 'phi')
+        assert.ok(app.$commander.get('phi'), '单层超限不再中断注册')
+        assert.ok(app.$commander.get('phi.demo.run0'))
+        assert.ok(logs.some(text => text.includes('超过 25')), logs.join(' | '))
+        for (let i = 0; i < 100; i++) app.command(`other${i}`)
+        registerCommands(app, entries('extra'), /** @type {any} */ ({}), true, 'pg')
+        assert.ok(app.$commander.get('pg'), '全局超限同样只警告')
+        assert.ok(logs.some(text => text.includes('超过 100')), logs.join(' | '))
+    } finally { await app.stop() }
+})
+
+test('registration only reports to Koishi: the commander builds the snapshot for the adapter', async () => {
+    const app = new App()
+    /** @type {string[][]} */
     const sent = []
     /** @type {any} */
     let bot
     const botFork = app.plugin((/** @type {any} */ ctx) => {
         bot = new Bot(ctx, { slash: true }, 'discord')
         bot.user = { id: 'test' }
-        bot.updateCommands = async (/** @type {any[]} */ commands) => { sent.push(commands) }
-        bot.internal = { bulkOverwriteGlobalApplicationCommands: async (/** @type {string} */ id, /** @type {any[]} */ commands) => { assert.equal(id, 'test'); sent.push(commands) } }
+        bot.updateCommands = async (/** @type {any[]} */ commands) => { sent.push(commands.map(command => command.name)) }
     })
     await app.start()
     bot._status = Universal.Status.ONLINE
-    // 设置测试专用短防抖周期，生产默认 500ms。
-    scheduleCommandSync(app, 20)
-    const other = app.command('other', '其他插件')
-    const plugin = (/** @type {any} */ ctx, /** @type {any} */ config) => registerCommands(ctx, entries('demo'), /** @type {any} */ ({}), true, config.head)
-    const fork = app.plugin(plugin, { head: 'phi' })
     try {
-        fork.update({ head: 'pg' })
-        await app.lifecycle.flush()
-        fork.update({ head: '' })
-        await app.lifecycle.flush()
-        await pause(70)
-        assert.equal(sent.length, 1)
-        assert.deepEqual(sent[0].map((/** @type {any} */ cmd) => cmd.name).sort(), ['demo', 'other'])
-        await fork.dispose()
-        await pause(70)
-        assert.deepEqual(sent.at(-1).map((/** @type {any} */ cmd) => cmd.name), ['other'])
-        other.dispose()
-        scheduleCommandSync(app)
-        await pause(70)
-        assert.deepEqual(sent.at(-1), [])
+        registerCommands(app, entries('demo'), /** @type {any} */ ({}), true, 'phi')
+        await pause(20)
+        assert.deepEqual(sent, [['phi']], '插件只调用 Koishi 的入口，快照与上传由 Commander 与适配器负责')
+        bot._status = Universal.Status.OFFLINE
+        registerCommands(app, entries('extra'), /** @type {any} */ ({}), true, 'pg')
+        await pause(20)
+        assert.equal(sent.length, 1, '离线机器人不再被插件主动同步')
     } finally { await botFork.dispose(); await app.stop() }
-})
-
-test('invalid full snapshot is not uploaded, failed requests are caught and later updates recover', async () => {
-    const app = new App()
-    /** @type {any} */
-    let bot
-    let requests = 0
-    const botFork = app.plugin((/** @type {any} */ ctx) => {
-        bot = new Bot(ctx, { slash: true }, 'discord')
-        bot.updateCommands = async () => { if (++requests === 1) throw new Error('test network error') }
-    })
-    await app.start()
-    bot._status = Universal.Status.ONLINE
-    const invalid = app.command('x'.repeat(33))
-    try {
-        scheduleCommandSync(app, 10)
-        await pause(40)
-        assert.equal(requests, 0)
-        invalid.dispose()
-        app.command('valid')
-        scheduleCommandSync(app)
-        await pause(40)
-        assert.equal(requests, 1)
-        scheduleCommandSync(app)
-        await pause(40)
-        assert.equal(requests, 2)
-    } finally { await botFork.dispose(); await app.stop() }
-})
-
-test('in-flight updates serialize and take a fresh snapshot; disabled/offline bots and disposed host do not sync', async () => {
-    const app = new App()
-    /** @type {any} */
-    let bot
-    /** @type {(() => void) | undefined} */
-    let release
-    /** @type {string[][]} */
-    const sent = []
-    let active = 0
-    const botFork = app.plugin((/** @type {any} */ ctx) => {
-        bot = new Bot(ctx, { slash: true }, 'discord')
-        bot.updateCommands = async (/** @type {any[]} */ commands) => {
-            assert.equal(++active, 1)
-            sent.push(commands.map(command => command.name))
-            if (sent.length === 1) await new Promise(resolve => { release = () => resolve(undefined) })
-            active--
-        }
-    })
-    await app.start()
-    const first = app.command('first')
-    try {
-        scheduleCommandSync(app, 10)
-        await pause(40)
-        assert.equal(sent.length, 0)
-        bot._status = Universal.Status.ONLINE
-        bot.config.slash = false
-        scheduleCommandSync(app)
-        await pause(40)
-        assert.equal(sent.length, 0)
-        bot.config.slash = true
-        scheduleCommandSync(app)
-        await pause(40)
-        assert.deepEqual(sent, [['first']])
-        first.dispose()
-        app.command('latest')
-        scheduleCommandSync(app)
-        await pause(40)
-        assert.equal(sent.length, 1)
-        release?.()
-        await pause(40)
-        assert.deepEqual(sent, [['first'], ['latest']])
-        scheduleCommandSync(app)
-    } finally {
-        release?.()
-        await botFork.dispose()
-        await app.stop()
-    }
-    await pause(40)
-    assert.equal(sent.length, 2)
-})
-
-test('429 cooldown survives reload requests, retries latest tree, restores old interaction mapping and deduplicates success', async () => {
-    const app = new App()
-    /** @type {any} */
-    let bot
-    /** @type {{time: number, names: string[]}[]} */
-    const sent = []
-    const oldCommands = [node('old')]
-    const botFork = app.plugin((/** @type {any} */ ctx) => {
-        bot = new Bot(ctx, { slash: true }, 'discord')
-        bot.user = { id: 'test-rate-limit' }
-        bot.commands = oldCommands
-        bot.updateCommands = async (/** @type {any[]} */ commands) => {
-            bot.commands = commands
-            sent.push({ time: Date.now(), names: commands.map(command => command.name) })
-            if (sent.length === 1) throw new Error('[429] {"retry_after":0.1,"global":false}')
-        }
-    })
-    await app.start()
-    bot._status = Universal.Status.ONLINE
-    const plugin = (/** @type {any} */ ctx, /** @type {any} */ config) => {
-        ctx.command(config.head)
-        scheduleCommandSync(ctx, 10)
-    }
-    const fork = app.plugin(plugin, { head: 'first' })
-    try {
-        await pause(50)
-        assert.equal(sent.length, 1)
-        assert.equal(bot.commands, oldCommands)
-        fork.update({ head: 'second' })
-        await app.lifecycle.flush()
-        await pause(40)
-        fork.update({ head: 'latest' })
-        await app.lifecycle.flush()
-        await pause(40)
-        assert.equal(sent.length, 1, '重载不得绕过冷却期限')
-        await pause(300)
-        assert.equal(sent.length, 2)
-        assert.deepEqual(sent[1].names, ['latest'])
-        assert.ok(sent[1].time - sent[0].time >= 350)
-        scheduleCommandSync(app)
-        await pause(40)
-        assert.equal(sent.length, 2, '成功上传过的相同快照不重复请求')
-    } finally { await fork.dispose(); await botFork.dispose(); await app.stop() }
-})
-
-test('repeated 429 responses back off again and host shutdown cancels pending retry', async () => {
-    const app = new App()
-    /** @type {any} */
-    let bot
-    let calls = 0
-    const botFork = app.plugin((/** @type {any} */ ctx) => {
-        bot = new Bot(ctx, { slash: true }, 'discord')
-        bot.updateCommands = async () => { calls++; throw new Error('[429] {"retry_after":0}') }
-    })
-    await app.start()
-    bot._status = Universal.Status.ONLINE
-    app.command('test')
-    try {
-        scheduleCommandSync(app, 10)
-        await pause(330)
-        assert.equal(calls, 2)
-    } finally { await botFork.dispose(); await app.stop() }
-    await pause(300)
-    assert.equal(calls, 2)
 })

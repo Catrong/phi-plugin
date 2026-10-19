@@ -1243,28 +1243,40 @@ async function getScore(songId, e, args = {}) {
      * @type {songRecordHistory | undefined}
      */
     let HistoryData = undefined;
+    /**历史成绩的展示时区：优先 API 记录方时区，其次本地历史来源时区，最后运行环境 */
+    let historyTimezone = undefined;
+    /**读取本地历史，并顺带补齐展示时区 */
+    const readLocalSongHistory = async () => {
+        const localHistory = await credentials.getLocalHistory()
+        if (!historyTimezone) historyTimezone = localHistory?.getTimezone?.()
+        return localHistory?.scoreHistory[songId]
+    };
     if (await canUseApi(e)) {
         try {
-            HistoryData = await credentials.getCloudSongHistory(songId)
-            if (!HistoryData) HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
+            const cloudRecord = await credentials.getCloudSongHistory(songId)
+            HistoryData = cloudRecord?.data
+            historyTimezone = cloudRecord?.timezone ?? historyTimezone
+            if (!HistoryData) HistoryData = await readLocalSongHistory()
         } catch (err) {
             logger.warn(`[phi-plugin] API ERR`, err)
-            HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
+            HistoryData = await readLocalSongHistory()
         }
     } else {
-        HistoryData = (await credentials.getLocalHistory())?.scoreHistory[songId]
+        HistoryData = await readLocalSongHistory()
     }
+    historyTimezone = historyTimezone || fCompute.timezoneOffset()
 
     /** @type {(import('../model/save/scoreHistory.js').extendedScoreHistoryDetail | {date_new: string})[]} */
     let history = []
 
     if (HistoryData) {
         for (let i of allLevel) {
-            if (!HistoryData[i]) continue
-            HistoryData[i].forEach((item) => {
+            /**v4 历史：dateValue 实例或 dateValueJSON */
+            for (const item of ScoreHistory.toScoreDetails(HistoryData[i])) {
                 const tem = ScoreHistory.extend(songId, i, item)
-                history.push({ ...tem, date_new: fCompute.formatDate(tem.date_new) })
-            })
+                /**按记录方时区校准展示时间 */
+                history.push({ ...tem, date_new: fCompute.formatDate(tem.date_new, undefined, historyTimezone) })
+            }
         }
     }
 

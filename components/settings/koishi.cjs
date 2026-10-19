@@ -8,6 +8,7 @@ function createKoishiSchema() {
         __updatePlugin: Schema.any().role('phi-plugin-update', { target: 'plugin' }).description('更新插件'),
         __updateArtwork: Schema.any().role('phi-plugin-update', { target: 'artwork' }).description('更新曲绘库'),
     }), Schema.object({
+        koishiDiscordCommands: Schema.boolean().default(false).description('Discord 指令总开关：关闭时不下发任何 Discord 斜线指令，并清空已上传的菜单；聊天调用与权限检查不受影响。开启后按下方勾选下发。'),
         koishiShortcuts: Schema.union([Schema.const(null), Schema.array(Schema.union([
             ...shortcutCommands.map(item => Schema.const(`command:${item.id}`)),
             ...Object.keys(commandCategories).map(key => Schema.const(`category:${key}`)),
@@ -21,7 +22,7 @@ function createKoishiSchema() {
         koishiShortcutCommands: Schema.array(Schema.union(shortcutCommands.map(item =>
             Schema.const(item.id).description(`${item.name} · ${commandCategories[item.key][1]}`),
         ))).hidden().max(25).default(defaultShortcutCommands)
-            .description('快捷指令：勾选的功能直接放在指令头下，如 /p b30；取消勾选后仅在已选分类中显示。'),
+            .description('快捷指令：勾选的功能直接放在指令头下，如 /p b30；取消勾选后仅在已选分类中显示。仅在总开关开启时下发。'),
         koishiShortcutCategories: Schema.array(Schema.union(Object.entries(commandCategories).map(([key, [name, label]]) =>
             Schema.const(key).description(`${label} (${name})`),
         ))).hidden().default(defaultShortcutCategories)

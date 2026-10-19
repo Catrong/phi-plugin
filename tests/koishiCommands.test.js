@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import test from 'node:test'
 import { createKoishiAdapter, registerKoishiApps } from '../components/platform/koishi.js'
+import { commandSnapshot } from '../components/platform/koishiCommandSync.js'
 
 const load = createRequire(import.meta.url)
 const { App, Bot, h } = load('koishi')
@@ -40,7 +41,10 @@ async function fixture(head, options = {}) {
             guess(/** @type {any} */ e) { calls.push(`guess:${e.msg}`); return false },
             ...options.instance,
         }
-        instances = registerKoishiApps(ctx, { demo, ...options.apps }, adapter, { ...options, cmdhead: currentHead })
+        instances = registerKoishiApps(ctx, { demo, ...options.apps }, adapter, {
+            // 默认场景：总开关打开，demo.help 作为顶层快捷入口（可用 options 覆盖以测试关闭路径）。
+            koishiDiscordCommands: true, koishiShortcutCommands: ['demo.help', 'demo.score'], koishiShortcutCategories: [], ...options, cmdhead: currentHead,
+        })
     }
     const fork = app.plugin(plugin, { cmdhead: head })
     /** @param {string} content @param {boolean} [direct] */
@@ -229,10 +233,21 @@ test('empty-head collision preserves system help execution and Phi remains calla
 })
 
 test('hiding all shortcuts leaves original chat commands executable', async () => {
-    const env = await fixture('phi', { koishiShortcutCommands: [], koishiShortcutCategories: [] })
+    const env = await fixture('phi', { koishiDiscordCommands: true, koishiShortcutCommands: [], koishiShortcutCategories: [] })
     try {
         assert.equal(env.app.$commander.get('phi').config.slash, false)
         assert.ok(env.app.$commander.get('phi.demo.help'))
+        await env.receive('/phihelp')
+        assert.deepEqual(env.calls, ['help:/phihelp'])
+    } finally { await env.close() }
+})
+
+test('Discord master switch off (default) ignores selections and keeps chat commands executable', async () => {
+    const env = await fixture('phi', { koishiDiscordCommands: false, koishiShortcutCommands: ['demo.help'], koishiShortcutCategories: ['demo'] })
+    try {
+        assert.deepEqual(commandSnapshot(env.app), [], '总开关关闭时不下发任何斜线指令')
+        assert.equal(env.app.$commander.get('phi').config.slash, false)
+        assert.ok(env.app.$commander.get('phi.demo.help'), '隐藏菜单不删除 Koishi 聊天指令')
         await env.receive('/phihelp')
         assert.deepEqual(env.calls, ['help:/phihelp'])
     } finally { await env.close() }
