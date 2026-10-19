@@ -28,7 +28,7 @@ export default class LevelRecordInfo {
      * @param {{fc:boolean | number, score:number, acc: number}} data 原始数据
      * @param {idString} id 曲目id
      * @param {number} rank 难度
-     * @param {string} [ver] 版本号
+     * @param {number} [ver] verCode
      */
     constructor(data, id, rank, ver) {
         this.fc = Boolean(data.fc);

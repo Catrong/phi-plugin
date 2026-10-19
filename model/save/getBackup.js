@@ -274,7 +274,7 @@ export default class getBackup {
                 /**阻止遍历文件user_token.json */
                 if (!session.includes('.json')) {
                     /**history */
-                    getFile.FileReader(path.join(savePath, session, 'history.json')).then((/** @type {saveHistoryObject & { version?: number; }} */ old) => {
+                    getFile.FileReader(path.join(savePath, session, 'history.json')).then((/** @type {saveHistoryObjectV3 & { version?: number; }} */ old) => {
                         zip.folder('saveData')?.folder(session)?.file('history.json')?.async('string').then((history) => {
                             /**格式化为 JSON */
                             let now = new saveHistory(JSON.parse(history))

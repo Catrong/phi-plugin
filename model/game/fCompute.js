@@ -1,7 +1,7 @@
 import Config from '../../components/Config.js'
 import logger from '../../components/Logger.js'
 import LevelRecordInfo from './LevelRecordInfo.js'
-import { MAX_DIFFICULTY } from './constNum.js'
+import { Level, MAX_DIFFICULTY } from './constNum.js'
 import getInfo from './getInfo.js'
 import platform from '../../components/platform/index.js'
 
@@ -172,21 +172,25 @@ export default class fCompute {
      * 转换时间格式
      * @param {Date|string|number} [date] 时间
      * @param {string} [formater='YYYY/MM/DD hh:mm:ss'] 格式
+     * @param {string|number} [timezone] 目标时区：'+08:00' 文本或分钟偏移；缺省使用运行环境时区
      * @returns 2020/10/08 10:08:08
      */
-    static formatDate(date, formater = 'YYYY/MM/DD hh:mm:ss') {
+    static formatDate(date, formater = 'YYYY/MM/DD hh:mm:ss', timezone = undefined) {
         if (!date) {
             date = new Date()
         }
         date = new Date(date)
 
-        const month = (date.getMonth() + 1).toString().padStart(2, '0')
-        const day = date.getDate().toString().padStart(2, '0')
-        const hours = date.getHours().toString().padStart(2, '0')
-        const minutes = date.getMinutes().toString().padStart(2, '0')
-        const seconds = date.getSeconds().toString().padStart(2, '0')
+        /** 先按目标时区偏移换算，再取 UTC 分量；缺省时区即等价于原来的本机格式化 */
+        const shifted = new Date(date.getTime() + fCompute.timezoneOffsetMinutes(timezone, date) * 60000)
 
-        return formater.replace('YYYY', `${date.getFullYear()}`)
+        const month = (shifted.getUTCMonth() + 1).toString().padStart(2, '0')
+        const day = shifted.getUTCDate().toString().padStart(2, '0')
+        const hours = shifted.getUTCHours().toString().padStart(2, '0')
+        const minutes = shifted.getUTCMinutes().toString().padStart(2, '0')
+        const seconds = shifted.getUTCSeconds().toString().padStart(2, '0')
+
+        return formater.replace('YYYY', `${shifted.getUTCFullYear()}`)
             .replace('MM', month)
             .replace('DD', day)
             .replace('hh', hours)
@@ -209,6 +213,35 @@ export default class fCompute {
         if (!text) return ''
         const num = Number(text)
         return Number.isFinite(num) ? num.toFixed(1) : text
+    }
+
+    /**
+     * 取运行环境的 UTC 偏移文本
+     * @param {Date|string|number} [date=new Date()] 参考时刻，可反映夏令时
+     * @returns {string} 如 '+08:00' / '-05:00' / '+00:00'
+     */
+    static timezoneOffset(date = new Date()) {
+        /**getTimezoneOffset 返回 UTC 减本地的分钟数，符号与常规偏移相反 */
+        const offsetMinutes = -new Date(date).getTimezoneOffset()
+        const sign = offsetMinutes < 0 ? '-' : '+'
+        const abs = Math.abs(offsetMinutes)
+        const hh = String(Math.floor(abs / 60)).padStart(2, '0')
+        const mm = String(abs % 60).padStart(2, '0')
+        return `${sign}${hh}:${mm}`
+    }
+
+    /**
+     * 解析时区偏移为分钟数
+     * @param {string|number|null|undefined} timezone '+08:00' 文本或分钟数；缺省返回运行环境偏移
+     * @param {Date|string|number} [date=new Date()] 参考时刻，缺省时区的运行环境取值可反映夏令时
+     * @returns {number} 东八区为 480
+     */
+    static timezoneOffsetMinutes(timezone, date = new Date()) {
+        if (typeof timezone === 'number' && Number.isFinite(timezone)) return timezone
+        const matched = typeof timezone === 'string' ? /^([+-])(\d{2}):?(\d{2})$/.exec(timezone.trim()) : null
+        if (!matched) return -new Date(date).getTimezoneOffset()
+        const sign = matched[1] === '-' ? -1 : 1
+        return sign * (Number(matched[2]) * 60 + Number(matched[3]))
     }
 
     /**
@@ -635,30 +668,69 @@ export default class fCompute {
         return /**@type {(keyof T)[]} */(Object.keys(record));
     }
 
+
     /**
-     * 
-     * @param {{phi: LevelRecordInfo[], b27: LevelRecordInfo[]}} b30List 
-     * @param {LevelRecordInfo[]} newRecords 
+     * 根据游戏记录和难度信息计算B30
+     * @param {gameRecord} records 
+     * @param {import('./getInfo.js').versionInfoObject} [diffInfo] 成绩对应版本的定数信息，省略时使用当前定数
+     * @returns {{rks: number, phi: LevelRecordInfo[], best: LevelRecordInfo[]}}
      */
-    static updateB30(b30List, newRecords) {
-        let phi = [...b30List.phi];
-        let b27 = [...b30List.b27];
-        newRecords = newRecords.sort((a, b) => b.rks - a.rks);
-        const newPhis = newRecords.filter(record => record.acc >= 100);
+    static getB30(records, diffInfo) {
+        const allRecords = [];
+        for (const id of this.objectKeys(records)) {
+            const levelRecords = records[id];
+            if (!levelRecords) continue;
+            for (let i = 0; i < Level.length; i++) {
+                const record = levelRecords[i];
+                if (!record) continue;
+                allRecords.push(new LevelRecordInfo(record, id, i, diffInfo?.version_code));
+            }
+        }
 
-        const newPhiKeys = newPhis.map(item => `${item.id}-${item.difficulty}`);
-        const newRecordKeys = newRecords.map(item => `${item.id}-${item.difficulty}`);
+        const best = allRecords.sort((a, b) => b.rks - a.rks);
 
-        phi = phi.filter(item => !newPhiKeys.includes(`${item.id}-${item.difficulty}`));
-        b27 = b27.filter(item => !newRecordKeys.includes(`${item.id}-${item.difficulty}`));
+        const phi = best.filter(record => record.acc >= 100);
 
-        phi.push(...newPhis);
-        phi = phi.sort((a, b) => b.rks - a.rks);
-        phi = phi.slice(0, 3);
-        b27.push(...newRecords);
-        b27 = b27.sort((a, b) => b.rks - a.rks);
-        b27 = b27.slice(0, 27);
-        return { phi, b27 };
+        let rks = 0;
+
+        /**RKS = (最高27个单曲RKS + 最高3个phi单曲RKS) / 30 */
+        for (let i = 0; i < 27 && i < best.length; i++) {
+            rks += best[i].rks;
+        }
+
+        for (let i = 0; i < 3 && i < phi.length; i++) {
+            rks += phi[i].rks;
+        }
+
+        return { rks: rks / 30, phi, best };
+    }
+
+    /**
+     * 查找最后一个 <= target 的位置
+     * @template T
+     * @template U
+     * @param {T[]} arr 
+     * @param {U} target 
+     * @param {(a: T, b: U) => number} compareFn 
+     * @returns 
+     */
+    static binarySearch(arr, target, compareFn) {
+        let left = 0;
+        let right = arr.length;
+
+        // 查找第一个 > target 的位置
+        while (left < right) {
+            const mid = left + Math.floor((right - left) / 2);
+
+            if (compareFn(arr[mid], target) <= 0) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        // left - 1 即最后一个 <= target 的位置
+        return left > 0 ? left - 1 : undefined;
     }
 
     /**

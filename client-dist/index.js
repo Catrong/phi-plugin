@@ -25,7 +25,7 @@ export default function apply(ctx, data) {
                 }
                 return () => h(SchemaBase, {}, {
                     title: () => '快捷指令',
-                    desc: () => h('p', '勾选分组：添加分类菜单；勾选子命令：添加顶层快捷指令。父子独立选择，不自动联动。指令与非空分组合计最多 25 个入口，保存后同步。'),
+                    desc: () => h('p', '先打开上方 Discord 指令总开关，再勾选分组（添加分类菜单）或子命令（添加到顶层快捷指令）。父子独立选择，不自动联动。指令与非空分组合计最多 25 个入口，保存后同步。'),
                     default: () => h(resolveComponent('el-tree'), {
                         ref: tree, data: extra().tree, nodeKey: 'id', showCheckbox: true,
                         checkStrictly: true, expandOnClickNode: false,

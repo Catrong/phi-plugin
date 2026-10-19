@@ -444,7 +444,7 @@ export class UserCredentials {
 
     /**
      * 将当前用户的本地历史记录上传到 API。
-     * @param {import('../save/saveHistory.js').default | saveHistoryObject} history 待上传的历史记录
+     * @param {import('../save/saveHistory.js').default | saveHistoryObjectV3} history 待上传的历史记录
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
      * @returns {Promise<{message: string} | null>} 上传结果；失败返回 `null`
      */
@@ -556,7 +556,7 @@ export class UserCredentials {
 
     /**
      * 保存当前用户的本地历史记录。
-     * @param {import('../save/saveHistory.js').default | saveHistoryObject | object} data 历史记录数据
+     * @param {import('../save/saveHistory.js').default | saveHistoryObjectV3 | object} data 历史记录数据
      */
     async putLocalHistory(data) {
         const sessionToken = await this.getSessionToken()
@@ -642,9 +642,10 @@ export class UserCredentials {
         return result
     }
 
-    /**hu
-     * 从 API 获取当前用户指定字段的历史记录。
-     * @template {keyof saveHistoryObject} K
+    /**
+     * 从 API 获取当前用户指定字段的历史记录（v4 端点 `/get/history/historyV4`）。
+     * 响应固定含 `version` 与 `timezone`，由 saveHistory 直接消费。
+     * @template {keyof saveHistoryObjectV3} K
      * @param {K[]} [fields] 需要返回的历史字段
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
      * @returns {Promise<saveHistory | null>} 云端历史记录；失败返回 `null`
@@ -659,33 +660,17 @@ export class UserCredentials {
     }
 
     /**
-     * 从 API 获取当前用户的成绩历史，支持全部成绩、单曲或单难度三种粒度。
-     * @overload
-     * @param {idString} songId
-     * @param {levelKind} difficulty
-     * @returns {Promise<ScoreDetail[]>}
-     */
-    /**
-     * @overload
-     * @param {idString} songId
-     * @param {undefined} [difficulty]
-     * @returns {Promise<songRecordHistory>}
-     */
-    /**
-     * @overload
-     * @param {undefined} [songId]
-     * @param {undefined} [difficulty]
-     * @returns {Promise<scoreHistoryObject>}
-     */
-    /**
-     * 从 API 获取当前用户的成绩历史。
+     * 从 API 获取当前用户的成绩历史（v4 端点 `/get/history/recordV4`），支持全部成绩、单曲或单难度三种粒度。
+     * 返回 v4 紧凑结构（dateValue）与记录方 `timezone`；
+     * 调用方可用 `ScoreHistory.toScoreDetails()` 展开为 `[acc, score, date, fc]`，
+     * 并按 `timezone` 校准时间展示。
      * @param {idString} [songId] 曲目 ID
      * @param {levelKind} [difficulty] 难度
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
-     * @returns {Promise<ScoreDetail[] | songRecordHistory | scoreHistoryObject | null>} 成绩历史；失败返回 `null`
+     * @returns {Promise<{ data: any, timezone: string } | null>} 成绩历史与记录方时区；失败返回 `null`
      */
     async getCloudSongHistory(songId, difficulty = undefined, options = {}) {
-        return makeRequest.getHistoryRecord(
+        const response = await makeRequest.getHistoryRecord(
             {
                 ...(await this.platformParams(true)),
                 ...(songId ? { song_id: songId } : {}),
@@ -693,6 +678,8 @@ export class UserCredentials {
             },
             this.endpointOptions(options),
         )
+        if (!response) return null
+        return { data: response.data ?? null, timezone: response.timezone }
     }
 
     // 云端存档同步与本地增量计算。
@@ -795,8 +782,8 @@ export class UserCredentials {
     }
 
     /**
-     * 获取当前用户历史记录：有 SSTK 时先同步本地历史，否则直接读取 API。
-     * @template {keyof saveHistoryObject} K
+     * 获取当前用户历史记录：API 功能开启且有 SSTK 时先同步本地历史，否则直接读取本地历史。
+     * @template {keyof saveHistoryObjectV3} K
      * @param {K[]} [fields] 需要返回的历史字段
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
      * @returns {Promise<import('../save/saveHistory.js').default | null>} 历史记录；无法获取时返回 `null`
@@ -804,11 +791,17 @@ export class UserCredentials {
     async getHistoryFromApi(fields = [], options = {}) {
         const event = this.requireEvent()
         const sessionToken = await this.getSessionToken()
-        if (!sessionToken) {
-            if (!await canUseApi(event)) {
+
+        /**API 功能关闭时不做同步，直接使用本地历史记录 */
+        if (!await canUseApi(event)) {
+            if (!sessionToken) {
                 notifyUser(event, '请先绑定sessionToken哦！')
                 return null
             }
+            return this.getLocalHistory()
+        }
+
+        if (!sessionToken) {
             const remoteHistory = await this.getCloudHistory(fields, options)
             if (!remoteHistory && !options.ignoreUnboundError) {
                 notifyUser(event, '从API获取历史记录失败，请稍后重试或绑定sessionToken后重试哦')

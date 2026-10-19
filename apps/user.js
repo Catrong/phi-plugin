@@ -11,7 +11,6 @@ import { Level, MAX_DIFFICULTY } from '../model/game/constNum.js'
 import getNotes from '../model/user/getNotes.js'
 import { UserCredentials } from '../model/user/userCredentials.js'
 import analyzeSaveHistory from '../model/save/analyzeSaveHistory.js'
-import ScoreHistory from '../model/save/scoreHistory.js'
 import { canUseApi } from '../model/user/apiPermission.js'
 import {
     sendQuickCommands,
@@ -258,6 +257,9 @@ export class phiuser extends phiPluginBase {
         // console.info(acc_rks_data_)
         // console.info(acc_rks_range)
 
+        /**历史记录的展示时区：来源时区缺失时用运行环境时区 */
+        const historyTimezone = user_data?.getTimezone?.() ?? fCompute.timezoneOffset()
+
         let data = {
             gameuser: gameuser,
             userstats: stats,
@@ -265,8 +267,8 @@ export class phiuser extends phiPluginBase {
             data_history: data_history,
             rks_range: rks_range,
             data_range: data_range,
-            data_date: [fCompute.formatDate(data_date[0]), fCompute.formatDate(data_date[1])],
-            rks_date: [fCompute.formatDate(rks_date[0]), fCompute.formatDate(rks_date[1])],
+            data_date: [fCompute.formatDate(data_date[0], undefined, historyTimezone), fCompute.formatDate(data_date[1], undefined, historyTimezone)],
+            rks_date: [fCompute.formatDate(rks_date[0], undefined, historyTimezone), fCompute.formatDate(rks_date[1], undefined, historyTimezone)],
             acc_rks_data: acc_rks_data_,
             acc_rks_range: acc_rks_range,
             acc_rks_AccRange: acc_rks_AccRange_position,
@@ -682,7 +684,7 @@ export class phiuser extends phiPluginBase {
 
         send.send_with_At(e, await picmodle.analyzeSaveHistory(e, {
             stats,
-            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
+            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)], 'blur'),
         }));
         await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
     }
@@ -713,41 +715,56 @@ export class phiuser extends phiPluginBase {
 
         const { scoreHistory } = history;
 
-        const records = [];
+        /**
+         * @typedef hisRecord
+         * @property {number} score
+         * @property {number} acc
+         * @property {boolean} fc
+         * @property {idString} id
+         * @property {levelKind} level
+         * @property {number} levelIdx
+         * @property {Date} date
+         */
 
+        /**@type {Record<string, hisRecord[]>} */
+        const timeKeyRecords = {}
+
+        /**按更新时刻聚合历史成绩（v4 结构：[日期, [acc, score, fc]]） */
         for (const ids of fCompute.objectKeys(scoreHistory)) {
             const songRecords = scoreHistory[ids];
             for (const level of Level) {
                 const levelRecords = songRecords[level];
-                if (!levelRecords) continue;
-                for (const record of levelRecords) {
-                    const openedRecord = ScoreHistory.open(record);
-                    records.push({
+                if (!levelRecords?.length) continue;
+                for (const [date, detail] of levelRecords.data) {
+                    const key = `${date.getTime()}`
+                    if (!timeKeyRecords[key]) {
+                        timeKeyRecords[key] = [];
+                    }
+                    timeKeyRecords[key].push({
                         id: ids,
                         level: level,
-                        ...openedRecord
+                        levelIdx: Level.indexOf(level),
+                        date: date,
+                        acc: Number(detail[0]),
+                        score: Number(detail[1]),
+                        fc: Boolean(detail[2])
                     });
                 }
             }
-        }
-
-        /**@type {Record<string, LevelRecordInfo[]>} */
-        const timeKeyRecords = {}
-
-        for (const record of records) {
-            if (!timeKeyRecords[`${record.date.getTime()}`]) {
-                timeKeyRecords[`${record.date.getTime()}`] = [];
-            }
-            timeKeyRecords[`${record.date.getTime()}`].push(new LevelRecordInfo(record, record.id, Level.indexOf(record.level)));
         }
 
         const times = fCompute.objectKeys(timeKeyRecords)
 
         times.sort((a, b) => Number(a) - Number(b));
 
-        /**@type {Record<'phi' | 'b27', LevelRecordInfo[]>} */
+        /**截至当前时刻各谱面的最新成绩，用于按历史定数重算B30 */
+        /**@type {gameRecord} */
+        const gameRecord = {}
+
         let b30List = {
+            /**@type {LevelRecordInfo[]} */
             phi: [],
+            /**@type {LevelRecordInfo[]} */
             b27: [],
         }
 
@@ -762,8 +779,25 @@ export class phiuser extends phiPluginBase {
             /**所有新成绩 */
             const records = timeKeyRecords[time];
 
+            /**更新该时刻各谱面的最新成绩 */
+            for (const record of records) {
+                if (!gameRecord[record.id]) gameRecord[record.id] = [];
+                gameRecord[record.id][record.levelIdx] = {
+                    acc: record.acc,
+                    score: record.score,
+                    fc: record.fc
+                };
+            }
+
+            /**使用该时刻对应的历史版本定数重算B30 */
+            const versionInfo = getInfo.getVersionDifficultyByDate(new Date(Number(time)));
+            const newB30 = fCompute.getB30(gameRecord, versionInfo);
+
             /**加入后新B30 */
-            const newB30List = fCompute.updateB30(b30List, records);
+            const newB30List = {
+                phi: newB30.phi.slice(0, 3),
+                b27: newB30.best.slice(0, 27),
+            };
 
             /**旧的keys */
             const oldPhiCharts = b30List.phi.map(item => `${item.id}-${item.rank}`);
@@ -799,8 +833,10 @@ export class phiuser extends phiPluginBase {
 
             /**先标记phi，优先合并到phi上 */
             newPhi.forEach(item => {
-                newPhiVis[`${item.id}-${item.rank}`] = item;
+                const key = `${item.id}-${item.rank}`;
+                newPhiVis[key] = item;
             });
+
 
             /**b27中有的合并到phi上 */
             newB27.forEach(item => {
@@ -811,6 +847,7 @@ export class phiuser extends phiPluginBase {
                 }
                 newB27Result.push(item);
             });
+
 
             /**合并后的新的phi成绩 */
             for (const key of fCompute.objectKeys(newPhiVis)) {
@@ -849,7 +886,7 @@ export class phiuser extends phiPluginBase {
 
             exitB27.forEach(item => {
                 const key = `${item.id}-${item.rank}`;
-                if (newB27Charts.includes(key)) {
+                if (newB27Charts.includes(key) && exitPhiVis[key]) {
                     exitPhiVis[key].exitB27 = item.exitB27;
                     return;
                 }
@@ -892,9 +929,12 @@ export class phiuser extends phiPluginBase {
          */
         const rows = [];
 
+        /**历史记录的展示时区：来源时区缺失时用运行环境时区 */
+        const historyTimezone = history?.getTimezone?.() ?? fCompute.timezoneOffset()
+
         times.reverse().forEach(time => {
             if (changeB30Result[time]) {
-                const date = fCompute.formatDate(Number(time));
+                const date = fCompute.formatDate(Number(time), undefined, historyTimezone);
 
                 /** @type {hisb30Songs[]} */
                 const songs = [];

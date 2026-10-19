@@ -1,8 +1,9 @@
 /**
  * 将 Yunzai 风格正则交给 Koishi 的命令执行管线。
  * 常用功能直接注册在命令头下，其余按业务分类分组。
+ * 指令只注册到 Koishi：斜线指令快照由 Commander 生成，上传交由平台适配器统一管理。
  */
-import { commandSnapshot, scheduleCommandSync, validateDiscordCommands, validateDiscordName } from './koishiCommandSync.js'
+import { commandSnapshot, requestCommandSync, validateDiscordCommands, validateDiscordName } from './koishiCommandSync.js'
 import { commandSpec, commonCommands, commandCategories } from './koishiCommandNames.js'
 
 /** @param {RegExp} regexp @param {string} message */
@@ -74,7 +75,7 @@ export function registerCommands(ctx, apps, adapter, block, head, shortcuts = {}
         if (root) for (const route of routes) route.name = `${root}.${route.name}`
     }
 
-    // 先校验整棵计划树，避免注册到一半才发现超限。
+    // Discord 限制只作提示：超限仍完成注册，把真正的上传约束留给适配器与平台。
     /** @type {any[]} */
     const planned = []
     for (const { name } of routes.filter(route => route.slash)) {
@@ -87,9 +88,13 @@ export function registerCommands(ctx, apps, adapter, block, head, shortcuts = {}
             children = node.children
         }
     }
-    validateDiscordCommands(planned)
-    const total = planned.length ? commandSnapshot(ctx).length + planned.length : 0
-    if (total > 100) throw new Error(`Discord 全局斜线指令超过 100 个：${total}`)
+    try {
+        validateDiscordCommands(planned)
+        const total = planned.length ? commandSnapshot(ctx).length + planned.length : 0
+        if (total > 100) throw new Error(`Discord 全局斜线指令超过 100 个：${total}`)
+    } catch (error) {
+        ctx.logger('phi-plugin').warn('斜线指令超出 Discord 建议限制，仍会注册并由适配器处理：%s', /** @type {any} */ (error).message)
+    }
 
     /** @param {any} session */
     function hasContext(session) {
@@ -177,7 +182,7 @@ export function registerCommands(ctx, apps, adapter, block, head, shortcuts = {}
             if (routes.some(route => route.key === key && route.name.startsWith(`${name}.`))) ctx.command(name, description)
         }
         // Koishi 4 仅过滤根节点的 slash，子节点需要随自有根一起过滤。
-        // 启动、重连与主动同步共用 toJSON，避免隐藏功能被重新上传。
+        // Koishi 就绪、机器人重连与本次报备共用同一份 toJSON，避免隐藏功能被重新上传。
         for (const name of reserved) {
             const rootCommand = ctx.$commander.get(name)
             rootCommand.config.slash = routes.some(route => route.slash && (route.name === name || route.name.startsWith(`${name}.`)))
@@ -194,7 +199,7 @@ export function registerCommands(ctx, apps, adapter, block, head, shortcuts = {}
                 return filter(data) ?? { ...data, children: [] }
             }
         }
-        scheduleCommandSync(ctx)
+        requestCommandSync(ctx)
         ctx.before('parse', (/** @type {string} */ content, /** @type {any} */ session) => {
             if (!ctx.filter(session)) return
             // 会话确认优先，由下方 middleware 处理，不把确认消息误当成新命令。
