@@ -2,7 +2,7 @@
 {{set pvis = ({
     default: false,
     '.Player_Id-right': [553.6, 83, 60, 20, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
-    '.Player_profile_box [color="white"]': [658.75, 290.4, 60, 16, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.Player_profile_box p': [658.75, 290.4, 60, 16, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
     '.Player_box_value p': [620, 90, 60, 18, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
 })}}
 {{block 'css'}}
@@ -84,7 +84,7 @@
         </div>
         <div class="Player_profile_box">
             {{if gameuser.selfIntro}}
-            <p color='white' name="pvis">{{#gameuser.selfIntro}}</p>
+            <p color='white' name="pvis">{{#gameuser.selfIntro.replace(/\r\n?|\n/g, '<br>')}}</p>
             {{else}}
             <p color='skyblue' name="pvis">{{'介个人的简介被胡桃吃掉惹……'}}</p>
             {{/if}}
