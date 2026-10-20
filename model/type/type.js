@@ -59,6 +59,7 @@
  * | 'guessgame'
  * | 'ltrgame'
  * | 'fribgame'
+ * | 'grksgame'
  * | 'sign'
  * | 'send'
  * | 'tasks'
@@ -152,6 +153,22 @@
  * @typedef {'FribNearDifficulty'} FribNearDifficulty 定数相近范围
  * @typedef {'FribNearBpm'} FribNearBpm BPM相近范围
  * @typedef {'FribNearCombo'} FribNearCombo 物量相近范围
+ * 猜RKS设置
+ * @typedef {'GrksTolerance'} GrksTolerance 猜中容差
+ * @typedef {'GrksMinRecord'} GrksMinRecord 最少成绩条数
+ * @typedef {'GrksMaxScore'} GrksMaxScore 单局满分
+ * @typedef {'GrksPositionHintAt'} GrksPositionHintAt 公开位置的第几条提示
+ * @typedef {'GrksHintRevealNum'} GrksHintRevealNum 每次公开成绩条数
+ * @typedef {'GrksTipCd'} GrksTipCd 提示冷却
+ * @typedef {'GrksTimeLength'} GrksTimeLength 待机时长
+ * @typedef {'GrksWrongLimit'} GrksWrongLimit 猜错次数上限
+ * @typedef {'GrksStatsHint'} GrksStatsHint 统计提示默认形式
+ * @typedef {'GrksPoolRefreshHours'} GrksPoolRefreshHours 出题池刷新周期
+ * @typedef {'GrksMatchWaitTimeout'} GrksMatchWaitTimeout 匹配等待超时
+ * @typedef {'GrksMatchRksRange'} GrksMatchRksRange 匹配 rks 差值
+ * @typedef {'GrksMatchTurnTime'} GrksMatchTurnTime 匹配回合时限
+ * @typedef {'GrksMatchMaxTimeoutTurn'} GrksMatchMaxTimeoutTurn 超时判负回合数
+ * @typedef {'GrksRankMinMatch'} GrksRankMinMatch 胜率榜最少对局
  * 其他设置
  * @typedef {'VikaToken'} VikaToken VikaToken
  * @typedef {'apiBotClientId'} apiBotClientId API签发的Bot clientId
@@ -227,6 +244,21 @@
  * |FribNearDifficulty
  * |FribNearBpm
  * |FribNearCombo
+ * |GrksTolerance
+ * |GrksMinRecord
+ * |GrksMaxScore
+ * |GrksPositionHintAt
+ * |GrksHintRevealNum
+ * |GrksTipCd
+ * |GrksTimeLength
+ * |GrksWrongLimit
+ * |GrksStatsHint
+ * |GrksPoolRefreshHours
+ * |GrksMatchWaitTimeout
+ * |GrksMatchRksRange
+ * |GrksMatchTurnTime
+ * |GrksMatchMaxTimeoutTurn
+ * |GrksRankMinMatch
  * |VikaToken
  * |apiBotClientId
  * |apiBotClientSecret

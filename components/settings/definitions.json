@@ -714,6 +714,195 @@
     "required": true
   },
   {
+    "key": "GrksTolerance",
+    "group": "猜RKS设置",
+    "label": "猜中容差",
+    "description": "猜测值与 B30 计算 rks 相差不超过该值即算猜对",
+    "type": "number",
+    "min": 0.01,
+    "max": 2,
+    "step": 0.01,
+    "placeholder": "请输入容差",
+    "required": true
+  },
+  {
+    "key": "GrksMinRecord",
+    "group": "猜RKS设置",
+    "label": "最少成绩条数",
+    "description": "匹配模式要求 B30 数据完整，至少有这么多条有效成绩",
+    "type": "number",
+    "min": 1,
+    "max": 30,
+    "step": 1,
+    "placeholder": "请输入条数",
+    "required": true
+  },
+  {
+    "key": "GrksMaxScore",
+    "group": "猜RKS设置",
+    "label": "单局满分",
+    "description": "实际得分 = 满分 / 提示条数",
+    "type": "number",
+    "min": 1,
+    "max": 100,
+    "placeholder": "请输入分数",
+    "required": true
+  },
+  {
+    "key": "GrksPositionHintAt",
+    "group": "猜RKS设置",
+    "label": "公开位置的第几条提示",
+    "description": "单机模式从第几条提示开始同步公开成绩位置（P几/B几）",
+    "type": "number",
+    "min": 1,
+    "max": 30,
+    "step": 1,
+    "placeholder": "请输入提示序号",
+    "required": true
+  },
+  {
+    "key": "GrksHintRevealNum",
+    "group": "猜RKS设置",
+    "label": "每次公开成绩条数",
+    "description": "单机每次成绩提示新公开的成绩数量",
+    "type": "number",
+    "min": 1,
+    "max": 10,
+    "step": 1,
+    "placeholder": "请输入条数",
+    "required": true
+  },
+  {
+    "key": "GrksTipCd",
+    "group": "猜RKS设置",
+    "label": "提示冷却",
+    "description": "单机提示的冷却时间，单位：秒",
+    "type": "number",
+    "min": 0,
+    "max": 3600,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "GrksTimeLength",
+    "group": "猜RKS设置",
+    "label": "待机时长",
+    "description": "单机连续多少秒没有猜测后自动公布答案，单位：秒",
+    "type": "number",
+    "min": 30,
+    "max": 86400,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "GrksWrongLimit",
+    "group": "猜RKS设置",
+    "label": "猜错次数上限",
+    "description": "单机允许猜错的次数，0 为不限制",
+    "type": "number",
+    "min": 0,
+    "max": 99,
+    "step": 1,
+    "placeholder": "请输入次数",
+    "required": true
+  },
+  {
+    "key": "GrksStatsHint",
+    "group": "猜RKS设置",
+    "label": "统计提示默认形式",
+    "description": "未指定参数时的统计提示形式：auto 随机、histogram 条形图、range 上下界（玩家可用 hint 3 histogram/range 临时指定）",
+    "type": "select",
+    "options": [
+      {
+        "label": "随机",
+        "value": "auto"
+      },
+      {
+        "label": "条形图",
+        "value": "histogram"
+      },
+      {
+        "label": "上下界",
+        "value": "range"
+      }
+    ],
+    "required": true
+  },
+  {
+    "key": "GrksPoolRefreshHours",
+    "group": "猜RKS设置",
+    "label": "出题池刷新周期",
+    "description": "本地存档出题池缓存的有效期，单位：小时；0 为每次重新扫描",
+    "type": "number",
+    "min": 0,
+    "max": 168,
+    "placeholder": "请输入小时",
+    "unit": "h",
+    "required": true
+  },
+  {
+    "key": "GrksMatchWaitTimeout",
+    "group": "猜RKS设置",
+    "label": "匹配等待超时",
+    "description": "等待超过该时长后放宽 rks 相近限制，单位：秒",
+    "type": "number",
+    "min": 10,
+    "max": 86400,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "GrksMatchRksRange",
+    "group": "猜RKS设置",
+    "label": "匹配 rks 差值",
+    "description": "优先匹配 rks 差值在该范围内的对手",
+    "type": "number",
+    "min": 0,
+    "max": 10,
+    "step": 0.01,
+    "placeholder": "请输入差值",
+    "required": true
+  },
+  {
+    "key": "GrksMatchTurnTime",
+    "group": "猜RKS设置",
+    "label": "匹配回合时限",
+    "description": "每回合双方行动的时间上限，单位：秒",
+    "type": "number",
+    "min": 10,
+    "max": 3600,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
+    "key": "GrksMatchMaxTimeoutTurn",
+    "group": "猜RKS设置",
+    "label": "超时判负回合数",
+    "description": "匹配中连续多少回合未行动判负",
+    "type": "number",
+    "min": 1,
+    "max": 20,
+    "step": 1,
+    "placeholder": "请输入回合数",
+    "required": true
+  },
+  {
+    "key": "GrksRankMinMatch",
+    "group": "猜RKS设置",
+    "label": "胜率榜最少对局",
+    "description": "进入匹配胜率榜所需的最少对局数",
+    "type": "number",
+    "min": 1,
+    "max": 100,
+    "step": 1,
+    "placeholder": "请输入对局数",
+    "required": true
+  },
+  {
     "key": "allowChartTag",
     "group": "系统设置",
     "label": "谱面标签",

@@ -463,6 +463,17 @@ export class PicModel {
     }
 
     /**
+     * 猜 RKS 提示图。
+     * 模板为 `resources/html/grks/grks.art`（复用 b19 的 B30 面板样式），显式丢弃 theme，保证不受用户主题设置影响。
+     * @param {any} e
+     * @param {any} data
+     * @returns
+     */
+    async grks(e, data) {
+        return await this.common(e, 'grks', { ...data, theme: undefined }, 'grks')
+    }
+
+    /**
      * 
      * @param {any} e 
      * @param {any} data 
@@ -515,7 +526,7 @@ export class PicModel {
     /** 
      * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|
      * 'ill'|'chartInfo'|'guess'|'frib19'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'market'|
-     * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'
+     * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'|'grks'
      * } picKind
      */
 

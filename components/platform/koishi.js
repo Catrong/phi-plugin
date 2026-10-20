@@ -5,6 +5,7 @@ import chokidar from 'chokidar'
 import MemoryRedis from './memoryRedis.js'
 import { createKoishiDatabaseRedis } from './koishiDatabaseRedis.js'
 import { setPlatformAdapter } from './state.js'
+import { dispatchToChat } from './sendTarget.js'
 import { registerCommands } from './koishiCommands.js'
 import { registerKoishiTasks } from './koishiTasks.js'
 import sharedSettings from '../settings/shared.cjs'
@@ -743,6 +744,35 @@ export function createKoishiAdapter(ctx, options = {}) {
             const bot = botId && ctx?.bots?.[botId] ? ctx.bots[botId] : ctx?.bots?.[0]
             if (bot?.sendPrivateMessage) return bot.sendPrivateMessage(userId, this.toPlatformMessage(msg))
             return false
+        },
+
+        /**
+         * 向任意已知会话主动发送消息。
+         * 群聊走 `bot.sendMessage(channelId)`，私聊走 `bot.sendPrivateMessage(userId)`。
+         * @param {import('./types.js').PlatformChatTarget} target
+         * @param {PlatformMessageInput} msg
+         * @returns {Promise<boolean>}
+         */
+        async sendToChat(target, msg) {
+            const content = this.toPlatformMessage(msg)
+            const bots = /** @type {any} */ (ctx)?.bots || []
+            /** @param {string} [botId] */
+            const pickBot = botId => {
+                if (botId) {
+                    const indexed = bots[botId]
+                    if (indexed) return indexed
+                    const matched = [...bots].find(item => String(item?.selfId) === String(botId))
+                    if (matched) return matched
+                }
+                return bots[0] || null
+            }
+            return dispatchToChat({
+                pickBot,
+                sendMessage: (bot, channelId, payload) => bot.sendMessage(channelId, payload),
+                sendPrivateMessage: (bot, userId, payload) => bot.sendPrivateMessage
+                    ? bot.sendPrivateMessage(userId, payload)
+                    : bot.sendMessage(userId, payload),
+            }, target, content)
         },
 
         /**

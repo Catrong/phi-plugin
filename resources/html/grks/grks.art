@@ -1,0 +1,299 @@
+{{extend defaultLayout}}
+{{set pvis = ({
+    default: false,
+    '.playerId': [306, 64, 32, 18, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }],
+    '.songname': [168, 23, 15, 11, null, { method: 'pvis', nowrap: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]
+})}}
+
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/b19/b19.css">
+<link rel="stylesheet" href="{{_res_path}}html/grks/grks.css">
+{{/block}}
+
+{{block 'main'}}
+
+<div class="title">
+    <div class="playerInfo">
+        <div class="blackBlock clip-box"></div>
+        <div class="avatar clip-box">
+            <img src="{{_res_path}}html/avatar/{{header.avatar}}.png" alt="{{header.avatar}}">
+        </div>
+        <div class="playerId">
+            <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{header.PlayerId}}"{{/if}}>{{header.PlayerId}}</p>
+        </div>
+        <div class="rks clip-box">
+            <p>{{header.rks}}</p>
+        </div>
+        {{if header.showChallenge}}
+        <div class="clgBox{{header.challengeMasked ? ' grks-clg-masked' : ''}}">
+            <div class="Challenge">
+                <img src="{{_res_path}}html/otherimg/{{header.ChallengeMode}}.png" alt="Challenge">
+                <p>{{header.ChallengeModeRank}}</p>
+            </div>
+            {{if header.challengeMasked}}
+            <p class="grks-clg-command">{{header.challengeCommand}}</p>
+            {{/if}}
+        </div>
+        {{/if}}
+        <div class="date">
+            <p>{{header.date}}</p>
+        </div>
+    </div>
+    <div class="recordInfo clip-box{{recordInfo.masked ? ' grks-record-masked' : ''}}">
+        <div class="whiteLine clip-box"></div>
+        <div class="sheet">
+            <div class="row">
+                <div class="poz"><p>\</p></div>
+                {{each recordInfo.stats v i}}
+                <div class="poz"><p>{{v.title}}</p></div>
+                {{/each}}
+            </div>
+            <div class="row">
+                <div class="poz"><p>C</p></div>
+                {{each recordInfo.stats v i}}
+                <div class="poz"><p>{{recordInfo.blank ? '' : v.cleared}}</p></div>
+                {{/each}}
+            </div>
+            <div class="row">
+                <div class="poz"><p>FC</p></div>
+                {{each recordInfo.stats v i}}
+                <div class="poz"><p>{{recordInfo.blank ? '' : v.fc}}</p></div>
+                {{/each}}
+            </div>
+            <div class="row">
+                <div class="poz"><p>Phi</p></div>
+                {{each recordInfo.stats v i}}
+                <div class="poz"><p>{{recordInfo.blank ? '' : v.phi}}</p></div>
+                {{/each}}
+            </div>
+        </div>
+        {{if recordInfo.masked}}
+        <div class="grks-overlay grks-overlay-record">
+            <p class="grks-placeholder is-noinfo">{{recordInfo.command}}</p>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+<div class="b19">
+    {{if positionRevealed}}
+
+    {{each phiSongs song}}
+    <div class="song phi_song{{song.revealed ? '' : ' grks-hidden-song'}}">
+        {{if song.record}}
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">{{song.slot}}</p></div>
+            <div class="ill clip-box"><img src="{{song.record.illustration}}" alt="ill"></div>
+            <div class="rank-{{song.record.rank}} clip-box">
+                <div class="org"><p>{{song.record.rank}}&ensp;{{song.record.difficulty.toFixed(1)}}</p></div>
+                <div class="rel"><p>???</p></div>
+            </div>
+        </div>
+        <div class="info-{{song.record.rank}}">
+            <div class="songname">
+                <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.record.song}}"{{/if}}>{{song.record.song}}</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="{{_res_path}}html/otherimg/{{song.rating}}.png" alt="{{song.rating}}">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>{{song.record.score}}</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>{{song.record.acc.toFixed(2)}}%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        {{if !song.revealed}}
+        <div class="grks-overlay{{song.record ? '' : ' is-solid'}}">
+            <p class="grks-placeholder{{song.command ? '' : ' is-noinfo'}}">{{song.placeholder}}</p>
+        </div>
+        {{/if}}
+    </div>
+    {{/each}}
+
+    {{each bestSongs song}}
+    <div class="song b_song{{song.revealed ? '' : ' grks-hidden-song'}}">
+        {{if song.record}}
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">{{song.slot}}</p></div>
+            <div class="ill clip-box"><img src="{{song.record.illustration}}" alt="ill"></div>
+            <div class="rank-{{song.record.rank}} clip-box">
+                <div class="org"><p>{{song.record.rank}}&ensp;{{song.record.difficulty.toFixed(1)}}</p></div>
+                <div class="rel"><p>???</p></div>
+            </div>
+        </div>
+        <div class="info-{{song.record.rank}}">
+            <div class="songname">
+                <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.record.song}}"{{/if}}>{{song.record.song}}</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="{{_res_path}}html/otherimg/{{song.rating}}.png" alt="{{song.rating}}">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>{{song.record.score}}</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>{{song.record.acc.toFixed(2)}}%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        {{if !song.revealed}}
+        <div class="grks-overlay{{song.record ? '' : ' is-solid'}}">
+            <p class="grks-placeholder{{song.command ? '' : ' is-noinfo'}}">{{song.placeholder}}</p>
+        </div>
+        {{/if}}
+    </div>
+    {{/each}}
+
+    {{else}}
+
+    {{each ordered song}}
+    <div class="song b_song">
+        <div class="ill-box">
+            <div class="ill clip-box"><img src="{{song.record.illustration}}" alt="ill"></div>
+            <div class="rank-{{song.record.rank}} clip-box">
+                <div class="org"><p>{{song.record.rank}}&ensp;{{song.record.difficulty.toFixed(1)}}</p></div>
+                <div class="rel"><p>???</p></div>
+            </div>
+        </div>
+        <div class="info-{{song.record.rank}}">
+            <div class="songname">
+                <p name="pvis"{{if renderNoJs}} class="phi-fit-line" title="{{song.record.song}}"{{/if}}>{{song.record.song}}</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="{{_res_path}}html/otherimg/{{song.rating}}.png" alt="{{song.rating}}">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>{{song.record.score}}</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>{{song.record.acc.toFixed(2)}}%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+
+    {{/if}}
+</div>
+
+{{if !rangeHint}}
+<div class="over_flow grks-over-flow">
+    <div class="flow_line_box_l">
+        <div class="flow_line"></div><div class="flow_line"></div><div class="flow_line"></div>
+        <div class="flow_line"></div><div class="flow_line"></div><div class="flow_line"></div>
+    </div>
+    <p><i>B30 数据分析</i></p>
+    <div class="flow_line_box_r">
+        <div class="flow_line"></div><div class="flow_line"></div><div class="flow_line"></div>
+        <div class="flow_line"></div><div class="flow_line"></div><div class="flow_line"></div>
+    </div>
+</div>
+
+<div class="b30-analysis-row">
+    <section class="analysis-panel histogram-panel clip-box{{analysisPanel.masked ? ' grks-analysis-masked' : ''}}">
+        <div class="analysis-panel-head">
+            <div>
+                <p class="analysis-kicker">RKS DISTRIBUTION</p>
+                <p class="analysis-title">等效 RKS 直方图</p>
+            </div>
+            <div class="histogram-summary">
+                <p>平均 RKS</p>
+                <p>{{analysisPanel.blank ? '——' : analysis.average.toFixed(4)}}</p>
+            </div>
+        </div>
+        <div class="histogram-chart">
+            <div class="histogram-y-label">等效单曲 RKS</div>
+            <div class="histogram-plot">
+                <div class="histogram-bars">
+                    {{each analysis.slots slot}}
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar {{slot.kind == 'phi' ? 'phi-bar' : 'best-bar'}}" style="height: {{analysisPanel.blank ? 0 : slot.height}}%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">{{analysisPanel.blank ? '' : slot.label}}</p>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        <div class="histogram-legend">
+            <p><span class="legend-dot phi-dot"></span>P1-P3</p>
+            <p><span class="legend-dot best-dot"></span>B1-B27</p>
+            <p>{{analysisPanel.blank ? '' : analysis.count}} 个有效槽位</p>
+        </div>
+        {{if analysisPanel.masked}}
+        <div class="grks-overlay grks-overlay-analysis">
+            <p class="grks-placeholder is-noinfo">{{analysisPanel.command}}</p>
+        </div>
+        {{/if}}
+    </section>
+</div>
+{{/if}}
+
+{{if rangeHint}}
+<div class="over_flow grks-over-flow">
+    <div class="flow_line_box_l">
+        <div class="flow_line"></div><div class="flow_line"></div><div class="flow_line"></div>
+        <div class="flow_line"></div><div class="flow_line"></div><div class="flow_line"></div>
+    </div>
+    <p><i>B30 等效 RKS 区间</i></p>
+    <div class="flow_line_box_r">
+        <div class="flow_line"></div><div class="flow_line"></div><div class="flow_line"></div>
+        <div class="flow_line"></div><div class="flow_line"></div><div class="flow_line"></div>
+    </div>
+</div>
+
+<div class="b30-analysis-row">
+    <section class="analysis-panel grks-ruler-panel clip-box">
+        <div class="analysis-panel-head">
+            <div>
+                <p class="analysis-kicker">RKS RANGE</p>
+                <p class="analysis-title">单曲等效 RKS 上下界</p>
+            </div>
+            <div class="histogram-summary">
+                <p>平均 RKS</p>
+                <p>——</p>
+            </div>
+        </div>
+        <div class="histogram-chart">
+            <div class="histogram-y-label">等效单曲 RKS</div>
+            <div class="histogram-plot grks-plot-scale-only">
+                <div class="histogram-scale">
+                    {{each rangeRuler.ticks tick}}
+                    <div class="histogram-grid-line" style="bottom: {{tick.position}}%;"><p>{{tick.label}}</p></div>
+                    {{/each}}
+                    <div class="grks-bound-marker" style="bottom: {{rangeRuler.maxPosition}}%;"><p>上界 {{rangeRuler.max.toFixed(2)}}</p></div>
+                    <div class="grks-bound-marker grks-bound-min" style="bottom: {{rangeRuler.minPosition}}%;"><p>下界 {{rangeRuler.min.toFixed(2)}}</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{{/if}}
+
+{{if footnote}}
+<div class="grks-foot">
+    <p>{{footnote}}</p>
+</div>
+{{/if}}
+
+<div class="createdbox">
+    <div class="phi-plugin">
+        <p>{{_plugin}}</p>
+    </div>
+    <div class="ver">
+        <p>{{Version.ver}}</p>
+    </div>
+</div>
+
+{{/block}}

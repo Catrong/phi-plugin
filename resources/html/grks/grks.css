@@ -1,0 +1,167 @@
+/* 猜 RKS 提示图：复用 b19 的 B30 面板样式，只补充未公开遮罩与提示区。 */
+@import "../b19/b19.css";
+
+/* 未公开槽位：正常渲染成绩行，再在上方盖半透明灰框 */
+.grks-hidden-song {
+  outline: 1px dashed rgba(214, 218, 228, 0.45);
+  outline-offset: -1px;
+  border-radius: 6px;
+}
+
+/* 存档统计遮罩（提示者未给出类型 4 提示时盖住数字并写出指令） */
+.grks-overlay-record {
+  left: 0;
+  padding: 0 6px;
+}
+
+.grks-overlay-record .grks-placeholder {
+  font-size: 12px;
+}
+
+.clgBox.grks-clg-masked::before {
+  content: "";
+  position: absolute;
+  inset: -8px 0px;
+  z-index: 3;
+  border-radius: 6px;
+  background: rgba(96, 100, 110, 0.86);
+}
+
+.grks-clg-masked > p {
+  font-size: 1rem;
+}
+
+.grks-clg-command {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  font-family: "Aldrich", sans-serif;
+  font-size: 11px;
+  color: #f0f2f8;
+  white-space: nowrap;
+}
+
+.grks-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: -26px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  text-align: center;
+  border-radius: 6px;
+  background: rgba(96, 100, 110, 0.82);
+}
+
+/* 回答者视角底层没有成绩，遮罩更实一些，避免透出页面背景 */
+.grks-overlay.is-solid {
+  background: rgba(96, 100, 110, 0.94);
+}
+
+.grks-placeholder {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #f0f2f8;
+  word-break: break-all;
+}
+
+.grks-placeholder.is-noinfo {
+  font-family: "Aldrich", sans-serif;
+  letter-spacing: 1px;
+  opacity: 0.75;
+}
+
+/* 直方图遮罩（提示者未给出类型 3 提示时盖住数据并写出指令） */
+.histogram-panel {
+  position: relative;
+}
+
+.grks-overlay-analysis {
+  left: 0;
+  padding: 0 16px;
+}
+
+.grks-overlay-analysis .grks-placeholder {
+  font-size: 14px;
+}
+
+/* 统计/课题提示的分隔标题与面板 */
+.grks-over-flow {
+  margin-top: 2rem;
+}
+
+/* 条状图模式：不渲染 y 轴刻度，只保留柱子 */
+.histogram-plot {
+  border-left: none;
+}
+
+.histogram-bars {
+  left: 3px;
+}
+
+/* 上下界模式：只渲染直方图左侧的数值标尺（含上下界标记线），不渲染柱子 */
+.grks-ruler-panel {
+  min-height: 168px;
+}
+
+.grks-plot-scale-only {
+  min-height: 160px;
+  margin-bottom: 22px;
+}
+
+/* b19 的图表区为整页布局做了左侧偏移，标尺面板单独占位时还原 */
+.grks-ruler-panel .histogram-chart {
+  width: 100%;
+  margin-left: -48px;
+  height: 200px;
+  padding-left: 30px;
+}
+
+.grks-bound-marker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.65);
+  z-index: 4;
+}
+
+.grks-bound-marker p {
+  position: absolute;
+  left: 30px;
+  top: -9px;
+  font-family: "Aldrich", sans-serif;
+  font-size: 11px;
+  color: #ffd76a;
+}
+
+.grks-bound-marker.grks-bound-min p {
+  color: #7db2ff;
+}
+
+/* 标尺模式下刻度数值靠右，避开面板左下斜切边 */
+.grks-ruler-panel .histogram-grid-line p {
+  left: auto;
+  right: 2px;
+}
+
+/* 底部状态与指令说明 */
+.grks-foot {
+  margin: 1.5rem 2.5rem 1rem;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.grks-foot p {
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: #ffffff;
+}

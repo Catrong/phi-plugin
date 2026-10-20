@@ -15,6 +15,16 @@ const names = {
     apiSetting: { tokenList: 'tkls' },
     botClient: { claimLink: { name: 'botclaimlink', text: 'botClaimLink' } },
     guessGame: { start: 'guess', getTip: 'tip', reveal: { name: 'open', text: 'open', bare: true } },
+    grks: {
+        start: { name: 'grks', text: 'grks' },
+        tip: { name: 'grks-tip', text: 'grks tip' },
+        hint: { name: 'grks-hint', text: 'grks hint 1' },
+        guess: { name: 'grks-guess', text: 'grks 15' },
+        ans: { name: 'grks-ans', text: 'grks ans' },
+        match: { name: 'grks-match', text: 'grks match' },
+        cancel: { name: 'grks-cancel', text: 'grks cancel' },
+        rankList: { name: 'grks-lb', text: 'grks lb' },
+    },
     aliasProposal: Object.fromEntries(Object.entries({ propose: 'submit', mine: 'mine', publicList: 'public', appeal: 'appeal', vote: 'vote', unvote: 'unvote' })
         .map(([fnc, action]) => [fnc, { name: `alias-${action}`, text: `alias ${action}` }])),
 }
@@ -30,7 +40,7 @@ const commandCategories = {
     phisong: ['songs', '曲目查询与曲绘'], help: ['guides', 'Token 与 API 帮助'],
     apiSetting: ['api', 'API 设置'], aliasProposal: ['proposals', '曲目别名提案与投票'],
     botClient: ['bot', 'Bot 身份与认领'], chart: ['charts', '谱面与标签'],
-    guessGame: ['games', '猜曲游戏'], manage: ['admin', '插件管理'],
+    guessGame: ['games', '猜曲游戏'], grks: ['games', '猜曲游戏'], manage: ['admin', '插件管理'],
     market: ['market', '主题市场'], money: ['daily', '签到与任务'],
     RankList: ['ranking', '排行榜'], setting: ['settings', '设置'],
     update: ['maintenance', '插件与曲绘更新'], user: ['user', '个人数据与历史'],
@@ -90,6 +100,16 @@ const commandFunctions = {
         "reveal",
         "getTip",
         "ans"
+    ],
+    "grks": [
+        "start",
+        "tip",
+        "hint",
+        "guess",
+        "ans",
+        "match",
+        "cancel",
+        "rankList"
     ],
     "help": [
         "help",

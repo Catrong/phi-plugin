@@ -1,0 +1,223 @@
+import fs from 'node:fs'
+import path from 'node:path'
+import { otherDataPath } from '../../filesystem/path.js'
+import logger from '../../../components/Logger.js'
+
+/**
+ * 通用游戏积分持久化。
+ *
+ * 存储结构（`data/otherData/gameScore.json`）：
+ * ```json
+ * { "version": 1, "games": { "<gameId>": { "<mode>": { "<userId>": { ...record } } } } }
+ * ```
+ * 读取带内存缓存，写入通过队列串行化并整文件落盘，避免并发写坏文件。
+ *
+ * @typedef {object} gameScoreRecord 玩家在某个游戏模式下的累计数据
+ * @property {number} score 累计积分
+ * @property {number} plays 游玩次数
+ * @property {number} best 单局最高分
+ * @property {number} wins 胜场（仅匹配）
+ * @property {number} losses 负场（仅匹配）
+ * @property {number} draws 平局（仅匹配）
+ * @property {number} updatedAt 最近一次更新时间戳（毫秒）
+ *
+ * @typedef {{version: number, games: Record<string, Record<string, Record<string, gameScoreRecord>>>}} gameScoreStore 存储结构
+ */
+
+const DEFAULT_FILE = path.join(otherDataPath, 'gameScore.json')
+
+/** @type {gameScoreStore | null} */
+let cache = null
+/** @type {Promise<void>} */
+let writeQueue = Promise.resolve()
+/** @type {string} */
+let storeFile = DEFAULT_FILE
+
+/**
+ * 覆盖存储文件路径（测试使用）。
+ * @param {string} file
+ */
+export function setStoreFile(file) {
+    storeFile = file
+    cache = null
+}
+
+/**
+ * 读取存储文件；缺失或损坏时返回空结构。
+ * @returns {gameScoreStore}
+ */
+function loadStore() {
+    if (cache) return cache
+    /** @type {gameScoreStore} */
+    let data = { version: 1, games: {} }
+    try {
+        if (fs.existsSync(storeFile)) {
+            const raw = JSON.parse(fs.readFileSync(storeFile, 'utf8'))
+            if (raw && typeof raw === 'object' && raw.games && typeof raw.games === 'object') {
+                data = { version: Number(raw.version) || 1, games: raw.games }
+            }
+        }
+    } catch (error) {
+        logger.warn(`[phi-plugin][gameScore] 读取 ${storeFile} 失败，已按空数据处理`)
+        logger.warn(error)
+    }
+    cache = data
+    return cache
+}
+
+/**
+ * 归一化一条玩家记录，兼容旧数据与脏数据。
+ * @param {Partial<gameScoreRecord> | undefined} raw
+ * @returns {gameScoreRecord}
+ */
+function normalizeRecord(raw) {
+    /**
+     * @param {unknown} value
+     * @param {number} [fallback]
+     */
+    const num = (value, fallback = 0) => {
+        const parsed = Number(value)
+        return Number.isFinite(parsed) ? parsed : fallback
+    }
+    return {
+        score: round2(num(raw?.score)),
+        plays: Math.max(0, Math.trunc(num(raw?.plays))),
+        best: round2(num(raw?.best)),
+        wins: Math.max(0, Math.trunc(num(raw?.wins))),
+        losses: Math.max(0, Math.trunc(num(raw?.losses))),
+        draws: Math.max(0, Math.trunc(num(raw?.draws))),
+        updatedAt: Math.max(0, Math.trunc(num(raw?.updatedAt))),
+    }
+}
+
+/**
+ * @param {number} value
+ * @returns {number}
+ */
+function round2(value) {
+    return Math.round(value * 100) / 100
+}
+
+/**
+ * 取出（必要时创建）某玩家在指定游戏模式下的记录。
+ * @param {gameScoreStore} store
+ * @param {string} gameId
+ * @param {string} mode
+ * @param {string} userId
+ * @param {boolean} [create]
+ * @returns {gameScoreRecord | null}
+ */
+function takeRecord(store, gameId, mode, userId, create = false) {
+    const gameBucket = store.games[gameId] || (store.games[gameId] = {})
+    const modeBucket = gameBucket[mode] || (gameBucket[mode] = {})
+    const key = String(userId)
+    const existing = modeBucket[key]
+    if (existing) {
+        /** 回写规整结果：后续修改必须作用于存储内的对象，否则累加会丢失 */
+        const record = normalizeRecord(existing)
+        modeBucket[key] = record
+        return record
+    }
+    if (!create) return null
+    const record = normalizeRecord(undefined)
+    modeBucket[key] = record
+    return record
+}
+
+/**
+ * 串行落盘，合并同一轮内的多次修改。
+ * @returns {Promise<void>}
+ */
+function schedulePersist() {
+    if (cache) {
+        const snapshot = JSON.stringify(cache)
+        writeQueue = writeQueue.then(() => {
+            try {
+                fs.mkdirSync(path.dirname(storeFile), { recursive: true })
+                fs.writeFileSync(storeFile, snapshot, 'utf8')
+            } catch (error) {
+                logger.warn(`[phi-plugin][gameScore] 写入 ${storeFile} 失败`)
+                logger.warn(error)
+            }
+        })
+    }
+    return writeQueue
+}
+
+/**
+ * 读取玩家记录。
+ * @param {string} gameId
+ * @param {string} mode
+ * @param {string} userId
+ * @returns {gameScoreRecord | null}
+ */
+export function getPlayer(gameId, mode, userId) {
+    const store = loadStore()
+    const record = takeRecord(store, gameId, mode, String(userId), false)
+    return record ? { ...record } : null
+}
+
+/**
+ * 列出某游戏模式全部玩家。
+ * @param {string} gameId
+ * @param {string} mode
+ * @returns {Array<{userId: string} & gameScoreRecord>}
+ */
+export function listPlayers(gameId, mode) {
+    const store = loadStore()
+    const bucket = store.games[gameId]?.[mode] || {}
+    return Object.entries(bucket).map(([userId, record]) => ({ userId, ...normalizeRecord(record) }))
+}
+
+/**
+ * 累加一局积分（单机或匹配通用）。
+ * @param {string} gameId
+ * @param {string} mode
+ * @param {string} userId
+ * @param {number} points 本局积分，0 表示未得分但仍计场次
+ * @param {{result?: 'win' | 'loss' | 'draw'}} [options]
+ * @returns {Promise<gameScoreRecord>} 更新后的记录
+ */
+export async function addScore(gameId, mode, userId, points, options = {}) {
+    const store = loadStore()
+    const record = takeRecord(store, gameId, mode, String(userId), true)
+    if (!record) throw new Error('无法创建积分记录')
+    const gain = Number.isFinite(Number(points)) ? Math.max(0, round2(Number(points))) : 0
+    record.score = round2(record.score + gain)
+    record.plays += 1
+    record.best = Math.max(record.best, gain)
+    if (options.result === 'win') record.wins += 1
+    else if (options.result === 'loss') record.losses += 1
+    else if (options.result === 'draw') record.draws += 1
+    record.updatedAt = Date.now()
+    await schedulePersist()
+    return { ...record }
+}
+
+/**
+ * 清空内存缓存并重新读取（管理命令或测试使用）。
+ * @returns {gameScoreStore}
+ */
+export function reloadStore() {
+    cache = null
+    return loadStore()
+}
+
+/**
+ * 删除指定游戏的全部数据。
+ * @param {string} gameId
+ * @returns {Promise<void>}
+ */
+export async function clearGame(gameId) {
+    const store = loadStore()
+    delete store.games[gameId]
+    await schedulePersist()
+}
+
+/**
+ * 当前存储文件路径。
+ * @returns {string}
+ */
+export function getStoreFile() {
+    return storeFile
+}

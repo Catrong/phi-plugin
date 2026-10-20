@@ -247,6 +247,15 @@ export interface PlatformHostRenderer {
     [key: string]: any
 }
 
+export interface PlatformChatTarget {
+    scene: 'group' | 'private'
+    platform?: string
+    botId?: string
+    chatId?: string
+    guildId?: string
+    userId?: string
+}
+
 export interface PlatformAdapter {
     name: PlatformName
     PluginBase: PlatformPluginBaseConstructor
@@ -273,6 +282,8 @@ export interface PlatformAdapter {
     pickMember(e: PlatformEvent, userId: PlatformUserId): Promise<PlatformMemberLike | null>
     sendPrivate(e: PlatformEvent, msg: PlatformMessageInput): Promise<unknown>
     relpyPrivate(userId: PlatformUserId, msg: PlatformMessageInput, botId?: PlatformUserId): MaybePromise<unknown>
+    /** 向任意已知会话（群或私聊）主动发送消息；失败返回 false，由调用方回滚。 */
+    sendToChat?(target: PlatformChatTarget, msg: PlatformMessageInput): Promise<boolean>
     recall(e: PlatformEvent, sentMessage: unknown): Promise<unknown>
     makeForwardMsg(e: PlatformEvent, msg?: PlatformMessageInput[], dec?: string): Promise<PlatformMessageOutput>
     sleep(ms: number): Promise<void>

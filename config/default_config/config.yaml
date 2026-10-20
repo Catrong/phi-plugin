@@ -227,6 +227,52 @@ FribNearBpm: 20
 #  物量相近范围
 FribNearCombo: 200
 
+#  ************ 【猜RKS设置】 *************
+#  猜中判定容差：猜测值与 B30 计算 rks 相差不超过该值即算猜对
+GrksTolerance: 0.1
+
+#  匹配模式要求的最少有效成绩条数（B30 数据完整度）
+GrksMinRecord: 27
+
+#  单局满分，实际得分 = 满分 / 提示条数
+GrksMaxScore: 10
+
+#  单机模式第几条提示后公开成绩位置
+GrksPositionHintAt: 5
+
+#  单机每次成绩提示新公开的成绩条数
+GrksHintRevealNum: 2
+
+#  单机提示冷却时间(s)
+GrksTipCd: 3
+
+#  单机待机超时时长(s)，超时自动公布答案
+GrksTimeLength: 600
+
+#  单机允许猜错次数，0 为不限制
+GrksWrongLimit: 0
+
+#  统计提示的默认形式：auto 随机 / histogram 条形图 / range 上下界（玩家可临时指定）
+GrksStatsHint: "auto"
+
+#  出题池缓存有效期(h)，0 为每次都重新扫描
+GrksPoolRefreshHours: 6
+
+#  匹配等待超时时长(s)，超过后放宽 rks 相近限制
+GrksMatchWaitTimeout: 300
+
+#  匹配优先的 rks 差值范围
+GrksMatchRksRange: 0.5
+
+#  匹配每回合行动时限(s)
+GrksMatchTurnTime: 90
+
+#  匹配连续多少回合未行动判负
+GrksMatchMaxTimeoutTurn: 3
+
+#  匹配胜率榜的最少对局数
+GrksRankMinMatch: 3
+
 #  ************ 【其他设置】 *************
 #  认证 Token
 VikaToken: ""

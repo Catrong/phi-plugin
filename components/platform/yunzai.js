@@ -3,6 +3,7 @@ import path from 'node:path'
 import { createRequire } from 'node:module'
 import chokidar from 'chokidar'
 import MemoryRedis from './memoryRedis.js'
+import { dispatchToChat } from './sendTarget.js'
 
 /** @import {PhiSegment, PlatformAdapter, PlatformEvent, PlatformForwardMessage, PlatformLogger, PlatformMessageInput, PlatformMessageOutput, PlatformPluginConfig, PlatformRendererConfig} from './types.js' */
 
@@ -525,6 +526,25 @@ const adapter = {
     relpyPrivate(userId, msg, botId) {
         if (globalThis.Bot?.sendFriendMsg) return globalThis.Bot.sendFriendMsg(botId, userId, this.toPlatformMessage(msg))
         return false
+    },
+
+    /**
+     * 向任意已知会话主动发送消息。
+     * 群聊优先 `Bot.pickGroup().sendMsg`，兼容 `Bot.sendGroupMsg`；私聊走 `Bot.sendFriendMsg` 或好友对象。
+     * @param {import('./types.js').PlatformChatTarget} target
+     * @param {PlatformMessageInput} msg
+     * @returns {Promise<boolean>}
+     */
+    async sendToChat(target, msg) {
+        const content = this.toPlatformMessage(msg)
+        const bot = (target?.botId && /** @type {any} */ (globalThis.Bot)?.bots?.[target.botId]) || globalThis.Bot
+        if (!bot) return false
+        return dispatchToChat({
+            pickGroup: typeof bot.pickGroup === 'function' ? groupId => bot.pickGroup(groupId) : undefined,
+            sendGroupMsg: typeof bot.sendGroupMsg === 'function' ? (groupId, payload) => bot.sendGroupMsg(groupId, payload) : undefined,
+            sendFriendMsg: typeof bot.sendFriendMsg === 'function' ? (botId, userId, payload) => bot.sendFriendMsg(botId, userId, payload) : undefined,
+            pickFriend: typeof bot.pickFriend === 'function' ? userId => bot.pickFriend(userId) : undefined,
+        }, target, content)
     },
 
     /**

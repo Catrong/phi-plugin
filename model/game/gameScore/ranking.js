@@ -1,0 +1,127 @@
+/**
+ * 游戏积分榜排名与文本格式化（纯函数，便于测试）。
+ *
+ * @typedef {import('./store.js').gameScoreRecord & {userId: string}} gameScoreRow 带用户标识的记录行
+ * @typedef {'score' | 'winRate'} gameScoreRankKind 榜单类型
+ */
+
+/**
+ * 按累计积分排名：积分降序，同分场次少者优先（效率更高），再按最近更新。
+ * @param {gameScoreRow[]} rows
+ * @returns {gameScoreRow[]}
+ */
+export function rankByScore(rows) {
+    return [...rows]
+        .filter(row => row.plays > 0 || row.score > 0)
+        .sort((a, b) =>
+            b.score - a.score
+            || a.plays - b.plays
+            || String(a.userId).localeCompare(String(b.userId))
+        )
+}
+
+/**
+ * 计算胜率（0~1）；无对局时返回 0。
+ * @param {gameScoreRow} row
+ * @returns {number}
+ */
+export function winRate(row) {
+    const total = row.wins + row.losses + row.draws
+    return total > 0 ? row.wins / total : 0
+}
+
+/**
+ * 按胜率排名：胜率降序，场次多者优先；场次不足 `minMatches` 的玩家不参与。
+ * @param {gameScoreRow[]} rows
+ * @param {number} [minMatches]
+ * @returns {gameScoreRow[]}
+ */
+export function rankByWinRate(rows, minMatches = 1) {
+    const threshold = Math.max(1, Math.trunc(minMatches))
+    return [...rows]
+        .filter(row => row.wins + row.losses + row.draws >= threshold)
+        .sort((a, b) =>
+            winRate(b) - winRate(a)
+            || (b.wins + b.losses + b.draws) - (a.wins + a.losses + a.draws)
+            || b.score - a.score
+            || String(a.userId).localeCompare(String(b.userId))
+        )
+}
+
+/**
+ * 分页切片，返回当前页与总页数。
+ * @template T
+ * @param {T[]} rows
+ * @param {number} [page] 1 起
+ * @param {number} [pageSize]
+ * @returns {{items: T[], page: number, pages: number, total: number}}
+ */
+export function paginate(rows, page = 1, pageSize = 10) {
+    const size = Math.max(1, Math.trunc(pageSize))
+    const total = rows.length
+    const pages = Math.max(1, Math.ceil(total / size))
+    const current = Math.min(Math.max(1, Math.trunc(page) || 1), pages)
+    return {
+        items: rows.slice((current - 1) * size, current * size),
+        page: current,
+        pages,
+        total,
+    }
+}
+
+/**
+ * 格式化积分榜文本。
+ * @param {object} options
+ * @param {string} options.title 标题
+ * @param {gameScoreRankKind} options.kind 榜单类型
+ * @param {gameScoreRow[]} [options.rows] 已排序的行（为空表示无数据）
+ * @param {string} [options.meId] 当前用户 ID，用于追加“我的排名”
+ * @param {string} [options.meLabel] 当前用户的展示名
+ * @param {number} [options.page] 页码，1 起
+ * @param {number} [options.pageSize] 每页条数
+ * @param {number} [options.minMatches] 胜率榜的最低场次（仅提示用）
+ * @returns {string}
+ */
+export function formatRanking(options) {
+    const kind = options.kind
+    const rows = options.rows || []
+    const pageSize = options.pageSize ?? 10
+    const paged = paginate(rows, options.page ?? 1, pageSize)
+    const lines = [`🏆 ${options.title}（共 ${paged.total} 人）`]
+    if (!paged.total) {
+        lines.push(kind === 'winRate'
+            ? `暂无符合条件的玩家（至少 ${options.minMatches ?? 1} 场匹配对局）`
+            : '暂无数据，快去玩一局吧！')
+        return lines.join('\n')
+    }
+    if (paged.pages > 1) lines.push(`第 ${paged.page}/${paged.pages} 页`)
+    paged.items.forEach((row, index) => {
+        const rank = (paged.page - 1) * pageSize + index + 1
+        lines.push(`#${rank} ${describeRow(row, kind)}`)
+    })
+    const meId = options.meId ? String(options.meId) : ''
+    if (meId) {
+        const index = rows.findIndex(row => String(row.userId) === meId)
+        if (index >= 0) {
+            lines.push(`我的排名：#${index + 1} ${describeRow(rows[index], kind)}`)
+        } else {
+            lines.push('我的排名：暂无记录')
+        }
+    }
+    return lines.join('\n')
+}
+
+/**
+ * 单行描述。
+ * @param {gameScoreRow} row
+ * @param {gameScoreRankKind} kind
+ * @returns {string}
+ */
+export function describeRow(row, kind) {
+    const name = String(row.userId)
+    if (kind === 'winRate') {
+        const total = row.wins + row.losses + row.draws
+        return `${name}　胜率 ${(winRate(row) * 100).toFixed(1)}%　${row.wins}胜 ${row.losses}负 ${row.draws}平（${total} 场）　积分 ${row.score.toFixed(2)}`
+    }
+    return `${name}　${row.score.toFixed(2)} 分　${row.plays} 局　最高 ${row.best.toFixed(2)}`
+}
