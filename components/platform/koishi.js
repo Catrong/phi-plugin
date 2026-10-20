@@ -381,7 +381,7 @@ export function createKoishiAdapter(ctx, options = {}) {
                 namespace,
                 event = 'message',
                 priority = 5000,
-                task = undefined,
+                task = [],
                 rule = [],
             } = {}) {
                 this.name = name
@@ -927,11 +927,19 @@ export function registerKoishiApps(ctx, apps, adapter, options = {}) {
         .sort((a, b) => Number(a.instance.priority ?? 5000) - Number(b.instance.priority ?? 5000))
     for (const { instance } of entries) {
         const handlers = new Set((instance.rule || []).map((/** @type {any} */ rule) => rule.fnc))
-        if (typeof instance.task?.fnc === 'string') handlers.add(instance.task.fnc)
-        else if (typeof instance.task?.fnc === 'function') {
-            const handler = instance.task.fnc
-            instance.task = { ...instance.task, fnc: /** @param {...any} args */ function (...args) { return adapter.runTask(handler, this, args) } }
+        /** task 既可能是数组（business 基类声明）也可能是单个对象（直接继承平台基类） */
+        const taskList = Array.isArray(instance.task)
+            ? instance.task
+            : (instance.task ? [instance.task] : [])
+        for (const task of taskList) {
+            if (!task) continue
+            if (typeof task.fnc === 'string') handlers.add(task.fnc)
+            else if (typeof task.fnc === 'function') {
+                const handler = task.fnc
+                task.fnc = /** @param {...any} args */ function (...args) { return adapter.runTask(handler, this, args) }
+            }
         }
+        if (!Array.isArray(instance.task) && instance.task) instance.task = taskList[0]
         for (const key of handlers) {
             trackHandler(instance, key, adapter)
         }

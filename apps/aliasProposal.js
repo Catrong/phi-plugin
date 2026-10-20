@@ -90,7 +90,7 @@ export class aliasProposal extends phiPluginBase {
             dsc: 'Token 驱动的曲目别名提案与公投',
             event: 'message',
             priority: 1000,
-            task: createAliasProposalTask(),
+            task: [createAliasProposalTask()],
             rule: [
                 { reg: `${getPrefix()}(提案|submit)(\\s*).*$`, fnc: 'propose' },
                 { reg: `${getPrefix()}(我的|mine)$`, fnc: 'mine' },

@@ -40,9 +40,18 @@ const wrappedHandlerSymbol = Symbol('phi.wrappedHandler')
  * @property {mutiNickCallback<T>} callback 选择后的回调函数
  * @property {NodeJS.Timeout | undefined} timer 超时清理定时器
  **/
-
 /** @type {Record<string, waitToChoseSong<any>>} */
 const wait_to_chose_song = {}
+
+/**
+ * 归一化定时任务声明：允许单个对象或数组，统一按数组返回。
+ * @param {import('./platform/types.js').PlatformTask | import('./platform/types.js').PlatformTask[] | undefined | null} task
+ * @returns {import('./platform/types.js').PlatformTask[]}
+ */
+function normalizeTaskList(task) {
+  if (!task) return []
+  return (Array.isArray(task) ? task : [task]).filter(Boolean)
+}
 
 /** @param {string} userId */
 function clearMutiNickState(userId) {
@@ -77,14 +86,21 @@ export default class phiPluginBase extends HostPlugin {
     namespace,
     event = "message",
     priority = 5000,
-    task = undefined,
+    task = [],
     rule = []
   }) {
+    const taskList = normalizeTaskList(task)
+    /** Yunzai 宿主只接受单个 task，这里取第一个；Koishi 适配层按数组注册全部任务 */
+    const hostTask = platform.name === 'koishi' ? taskList : taskList[0]
     super({
-      name, dsc, handler, namespace, event, priority, task,
+      name, dsc, handler, namespace, event, priority,
+      task: hostTask,
       // @ts-ignore
       rule
     });
+
+    /** 声明的全部定时任务（数组形式） */
+    this.taskList = taskList
 
     /** @type {botEvent} */
     this.e = platform.wrapEvent({ msg: '', user_id: '', isGroup: false, isPrivate: true }) // 占位用;

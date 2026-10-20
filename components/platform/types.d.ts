@@ -203,7 +203,8 @@ export interface PlatformPluginConfig {
     namespace?: string
     event?: string
     priority?: number
-    task?: PlatformTask
+    /** 定时任务声明，统一按数组处理；适配器会兼容单个对象 */
+    task?: PlatformTask | PlatformTask[]
     rule?: PlatformRule[]
     [key: string]: unknown
 }
@@ -213,7 +214,8 @@ export interface PlatformPluginBase {
     dsc?: string
     event?: string
     priority?: number
-    task?: PlatformTask
+    /** 定时任务声明，统一按数组处理；适配器会兼容单个对象 */
+    task?: PlatformTask | PlatformTask[]
     rule?: PlatformRule[]
     e?: PlatformEvent
     reply?(msg?: PlatformMessageInput, quote?: boolean, data?: Record<string, unknown>): MaybePromise<unknown>
