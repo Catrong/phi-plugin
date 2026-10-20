@@ -53,6 +53,42 @@ test('Shotium 多行正文保留显式换行和完整文本，只有昵称等横
     assert.match(render('atlas', true), /版本 3\.19\.4<br>日期 2026-07-03/)
 })
 
+test('userinfo 简介把换行转成 <br> 并按真实行数缩字，占位文案同样进入 pvis', () => {
+    const line = '这是简介的一行，用来确认换行与字号 WithMixedText 3.19.4'
+    /** @param {string} selfIntro */
+    const renderIntro = selfIntro => art(`${resources}/html/userinfo/userinfo.art`, {
+        ...common, renderNoJs: true, staticText,
+        ...fixtures.userinfo, gameuser: { ...fixtures.userinfo.gameuser, selfIntro },
+    })
+
+    // 换行必须变成 <br>：HTML 会把字面量换行折成空格，pvis 却按行计算，两边对不上就会缩错字号。
+    const multi = Array.from({ length: 6 }, (_, index) => `${line}${index + 1}`).join('\n')
+    const html = renderIntro(multi)
+    const region = html.match(/<div class="Player_profile_box">([\s\S]*?)<\/div>/)?.[1]
+    assert.ok(region, '必须渲染简介区')
+    assert.equal((region.match(/<br>/g) || []).length, 5, '每个换行都要转成 <br>')
+
+    /** @param {string} source */
+    const fontSize = source => {
+        const tag = [...source.matchAll(/<p\b[^>]*>/g)].map(match => match[0]).find(tag => /\bname="pvis"/.test(tag))
+        assert.ok(tag, '简介必须保留 pvis 标记')
+        const size = tag.match(/font-size:\s*([\d.]+)px/)
+        assert.ok(size, `简介必须写入字号：${tag}`)
+        return Number(size[1])
+    }
+    assert.ok(fontSize(region) >= 16 && fontSize(region) <= 60, '多行简介字号应落在 16 至 60')
+
+    // 占位文案走的是另一个颜色分支，同样要能被 pvis 命中，否则会一直按 CSS 的 60px 渲染。
+    const placeholder = renderIntro('')
+    const placeholderRegion = placeholder.match(/<div class="Player_profile_box">([\s\S]*?)<\/div>/)?.[1]
+    assert.ok(placeholderRegion?.includes('skyblue'), '空简介应使用占位文案')
+    fontSize(placeholderRegion)
+
+    // 更长的简介必须更小，且不低于可读下限。
+    const short = renderIntro(line).match(/<div class="Player_profile_box">([\s\S]*?)<\/div>/)?.[1]
+    assert.ok(fontSize(region) < fontSize(short), '行数更多的简介字号必须更小')
+})
+
 test('两页 DATA 各自限定格子宽度，超长体积单行缩字而不是溢出格子', () => {
     const volume = '1023.99 GiB 1023.99 MiB 1023.99 KiB'
     /** @param {string} page @param {string} value */
