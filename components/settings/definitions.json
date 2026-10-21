@@ -891,18 +891,6 @@
     "required": true
   },
   {
-    "key": "GrksRankMinMatch",
-    "group": "猜RKS设置",
-    "label": "胜率榜最少对局",
-    "description": "进入匹配胜率榜所需的最少对局数",
-    "type": "number",
-    "min": 1,
-    "max": 100,
-    "step": 1,
-    "placeholder": "请输入对局数",
-    "required": true
-  },
-  {
     "key": "allowChartTag",
     "group": "系统设置",
     "label": "谱面标签",

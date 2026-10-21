@@ -1,4 +1,5 @@
 import { buildRksHistogram, getB30AnalysisRecords } from '../b30Analysis.js'
+import fCompute from '../fCompute.js'
 
 /**
  * 猜 RKS 的提示生成（纯函数，不读写文件、不依赖平台）。
@@ -165,6 +166,8 @@ export function challengeModeInfo(challengeModeRank) {
  * @property {number} hintCount 已给出的提示条数
  * @property {string[]} revealedSlots 已公开的槽位
  * @property {boolean} positionRevealed 是否已公开位置
+ * @property {'' | 'histogram' | 'range'} statsKind 已公开的统计形式（空串表示尚未公开）
+ * @property {boolean} challengeRevealed 是否已公开课题完成度
  * @property {number} wrongCount 猜错次数
  * @property {number} lastHintAt 最近一次提示时间戳
  * @property {number} lastGuessAt 最近一次猜测时间戳
@@ -181,6 +184,8 @@ export function createSoloState(puzzleKey) {
         hintCount: 0,
         revealedSlots: [],
         positionRevealed: false,
+        statsKind: '',
+        challengeRevealed: false,
         wrongCount: 0,
         lastHintAt: 0,
         lastGuessAt: 0,
@@ -295,14 +300,17 @@ export function applySoloHint(state, puzzle, cfg, rng = Math.random) {
         }
     }
     if (kind === 'stats') {
+        /** 统计形式一经公开就在后续提示中保持不变，避免下一张图又变回空白 */
+        const statsKind = resolveStatsKind(cfg?.StatsHint, undefined, rng)
         return {
             state: {
                 ...state,
                 hintCount,
                 positionRevealed: hintCount >= positionAt,
+                statsKind,
                 lastHintAt: Date.now(),
             },
-            hint: { kind: 'stats', statsKind: resolveStatsKind(cfg?.StatsHint, undefined, rng) },
+            hint: { kind: 'stats', statsKind },
         }
     }
     return {
@@ -310,10 +318,34 @@ export function applySoloHint(state, puzzle, cfg, rng = Math.random) {
             ...state,
             hintCount,
             positionRevealed: hintCount >= positionAt,
+            challengeRevealed: true,
             lastHintAt: Date.now(),
         },
         hint: { kind: 'challenge' },
     }
+}
+
+/**
+ * 一局单机最多会用到的提示条数：全部槽位公开所需条数 + 统计 + 课题。
+ * 未猜出的对局按满提示计入准确率统计，避免放弃或超时拉低平均值。
+ * @param {grksPuzzle} puzzle
+ * @param {any} cfg 配置：HintRevealNum
+ * @returns {number}
+ */
+export function maxSoloHints(puzzle, cfg) {
+    const slots = Array.isArray(puzzle?.slots) ? puzzle.slots.length : 0
+    const reveal = intCfg(cfg?.HintRevealNum, 2, 1, 10)
+    return Math.max(1, Math.ceil(slots / reveal) + 2)
+}
+
+/**
+ * 一局匹配中一方最多能收到的提示条数：逐个公开槽位 + 统计 + 课题。
+ * @param {grksPuzzle} puzzle 需要猜的谜题
+ * @returns {number}
+ */
+export function maxMatchHints(puzzle) {
+    const slots = Array.isArray(puzzle?.slots) ? puzzle.slots.length : 0
+    return Math.max(1, slots + 2)
 }
 
 /**
@@ -348,6 +380,8 @@ export function normalizeSlotName(slotText) {
  * @typedef {object} grksMatchSideState 匹配中一方（谜题持有者）的提示状态
  * @property {string[]} revealedSlots 已公开槽位
  * @property {number} hintCount 已给出的提示条数
+ * @property {'' | 'histogram' | 'range'} statsKind 已公开的统计形式（空串表示尚未公开）
+ * @property {boolean} challengeRevealed 是否已公开课题完成度
  */
 
 /**
@@ -355,7 +389,7 @@ export function normalizeSlotName(slotText) {
  * @returns {grksMatchSideState}
  */
 export function createMatchSideState() {
-    return { revealedSlots: [], hintCount: 0 }
+    return { revealedSlots: [], hintCount: 0, statsKind: '', challengeRevealed: false }
 }
 
 /**
@@ -412,6 +446,7 @@ export function applyMatchHint(side, puzzle, type, arg, cfg, rng = Math.random) 
         return {
             ok: true,
             side: {
+                ...side,
                 revealedSlots: [...side.revealedSlots, slot],
                 hintCount: side.hintCount + 1,
             },
@@ -420,15 +455,17 @@ export function applyMatchHint(side, puzzle, type, arg, cfg, rng = Math.random) 
         }
     }
     if (type === 'stats') {
+        /** 统计形式一经公开就保留在状态里，后续回合的图不会又变回空白 */
+        const statsKind = check.statsKind || resolveStatsKind(cfg?.StatsHint, undefined, rng)
         return {
             ok: true,
-            side: { revealedSlots: [...side.revealedSlots], hintCount: side.hintCount + 1 },
-            hint: { kind: 'stats', statsKind: check.statsKind || resolveStatsKind(cfg?.StatsHint, undefined, rng) },
+            side: { ...side, revealedSlots: [...side.revealedSlots], hintCount: side.hintCount + 1, statsKind },
+            hint: { kind: 'stats', statsKind },
         }
     }
     return {
         ok: true,
-        side: { revealedSlots: [...side.revealedSlots], hintCount: side.hintCount + 1 },
+        side: { ...side, revealedSlots: [...side.revealedSlots], hintCount: side.hintCount + 1, challengeRevealed: true },
         hint: { kind: 'challenge' },
     }
 }
@@ -466,10 +503,13 @@ export function formatNow(date = new Date()) {
  * @param {'solo' | 'match'} options.mode
  * @param {string} [options.hintCommand] 灰框上展示的提示指令前缀（如 `#phi grks`）
  * @param {grksHint | null} [options.hint] 本次提示
+ * @param {'' | 'histogram' | 'range'} [options.statsKind] 已公开的统计形式（空串/缺省表示尚未公开）
+ * @param {boolean} [options.challengeRevealed] 是否已公开课题完成度
  * @param {string} [options.playerLabel] 标题栏展示的出题者标识（默认匿名）
  * @param {string} [options.avatar] 头像文件名（`resources/html/avatar` 下的名称）
  * @param {string} [options.date] 标题栏日期
  * @param {string} [options.footnote] 底部状态与指令说明
+ * @param {string} [options.background] 背景图 id
  * @returns {any}
  */
 export function buildView(options) {
@@ -478,10 +518,17 @@ export function buildView(options) {
     const positionRevealed = Boolean(options.positionRevealed)
     const hintCommand = String(options.hintCommand || '').trim()
     const challenge = challengeModeInfo(puzzle.challengeModeRank)
-    const challengeHint = options.hint?.kind === 'challenge'
+    const challengeRevealedHint = options.hint?.kind === 'challenge'
     const hint = options.hint || null
     /** 提示者（匹配）以完整 B30 为底图，未公开槽位只在上方盖半透明遮罩 */
     const overlayMode = mode === 'match'
+    /** 统计与课题一经公开就长期展示：优先取累积状态，兼容只传本次提示的调用 */
+    const revealedStatsKind = options.statsKind
+        || (hint?.kind === 'stats' ? (hint.statsKind || 'histogram') : '')
+    const statsRevealed = Boolean(revealedStatsKind)
+    /** 直方图数据只在 histogram 形式公开后才有值；range 形式改用标尺视图 */
+    const histogramRevealed = revealedStatsKind === 'histogram'
+    const challengeRevealed = Boolean(options.challengeRevealed) || challengeRevealedHint
     const histogram = puzzle.analysis.histogram || /** @type {any} */ ({})
     const analysis = {
         slots: Array.isArray(histogram.slots) ? histogram.slots : [],
@@ -494,10 +541,6 @@ export function buildView(options) {
         min: puzzle.analysis.min,
         max: puzzle.analysis.max,
     }
-    const statsHint = hint?.kind === 'stats'
-    const statsKind = statsHint ? (hint.statsKind || 'histogram') : ''
-    const histogramHint = statsHint && statsKind === 'histogram'
-
     /** @type {any} */
     const view = {
         mode,
@@ -510,15 +553,15 @@ export function buildView(options) {
         analysis,
         /** 直方图区域始终渲染框架；未给出类型 3 提示时按视角遮罩或留空 */
         showAnalysis: true,
-        rangeHint: statsHint && statsKind === 'range',
+        rangeHint: revealedStatsKind === 'range',
         /** 上下界（标尺）视图：把 min~max 映射到直方图同一坐标轴上 */
         rangeRuler: buildRangeRuler(analysis),
         analysisPanel: {
             /** 提示者：底图保留完整条状图，未提示前用遮罩盖住并写出指令 */
-            masked: overlayMode && !histogramHint,
+            masked: overlayMode && !histogramRevealed,
             /** 猜测者：未提示前条状图与平均数值留空 */
-            blank: !overlayMode && !histogramHint,
-            command: overlayMode && !histogramHint ? `${hintCommand} hint 3 (histogram|range)` : '',
+            blank: !overlayMode && !histogramRevealed,
+            command: overlayMode && !statsRevealed ? `${hintCommand} hint 3 (histogram|range)` : '',
         },
         recordCount: puzzle.recordCount,
         phiCount: puzzle.phiCount,
@@ -534,23 +577,24 @@ export function buildView(options) {
             avatar: options.avatar || 'Introduction',
             rks: '----',
             date: options.date || '',
-            /** 提示者底图保留课题段位，未给类型 4 提示前用遮罩盖住；猜测者只在类型 4 提示时显示 */
-            showChallenge: overlayMode || challengeHint,
-            challengeMasked: overlayMode && !challengeHint,
-            challengeCommand: overlayMode && !challengeHint ? `${hintCommand} hint 4` : '',
+            /** 提示者底图保留课题段位，未给类型 4 提示前用遮罩盖住；猜测者公开后一直显示 */
+            showChallenge: overlayMode || challengeRevealed,
+            challengeMasked: overlayMode && !challengeRevealed,
+            challengeCommand: overlayMode && !challengeRevealed ? `${hintCommand} hint 4` : '',
             ChallengeMode: challenge.colorIndex,
             ChallengeModeRank: challenge.score,
         },
         recordInfo: {
             enabled: true,
-            /** 提示者：底图保留存档统计，未给类型 4 提示前用遮罩盖住并写出指令 */
-            masked: overlayMode && !challengeHint,
+            /** 提示者：底图保留存档统计，未给类型 4 提示前用遮罩盖住 */
+            masked: overlayMode && !challengeRevealed,
             /** 猜测者：未给类型 4 提示前表格照常展示，但具体数字留空 */
-            blank: !overlayMode && !challengeHint,
-            command: overlayMode && !challengeHint ? `${hintCommand} hint 4` : '',
+            blank: !overlayMode && !challengeRevealed,
+            command: overlayMode && !challengeRevealed ? `${hintCommand} hint 4` : '',
             stats: puzzle.stats,
         },
         footnote: options.footnote || '',
+        background: options.background || fCompute.randBackground(true),
     }
 
     if (positionRevealed) {
@@ -634,6 +678,8 @@ function slotView(puzzle, revealed, slot, mode, hintCommand, hideSlot = false, k
         masked: !isRevealed && keepRecord,
         record: isRevealed || keepRecord ? record : null,
         rating: ratingOf(record),
+        /** 定数下方的单曲 rks：曲目公开后才显示，未公开保持 ??? */
+        recordRks: isRevealed && record ? record.rks.toFixed(2) : '???',
         placeholder: isRevealed ? '' : (command || NOINFO_TEXT),
         command,
     }

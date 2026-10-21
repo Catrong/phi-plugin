@@ -27,7 +27,7 @@ import {
 /**
  * @type {idString[]}
  */
-let songIdList = getInfo.idList || []
+let songIdList = getInfo.all_idList || []
 /**
  * 存储每首歌曲被抽取的权重
  * @type {Record<string, Record<idString, number>>}

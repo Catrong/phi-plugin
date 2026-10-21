@@ -8,6 +8,7 @@ import getInfo from './model/game/getInfo.js'
 import Version from './components/Version.js'
 import Config from './components/Config.js';
 import logger from './components/Logger.js';
+import { pickAppClass } from './components/appExports.js';
 import { APIBASEURL } from './model/game/constNum.js';
 import chalk from 'chalk';
 import autoSeekApi from './model/api/autoSeekApi.js';
@@ -52,8 +53,7 @@ for (let i in files) {
         console.error(files[i])
         throw new Error(ret[i].reason)
     }
-    // @ts-ignore
-    apps[name] = ret[i].value[Object.keys(ret[i].value)[0]]
+    apps[name] = pickAppClass(/** @type {Record<string, any>} */ (ret[i].value))
 }
 
 export { apps }

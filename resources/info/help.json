@@ -305,7 +305,7 @@
             {
                 "title": "/grks<br>/猜rks",
                 "eg": "/grks /grks tip /grks 15.25 /grks ans /grks match /grks hint B7 /grks hint 3 range /grks hint 4 /grks lb",
-                "desc": "猜 RKS 小游戏：从本地已绑定存档中随机抽一个 B30 出题，逐步公开成绩后猜出它的 rks（容差可配）<br>单机：/grks 开始 → /grks tip 逐条提示 → /grks 15.25 猜测 → /grks ans 公布答案<br>匹配：/grks match 入池，双方轮流用 hint 公开自己 B30 的成绩/统计/课题，同回合猜对者获胜<br>积分：每局最高 10 分，实际得分 = 10 / 提示条数；榜单 /grks lb [单机|匹配] [胜率]"
+                "desc": "猜 RKS 小游戏：从本地已绑定存档中随机抽一个 B30 出题，逐步公开成绩后猜出它的 rks（容差可配）<br>单机：/grks 开始 → /grks tip 逐条提示 → /grks 15.25 猜测 → /grks ans 公布答案<br>匹配：/grks match 入池，双方轮流用 hint 公开自己 B30 的成绩/统计/课题，同回合猜对者获胜<br>积分：每局最高 10 分，实际得分 = 10 / 提示条数；榜单 /grks lb [单机|匹配] [积分|胜率|准确率]（准确率榜展示平均所需提示数，需完成 10 局以上；胜率榜同样要求 10 场以上）"
             },
             {
                 "title": "/theme",

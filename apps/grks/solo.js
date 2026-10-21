@@ -13,6 +13,7 @@ import {
     formatHintText,
     formatNow,
     intCfg,
+    maxSoloHints,
 } from '../../model/game/grks/hints.js'
 import {
     DEFAULT_MAX_SCORE,
@@ -22,6 +23,7 @@ import {
     parseGuess,
     scoreForHintCount,
 } from '../../model/game/grks/score.js'
+import { isUsableImage, pickImageOrText } from '../../model/game/grks/renderResult.js'
 import { chatTargetFromEvent, chatTargetKey } from '../../components/platform/sendTarget.js'
 
 /** @import {botEvent} from '../../components/baseClass.js' */
@@ -72,7 +74,6 @@ export function readConfig() {
         matchRksRange: Number(cfg('GrksMatchRksRange', 0.5)) || 0.5,
         matchTurnTime: intCfg(cfg('GrksMatchTurnTime', 90), 90, 10, 3600),
         matchMaxTimeoutTurn: intCfg(cfg('GrksMatchMaxTimeoutTurn', 3), 3, 1, 20),
-        rankMinMatch: intCfg(cfg('GrksRankMinMatch', 3), 3, 1, 100),
     }
 }
 
@@ -95,7 +96,7 @@ export function cmdPrefix() {
 }
 
 /**
- * 渲染并发送提示图；渲染失败时降级为文字。
+ * 渲染并发送提示图；有图时只发图，渲染失败才用文字兜底。
  * @param {botEvent} e
  * @param {object} options
  * @param {grksPuzzle} options.puzzle
@@ -112,6 +113,9 @@ export async function sendHintImage(e, options) {
         positionRevealed: options.state.positionRevealed,
         mode: 'solo',
         hint: options.hint,
+        /** 已公开的统计与课题在后续提示中继续显示 */
+        statsKind: options.state.statsKind,
+        challengeRevealed: options.state.challengeRevealed,
         playerLabel: options.playerLabel || '？？？',
         date: formatNow(),
         footnote: options.footnote || '',
@@ -129,11 +133,21 @@ export async function sendHintImage(e, options) {
         logger.warn('[phi-plugin][grks] 提示图渲染失败，改为文字')
         logger.warn(error)
     }
-    if (typeof image === 'string') {
-        await send.send_with_At(e, `${text}\n\n${image}`)
+    if (!isUsableImage(image)) {
+        warnRenderFailure(image, '提示图')
+        await send.send_with_At(e, text)
         return
     }
-    await send.send_with_At(e, [image, text])
+    await send.send_with_At(e, image)
+}
+
+/**
+ * 渲染失败时记录原因：用户只看到文字兜底，渲染器返回的错误文案只能留在日志里。
+ * @param {any} image 渲染结果
+ * @param {string} label 日志中的用途说明
+ */
+export function warnRenderFailure(image, label) {
+    if (typeof image === 'string') logger.warn(`[phi-plugin][grks] ${label}渲染失败，改为文字兜底：${image}`)
 }
 
 /**
@@ -151,6 +165,9 @@ async function revealAnswer(game, cfg, reason) {
         positionRevealed: true,
         mode: 'solo',
         hint: null,
+        /** 答案图沿用本局已公开的统计与课题，不额外泄露未公开的信息 */
+        statsKind: game.state.statsKind,
+        challengeRevealed: game.state.challengeRevealed,
         playerLabel: '---',
         date: formatNow(),
         footnote: `${reason}\n答案：${puzzle.rks.toFixed(4)}　提示 ${game.state.hintCount} 条`,
@@ -162,8 +179,9 @@ async function revealAnswer(game, cfg, reason) {
         logger.warn('[phi-plugin][grks] 答案图渲染失败')
         logger.warn(error)
     }
+    warnRenderFailure(image, '答案图')
     const text = `${reason}\n正确答案：${puzzle.rks.toFixed(4)}（±${cfg.tolerance}）\n提示次数：${game.state.hintCount}`
-    await send.send_with_At(event, image === null || typeof image === 'string' ? text : [image, text])
+    await send.send_with_At(event, pickImageOrText(image, text))
 }
 
 /**
@@ -278,18 +296,19 @@ async function timeoutGame(game, cfg) {
     if (game.settled) return
     if (!disposeGame(game)) return
     await revealAnswer(game, cfg, `超过 ${cfg.timeLength}s 没有猜测，本局结束`)
-    await recordPlay(game, 0)
+    await recordPlay(game, 0, maxSoloHints(game.puzzle, cfg))
 }
 
 /**
  * 记录一局（猜对才加分）。
  * @param {grksSoloGame} game
  * @param {number} points
+ * @param {number} hints 本局计入准确率榜的提示数：猜对为本局实际提示数，未猜出按满提示
  */
-async function recordPlay(game, points) {
+async function recordPlay(game, points, hints) {
     if (!game.userId) return
     try {
-        await addScore('grks', 'normal', game.userId, points, {})
+        await addScore('grks', 'normal', game.userId, points, { hints })
     } catch (error) {
         logger.warn('[phi-plugin][grks] 记录单机积分失败')
         logger.warn(error)
@@ -373,7 +392,7 @@ export async function guess(e, rawValue) {
         const points = scoreForHintCount(game.state.hintCount, cfg.maxScore)
         await send.send_with_At(e, `🎉 猜对了！答案 ${game.puzzle.rks.toFixed(4)}，你猜 ${guessValue}（容差 ±${cfg.tolerance}）\n本局得分：${formatScoreValue(points)} 分（提示 ${game.state.hintCount} 条）`)
         await revealAnswer(game, cfg, '本局已结算')
-        await recordPlay(game, points)
+        await recordPlay(game, points, game.state.hintCount)
         return true
     }
 
@@ -383,7 +402,7 @@ export async function guess(e, rawValue) {
     if (cfg.wrongLimit > 0 && game.state.wrongCount >= cfg.wrongLimit) {
         if (!disposeGame(game)) return false
         await revealAnswer(game, cfg, `已经猜错 ${game.state.wrongCount} 次，本局结束`)
-        await recordPlay(game, 0)
+        await recordPlay(game, 0, maxSoloHints(game.puzzle, cfg))
         return true
     }
     const remain = cfg.wrongLimit > 0 ? `\n还可猜错 ${Math.max(0, cfg.wrongLimit - game.state.wrongCount)} 次` : ''
@@ -405,7 +424,7 @@ export async function ans(e) {
     const cfg = readConfig()
     if (!disposeGame(game)) return false
     await revealAnswer(game, cfg, '本局已放弃')
-    await recordPlay(game, 0)
+    await recordPlay(game, 0, maxSoloHints(game.puzzle, cfg))
     return true
 }
 

@@ -168,7 +168,6 @@
  * @typedef {'GrksMatchRksRange'} GrksMatchRksRange 匹配 rks 差值
  * @typedef {'GrksMatchTurnTime'} GrksMatchTurnTime 匹配回合时限
  * @typedef {'GrksMatchMaxTimeoutTurn'} GrksMatchMaxTimeoutTurn 超时判负回合数
- * @typedef {'GrksRankMinMatch'} GrksRankMinMatch 胜率榜最少对局
  * 其他设置
  * @typedef {'VikaToken'} VikaToken VikaToken
  * @typedef {'apiBotClientId'} apiBotClientId API签发的Bot clientId
@@ -258,7 +257,6 @@
  * |GrksMatchRksRange
  * |GrksMatchTurnTime
  * |GrksMatchMaxTimeoutTurn
- * |GrksRankMinMatch
  * |VikaToken
  * |apiBotClientId
  * |apiBotClientSecret

@@ -13,10 +13,12 @@ import {
     formatHintText,
     formatNow,
     matchHintType,
+    maxMatchHints,
 } from '../../model/game/grks/hints.js'
 import { formatScoreValue, isCorrect, parseGuess, scoreForHintCount } from '../../model/game/grks/score.js'
+import { isUsableImage, pickImageOrText } from '../../model/game/grks/renderResult.js'
 import { chatTargetFromEvent, chatTargetKey } from '../../components/platform/sendTarget.js'
-import { cmdPrefix, hasSoloGame, readConfig, sessionKeyOf } from './solo.js'
+import { cmdPrefix, hasSoloGame, readConfig, sessionKeyOf, warnRenderFailure } from './solo.js'
 
 /** @import {botEvent} from '../../components/baseClass.js' */
 /** @import {grksHint, grksMatchSideState, grksPuzzle} from '../../model/game/grks/hints.js' */
@@ -341,7 +343,24 @@ function opponentOf(match, player) {
 }
 
 /**
- * 渲染并发送一方的"自己的 B30"面板。
+ * 一方本局计入准确率榜的提示数。
+ * 猜对时取对手实际给出的提示条数；未猜出（超时 / 判负 / 主动退出）按满提示计入，
+ * 避免靠放弃拉低平均值。
+ * @param {grksMatch} match
+ * @param {grksMatchPlayer} player
+ * @param {any} cfg
+ * @returns {number}
+ */
+function hintsUsedBy(match, player, cfg) {
+    const opponent = opponentOf(match, player)
+    const guess = player.pendingGuess
+    const hit = guess !== null && guess !== undefined
+        && isCorrect(Number(guess), opponent.puzzle.rks, cfg.tolerance)
+    return hit ? opponent.side.hintCount : maxMatchHints(opponent.puzzle)
+}
+
+/**
+ * 渲染并发送一方的"自己的 B30"面板；有图时只发图，渲染失败才用文字兜底。
  * @param {grksMatch} match
  * @param {grksMatchPlayer} player
  * @param {any} cfg
@@ -362,6 +381,9 @@ async function sendOwnPanel(match, player, cfg, extra = '') {
         mode: 'match',
         hintCommand: cmdPrefix(),
         hint: null,
+        /** 持有者面板同样保留已经给过的统计与课题，不再重新盖遮罩 */
+        statsKind: player.side.statsKind,
+        challengeRevealed: player.side.challengeRevealed,
         playerLabel: 'B30',
         date: formatNow(),
         footnote,
@@ -373,10 +395,8 @@ async function sendOwnPanel(match, player, cfg, extra = '') {
         logger.warn('[phi-plugin][grks] 匹配面板渲染失败')
         logger.warn(error)
     }
-    if (image === null || typeof image === 'string') {
-        return await deliver(player.target, `第 ${match.turn} 回合\n${footnote}`)
-    }
-    return await deliver(player.target, [image, `第 ${match.turn} 回合\n${footnote}`])
+    warnRenderFailure(image, '匹配面板')
+    return await deliver(player.target, pickImageOrText(image, `第 ${match.turn} 回合\n${footnote}`))
 }
 
 /**
@@ -438,7 +458,8 @@ async function onTurnTimeout(match, cfg) {
 
 /**
  * 把一方本回合的提示投递给对手。
- * 统计（类型 3）与课题/存档统计（类型 4）额外渲染一张对手视角的面板图。
+ * 统计（类型 3）与课题/存档统计（类型 4）额外渲染一张对手视角的面板图，
+ * 有图时只发图，渲染失败才用文字兜底。
  * @param {grksMatch} match
  * @param {grksMatchPlayer} player
  * @returns {Promise<boolean>}
@@ -460,9 +481,15 @@ async function deliverHintToOpponent(match, player) {
             positionRevealed: true,
             mode: 'solo',
             hint: player.pendingHint,
+            /** 对手视角同样保留已公开的统计与课题，后续提示不再隐藏 */
+            statsKind: player.side.statsKind,
+            challengeRevealed: player.side.challengeRevealed,
             playerLabel: '对手的 B30',
             date: formatNow(),
-            footnote: `${kind === 'stats' ? '对手给出的统计提示' : '对手给出的课题与完成度提示'}\n${cmdPrefix()} <数值> 提交猜测`,
+            footnote: [
+                `对手 ${player.nickname} 给出的${kind === 'stats' ? '统计提示' : '课题与完成度提示'}`,
+                `${cmdPrefix()} <数值> 提交猜测`,
+            ].join('\n'),
         })
         let image = null
         try {
@@ -471,9 +498,8 @@ async function deliverHintToOpponent(match, player) {
             logger.warn('[phi-plugin][grks] 对手提示图渲染失败，改为文字')
             logger.warn(error)
         }
-        if (image !== null && typeof image !== 'string') {
-            return await deliver(opponent.target, [image, `对手 ${player.nickname} 的提示：\n${text}`])
-        }
+        warnRenderFailure(image, '对手提示图')
+        if (isUsableImage(image)) return await deliver(opponent.target, image)
     }
     return await deliver(opponent.target, `对手 ${player.nickname} 的提示：\n${text}`)
 }
@@ -561,7 +587,10 @@ async function settleMatch(match, outcome, cfg) {
     for (const player of match.players) {
         const result = results[player.userId]
         try {
-            await addScore('grks', 'match', player.userId, result.points, { result: result.result })
+            await addScore('grks', 'match', player.userId, result.points, {
+                result: result.result,
+                hints: hintsUsedBy(match, player, cfg),
+            })
         } catch (error) {
             logger.warn('[phi-plugin][grks] 记录匹配积分失败')
             logger.warn(error)

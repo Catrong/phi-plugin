@@ -5,7 +5,9 @@ import path from 'node:path'
 import test from 'node:test'
 import {
     GRKS_GAME,
+    RANK_MIN_PLAYS,
     addScore,
+    averageHints,
     clearGame,
     getGame,
     getPlayer,
@@ -13,6 +15,7 @@ import {
     listPlayers,
     paginate,
     queryRanking,
+    rankByAccuracy,
     rankByScore,
     rankByWinRate,
     registerGame,
@@ -136,4 +139,62 @@ test('accepts third-party games through the public registry', async () => {
     assert.equal(board.ok, true)
     assert.match(board.text, /示例游戏 · 单机 积分榜/)
     assert.match(board.text, /x　3\.00 分/)
+})
+
+test('accumulates hint counts for the accuracy statistics', async () => {
+    useTempStore()
+    await addScore('grks', 'normal', 'a', 10, { hints: 3 })
+    await addScore('grks', 'normal', 'a', 0, { hints: 17 })
+    const row = getPlayer('grks', 'normal', 'a')
+    assert.equal(row?.plays, 2)
+    assert.equal(row?.hintPlays, 2)
+    assert.equal(row?.hintSum, 20)
+    assert.equal(averageHints(row), 10)
+    /** 不带提示数的对局只计场次，不参与平均 */
+    await addScore('grks', 'normal', 'a', 0)
+    const legacy = getPlayer('grks', 'normal', 'a')
+    assert.equal(legacy?.plays, 3)
+    assert.equal(legacy?.hintPlays, 2)
+    assert.equal(averageHints(legacy), 10)
+})
+
+test('ranks by average hints, then total score, with a 10 game threshold', async () => {
+    useTempStore()
+    /** sharp：10 局、平均 2 条 */
+    for (let index = 0; index < 10; index++) await addScore('grks', 'normal', 'sharp', 1, { hints: 2 })
+    /** vet-a / vet-b：同为平均 4 条，积分低者排后 */
+    for (let index = 0; index < 10; index++) await addScore('grks', 'normal', 'vet-a', 5, { hints: 4 })
+    for (let index = 0; index < 10; index++) await addScore('grks', 'normal', 'vet-b', 10, { hints: 4 })
+    /** rookie：平均最好但只玩了 9 局，不上榜 */
+    for (let index = 0; index < RANK_MIN_PLAYS - 1; index++) await addScore('grks', 'normal', 'rookie', 1, { hints: 1 })
+
+    const rows = listPlayers('grks', 'normal')
+    assert.deepEqual(rankByAccuracy(rows).map(row => row.userId), ['sharp', 'vet-b', 'vet-a'])
+    assert.ok(rankByAccuracy(rows, 1).some(row => row.userId === 'rookie'))
+
+    const board = queryRanking({ gameId: 'grks', mode: 'normal', kind: 'accuracy', meId: 'rookie' })
+    assert.equal(board.ok, true)
+    assert.match(board.text, /猜RKS · 单机 准确率榜（共 3 人）/)
+    assert.match(board.text, /#1 sharp　平均 2\.00 条提示　10 局　积分 10\.00/)
+    assert.match(board.text, /#2 vet-b　平均 4\.00 条提示　10 局　积分 100\.00/)
+    assert.match(board.text, /我的排名：未上榜（需要至少完成 10 局）/)
+
+    /** 匹配模式同样提供准确率榜 */
+    for (let index = 0; index < 10; index++) await addScore('grks', 'match', 'duel', 5, { result: 'win', hints: 3 })
+    const matchBoard = queryRanking({ gameId: 'grks', mode: 'match', kind: 'accuracy' })
+    assert.match(matchBoard.text, /猜RKS · 匹配 准确率榜/)
+    assert.match(matchBoard.text, /duel　平均 3\.00 条提示　10 局/)
+})
+
+test('requires 10 matches for the win rate board by default', async () => {
+    useTempStore()
+    await addScore('grks', 'match', 'a', 10, { result: 'win' })
+    await addScore('grks', 'match', 'a', 10, { result: 'win' })
+    const early = queryRanking({ gameId: 'grks', mode: 'match', kind: 'winRate' })
+    assert.match(early.text, /暂无符合条件的玩家（至少 10 场匹配对局）/)
+
+    for (let index = 0; index < 8; index++) await addScore('grks', 'match', 'a', 0, { result: 'loss' })
+    const board = queryRanking({ gameId: 'grks', mode: 'match', kind: 'winRate' })
+    assert.match(board.text, /胜率榜（共 1 人）/)
+    assert.match(board.text, /a　胜率 20\.0%　2胜 8负 0平（10 场）/)
 })

@@ -23,7 +23,7 @@ const getPrefix = () => `^[#/](${getHead()})(\\s*)`
  * - `#phi grks match`         加入匹配池
  * - `#phi grks cancel`        退出匹配池 / 结束对局
  * - `#phi grks hint 1 B7`     匹配回合给出提示
- * - `#phi grks lb`            查看积分榜
+ * - `#phi grks lb`            查看排行榜（积分 / 胜率 / 准确率）
  */
 export class phiGrks extends phiPluginBase {
     constructor() {
@@ -152,12 +152,11 @@ export class phiGrks extends phiPluginBase {
     }
 
     /**
-     * 查看积分榜。
+     * 查看排行榜（积分榜 / 胜率榜 / 准确率榜）。
      * @param {botEvent} e
      * @returns {Promise<boolean>}
      */
     async rankList(e) {
-        const cfg = solo.readConfig()
         const args = parseRankArgs(String(e.msg ?? ''))
         const result = queryRanking({
             gameId: args.gameId,
@@ -165,7 +164,6 @@ export class phiGrks extends phiPluginBase {
             kind: args.kind,
             page: args.page,
             meId: String(e.user_id || ''),
-            minMatches: cfg.rankMinMatch,
         })
         if (!result.ok) {
             await send.send_with_At(e, result.text)
@@ -195,14 +193,14 @@ export function parseHintArgs(msg) {
 }
 
 /**
- * 解析榜单参数：`[游戏] [模式] [胜率|积分] [页码]`，顺序不限。
+ * 解析榜单参数：`[游戏] [模式] [胜率|积分|准确率] [页码]`，顺序不限。
  * @param {string} msg
- * @returns {{gameId?: string, mode?: string, kind: 'score' | 'winRate', page: number}}
+ * @returns {{gameId?: string, mode?: string, kind: 'score' | 'winRate' | 'accuracy', page: number}}
  */
 export function parseRankArgs(msg) {
     const tail = msg.replace(/^[#/]\S*\s*/, '').replace(/^(grks|猜rks)(\s*)(lb|榜)\s*/, '').replace(/^(游戏积分榜|积分榜)\s*/, '')
     const parts = tail.split(/\s+/).filter(Boolean)
-    /** @type {'score' | 'winRate'} */
+    /** @type {'score' | 'winRate' | 'accuracy'} */
     let kind = 'score'
     /** @type {string | undefined} */
     let mode
@@ -211,6 +209,10 @@ export function parseRankArgs(msg) {
     let page = 1
     for (const part of parts) {
         const text = part.toLowerCase()
+        if (text === 'accuracy' || part === '准确率' || part === '准确率榜') {
+            kind = 'accuracy'
+            continue
+        }
         if (text === 'winrate' || part === '胜率' || part === '胜率榜') {
             kind = 'winRate'
             continue

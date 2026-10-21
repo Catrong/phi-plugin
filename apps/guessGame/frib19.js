@@ -62,6 +62,168 @@ let versionIndexSize = -1
 /** 缓存对应的版本数据文件时间戳，用于识别 songVersion.csv / taptap-updates.json 的变化 */
 let versionIndexStamp = ''
 
+export default new class frib19 {
+    /**
+     * 开始弗一把
+     * @param {botEvent} e 事件对象
+     * @param {GameList} gameList 进行中的游戏列表
+     */
+    async start(e, gameList) {
+        const group_id = groupKey(e)
+        if (fribGameData[group_id]) {
+            send.reply(e, `当前群还有未结束的弗一把哦！发送 /${Config.getUserCfg('config', 'cmdhead')} ans 可以提前结束呐！`, true)
+            return false
+        }
+        const { level, minDifficulty } = parseStartArgs(e.msg, Config.getUserCfg('config', 'FribDefaultLevel'))
+        const pool = buildSongPool(getInfo.all_idList || [], {
+            level,
+            minDifficulty,
+            infoOf: id => getInfo.info(id),
+        })
+        if (!pool.length) {
+            send.send_with_At(e, `当前曲库没有符合「${levelText(level, minDifficulty)}」条件的曲目哦！换个难度或定数下限试试吧！`)
+            return false
+        }
+        const ansId = pool[fCompute.randInt(0, pool.length - 1)]
+        if (!getInfo.info(ansId)) {
+            send.send_with_At(e, '获取曲目信息发生未知错误QAQ！')
+            return false
+        }
+        const maxGuess = guessNumLimit(1, guessNumTable())
+        /** @type {fribGameData} */
+        const game = {
+            ansId,
+            level,
+            minDifficulty,
+            maxGuess,
+            rows: [],
+            guessedIds: [],
+            lastGuessId: null,
+            lastGroupGuessTime: 0,
+            playerGuessTime: {},
+            settled: false,
+            timer: null,
+            event: e,
+        }
+        fribGameData[group_id] = game
+        gameList[group_id] = { gameType: 'frib19' }
+        send.reply(e, [
+            `下面开始进行弗一把哦！本局按「${levelText(level, minDifficulty)}」谱面对比，定数与物量均以该难度为准嗷！`,
+            `直接发送曲名进行猜测，参与的人越多本局可猜次数越多（初始 ${guessNumLimit(1, guessNumTable())} 次，最多 ${guessNumLimit(99, guessNumTable())} 次）；猜中或次数用尽后公布答案，连续 ${Config.getUserCfg('config', 'FribTimeout')} 秒没有有效猜测会自动结束呐！`,
+            `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 获取答案，回答冷却：个人 ${Config.getUserCfg('config', 'FribSelfGuessCd')}s、群聊 ${Config.getUserCfg('config', 'FribGroupGuessCd')}s。`,
+        ])
+        refreshTimeout(group_id, gameList)
+        return true
+    }
+
+    /**
+     * 猜测曲目
+     * @param {botEvent} e 事件对象
+     * @param {GameList} gameList 进行中的游戏列表
+     */
+    async guess(e, gameList) {
+        const group_id = groupKey(e)
+        const game = fribGameData[group_id]
+        if (!game) return false
+        const msg = String(e.msg ?? '').trim()
+        /** 过滤命令、CQ码与超长文本，避免无效猜测消耗次数 */
+        if (!msg || msg.length > 64 || msg.includes('[CQ:') || msg.startsWith('#') || msg.startsWith('/')) return false
+        const ids = getInfo.fuzzysongsnick(msg, 0.95)
+        if (!ids.length) return false
+        const answer = getInfo.info(game.ansId)
+        if (!answer) {
+            endGame(group_id, gameList)
+            return false
+        }
+        if (ids.includes(game.ansId)) {
+            /** 先占位结算，避免发图期间其他人再猜中一次 */
+            if (!beginSettle(game)) return true
+            game.rows.push(createFribRow(withCharters(answer), withCharters(answer), compareContext(playerName(e), game.level)))
+            game.lastGuessId = game.ansId
+            markGuessed(game, e)
+            endGame(group_id, gameList)
+            try {
+                await send.send_with_At(e, `恭喜你，猜中啦喵！ヾ(≧▽≦*)o`, true)
+                await send.reply(e, await renderGame(e, game, true))
+                await send.reply(e, await getPic.GetSongsInfoAtlas(e, game.ansId))
+                await send.reply(e, `正确答案是：${answer.song}！发送 /${Config.getUserCfg('config', 'cmdhead')} fib 可以再来一局喵！\n` +
+                    `Tip: 可以指定难度与定级范围哦~ 例如 /${Config.getUserCfg('config', 'cmdhead')} fib AT 15+`)
+            } catch (err) {
+                logger.error('[phi-plugin][frib19]结算消息发送失败')
+                logger.error(err)
+            }
+            return true
+        }
+        /** 已在结算中的猜测不再计入 */
+        if (game.settled) return true
+        const guessId = ids.find(id => !game.guessedIds.includes(id))
+        if (!guessId) {
+            send.send_with_At(e, `曲目[${getInfo.info(ids[0])?.song ?? msg}]已经猜过啦，换一首试试吧uwu`, true, { recallMsg: 5 })
+            return true
+        }
+        /** 回答冷却：个人冷却与群冷却同时生效 */
+        const cooldown = guessCooldown({
+            now: Date.now(),
+            selfSeconds: numberCfg(Config.getUserCfg('config', 'FribSelfGuessCd'), 30),
+            groupSeconds: numberCfg(Config.getUserCfg('config', 'FribGroupGuessCd'), 5),
+            lastSelfGuess: game.playerGuessTime[String(e.user_id ?? '')] ?? 0,
+            lastGroupGuess: game.lastGroupGuessTime,
+        })
+        if (cooldown.seconds > 0) {
+            send.send_with_At(e, `${cooldown.kind === 'self' ? '你的' : '群里的'}回答冷却还有 ${cooldown.seconds}s 呐，先耐心等下哇QAQ`, true, { recallMsg: 5 })
+            return true
+        }
+        const guessInfo = getInfo.info(guessId)
+        if (!guessInfo) return false
+        game.rows.push(createFribRow(withCharters(guessInfo), withCharters(answer), compareContext(playerName(e), game.level)))
+        game.guessedIds.push(guessId)
+        game.lastGuessId = guessId
+        markGuessed(game, e)
+        refreshMaxGuess(game)
+        refreshTimeout(group_id, gameList)
+        if (game.rows.length >= game.maxGuess) {
+            /** 先占位结算，避免并发的另一次猜测也走到结算 */
+            if (!beginSettle(game)) return true
+            endGame(group_id, gameList)
+            try {
+                await send.reply(e, [`很遗憾，猜测次数用完了喵！正确答案是：${answer.song}`, await renderGame(e, game, true)])
+            } catch (err) {
+                logger.error('[phi-plugin][frib19]结算消息发送失败')
+                logger.error(err)
+            }
+            return true
+        }
+        const image = await renderGame(e, game, false)
+        /** 渲染期间本局可能已被他人结算，此时不再补发这张图 */
+        if (fribGameData[group_id] !== game) return true
+        await send.reply(e, image)
+        return true
+    }
+
+    /**
+     * 结束游戏并公布答案
+     * @param {botEvent} e 事件对象
+     * @param {GameList} gameList 进行中的游戏列表
+     */
+    async ans(e, gameList) {
+        const group_id = groupKey(e)
+        const game = fribGameData[group_id]
+        if (!game) return false
+        /** 先占位结算，避免公布答案期间有人猜中而重复结算 */
+        if (!beginSettle(game)) return false
+        const answer = getInfo.info(game.ansId)
+        endGame(group_id, gameList)
+        try {
+            await send.reply(e, [`好吧，下面开始公布答案。正确答案是：${answer?.song}`, await renderGame(e, game, true)])
+        } catch (err) {
+            logger.error('[phi-plugin][frib19]结算消息发送失败')
+            logger.error(err)
+        }
+        return true
+    }
+}()
+
+
 /**
  * 版本数据文件的时间戳签名：这两个文件不属于 getInfo 的曲目数据结构，
  * 单独用它识别变化，保证改动后下一次渲染即生效
@@ -327,164 +489,3 @@ async function renderGame(e, game, showAnswer) {
         timeout: Config.getUserCfg('config', 'FribTimeout'),
     })
 }
-
-export default new class frib19 {
-    /**
-     * 开始弗一把
-     * @param {botEvent} e 事件对象
-     * @param {GameList} gameList 进行中的游戏列表
-     */
-    async start(e, gameList) {
-        const group_id = groupKey(e)
-        if (fribGameData[group_id]) {
-            send.reply(e, `当前群还有未结束的弗一把哦！发送 /${Config.getUserCfg('config', 'cmdhead')} ans 可以提前结束呐！`, true)
-            return false
-        }
-        const { level, minDifficulty } = parseStartArgs(e.msg, Config.getUserCfg('config', 'FribDefaultLevel'))
-        const pool = buildSongPool(getInfo.idList || [], {
-            level,
-            minDifficulty,
-            infoOf: id => getInfo.info(id),
-        })
-        if (!pool.length) {
-            send.send_with_At(e, `当前曲库没有符合「${levelText(level, minDifficulty)}」条件的曲目哦！换个难度或定数下限试试吧！`)
-            return false
-        }
-        const ansId = pool[fCompute.randInt(0, pool.length - 1)]
-        if (!getInfo.info(ansId)) {
-            send.send_with_At(e, '获取曲目信息发生未知错误QAQ！')
-            return false
-        }
-        const maxGuess = guessNumLimit(1, guessNumTable())
-        /** @type {fribGameData} */
-        const game = {
-            ansId,
-            level,
-            minDifficulty,
-            maxGuess,
-            rows: [],
-            guessedIds: [],
-            lastGuessId: null,
-            lastGroupGuessTime: 0,
-            playerGuessTime: {},
-            settled: false,
-            timer: null,
-            event: e,
-        }
-        fribGameData[group_id] = game
-        gameList[group_id] = { gameType: 'frib19' }
-        send.reply(e, [
-            `下面开始进行弗一把哦！本局按「${levelText(level, minDifficulty)}」谱面对比，定数与物量均以该难度为准嗷！`,
-            `直接发送曲名进行猜测，参与的人越多本局可猜次数越多（初始 ${guessNumLimit(1, guessNumTable())} 次，最多 ${guessNumLimit(99, guessNumTable())} 次）；猜中或次数用尽后公布答案，连续 ${Config.getUserCfg('config', 'FribTimeout')} 秒没有有效猜测会自动结束呐！`,
-            `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 获取答案，回答冷却：个人 ${Config.getUserCfg('config', 'FribSelfGuessCd')}s、群聊 ${Config.getUserCfg('config', 'FribGroupGuessCd')}s。`,
-        ])
-        refreshTimeout(group_id, gameList)
-        return true
-    }
-
-    /**
-     * 猜测曲目
-     * @param {botEvent} e 事件对象
-     * @param {GameList} gameList 进行中的游戏列表
-     */
-    async guess(e, gameList) {
-        const group_id = groupKey(e)
-        const game = fribGameData[group_id]
-        if (!game) return false
-        const msg = String(e.msg ?? '').trim()
-        /** 过滤命令、CQ码与超长文本，避免无效猜测消耗次数 */
-        if (!msg || msg.length > 64 || msg.includes('[CQ:') || msg.startsWith('#') || msg.startsWith('/')) return false
-        const ids = getInfo.fuzzysongsnick(msg, 0.95)
-        if (!ids.length) return false
-        const answer = getInfo.info(game.ansId)
-        if (!answer) {
-            endGame(group_id, gameList)
-            return false
-        }
-        if (ids.includes(game.ansId)) {
-            /** 先占位结算，避免发图期间其他人再猜中一次 */
-            if (!beginSettle(game)) return true
-            game.rows.push(createFribRow(withCharters(answer), withCharters(answer), compareContext(playerName(e), game.level)))
-            game.lastGuessId = game.ansId
-            markGuessed(game, e)
-            endGame(group_id, gameList)
-            try {
-                await send.send_with_At(e, `恭喜你，猜中啦喵！ヾ(≧▽≦*)o`, true)
-                await send.reply(e, await renderGame(e, game, true))
-                await send.reply(e, await getPic.GetSongsInfoAtlas(e, game.ansId))
-                await send.reply(e, `正确答案是：${answer.song}！发送 /${Config.getUserCfg('config', 'cmdhead')} fib 可以再来一局喵！\n` +
-                    `Tip: 可以指定难度与定级范围哦~ 例如 /${Config.getUserCfg('config', 'cmdhead')} fib AT 15+`)
-            } catch (err) {
-                logger.error('[phi-plugin][frib19]结算消息发送失败')
-                logger.error(err)
-            }
-            return true
-        }
-        /** 已在结算中的猜测不再计入 */
-        if (game.settled) return true
-        const guessId = ids.find(id => !game.guessedIds.includes(id))
-        if (!guessId) {
-            send.send_with_At(e, `曲目[${getInfo.info(ids[0])?.song ?? msg}]已经猜过啦，换一首试试吧uwu`, true, { recallMsg: 5 })
-            return true
-        }
-        /** 回答冷却：个人冷却与群冷却同时生效 */
-        const cooldown = guessCooldown({
-            now: Date.now(),
-            selfSeconds: numberCfg(Config.getUserCfg('config', 'FribSelfGuessCd'), 30),
-            groupSeconds: numberCfg(Config.getUserCfg('config', 'FribGroupGuessCd'), 5),
-            lastSelfGuess: game.playerGuessTime[String(e.user_id ?? '')] ?? 0,
-            lastGroupGuess: game.lastGroupGuessTime,
-        })
-        if (cooldown.seconds > 0) {
-            send.send_with_At(e, `${cooldown.kind === 'self' ? '你的' : '群里的'}回答冷却还有 ${cooldown.seconds}s 呐，先耐心等下哇QAQ`, true, { recallMsg: 5 })
-            return true
-        }
-        const guessInfo = getInfo.info(guessId)
-        if (!guessInfo) return false
-        game.rows.push(createFribRow(withCharters(guessInfo), withCharters(answer), compareContext(playerName(e), game.level)))
-        game.guessedIds.push(guessId)
-        game.lastGuessId = guessId
-        markGuessed(game, e)
-        refreshMaxGuess(game)
-        refreshTimeout(group_id, gameList)
-        if (game.rows.length >= game.maxGuess) {
-            /** 先占位结算，避免并发的另一次猜测也走到结算 */
-            if (!beginSettle(game)) return true
-            endGame(group_id, gameList)
-            try {
-                await send.reply(e, [`很遗憾，猜测次数用完了喵！正确答案是：${answer.song}`, await renderGame(e, game, true)])
-            } catch (err) {
-                logger.error('[phi-plugin][frib19]结算消息发送失败')
-                logger.error(err)
-            }
-            return true
-        }
-        const image = await renderGame(e, game, false)
-        /** 渲染期间本局可能已被他人结算，此时不再补发这张图 */
-        if (fribGameData[group_id] !== game) return true
-        await send.reply(e, image)
-        return true
-    }
-
-    /**
-     * 结束游戏并公布答案
-     * @param {botEvent} e 事件对象
-     * @param {GameList} gameList 进行中的游戏列表
-     */
-    async ans(e, gameList) {
-        const group_id = groupKey(e)
-        const game = fribGameData[group_id]
-        if (!game) return false
-        /** 先占位结算，避免公布答案期间有人猜中而重复结算 */
-        if (!beginSettle(game)) return false
-        const answer = getInfo.info(game.ansId)
-        endGame(group_id, gameList)
-        try {
-            await send.reply(e, [`好吧，下面开始公布答案。正确答案是：${answer?.song}`, await renderGame(e, game, true)])
-        } catch (err) {
-            logger.error('[phi-plugin][frib19]结算消息发送失败')
-            logger.error(err)
-        }
-        return true
-    }
-}()

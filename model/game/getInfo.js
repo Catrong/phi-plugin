@@ -69,119 +69,141 @@ import Save from '../save/Save.js'
  */
 
 class getInfo {
+    /**
+     * 难度映射
+     * @type {allLevelKind[]}
+     */
+    allLevel = allLevel
+
+    /**
+     * 难度映射
+     * @type {levelKind[]}
+     */
+    Level = Level
+
+    /**
+     * 最大难度
+     * @type {number}
+     */
+    MAX_DIFFICULTY = 0
+
+    /**
+     * @type {string[]}
+     * @description Tips
+     */
+    tips = []
+
+
+    /**
+     * @type {{[key:idString]:Partial<SongsInfo> | undefined}}
+     * @description 原版信息
+     */
+    ori_info = {}
+    /**
+     * @type {{[key:idString]:songString}}
+     * @description 通过id获取曲名
+     */
+    songsid = {}
+    /**
+     * @type {{[key:songString]:idString}}
+     * @description 原曲名称获取id
+     */
+    idssong = {}
+    /**
+     * @type {idString[]}
+     * @description 含有曲绘的曲目列表，id名称
+     */
+    illlist = []
+
+    /**
+     * 原始曲目id列表(不包含自定义曲目)
+     * @type {idString[]}
+     */
+    idList = []
+
+    /**
+     * 曲目id列表(包含自定义曲目)
+     * @type {idString[]}
+     */
+    all_idList = []
+    /**
+     * 所有曲目曲名列表
+     * @type {songString[]}
+     */
+    songlist = []
+
+    /**
+     * @type {{[key:string]: string[]}}
+     * @description 章节别名，以别名为key，内容为章节名
+     */
+    chapNick = {}
+
+    /**
+     * 按dif分的info
+     * @type {Record<string, Chart[]>}
+     */
+    info_by_difficulty = {}
+
+
+    /**
+     * @type {idString[]}
+     */
+    updatedSong = []
+
+
+    /**
+     * @type {Record<idString, Partial<Record<levelKind, updatedChartObject>>>}
+     */
+    updatedChart = {}
+
+    /** @type {{[versionLabel: string]: versionInfoObject}} */
+    versionInfoByLabel = {}
+
+    /** @type {{[versionCode: string]: versionInfoObject}} */
+    versionInfoByCode = {}
+
+    /** @type {[Date,versionInfoObject][]} */
+    versionInfoByDate = []
+
+    /** @type {historyDifficultyByVersionObject} */
+    historyDifficultyByVersion = {}
+
+    /** @type {historyDifficultyBySongIdObject} */
+    historyDifficultyBySongId = {}
+
+    /** @type {Record<string, Record<string, {id: idString, rank: levelKind, difficulty: number}[]>>} */
+    historyDifficultyByVerDifficulty = {}
+
+    /**@type {{title: string, code: number, content: string[]}} */
+    noticeJson = { title: '', code: 0, content: [] }
+
+    /**@type {Save | null} */
+    badSave = null;
+
+    initIng = false
+    reinitRequested = false
+
+    /** 定数表推算出的理论上限，懒计算，曲库重载后失效 @type {import('./songLimits.js').songLimitsObject | null} */
+    songLimits = null
+
+    /** 已注册的信息文件监听 @type {{close: () => Promise<void>}[]} */
+    infoWatcherLeases = []
+    /** @type {Promise<void>} 重载串行链，避免加载与初始化并发 */
+    infoReloadChain = Promise.resolve()
+    /** @type {Set<string>} 待重载的单元 */
+    pendingReloadUnits = new Set()
+    /** @type {ReturnType<typeof setTimeout> | null} */
+    reloadTimer = null
+    infoWatchersClosed = false
+    /** @type {Record<string, Partial<Record<levelKind, number>>>} 上一版本定数表，用于新曲与改谱对比 */
+    oldDifList = {}
+    /** @type {boolean} 版本历史是否已加载 */
+    versionHistoryLoaded = false
+
+    /** @type {Record<idString, Partial<Record<levelKind, string[]>>>} 来源于 https://daogemm.github.io/files/infos/charters.json */
+    charters = {}
 
     constructor() {
-        /**
-         * 难度映射
-         * @type {allLevelKind[]}
-         */
-        this.allLevel = allLevel
-
-        /**
-         * 难度映射
-         * @type {levelKind[]}
-         */
-        this.Level = Level
-
-        /**
-         * @type {string[]}
-         * @description Tips
-         */
-        this.tips = []
-
-
-        /**
-         * @type {{[key:idString]:Partial<SongsInfo> | undefined}}
-         * @description 原版信息
-         */
-        this.ori_info = {}
-        /**
-         * @type {{[key:idString]:songString}}
-         * @description 通过id获取曲名
-         */
-        this.songsid = {}
-        /**
-         * @type {{[key:songString]:idString}}
-         * @description 原曲名称获取id
-         */
-        this.idssong = {}
-        /**
-         * @type {idString[]}
-         * @description 含有曲绘的曲目列表，id名称
-         */
-        this.illlist = []
-
-        /**
-         * @type {{[key:string]: string[]}}
-         * @description 章节别名，以别名为key，内容为章节名
-         */
-        this.chapNick = {}
-
-        /**
-         * 按dif分的info
-         * @type {Record<string, Chart[]>}
-         */
-        this.info_by_difficulty = {}
-
-
-        /**
-         * @type {idString[]}
-         */
-        this.updatedSong = []
-
-
-        /**
-         * @type {Record<idString, Partial<Record<levelKind, updatedChartObject>>>}
-         */
-        this.updatedChart = {}
-
-        /** @type {{[versionLabel: string]: versionInfoObject}} */
-        this.versionInfoByLabel = {}
-
-        /** @type {{[versionCode: string]: versionInfoObject}} */
-        this.versionInfoByCode = {}
-
-        /** @type {[Date,versionInfoObject][]} */
-        this.versionInfoByDate = []
-
-        /** @type {historyDifficultyByVersionObject} */
-        this.historyDifficultyByVersion = {}
-
-        /** @type {historyDifficultyBySongIdObject} */
-        this.historyDifficultyBySongId = {}
-
-        /** @type {Record<string, Record<string, {id: idString, rank: levelKind, difficulty: number}[]>>} */
-        this.historyDifficultyByVerDifficulty = {}
-
-        /**@type {{title: string, code: number, content: string[]}} */
-        this.noticeJson = { title: '', code: 0, content: [] }
-
-        /**@type {Save | null} */
-        this.badSave = null;
-
-        this.initIng = false
-        this.reinitRequested = false
-
-        /** 定数表推算出的理论上限，懒计算，曲库重载后失效 @type {import('./songLimits.js').songLimitsObject | null} */
-        this.songLimits = null
-
-        /** 已注册的信息文件监听 @type {{close: () => Promise<void>}[]} */
-        this.infoWatcherLeases = []
-        /** @type {Promise<void>} 重载串行链，避免加载与初始化并发 */
-        this.infoReloadChain = Promise.resolve()
-        /** @type {Set<string>} 待重载的单元 */
-        this.pendingReloadUnits = new Set()
-        /** @type {ReturnType<typeof setTimeout> | null} */
-        this.reloadTimer = null
-        this.infoWatchersClosed = false
-        /** @type {Record<string, Partial<Record<levelKind, number>>>} 上一版本定数表，用于新曲与改谱对比 */
-        this.oldDifList = {}
-        /** @type {boolean} 版本历史是否已加载 */
-        this.versionHistoryLoaded = false
-
-        /** @type {Record<idString, Partial<Record<levelKind, string[]>>>} 来源于 https://daogemm.github.io/files/infos/charters.json */
-        this.charters = {}
-
         this.setupInfoWatchers()
     }
 
@@ -505,17 +527,10 @@ class getInfo {
         /**最高定数 */
         this.MAX_DIFFICULTY = 0
 
-        /**
-         * 所有曲目曲名列表
-         * @type {songString[]}
-         */
         this.songlist = []
-
-        /**
-         * 曲目id列表
-         * @type {idString[]}
-         */
         this.idList = []
+
+        this.all_idList = []
 
         /**
          * @typedef {Object} notesInfoObject
@@ -684,10 +699,11 @@ class getInfo {
             if (Jsoninfo[idWithout0]?.chart) {
                 this.ori_info[id].chart = { ...this.ori_info[id].chart, ...Jsoninfo[idWithout0].chart }
             }
+            this.idList.push(id)
             if (otherInfoMode != 2) {
                 this.illlist.push(id)
                 this.songlist.push(this.ori_info[id].song)
-                this.idList.push(id)
+                this.all_idList.push(id)
             }
         }
 
@@ -701,7 +717,7 @@ class getInfo {
                     this.illlist.push(/** @type {idString} */(i))
                 }
                 this.songlist.push(/** @type {songString} */(song?.song || i))
-                this.idList.push(/** @type {idString} */(i))
+                this.all_idList.push(/** @type {idString} */(i))
             }
         }
 

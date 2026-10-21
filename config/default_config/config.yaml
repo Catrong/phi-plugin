@@ -270,9 +270,6 @@ GrksMatchTurnTime: 90
 #  匹配连续多少回合未行动判负
 GrksMatchMaxTimeoutTurn: 3
 
-#  匹配胜率榜的最少对局数
-GrksRankMinMatch: 3
-
 #  ************ 【其他设置】 *************
 #  认证 Token
 VikaToken: ""

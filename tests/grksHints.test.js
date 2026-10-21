@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { parseHintArgs } from '../apps/grks.js'
+import { parseHintArgs, parseRankArgs } from '../apps/grks.js'
 import {
     BEST_SLOTS,
     NOINFO_TEXT,
@@ -15,6 +15,8 @@ import {
     defaultMatchHint,
     formatHintText,
     matchHintType,
+    maxMatchHints,
+    maxSoloHints,
     normalizeSlotName,
     resolveStatsKind,
     soloHintKind,
@@ -107,6 +109,9 @@ test('walks the solo hint ladder around the position threshold', () => {
         state = result.state
         assert.equal(state.hintCount, index + 1)
         assert.equal(state.positionRevealed, index + 1 >= 5)
+        /** 第 6 条是统计、第 7 条是课题，之后继续补成绩，但已公开的信息必须保留 */
+        assert.equal(state.statsKind, index + 1 >= 6 ? 'histogram' : '')
+        assert.equal(state.challengeRevealed, index + 1 >= 7)
     }
     assert.deepEqual(kinds, ['records', 'records', 'records', 'records', 'records', 'stats', 'challenge', 'records'])
     assert.equal(soloHintKind({ ...state, hintCount: 0 }, 5), 'records')
@@ -114,6 +119,12 @@ test('walks the solo hint ladder around the position threshold', () => {
     assert.equal(soloHintKind({ ...state, hintCount: 5 }, 5), 'stats')
     assert.equal(soloHintKind({ ...state, hintCount: 6 }, 5), 'challenge')
     assert.equal(soloHintKind({ ...state, hintCount: 7 }, 5), 'records')
+    /** 换成上下界形式时状态记下的是 range */
+    const ranged = applySoloHint(createSoloState('token-a'), puzzle, { ...cfg, StatsHint: 'range' }, () => 0)
+    assert.equal(ranged.hint.kind, 'records')
+    const rangedStats = applySoloHint({ ...ranged.state, hintCount: 5 }, puzzle, { ...cfg, StatsHint: 'range' }, () => 0)
+    assert.equal(rangedStats.hint.kind, 'stats')
+    assert.equal(rangedStats.state.statsKind, 'range')
 })
 
 test('reveals slots without duplicates and marks exhaustion', () => {
@@ -156,7 +167,7 @@ test('validates match hint arguments', () => {
     assert.equal(validateMatchHint(side, puzzle, 'records', 'P4').ok, false)
     assert.match(String(validateMatchHint(side, puzzle, 'records', '').error), /需要指定槽位/)
 
-    const used = { revealedSlots: ['B7'], hintCount: 1 }
+    const used = { revealedSlots: ['B7'], hintCount: 1, statsKind: /** @type {''} */ (''), challengeRevealed: false }
     const repeated = validateMatchHint(used, puzzle, 'records', 'B7')
     assert.equal(repeated.ok, false)
     assert.match(String(repeated.error), /已经提示过/)
@@ -204,7 +215,7 @@ test('applies match hints and falls back to an unused slot', () => {
     if (challenge.ok) assert.equal(challenge.side.hintCount, 2)
 
     assert.deepEqual(defaultMatchHint(side, puzzle), { type: 'records', arg: 'P1' })
-    const full = { revealedSlots: puzzle.slots.map(slot => slot.slot), hintCount: 30 }
+    const full = { revealedSlots: puzzle.slots.map(slot => slot.slot), hintCount: 30, statsKind: /** @type {''} */ (''), challengeRevealed: false }
     assert.deepEqual(defaultMatchHint(full, puzzle), { type: 'stats' })
 })
 
@@ -222,6 +233,9 @@ test('builds solo and match views with placeholders', () => {
     assert.equal(unknownPosition.bestSongs.length, 0)
     assert.deepEqual(unknownPosition.ordered.map((/** @type {any} */ item) => item.slot), ['', ''])
     assert.ok(unknownPosition.ordered[0].record.rks >= unknownPosition.ordered[1].record.rks)
+    /** 位置未公开时只列出已公开成绩，因此都能显示单曲 rks */
+    assert.equal(unknownPosition.ordered[0].recordRks, unknownPosition.ordered[0].record.rks.toFixed(2))
+    assert.equal(unknownPosition.ordered[1].recordRks, unknownPosition.ordered[1].record.rks.toFixed(2))
     assert.equal(unknownPosition.ordered[0].placeholder, '')
     assert.equal(unknownPosition.header.rks, '----')
     assert.equal(unknownPosition.recordInfo.blank, true)
@@ -238,11 +252,16 @@ test('builds solo and match views with placeholders', () => {
     assert.equal(soloGrid.phiSongs[0].slot, 'P1')
     assert.equal(soloGrid.phiSongs[0].revealed, true)
     assert.equal(soloGrid.phiSongs[0].rating, 'V')
+    /** 定数下方的单曲 rks：公开后显示，未公开保持 ??? */
+    assert.equal(soloGrid.phiSongs[0].recordRks, soloGrid.phiSongs[0].record.rks.toFixed(2))
+    assert.equal(soloGrid.phiSongs[1].recordRks, '???')
     assert.equal(soloGrid.phiSongs[1].placeholder, NOINFO_TEXT)
     assert.equal(soloGrid.phiSongs[1].record, null)
     assert.equal(soloGrid.phiSongs[1].masked, false)
     assert.equal(soloGrid.bestSongs[2].slot, 'B3')
     assert.equal(soloGrid.bestSongs[2].revealed, true)
+    assert.equal(soloGrid.bestSongs[2].recordRks, soloGrid.bestSongs[2].record.rks.toFixed(2))
+    assert.equal(soloGrid.bestSongs[1].recordRks, '???')
     assert.equal(soloGrid.bestSongs[1].placeholder, NOINFO_TEXT)
     assert.equal(soloGrid.showAnalysis, true)
     assert.equal(soloGrid.header.showChallenge, false)
@@ -264,7 +283,10 @@ test('builds solo and match views with placeholders', () => {
     assert.equal(matchGrid.phiSongs[1].revealed, false)
     assert.equal(matchGrid.phiSongs[1].masked, true)
     assert.ok(matchGrid.phiSongs[1].record)
+    /** 未公开槽位即使渲染了真实成绩底图，单曲 rks 也不显示 */
+    assert.equal(matchGrid.phiSongs[1].recordRks, '???')
     assert.equal(matchGrid.bestSongs[0].masked, true)
+    assert.equal(matchGrid.bestSongs[0].recordRks, '???')
     assert.equal(matchGrid.header.showChallenge, true)
     assert.equal(matchGrid.header.challengeMasked, true)
     assert.equal(matchGrid.header.challengeCommand, '#phi grks hint 4')
@@ -306,6 +328,105 @@ test('builds solo and match views with placeholders', () => {
     assert.equal(challengeView.header.showChallenge, true)
     assert.equal(challengeView.header.ChallengeMode, 0)
     assert.equal(challengeView.header.ChallengeModeRank, 56)
+})
+
+test('keeps revealed stats and challenge visible on later hints', () => {
+    const puzzle = makePuzzle()
+    const revealed = ['P1', 'B3']
+    /** 下一条提示是成绩，但统计已经公开过 */
+    const laterHint = /** @type {import('../model/game/grks/hints.js').grksHint} */ ({ kind: 'records', slots: ['B5'] })
+
+    const histogramNext = buildView({
+        puzzle,
+        revealedSlots: revealed,
+        positionRevealed: true,
+        mode: 'solo',
+        hint: laterHint,
+        statsKind: 'histogram',
+    })
+    assert.equal(histogramNext.analysisPanel.blank, false)
+    assert.equal(histogramNext.analysisPanel.masked, false)
+    assert.equal(histogramNext.rangeHint, false)
+
+    /** 上下界形式同样保持，后续提示继续渲染标尺视图（直方图区不渲染，数据保持留空） */
+    const rangeNext = buildView({
+        puzzle,
+        revealedSlots: revealed,
+        positionRevealed: true,
+        mode: 'solo',
+        hint: laterHint,
+        statsKind: 'range',
+    })
+    assert.equal(rangeNext.rangeHint, true)
+    assert.equal(rangeNext.analysisPanel.blank, true)
+
+    /** 课题公开后，后续提示仍显示课题段位与存档统计 */
+    const challengeNext = buildView({
+        puzzle,
+        revealedSlots: revealed,
+        positionRevealed: true,
+        mode: 'solo',
+        hint: laterHint,
+        challengeRevealed: true,
+    })
+    assert.equal(challengeNext.header.showChallenge, true)
+    assert.equal(challengeNext.header.challengeMasked, false)
+    assert.equal(challengeNext.recordInfo.blank, false)
+
+    /** 未公开时保持隐藏 */
+    const hidden = buildView({
+        puzzle,
+        revealedSlots: revealed,
+        positionRevealed: true,
+        mode: 'solo',
+        hint: laterHint,
+    })
+    assert.equal(hidden.analysisPanel.blank, true)
+    assert.equal(hidden.header.showChallenge, false)
+    assert.equal(hidden.recordInfo.blank, true)
+
+    /** 匹配持有者底图：给出统计与课题后不再重新盖遮罩 */
+    const ownPanel = buildView({
+        puzzle,
+        revealedSlots: [],
+        positionRevealed: true,
+        mode: 'match',
+        hintCommand: '#phi grks',
+        hint: null,
+        statsKind: 'histogram',
+        challengeRevealed: true,
+    })
+    assert.equal(ownPanel.analysisPanel.masked, false)
+    assert.equal(ownPanel.header.challengeMasked, false)
+    assert.equal(ownPanel.recordInfo.masked, false)
+})
+
+test('keeps revealed stats and challenge across later match hints', () => {
+    const puzzle = makePuzzle()
+    const cfg = { StatsHint: 'auto' }
+    let side = createMatchSideState()
+
+    const stats = applyMatchHint(side, puzzle, 'stats', 'histogram', cfg)
+    assert.equal(stats.ok, true)
+    if (!stats.ok) return
+    side = stats.side
+    assert.equal(side.statsKind, 'histogram')
+    assert.equal(side.challengeRevealed, false)
+
+    const challenge = applyMatchHint(side, puzzle, 'challenge', '', cfg)
+    assert.equal(challenge.ok, true)
+    if (!challenge.ok) return
+    side = challenge.side
+    assert.equal(side.statsKind, 'histogram')
+    assert.equal(side.challengeRevealed, true)
+
+    /** 之后再给记录提示，已公开的统计与课题仍保留在状态里 */
+    const records = applyMatchHint(side, puzzle, 'records', 'B2', cfg)
+    assert.equal(records.ok, true)
+    if (!records.ok) return
+    assert.equal(records.side.statsKind, 'histogram')
+    assert.equal(records.side.challengeRevealed, true)
+    assert.deepEqual(records.side.revealedSlots, ['B2'])
 })
 
 test('renders text fallback for every hint kind', () => {
@@ -367,4 +488,27 @@ test('parses simplified hint arguments', () => {
     assert.deepEqual(parseHintArgs('#phi grks hint histogram'), { type: '3', arg: 'histogram' })
     assert.deepEqual(parseHintArgs('#phi grks hint 4'), { type: '4', arg: undefined })
     assert.deepEqual(parseHintArgs('#phi grks hint'), {})
+})
+
+test('parses rank board arguments including the accuracy board', () => {
+    assert.deepEqual(parseRankArgs('#phi grks lb'), { gameId: undefined, mode: undefined, kind: 'score', page: 1 })
+    assert.equal(parseRankArgs('#phi grks lb 准确率').kind, 'accuracy')
+    assert.equal(parseRankArgs('#phi grks lb accuracy').kind, 'accuracy')
+    assert.deepEqual(parseRankArgs('#phi grks lb 匹配 准确率 2'), { gameId: undefined, mode: 'match', kind: 'accuracy', page: 2 })
+    assert.equal(parseRankArgs('#phi grks lb 单机 准确率榜').kind, 'accuracy')
+    assert.equal(parseRankArgs('#phi 游戏积分榜 胜率').kind, 'winRate')
+})
+
+test('counts every hint an unanswered game could consume', () => {
+    const puzzle = makePuzzle()
+    assert.equal(puzzle.slots.length, 30)
+    /** 匹配每条提示只公开一个槽位，再加统计与课题两条 */
+    assert.equal(maxMatchHints(puzzle), 32)
+    /** 单机每条提示公开 HintRevealNum 个槽位，再加统计与课题两条 */
+    assert.equal(maxSoloHints(puzzle, { HintRevealNum: 2 }), 17)
+    assert.equal(maxSoloHints(puzzle, { HintRevealNum: 1 }), 32)
+    assert.equal(maxSoloHints(puzzle, { HintRevealNum: 10 }), 5)
+    assert.equal(maxSoloHints(puzzle, {}), 17)
+    /** 空谜题时仍保留统计与课题两条提示 */
+    assert.equal(maxMatchHints(/** @type {any} */ (null)), 2)
 })

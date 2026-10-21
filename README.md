@@ -218,7 +218,7 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 | `#phi (ltr\|开字母)` | 根据字母猜曲名，#出/#open... 开指定的字母，#第n个/#nX.xxx 进行回答，#ans 获取答案
 | `#phi (tipgame\|提示猜曲)` | 根据提示猜曲名，#tip获得下一条提示，#ans 获取答案，回答直接回复
 | `#phi (弗一把\|friberg\|fib\|fri) [难度=EZ\|HD\|IN\|AT] [定数下限，如 14.1 / 14.1+ / 连写 fib14.3，均表示该定数及以上]` | 弗一把猜歌，直接回复曲名猜测，每次猜测都会对比谱师（真实名录来源于 daogemm.github.io；双方都有真实名录时，多名谱师有一人重合即视为相近）、首次收录版本（含上线时间）、章节、是否独占、定数、BPM、物量与答案的异同，#ans 获取答案；定数与物量以指定难度的谱面为准，回答有个人与群聊冷却，参与人数越多可猜次数越多
-| `#phi grks` / `#phi 猜rks` | 猜 RKS 小游戏：从本地已绑定存档随机抽一个 B30 出题，`grks tip` 逐条提示（第 N 条后公开位置，再给统计与课题完成度），`grks 15.25` 猜测，`grks ans` 公布答案；`grks match` 进入匹配池，按 rks 相近且不同会话配对，`grks hint B7`（等价 `grks hint 1 B7`）/ `grks hint 3 [histogram\|range]` / `grks hint 4` 给对方提示，同回合结算，`grks cancel` 退出；`grks lb [单机\|匹配] [胜率] [页码]` 查看积分榜（每局 10/提示条数 分）
+| `#phi grks` / `#phi 猜rks` | 猜 RKS 小游戏：从本地已绑定存档随机抽一个 B30 出题，`grks tip` 逐条提示（第 N 条后公开位置，再给统计与课题完成度），`grks 15.25` 猜测，`grks ans` 公布答案；`grks match` 进入匹配池，按 rks 相近且不同会话配对，`grks hint B7`（等价 `grks hint 1 B7`）/ `grks hint 3 [histogram\|range]` / `grks hint 4` 给对方提示，同回合结算，`grks cancel` 退出；`grks lb [单机\|匹配] [积分\|胜率\|准确率] [页码]` 查看排行榜（每局 10/提示条数 分；准确率榜展示平均所需提示数且需完成 10 局以上，胜率榜同样要求 10 场以上）
 | `#phi (song\|曲) xxx` | 查询phigros中某一曲目的图鉴，支持设定别名
 | `#phi chart <曲名> [难度=IN]` | 查询phigros中某一谱面的详细信息
 | `#phi tag <曲名> [难度=IN] <标签>` | 查看谱面标签，标签可选项见回复说明，难度默认为IN

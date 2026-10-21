@@ -12,6 +12,8 @@
 
 {{block 'main'}}
 
+
+
 <div class="title">
     <div class="playerInfo">
         <div class="blackBlock clip-box"></div>
@@ -86,7 +88,7 @@
             <div class="ill clip-box"><img src="{{song.record.illustration}}" alt="ill"></div>
             <div class="rank-{{song.record.rank}} clip-box">
                 <div class="org"><p>{{song.record.rank}}&ensp;{{song.record.difficulty.toFixed(1)}}</p></div>
-                <div class="rel"><p>???</p></div>
+                <div class="rel"><p>{{song.recordRks}}</p></div>
             </div>
         </div>
         <div class="info-{{song.record.rank}}">
@@ -123,7 +125,7 @@
             <div class="ill clip-box"><img src="{{song.record.illustration}}" alt="ill"></div>
             <div class="rank-{{song.record.rank}} clip-box">
                 <div class="org"><p>{{song.record.rank}}&ensp;{{song.record.difficulty.toFixed(1)}}</p></div>
-                <div class="rel"><p>???</p></div>
+                <div class="rel"><p>{{song.recordRks}}</p></div>
             </div>
         </div>
         <div class="info-{{song.record.rank}}">
@@ -160,7 +162,7 @@
             <div class="ill clip-box"><img src="{{song.record.illustration}}" alt="ill"></div>
             <div class="rank-{{song.record.rank}} clip-box">
                 <div class="org"><p>{{song.record.rank}}&ensp;{{song.record.difficulty.toFixed(1)}}</p></div>
-                <div class="rel"><p>???</p></div>
+                <div class="rel"><p>{{song.recordRks}}</p></div>
             </div>
         </div>
         <div class="info-{{song.record.rank}}">

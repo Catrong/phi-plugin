@@ -814,4 +814,11 @@ export default class fCompute {
         return rex;
     }
 
+    static randBackground(original = false) {
+        if (!original) {
+            return getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))], 'blur');
+        }
+        return getInfo.getill(getInfo.idList[Math.floor((Math.random() * (getInfo.idList.length - 1)))], 'blur');
+    }
+
 }

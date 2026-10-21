@@ -79,7 +79,7 @@ export default new class guessTips {
          */
         let hasIllIdList = []
 
-        const allIdList = getInfo.idList || []
+        const allIdList = getInfo.all_idList || []
 
         allIdList.forEach(id => {
             if (getInfo.getill(id) && getInfo.info(id)) {

@@ -17,10 +17,13 @@ import {
 import {
     rankByScore,
     rankByWinRate,
+    rankByAccuracy,
+    averageHints,
     winRate,
     paginate,
     formatRanking,
     describeRow,
+    RANK_MIN_PLAYS,
 } from './ranking.js'
 
 /**
@@ -44,13 +47,15 @@ export const GRKS_GAME = registerGame({
 
 /**
  * 查询并格式化一份榜单。
+ * 准确率榜与胜率榜默认要求至少 `RANK_MIN_PLAYS`（10）局，避免样本太少失真。
  * @param {object} options
  * @param {string} [options.gameId]
  * @param {string} [options.mode]
  * @param {import('./ranking.js').gameScoreRankKind} [options.kind]
  * @param {number} [options.page]
  * @param {number} [options.pageSize]
- * @param {number} [options.minMatches]
+ * @param {number} [options.minPlays] 上榜门槛覆盖值（测试与第三方调用使用）
+ * @param {number} [options.minMatches] `minPlays` 的旧名称
  * @param {string} [options.meId]
  * @returns {{ok: boolean, text: string, gameId?: string, mode?: string, kind?: string}}
  */
@@ -58,12 +63,17 @@ export function queryRanking(options) {
     const resolved = resolveGameMode(options.gameId, options.mode)
     if (!resolved) return { ok: false, text: '暂无可查询的游戏积分榜' }
     const { game, mode, modeMeta } = resolved
-    const kind = options.kind === 'winRate' && modeMeta.winRate ? 'winRate' : 'score'
+    const kind = options.kind === 'accuracy'
+        ? 'accuracy'
+        : options.kind === 'winRate' && modeMeta.winRate ? 'winRate' : 'score'
+    const threshold = Math.max(1, Math.trunc(options.minPlays ?? options.minMatches ?? RANK_MIN_PLAYS))
     const rows = listPlayers(game.id, mode)
-    const sorted = kind === 'winRate'
-        ? rankByWinRate(rows, options.minMatches ?? 1)
-        : rankByScore(rows)
-    const title = `${game.name} · ${modeMeta.label} ${kind === 'winRate' ? '胜率榜' : '积分榜'}`
+    const sorted = kind === 'accuracy'
+        ? rankByAccuracy(rows, threshold)
+        : kind === 'winRate'
+            ? rankByWinRate(rows, threshold)
+            : rankByScore(rows)
+    const title = `${game.name} · ${modeMeta.label} ${rankKindLabel(kind)}`
     return {
         ok: true,
         gameId: game.id,
@@ -76,9 +86,20 @@ export function queryRanking(options) {
             meId: options.meId,
             page: options.page,
             pageSize: options.pageSize,
-            minMatches: options.minMatches,
+            minPlays: threshold,
         }),
     }
+}
+
+/**
+ * 榜单类型显示名。
+ * @param {import('./ranking.js').gameScoreRankKind} kind
+ * @returns {string}
+ */
+function rankKindLabel(kind) {
+    if (kind === 'accuracy') return '准确率榜'
+    if (kind === 'winRate') return '胜率榜'
+    return '积分榜'
 }
 
 export {
@@ -96,6 +117,9 @@ export {
     setStoreFile,
     rankByScore,
     rankByWinRate,
+    rankByAccuracy,
+    averageHints,
+    RANK_MIN_PLAYS,
     winRate,
     paginate,
     formatRanking,
@@ -117,6 +141,9 @@ export default {
     setStoreFile,
     rankByScore,
     rankByWinRate,
+    rankByAccuracy,
+    averageHints,
+    RANK_MIN_PLAYS,
     winRate,
     paginate,
     formatRanking,

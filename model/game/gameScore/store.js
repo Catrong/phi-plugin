@@ -19,6 +19,8 @@ import logger from '../../../components/Logger.js'
  * @property {number} wins 胜场（仅匹配）
  * @property {number} losses 负场（仅匹配）
  * @property {number} draws 平局（仅匹配）
+ * @property {number} hintSum 已统计对局的提示数合计（准确率榜用）
+ * @property {number} hintPlays 已统计提示数的对局数（准确率榜用）
  * @property {number} updatedAt 最近一次更新时间戳（毫秒）
  *
  * @typedef {{version: number, games: Record<string, Record<string, Record<string, gameScoreRecord>>>}} gameScoreStore 存储结构
@@ -86,6 +88,8 @@ function normalizeRecord(raw) {
         wins: Math.max(0, Math.trunc(num(raw?.wins))),
         losses: Math.max(0, Math.trunc(num(raw?.losses))),
         draws: Math.max(0, Math.trunc(num(raw?.draws))),
+        hintSum: round2(num(raw?.hintSum)),
+        hintPlays: Math.max(0, Math.trunc(num(raw?.hintPlays))),
         updatedAt: Math.max(0, Math.trunc(num(raw?.updatedAt))),
     }
 }
@@ -175,7 +179,7 @@ export function listPlayers(gameId, mode) {
  * @param {string} mode
  * @param {string} userId
  * @param {number} points 本局积分，0 表示未得分但仍计场次
- * @param {{result?: 'win' | 'loss' | 'draw'}} [options]
+ * @param {{result?: 'win' | 'loss' | 'draw', hints?: number}} [options] hints 为本局计入准确率统计的提示数
  * @returns {Promise<gameScoreRecord>} 更新后的记录
  */
 export async function addScore(gameId, mode, userId, points, options = {}) {
@@ -189,6 +193,12 @@ export async function addScore(gameId, mode, userId, points, options = {}) {
     if (options.result === 'win') record.wins += 1
     else if (options.result === 'loss') record.losses += 1
     else if (options.result === 'draw') record.draws += 1
+    /** 提示数用于准确率榜；旧数据没有该字段，只有带值的新对局参与平均 */
+    const hints = Number(options.hints)
+    if (Number.isFinite(hints) && hints >= 0) {
+        record.hintSum = round2(record.hintSum + hints)
+        record.hintPlays += 1
+    }
     record.updatedAt = Date.now()
     await schedulePersist()
     return { ...record }
