@@ -65,6 +65,7 @@ export class phihelp extends phiPluginBase {
             background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
             theme: pluginData?.theme || 'star'
         }), true)
+        send.send_with_At(e, `《Phi-plugin使用指引(别名提案申请)》：https://kdocs.cn/l/catqcMM9UR5Y`)
         await sendQuickCommands(e, helpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), '帮助页常用操作')
         return true
     }
