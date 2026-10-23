@@ -89,7 +89,7 @@
                         <p>Chart Tag</p>
                     </div>
                     <div class="box-tip">
-                        <p>{{tip}}</p>
+                        <p>维度标签体系参考自 @空游小站（kyou.net.cn）</p>
                     </div>
                     <div class="words" id="words">
                         {{if renderNoJs}}
