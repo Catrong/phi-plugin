@@ -393,7 +393,8 @@ Koishi 的全局前缀与 `cmdhead` 分别生效。例如 Koishi 前缀为 `!`�
 1. 功能仅限内部交流与小范围使用，请勿将`Yunzai-Bot`及`phi-Plugin`用于任何以盈利为目的的场景.
 2. 图片与其他素材均来自于网络，仅供交流学习使用，如有侵权请联系，会立即删除.
 3. 云存档由 [7aGiven/PhigrosLibrary](https://github.com/7aGiven/PhigrosLibrary) 改写而来
-4. 谱师数据来源于 [DP-Tool](https://daogemm.github.io/)
+4. 谱面标签采用 B 站 UP 主 [空游呀](https://space.bilibili.com/39677917) 的分类方式，可前往 [空游的小站](https://kyou.net.cn/) 了解更多音游相关内容和分类资料。
+5. 谱师数据来源于 [DP-Tool](https://daogemm.github.io/)
 
 ###### 写的不好，轻喷……
 

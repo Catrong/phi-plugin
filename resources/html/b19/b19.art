@@ -416,13 +416,15 @@
             </div>
             {{if !b30Analysis.tagAnalysis || b30Analysis.tagAnalysis.insufficient}}
             <div class="tag-insufficient-message">
-                <p>有效选票或逐标签成绩样本不足，请前往 https://www.phib19.top 或使用 /settag 进行谱面标签投票</p>
+                <p>维度标签体系参考自 @空游小站（kyou.net.cn）</p>
+                <p>有效选票或逐标签成绩样本不足，请前往 phib19.top 或使用 /settag 进行谱面标签投票</p>
             </div>
             {{/if}}
         </div>
         {{if b30Analysis.tagAnalysis && !b30Analysis.tagAnalysis.insufficient}}
         <div class="tag-analysis-tip">
-            <p>谱面投票可前往 https://www.phib19.top 或使用 /settag 指令提交</p>
+            <p>维度标签体系参考自 @空游小站（kyou.net.cn）</p>
+            <p>谱面投票可前往 phib19.top 或使用 /settag 指令提交</p>
         </div>
         {{/if}}
     </section>

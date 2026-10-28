@@ -463,7 +463,7 @@ body {
 .words-box {
     position: relative;
     display: flex;
-    width: 18%;
+    width: 22%;
     height: 100%;
     flex-direction: column;
 }
