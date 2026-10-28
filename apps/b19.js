@@ -31,7 +31,7 @@ import {
     chapterQuickCommands,
     achievementQuickCommands,
 } from '../model/game/markdown.js'
-import { getTableDifficulty } from '../model/game/tableDifficulty.js'
+import { getTableDifficulty, parseTableArgs } from '../model/game/tableDifficulty.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -1115,13 +1115,21 @@ export class phib19 extends phiPluginBase {
             return false
         }
 
-        const difMatch = e.msg.match(/[0-9]+/)
-        let dif = Number(difMatch?.[0])
+        // 与 #table 一致：只接受整数定数，非整数给出明确提示而不是静默取整
+        const argStr = e.msg.replace(fCompute.getRexWithCmdHead('(achievement|ahv)'), '')
+        const parsed = parseTableArgs(argStr)
 
-        if (!difMatch) {
-            send.send_with_At(e, `请输入定数嗷！\n/格式：${Config.getUserCfg('config', 'cmdhead')} table <定数>`, true)
+        if (!parsed.ok) {
+            const cmdhead = Config.getUserCfg('config', 'cmdhead')
+            if (parsed.reason === 'missing') {
+                send.send_with_At(e, `请输入定数嗷！\n/格式：${cmdhead} ahv <定数> [-v <版本号|verCode>]`, true)
+            } else {
+                send.send_with_At(e, `定数需要是整数嗷！\n/格式：${cmdhead} ahv <整数定数> [-v <版本号|verCode>]`, true)
+            }
             return false
         }
+
+        const dif = parsed.difficulty
 
         if (dif > getInfo.MAX_DIFFICULTY) {
             send.send_with_At(e, `定数已经超过最高的定数${getInfo.MAX_DIFFICULTY}了QAQ！`)
@@ -1133,7 +1141,7 @@ export class phib19 extends phiPluginBase {
         // #ahv 0 等同于 #ahv 1，#ahv 18 等同于 #ahv 17
         const tableDif = getTableDifficulty(dif)
 
-        let matchVersion = e.msg.match(/-v\s*(\S+)/i)?.[1];
+        let matchVersion = parsed.version;
         let matchVerCode = 0;
         if (matchVersion) {
             if (matchVersion.includes('.')) {

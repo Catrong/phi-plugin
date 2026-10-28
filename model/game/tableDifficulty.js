@@ -7,6 +7,24 @@ const TABLE_DIF_MIN = 1
 const TABLE_DIF_MAX = 17
 
 /**
+ * 解析定数表类指令（#ahv）的参数：整数定数 + 可选的 `-v <版本>`。
+ *
+ * 定数只接受整数：`#ahv 15.5`、`#ahv abc` 这类输入过去会被 `match(/[0-9]+/)`
+ * 静默截成 15 查询，这里统一返回错误原因，由调用方提示。
+ *
+ * @param {string} argStr 指令关键字（achievement / ahv）之后的原文
+ * @returns {{ok: true, difficulty: number, version: string | undefined} | {ok: false, reason: 'missing' | 'notInteger'}} 解析结果
+ */
+export function parseTableArgs(argStr) {
+    const text = String(argStr ?? '')
+    const version = text.match(/(?:^|\s)-v\s*(\S+)/i)?.[1]
+    const rest = text.replace(/(?:^|\s)-v\s*\S+/i, ' ').trim()
+    if (!rest) return { ok: false, reason: 'missing' }
+    if (!/^\d+$/.test(rest)) return { ok: false, reason: 'notInteger' }
+    return { ok: true, difficulty: Number(rest), version }
+}
+
+/**
  * 计算定数表查询实际展示的定数与档位。
  *
  * Phigros 中 0 级与 18 级的谱面各只有一首，分别就近并入 1 级与 17 级的定数表，

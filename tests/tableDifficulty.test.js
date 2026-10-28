@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { getTableDifficulty } from '../model/game/tableDifficulty.js'
+import { getTableDifficulty, parseTableArgs } from '../model/game/tableDifficulty.js'
 
 test('0 级谱面并入 1 级定数表，最上方显示 1-', () => {
     const zero = getTableDifficulty(0)
@@ -41,4 +41,21 @@ test('中间定数仍按 10 个 0.1 档位展示，标题保持原定数', () =>
 
 test('超出 0.1 档位精度的定数不会产生浮点档位', () => {
     assert.ok(getTableDifficulty(3).buckets.every(bucket => /^\d+\.\d$/.test(bucket)))
+})
+
+test('定数参数只接受整数，小数和文字不会被静默取整', () => {
+    assert.deepEqual(parseTableArgs('15'), { ok: true, difficulty: 15, version: undefined })
+    assert.deepEqual(parseTableArgs(' 15 '), { ok: true, difficulty: 15, version: undefined })
+    assert.deepEqual(parseTableArgs('0'), { ok: true, difficulty: 0, version: undefined })
+    assert.deepEqual(parseTableArgs('18'), { ok: true, difficulty: 18, version: undefined })
+    assert.deepEqual(parseTableArgs('15 -v 3.5.1'), { ok: true, difficulty: 15, version: '3.5.1' })
+    assert.deepEqual(parseTableArgs('15 -v3.5.1'), { ok: true, difficulty: 15, version: '3.5.1' })
+    assert.deepEqual(parseTableArgs('-v 3.5.1 15'), { ok: true, difficulty: 15, version: '3.5.1' })
+
+    for (const bad of ['15.5', '15.0', 'abc', '15 16', '15a', '+5', '15 -v']) {
+        assert.deepEqual(parseTableArgs(bad), { ok: false, reason: 'notInteger' }, bad)
+    }
+    assert.deepEqual(parseTableArgs(''), { ok: false, reason: 'missing' })
+    assert.deepEqual(parseTableArgs('   '), { ok: false, reason: 'missing' })
+    assert.deepEqual(parseTableArgs('-v 3.5.1'), { ok: false, reason: 'missing' })
 })
