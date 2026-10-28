@@ -717,7 +717,7 @@ export default class Save {
      * 获取存档成绩总览
      * @returns 
      */
-    async getStats() {
+    getStats() {
         /**'EZ', 'HD', 'IN', 'AT' */
         let tot = [0, 0, 0, 0]
 

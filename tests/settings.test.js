@@ -90,10 +90,10 @@ test('Koishi shortcut tree exposes independent groups and commands and retains l
 })
 
 test('Koishi schema preserves numeric choices, booleans and validates bounds', () => {
-    const config = schema({ onLinePhiIllUrl: 3, githubProxy: false, LetterMarkdown: false, LetterGuessCd: 0 })
+    const config = schema({ onLinePhiIllUrl: 3, githubProxy: false, LetterMarkdown: 'off', LetterGuessCd: 0 })
     assert.equal(config.onLinePhiIllUrl, 3)
     assert.equal(config.githubProxy, false)
-    assert.equal(config.LetterMarkdown, false)
+    assert.equal(config.LetterMarkdown, 'off')
     assert.equal(config.LetterGuessCd, 0)
     assert.throws(() => schema({ renderScale: 201 }))
     assert.throws(() => schema({ onLinePhiIllUrl: 99 }))

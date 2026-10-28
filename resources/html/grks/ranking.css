@@ -1,0 +1,158 @@
+body {
+  width: 1100px;
+  color: #f2f5fa;
+}
+
+.ranking-page {
+  box-sizing: border-box;
+  padding: 42px 36px 24px;
+  background: linear-gradient(135deg, rgba(13, 25, 43, 0.95), rgba(21, 39, 56, 0.88));
+}
+
+.ranking-header,
+.ranking-columns,
+.ranking-footer,
+.ranking-credit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ranking-header {
+  gap: 24px;
+  padding: 0 24px 26px;
+}
+
+.ranking-kicker {
+  color: #77d9f5;
+  font: 14px "Aldrich", "PHI";
+  letter-spacing: 2px;
+}
+
+.ranking-header h1 {
+  margin: 10px 0;
+  font-size: 34px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.ranking-page-info,
+.ranking-footer {
+  color: #b6c7d9;
+  font-size: 16px;
+}
+
+.ranking-badge {
+  --height: 48px;
+  height: var(--height);
+  flex: 0 0 150px;
+  display: grid;
+  place-items: center;
+  background: #65d4f0;
+  color: #102137;
+  font: 22px "Aldrich", "PHI";
+}
+
+.ranking-columns {
+  padding: 12px 42px;
+  color: #91a9c1;
+  font-size: 16px;
+  border-top: 1px solid #ffffff26;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ranking-row {
+  --height: 96px;
+  box-sizing: border-box;
+  min-height: var(--height);
+  display: grid;
+  grid-template-columns: 56px 60px minmax(0, 1fr) 192px;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 40px;
+  background: #ffffff0e;
+}
+
+.ranking-row.is-me {
+  background: #50b9da30;
+}
+
+.ranking-place {
+  color: #a6bdd1;
+  font: 30px "Aldrich", "PHI";
+}
+
+.ranking-place.is-top {
+  color: #f2d38a;
+}
+
+.ranking-avatar,
+.ranking-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-size: cover;
+}
+
+.ranking-player {
+  min-width: 0;
+}
+
+.ranking-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: 21px;
+  line-height: 1.25;
+}
+
+.ranking-detail {
+  margin-top: 5px;
+  color: #a9bdcf;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.ranking-metric {
+  color: #83dff7;
+  font-size: 25px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.ranking-empty {
+  padding: 70px 30px;
+  color: #b6c7d9;
+  text-align: center;
+  font-size: 22px;
+}
+
+.ranking-footer {
+  gap: 24px;
+  margin-top: 24px;
+  padding: 18px 24px;
+  border-top: 1px solid #ffffff26;
+}
+
+.ranking-footer p:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ranking-footer p:last-child {
+  flex-shrink: 0;
+}
+
+.ranking-credit {
+  padding: 6px 24px 0;
+  color: #70889f;
+  font-size: 12px;
+}

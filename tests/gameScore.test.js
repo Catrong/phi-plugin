@@ -116,7 +116,7 @@ test('formats score and win rate boards and falls back for unknown games', async
     const scoreBoard = queryRanking({ gameId: 'grks', mode: 'normal', meId: 'user-1' })
     assert.equal(scoreBoard.ok, true)
     assert.match(scoreBoard.text, /猜RKS · 单机 积分榜/)
-    assert.match(scoreBoard.text, /user-1　10\.00 分/)
+    assert.match(scoreBoard.text, /匿名用户　10\.00 分/)
     assert.match(scoreBoard.text, /我的排名：#1/)
 
     const rateBoard = queryRanking({ gameId: 'grks', mode: 'match', kind: 'winRate', minMatches: 1 })
@@ -138,7 +138,7 @@ test('accepts third-party games through the public registry', async () => {
     const board = queryRanking({ gameId: 'demo', mode: 'normal' })
     assert.equal(board.ok, true)
     assert.match(board.text, /示例游戏 · 单机 积分榜/)
-    assert.match(board.text, /x　3\.00 分/)
+    assert.match(board.text, /匿名用户　3\.00 分/)
 })
 
 test('accumulates hint counts for the accuracy statistics', async () => {
@@ -158,6 +158,62 @@ test('accumulates hint counts for the accuracy statistics', async () => {
     assert.equal(averageHints(legacy), 10)
 })
 
+test('答题统计独立累加且持久化，旧对局不推算正确率', async () => {
+    useTempStore()
+    await addScore('grks', 'match', 'a', 10, { result: 'win', hints: 2 })
+    assert.equal(getPlayer('grks', 'match', 'a')?.answers, undefined)
+    await addScore('grks', 'match', 'a', 0, { result: 'loss', hints: 10, answers: { total: 3, correct: 0 } })
+    const result = await addScore('grks', 'match', 'a', 5, { result: 'draw', hints: 2, answers: { total: 2, correct: 1 } })
+    assert.deepEqual(result.answers, { total: 5, correct: 1 })
+    if (!result.answers) assert.fail('缺少答题统计')
+    result.answers.correct = 5
+    const snapshot = getPlayer('grks', 'match', 'a')
+    if (!snapshot?.answers) assert.fail('缺少答题统计快照')
+    assert.deepEqual(snapshot.answers, { total: 5, correct: 1 })
+    snapshot.answers.total = 99
+    assert.deepEqual(getPlayer('grks', 'match', 'a')?.answers, { total: 5, correct: 1 })
+    reloadStore()
+    const restored = getPlayer('grks', 'match', 'a')
+    assert.deepEqual(restored?.answers, { total: 5, correct: 1 })
+    assert.equal(restored?.plays, 3)
+    assert.equal(restored?.hintSum, 14)
+    assert.equal(restored?.wins, 1)
+    assert.equal(restored?.draws, 1)
+    assert.equal(restored?.losses, 1)
+})
+
+test('非法答题计数立即失败，不增加场次或积分', async () => {
+    useTempStore()
+    for (const answers of [
+        { total: -1, correct: 0 }, { total: 1, correct: -1 }, { total: 1, correct: 2 },
+        { total: 1.5, correct: 1 }, { total: 1, correct: 0.5 },
+        { total: NaN, correct: 0 }, { total: Infinity, correct: 0 },
+        { total: Number.MAX_SAFE_INTEGER + 1, correct: 0 },
+    ]) {
+        await assert.rejects(addScore('grks', 'match', 'a', 10, { answers }), /答题统计/)
+        assert.equal(getPlayer('grks', 'match', 'a'), null)
+    }
+    await addScore('grks', 'match', 'a', 0, { answers: { total: Number.MAX_SAFE_INTEGER, correct: 0 } })
+    await assert.rejects(addScore('grks', 'match', 'a', 10, { answers: { total: 1, correct: 1 } }), /安全整数范围/)
+    assert.equal(getPlayer('grks', 'match', 'a')?.plays, 1)
+    assert.equal(getPlayer('grks', 'match', 'a')?.score, 0)
+    assert.deepEqual(getPlayer('grks', 'match', 'a')?.answers, { total: Number.MAX_SAFE_INTEGER, correct: 0 })
+})
+
+test('存储中的答题统计严格校验，缺失字段保留无样本状态', () => {
+    const directory = useTempStore()
+    const file = path.join(directory, 'gameScore.json')
+    for (const answers of [null, [], {}, { total: '1', correct: 0 }, { total: 1, correct: 2 }]) {
+        fs.writeFileSync(file, JSON.stringify({ version: 1, games: { grks: { match: { a: { plays: 10, answers } } } } }))
+        reloadStore()
+        assert.throws(() => getPlayer('grks', 'match', 'a'), /答题统计/)
+    }
+    fs.writeFileSync(file, JSON.stringify({ version: 1, games: { grks: { match: { a: { plays: 10, wins: 5 } } } } }))
+    reloadStore()
+    assert.equal(getPlayer('grks', 'match', 'a')?.plays, 10)
+    assert.equal(getPlayer('grks', 'match', 'a')?.answers, undefined)
+})
+
 test('ranks by average hints, then total score, with a 10 game threshold', async () => {
     useTempStore()
     /** sharp：10 局、平均 2 条 */
@@ -175,15 +231,15 @@ test('ranks by average hints, then total score, with a 10 game threshold', async
     const board = queryRanking({ gameId: 'grks', mode: 'normal', kind: 'accuracy', meId: 'rookie' })
     assert.equal(board.ok, true)
     assert.match(board.text, /猜RKS · 单机 准确率榜（共 3 人）/)
-    assert.match(board.text, /#1 sharp　平均 2\.00 条提示　10 局　积分 10\.00/)
-    assert.match(board.text, /#2 vet-b　平均 4\.00 条提示　10 局　积分 100\.00/)
+    assert.match(board.text, /#1 匿名用户　平均 2\.00 条提示　10 局　积分 10\.00/)
+    assert.match(board.text, /#2 匿名用户　平均 4\.00 条提示　10 局　积分 100\.00/)
     assert.match(board.text, /我的排名：未上榜（需要至少完成 10 局）/)
 
     /** 匹配模式同样提供准确率榜 */
     for (let index = 0; index < 10; index++) await addScore('grks', 'match', 'duel', 5, { result: 'win', hints: 3 })
     const matchBoard = queryRanking({ gameId: 'grks', mode: 'match', kind: 'accuracy' })
     assert.match(matchBoard.text, /猜RKS · 匹配 准确率榜/)
-    assert.match(matchBoard.text, /duel　平均 3\.00 条提示　10 局/)
+    assert.match(matchBoard.text, /匿名用户　平均 3\.00 条提示　10 局/)
 })
 
 test('requires 10 matches for the win rate board by default', async () => {
@@ -196,5 +252,5 @@ test('requires 10 matches for the win rate board by default', async () => {
     for (let index = 0; index < 8; index++) await addScore('grks', 'match', 'a', 0, { result: 'loss' })
     const board = queryRanking({ gameId: 'grks', mode: 'match', kind: 'winRate' })
     assert.match(board.text, /胜率榜（共 1 人）/)
-    assert.match(board.text, /a　胜率 20\.0%　2胜 8负 0平（10 场）/)
+    assert.match(board.text, /匿名用户　胜率 20\.0%　2胜 8负 0平（10 场）/)
 })

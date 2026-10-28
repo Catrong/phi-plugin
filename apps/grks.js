@@ -1,29 +1,32 @@
 import Config from '../components/Config.js'
 import phiPluginBase from '../components/baseClass.js'
-import send from '../model/render/send.js'
 import logger from '../components/Logger.js'
 import { queryRanking } from '../model/game/gameScore/index.js'
-import * as solo from './grks/solo.js'
-import * as match from './grks/match.js'
+import { grksSoloClass } from './grks/solo.js'
+import { grksMatchClass } from './grks/match.js'
+import { grksMessages } from '../model/render/messages.js'
+import { sendMessage } from '../model/render/message.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
 
-const getHead = () => Config.getUserCfg('config', 'cmdhead')
-/** 命令前缀；测试会在 vm 中直接求值该表达式，因此只能依赖 getHead。 */
-const getPrefix = () => `^[#/](${getHead()})(\\s*)`
+/** 命令前缀；测试会在 vm 中直接求值该表达式，因此只能依赖 Config。 */
+const getPrefix = () => `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)`
+
+/** 单机房间管理器，进程内共享。 */
+const solo = new grksSoloClass()
+const matches = new grksMatchClass(solo)
 
 /**
  * 猜 RKS 小游戏入口。
  *
- * 所有子指令都带命令头，避免与 `b30`/`rks` 相关指令以及 guessGame 的普通消息监听冲突：
- * - `#phi grks`               开始单机（开局立即下发第一条提示）
- * - `#phi grks tip`           请求下一条提示
- * - `#phi grks 15.25`         提交猜测
+ * 单机模式（房间制）：
+ * - `#phi grks`               开始一局；群聊内多人共享同一道题
+ * - `#phi grks 15.25`         提交猜测；猜错后系统自动给出下一条提示
  * - `#phi grks ans`           放弃并公布答案
- * - `#phi grks match`         加入匹配池
- * - `#phi grks cancel`        退出匹配池 / 结束对局
- * - `#phi grks hint 1 B7`     匹配回合给出提示
- * - `#phi grks lb`            查看排行榜（积分 / 胜率 / 准确率）
+ * - `#phi grks match`         加入匹配，互猜对手的 B30
+ * - `#phi grks hint B7`       给对手公开自己的 B7
+ * - `#phi grks cancel`        退出匹配池或认输
+ * - `#phi grks lb match`      查看匹配积分榜
  */
 export class phiGrks extends phiPluginBase {
     constructor() {
@@ -34,16 +37,20 @@ export class phiGrks extends phiPluginBase {
             priority: 900,
             rule: [
                 {
+                    reg: `${getPrefix()}(grks|猜rks)\\s*(match|匹配)\\s*$`,
+                    fnc: 'match'
+                },
+                {
+                    reg: `${getPrefix()}(grks|猜rks)\\s*(cancel|取消|退出)\\s*$`,
+                    fnc: 'cancel'
+                },
+                {
+                    reg: `${getPrefix()}(grks|猜rks)\\s*(hint|提示)(?:\\s.*|[134PBpb].*)?$`,
+                    fnc: 'hint'
+                },
+                {
                     reg: `${getPrefix()}(grks|猜rks)\\s*$`,
                     fnc: 'start'
-                },
-                {
-                    reg: `${getPrefix()}(grks|猜rks)(\\s*)(tip|提示)\\s*$`,
-                    fnc: 'tip'
-                },
-                {
-                    reg: `${getPrefix()}(grks|猜rks)(\\s*)(hint|提示)(?:\\s*)([134])?(?:\\s*)([PpBb]\\d{1,2}|histogram|range)?\\s*$`,
-                    fnc: 'hint'
                 },
                 {
                     reg: `${getPrefix()}(grks|猜rks)(\\s*)(\\d+(?:\\.\\d+)?)$`,
@@ -52,14 +59,6 @@ export class phiGrks extends phiPluginBase {
                 {
                     reg: `${getPrefix()}(grks|猜rks)(\\s*)(ans|答案|放弃)\\s*$`,
                     fnc: 'ans'
-                },
-                {
-                    reg: `${getPrefix()}(grks|猜rks)(\\s*)(match|匹配)\\s*$`,
-                    fnc: 'match'
-                },
-                {
-                    reg: `${getPrefix()}(grks|猜rks)(\\s*)(cancel|取消|退出)\\s*$`,
-                    fnc: 'cancel'
                 },
                 {
                     reg: `${getPrefix()}(?:(grks|猜rks)(\\s*)(lb|榜)|(游戏积分榜|积分榜))(?:\\s*)(.*)$`,
@@ -76,51 +75,23 @@ export class phiGrks extends phiPluginBase {
      */
     async start(e) {
         logger.info(`[phi-grks][start] ${e.user_id}`)
-        if (match.isMatching(String(e.user_id || ''))) {
-            await send.send_with_At(e, `你正在匹配中，先发送 ${solo.cmdPrefix()} cancel 结束对局再开单机吧！`)
-            return false
-        }
-        return await solo.start(e)
+        return await solo.start(e, () => matches.isMatching(e))
     }
 
     /**
-     * 请求下一条提示（单机）。
-     * @param {botEvent} e
-     * @returns {Promise<boolean>}
-     */
-    async tip(e) {
-        return await solo.tip(e)
-    }
-
-    /**
-     * 匹配回合给出提示。
-     * @param {botEvent} e
-     * @returns {Promise<boolean>}
-     */
-    async hint(e) {
-        const parsed = parseHintArgs(String(e.msg ?? ''))
-        if (!parsed?.type) {
-            await send.send_with_At(e, `格式：${solo.cmdPrefix()} hint B7（等价于 hint 1 B7）／${solo.cmdPrefix()} hint 3 [histogram|range]／${solo.cmdPrefix()} hint 4`)
-            return false
-        }
-        return await match.hint(e, parsed.type, parsed.arg)
-    }
-
-    /**
-     * 提交猜测（自动区分单机/匹配）。
+     * 提交猜测。
      * @param {botEvent} e
      * @returns {Promise<boolean>}
      */
     async guess(e) {
         const matched = String(e.msg ?? '').match(/(\d+(?:\.\d+)?)\s*$/)
         if (!matched) {
-            await send.send_with_At(e, `格式：${solo.cmdPrefix()} 15.25`)
+            await sendMessage(e, grksMessages.guess.format(solo.cmdPrefix(), matches.commandState(e)), { at: true })
             return false
         }
-        if (match.isMatching(String(e.user_id || ''))) {
-            return await match.guess(e, matched[1])
-        }
-        return await solo.guess(e, matched[1])
+        return matches.isMatching(e) || (!solo.hasRoom(e) && matches.findPlayer(e))
+            ? await matches.guess(e, matched[1])
+            : await solo.guess(e, matched[1])
     }
 
     /**
@@ -129,30 +100,32 @@ export class phiGrks extends phiPluginBase {
      * @returns {Promise<boolean>}
      */
     async ans(e) {
+        if (matches.isMatching(e) || (!solo.hasRoom(e) && matches.findPlayer(e))) return await matches.cancel(e)
         return await solo.ans(e)
     }
 
-    /**
-     * 加入匹配池。
-     * @param {botEvent} e
-     * @returns {Promise<boolean>}
-     */
+    /** @param {botEvent} e */
     async match(e) {
-        logger.info(`[phi-grks][match] ${e.user_id}`)
-        return await match.join(e)
+        return await matches.join(e)
     }
 
-    /**
-     * 退出匹配池或结束对局。
-     * @param {botEvent} e
-     * @returns {Promise<boolean>}
-     */
+    /** @param {botEvent} e */
     async cancel(e) {
-        return await match.cancel(e)
+        return await matches.cancel(e)
+    }
+
+    /** @param {botEvent} e */
+    async hint(e) {
+        const parsed = parseHintArgs(e.msg)
+        if (!parsed.type) {
+            await sendMessage(e, grksMessages.hint.format(solo.cmdPrefix(), matches.commandState(e)), { at: true })
+            return false
+        }
+        return await matches.hint(e, parsed.type, parsed.arg)
     }
 
     /**
-     * 查看排行榜（积分榜 / 胜率榜 / 准确率榜）。
+     * 查看排行榜（积分榜 / 准确率榜）。
      * @param {botEvent} e
      * @returns {Promise<boolean>}
      */
@@ -163,20 +136,21 @@ export class phiGrks extends phiPluginBase {
             mode: args.mode,
             kind: args.kind,
             page: args.page,
+            pageSize: 10,
             meId: String(e.user_id || ''),
         })
         if (!result.ok) {
-            await send.send_with_At(e, result.text)
+            await sendMessage(e, grksMessages.rankList.unavailable(result.text), { at: true })
             return false
         }
-        await send.send_with_At(e, result.text)
+        await sendMessage(e, await grksMessages.rankList.result(e, result), { at: true })
         return true
     }
 }
 
 /**
  * 解析匹配提示参数：`hint [1|3|4] [槽位|histogram|range]`。
- * 省略类型时按参数推断：槽位 → 类型 1，histogram/range → 类型 3。
+ * 省略类型时按槽位或统计形式推断。
  * @param {string} msg
  * @returns {{type?: string, arg?: string}}
  */

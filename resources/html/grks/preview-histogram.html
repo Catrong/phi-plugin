@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" type="text/css" href="../../html/common/common.css" />
+
+<link rel="stylesheet" href="../../html/grks/grks.css">
+
+    <style>
+        /* 页面保留自己的换行规则；只有显式声明的固定标题栏允许单行省略。 */
+        body [name="pvis"] { min-width: 0; max-width: 100%; }
+        body .phi-fit-line[name="pvis"] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .phi-static-theme { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
+        .phi-static-stars {
+            background-image: radial-gradient(circle, #fff9 1px, transparent 2px), radial-gradient(circle, #9dd7ff88 1px, transparent 2px), radial-gradient(circle, #fff6 1.5px, transparent 3px);
+            background-size: 131px 173px, 227px 193px, 367px 293px;
+            background-position: 31px 47px, 97px 131px, 173px 53px;
+        }
+        .phi-static-theme .snow { width: 2.5%; }
+        .phi-static-theme .snow img { width: 100%; }
+        .phi-static-theme.topTextBox p { font-size: 18px; opacity: .35; filter: blur(1px); }
+        body > canvas#stars, body > .snow-box, body > .topTextBox:not(.phi-static-theme) { display: none; }
+    </style>
+
+    <title>猜 RKS 预览 · 提示直方图</title>
+</head>
+
+<body class="elem-hydro match-mode  " >
+
+    <div class="background theme-background">
+
+        <img src="../../otherill/雪降SP.png" alt="曲绘-模糊">
+
+    </div>
+
+    <!-- <div class="container" id="container"> -->
+
+<div class="title">
+    <div class="playerInfo">
+        <div class="blackBlock clip-box"></div>
+        <div class="avatar clip-box">
+            <img src="../../html/avatar/Introduction.png" alt="Introduction">
+        </div>
+        <div class="playerId">
+            <p name="pvis" class="phi-fit-line" title="示例存档">示例存档</p>
+        </div>
+        <div class="rks clip-box">
+            <p>----</p>
+        </div>
+
+        <div class="clgBox">
+            <div class="Challenge">
+                <img src="../../html/otherimg/4.png" alt="Challenge">
+                <p>56</p>
+            </div>
+        </div>
+
+        <div class="date">
+            <p>2026-10-26 20:15</p>
+        </div>
+    </div>
+    <div class="recordInfo clip-box">
+        <div class="whiteLine clip-box"></div>
+        <div class="sheet">
+            <div class="row">
+                <div class="poz"><p>\</p></div>
+
+                <div class="poz"><p>EZ</p></div>
+
+                <div class="poz"><p>HD</p></div>
+
+                <div class="poz"><p>IN</p></div>
+
+                <div class="poz"><p>AT</p></div>
+
+            </div>
+            <div class="row">
+                <div class="poz"><p>C</p></div>
+
+                <div class="poz"><p>168</p></div>
+
+                <div class="poz"><p>190</p></div>
+
+                <div class="poz"><p>175</p></div>
+
+                <div class="poz"><p>12</p></div>
+
+            </div>
+            <div class="row">
+                <div class="poz"><p>FC</p></div>
+
+                <div class="poz"><p>121</p></div>
+
+                <div class="poz"><p>88</p></div>
+
+                <div class="poz"><p>46</p></div>
+
+                <div class="poz"><p>3</p></div>
+
+            </div>
+            <div class="row">
+                <div class="poz"><p>Phi</p></div>
+
+                <div class="poz"><p>34</p></div>
+
+                <div class="poz"><p>12</p></div>
+
+                <div class="poz"><p>5</p></div>
+
+                <div class="poz"><p>1</p></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="b19">
+
+    <div class="song phi_song">
+
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">P1</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-AT clip-box">
+                <div class="org"><p>AT&ensp;16.5</p></div>
+                <div class="rel"><p>16.50</p></div>
+            </div>
+        </div>
+        <div class="info-AT">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="雪降">雪降</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/phi.png" alt="phi">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>1000000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>100.00%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="song phi_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">P2</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song phi_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">P3</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B1</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B2</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B3</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B4</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B5</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B6</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song">
+
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B7</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.1</p></div>
+                <div class="rel"><p>15.46</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="雪降">雪降</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>995000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.10%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B8</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B9</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B10</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B11</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B12</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B13</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B14</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B15</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B16</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B17</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B18</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B19</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B20</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B21</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B22</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B23</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B24</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B25</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B26</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+    <div class="song best_song grks-hidden-song">
+
+        <div class="grks-overlay is-solid clip-box">
+            <p class="grks-hidden-slot">B27</p>
+            <p class="grks-placeholder">成绩未公开</p>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="over_flow grks-over-flow">
+    <div class="flow_line_box_l">
+        <div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div>
+        <div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div>
+    </div>
+    <p><i>B30 数据与猜测记录</i></p>
+    <div class="flow_line_box_r">
+        <div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div>
+        <div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div>
+    </div>
+</div>
+
+<div class="b30-analysis-row grks-analysis-row">
+
+    <section class="analysis-panel histogram-panel clip-box">
+        <div class="analysis-panel-head">
+            <div>
+                <p class="analysis-kicker">RKS DISTRIBUTION</p>
+                <p class="analysis-title">等效 RKS 直方图</p>
+            </div>
+            <p class="analysis-meta">相对分布</p>
+        </div>
+        <div class="histogram-chart">
+            <div class="histogram-y-label">等效单曲 RKS</div>
+            <div class="histogram-plot">
+                <div class="histogram-scale">
+
+                    <div class="histogram-grid-line" style="bottom: 0%;"></div>
+
+                    <div class="histogram-grid-line" style="bottom: 25%;"></div>
+
+                    <div class="histogram-grid-line" style="bottom: 50%;"></div>
+
+                    <div class="histogram-grid-line" style="bottom: 75%;"></div>
+
+                    <div class="histogram-grid-line" style="bottom: 100%;"></div>
+
+                </div>
+                <div class="histogram-bars">
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar phi-bar" style="height: 95.45454545454548%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">P1</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar phi-bar" style="height: 90.904449811535%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">P2</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar phi-bar" style="height: 90.904449811535%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">P3</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 61.354308667567956%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B1</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 56.98439681202091%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B2</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 56.98439681202091%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B3</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 52.61448495647362%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B4</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 48.244573100926566%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B5</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 48.244573100926566%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B6</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 48.244573100926566%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B7</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 43.87466124537927%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B8</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 39.50474938983206%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B9</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 39.50474938983206%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B10</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 35.13483753428493%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B11</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 35.13483753428493%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B12</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 35.13483753428493%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B13</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 30.764925678737633%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B14</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 30.764925678737633%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B15</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 26.3950138231905%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B16</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 26.3950138231905%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B17</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 22.025101967643288%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B18</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 17.655190112096076%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B19</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 17.655190112096076%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B20</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 13.285278256548944%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B21</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 13.285278256548944%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B22</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 13.285278256548944%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B23</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 8.91536640100165%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B24</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 8.91536640100165%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B25</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 4.54545454545452%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B26</p>
+                    </div>
+
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 4.54545454545452%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B27</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="histogram-legend">
+            <p><span class="legend-dot phi-dot"></span>P1-P3</p>
+            <p><span class="legend-dot best-dot"></span>B1-B27</p>
+            <p>30 条成绩</p>
+        </div>
+    </section>
+
+    <section class="analysis-panel grks-history-panel clip-box">
+        <div class="analysis-panel-head">
+            <div>
+                <p class="analysis-kicker">GUESS HISTORY</p>
+                <p class="analysis-title">猜测记录</p>
+            </div>
+            <p class="analysis-meta">已回答 3 / 10 次</p>
+        </div>
+        <div class="grks-history-grid">
+
+            <div class="grks-history-cell is-wrong clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">01</p>
+                    <p class="grks-history-answer">答 15.2</p>
+                    <p class="grks-history-result">错误</p>
+                </div>
+                <p class="grks-history-hint">提示：公开 P1</p>
+            </div>
+
+            <div class="grks-history-cell is-wrong clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">02</p>
+                    <p class="grks-history-answer">答 15.5</p>
+                    <p class="grks-history-result">错误</p>
+                </div>
+                <p class="grks-history-hint">提示：公开 B7</p>
+            </div>
+
+            <div class="grks-history-cell is-wrong clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">03</p>
+                    <p class="grks-history-answer">答 15.7</p>
+                    <p class="grks-history-result">错误</p>
+                </div>
+                <p class="grks-history-hint">提示：存档统计与课题分</p>
+            </div>
+
+            <div class="grks-history-cell is-pending clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">04</p>
+                    <p class="grks-history-answer">答 —</p>
+                    <p class="grks-history-result">待回答</p>
+                </div>
+                <p class="grks-history-hint">提示：等效 RKS 直方图</p>
+            </div>
+
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">05</p>
+                    <p class="grks-history-answer">答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">提示：等待提示</p>
+            </div>
+
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">06</p>
+                    <p class="grks-history-answer">答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">提示：等待提示</p>
+            </div>
+
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">07</p>
+                    <p class="grks-history-answer">答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">提示：等待提示</p>
+            </div>
+
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">08</p>
+                    <p class="grks-history-answer">答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">提示：等待提示</p>
+            </div>
+
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">09</p>
+                    <p class="grks-history-answer">答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">提示：等待提示</p>
+            </div>
+
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">10</p>
+                    <p class="grks-history-answer">答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">提示：等待提示</p>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div class="grks-foot">
+    <p>渲染效果预览 · 提示直方图 · 示例数据
+统计图：直方图；成绩位置：已公开；统计信息：已公开
+第 4 / 10 回合 · 提示已公布，等待回答
+猜测：#phi grks &#60;数值&#62;　放弃：#phi grks cancel</p>
+</div>
+
+<div class="createdbox">
+    <div class="phi-plugin">
+        <p>phi-plugin</p>
+    </div>
+    <div class="ver">
+        <p>1.0.2</p>
+    </div>
+</div>
+
+    <!-- <div class="copyright">phi-plugin 示例预览</div> -->
+    <!-- </div> -->
+    <!-- 曲目名称自适应name-box的宽度 -->
+
+</body>
+
+</html>

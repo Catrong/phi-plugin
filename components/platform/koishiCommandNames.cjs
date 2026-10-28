@@ -17,7 +17,6 @@ const names = {
     guessGame: { start: 'guess', getTip: 'tip', reveal: { name: 'open', text: 'open', bare: true } },
     grks: {
         start: { name: 'grks', text: 'grks' },
-        tip: { name: 'grks-tip', text: 'grks tip' },
         hint: { name: 'grks-hint', text: 'grks hint 1' },
         guess: { name: 'grks-guess', text: 'grks 15' },
         ans: { name: 'grks-ans', text: 'grks ans' },
@@ -103,7 +102,6 @@ const commandFunctions = {
     ],
     "grks": [
         "start",
-        "tip",
         "hint",
         "guess",
         "ans",

@@ -84,6 +84,13 @@ TapTapLoginQRcode: true
 #  绑定流程精简回复，开启后仅发送二维码、绑定成功提示、成绩更新图与API不可用提示，避免官方Bot被动回复超出条数限制
 SimpleBindReply: false
 
+#  图片与文本/Markdown/按钮消息是否合并为一条发送
+#  关闭时：图片+文本+Markdown/按钮 会先单独发送图片，再发送文本与Markdown/按钮；图片+纯文本仍合并发送
+MergeImageWithText: false
+
+#  快捷操作消息发送方式：off 关闭 / markdown 使用 md / button 使用按钮（按钮需要 QQ 官方机器人支持）
+LetterMarkdown: "markdown"
+
 #  命令头
 cmdhead: "phi"
 
@@ -133,8 +140,8 @@ otherinfo: 0
 #  猜字母条数
 LetterNum: 8
 
-#  是否发送开字母、主题市场及 QQ 官方机器人页面的交互式 Markdown 快捷操作
-LetterMarkdown: true
+#  开字母消息格式：text 仅文本 / markdown 仅 md
+LetterMessageMode: "markdown"
 
 #  猜对后是否发送以及发送什么曲绘 原版 水印版 不发送
 LetterIllustration: "水印版"
@@ -246,6 +253,9 @@ GrksHintRevealNum: 2
 #  单机提示冷却时间(s)
 GrksTipCd: 3
 
+#  单机回答与提示共用冷却(s)：回答按玩家独立计算，提示按房间独立计算
+GrksSoloCd: 5
+
 #  单机待机超时时长(s)，超时自动公布答案
 GrksTimeLength: 600
 
@@ -258,17 +268,8 @@ GrksStatsHint: "auto"
 #  出题池缓存有效期(h)，0 为每次都重新扫描
 GrksPoolRefreshHours: 6
 
-#  匹配等待超时时长(s)，超过后放宽 rks 相近限制
-GrksMatchWaitTimeout: 300
-
-#  匹配优先的 rks 差值范围
-GrksMatchRksRange: 0.5
-
-#  匹配每回合行动时限(s)
+#  匹配提示、回答阶段各自的行动时限(s)，切换阶段后重新计时
 GrksMatchTurnTime: 90
-
-#  匹配连续多少回合未行动判负
-GrksMatchMaxTimeoutTurn: 3
 
 #  ************ 【其他设置】 *************
 #  认证 Token

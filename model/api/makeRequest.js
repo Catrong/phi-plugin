@@ -4,6 +4,7 @@ import logger from '../../components/Logger.js';
 import platform from '../../components/platform/index.js';
 import { APII18NCN } from '../game/constNum.js';
 import { getPhiApiUserMessage, hasPhiApiUserMessage } from './phiApiErrors.js';
+import { apiMessages } from '../render/messages.js';
 
 /**
  * API 请求的统一错误处理选项。
@@ -406,16 +407,16 @@ export default class makeRequest {
         const status = error?.status ?? (typeof error?.code === 'number' ? error.code : undefined)
 
         if (status === 403 && !userMessage) {
-            userMessage = `API访问被拒绝。${errorMessage || '请检查你的设置是否正确启用了API访问权限。'}`
+            userMessage = apiMessages.forbidden(errorMessage).text
         } else if (status >= 500 && !userMessage) {
-            userMessage = `API访问发生服务器错误。${errorMessage || '请稍后再试，或联系管理员。'}`
+            userMessage = apiMessages.serverError(errorMessage).text
         }
 
         if (notifyUser && userMessage) {
             const prefix = errorPrefix ? `${errorPrefix}\n` : ''
             platform.sendWithAt(
                 platform.wrapEvent(event),
-                `${prefix}${userMessage || `错误信息：${errorMessage}`}`,
+                `${prefix}${userMessage}`,
                 false,
                 {},
             )
@@ -736,7 +737,7 @@ export default class makeRequest {
      * @template {keyof saveHistoryObjectV4} K
      * @param {baseAu & {request?: K[]}} params 只过滤 data/rks/scoreHistory/challengeModeRank
      * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<Partial<saveHistoryObjectV4> | null>}
+     * @returns {Promise<(Partial<saveHistoryObjectV4> & { version: 4, timezone: string }) | null>}
      */
     static async getHistory(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
         return (await makeFetch(burl('/get/history/historyV4'), params, 'POST', options))?.data ?? null

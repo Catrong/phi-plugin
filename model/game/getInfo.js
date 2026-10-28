@@ -1231,7 +1231,7 @@ class getInfo {
      * @returns file name
      */
     idgetavatar(id) {
-        if (this.avatarid?.includes(id)) {
+        if (id && this.avatarid?.includes(id)) {
             if (id == "Cipher : /2&//<|0") {
                 return "Cipher1"
             }

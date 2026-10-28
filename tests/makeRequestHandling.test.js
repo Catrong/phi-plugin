@@ -46,6 +46,13 @@ test('makeRequest endpoint execution only ignores explicit unbound errors', asyn
         assert.equal(rejected, null)
         assert.equal(messages.length, 1)
         assert.match(messages[0], /API访问被拒绝/)
+
+        phiApiClient.request = async () => { throw new PhiApiError('server failed', 500, 'internal_error') }
+        await makeRequest.getUserBan(
+            /** @type {any} */ ({ platform: 'qq', platform_id: 'request-user' }),
+            { event: /** @type {any} */ (event), notifyUser: true, errorPrefix: '查询失败' },
+        )
+        assert.match(messages[1], /^查询失败\nAPI访问发生服务器错误。server failed$/)
     } finally {
         phiApiClient.request = originalRequest
         platform.sendWithAt = originalSend

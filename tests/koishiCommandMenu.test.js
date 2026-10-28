@@ -20,7 +20,7 @@ function actualRules(head, calls) {
     const directory = new URL('../apps/', import.meta.url)
     return fs.readdirSync(directory).filter(file => file.endsWith('.js')).map(file => {
         const source = ts.createSourceFile(file, fs.readFileSync(new URL(file, directory), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS)
-        const scope = vm.createContext({ Config: { getUserCfg: () => head }, getHead: () => head })
+        const scope = vm.createContext({ Config: { getUserCfg: () => head } })
         /** @type {any} */
         const instance = { rule: [] }
         const key = file.slice(0, -3)

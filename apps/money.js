@@ -20,6 +20,8 @@ import { canUseApi } from '../model/user/apiPermission.js'
 import platform, { redis } from '../components/platform/index.js'
 import themeUseService, { marketThemeErrorMessage } from '../model/theme/useService.js'
 import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
+import { sendMessage } from '../model/render/message.js'
+import { moneyMessages, marketMessages } from '../model/render/messages.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -116,7 +118,7 @@ export class phimoney extends phiPluginBase {
     async sign(e) {
 
         if (await getBanGroup.get(e, 'sign')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, moneyMessages.sign.banned, { at: true })
             return false
         }
 
@@ -174,9 +176,9 @@ export class phimoney extends phiPluginBase {
             const tips = spDateIndex !== -1
                 ? spData[spDateIndex].tips[randint(spData[spDateIndex].tips.length - 1)]
                 : `签到成功！${helloMsg(now_time, 0)}`
-            send.send_with_At(e, [img, `${tips}\n恭喜您获得了${getnum}个Note！当前 Note：${data.money}`])
+            sendMessage(e, moneyMessages.sign.success(img, tips, getnum, data.money), { at: true })
         } else {
-            send.send_with_At(e, [img, `你在今天${fCompute.formatDate(last_sign, 'hh:mm:ss')}的时候已经签过到了哦！\n你现在的Note数量: ${data.money}`])
+            sendMessage(e, moneyMessages.sign.alreadySigned(img, fCompute.formatDate(last_sign, 'hh:mm:ss'), data.money), { at: true })
         }
         return true
     }
@@ -188,7 +190,7 @@ export class phimoney extends phiPluginBase {
     async retask(e) {
 
         if (await getBanGroup.get(e, 'retask')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, moneyMessages.retask.banned, { at: true })
             return false
         }
 
@@ -217,7 +219,7 @@ export class phimoney extends phiPluginBase {
                 change_note -= 20
                 oldtask = data.task
             } else {
-                send.send_with_At(e, `刷新任务需要 20 Notes，咱没有那么多Note哇QAQ！\n你当前的 Note 数目为：${data.money}`)
+                sendMessage(e, moneyMessages.retask.notEnoughNotes(data.money), { at: true })
                 return false
             }
         }
@@ -234,14 +236,14 @@ export class phimoney extends phiPluginBase {
         }
 
         if (!vis) {
-            send.send_with_At(e, `哇塞，您已经把所有曲目全部满分了呢！没有办法为您布置任务了呢！敬请期待其他玩法哦！`)
+            sendMessage(e, moneyMessages.retask.allPerfect, { at: true })
             return true
         }
 
         getNotes.putNotesData(e.user_id, data)
 
         const img = await picmodle.common(e, 'sign', await picData(save, data, e));
-        send.send_with_At(e, img);
+        sendMessage(e, moneyMessages.sign.image(img), { at: true });
 
         return true
 
@@ -256,7 +258,7 @@ export class phimoney extends phiPluginBase {
     async tasks(e) {
 
         if (await getBanGroup.get(e, 'tasks')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, moneyMessages.tasks.banned, { at: true })
             return false
         }
 
@@ -273,7 +275,7 @@ export class phimoney extends phiPluginBase {
 
         const img = await picmodle.common(e, 'sign', await picData(save, data, e));
 
-        send.send_with_At(e, img)
+        sendMessage(e, moneyMessages.tasks.image(img), { at: true })
 
         return true
     }
@@ -285,7 +287,7 @@ export class phimoney extends phiPluginBase {
     async send(e) {
 
         if (await getBanGroup.get(e, 'send')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, moneyMessages.send.banned, { at: true })
             return false
         }
         const tmp = `\n格式：/${Config.getUserCfg('config', 'cmdhead')} send <@ or id> <数量>`;
@@ -299,7 +301,7 @@ export class phimoney extends phiPluginBase {
                 target = parts[0]
                 num = Number(parts[1])
             } else {
-                send.send_with_At(e, `格式错误！请指定目标${tmp}`, true)
+                sendMessage(e, moneyMessages.send.formatTarget(tmp), { at: true, quote: true })
                 return true
             }
         } else {
@@ -307,12 +309,12 @@ export class phimoney extends phiPluginBase {
         }
         // Note 恒为正整数，拒绝小数、0、负数与非数字
         if (!Number.isInteger(num) || num <= 0) {
-            send.send_with_At(e, `非法数量！转账数量只能是正整数${tmp}`, true)
+            sendMessage(e, moneyMessages.send.invalidAmount(tmp), { at: true, quote: true })
             return true
         }
 
         if (!target) {
-            send.send_with_At(e, `格式错误！请指定目标${tmp}`, true);
+            sendMessage(e, moneyMessages.send.formatTarget(tmp), { at: true, quote: true })
             return true
         }
 
@@ -320,7 +322,7 @@ export class phimoney extends phiPluginBase {
             const tar = await platform.pickMember(e, target);
             if (!tar) throw new Error("not found");
         } catch (err) {
-            send.send_with_At(e, `这个QQ号……好像没有见过呢……`);
+            sendMessage(e, moneyMessages.send.targetNotFound, { at: true })
             return true
         }
 
@@ -330,12 +332,12 @@ export class phimoney extends phiPluginBase {
         let sender_data = await getNotes.getNotesData(e.user_id)
 
         if (target == e.user_id) {
-            await send.send_with_At(e, `转账成……欸？这个目标……在拿我寻开心嘛！`)
+            await sendMessage(e, moneyMessages.send.selfTarget, { at: true })
             await common.sleep(1000)
-            await send.send_with_At(e, `转账失败！扣除 20 Notes！`)
+            await sendMessage(e, moneyMessages.send.failedDeduct, { at: true })
             if (sender_data.money < 20) {
-                await send.send_with_At(e, `a，你怎么连20 Note都没有哇`)
-                await send.send_with_At(e, `www，算了，我今天心情好，不和你计较了，哼！`)
+                await sendMessage(e, moneyMessages.send.no20Notes, { at: true })
+                await sendMessage(e, moneyMessages.send.forgive, { at: true })
             } else {
                 sender_data.money -= 20
             }
@@ -344,7 +346,7 @@ export class phimoney extends phiPluginBase {
         }
 
         if (sender_data.money < num) {
-            send.send_with_At(e, `你当前的Note数量不够哦！\n当前Note: ${sender_data.money}`)
+            sendMessage(e, moneyMessages.send.notEnough(sender_data.money), { at: true })
             return true
         }
 
@@ -361,7 +363,7 @@ export class phimoney extends phiPluginBase {
         getNotes.putNotesData(target, target_data)
         let target_card = await platform.pickMember(e, target)
         const targetName = target_card?.nickname || target_card?.card || target
-        send.send_with_At(e, `转账成功！\n你当前的Note: ${sender_old} - ${num} = ${sender_data.money}\n${targetName}的Note: ${target_old} + ${received} = ${target_data.money}`)
+        sendMessage(e, moneyMessages.send.success(sender_old, num, sender_data.money, targetName, target_old, received, target_data.money), { at: true })
     }
 
     /**
@@ -371,7 +373,7 @@ export class phimoney extends phiPluginBase {
     async theme(e) {
 
         if (await getBanGroup.get(e, 'theme')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, moneyMessages.theme.banned, { at: true })
             return false
         }
 
@@ -379,17 +381,17 @@ export class phimoney extends phiPluginBase {
         let msg = e.msg.replace(/.*?theme\s*/g, '')
         let aim = Number(msg)
         if (!Number.isInteger(aim) || aim < 0 || aim > themeList.length - 1) {
-            send.send_with_At(e, `请输入主题数字嗷！\n格式/${Config.getUserCfg('config', 'cmdhead')} theme 0-${themeList.length - 1}`)
+            sendMessage(e, moneyMessages.theme.specifyTheme(themeList.length - 1), { at: true })
             return false
         }
 
         const selectedTheme = themeList[aim]
         if (themeManager.getTheme(selectedTheme.id)?.marketInstalled) {
-            send.send_with_At(e, `正在校验并准备主题 ${selectedTheme.id}，请稍候。`)
+            sendMessage(e, moneyMessages.theme.preparing(selectedTheme.id), { at: true })
             try {
                 await themeUseService.use(selectedTheme.id, { requesterId: getThemeInstallRequesterId(e) })
             } catch (error) {
-                send.send_with_At(e, marketThemeErrorMessage(error))
+                sendMessage(e, marketMessages.themeError(marketThemeErrorMessage(error)), { at: true })
                 return true
             }
         }
@@ -404,11 +406,11 @@ export class phimoney extends phiPluginBase {
         }
 
         if (!getNotes.putNotesData(e.user_id, plugin_data)) {
-            send.send_with_At(e, '主题已准备完成，但你的主题设置保存失败，请稍后重试。')
+            sendMessage(e, moneyMessages.theme.saveFailed, { at: true })
             return true
         }
 
-        send.send_with_At(e, `设置成功！\n你当前的主题是：${selectedTheme.src}`)
+        sendMessage(e, moneyMessages.theme.success(selectedTheme.src), { at: true })
         return true
     }
 
@@ -421,7 +423,7 @@ export class phimoney extends phiPluginBase {
     async jrrp(e) {
 
         if (await getBanGroup.get(e, 'jrrp')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, moneyMessages.jrrp.banned, { at: true })
             return false
         }
 
@@ -437,7 +439,7 @@ export class phimoney extends phiPluginBase {
             good: jrrp.slice(2, 6),
             bad: jrrp.slice(6, 10),
         }
-        send.send_with_At(e, await picmodle.common(e, 'jrrp', data))
+        sendMessage(e, moneyMessages.jrrp.image(await picmodle.common(e, 'jrrp', data)), { at: true })
     }
 }
 
@@ -469,10 +471,10 @@ async function randtask(e, save, task = []) {
     if (await canUseApi(e, 'scoreStatistics')) {
 
         const res = await makeRequest.getAllSongAccAvgB30({
-                songIds: fCompute.objectKeys(getInfo.ori_info),
-                minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
-                maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
-            }, { event: e })
+            songIds: fCompute.objectKeys(getInfo.ori_info),
+            minRks: Math.floor((com_rks - 0.05) / 0.05) * 0.05,
+            maxRks: Math.floor((com_rks + 0.05) / 0.05) * 0.05
+        }, { event: e })
         if (res) {
             const ids = fCompute.objectKeys(res)
             ids.forEach(id => {
@@ -933,7 +935,7 @@ async function createJrrp(e) {
         }
 
         if (!getInfo.word) {
-            send.send_with_At(e, '发生未知错误QAQ，请联系管理员处理！');
+            sendMessage(e, moneyMessages.createJrrp.unknownError, { at: true });
             logger.error('jrrp获取词库失败，getInfo.word未定义！');
             throw new Error('jrrp word undefined');
         }

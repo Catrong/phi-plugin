@@ -150,7 +150,7 @@ export const USER_SETTING_OPTIONS = {
 export const USER_API_SETTING_META = {
     allowDataCollection: {
         title: '数据收集同意',
-        description: '控制是否同意插件收集你的游戏数据（如成绩、游玩时间等）用于统计分析和功能优化，帮助我们改进插件性能和用户体验。关闭后将同步禁用下方所有选项。'
+        description: '控制是否同意API收集你的游戏数据以提供部分服务，关闭后将同步禁用下方所有选项。'
     },
     allowLeaderboard: {
         title: '排行榜展示',
@@ -165,7 +165,7 @@ export const USER_API_SETTING_META = {
         description: '同意其他玩家通过你游戏中的的玩家ID搜索到你的成绩信息，便于社交互动和成绩比较。'
     },
     allowUserIdSearch: {
-        title: '用户ID搜索',
+        title: '查分ID搜索/绑定',
         description: '控制是否同意使用用户ID进行绑定，其他玩家可以通过用户id获取到你的成绩信息'
     }
 }

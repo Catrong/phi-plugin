@@ -4,6 +4,8 @@ import LevelRecordInfo from './LevelRecordInfo.js'
 import { Level, MAX_DIFFICULTY } from './constNum.js'
 import getInfo from './getInfo.js'
 import platform from '../../components/platform/index.js'
+import { fileMessages } from '../render/messages.js'
+import { sendMessage } from '../render/message.js'
 
 export default class fCompute {
     /**
@@ -96,7 +98,7 @@ export default class fCompute {
             logger.error(`文件上传错误：${logger.red(err.stack)}`)
             console.error(err)
             // @ts-ignore
-            await platform.reply(e, `文件上传错误：${err.stack}`)
+            await sendMessage(e, fileMessages.uploadError(err.stack))
         }
     }
 
@@ -789,7 +791,7 @@ export default class fCompute {
     /**
      * 从数组中随机选择一个元素，数组元素为[值,权重]，权重越大被选中的概率越大
      * @template T
-     * @param {[T,number][]} arr 
+     * @param {[value: T, weight: number][]} arr 
      * @return {T} 选中的元素
      */
     static randFromArray(arr) {

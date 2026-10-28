@@ -1,161 +1,349 @@
-/* 猜 RKS 提示图：复用 b19 的 B30 面板样式，只补充未公开遮罩与提示区。 */
 @import "../b19/b19.css";
 
-/* 未公开槽位：正常渲染成绩行，再在上方盖半透明灰框 */
-.grks-hidden-song {
-  outline: 1px dashed rgba(214, 218, 228, 0.45);
-  outline-offset: -1px;
-  border-radius: 6px;
+body {
+  width: 1360px;
 }
 
-/* 存档统计遮罩（提示者未给出类型 4 提示时盖住数字并写出指令） */
-.grks-overlay-record {
-  left: 0;
-  padding: 0 6px;
+.b19 {
+  width: 95%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 20px;
 }
 
-.grks-overlay-record .grks-placeholder {
-  font-size: 12px;
+.recordInfo {
+  width: 18.5%;
 }
 
-.clgBox.grks-clg-masked::before {
-  content: "";
-  position: absolute;
-  inset: -8px 0px;
-  z-index: 3;
-  border-radius: 6px;
-  background: rgba(96, 100, 110, 0.86);
-}
-
-.grks-clg-masked > p {
-  font-size: 1rem;
-}
-
-.grks-clg-command {
-  position: absolute;
-  left: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 4;
-  font-family: "Aldrich", sans-serif;
-  font-size: 11px;
-  color: #f0f2f8;
-  white-space: nowrap;
+.song {
+  width: calc(100% - 24px);
+  margin: 0 0 0 24px;
 }
 
 .grks-overlay {
+  --height: 100px;
+  height: auto;
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: -26px;
-  z-index: 3;
+  inset: 0 0 0 -24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 12px;
-  text-align: center;
-  border-radius: 6px;
-  background: rgba(96, 100, 110, 0.82);
+  background: rgba(47, 56, 69, 0.52);
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  border-bottom: 1px solid rgba(0, 183, 240, 0.35);
 }
 
-/* 回答者视角底层没有成绩，遮罩更实一些，避免透出页面背景 */
-.grks-overlay.is-solid {
-  background: rgba(96, 100, 110, 0.94);
+.grks-hidden-slot {
+  position: absolute;
+  top: 10px;
+  left: 36px;
+  font: 14px "Aldrich", "PHI";
+  opacity: 0.65;
 }
 
 .grks-placeholder {
-  font-size: 13px;
-  line-height: 1.4;
-  color: #f0f2f8;
-  word-break: break-all;
+  font-size: 16px;
+  color: #c9d0db;
+  letter-spacing: 2px;
 }
 
-.grks-placeholder.is-noinfo {
-  font-family: "Aldrich", sans-serif;
-  letter-spacing: 1px;
-  opacity: 0.75;
-}
-
-/* 直方图遮罩（提示者未给出类型 3 提示时盖住数据并写出指令） */
-.histogram-panel {
-  position: relative;
-}
-
-.grks-overlay-analysis {
-  left: 0;
-  padding: 0 16px;
-}
-
-.grks-overlay-analysis .grks-placeholder {
-  font-size: 14px;
-}
-
-/* 统计/课题提示的分隔标题与面板 */
 .grks-over-flow {
-  margin-top: 2rem;
+  margin-top: 28px;
 }
 
-/* 条状图模式：不渲染 y 轴刻度，只保留柱子 */
+.grks-over-flow > p {
+  white-space: nowrap;
+}
+
+.grks-flow-line {
+  --height: 15px;
+  background-color: #fff;
+}
+
+.flow_line_box_l .grks-flow-line:nth-child(1),
+.flow_line_box_r .grks-flow-line:nth-child(6) {
+  width: 50%;
+}
+
+.flow_line_box_l .grks-flow-line:nth-child(2),
+.flow_line_box_r .grks-flow-line:nth-child(5) {
+  width: 25%;
+}
+
+.flow_line_box_l .grks-flow-line:nth-child(3),
+.flow_line_box_r .grks-flow-line:nth-child(4) {
+  width: 12.5%;
+}
+
+.flow_line_box_l .grks-flow-line:nth-child(4),
+.flow_line_box_r .grks-flow-line:nth-child(3) {
+  width: 6.25%;
+}
+
+.flow_line_box_l .grks-flow-line:nth-child(5),
+.flow_line_box_r .grks-flow-line:nth-child(2) {
+  width: 3.125%;
+}
+
+.flow_line_box_l .grks-flow-line:nth-child(6),
+.flow_line_box_r .grks-flow-line:nth-child(1) {
+  width: 1.5625%;
+}
+
+.grks-analysis-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 20px auto 24px;
+}
+
+.grks-analysis-row .analysis-panel {
+  --height: 400px;
+  width: auto;
+  min-width: 0;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-panel-head {
+  width: calc(100% - var(--height) * var(--clipSlope));
+  height: 64px;
+  min-height: 64px;
+  box-sizing: border-box;
+  margin-left: calc(var(--height) * var(--clipSlope) - 16px);
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.analysis-title {
+  font-size: 25px;
+}
+
+.analysis-kicker {
+  margin-bottom: 6px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.analysis-meta {
+  font-size: 12px;
+  white-space: nowrap;
+  padding-bottom: 4px;
+}
+
+.histogram-summary {
+  flex-shrink: 0;
+}
+
+.histogram-chart {
+  --chart-height: 286px;
+  width: calc(100% - (var(--height) + var(--chart-height)) * var(--clipSlope));
+  height: var(--chart-height);
+  margin: 18px 0 0 calc(var(--height) * var(--clipSlope) - 36px);
+  padding: 0;
+  gap: 6px;
+}
+
+.histogram-y-label {
+  flex: 0 0 16px;
+}
+
 .histogram-plot {
-  border-left: none;
+  min-width: 0;
+  height: 100%;
+  border: none;
+}
+
+.histogram-scale {
+  inset: 0 0 38px 34px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.32);
+}
+
+.histogram-grid-line p {
+  left: -34px;
+  width: 28px;
+  text-align: right;
+  background: none;
+  font-size: 9px;
 }
 
 .histogram-bars {
-  left: 3px;
+  inset: 0 0 0 34px;
 }
 
-/* 上下界模式：只渲染直方图左侧的数值标尺（含上下界标记线），不渲染柱子 */
-.grks-ruler-panel {
-  min-height: 168px;
+.histogram-bar-area {
+  height: calc(100% - 38px);
 }
 
-.grks-plot-scale-only {
-  min-height: 160px;
-  margin-bottom: 22px;
+.histogram-slot-label {
+  height: 38px;
+  padding-top: 5px;
+  writing-mode: vertical-rl;
+  transform: none;
+  font-size: 8px;
+  line-height: 1;
 }
 
-/* b19 的图表区为整页布局做了左侧偏移，标尺面板单独占位时还原 */
-.grks-ruler-panel .histogram-chart {
-  width: 100%;
-  margin-left: -48px;
-  height: 200px;
-  padding-left: 30px;
+.histogram-legend {
+  width: calc(100% - var(--height) * var(--clipSlope));
+  margin: 5px 0 0 10px;
 }
 
 .grks-bound-marker {
   position: absolute;
   left: 0;
   right: 0;
-  border-top: 1px dashed rgba(255, 255, 255, 0.65);
-  z-index: 4;
+  border-top: 1px dashed rgba(255, 215, 106, 0.8);
 }
 
 .grks-bound-marker p {
   position: absolute;
-  left: 30px;
-  top: -9px;
-  font-family: "Aldrich", sans-serif;
-  font-size: 11px;
+  right: 6px;
+  bottom: 4px;
+  padding: 2px 4px;
+  background: rgba(0, 0, 0, 0.8);
+  font: 12px "Aldrich", "PHI";
   color: #ffd76a;
 }
 
-.grks-bound-marker.grks-bound-min p {
+.grks-bound-min {
+  border-color: #7db2ff;
+}
+
+.grks-bound-min p {
+  top: 4px;
+  bottom: auto;
   color: #7db2ff;
 }
 
-/* 标尺模式下刻度数值靠右，避开面板左下斜切边 */
-.grks-ruler-panel .histogram-grid-line p {
-  left: auto;
-  right: 2px;
+.grks-sheet-placeholder {
+  flex: 1;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
-/* 底部状态与指令说明 */
+.grks-sheet-placeholder p:first-child {
+  font-size: 23px;
+  color: #c9d0db;
+}
+
+.grks-sheet-placeholder p:last-child {
+  font-size: 13px;
+  color: #8d9bab;
+}
+
+.grks-history-grid {
+  --history-cell-height: 64px;
+  --history-row-gap: 6px;
+  --history-row-step: calc((var(--history-cell-height) + var(--history-row-gap)) * var(--clipSlope));
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: var(--history-cell-height);
+  gap: var(--history-row-gap) 0px;
+  width: calc(100% - var(--height) * var(--clipSlope));
+  margin: 12px 0 0 calc(var(--height) * var(--clipSlope) - 36px);
+}
+
+.grks-history-cell {
+  --height: var(--history-cell-height);
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 8px 0;
+  background: rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.grks-history-cell:nth-child(n + 4):nth-child(-n + 6) {
+  transform: translateX(calc(var(--history-row-step) * -1));
+}
+
+.grks-history-cell:nth-child(n + 7):nth-child(-n + 9) {
+  transform: translateX(calc(var(--history-row-step) * -2));
+}
+
+.grks-history-cell:last-child {
+  grid-column: 1 / -1;
+  transform: translateX(calc(var(--history-row-step) * -3));
+}
+
+.grks-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+  height: 16px;
+  padding: 0 8px 0 calc(var(--height) * var(--clipSlope) + 2px);
+  margin-bottom: 3px;
+}
+
+.grks-history-turn {
+  font: 14px "Aldrich", "PHI";
+  color: #9fe8ff;
+}
+
+.grks-history-result {
+  font-size: 11px;
+  color: #b8c1cf;
+}
+
+.grks-history-hint,
+.grks-history-answer {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.grks-history-hint {
+  padding: 0 calc(var(--height) * var(--clipSlope)) 0 20px;
+  overflow-wrap: anywhere;
+  color: #b8c1cf;
+}
+
+.grks-history-answer,
+.grks-history-result,
+.grks-history-turn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.is-empty {
+  opacity: 0.45;
+}
+
+.is-pending {
+  background: rgba(0, 183, 240, 0.14);
+  border-top-color: #00b7f0;
+}
+
+.is-correct {
+  background: rgba(0, 214, 173, 0.15);
+  border-top-color: #00d6ad;
+}
+
+.is-correct .grks-history-result {
+  color: #62f5d0;
+}
+
+.is-wrong .grks-history-result,
+.is-timeout .grks-history-result,
+.is-abandoned .grks-history-result {
+  color: #ffad91;
+}
+
 .grks-foot {
-  margin: 1.5rem 2.5rem 1rem;
-  padding: 12px 16px;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.45);
+  position: relative;
+  margin: 0 auto 24px;
+  width: 95%;
+  box-sizing: border-box;
+  padding: 14px 20px;
+  border-left: 3px solid #00b7f0;
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
 }
 
@@ -163,5 +351,5 @@
   font-size: 14px;
   line-height: 1.7;
   white-space: pre-wrap;
-  color: #ffffff;
+  overflow-wrap: anywhere;
 }

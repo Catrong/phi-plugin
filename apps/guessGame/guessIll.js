@@ -2,11 +2,12 @@ import common from '../../components/common.js'
 import Config from '../../components/Config.js'
 import logger from '../../components/Logger.js'
 import getInfo from '../../model/game/getInfo.js'
-import send from '../../model/render/send.js'
 import picmodle from "../../model/render/picmodle.js";
 import SongsInfo from '../../model/game/SongsInfo.js'
 import fCompute from '../../model/game/fCompute.js'
 import getPic from '../../model/render/getPic.js'
+import { sendMessage } from '../../model/render/message.js'
+import { guessIllMessages, guessIllWords } from '../../model/render/messages.js'
 
 let songIdList = getInfo.illlist || [] //所有有曲绘的曲目列表
 
@@ -102,11 +103,11 @@ export default new class guessIll {
     async start(e, gameList) {
         const group_id = groupKey(e)
         if (ansList[group_id]) {
-            send.reply(e, "请不要重复发起哦！", true)
+            sendMessage(e, guessIllMessages.start.alreadyStarted, { quote: true })
             return true
         }
         if (songIdList.length == 0) {
-            send.reply(e, '当前曲库暂无有曲绘的曲目哦！更改曲库后需要重启哦！')
+            sendMessage(e, guessIllMessages.start.noIllustration)
             return true
         }
 
@@ -128,7 +129,7 @@ export default new class guessIll {
             ++cnnt
             if (cnnt >= 50) {
                 logger.error(`[phi guess]抽取曲目失败，请检查曲库设置`)
-                send.reply(e, `[phi guess]抽取曲目失败，请检查曲库设置`)
+                sendMessage(e, guessIllMessages.start.drawFailed)
                 return
             }
             songId = getRandomSong(e)
@@ -245,15 +246,15 @@ export default new class guessIll {
         }
         logger.info(data)
 
-        send.reply(e, 
-            [`下面开始进行猜曲绘哦！回答可以直接发送哦！每过${Config.getUserCfg('config', 'GuessTipCd')}秒后将会给出进一步提示。`,
-            `发送 /${Config.getUserCfg('config', 'cmdhead')} ans 结束游戏`,
-            `本局难度：${level}，当前干扰类型：${data.chosenInterferences.length ? data.chosenInterferences.join('、') : '无干扰'}`].join('\n')
-        )
+        sendMessage(e, guessIllMessages.start.intro(
+                Config.getUserCfg('config', 'GuessTipCd'),
+                level,
+                data.chosenInterferences.length ? data.chosenInterferences.join('、') : '无干扰',
+            ))
         if (Config.getUserCfg('config', 'GuessTipRecall'))
-            await send.reply(e, await picmodle.guess(e, data), false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') })
+            await sendMessage(e, guessIllMessages.tip.image(await picmodle.guess(e, data)), { recallMsg: Config.getUserCfg('config', 'GuessTipCd') })
         else
-            await send.reply(e, await picmodle.guess(e, data))
+            await sendMessage(e, guessIllMessages.tip.image(await picmodle.guess(e, data)))
 
         /**单局时间不超过4分半 */
         const time = Config.getUserCfg('config', 'GuessTipCd')
@@ -281,46 +282,46 @@ export default new class guessIll {
             switch (select) {
                 case 0: {
                     area_increase(100, data, fnc)
-                    tipmsg = `[区域扩增!]`
+                    tipmsg = guessIllWords.tip.areaIncrease
                     break
                 }
                 case 1: {
                     blur_down(2, data, fnc)
-                    tipmsg = `[清晰度上升!]`
+                    tipmsg = guessIllWords.tip.blurDown
                     break
                 }
                 case 2: {
                     gave_a_tip(known_info, remain_info, songs_info, fnc)
-                    tipmsg = `[追加提示!]`
+                    tipmsg = guessIllWords.tip.added
                     break
                 }
                 case 3: {
                     data.style = 1
                     fnc.splice(fnc.indexOf(3), 1)
-                    tipmsg = `[全局视野!]`
+                    tipmsg = guessIllWords.tip.globalView
                     break
                 }
                 case 4: {
                     const reduced = interference_reduce(data, fnc)
-                    tipmsg = `[${reduced}干扰减弱!]`
+                    tipmsg = guessIllWords.tip.interferenceReduced(reduced)
                     break
                 }
             }
             if (data.blur || data.saturate !== 1 || data.invert || data.hueRotate !== 0 || data.lineMode) {
-                tipmsg += `\n当前干扰类型：`
-                if (data.blur) tipmsg += `模糊 `
-                if (data.saturate !== 1) tipmsg += `饱和 `
-                if (data.invert) tipmsg += `反相 `
-                if (data.hueRotate !== 0) tipmsg += `色相 `
-                if (data.lineMode) tipmsg += `线稿 `
+                tipmsg += guessIllWords.tip.interferenceHeader
+                if (data.blur) tipmsg += guessIllWords.tip.blur
+                if (data.saturate !== 1) tipmsg += guessIllWords.tip.saturate
+                if (data.invert) tipmsg += guessIllWords.tip.invert
+                if (data.hueRotate !== 0) tipmsg += guessIllWords.tip.hueRotate
+                if (data.lineMode) tipmsg += guessIllWords.tip.lineMode
             } else {
-                tipmsg += `\n当前没有任何干扰了哦！`
+                tipmsg += guessIllWords.tip.noInterference
             }
-            if (known_info.chapter) tipmsg += `\n该曲目隶属于 ${known_info.chapter}`
-            if (known_info.bpm) tipmsg += `\n该曲目的 BPM 值为 ${known_info.bpm}`
-            if (known_info.composer) tipmsg += `\n该曲目的作者为 ${known_info.composer}`
-            if (known_info.length) tipmsg += `\n该曲目的时长为 ${known_info.length}`
-            if (known_info.illustrator) tipmsg += `\n该曲目曲绘的作者为 ${known_info.illustrator}`
+            if (known_info.chapter) tipmsg += guessIllWords.tip.chapter(known_info.chapter)
+            if (known_info.bpm) tipmsg += guessIllWords.tip.bpm(known_info.bpm)
+            if (known_info.composer) tipmsg += guessIllWords.tip.composer(known_info.composer)
+            if (known_info.length) tipmsg += guessIllWords.tip.length(known_info.length)
+            if (known_info.illustrator) tipmsg += guessIllWords.tip.illustrator(known_info.illustrator)
             if (known_info.chart) tipmsg += known_info.chart
             remsg = []
             remsg.push(await picmodle.guess(e, data))
@@ -339,9 +340,9 @@ export default new class guessIll {
             }
 
             if (Config.getUserCfg('config', 'GuessTipRecall'))
-                send.reply(e, remsg, false, { recallMsg: Config.getUserCfg('config', 'GuessTipCd') + 1 })
+                sendMessage(e, guessIllMessages.tip.update(remsg[0], remsg[1]), { recallMsg: Config.getUserCfg('config', 'GuessTipCd') + 1 })
             else
-                send.reply(e, remsg)
+                sendMessage(e, guessIllMessages.tip.update(remsg[0], remsg[1]))
 
         }
 
@@ -366,9 +367,7 @@ export default new class guessIll {
         const t = ansList[group_id]
         delete ansList[group_id]
         delete gameList[group_id]
-        await send.reply(e, "呜，怎么还没有人答对啊QAQ！只能说答案了喵……")
-
-        await send.reply(e, await getPic.GetSongsInfoAtlas(e, t))
+        await sendMessage(e, guessIllMessages.timeout.nobodyCorrect(await getPic.GetSongsInfoAtlas(e, t)))
         await gameover(e, data)
 
         return true
@@ -394,15 +393,14 @@ export default new class guessIll {
                             delete ansList[group_id]
                             delete gameList[group_id]
                             delete eList[group_id]
-                            send.send_with_At(e, '恭喜你，答对啦喵！ヾ(≧▽≦*)o', true)
-                            await send.reply(e, await getPic.GetSongsInfoAtlas(e, t))
+                            sendMessage(e, guessIllMessages.guess.correct(await getPic.GetSongsInfoAtlas(e, t)), { at: true, quote: true })
                             return true
                         }
                     }
                     if (ids[1]) {
-                        send.send_with_At(e, `不是 ${ans} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                        sendMessage(e, guessIllMessages.guess.wrongRaw(ans), { at: true, quote: true, recallMsg: 5 })
                     } else {
-                        send.send_with_At(e, `不是 ${getInfo.info(ids[0])?.song ?? ids[0]} 哦喵！≧ ﹏ ≦`, true, { recallMsg: 5 })
+                        sendMessage(e, guessIllMessages.guess.wrongSong(getInfo.info(ids[0])?.song ?? ids[0]), { at: true, quote: true, recallMsg: 5 })
                     }
                     return false
                 }
@@ -424,8 +422,7 @@ export default new class guessIll {
             delete ansList[group_id]
             delete gameList[group_id]
             delete eList[group_id]
-            await send.reply(e, '好吧，下面开始公布答案。', true)
-            await send.reply(e, await getPic.GetSongsInfoAtlas(e, t))
+            await sendMessage(e, guessIllMessages.ans.reveal(await getPic.GetSongsInfoAtlas(e, t)), { quote: true })
             return true
         }
         return false
@@ -439,7 +436,7 @@ export default new class guessIll {
         const group_id = groupKey(e)
 
         if (ansList[group_id]) {
-            await send.reply(e, `当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
+            await sendMessage(e, guessIllMessages.mix.running, { quote: true })
             return false
         }
 
@@ -454,7 +451,7 @@ export default new class guessIll {
             songweights[group_id][song] = 1
         })
 
-        await send.reply(e, `洗牌成功了www`, true)
+        await sendMessage(e, guessIllMessages.mix.shuffled, { quote: true })
         return true
     }
 }()
@@ -470,7 +467,7 @@ async function gameover(e, data) {
     data.filterStyle = buildFilterStyle(data)
     data.ans = data.illustration
     data.style = 1
-    await send.reply(e, await picmodle.guess(e, data))
+    await sendMessage(e, guessIllMessages.ans.image(await picmodle.guess(e, data)))
     delete eList[groupKey(e)]
 }
 

@@ -103,6 +103,8 @@
  * @typedef {'autoPullPhiIll'} autoPullPhiIll 自动更新曲绘
  * @typedef {'isGuild'} isGuild 频道模式
  * @typedef {'TapTapLoginQRcode'} TapTapLoginQRcode 绑定二维码
+ * @typedef {'SimpleBindReply'} SimpleBindReply 绑定流程精简回复，开启后仅发送二维码、绑定成功提示、成绩更新图与API不可用提示，避免官方Bot被动回复超出条数限制
+ * @typedef {'MergeImageWithText'} MergeImageWithText 图文合并发送
  * @typedef {'WordB19Img'} WordB19Img 文字版B19曲绘图片
  * @typedef {'WordSuggImg'} WordSuggImg Suggest曲绘图片
  * @typedef {'cmdhead'} cmdhead 命令头
@@ -132,7 +134,8 @@
  * @typedef {'GuessTipChartCharter'} GuessTipChartCharter 谱师提示开关
  * 开字母设置
  * @typedef {'LetterNum'} LetterNum 字母条数
- * @typedef {'LetterMarkdown'} LetterMarkdown Markdown格式
+ * @typedef {'LetterMessageMode'} LetterMessageMode 开字母消息格式
+ * @typedef {'LetterMarkdown'} LetterMarkdown 快捷操作消息方式
  * @typedef {'LetterIllustration'} LetterIllustration 发送曲绘
  * @typedef {'LetterRevealCd'} LetterRevealCd 字母提示间隔
  * @typedef {'LetterGuessCd'} LetterGuessCd 字母开启间隔
@@ -160,20 +163,18 @@
  * @typedef {'GrksPositionHintAt'} GrksPositionHintAt 公开位置的第几条提示
  * @typedef {'GrksHintRevealNum'} GrksHintRevealNum 每次公开成绩条数
  * @typedef {'GrksTipCd'} GrksTipCd 提示冷却
+ * @typedef {'GrksSoloCd'} GrksSoloCd 单机回答（每人）与提示（房间）共用冷却
  * @typedef {'GrksTimeLength'} GrksTimeLength 待机时长
  * @typedef {'GrksWrongLimit'} GrksWrongLimit 猜错次数上限
  * @typedef {'GrksStatsHint'} GrksStatsHint 统计提示默认形式
  * @typedef {'GrksPoolRefreshHours'} GrksPoolRefreshHours 出题池刷新周期
- * @typedef {'GrksMatchWaitTimeout'} GrksMatchWaitTimeout 匹配等待超时
- * @typedef {'GrksMatchRksRange'} GrksMatchRksRange 匹配 rks 差值
- * @typedef {'GrksMatchTurnTime'} GrksMatchTurnTime 匹配回合时限
- * @typedef {'GrksMatchMaxTimeoutTurn'} GrksMatchMaxTimeoutTurn 超时判负回合数
+ * @typedef {'GrksMatchTurnTime'} GrksMatchTurnTime 匹配阶段时限
  * 其他设置
  * @typedef {'VikaToken'} VikaToken VikaToken
  * @typedef {'apiBotClientId'} apiBotClientId API签发的Bot clientId
  * @typedef {'apiBotClientSecret'} apiBotClientSecret API签发的Bot HMAC secret
  * @typedef {'apiBotSecretVersion'} apiBotSecretVersion Bot HMAC secret版本
- * 
+ *
  * @typedef {onLinePhiIllUrl
  * |githubProxy
  * |downIllUrl
@@ -197,6 +198,8 @@
  * |autoPullPhiIll
  * |isGuild
  * |TapTapLoginQRcode
+ * |SimpleBindReply
+ * |MergeImageWithText
  * |WordB19Img
  * |WordSuggImg
  * |cmdhead
@@ -224,6 +227,7 @@
  * |GuessTipChartCombo
  * |GuessTipChartCharter
  * |LetterNum
+ * |LetterMessageMode
  * |LetterMarkdown
  * |LetterIllustration
  * |LetterRevealCd
@@ -249,14 +253,12 @@
  * |GrksPositionHintAt
  * |GrksHintRevealNum
  * |GrksTipCd
+ * |GrksSoloCd
  * |GrksTimeLength
  * |GrksWrongLimit
  * |GrksStatsHint
  * |GrksPoolRefreshHours
- * |GrksMatchWaitTimeout
- * |GrksMatchRksRange
  * |GrksMatchTurnTime
- * |GrksMatchMaxTimeoutTurn
  * |VikaToken
  * |apiBotClientId
  * |apiBotClientSecret
@@ -298,7 +300,7 @@
  * @property {string} shortId
  * @property {string} updatedAt
  * @property {string} username
- * 
+ *
  * @typedef {object} gameFile
  * @property {string} __type 文件类型
  * @property {string} bucket 存档bucket
@@ -311,11 +313,11 @@
  * @property {string} provider provider
  * @property {string} updatedAt 存档更新时间 2023-10-05T07:41:24.503Z
  * @property {string} url https://rak3ffdi.tds1.tapfiles.cn/gamesaves/{32}/.save
- * 
+ *
  * @typedef {object} modifiedAt
  * @property {string} __type
  * @property {Date} iso
- * 
+ *
  * @typedef {object} summary
  * @property {string} updatedAt 插件获取存档时间 2023 Oct.06 11:46:33
  * @property {number} saveVersion 存档版本
@@ -326,7 +328,7 @@
  * @property {number[]} cleared 完成曲目数量
  * @property {number[]} fullCombo FC曲目数量
  * @property {number[]} phi AP曲目数量
- * 
+ *
  * @typedef {object} saveInfo
  * @property {Date} createdAt 账户创建时间 2022-09-03T10:21:48.613Z
  * @property {gameFile} gameFile
@@ -337,7 +339,7 @@
  * @property {Date} updatedAt 存档更新时间 2023-10-06T03:46:33.000Z
  * @property {{'__type': "Pointer", 'className': "_User", 'objectId': string}} user
  * @property {string} PlayerId
- * 
+ *
  * @typedef {object} gameProgress
  * @property {boolean} isFirstRun
  * @property {boolean} legacyChapterFinished
@@ -356,7 +358,7 @@
  * @property {boolean} chapter8UnlockSecondPhase
  * @property {boolean} chapter8Passed
  * @property {number} chapter8SongUnlocked
- * 
+ *
  * @typedef {object} gameuser
  * @property {string} name
  * @property {string} version
@@ -365,9 +367,9 @@
  * @property {string} avatar
  * @property {string} background
  * @property {string} CLGMOD
- * 
+ *
  * @typedef {Record<idString, (ori_record | null)[]>} gameRecord
- * 
+ *
  * @typedef {object} oriSave
  * @property {phigrosToken} session
  * @property {apiUserId} [apiId]
@@ -390,16 +392,19 @@
 
 /**
  * 单条成绩详细记录
- * @typedef {[acc: string, score: number, date: string, fc: number | boolean]} ScoreDetail
+ * @typedef {[acc: string, score: number, date: string, fc: number | boolean]} ScoreDetailJson
  * 0 - acc
  * 1 - score
  * 2 - 记录日期
  * 3 - fc
+ * 
+ * @typedef {[acc: number, score: number, date: Date, fc: 0 | 1]} ScoreDetail
+ * @description 单条成绩详细记录，acc 保留 4 位小数，fc 为 0 | 1，日期为 Date 对象
  */
 
 /**
- * 
- * @typedef {Partial<Record<allLevelKind, ScoreDetail[]>>} songRecordHistory
+ *
+ * @typedef {Partial<Record<allLevelKind, ScoreDetailJson[]>>} songRecordHistory
  */
 
 /**
@@ -451,7 +456,7 @@
  * @property {boolean} success
  */
 
-/** 
+/**
  * @typedef {Object} TapTapNoticeItem
  * @property {'moment'} type
  * @property {string} identification
@@ -516,4 +521,13 @@
  * @property {{ list: TapTapNoticeItem[], total: number, next_page: string }} data
  * @property {number} now
  * @property {boolean} success
+ */
+
+/**
+ * @typedef {1|2|3|4} buttonStyle 按钮样式:1-蓝框蓝字,2-灰框黑字,3-灰框红字,4-蓝底白字,其他均为灰框黑字
+ *
+ * @typedef {object} buttonCommandObject
+ * @property {string} command 指令
+ * @property {string} label 按钮标签
+ * @property {buttonStyle} [style] 按钮样式:1-蓝框蓝字,2-灰框黑字,3-灰框红字,4-蓝底白字,其他均为灰框黑字
  */

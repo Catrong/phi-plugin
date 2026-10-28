@@ -1,5 +1,4 @@
 import Config from '../components/Config.js'
-import send from '../model/render/send.js'
 import picmodle from '../model/render/picmodle.js'
 import getFile from '../model/filesystem/getFile.js'
 import path from 'path'
@@ -9,7 +8,8 @@ import phiPluginBase from '../components/baseClass.js';
 import getNotes from '../model/user/getNotes.js'
 import getInfo from '../model/game/getInfo.js'
 import { getApiAccessState } from '../model/user/apiPermission.js'
-import { sendQuickCommands, helpQuickCommands, apiHelpQuickCommands } from '../model/game/markdown.js'
+import { sendMessage } from '../model/render/message.js'
+import { helpMessages } from '../model/render/messages.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -51,21 +51,22 @@ export class phihelp extends phiPluginBase {
     async help(e) {
 
         if (await getBanGroup.get(e, 'help')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, helpMessages.help.banned, { at: true })
             return false
         }
 
-        let head = Config.getUserCfg('config', 'cmdhead')
-        head = head.match(RegExp(head))[0]
+        const head = Config.getUserCfg('config', 'cmdhead')
+        const displayHead = head.match(RegExp(head))?.[0] || head
         let pluginData = await getNotes.getNotesData(e.user_id)
-        send.reply(e, await picmodle.help(e, {
-            helpGroup: helpGroup,
-            cmdHead: head || null,
-            isMaster: e.isMaster,
-            background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
-            theme: pluginData?.theme || 'star'
-        }), true)
-        await sendQuickCommands(e, helpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), '帮助页常用操作')
+        sendMessage(e, helpMessages.help.finalMessage({
+            image: await picmodle.help(e, {
+                helpGroup: helpGroup,
+                cmdHead: displayHead || null,
+                isMaster: e.isMaster,
+                background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
+                theme: pluginData?.theme || 'star'
+            })
+        }), { quote: true })
         return true
     }
 
@@ -77,11 +78,11 @@ export class phihelp extends phiPluginBase {
     async tkhelp(e) {
 
         if (await getBanGroup.get(e, 'tkhelp')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, helpMessages.tkhelp.banned, { at: true })
             return false
         }
 
-        send.send_with_At(e, `sessionToken有关帮助：\n【推荐】：扫码登录TapTap获取token\n指令：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n【基础方法】详见《Phigros非官方查分指引》：https://kdocs.cn/l/cvMDjWPTNaz4\n绑定sessionToken指令：\n/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+        sendMessage(e, helpMessages.tkhelp.tokenHelp(), { at: true })
     }
 
     /**
@@ -97,24 +98,25 @@ export class phihelp extends phiPluginBase {
         // }
         const apiAccess = await getApiAccessState(e)
         if (!apiAccess.enabled) {
-            send.send_with_At(e, !apiAccess.globalEnabled
-                ? '这里没有连接查分平台哦！'
+            sendMessage(e, !apiAccess.globalEnabled
+                ? helpMessages.apihelp.notConnected
                 : !apiAccess.capabilityEnabled
-                    ? 'Bot 主人已关闭在线查分功能。'
-                    : '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。')
+                    ? helpMessages.apihelp.capabilityDisabled
+                    : helpMessages.apihelp.userDisabled, { at: true })
             return false
         }
 
-        let head = Config.getUserCfg('config', 'cmdhead')
-        head = head.match(RegExp(head))[0]
+        const head = Config.getUserCfg('config', 'cmdhead')
+        const displayHead = head.match(RegExp(head))?.[0] || head
         let pluginData = await getNotes.getNotesData(e.user_id)
-        send.reply(e, await picmodle.help(e, {
-            helpGroup: apiHelp,
-            cmdHead: head || null,
-            isMaster: e.isMaster,
-            background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
-            theme: pluginData?.theme || 'star'
-        }), true)
-        await sendQuickCommands(e, apiHelpQuickCommands(head || Config.getUserCfg('config', 'cmdhead')), 'API帮助快捷操作')
+        sendMessage(e, helpMessages.apihelp.finalMessage({
+            image: await picmodle.help(e, {
+                helpGroup: apiHelp,
+                cmdHead: displayHead || null,
+                isMaster: e.isMaster,
+                background: getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))]),
+                theme: pluginData?.theme || 'star'
+            })
+        }), { quote: true })
     }
 }

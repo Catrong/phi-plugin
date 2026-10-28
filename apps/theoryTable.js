@@ -1,11 +1,12 @@
 import Config from '../components/Config.js'
 import Version from '../components/Version.js'
 import phiPluginBase from '../components/baseClass.js'
-import send from '../model/render/send.js'
 import picmodle from '../model/render/picmodle.js'
 import fCompute from '../model/game/fCompute.js'
 import getInfo from '../model/game/getInfo.js'
 import getNotes from '../model/user/getNotes.js'
+import { sendMessage } from '../model/render/message.js'
+import { theoryTableMessages, theoryTableWords } from '../model/render/messages.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import { Level } from '../model/game/constNum.js'
 import { computeSongLimits } from '../model/game/songLimits.js'
@@ -38,7 +39,7 @@ export class phiTheoryTable extends phiPluginBase {
      */
     async theoryTable(e) {
         if (await getBanGroup.get(e, 'b19')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, theoryTableMessages.theoryTable.banned, { at: true })
             return false
         }
 
@@ -52,7 +53,7 @@ export class phiTheoryTable extends phiPluginBase {
                 verCode = Number(matchVersion)
             }
             if (!verCode || !getInfo.versionInfoByCode[`${verCode}`]) {
-                send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                sendMessage(e, theoryTableMessages.theoryTable.versionNotFound(matchVersion), { at: true })
                 return true
             }
         } else {
@@ -62,13 +63,13 @@ export class phiTheoryTable extends phiPluginBase {
         const versionInfo = getInfo.versionInfoByCode[`${verCode}`]
         if (!versionInfo) {
             console.error(`[phi-plugin] 版本信息获取失败，versionCode: ${verCode}`)
-            send.send_with_At(e, `发生未知错误QAQ！请回报管理员！`)
+            sendMessage(e, theoryTableMessages.theoryTable.unknownError, { at: true })
             return true
         }
 
         const charts = getVersionCharts(verCode)
         if (!charts.length) {
-            send.send_with_At(e, `未能获取版本 ${versionInfo.version_label} 的定数表QAQ！`)
+            sendMessage(e, theoryTableMessages.theoryTable.chartTableUnavailable(versionInfo.version_label), { at: true })
             return true
         }
 
@@ -92,7 +93,7 @@ export class phiTheoryTable extends phiPluginBase {
         const plugin_data = await getNotes.getNotesData(e.user_id)
 
         if (!Config.getUserCfg('config', 'isGuild'))
-            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            sendMessage(e, theoryTableMessages.theoryTable.generating, { recallMsg: 5 })
 
         /**各难度谱面数量，满分模拟下C/FC/Phi与总数一致 */
         const stats = Level.map(lv => {
@@ -104,8 +105,7 @@ export class phiTheoryTable extends phiPluginBase {
         const maxChallenge = computeSongLimits(charts).maxChallenge || 0
 
         const spInfo = [
-            `模拟分表：理论模拟，非真实存档`,
-            `理论rks = ${isNewAlgo ? '(P1-3+B1-27)/30' : '(P1+B1-19)/20'}（${versionInfo.version_label}${isNewAlgo ? '' : '旧版'}算法）`,
+            ...theoryTableWords.theoryTable.simulatedInfo(isNewAlgo ? '(P1-3+B1-27)/30' : '(P1+B1-19)/20', versionInfo.version_label, isNewAlgo),
         ]
 
         const background = getInfo.getill(/**@type {idString} */(phiCharts[0]?.id), 'blur')
@@ -114,7 +114,7 @@ export class phiTheoryTable extends phiPluginBase {
         const data = {
             phi,
             b19_list,
-            PlayerId: `v${versionInfo.version_label}理论分表`,
+            PlayerId: theoryTableMessages.theoryTable.playerName(versionInfo.version_label),
             Rks: com_rks.toFixed(4),
             Date: fCompute.formatDate(versionInfo.update_date * 1000),
             ChallengeMode: 0,
@@ -129,14 +129,14 @@ export class phiTheoryTable extends phiPluginBase {
                 data: '',
                 selfIntro: '',
                 backgroundUrl: '',
-                PlayerId: `v${versionInfo.version_label}理论分表`,
+                PlayerId: theoryTableMessages.theoryTable.playerName(versionInfo.version_label),
             },
             nnum: bestCount,
             stats,
             spInfo,
         }
 
-        send.send_with_At(e, await picmodle.b19(e, data))
+        sendMessage(e, theoryTableMessages.theoryTable.image(await picmodle.b19(e, data)), { at: true })
         return true
     }
 }

@@ -1,9 +1,10 @@
 import Config from './Config.js'
-import send from "../model/render/send.js";
 import fCompute from '../model/game/fCompute.js'
 import getInfo from '../model/game/getInfo.js';
 import logger from './Logger.js';
 import platform from './platform/index.js';
+import { sendMessage } from '../model/render/message.js'
+import { baseClassMessages } from '../model/render/messages.js'
 
 /** @import {PlatformEvent, PlatformMessageInput, PlatformPluginConfig, PlatformUserId} from './platform/types.js' */
 
@@ -180,14 +181,14 @@ export default class phiPluginBase extends HostPlugin {
   choseMutiNick(e, idList, options, callback) {
     e = this.wrapPlatformEvent(e)
     if (idList.length === 0) {
-      send.send_with_At(e, `未找到相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+      sendMessage(e, baseClassMessages.choseMutiNick.notFound, { at: true, quote: true })
       return;
     }
     if (idList.length === 1) {
       callback(e, idList[0], options);
       return;
     }
-    send.send_with_At(e, fCompute.mutiNick(idList));
+    sendMessage(e, baseClassMessages.choseMutiNick.list(fCompute.mutiNick(idList)), { at: true });
     const userId = String(e.user_id)
     const timeoutSeconds = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
     clearMutiNickState(userId)
@@ -215,9 +216,9 @@ export default class phiPluginBase extends HostPlugin {
     const state = wait_to_chose_song[userId]
     const ids = state?.ids || [];
     if (!num) {
-      send.send_with_At(this.e, `请输入正确的序号哦！`);
+      sendMessage(this.e, baseClassMessages.choseMutiNick.inputNumber, { at: true });
     } else if (!ids[num - 1]) {
-      send.send_with_At(this.e, `未找到${num}所对应的曲目哦！`);
+      sendMessage(this.e, baseClassMessages.choseMutiNick.numberNotFound(num), { at: true });
     } else {
       clearMutiNickState(userId)
       this.finish('mutiNick', false)
@@ -252,13 +253,13 @@ export default class phiPluginBase extends HostPlugin {
     }
 
     if (!msg) {
-      send.send_with_At(e, `请在命令后添加曲目名称或别名哦~`, true);
+      sendMessage(e, baseClassMessages.getMicInfoFromMsg.missingSong, { at: true, quote: true });
       return;
     }
 
     let ids = getInfo.fuzzysongsnick(msg, undefined, true)
     if (!ids.length) {
-      send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+      sendMessage(e, baseClassMessages.getMicInfoFromMsg.notFound(msg), { at: true, quote: true })
       return;
     }
 
@@ -267,14 +268,14 @@ export default class phiPluginBase extends HostPlugin {
 
         let info = getInfo.info(id, true)
         if (!info) {
-          send.send_with_At(e, `未找到${id}的曲目信息QAQ！请回报管理员！`, true)
+          sendMessage(e, baseClassMessages.getMicInfoFromMsg.infoMissing(id), { at: true, quote: true })
           logger.error(`phi-plugin错误：未找到曲目ID为${id}的曲目信息！`)
           return;
         }
         if ('rank' in optObj) {
           const { rank } = optObj
           if (!info.chart[/** @type {levelKind} */(rank)]) {
-            send.send_with_At(e, `${info.song} 没有 ${rank} 这个难度QAQ！`)
+            sendMessage(e, baseClassMessages.getMicInfoFromMsg.noDifficulty(info.song, rank), { at: true })
             return;
           }
         }
@@ -285,14 +286,14 @@ export default class phiPluginBase extends HostPlugin {
       const id = ids[0];
       let info = getInfo.info(id, true)
       if (!info) {
-        send.send_with_At(e, `未找到${id}的曲目信息QAQ！请回报管理员！`, true)
+        sendMessage(e, baseClassMessages.getMicInfoFromMsg.infoMissing(id), { at: true, quote: true })
         logger.error(`phi-plugin错误：未找到曲目ID为${id}的曲目信息！`)
         return;
       }
       if ('rank' in optObj) {
         const { rank } = optObj
         if (!info.chart[/** @type {levelKind} */(rank)]) {
-          send.send_with_At(e, `${info.song} 没有 ${rank} 这个难度QAQ！`)
+          sendMessage(e, baseClassMessages.getMicInfoFromMsg.noDifficulty(info.song, rank), { at: true })
           return;
         }
       }

@@ -46,105 +46,105 @@ export default class saveHistory {
 
     /**
      * 
-     * @param {saveHistoryObjectV3 | saveHistoryObjectV4 | null} [oridata] 
+     * @param {Partial<saveHistoryObjectV3 | saveHistoryObjectV4> | null} [oridata] 
      */
     constructor(oridata) {
         if (!oridata) return
-        /**时区偏移仅作来源元信息，随数据保留 */
-        if (typeof oridata?.timezone === 'string' && oridata.timezone) {
-            this.timezone = oridata.timezone
-        }
 
         /**
          * 版本判定：历史数据的 version 曾用 4 表示旧结构（与现在的 v4 紧凑结构同名不同义），
          * 因此按结构优先识别；显式声明 v1 及以前的记录以曲名为 key，结构不可靠，直接跳过
          */
-        const declaredVersion = Number(oridata?.version) || 0
-        const version = declaredVersion && declaredVersion < 2
-            ? declaredVersion
-            : detectHistoryVersion(oridata) || declaredVersion || 0
+        //@ts-ignore
+        if (oridata?.version == 4) oridata.version = detectHistoryVersion(oridata);
 
-        /**检查版本：v1 及以前的结构不可靠，不导入 */
-        if (version < 2) {
-            return;
-        }
-        if (version < 4) {
-            /**导入 v2/v3 版本逻辑 */
-            if (oridata.data) {
-                /**data货币 */
-                for (const item of oridata.data) {
-                    this.data.push(new Date(item.date), item.value)
+        switch (oridata?.version) {
+            case 2:
+            case 3:
+                /**初始化时区偏移 */
+                this.timezone = fCompute.timezoneOffset()
+                /**导入 v2/v3 版本逻辑 */
+                if (oridata.data) {
+                    /**data货币 */
+                    for (const item of oridata.data) {
+                        this.data.push(new Date(item.date), item.value)
+                    }
+                    this.data.sort();
                 }
-                this.data.sort();
-            }
-            if (oridata.scoreHistory) {
-                /**详细分数 */
-                const ids = fCompute.objectKeys(oridata?.scoreHistory || {})
-                for (const id of ids) {
-                    const record = oridata?.scoreHistory?.[id];
-                    if (!record) continue;
-                    // 初始化分数历史
-                    this.scoreHistory[id] = {}
-                    for (const level of allLevel) {
-                        if (!record[level]) continue;
-                        // 初始化该难度的分数历史
-                        this.scoreHistory[id][level] = new dateValue();
-                        for (const item of record[level]) {
-                            // item[2] = new Date(item[2])
-                            this.scoreHistory[id][level].push(
-                                new Date(item[2]),
-                                createHistoryV4(item[0], item[1], item[3])
-                            );
+                if (oridata.scoreHistory) {
+                    /**详细分数 */
+                    const ids = fCompute.objectKeys(oridata?.scoreHistory || {})
+                    for (const id of ids) {
+                        const record = oridata?.scoreHistory?.[id];
+                        if (!record) continue;
+                        // 初始化分数历史
+                        this.scoreHistory[id] = {}
+                        for (const level of allLevel) {
+                            if (!record[level]) continue;
+                            // 初始化该难度的分数历史
+                            this.scoreHistory[id][level] = new dateValue();
+                            for (const item of record[level]) {
+                                // item[2] = new Date(item[2])
+                                this.scoreHistory[id][level].push(
+                                    new Date(item[2]),
+                                    createHistoryV4(item[0], item[1], item[3])
+                                );
+                            }
+                            this.scoreHistory[id][level].sort();
                         }
-                        this.scoreHistory[id][level].sort();
                     }
                 }
-            }
-            if (oridata.challengeModeRank) {
-                /**课题模式成绩 */
-                for (const item of oridata.challengeModeRank) {
-                    this.challengeModeRank.push(new Date(item.date), item.value)
+                if (oridata.challengeModeRank) {
+                    /**课题模式成绩 */
+                    for (const item of oridata.challengeModeRank) {
+                        this.challengeModeRank.push(new Date(item.date), item.value)
+                    }
+                    this.challengeModeRank.sort();
                 }
-                this.challengeModeRank.sort();
-            }
-            if (oridata.rks) {
-                /**rks历史记录，仅保留4位小数 */
-                for (const item of oridata.rks) {
-                    this.rks.push(new Date(item.date), Number(Number(item.value).toFixed(4)))
+                if (oridata.rks) {
+                    /**rks历史记录，仅保留4位小数 */
+                    for (const item of oridata.rks) {
+                        this.rks.push(new Date(item.date), Number(Number(item.value).toFixed(4)))
+                    }
+                    this.rks.sort();
                 }
-                this.rks.sort();
-            }
-            this.version = 4
-        } else {
-            /**导入 v4 版本逻辑 */
-            if (oridata.data) {
-                /**data货币 */
-                this.data.fromJson(oridata.data)
-            }
-            if (oridata.challengeModeRank) {
-                /**课题模式成绩 */
-                this.challengeModeRank.fromJson(oridata.challengeModeRank)
-            }
-            if (oridata.rks) {
-                /**rks历史记录 */
-                this.rks.fromJson(oridata.rks)
-            }
-            if (oridata.scoreHistory) {
-                /**详细分数 */
-                const ids = fCompute.objectKeys(oridata?.scoreHistory || {})
-                for (const id of ids) {
-                    const record = oridata?.scoreHistory?.[id];
-                    if (!record) continue;
-                    // 初始化分数历史
-                    this.scoreHistory[id] = {}
-                    for (const level of allLevel) {
-                        if (!record[level]) continue;
-                        // 初始化该难度的分数历史
-                        this.scoreHistory[id][level] = new dateValue();
-                        this.scoreHistory[id][level].fromJson(record[level])
+                this.version = 4
+                break;
+            case 4:
+                /**初始化时区偏移 */
+                if (oridata.timezone) {
+                    this.timezone = oridata.timezone
+                }
+                /**导入 v4 版本逻辑 */
+                if (oridata.data) {
+                    /**data货币 */
+                    this.data.fromJson(oridata.data)
+                }
+                if (oridata.challengeModeRank) {
+                    /**课题模式成绩 */
+                    this.challengeModeRank.fromJson(oridata.challengeModeRank)
+                }
+                if (oridata.rks) {
+                    /**rks历史记录 */
+                    this.rks.fromJson(oridata.rks)
+                }
+                if (oridata.scoreHistory) {
+                    /**详细分数 */
+                    const ids = fCompute.objectKeys(oridata?.scoreHistory || {})
+                    for (const id of ids) {
+                        const record = oridata?.scoreHistory?.[id];
+                        if (!record) continue;
+                        // 初始化分数历史
+                        this.scoreHistory[id] = {}
+                        for (const level of allLevel) {
+                            if (!record[level]) continue;
+                            // 初始化该难度的分数历史
+                            this.scoreHistory[id][level] = new dateValue();
+                            this.scoreHistory[id][level].fromJson(record[level])
+                        }
                     }
                 }
-            }
+
         }
         this.version = 4
     }
@@ -474,7 +474,7 @@ export default class saveHistory {
 
 /**
  * v4 成绩历史记录：acc 仅保留4位小数
- * @param {number} acc 
+ * @param {number|string} acc 
  * @param {number} score 
  * @param {boolean | number} fc 
  * @returns {[acc: number, score: number, fc: 0 | 1]}
@@ -503,7 +503,7 @@ function openHistoryV4(data) {
  * - v4：[年份, [月份, [日, [当天毫秒, 值]]]]、[日期, 值]
  * - v3：[acc, score, date, fc]、{ date, value }
  * @param {any} data 
- * @returns {number} 识别出的版本号，无法识别时为 0
+ * @returns {3|4|0} 识别出的版本号，无法识别时为 0
  */
 function detectHistoryVersion(data) {
     if (!data) return 0

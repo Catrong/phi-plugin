@@ -48,6 +48,8 @@ test('clearApiData requires confirmation and authenticates deletion with SSTK', 
         assert.equal(await command.clearApiData(/** @type {any} */ (event('/phi clearApiData'))), true)
         assert.equal(clearRequests.length, 0)
         assert.equal(contexts[0][0], 'confirmClearApiData')
+        assert.equal(typeof contexts[0][3], 'string')
+        assert.match(contexts[0][3], /超时已取消/)
         assert.match(messages[0], /永久清除云端账号及全部数据/)
 
         command.e = /** @type {any} */ (event('确认'))

@@ -7,13 +7,13 @@
 import { pinyin } from 'pinyin-pro'
 
 import Config from '../../components/Config.js'
-import send from '../../model/render/send.js'
 import getInfo from '../../model/game/getInfo.js'
 import getPic from '../../model/render/getPic.js'
 import fCompute from '../../model/game/fCompute.js'
 import picmodle from '../../model/render/picmodle.js'
 import logger from '../../components/Logger.js'
-import segment from '../../components/segment.js'
+import { getShortcutMode, sendMessage } from '../../model/render/message.js'
+import { guessLetterMessages, guessLetterWords } from '../../model/render/messages.js'
 import { isOfficialBot } from '../../model/game/markdown.js'
 import {
     LETTER_HIDDEN_CHAR,
@@ -156,7 +156,7 @@ export default class guessLetter {
         const { group_id } = e // 使用对象解构提取group_id
 
         if (letterGameData[group_id]) {
-            send.reply(e, `喂喂喂，已经有群友发起出字母猜歌啦，不要再重复发起了，赶快输入'/第X个XXXX'来猜曲名或者'/出X'来揭开字母吧！结束请发 /${Config.getUserCfg('config', 'cmdhead')} ans 嗷！`, true)
+            sendMessage(e, guessLetterMessages.start.alreadyStarted(), { quote: true })
             return true
         }
 
@@ -188,7 +188,7 @@ export default class guessLetter {
         }
 
         if (allSelectSongId.length < Config.getUserCfg('config', 'LetterNum')) {
-            send.reply(e, "曲库中曲目的数量小于开字母的条数哦！更改曲库后需要重启哦！")
+            sendMessage(e, guessLetterMessages.start.tooFewSongs)
             cleanupGameState(group_id, gameList)
             return true
         }
@@ -221,7 +221,7 @@ export default class guessLetter {
                 ++cnnt
                 if (cnnt >= 50) {
                     logger.error(`[phi-plugin][letter]抽取曲目失败，请检查曲库设置`)
-                    send.reply(e, `抽取曲目失败，请检查曲库设置`)
+                    sendMessage(e, guessLetterMessages.start.drawFailed)
                     cleanupGameState(group_id, gameList)
                     return
                 }
@@ -244,7 +244,7 @@ export default class guessLetter {
         }
 
         // 输出提示信息
-        send.reply(e, `开字母开启成功！回复'/nX. XXXX'命令猜歌，例如：/n1. Reimei;发送'/open X'来揭开字母(不区分大小写，不需要指令头)，如'/open A';发送'/${Config.getUserCfg('config', 'cmdhead')} ans'结束并查看答案哦！`)
+        sendMessage(e, guessLetterMessages.start.intro())
 
         // 延时1s
         await timeout(1 * 1000)
@@ -261,7 +261,7 @@ export default class guessLetter {
         }
 
         if (letterGameData[group_id]) {
-            await send.reply(e, '呜，怎么还没有人答对啊QAQ！只能说答案了喵……')
+            await sendMessage(e, guessLetterMessages.timeout.nobodyCorrect)
             const result = finishGame(group_id, gameList)
             if (result) {
                 await tryToSendMd(e, (t) => formatGameover(result, t));
@@ -282,7 +282,7 @@ export default class guessLetter {
 
         const currentGame = letterGameData[group_id];
         if (!currentGame) {
-            send.reply(e, `现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} ltr'开始新的一局吧！`, true)
+            sendMessage(e, guessLetterMessages.ans.notRunning(), { quote: true })
             return false
         }
 
@@ -296,7 +296,7 @@ export default class guessLetter {
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
 
         if (timetik < 1000 * time) {
-            send.reply(e, `翻字符的全局冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
+            sendMessage(e, guessLetterMessages.reveal.cooldown(timeleft), { quote: true })
             return true
         }
 
@@ -310,7 +310,7 @@ export default class guessLetter {
             let included = false
 
             if (currentGame.alphalist.includes(letter.toUpperCase())) {
-                send.reply(e, `字符[ ${letter} ]已经被打开过了ww,不用需要再重复开啦！`, true)
+                sendMessage(e, guessLetterMessages.reveal.letterOpened(letter), { quote: true })
                 return true
             }
 
@@ -396,14 +396,14 @@ export default class guessLetter {
 
         //上一轮猜测的Cd还没过
         if (timetik < 1000 * time) {
-            send.reply(e, `猜测的冷却时间还有${timeleft}s呐，先耐心等下哇QAQ`, true)
+            sendMessage(e, guessLetterMessages.guess.cooldown(timeleft), { quote: true })
             return true
         }
 
         //上一轮Cd结束，更新新一轮的时间戳
         currentGame.lastGuessedTime = currentTime
 
-        const opened = `\n所有翻开的字母[ ${currentGame.alphalist.join(' ')}]\n`
+        const opened = guessLetterWords.guess.openedList(currentGame.alphalist.join(' '))
         const regex = /^[#/]\s*[第n]\s*(\d+|[一二三四五六七八九十百]+)\s*[个首\.]?(.*)$/
         /**
          * [0] 完整匹配
@@ -435,7 +435,7 @@ export default class guessLetter {
         const content = result[2]
 
         if (num > Config.getUserCfg('config', 'LetterNum') || num <= 0) {
-            send.reply(e, `没有第${num}个啦！看清楚再回答啊喂！￣へ￣`)
+            sendMessage(e, guessLetterMessages.guess.invalidIndex(num))
             return true
         }
 
@@ -446,31 +446,31 @@ export default class guessLetter {
         const standard_name = currentGame.ansList[num] // 标准答案名称
 
         if (!ids[0]) {
-            send.reply(e, `没有找到[${content}]的曲目信息呐QAQ`, true)
+            sendMessage(e, guessLetterMessages.guess.songNotFound(content), { quote: true })
             return true
         }
         for (const id of ids) {
             if (standard_id === id) {
                 //已经猜完移除掉的曲目不能再猜
                 if (!currentGame.blurlist[num]) {
-                    send.reply(e, `曲目[${standard_name}]已经猜过了，要不咱们换一个吧uwu`)
+                    sendMessage(e, guessLetterMessages.guess.alreadyGuessed(standard_name))
                     return true
                 }
 
                 currentGame.blurlist[num] = null //移除模糊曲目
 
-                send.send_with_At(e, `恭喜你ww，答对啦喵，第${num + 1}首答案是[${standard_name}]!ヾ(≧▽≦*)o `, true)
+                sendMessage(e, guessLetterMessages.guess.correct(num + 1, standard_name), { at: true, quote: true })
 
                 /**发送曲绘 */
                 const info = getInfo.info(standard_id)
                 if (info?.illustration) { //如果有曲绘文件
                     switch (Config.getUserCfg('config', 'LetterIllustration')) {
                         case "水印版": {
-                            send.reply(e, await picmodle.ill(e, { illustration: info.illustration, illustrator: info.illustrator }))
+                            sendMessage(e, guessLetterMessages.puzzle.image(await picmodle.ill(e, { illustration: info.illustration, illustrator: info.illustrator })))
                             break;
                         }
                         case "原版": {
-                            send.reply(e, getPic.getIll(standard_id))
+                            sendMessage(e, guessLetterMessages.puzzle.image(getPic.getIll(standard_id)))
                         }
                         default:
                             break;
@@ -481,12 +481,12 @@ export default class guessLetter {
                 const isEmpty = allGuessed(currentGame) //是否全部猜完
 
                 if (!isEmpty) {
-                    output.push('开字母进行中：')
+                    output.push(guessLetterWords.puzzle.puzzleHeader)
                     output.push(opened)
                     await tryToSendMd(e, (t) => [...output, getPuzzle(currentGame, t)].join('\n'));
                     return true
                 } else {
-                    output.push('所有曲目均已被猜出，答案如下：');
+                    output.push(guessLetterWords.puzzle.allGuessedHeader);
                     const result = finishGame(group_id, gameList)
                     if (result) {
                         await tryToSendMd(e, (t) => [...output, formatGameover(result, t)].join('\n'));
@@ -497,9 +497,9 @@ export default class guessLetter {
         }
 
         if (ids[1]) {
-            send.reply(e, `第${num + 1}首不是[${content}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
+            sendMessage(e, guessLetterMessages.guess.wrongRaw(num + 1, content), { quote: true })
         } else {
-            send.reply(e, `第${num + 1}首不是[${getInfo.info(ids[0])?.song ?? ids[0]}]www，要不再想想捏？如果实在不会可以悄悄发个[/${Config.getUserCfg('config', 'cmdhead')} tip]哦≧ ﹏ ≦`, true)
+            sendMessage(e, guessLetterMessages.guess.wrongSong(num + 1, getInfo.info(ids[0])?.song ?? ids[0]), { quote: true })
         }
 
         return false
@@ -518,12 +518,12 @@ export default class guessLetter {
         //必须已经开始了一局
         if (!currentGame) {
             /**未进行游戏放过命令 */
-            send.reply(e, `现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
+            sendMessage(e, guessLetterMessages.ans.notRunning(), { quote: true })
             return false
         }
 
 
-        await send.reply(e, '好吧好吧，既然你执着要放弃，那就公布答案好啦。', true)
+        await sendMessage(e, guessLetterMessages.ans.reveal, { quote: true })
         const result = finishGame(group_id, gameList)
         if (result) {
             await tryToSendMd(e, (t) => formatGameover(result, t));
@@ -543,7 +543,7 @@ export default class guessLetter {
         const currentGame = letterGameData[group_id];
 
         if (!currentGame) {
-            send.reply(e, `现在还没有进行的开字母捏，赶快输入'/${Config.getUserCfg('config', 'cmdhead')} letter'开始新的一局吧！`, true)
+            sendMessage(e, guessLetterMessages.ans.notRunning(), { quote: true })
             return false
         }
 
@@ -557,7 +557,7 @@ export default class guessLetter {
         const timeleft = Math.floor((1000 * time - timetik) / 1000)
 
         if (timetik < 1000 * time) {
-            send.reply(e, `使用提示的全局冷却时间还有${timeleft}s呐，还请先耐心等下哇QAQ`, true)
+            sendMessage(e, guessLetterMessages.getTip.cooldown(timeleft), { quote: true })
             return false
         }
 
@@ -566,7 +566,7 @@ export default class guessLetter {
         const candidates = getRevealCandidates(currentGame)
         if (candidates.length === 0) {
             logger.warn(`[phi-plugin][letter]群${group_id}的提示没有可翻开的字符`)
-            send.reply(e, '当前没有可以继续翻开的字符，请结束本局后重新开始。', true)
+            sendMessage(e, guessLetterMessages.getTip.noCandidates, { quote: true })
             return true
         }
         const randsymbol = candidates[fCompute.randInt(0, candidates.length - 1)]
@@ -629,14 +629,14 @@ export default class guessLetter {
         const currentGame = letterGameData[group_id];
 
         if (currentGame) {
-            await send.reply(e, `当前有正在进行的游戏，请等待游戏结束再执行该指令`, true)
+            await sendMessage(e, guessLetterMessages.mix.running, { quote: true })
             return false
         }
 
         songweights[group_id] = {}
         scheduleSongweightCleanup(group_id)
 
-        await send.reply(e, `洗牌成功了www`, true)
+        await sendMessage(e, guessLetterMessages.mix.shuffled, { quote: true })
         return true
     }
 }
@@ -747,13 +747,13 @@ function formatGameover(result, letterMarkdown) {
     result.ansList.forEach((value, index) => {
         const correct_name = value
         const winner_card = result.winnerlist[index]
-        output.push(`${index + 1}. ${correct_name}` + (winner_card ? ` @${winner_card}` : ''))
+        output.push(guessLetterWords.puzzle.songLine(index, correct_name) + (winner_card ? guessLetterWords.puzzle.winner(winner_card) : ''))
     });
     if (letterMarkdown) {
         const cmdhead = Config.getUserCfg('config', 'cmdhead')
         output.push(`\n***\n\n` +
             // '| - | - | - |\n' +
-            `| ${cmdInpt(`/${cmdhead} letter `, '再来一局')} | ${cmdInpt(`/${cmdhead} guess`, '猜个曲绘')} | ${cmdInpt(`/${cmdhead} tipgame`, '提示猜歌')} |` +
+            `| ${cmdInpt(`/${cmdhead} letter `, guessLetterWords.puzzle.restart)} | ${cmdInpt(`/${cmdhead} guess`, guessLetterWords.puzzle.guess)} | ${cmdInpt(`/${cmdhead} tipgame`, guessLetterWords.puzzle.tipGame)} |` +
             '\n| :---: | :---: | :---: |\n');
     }
 
@@ -769,7 +769,7 @@ function getPuzzle(currentGame, letterMarkdown) {
     /**@type {string[]} */
     const output = [];
     letterMarkdown && output.push('***');
-    output.push(`曲库范围：${currentGame.gameSelectList.join('、')}\n`);
+    output.push(guessLetterWords.puzzle.range(currentGame.gameSelectList));
     currentGame.ansList.forEach((song, index) => {
         if (currentGame.blurlist[index]) {
             const visibleBlurName = currentGame.blurlist[index].replaceAll(LETTER_HIDDEN_CHAR, '*')
@@ -778,9 +778,9 @@ function getPuzzle(currentGame, letterMarkdown) {
                 : visibleBlurName
             output.push(`${index + 1}. ${str}`);
         } else {
-            output.push(`${index + 1}. ${song} ✅`)
+            output.push(guessLetterWords.puzzle.songLine(index, song) + guessLetterWords.puzzle.guessedMark)
             if (currentGame.winnerlist[index]) {
-                output.push(` @${currentGame.winnerlist[index]}`)
+                output.push(guessLetterWords.puzzle.winner(currentGame.winnerlist[index]))
             }
         }
     })
@@ -788,9 +788,9 @@ function getPuzzle(currentGame, letterMarkdown) {
         const cmdhead = Config.getUserCfg('config', 'cmdhead')
         output.push(`\n***\n` +
             // '| - | - | - |\n' +
-            `| ${cmdInpt(`/开 `, '开个字母')} | ${cmdInpt(`/${cmdhead} tip`, '看看提示')} | ${cmdInpt(`/${cmdhead} ans`, '公布答案')} |` +
+            `| ${cmdInpt(`/开 `, guessLetterWords.puzzle.open)} | ${cmdInpt(`/${cmdhead} tip`, guessLetterWords.puzzle.tip)} | ${cmdInpt(`/${cmdhead} ans`, guessLetterWords.puzzle.answer)} |` +
             '\n| :---: | :---: | :---: |\n');
-        output.push('\n*点击蓝色字体可以快速填写指令哦~')
+        output.push(guessLetterWords.puzzle.clickTip)
     }
     return output.join('\n');
 }
@@ -811,22 +811,22 @@ function cmdInpt(text, show, reference = false) {
  * @param {(arg0: boolean) => string} fnc
  */
 async function tryToSendMd(e, fnc) {
-    const letterMarkdown = Config.getUserCfg('config', 'LetterMarkdown')
-    if (!letterMarkdown || ((e?.bot || e?.platform) && !isOfficialBot(e))) {
-        await send.reply(e, fnc(false))
+    const useMarkdown = Config.getUserCfg('config', 'LetterMessageMode') === 'markdown'
+    if (!useMarkdown || getShortcutMode() === 'off' || ((e?.bot || e?.platform) && !isOfficialBot(e))) {
+        await sendMessage(e, guessLetterMessages.puzzle.plain(fnc(false)))
         return;
     }
 
     let sent
     try {
-        sent = /** @type {{error?: unknown[]}|undefined} */ (await send.reply(e, segment.markdown(fnc(true))))
+        sent = /** @type {{error?: unknown[]}|undefined} */ (await sendMessage(e, guessLetterMessages.puzzle.markdown(fnc(true))))
     } catch (error) {
         logger.warn(`[phi-plugin][letter]Markdown发送失败，改用普通消息`, error)
-        await send.reply(e, fnc(false))
+        await sendMessage(e, guessLetterMessages.puzzle.plain(fnc(false)))
         return
     }
 
     if (sent?.error?.length) {
-        await send.reply(e, fnc(false))
+        await sendMessage(e, guessLetterMessages.puzzle.plain(fnc(false)))
     }
 }

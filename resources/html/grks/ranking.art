@@ -1,0 +1,36 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/grks/ranking.css">
+{{/block}}
+
+{{block 'main'}}
+<main class="ranking-page">
+    <header class="ranking-header">
+        <div>
+            <p class="ranking-kicker">GUESS RKS · LEADERBOARD</p>
+            <h1>{{title}}</h1>
+            <p class="ranking-page-info">{{pageText}}</p>
+        </div>
+        <div class="ranking-badge clip-box"><p>每页 10 位</p></div>
+    </header>
+    <div class="ranking-columns"><p>排名 / 玩家</p><p>{{metricTitle}}</p></div>
+    <section class="ranking-list">
+        {{each rows row}}
+        <article class="ranking-row clip-box{{row.me ? ' is-me' : ''}}">
+            <p class="ranking-place{{row.rank <= 3 ? ' is-top' : ''}}">{{row.rank < 10 ? '0' : ''}}{{row.rank}}</p>
+            <div class="ranking-avatar" style="background-image: url('{{_res_path}}html/avatar/Introduction.png')">
+                <img src="{{_res_path}}html/avatar/{{row.avatar}}.png" alt="" onerror="this.style.visibility='hidden'">
+            </div>
+            <div class="ranking-player">
+                <p class="ranking-name">{{row.name}}</p>
+                <p class="ranking-detail">{{row.detail}}</p>
+            </div>
+            <p class="ranking-metric">{{row.metric}}</p>
+        </article>
+        {{/each}}
+        {{if !rows.length}}<div class="ranking-empty"><p>{{emptyText}}</p></div>{{/if}}
+    </section>
+    <footer class="ranking-footer"><p>{{footer}}</p><p>{{pageText}}</p></footer>
+    <div class="ranking-credit"><p>{{_plugin}}</p><p>{{Version.ver}}</p></div>
+</main>
+{{/block}}

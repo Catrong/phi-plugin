@@ -31,7 +31,12 @@ export function createGuobaSchemas(includeCredentials = true) {
 export function createGuobaConfigInfo(config, options = {}) {
     const items = shared.editable.filter(item => options.includeCredentials !== false || !item.generated)
     // 锅巴会解构后单独调用 setConfigData，方法内不能用 this
-    const getConfigData = () => Object.fromEntries(items.map(item => [item.key, config.getUserCfg('config', item.key)]))
+    const getConfigData = () => Object.fromEntries(items.map(item => {
+        const value = config.getUserCfg('config', item.key)
+        // 兼容旧版布尔配置，面板显示三态值。
+        if (item.key === 'LetterMarkdown' && typeof value === 'boolean') return [item.key, value ? 'markdown' : 'off']
+        return [item.key, value]
+    }))
     return {
         schemas: createGuobaSchemas(options.includeCredentials !== false),
         getConfigData,

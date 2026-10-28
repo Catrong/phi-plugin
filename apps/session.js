@@ -19,7 +19,8 @@ import picmodle from '../model/render/picmodle.js'
 import { canUseApi } from '../model/user/apiPermission.js'
 import platform, { redis } from '../components/platform/index.js'
 import { UserCredentials } from '../model/user/userCredentials.js'
-import { sendQuickCommands, sessionQuickCommands, updateQuickCommands } from '../model/game/markdown.js'
+import { sendMessage } from '../model/render/message.js'
+import { sessionMessages } from '../model/render/messages.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -57,16 +58,16 @@ export class phisstk extends phiPluginBase {
     }
 
     /**
-     * 
-     * @param {botEvent} e 
-     * @returns 
+     *
+     * @param {botEvent} e
+     * @returns
      */
     async bind(e) {
 
         const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'bind')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, sessionMessages.bind.banned, { at: true })
             return false
         }
 
@@ -88,26 +89,24 @@ export class phisstk extends phiPluginBase {
             if (apiId && allowApi) {
                 const result = await credentials.bindWithApiId(apiId)
                 if (result?.apiUserId) {
-                    let resMsg = `绑定成功！您的查分ID为：${result.apiUserId}，请妥善保管嗷！`
-                    send.send_with_At(e, resMsg)
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                    if (updateData && history) await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作', { simpleReply })
-                    else send.send_with_At(e, '绑定已成功，但暂时无法读取 API 存档，请稍后执行更新。')
+                    if (updateData && history) await build(e, updateData, history, 'bind', { simpleReply, apiUserId: result.apiUserId })
+                    else sendMessage(e, sessionMessages.bind.apiSaveUnavailable, { at: true })
                     return true
                 }
                 if (!result) {
-                    send.send_with_At(e, `没有找到${apiId || ''}对应的用户，请先绑定sessionToken哦！如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                    sendMessage(e, sessionMessages.bind.apiUserNotFound(apiId || ''), { at: true })
                     return false
                 }
             } else {
                 if (apiId) {
-                    send.send_with_At(e, `这里没有连接查分平台哦！请使用sessionToken进行绑定！`)
+                    sendMessage(e, sessionMessages.bind.apiUnavailable, { at: true })
                     return false
                 }
             }
             if (!localPhigrosToken) {
-                send.send_with_At(e, `喂喂喂！你还没输入sessionToken呐，如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                sendMessage(e, sessionMessages.bind.missingToken(), { at: true })
                 return false
             }
 
@@ -123,12 +122,9 @@ export class phisstk extends phiPluginBase {
                 let recallTime = qrcodeTimeOut
                 if (qrcodeTimeOut >= 60) recallTime = 60
                 if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
-                    await send.send_with_At(e, [
-                        segment.image(await getQRcode.getQRcode(qrcode)),
-                        `请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n二维码剩余时间:${qrcodeTimeOut}`
-                    ], false, { recallMsg: recallTime });
+                    await sendMessage(e, sessionMessages.bind.qrcodeImageHint(await getQRcode.getQRcode(qrcode), qrcodeTimeOut), { at: true, recallMsg: recallTime });
                 } else {
-                    await send.send_with_At(e, `请点击链接进行登录嗷！请勿使用他人的链接。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n链接剩余时间:${qrcodeTimeOut}\n${qrcode}`, false, { recallMsg: recallTime });
+                    await sendMessage(e, sessionMessages.bind.qrcodeLinkHint(qrcodeTimeOut, qrcode), { at: true, recallMsg: recallTime });
                 }
                 return
             }
@@ -136,12 +132,9 @@ export class phisstk extends phiPluginBase {
             let request = await getQRcode.getRequest(isGlobal);
             let qrCodeMsg;
             if (Config.getUserCfg('config', 'TapTapLoginQRcode')) {
-                qrCodeMsg = await send.send_with_At(e, [
-                    segment.image(await getQRcode.getQRcode(request.data.qrcode_url)),
-                    `请识别二维码并按照提示进行登录嗷！请勿错扫他人二维码。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。`
-                ], false, { recallMsg: 60 });
+                qrCodeMsg = await sendMessage(e, sessionMessages.bind.qrcodeImageHint(await getQRcode.getQRcode(request.data.qrcode_url), request.data.expires_in), { at: true, recallMsg: 60 });
             } else {
-                qrCodeMsg = await send.send_with_At(e, `请点击链接进行登录嗷！请勿使用他人的链接。请注意，登录TapTap可能造成账号及财产损失，请在信任Bot来源的情况下扫码登录。\n${request.data.qrcode_url}`, false, { recallMsg: 60 });
+                qrCodeMsg = await sendMessage(e, sessionMessages.bind.qrcodeLinkOnly(request.data.qrcode_url), { at: true, recallMsg: 60 });
             }
             let t1 = new Date().getTime();
             /**@type {any} */
@@ -162,7 +155,7 @@ export class phisstk extends phiPluginBase {
                 }
                 if (!result.success) {
                     if (result.data.error == "authorization_waiting" && !flag) {
-                        if (!simpleReply) send.send_with_At(e, `二维码已扫描，请确认登录`, false, { recallMsg: 10 });
+                        if (!simpleReply) sendMessage(e, sessionMessages.bind.qrcodeScanned, { at: true, recallMsg: 10 });
                         platform.recall(e, qrCodeMsg)
                         flag = true;
                     }
@@ -176,14 +169,14 @@ export class phisstk extends phiPluginBase {
             redis.del(timeOutKey)
 
             if (!result.success) {
-                send.send_with_At(e, `操作超时，请重试QAQ！`);
+                sendMessage(e, sessionMessages.bind.timeout, { at: true });
                 return true
             }
             try {
                 sessionToken = await getQRcode.getSessionToken(result, isGlobal);
             } catch (err) {
                 logger.error(err)
-                send.send_with_At(e, `获取sessionToken失败QAQ！请确认您的Phigros已登录TapTap账号并同步！\n错误信息：${err}`)
+                sendMessage(e, sessionMessages.bind.tokenFailed(err), { at: true })
                 return true
             }
         }
@@ -192,7 +185,7 @@ export class phisstk extends phiPluginBase {
 
         if (!simpleReply && !Config.getUserCfg('config', 'isGuild')) {
 
-            send.reply(e, "正在绑定，请稍等一下哦！\n >_<", false, { recallMsg: 5 })
+            sendMessage(e, sessionMessages.bind.binding, { recallMsg: 5 })
             // return true
         }
 
@@ -202,16 +195,14 @@ export class phisstk extends phiPluginBase {
                 let result = await credentials.bindWithSessionToken(sessionToken, isGlobal)
                 if (result?.apiUserId) {
                     apiBindingSucceeded = true
-                    let resMsg = `绑定成功！您的查分ID为：${result.apiUserId}，请妥善保管嗷！`
-                    send.send_with_At(e, resMsg)
                     let oldHistory = await credentials.getLocalHistory()
                     if (oldHistory) {
                         await credentials.uploadHistory(oldHistory)
                     }
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                    if (updateData && history) await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作', { simpleReply })
-                    else send.send_with_At(e, '绑定已成功，但暂时无法读取 API 存档，请稍后执行更新。')
+                    if (updateData && history) await build(e, updateData, history, 'bind', { simpleReply, apiUserId: result.apiUserId })
+                    else sendMessage(e, sessionMessages.bind.apiSaveUnavailable, { at: true })
                     return true
                 }
                 logger.warn('[phi-plugin] API绑定未完成，将改用当前 Bot 本地绑定')
@@ -227,28 +218,27 @@ export class phisstk extends phiPluginBase {
                 ? await credentials.getUpdatedSaveFromLocal(sessionToken, isGlobal)
                 : await credentials.bindLocallyWithSessionToken(sessionToken, isGlobal)
             if (!updateData) return true;
-            send.send_with_At(e, `${apiBindingSucceeded ? '' : 'API绑定不可用，已按当前 Bot 本地状态完成绑定。\n'}请注意保护好自己的sessionToken呐！如果需要获取已绑定的sessionToken可以私聊发送 /${Config.getUserCfg('config', 'cmdhead')} sessionToken 哦！`, false, { recallMsg: 10 })
             let history = await credentials.getLocalHistory()
-            await build(e, updateData, history, sessionQuickCommands, '绑定页快捷操作', { simpleReply })
+            await build(e, updateData, history, 'bind', { simpleReply })
         } catch (error) {
             logger.error(error)
-            send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确！\n错误信息：${error}`)
+            sendMessage(e, sessionMessages.bind.updateFailed(error), { at: true })
         }
 
         return true
     }
 
     /**
-     * 
-     * @param {botEvent} e 
-     * @returns 
+     *
+     * @param {botEvent} e
+     * @returns
      */
     async update(e) {
 
         const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'update')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, sessionMessages.update.banned, { at: true })
             return false
         }
         let updateData;
@@ -257,7 +247,7 @@ export class phisstk extends phiPluginBase {
             try {
 
                 if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
-                    send.reply(e, "正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
+                    sendMessage(e, sessionMessages.update.updating, { quote: true, recallMsg: 5 })
                 }
 
                 updateData = await credentials.getUpdatedSaveFromApi()
@@ -277,12 +267,12 @@ export class phisstk extends phiPluginBase {
 
             let session = await credentials.getSessionToken()
             if (!session) {
-                send.reply(e, `没有找到你的存档，请先绑定sessionToken哦！如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`, true)
+                sendMessage(e, sessionMessages.update.noSave(), { quote: true })
                 return true
             }
 
             if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
-                send.reply(e, "正在更新，请稍等一下哦！\n >_<", true, { recallMsg: 5 })
+                sendMessage(e, sessionMessages.update.updating, { quote: true, recallMsg: 5 })
             }
 
             try {
@@ -291,16 +281,16 @@ export class phisstk extends phiPluginBase {
                 history = await credentials.getLocalHistory()
             } catch (error) {
                 logger.error(error)
-                send.send_with_At(e, `更新失败，请检查你的sessionToken是否正确QAQ！\n错误信息：${error}`)
+                sendMessage(e, sessionMessages.update.tokenFailed(error), { at: true })
                 return true
             }
         }
 
         try {
-            await build(e, updateData, history, updateQuickCommands, '更新页快捷操作')
+            await build(e, updateData, history, 'update')
         } catch (error) {
             logger.error(error)
-            send.send_with_At(e, `更新失败QAQ！\n错误信息：${error}`)
+            sendMessage(e, sessionMessages.update.failed(error), { at: true })
         }
 
         return true
@@ -315,20 +305,20 @@ export class phisstk extends phiPluginBase {
         const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'unbind')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, sessionMessages.unbind.banned, { at: true })
             return false
         }
 
 
         const { sessionToken, apiId } = await credentials.getLocalCredentials()
         if (!sessionToken && !apiId) {
-            send.send_with_At(e, '没有找到你的存档信息嗷！')
+            sendMessage(e, sessionMessages.unbind.noCredentials, { at: true })
             return false
         }
 
-        this.setContext('doUnbind', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
+        this.setContext('doUnbind', false, 30, sessionMessages.unbind.timeout.text)
 
-        send.send_with_At(e, '解绑只会清除当前 Bot 本地保存的绑定、存档和历史，不会修改 API 数据。真的要这么做吗？（确认/取消）')
+        sendMessage(e, sessionMessages.unbind.confirm, { at: true })
 
         return true
     }
@@ -344,8 +334,8 @@ export class phisstk extends phiPluginBase {
             let flag = true
             try {
                 await credentials.unbindAndReport()
-            } catch (err) {
-                send.send_with_At(e, err)
+            } catch (/**@type {any} */err) {
+                sendMessage(e, sessionMessages.unbind.failed(err), { at: true })
                 logger.error(err)
                 flag = false
             }
@@ -358,31 +348,31 @@ export class phisstk extends phiPluginBase {
                     }
                     getNotes.putNotesData(e.user_id, pluginData)
                 }
-            } catch (err) {
-                send.send_with_At(e, err)
+            } catch (/**@type {any} */err) {
+                sendMessage(e, sessionMessages.unbind.failed(err), { at: true })
                 logger.error(err)
                 flag = false
             }
             if (flag) {
-                send.send_with_At(e, '当前 Bot 本地解绑成功')
+                sendMessage(e, sessionMessages.unbind.success, { at: true })
             } else {
-                send.send_with_At(e, '没有找到你的存档哦！')
+                sendMessage(e, sessionMessages.unbind.noSave, { at: true })
             }
         } else {
-            send.send_with_At(e, `取消成功！`)
+            sendMessage(e, sessionMessages.unbind.cancelled, { at: true })
         }
         this.finish('doUnbind', false)
     }
 
     /**
-     * 
-     * @param {botEvent} e 
-     * @returns 
+     *
+     * @param {botEvent} e
+     * @returns
      */
     async clean(e) {
-        this.setContext('doClean', false, 30, '超时已取消，请注意 @Bot 进行回复哦！')
+        this.setContext('doClean', false, 30, sessionMessages.clean.timeout.text)
 
-        send.send_with_At(e, '请注意，本操作将会删除Phi-Plugin关于您的所有信息QAQ！（确认/取消）')
+        sendMessage(e, sessionMessages.clean.confirm, { at: true })
 
         return true
     }
@@ -398,45 +388,51 @@ export class phisstk extends phiPluginBase {
             let flag = true
             try {
                 await credentials.deleteLocalSave()
-            } catch (err) {
-                send.send_with_At(e, err)
+            } catch (/**@type {any} */err) {
+                sendMessage(e, sessionMessages.clean.failed(err), { at: true })
                 flag = false
             }
             try {
                 getNotes.delNotesData(e.user_id)
-            } catch (err) {
-                send.send_with_At(e, err)
+            } catch (/**@type {any} */err) {
+                sendMessage(e, sessionMessages.clean.failed(err), { at: true })
                 flag = false
             }
             if (flag) {
-                send.send_with_At(e, '清除数据成功')
+                sendMessage(e, sessionMessages.clean.success, { at: true })
             }
         } else {
-            send.send_with_At(e, `取消成功！`)
+            sendMessage(e, sessionMessages.unbind.cancelled, { at: true })
         }
         this.finish('doClean', false)
     }
 
     /**
-     * 
-     * @param {botEvent} e 
-     * @returns 
+     *
+     * @param {botEvent} e
+     * @returns
      */
     async getSstk(e) {
         const credentialManager = UserCredentials.fromEvent(e)
         if (e.isGroup) {
-            send.send_with_At(e, `请私聊使用嗷`)
+            sendMessage(e, sessionMessages.getSstk.privateOnly, { at: true })
             return false
         }
 
         let save = await send.getsave_result(e)
         if (!save) {
-            send.send_with_At(e, `未绑定存档，请先绑定存档嗷！`)
+            sendMessage(e, sessionMessages.getSstk.notBound, { at: true })
             return true
         }
 
         const credentials = await credentialManager.getLocalCredentials()
-        send.send_with_At(e, `PlayerId: ${fCompute.convertRichText(save.saveInfo.PlayerId, true)}\nsessionToken: ${credentials.sessionToken}\nObjectId: ${save.saveInfo.objectId}\nQQId: ${e.user_id}\nAPIId: ${credentials.apiId || '未绑定'}`)
+        sendMessage(e, sessionMessages.getSstk.tokenInfo({
+            playerId: fCompute.convertRichText(save.saveInfo.PlayerId, true),
+            sessionToken: credentials.sessionToken,
+            objectId: save.saveInfo.objectId,
+            userId: e.user_id,
+            apiId: credentials.apiId || '未绑定',
+        }), { at: true })
 
     }
 
@@ -445,8 +441,8 @@ export class phisstk extends phiPluginBase {
 
 /**
  * 定义一个函数，接受一个整数参数，返回它的十六进制形式
- * @param {number} num 
- * @returns 
+ * @param {number} num
+ * @returns
  */
 function toHex(num) {
     // 如果数字小于 16，就在前面补一个 0
@@ -482,8 +478,12 @@ function comWidth(num) {
  * @param {botEvent} e
  * @param {{save:Save, added_rks_notes: number[]}} updateData
  * @param {saveHistory} history
+ * @param {'bind'|'update'} buildKind 类型
+ * @param {Object} [option={}]
+ * @param {boolean} [option.simpleReply=false] 省略按钮
+ * @param {string} [option.apiUserId] API绑定的用户ID
  */
-async function build(e, updateData, history, quickCommands = updateQuickCommands, quickCommandsTitle = '更新页快捷操作', { simpleReply = false } = {}) {
+async function build(e, updateData, history, buildKind, { simpleReply = false } = {}) {
 
     let { added_rks_notes, save } = updateData
 
@@ -526,6 +526,7 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
     for (let id of fCompute.objectKeys(history.scoreHistory)) {
         const tem = history.scoreHistory[id]
         for (let level of allLevel) {
+            if (!tem[level]) continue
             /**v4 历史：dateValue 实例 */
             const levelRecords = ScoreHistory.toScoreDetails(tem[level])
             if (!levelRecords.length) continue
@@ -666,8 +667,13 @@ async function build(e, updateData, history, quickCommands = updateQuickCommands
         rks_history, rks_range,
     }
 
-    send.send_with_At(e, [await picmodle.update(e, data), `PlayerId: ${fCompute.convertRichText(now.saveInfo.PlayerId, true)}`])
-    if (!simpleReply) await sendQuickCommands(e, quickCommands(Config.getUserCfg('config', 'cmdhead')), quickCommandsTitle)
+    const image = await picmodle.update(e, data);
+    const playerId = fCompute.convertRichText(now.saveInfo.PlayerId, true);
+    if (buildKind === 'bind') {
+        sendMessage(e, sessionMessages.bind.bindSuccess(image, playerId), { at: true })
+    } else if (buildKind === 'update') {
+        sendMessage(e, sessionMessages.update.updateSuccess(image, playerId), { at: true })
+    }
 
     return false
 }

@@ -268,6 +268,34 @@
     "type": "boolean"
   },
   {
+    "key": "MergeImageWithText",
+    "group": "系统设置",
+    "label": "图文合并发送",
+    "description": "开启后图片与文本/Markdown/按钮消息合并为一条发送。关闭时图片与文本+Markdown/按钮分开发送：先发图片，再发文本与Markdown/按钮；图片与纯文本仍会合并",
+    "type": "boolean"
+  },
+  {
+    "key": "LetterMarkdown",
+    "group": "系统设置",
+    "label": "快捷操作消息",
+    "description": "控制功能列表的发送方式：关闭、使用 Markdown 表格或使用按钮。按钮需要 QQ 官方机器人支持",
+    "type": "select",
+    "options": [
+      {
+        "label": "关闭",
+        "value": "off"
+      },
+      {
+        "label": "使用 md",
+        "value": "markdown"
+      },
+      {
+        "label": "使用按钮",
+        "value": "button"
+      }
+    ]
+  },
+  {
     "key": "cmdhead",
     "group": "系统设置",
     "label": "命令头",
@@ -474,11 +502,21 @@
     "required": true
   },
   {
-    "key": "LetterMarkdown",
+    "key": "LetterMessageMode",
     "group": "开字母设置",
-    "label": "交互式MD消息",
-    "description": "控制开字母、主题市场及 QQ 官方机器人页面的 Markdown 快捷操作消息",
-    "type": "boolean"
+    "label": "消息格式",
+    "description": "开字母提示使用纯文本或 Markdown；选择仅 md 时仅在 QQ 官方机器人发送 Markdown 消息",
+    "type": "select",
+    "options": [
+      {
+        "label": "仅文本",
+        "value": "text"
+      },
+      {
+        "label": "仅 md",
+        "value": "markdown"
+      }
+    ]
   },
   {
     "key": "LetterIllustration",
@@ -785,6 +823,18 @@
     "required": true
   },
   {
+    "key": "GrksSoloCd",
+    "group": "猜RKS设置",
+    "label": "单机回答与提示冷却",
+    "description": "回答冷却按玩家独立计算，提示冷却按房间独立计算，两者共用该时长，单位：秒",
+    "type": "number",
+    "min": 0,
+    "max": 3600,
+    "placeholder": "请输入时间",
+    "unit": "s",
+    "required": true
+  },
+  {
     "key": "GrksTimeLength",
     "group": "猜RKS设置",
     "label": "待机时长",
@@ -843,51 +893,15 @@
     "required": true
   },
   {
-    "key": "GrksMatchWaitTimeout",
-    "group": "猜RKS设置",
-    "label": "匹配等待超时",
-    "description": "等待超过该时长后放宽 rks 相近限制，单位：秒",
-    "type": "number",
-    "min": 10,
-    "max": 86400,
-    "placeholder": "请输入时间",
-    "unit": "s",
-    "required": true
-  },
-  {
-    "key": "GrksMatchRksRange",
-    "group": "猜RKS设置",
-    "label": "匹配 rks 差值",
-    "description": "优先匹配 rks 差值在该范围内的对手",
-    "type": "number",
-    "min": 0,
-    "max": 10,
-    "step": 0.01,
-    "placeholder": "请输入差值",
-    "required": true
-  },
-  {
     "key": "GrksMatchTurnTime",
     "group": "猜RKS设置",
-    "label": "匹配回合时限",
-    "description": "每回合双方行动的时间上限，单位：秒",
+    "label": "匹配阶段时限",
+    "description": "提示和回答阶段各自的时间上限，进入下一阶段后重新计时，单位：秒",
     "type": "number",
     "min": 10,
     "max": 3600,
     "placeholder": "请输入时间",
     "unit": "s",
-    "required": true
-  },
-  {
-    "key": "GrksMatchMaxTimeoutTurn",
-    "group": "猜RKS设置",
-    "label": "超时判负回合数",
-    "description": "匹配中连续多少回合未行动判负",
-    "type": "number",
-    "min": 1,
-    "max": 20,
-    "step": 1,
-    "placeholder": "请输入回合数",
     "required": true
   },
   {

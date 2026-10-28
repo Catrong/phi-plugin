@@ -473,6 +473,22 @@ export class PicModel {
         return await this.common(e, 'grks', { ...data, theme: undefined }, 'grks')
     }
 
+    /** @param {import('../../components/baseClass.js').botEvent} e @param {import('./messages.js').grksRankingView} data */
+    async grksRanking(e, data) {
+        return await this.common(e, 'grks', { ...data, theme: undefined }, 'ranking')
+    }
+
+    /**
+     * 通用表格图片。
+     * 模板为 `resources/html/tableImage/table.art`，数据契约见 `model/game/songSearch.js`。
+     * @param {any} e
+     * @param {any} data
+     * @returns
+     */
+    async tableImage(e, data) {
+        return await this.common(e, 'tableImage', data, 'table')
+    }
+
     /**
      * 
      * @param {any} e 
@@ -526,7 +542,7 @@ export class PicModel {
     /** 
      * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|
      * 'ill'|'chartInfo'|'guess'|'frib19'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'market'|
-     * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'|'grks'
+     * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'|'grks'|'tableImage'
      * } picKind
      */
 

@@ -36,8 +36,8 @@ export default class ScoreHistory {
      * 扩充信息
      * @param {idString} songId 曲目id
      * @param {allLevelKind} level 难度
-     * @param {ScoreDetail} now 
-     * @param {ScoreDetail} [old=undefined]
+     * @param {ScoreDetailJson | ScoreDetail} now 
+     * @param {ScoreDetailJson | ScoreDetail} [old=undefined]
      * @param {'common'|'low'} [illustrationKind='common'] 展示曲绘清晰度
      * @returns {extendedScoreHistoryDetail} 扩展后的成绩信息
      */
@@ -81,7 +81,7 @@ export default class ScoreHistory {
 
     /**
      * 展开信息
-     * @param {ScoreDetail} data 历史成绩
+     * @param {ScoreDetailJson} data 历史成绩
      */
     static open(data) {
         return {
@@ -94,7 +94,7 @@ export default class ScoreHistory {
 
     /**
      * 获取该成绩记录的日期
-     * @param {ScoreDetail} data 成绩记录
+     * @param {ScoreDetailJson | ScoreDetail} data 成绩记录
      * @returns {Date} 该成绩的日期
      */
     static date(data) {
@@ -104,18 +104,19 @@ export default class ScoreHistory {
     /**
      * 展开 v4 成绩历史（dateValue 实例或 dateValueJSON）为 ScoreDetail 数组 [acc, score, date, fc]
      * 输入来自已判定的 v4 历史，直接信任其结构
-     * @param {any} levelData 单曲单难度的历史记录
+     * @param {dateValue<scoreDetailV4> | dateValueJSON<scoreDetailV4>} levelData 单曲单难度的历史记录
      * @returns {ScoreDetail[]}
      */
     static toScoreDetails(levelData) {
         if (!levelData) return []
-        if (Array.isArray(levelData.data)) {
+
+        if ('data' in levelData) {
             return /**@type {ScoreDetail[]} */(levelData.data.map(([date, detail]) => [
-                detail[0], detail[1], date, Boolean(detail[2])
+                detail[0], detail[1], date, detail[2]
             ]))
         }
         return new dateValue().fromJson(levelData).map(([date, detail]) => [
-            detail[0], detail[1], date, Boolean(detail[2])
+            detail[0], detail[1], date, detail[2]
         ])
     }
 }

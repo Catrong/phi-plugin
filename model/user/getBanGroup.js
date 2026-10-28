@@ -3,9 +3,10 @@ import logger from "../../components/Logger.js";
 import { redisPath } from "../game/constNum.js"
 import { UserCredentials } from './userCredentials.js';
 import userCredentialStore from './userCredentialStore.js';
-import send from "../render/send.js";
 import { canUseApi } from './apiPermission.js';
 import { redis } from "../../components/platform/index.js";
+import { sendMessage } from "../render/message.js";
+import { banGroupMessages } from "../render/messages.js";
 
 /**@import {botEvent} from "../../components/baseClass.js" */
 
@@ -32,12 +33,12 @@ export default class getBanGroup {
         const credentials = UserCredentials.fromEvent(e)
         if (await canUseApi(e)) {
             if (await credentials.getUserAPIBanStatus({ ignoreUnboundError: true })) {
-                send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员(1)。")
+                sendMessage(e, banGroupMessages.bannedPrimary, { at: true })
                 return true;
             }
         }
         if (await credentials.getUserLoaclBanStatus()) {
-            send.send_with_At(e, "当前账户被加入黑名单，详情请联系管理员(2)。")
+            sendMessage(e, banGroupMessages.bannedSecondary, { at: true })
             return true;
         }
         if (!group_id) {

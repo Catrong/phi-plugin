@@ -1,5 +1,4 @@
 // import get from '../model/getdata.js'
-import common from "../components/common.js"
 import Config from '../components/Config.js'
 import send from '../model/render/send.js'
 import getInfo from '../model/game/getInfo.js'
@@ -18,8 +17,11 @@ import logger from '../components/Logger.js'
 import SongsInfo from '../model/game/SongsInfo.js'
 import Chart from "../model/game/Chart.js"
 import getNotes from "../model/user/getNotes.js"
+import { buildSearchTable, searchSongs } from '../model/game/songSearch.js'
 import { canUseApi } from '../model/user/apiPermission.js'
 import TapInfo from "../model/integrations/getInfoFromTap.js"
+import { sendMessage } from '../model/render/message.js'
+import { phisongMessages } from '../model/render/messages.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -133,7 +135,7 @@ export class phisong extends phiPluginBase {
     async song(e) {
 
         if (await getBanGroup.get(e, 'song')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.song.banned, { at: true })
             return false
         }
 
@@ -143,147 +145,52 @@ export class phisong extends phiPluginBase {
         let page = msg.match(/\s+-p\s+([0-9]+)/)?.[1] ? Number(msg.match(/\s+-p\s+([0-9]+)/)?.[1]) : 0;
         msg = msg.replace(/\s+-p\s+([0-9]+)/, "")
         if (!msg) {
-            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} song <曲名>`)
+            sendMessage(e, phisongMessages.song.specifySong(), { at: true })
             return true
         }
         let ids = getInfo.fuzzysongsnick(msg)
         if (ids[0]) {
             if (!ids[1]) {
-                send.send_with_At(e, await songInfo(page, addComment, ids[0], e))
+                sendMessage(e, phisongMessages.song.image(await songInfo(page, addComment, ids[0], e)), { at: true })
             } else {
                 this.choseMutiNick(e, ids, { page, addComment }, async (e, id, options) => {
-                    send.send_with_At(e, await songInfo(options.page, options.addComment, id, e));
+                    sendMessage(e, phisongMessages.song.image(await songInfo(options.page, options.addComment, id, e)), { at: true });
                 })
             }
         } else {
-            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`)
+            sendMessage(e, phisongMessages.song.notFound(msg), { at: true })
         }
         return true
     }
 
     /**
-     * 
-     * @param {botEvent} e 
-     * @returns 
+     * 曲目检索，结果以通用表格图片输出
+     * @param {botEvent} e
      */
     async search(e) {
 
         if (await getBanGroup.get(e, 'search')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.search.banned, { at: true })
             return false
         }
 
-        let msg = e.msg.replace(/[#/](.*?)(查找|检索|search)(\s*)/g, "").toLowerCase()
+        const input = e.msg.replace(/[#/](.*?)(查找|检索|search)(\s*)/g, "")
+        const { filters, hits } = searchSongs(input)
+        const table = buildSearchTable(hits, filters, Config.getUserCfg('config', 'listScoreMaxNum'))
+        const pluginData = await getNotes.getNotesData(e.user_id)
 
-        /**
-         * @type {Record<string, {regex: RegExp, predicate: (item: any, bottom: number, top: number) => boolean}>}
-         */
-        const patterns = {
-            'bpm': {
-                'regex': /bpm([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
-                'predicate': (item, bottom, top) => {
-                    // 优先使用 bpmList（变速曲目）
-                    if (item?.['bpmList'] && Array.isArray(item['bpmList']) && item['bpmList'].length) {
-                        return item['bpmList'].some(bpm => bottom <= bpm && bpm <= top);
-                    }
-                    // 回退到原来的单值 bpm
-                    return item?.['bpm'] ? bottom <= item['bpm'] && item['bpm'] <= top : false;
-                }
-            },
-            'difficulty': {
-                'regex': /(difficulty|dif|定数|难度|定级)([\s:：,，/|~是为]*)([0-9.]+(\s*-\s*[0-9.]+)?)/,
-                'predicate': (item, bottom, top) => (item?.['chart'] ? Object.values(item['chart']).some(level => bottom <= level['difficulty'] && level['difficulty'] <= top) : false)
-            },
-            'combo': {
-                'regex': /(combo|cmb|物量|连击)([\s:：,，/|~是为]*)([0-9]+(\s*-\s*[0-9]+)?)/,
-                'predicate': (item, bottom, top) => (item?.['chart'] ? Object.values(item['chart']).some(level => bottom <= level['combo'] && level['combo'] <= top) : false)
-            }
-        }
-
-        /**@type {Partial<Record<idString, SongsInfo>>} */
-        let remain = getInfo.all_info()
-        /**@type {Partial<Record<idString, SongsInfo>>} */
-        let result = {}
-        /**
-         * @type {{ [x: string]: [number, number]; }} filters
-         */
-        let filters = {}
-
-        for (let key in patterns) {
-            let { regex, predicate } = patterns[key]
-            let match = msg.match(regex)
-            if (match) {
-                let matchStr = match[0].replace(/((bpm|difficulty|dif|难度|定级|定数|combo|cmb|物量|连击)([\s:：,，/|~是为]*))(\d)/g, '$1 $4')
-                matchStr = matchStr.replace(/((bpm|difficulty|dif|难度|定级|定数|combo|cmb|物量|连击)([\s:：,，/|~是为]*))|\s/g, '')
-                let [bottom, top] = matchStr.includes('-') ? matchStr.split('-').sort((a, b) => Number(a) - Number(b)) : [matchStr, matchStr]
-                let bottomNum = Number(bottom)
-                let topNum = Number(top)
-                if (key === 'difficulty' && !matchStr.includes('.0') && topNum % 1 === 0) {
-                    topNum += 0.9
-                }
-                filters[key] = [bottomNum, topNum]
-                for (let id of fCompute.objectKeys(remain)) {
-                    if (predicate(remain[id], bottomNum, topNum)) {
-                        result[id] = remain[id]
-                    }
-                }
-                remain = result
-                result = {}
-            }
-        }
-
-        if (Config.getUserCfg('config', 'isGuild')) {
-            let Resmsg = []
-            let tot = 0
-            let count = 1
-            let single = `当前筛选：${filters.bpm ? `BPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? ` 物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`
-            for (let id of fCompute.objectKeys(remain)) {
-                let songInfo = remain[id]
-                if (!songInfo) continue;
-                let msg
-                if (count) {
-                    msg = `\n${id} BPM:${songInfo.bpm}`
-                } else {
-                    msg = `${id} BPM:${songInfo.bpm}`
-                }
-                for (let level of fCompute.objectKeys(songInfo.chart)) {
-                    msg += `<${level}> ${songInfo.chart[level]?.difficulty} ${songInfo.chart[level]?.combo}`
-                }
-                single += msg
-                ++tot
-                ++count
-                /**每条消息10行 */
-                if (count == 10) {
-                    Resmsg.push(single)
-                    single = ''
-                    count = 0
-                }
-            }
-            if (count) {
-                Resmsg.push(single)
-                count = 0
-            }
-            if (e.isGroup) {
-                send.send_with_At(e, `找到了${tot}个结果，自动转为私聊发送喵～`, true)
-                send.pick_send(e, await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
-
-            } else {
-                send.reply(e, await common.makeForwardMsg(e, Resmsg, `找到了${tot}个结果喵！`))
-            }
-        } else {
-            let Resmsg = [`当前筛选：${filters.bpm ? `\nBPM:${filters.bpm[0]}${filters.bpm[1] ? `-${filters.bpm[1]}` : ''}` : ''}${filters.difficulty ? `\n定级:${filters.difficulty[0]}${filters.difficulty[1] ? `-${filters.difficulty[1]}` : ''} ` : ''}${filters.combo ? `\n物量:${filters.combo[0]}${filters.combo[1] ? `-${filters.combo[1]}` : ''} ` : ''}`]
-            for (let id of fCompute.objectKeys(remain)) {
-                let songInfo = remain[id]
-                if (!songInfo) continue;
-                let msg = `${id}\nBPM:${songInfo.bpm}`
-                for (let level of fCompute.objectKeys(songInfo.chart)) {
-                    msg += `\n${level} ${songInfo.chart[level]?.difficulty} ${songInfo.chart[level]?.combo}`
-                }
-                Resmsg.push(msg)
-            }
-            send.reply(e, await common.makeForwardMsg(e, Resmsg, `找到了${Resmsg.length - 1}首曲目喵！`))
-        }
-
+        sendMessage(e, phisongMessages.search.image(await picmodle.tableImage(e, {
+            pageTitle: phisongMessages.search.title.text,
+            pageDescription: phisongMessages.search.summary(filters).text,
+            notice: table.truncated ? phisongMessages.search.truncated(table.total, table.shown).text : '',
+            emptyText: phisongMessages.search.empty.text,
+            footer: table.total ? phisongMessages.search.footer(table.total).text : '',
+            columns: table.columns,
+            rows: table.rows,
+            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)], 'blur'),
+            theme: pluginData?.theme || 'default'
+        })), { at: true })
+        return true
     }
 
 
@@ -293,7 +200,7 @@ export class phisong extends phiPluginBase {
      */
     async setnick(e) {
         if (!(e.is_admin || e.isMaster)) {
-            send.reply(e, "只有管理员可以设置别名哦！")
+            sendMessage(e, phisongMessages.setnick.adminOnly)
             return true
         }
         let msg = e.msg.replace(/[#/](.*?)(设置别名|setnic(k?))(\s*)/g, "")
@@ -311,19 +218,19 @@ export class phisong extends phiPluginBase {
             if (P0Ids[0]) {
                 P0Id = P0Ids[0]
             } else {
-                send.reply(e, `输入有误哦！没有找到“${msg[0]}”这首曲子呢！`)
+                sendMessage(e, phisongMessages.setnick.songNotFound(msg[0]))
                 return true
             }
             if (P0Id in getInfo.fuzzysongsnick(parts[1], 1)) {
                 /**已经添加过该别名 */
-                send.reply(e, `${P0Id} 已经有 ${parts[1]} 这个别名了哦！`)
+                sendMessage(e, phisongMessages.setnick.aliasExists(P0Id, parts[1]))
                 return true
             } else {
                 getInfo.setnick(P0Id, parts[1])
-                send.reply(e, "设置完成！")
+                sendMessage(e, phisongMessages.setnick.done)
             }
         } else {
-            send.reply(e, `输入有误哦！请按照\n原名（或已有别名） ---> 别名\n的格式发送哦！`)
+            sendMessage(e, phisongMessages.setnick.formatError)
         }
         return true
     }
@@ -335,13 +242,13 @@ export class phisong extends phiPluginBase {
     async ill(e) {
 
         if (await getBanGroup.get(e, 'ill')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.ill.banned, { at: true })
             return false
         }
 
         let msg = e.msg.replace(/[#/](.*?)(曲绘|ill|Ill)(\s*)/, "")
         if (!msg) {
-            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} ill <曲名>`)
+            sendMessage(e, phisongMessages.ill.specifySong(), { at: true })
             return true
         }
         let ids = getInfo.fuzzysongsnick(msg)
@@ -349,14 +256,14 @@ export class phisong extends phiPluginBase {
             let msgRes
 
             if (!ids[1]) {
-                send.send_with_At(e, await getPic.GetSongsIllAtlas(e, ids[0]))
+                sendMessage(e, phisongMessages.ill.image(await getPic.GetSongsIllAtlas(e, ids[0])), { at: true })
             } else {
                 this.choseMutiNick(e, ids, {}, async (e, id) => {
-                    send.send_with_At(e, await getPic.GetSongsIllAtlas(e, id));
+                    sendMessage(e, phisongMessages.ill.image(await getPic.GetSongsIllAtlas(e, id)), { at: true });
                 })
             }
         } else {
-            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ`)
+            sendMessage(e, phisongMessages.ill.notFound(msg), { at: true })
             return false
         }
         return true
@@ -370,7 +277,7 @@ export class phisong extends phiPluginBase {
     async randmic(e) {
 
         if (await getBanGroup.get(e, 'randmic')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.randmic.banned, { at: true })
             return false
         }
 
@@ -394,7 +301,7 @@ export class phisong extends phiPluginBase {
         if (rank[0]) {
             if (rank[0].includes('+')) {
                 if (rank[1]) {
-                    send.send_with_At(e, `含有 '+' 的难度不支持指定范围哦！\n/${Config.getUserCfg('config', 'cmdhead')} rand <定数>+ <难度(可多选)>`, true)
+                    sendMessage(e, phisongMessages.randmic.plusRangeUnsupported(), { at: true, quote: true })
                     return true
                 } else {
                     bottom = Number(rank[0].replace('+', ''))
@@ -403,7 +310,7 @@ export class phisong extends phiPluginBase {
             } else if (rank[0].includes('-') && !rank[1]) {
                 const tb = Number(rank[0].replace('-', ''))
                 if (isNaN(tb)) {
-                    send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getUserCfg('config', 'cmdhead')} rand <定数>- <难度(可多选)>`, true)
+                    sendMessage(e, phisongMessages.randmic.invalidBelow(rank[0]), { at: true, quote: true })
                     return true
                 } else {
                     bottom = 0
@@ -414,14 +321,14 @@ export class phisong extends phiPluginBase {
                 if (rank[1]) {
                     const tt = Number(rank[1])
                     if (isNaN(tb) || isNaN(tt)) {
-                        send.send_with_At(e, `${rank[0]} - ${rank[1]} 不是一个定级范围哦\n/${Config.getUserCfg('config', 'cmdhead')} rand <定数1> - <定数2> <难度(可多选)>`, true)
+                        sendMessage(e, phisongMessages.randmic.invalidRange(rank[0], rank[1]), { at: true, quote: true })
                         return true
                     }
                     top = Math.max(tb, tt)
                     bottom = Math.min(tb, tt)
                 } else {
                     if (isNaN(tb)) {
-                        send.send_with_At(e, `${rank[0]} 不是一个定级哦\n#/${Config.getUserCfg('config', 'cmdhead')} rand <定数> <难度(可多选)>`, true)
+                        sendMessage(e, phisongMessages.randmic.invalidValue(rank[0]), { at: true, quote: true })
                         return true
                     } else {
                         top = bottom = tb
@@ -456,13 +363,13 @@ export class phisong extends phiPluginBase {
         }
 
         if (!songsname[0]) {
-            send.send_with_At(e, `未找到 ${bottom} - ${top} 的 ${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''}谱面QAQ!`)
+            sendMessage(e, phisongMessages.randmic.notFound(bottom, top, `${isask[0] ? `${Level[0]} ` : ''}${isask[1] ? `${Level[1]} ` : ''}${isask[2] ? `${Level[2]} ` : ''}${isask[3] ? `${Level[3]} ` : ''}`), { at: true, quote: true })
             return true
         }
 
         let result = songsname[randbt(songsname.length - 1)]
 
-        send.send_with_At(e, await picmodle.rand(e, result))
+        sendMessage(e, phisongMessages.randmic.image(await picmodle.rand(e, result)), { at: true })
         return true
     }
 
@@ -473,7 +380,7 @@ export class phisong extends phiPluginBase {
     async alias(e) {
 
         if (await getBanGroup.get(e, 'alias')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.alias.banned, { at: true })
             return false
         }
 
@@ -499,7 +406,7 @@ export class phisong extends phiPluginBase {
             }
             // console.info(getInfo.nicklist)
             // console.info(info.song)
-            send.send_with_At(e, [getPic.getIll(id), `\nname: ${info?.song}\nid: ${id}\n` + nicks.join('\n')])
+            sendMessage(e, phisongMessages.alias.info(getPic.getIll(id), id, info?.song, nicks), { at: true })
         }
 
         if (ids[0]) {
@@ -509,7 +416,7 @@ export class phisong extends phiPluginBase {
                 this.choseMutiNick(e, ids, {}, (e, id) => makeNickMsg(e, id));
             }
         } else {
-            send.send_with_At(e, `未找到${msg}的相关曲目信息QAQ！如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+            sendMessage(e, phisongMessages.alias.notFound(msg), { at: true, quote: true })
         }
     }
 
@@ -520,7 +427,7 @@ export class phisong extends phiPluginBase {
     async comrks(e) {
 
         if (await getBanGroup.get(e, 'comrks')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.comrks.banned, { at: true })
             return false
         }
 
@@ -529,10 +436,10 @@ export class phisong extends phiPluginBase {
         let data0 = Number(data[0])
         let data1 = Number(data[1])
         if (data && data1 && data0 > 0 && data0 <= 18 && data1 > 0 && data1 <= 100) {
-            send.send_with_At(e, `dif: ${data0} acc: ${data1}\n计算结果：${fCompute.rks(Number(data1), Number(data0))}`, true)
+            sendMessage(e, phisongMessages.comrks.result(data0, data1, fCompute.rks(Number(data1), Number(data0))), { at: true, quote: true })
             return true
         } else {
-            send.send_with_At(e, `格式错误QAQ！\n格式：${Config.getUserCfg('config', 'cmdhead')} com <定数> <acc>`)
+            sendMessage(e, phisongMessages.comrks.formatError(), { at: true })
             return false
         }
     }
@@ -544,11 +451,11 @@ export class phisong extends phiPluginBase {
     async tips(e) {
 
         if (await getBanGroup.get(e, 'tips')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.tips.banned, { at: true })
             return false
         }
 
-        send.send_with_At(e, getInfo.tips[fCompute.randInt(0, getInfo.tips.length - 1)])
+        sendMessage(e, phisongMessages.tips.text(getInfo.tips[fCompute.randInt(0, getInfo.tips.length - 1)]), { at: true })
     }
 
     /**
@@ -558,7 +465,7 @@ export class phisong extends phiPluginBase {
      */
     async randClg(e) {
         if (await getBanGroup.get(e, 'randClg')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.randClg.banned, { at: true })
             return false
         }
 
@@ -602,7 +509,7 @@ export class phisong extends phiPluginBase {
 
         let shiftNum = NumList.shift()
         if (!shiftNum) {
-            send.send_with_At(e, `未找到符合条件的谱面QAQ！`)
+            sendMessage(e, phisongMessages.randClg.notFound, { at: true })
             return true;
         }
         let res = undefined;
@@ -630,19 +537,19 @@ export class phisong extends phiPluginBase {
                 })
             }
 
-            send.send_with_At(e, await picmodle.common(e, 'clg', {
+            sendMessage(e, phisongMessages.randClg.image(await picmodle.common(e, 'clg', {
                 songs,
                 tot_clg: Math.floor(res[0].difficulty) + Math.floor(res[1].difficulty) + Math.floor(res[2].difficulty),
                 background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
                 theme: plugin_data?.theme || 'star',
-            }))
+            })), { at: true })
 
             // ans += `${getInfo.idgetsong(res[0].id)} ${res[0].rank} ${res[0].difficulty}\n`
             // ans += `${getInfo.idgetsong(res[1].id)} ${res[1].rank} ${res[1].difficulty}\n`
             // ans += `${getInfo.idgetsong(res[2].id)} ${res[2].rank} ${res[2].difficulty}\n`
             // ans += `difficulty: ${Math.floor(res[0].difficulty) + Math.floor(res[1].difficulty) + Math.floor(res[2].difficulty)}`
         } else {
-            send.send_with_At(e, `未找到符合条件的谱面QAQ！`)
+            sendMessage(e, phisongMessages.randClg.notFound, { at: true })
         }
 
         return true;
@@ -656,19 +563,13 @@ export class phisong extends phiPluginBase {
     async newSong(e) {
 
         if (await getBanGroup.get(e, 'newSong')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.newSong.banned, { at: true })
             return false
         }
         /**
          * @type {{ cnt: any; col?: number; row?: number; color?: string; bkg?: string; }[][]}
          */
         const ans = []
-        let msg = ''
-        try {
-            let info = await TapInfo.PgrUpdateInfo();
-            msg += `最新版本：${info?.[0]?.version}\n更新信息：\n${info?.[0]?.rawHtml?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')}\n`
-        } catch (e) { }
-        msg += `信息文件版本：${Version.phigros}\n`
         ans.push([{ cnt: '新曲速递', col: 4 }]);
         ans.push([{ cnt: '曲名' }, { cnt: '难度' }, { cnt: '定数' }, { cnt: '物量' }])
         for (let id of getInfo.updatedSong) {
@@ -732,29 +633,18 @@ export class phisong extends phiPluginBase {
             ans,
             background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur')
         });
-        send.send_with_At(e, [newSongImg, msg]);
-    }
-
-    /**
-     * 
-     * @param {botEvent} e 
-     * @returns 
-     */
-    async live(e) {
-
-        if (await getBanGroup.get(e, 'newSong')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-            return false
+        /** @type {string | undefined} */
+        let version;
+        /** @type {string | undefined} */
+        let updateInfo;
+        try {
+            const info = await TapInfo.PgrUpdateInfo();
+            version = info?.[0]?.version
+            updateInfo = info?.[0]?.rawHtml?.replace(/<\/?div>/g, '')?.replace(/<br\/>/g, '\n')
+        } catch (error) {
+            logger.warn('[phi-plugin] 获取新曲更新说明失败', error)
         }
-        let ans = '直播速递：\n'
-        const info = await makeRequest.liveInfo({ event: e })
-        if (info) {
-            ans += info;
-        } else {
-            ans += '发生错误，请稍后再试。'
-        }
-
-        send.send_with_At(e, ans)
+        await sendMessage(e, phisongMessages.newSong.content(newSongImg, version, updateInfo, Version.phigros), { at: true });
     }
 
     /**
@@ -765,7 +655,7 @@ export class phisong extends phiPluginBase {
     async table(e) {
 
         if (await getBanGroup.get(e, 'table')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.table.banned, { at: true })
             return false
         }
 
@@ -773,12 +663,12 @@ export class phisong extends phiPluginBase {
         let dif = Number(difMatch?.[0])
 
         if (!difMatch) {
-            send.send_with_At(e, `请输入定数嗷！\n/格式：${Config.getUserCfg('config', 'cmdhead')} table <定数>`, true)
+            sendMessage(e, phisongMessages.table.specifyDifficulty(), { at: true, quote: true })
             return false
         }
 
         if (dif > getInfo.MAX_DIFFICULTY) {
-            send.send_with_At(e, `定数已经超过最高的定数${getInfo.MAX_DIFFICULTY}了QAQ！`)
+            sendMessage(e, phisongMessages.table.difficultyTooHigh(getInfo.MAX_DIFFICULTY), { at: true })
             return false
         }
 
@@ -789,14 +679,14 @@ export class phisong extends phiPluginBase {
         if (matchVersion) {
             if (matchVersion.includes('.')) {
                 if (!getInfo.versionInfoByLabel[matchVersion]) {
-                    send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                    sendMessage(e, phisongMessages.table.versionNotFound(matchVersion), { at: true })
                     return true
                 }
                 matchVerCode = getInfo.versionInfoByLabel[matchVersion].version_code
             } else {
                 let verCodeNum = Number(matchVersion)
                 if (!getInfo.versionInfoByCode[verCodeNum]) {
-                    send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                    sendMessage(e, phisongMessages.table.versionNotFound(matchVersion), { at: true })
                     return true
                 }
                 matchVerCode = verCodeNum
@@ -808,7 +698,7 @@ export class phisong extends phiPluginBase {
         const versionInfo = getInfo.versionInfoByCode[matchVerCode]
         if (!versionInfo) {
             console.error(`[phi-plugin] 版本信息获取失败，versionCode: ${matchVerCode}`);
-            send.send_with_At(e, `发生未知错误QAQ！请回报管理员！`)
+            sendMessage(e, phisongMessages.table.unknownError, { at: true })
             return true
         }
 
@@ -840,7 +730,7 @@ export class phisong extends phiPluginBase {
 
         }
 
-        send.send_with_At(e, await picmodle.common(e, 'table', data));
+        sendMessage(e, phisongMessages.table.image(await picmodle.common(e, 'table', data)), { at: true });
 
     }
 
@@ -851,7 +741,7 @@ export class phisong extends phiPluginBase {
      */
     async difHis(e) {
         if (await getBanGroup.get(e, 'table')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.difHis.banned, { at: true })
             return false
         }
         const songstr = e.msg.replace(fCompute.getRexWithCmdHead('difhis(tory)?'), '')
@@ -859,7 +749,7 @@ export class phisong extends phiPluginBase {
             const difhistory = getInfo.historyDifficultyBySongId[id];
             const verinfo = getInfo.versionInfoByCode;
             if (!difhistory) {
-                send.send_with_At(e, `未找到 ${songstr} 的相关历史定数信息QAQ！`)
+                sendMessage(e, phisongMessages.difHis.notFound(songstr), { at: true })
                 return
             }
 
@@ -925,7 +815,7 @@ export class phisong extends phiPluginBase {
                 theme: (await getNotes.getNotesData(e.user_id))?.theme || 'star',
             }
 
-            send.send_with_At(e, await picmodle.common(e, 'difficultyHistory', picData));
+            sendMessage(e, phisongMessages.difHis.image(await picmodle.common(e, 'difficultyHistory', picData)), { at: true });
         })
     }
 
@@ -939,7 +829,7 @@ export class phisong extends phiPluginBase {
         const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'comment') || !(await Config.getUserCfg('config', 'allowComment'))) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.comment.banned, { at: true })
             return false
         }
 
@@ -952,13 +842,13 @@ export class phisong extends phiPluginBase {
         const sessionToken = await credentials.getSessionToken()
 
         if (!sessionToken) {
-            send.send_with_At(e, `请先绑定sessionToken哦！`)
+            sendMessage(e, phisongMessages.comment.needToken, { at: true })
             return true
         }
 
         let msg = e.msg.replace(/[#/](.*?)(comment|cmt|评论|评价)(\s*)/, "");
         if (!msg) {
-            send.send_with_At(e, `请指定曲名哦！\n格式：\n/${Config.getUserCfg('config', 'cmdhead')} cmt <曲名> <难度?>(换行)\n<内容>`)
+            sendMessage(e, phisongMessages.comment.specifySong(), { at: true })
             return true
         }
 
@@ -992,13 +882,13 @@ export class phisong extends phiPluginBase {
         let id = getInfo.fuzzysongsnick(nickname)?.[0]
 
         if (!id) {
-            send.send_with_At(e, `未找到${nickname}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！`, true)
+            sendMessage(e, phisongMessages.comment.notFound(nickname), { at: true, quote: true })
             return true;
         }
         let songInfo = getInfo.info(id)
         if (!songInfo) {
             logger.error(`[phi-plugin] 评论时获取曲目信息失败，id: ${id}`);
-            send.send_with_At(e, `发生未知错误QAQ！请回报管理员`);
+            sendMessage(e, phisongMessages.comment.unknownError, { at: true })
             return true;
         }
         if (!songInfo.sp_vis) {
@@ -1006,10 +896,10 @@ export class phisong extends phiPluginBase {
                 rankKind = 'IN';
                 rankNum = 2;
             } else if (rankNum == -1) {
-                send.send_with_At(e, `${rankKind} 不是一个难度QAQ！`);
+                sendMessage(e, phisongMessages.comment.invalidRank(rankKind), { at: true })
                 return true;
             } else if (!songInfo.chart?.[allLevel[rankNum]]) {
-                send.send_with_At(e, `${id} 没有 ${allLevel[rankNum]} 这个难度QAQ！`);
+                sendMessage(e, phisongMessages.comment.noDifficulty(id, allLevel[rankNum]), { at: true })
                 return true;
             }
         } else {
@@ -1018,11 +908,11 @@ export class phisong extends phiPluginBase {
         /** @type {string | undefined} */
         let comment = msg.match(/\n([\s\S]*)/)?.[1];
         if (!comment) {
-            send.send_with_At(e, `不可发送空白内容w(ﾟДﾟ)w！`)
+            sendMessage(e, phisongMessages.comment.empty, { at: true })
             return true
         }
         if (comment.length > 1000) {
-            send.send_with_At(e, `太长了吧！你想干嘛w(ﾟДﾟ)w！`)
+            sendMessage(e, phisongMessages.comment.tooLong, { at: true })
             return true
         }
 
@@ -1076,7 +966,7 @@ export class phisong extends phiPluginBase {
             };
             const apiAddResult = await credentials.addComment(cmtobj)
             if (apiAddResult) {
-                send.send_with_At(e, `在线评论成功！φ(゜▽゜*)♪`);
+                sendMessage(e, phisongMessages.comment.onlineSuccess, { at: true })
                 return true;
             }
         }
@@ -1126,9 +1016,9 @@ export class phisong extends phiPluginBase {
             }
         };
         if (getComment.add(songId, cmtobj)) {
-            send.send_with_At(e, `评论成功！φ(゜▽゜*)♪`);
+            sendMessage(e, phisongMessages.comment.success, { at: true })
         } else {
-            send.send_with_At(e, `遇到未知错误QAQ！`);
+            sendMessage(e, phisongMessages.comment.failed, { at: true })
         }
 
         return true;
@@ -1142,7 +1032,7 @@ export class phisong extends phiPluginBase {
     async recallComment(e) {
         const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'recallComment') || !(await Config.getUserCfg('config', 'allowComment'))) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.recallComment.banned, { at: true })
             return false
         }
         let save;
@@ -1154,7 +1044,7 @@ export class phisong extends phiPluginBase {
             }
 
             if (!sessionToken) {
-                send.send_with_At(e, `请先绑定sessionToken哦！`)
+                sendMessage(e, phisongMessages.comment.needToken, { at: true })
                 return true
             }
         }
@@ -1162,7 +1052,7 @@ export class phisong extends phiPluginBase {
         let commentId = e.msg.match(/[0-9]+/)?.[0];
 
         if (!commentId) {
-            send.send_with_At(e, `请输入评论ID嗷！\n格式：/${Config.getUserCfg('config', 'cmdhead')} recmt <评论ID>`);
+            sendMessage(e, phisongMessages.recallComment.specifyId(), { at: true })
             return true;
         }
 
@@ -1171,22 +1061,22 @@ export class phisong extends phiPluginBase {
             if (await canUseApi(e)) {
                 const delResult = await credentials.deleteComment(commentId)
                 if (delResult) {
-                    send.send_with_At(e, `删除在线评论成功！φ(゜▽゜*)♪`);
+                    sendMessage(e, phisongMessages.recallComment.onlineDeleted, { at: true })
                     return true;
                 }
             }
-            send.send_with_At(e, `没有找到ID为${commentId}的评论QAQ！`);
+            sendMessage(e, phisongMessages.recallComment.notFound(commentId), { at: true })
             return true;
         }
 
         if (!e.isMaster && !(comment.sessionToken == sessionToken || comment.userObjectId == save?.saveInfo.objectId)) {
-            send.send_with_At(e, `您没有权限操作这条评论捏(。﹏。)`);
+            sendMessage(e, phisongMessages.recallComment.noPermission, { at: true })
             return true;
         }
 
         getComment.del(commentId) ?
-            send.send_with_At(e, `删除成功！`) :
-            send.send_with_At(e, `删除失败QAQ！`);
+            sendMessage(e, phisongMessages.recallComment.deleted, { at: true }) :
+            sendMessage(e, phisongMessages.recallComment.deleteFailed, { at: true })
     }
 
     /**
@@ -1197,7 +1087,7 @@ export class phisong extends phiPluginBase {
     async myComment(e) {
         const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'myComment')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, phisongMessages.myComment.banned, { at: true })
             return false
         }
 
@@ -1212,13 +1102,9 @@ export class phisong extends phiPluginBase {
             if (comments) {
 
                 if (comments && comments.length > 0) {
-                    let msg = `您的评论列表：\nID | 曲目 | 难度 | 内容 | 时间\n`;
-                    for (let comment of comments) {
-                        msg += `${comment.id} | ${comment.songId} | ${comment.rank} | ${comment.comment} | ${fCompute.formatDate(comment.time)}\n`
-                    }
-                    send.send_with_At(e, msg);
+                    sendMessage(e, phisongMessages.myComment.content(comments, fCompute.formatDate), { at: true });
                 } else {
-                    send.send_with_At(e, `您还没有评论哦！`);
+                    sendMessage(e, phisongMessages.myComment.empty, { at: true })
                 }
                 return true;
             }
@@ -1234,7 +1120,7 @@ export class phisong extends phiPluginBase {
         const info = await TapInfo.PgrTapNotice(1);
         if (info) {
             const img = await picmodle.common(e, 'newnotice', info);
-            send.send_with_At(e, img);
+            sendMessage(e, phisongMessages.notice.image(img), { at: true });
         }
     }
 }

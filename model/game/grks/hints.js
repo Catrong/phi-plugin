@@ -1,5 +1,6 @@
 import { buildRksHistogram, getB30AnalysisRecords } from '../b30Analysis.js'
 import fCompute from '../fCompute.js'
+import { grksHintWords } from '../../render/messages.js'
 
 /**
  * 猜 RKS 的提示生成（纯函数，不读写文件、不依赖平台）。
@@ -699,28 +700,28 @@ export function formatHintText(options) {
     const revealed = new Set(options.revealedSlots || [])
     const lines = []
     if (!hint || hint.kind === 'exhausted') {
-        lines.push('B30 成绩已全部公开，可继续猜测或放弃。')
+        lines.push(grksHintWords.exhausted)
         return lines.join('\n')
     }
     if (hint.kind === 'records') {
-        lines.push('本次公开的成绩：')
+        lines.push(grksHintWords.recordsHeader)
         for (const slot of hint.slots || []) {
             const record = puzzle.slots.find(item => item.slot === slot)
             if (!record) continue
             const position = options.positionRevealed ? `${slot} ` : ''
-            lines.push(`${position}${record.rank} ${record.difficulty.toFixed(1)} ${record.song} · ${Math.round(record.score)} · ${record.acc.toFixed(2)}%`)
+            lines.push(grksHintWords.recordLine(position, record.rank, record.difficulty.toFixed(1), record.song, Math.round(record.score), record.acc.toFixed(2)))
         }
-        if (!options.positionRevealed) lines.push('（位置尚未公开）')
+        if (!options.positionRevealed) lines.push(grksHintWords.positionHidden)
         return lines.join('\n')
     }
     if (hint.kind === 'stats') {
         const statsKind = hint.statsKind || 'histogram'
         if (statsKind === 'range') {
-            lines.push(`B30 单曲等效 rks 区间：${puzzle.analysis.min.toFixed(2)} ~ ${puzzle.analysis.max.toFixed(2)}`)
+            lines.push(grksHintWords.range(puzzle.analysis.min.toFixed(2), puzzle.analysis.max.toFixed(2)))
         } else {
-            lines.push('B30 等效 rks 分布：')
+            lines.push(grksHintWords.histogramHeader)
             const histogram = puzzle.analysis.histogram
-            lines.push(`区间 ${Number(histogram.domainMin || 0).toFixed(2)} ~ ${Number(histogram.domainMax || 0).toFixed(2)}，平均 ${puzzle.analysis.average.toFixed(2)}`)
+            lines.push(grksHintWords.histogramRange(Number(histogram.domainMin || 0).toFixed(2), Number(histogram.domainMax || 0).toFixed(2), puzzle.analysis.average.toFixed(2)))
             for (const slot of histogram.slots || []) {
                 const blocks = Math.max(1, Math.round(Number(slot.height) / 5))
                 lines.push(`${String(slot.label).padStart(3, ' ')} ${'▇'.repeat(blocks)}`)
@@ -729,16 +730,16 @@ export function formatHintText(options) {
         return lines.join('\n')
     }
     const challenge = challengeModeInfo(puzzle.challengeModeRank)
-    lines.push(`课题模式：${challenge.name} ${challenge.level}（${challenge.score} 分）`)
-    lines.push('谱面完成度：')
+    lines.push(grksHintWords.challenge(challenge.name, challenge.level, challenge.score))
+    lines.push(grksHintWords.completionHeader)
     for (const item of puzzle.stats) {
-        lines.push(`${item.title}：通关 ${item.cleared}/${item.tot} · FC ${item.fc} · φ ${item.phi}`)
+        lines.push(grksHintWords.statsLine(item.title, item.cleared, item.tot, item.fc, item.phi))
     }
     const fcTotal = puzzle.stats.reduce((sum, item) => sum + item.fc, 0)
     const phiTotal = puzzle.stats.reduce((sum, item) => sum + item.phi, 0)
     const clearedTotal = puzzle.stats.reduce((sum, item) => sum + item.cleared, 0)
     const totTotal = puzzle.stats.reduce((sum, item) => sum + item.tot, 0)
-    lines.push(`合计：通关 ${clearedTotal}/${totTotal} · FC ${fcTotal} · φ ${phiTotal}`)
-    lines.push(`已公开 ${revealed.size}/${puzzle.slots.length} 个槽位`)
+    lines.push(grksHintWords.totalLine(clearedTotal, totTotal, fcTotal, phiTotal))
+    lines.push(grksHintWords.revealed(revealed.size, puzzle.slots.length))
     return lines.join('\n')
 }

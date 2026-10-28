@@ -311,7 +311,7 @@ export function withReliableTemplateCache(Base) {
 export const YunzaiRenderer = withReliableTemplateCache(yunzaiRendererModule?.default || FallbackRenderer)
 
 /**
- * @param {'image' | 'at' | 'markdown' | 'text'} type
+ * @param {'image' | 'at' | 'markdown' | 'text' | 'button'} type
  * @param {Record<string, unknown>} [data]
  */
 function createPhiSegment(type, data = {}) {
@@ -343,6 +343,10 @@ const adapter = {
         return String(yunzaiCfgModule?.default?.renderer?.name || 'puppeteer').trim().toLowerCase()
     },
 
+    hasButtonSegment() {
+        return Boolean(nativeSegment?.button)
+    },
+
     async getHostRenderer(name) {
         // 按需加载，普通 Puppeteer 模式与非 Yunzai 环境不加载宿主渲染后端。
         const module = await optionalImport('../../../../lib/renderer/loader.js')
@@ -362,6 +366,10 @@ const adapter = {
         },
         text(text) {
             return createPhiSegment('text', { text })
+        },
+        button(...rows) {
+            if (nativeSegment?.button) return nativeSegment.button(...rows)
+            return createPhiSegment('button', { rows })
         },
     },
 
@@ -402,6 +410,7 @@ const adapter = {
         if (phiSegment.type === 'at') return nativeSegment?.at ? nativeSegment.at(phiSegment.userId) : phiSegment
         if (phiSegment.type === 'markdown') return nativeSegment?.markdown ? nativeSegment.markdown(phiSegment.text) : phiSegment.text
         if (phiSegment.type === 'text') return phiSegment.text
+        if (phiSegment.type === 'button') return nativeSegment?.button ? nativeSegment.button(...phiSegment.rows) : phiSegment
         return phiSegment
     },
 

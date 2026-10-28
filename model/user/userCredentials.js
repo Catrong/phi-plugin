@@ -660,6 +660,15 @@ export class UserCredentials {
     }
 
     /**
+     * @overload
+     * @param {idString} songId 曲目 ID
+     * @returns {Promise<{ data: Record<allLevelKind, dateValueJSON<scoreDetailV4>>, timezone: string } | null>} 成绩历史与记录方时区；失败返回 `null`
+     * 
+     * @overload
+     * @param {idString} songId 曲目 ID
+     * @param {levelKind} difficulty 难度
+     * @returns {Promise<{ data: dateValueJSON<scoreDetailV4>, timezone: string } | null>} 成绩历史与记录方时区；失败返回 `null`
+     * 
      * 从 API 获取当前用户的成绩历史（v4 端点 `/get/history/recordV4`），支持全部成绩、单曲或单难度三种粒度。
      * 返回 v4 紧凑结构（dateValue）与记录方 `timezone`；
      * 调用方可用 `ScoreHistory.toScoreDetails()` 展开为 `[acc, score, date, fc]`，
@@ -668,7 +677,7 @@ export class UserCredentials {
      * @param {levelKind} [difficulty] 难度
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
      * @returns {Promise<{ data: any, timezone: string } | null>} 成绩历史与记录方时区；失败返回 `null`
-     */
+     */ 
     async getCloudSongHistory(songId, difficulty = undefined, options = {}) {
         const response = await makeRequest.getHistoryRecord(
             {

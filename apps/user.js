@@ -12,12 +12,8 @@ import getNotes from '../model/user/getNotes.js'
 import { UserCredentials } from '../model/user/userCredentials.js'
 import analyzeSaveHistory from '../model/save/analyzeSaveHistory.js'
 import { canUseApi } from '../model/user/apiPermission.js'
-import {
-    sendQuickCommands,
-    scoreQuickCommands,
-    userListQuickCommands,
-    historyQuickCommands,
-} from '../model/game/markdown.js'
+import { sendMessage } from '../model/render/message.js'
+import { userMessages } from '../model/render/messages.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -66,7 +62,7 @@ export class phiuser extends phiPluginBase {
     async data(e) {
 
         if (await getBanGroup.get(e, 'data')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, userMessages.data.banned, { at: true })
             return false
         }
 
@@ -78,9 +74,9 @@ export class phiuser extends phiPluginBase {
         }
         if (save.gameProgress) {
             let data = save.gameProgress.money
-            send.send_with_At(e, `您的data数为：${data[4] ? `${data[4]}PB ` : ''}${data[3] ? `${data[3]}TB ` : ''}${data[2] ? `${data[2]}GB ` : ''}${data[1] ? `${data[1]}MB ` : ''}${data[0] ? `${data[0]}KB ` : ''}`)
+            sendMessage(e, userMessages.data.dataAmount(`${data[4] ? `${data[4]}PB ` : ''}${data[3] ? `${data[3]}TB ` : ''}${data[2] ? `${data[2]}GB ` : ''}${data[1] ? `${data[1]}MB ` : ''}${data[0] ? `${data[0]}KB ` : ''}`), { at: true })
         } else {
-            send.send_with_At(e, `请先更新数据哦！\n/${Config.getUserCfg('config', 'cmdhead')} update`)
+            sendMessage(e, userMessages.data.needUpdate(), { at: true })
         }
         return true
     }
@@ -93,7 +89,7 @@ export class phiuser extends phiPluginBase {
         const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'info')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, userMessages.info.banned, { at: true })
             return false
         }
         /**背景 */
@@ -126,7 +122,7 @@ export class phiuser extends phiPluginBase {
         let userbackground = await fCompute.getBackground(save.gameuser.background)
 
         if (!userbackground) {
-            send.reply(e, `ERROR: 未找到[${save.gameuser.background}]的有关信息！`)
+            sendMessage(e, userMessages.info.backgroundNotFound(save.gameuser.background))
             logger.error(`未找到${save.gameuser.background}对应的曲绘！`)
         }
 
@@ -160,7 +156,7 @@ export class phiuser extends phiPluginBase {
         }
 
         if (!user_data) {
-            send.send_with_At(e, '没有找到可用的历史记录，请先更新存档。')
+            sendMessage(e, userMessages.info.noHistory, { at: true })
             return true
         }
         let { rks_history, data_history, rks_range, data_range, rks_date, data_date } = user_data.getRksAndDataLine()
@@ -280,8 +276,7 @@ export class phiuser extends phiPluginBase {
 
         const infoVersion = e.msg.match(new RegExp(`^[#/](?:${Config.getUserCfg('config', 'cmdhead')})\\s*info([12])?`, 'i'))?.at(-1)
         const kind = Number(infoVersion || 0)
-        send.send_with_At(e, await picmodle.user_info(e, data, kind))
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        sendMessage(e, userMessages.info.finalMessage({ image: await picmodle.user_info(e, data, kind) }), { at: true })
     }
 
     /**
@@ -291,7 +286,7 @@ export class phiuser extends phiPluginBase {
     async lvscore(e) {
 
         if (await getBanGroup.get(e, 'lvscore')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, userMessages.lvscore.banned, { at: true })
             return false
         }
 
@@ -446,7 +441,7 @@ export class phiuser extends phiPluginBase {
         let illustration = await fCompute.getBackground(save.gameuser.background)
 
         if (!illustration) {
-            send.reply(e, `ERROR: 未找到[${save.gameuser.background}]背景的有关信息！`)
+            sendMessage(e, userMessages.lvscore.backgroundNotFound(save.gameuser.background))
             logger.error(`未找到${save.gameuser.background}的曲绘！`)
         }
 
@@ -507,8 +502,7 @@ export class phiuser extends phiPluginBase {
         // remsg += `φ:${totRating['phi']} FC:${totRating['FC']} V:${totRating['V']} S:${totRating['S']} A:${totRating['A']} B:${totRating['B']} C:${totRating['C']} F:${totRating['F']}`
 
 
-        send.send_with_At(e, await picmodle.lvsco(e, data))
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        sendMessage(e, userMessages.lvscore.finalMessage({ image: await picmodle.lvsco(e, data) }), { at: true })
     }
 
     /**
@@ -518,7 +512,7 @@ export class phiuser extends phiPluginBase {
     async list(e) {
 
         if (await getBanGroup.get(e, 'list')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, userMessages.list.banned, { at: true })
             return false
         }
 
@@ -620,7 +614,7 @@ export class phiuser extends phiPluginBase {
         }
 
         if (data.length > Config.getUserCfg('config', 'listScoreMaxNum')) {
-            send.send_with_At(e, `谱面数量过多(${data.length})大于设置的最大值(${Config.getUserCfg('config', 'listScoreMaxNum')})，请缩小搜索范围QAQ！`)
+            sendMessage(e, userMessages.list.tooMany(data.length, Config.getUserCfg('config', 'listScoreMaxNum')), { at: true })
             return true
         }
 
@@ -636,20 +630,19 @@ export class phiuser extends phiPluginBase {
         request.push(`ACC ${acc_range[0]}-${acc_range[1]}`);
 
 
-        send.send_with_At(e, await picmodle.list(e, {
-            head_title: "成绩筛选",
-            song: data,
-            background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
-            theme: plugin_data?.theme || 'star',
-            PlayerId: save.saveInfo.PlayerId,
-            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
-            Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
-            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            // dan: await get.getDan(e.user_id),
-            request: request
-        }))
-        await sendQuickCommands(e, userListQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩筛选快捷操作')
+        sendMessage(e, userMessages.list.finalMessage({ image: await picmodle.list(e, {
+                head_title: "成绩筛选",
+                song: data,
+                background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
+                theme: plugin_data?.theme || 'star',
+                PlayerId: save.saveInfo.PlayerId,
+                Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
+                Date: save.saveInfo.summary.updatedAt,
+                ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+                ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+                // dan: await get.getDan(e.user_id),
+                request: request
+            }) }), { at: true })
 
     }
 
@@ -663,7 +656,7 @@ export class phiuser extends phiPluginBase {
 
 
         if (await getBanGroup.get(e, 'analyze2025SaveHistory')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, userMessages.analyze2025SaveHistory.banned, { at: true })
             return false
         }
 
@@ -682,11 +675,10 @@ export class phiuser extends phiPluginBase {
 
         const stats = analyzeSaveHistory(history);
 
-        send.send_with_At(e, await picmodle.analyzeSaveHistory(e, {
-            stats,
-            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)], 'blur'),
-        }));
-        await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
+        sendMessage(e, userMessages.analyze2025SaveHistory.finalMessage({ image: await picmodle.analyzeSaveHistory(e, {
+                stats,
+                background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)], 'blur'),
+            }) }), { at: true })
     }
 
     /**
@@ -697,7 +689,7 @@ export class phiuser extends phiPluginBase {
     async hisb30(e) {
         const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'hisb30')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, userMessages.hisb30.banned, { at: true })
             return false
         }
 
@@ -972,13 +964,12 @@ export class phiuser extends phiPluginBase {
             // dan: dan,
         }
 
-        send.send_with_At(e, await picmodle.common(e, 'historyB30', {
-            gameuser,
-            rows,
-            background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
-            theme: pluginData?.theme || 'star',
-        }))
-        await sendQuickCommands(e, historyQuickCommands(Config.getUserCfg('config', 'cmdhead')), '历史记录快捷操作')
+        sendMessage(e, userMessages.hisb30.finalMessage({ image: await picmodle.common(e, 'historyB30', {
+                gameuser,
+                rows,
+                background: getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)]),
+                theme: pluginData?.theme || 'star',
+            }) }), { at: true })
 
     }
 

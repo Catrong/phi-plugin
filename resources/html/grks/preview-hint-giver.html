@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" type="text/css" href="../../html/common/common.css" />
+    
+    
+
+    
+<link rel="stylesheet" href="../../html/grks/grks.css">
+
+
+    
+
+    
+    
+    <style>
+        /* 页面保留自己的换行规则；只有显式声明的固定标题栏允许单行省略。 */
+        body [name="pvis"] { min-width: 0; max-width: 100%; }
+        body .phi-fit-line[name="pvis"] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .phi-static-theme { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
+        .phi-static-stars {
+            background-image: radial-gradient(circle, #fff9 1px, transparent 2px), radial-gradient(circle, #9dd7ff88 1px, transparent 2px), radial-gradient(circle, #fff6 1.5px, transparent 3px);
+            background-size: 131px 173px, 227px 193px, 367px 293px;
+            background-position: 31px 47px, 97px 131px, 173px 53px;
+        }
+        .phi-static-theme .snow { width: 2.5%; }
+        .phi-static-theme .snow img { width: 100%; }
+        .phi-static-theme.topTextBox p { font-size: 18px; opacity: .35; filter: blur(1px); }
+        body > canvas#stars, body > .snow-box, body > .topTextBox:not(.phi-static-theme) { display: none; }
+    </style>
+    
+    <title>猜 RKS 预览 · 提示者视角</title>
+
+    <style>
+        .grks-giver-unrevealed > :not(.grks-giver-label),
+        .clgBox > .Challenge,
+        .date > p,
+        .recordInfo > .sheet,
+        .recordInfo > .whiteLine,
+        .histogram-panel > :not(.grks-giver-label) {
+            filter: brightness(.48);
+        }
+        .grks-giver-label {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .song > .grks-giver-label { left: -24px; }
+        .grks-giver-label .grks-giver-status {
+            font-size: 12px;
+            color: #daf4ff;
+            text-shadow: 0 1px 3px #000;
+        }
+        .grks-giver-command,
+        .grks-giver-shared-command {
+            padding: 4px 10px;
+            background: rgba(12, 23, 38, .88);
+            border-left: 2px solid #9fe8ff;
+            color: #e5f8ff;
+            font: 13px "PHI", sans-serif;
+            white-space: nowrap;
+        }
+        .grks-giver-links {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 150px;
+            overflow: visible;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .grks-giver-links path {
+            fill: none;
+            stroke: #9fe8ff;
+            stroke-width: 1.5;
+            stroke-linejoin: round;
+        }
+        .grks-giver-links circle { fill: #9fe8ff; }
+        .title > .grks-giver-shared-command {
+            position: absolute;
+            left: 780px;
+            top: 112px;
+            transform: translateX(-50%);
+            z-index: 4;
+        }
+        .histogram-panel { position: relative; }
+        .histogram-panel > .grks-giver-label {
+            left: 80px;
+            right: 80px;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body class="elem-hydro match-mode  " >
+
+
+    <div class="background theme-background">
+        
+        
+        <img src="../../otherill/雪降SP.png" alt="曲绘-模糊">
+        
+        
+    </div>
+
+    
+
+    <!-- <div class="container" id="container"> -->
+    
+
+<div class="title">
+    <div class="playerInfo">
+        <div class="blackBlock clip-box"></div>
+        <div class="avatar clip-box">
+            <img src="../../html/avatar/Introduction.png" alt="Introduction">
+        </div>
+        <div class="playerId">
+            <p name="pvis" class="phi-fit-line" title="红方 · 提示者视角">红方 · 提示者视角</p>
+        </div>
+        <div class="rks clip-box">
+            <p>15.5910</p>
+        </div>
+        
+        <div class="clgBox">
+            <div class="Challenge">
+                <img src="../../html/otherimg/4.png" alt="Challenge">
+                <p>35</p>
+            </div>
+        </div>
+        
+        
+        <div class="date">
+            <p>2026-10-27 09:00</p>
+        </div>
+        
+    </div>
+    <div class="recordInfo clip-box">
+        <div class="whiteLine clip-box"></div>
+        <div class="sheet">
+            <div class="row">
+                <div class="poz"><p>\</p></div>
+                
+                <div class="poz"><p>EZ</p></div>
+                
+                <div class="poz"><p>HD</p></div>
+                
+                <div class="poz"><p>IN</p></div>
+                
+                <div class="poz"><p>AT</p></div>
+                
+            </div>
+            <div class="row">
+                <div class="poz"><p>C</p></div>
+                
+                <div class="poz"><p>320</p></div>
+                
+                <div class="poz"><p>275</p></div>
+                
+                <div class="poz"><p>210</p></div>
+                
+                <div class="poz"><p>18</p></div>
+                
+            </div>
+            <div class="row">
+                <div class="poz"><p>FC</p></div>
+                
+                <div class="poz"><p>205</p></div>
+                
+                <div class="poz"><p>160</p></div>
+                
+                <div class="poz"><p>95</p></div>
+                
+                <div class="poz"><p>8</p></div>
+                
+            </div>
+            <div class="row">
+                <div class="poz"><p>Phi</p></div>
+                
+                <div class="poz"><p>80</p></div>
+                
+                <div class="poz"><p>50</p></div>
+                
+                <div class="poz"><p>25</p></div>
+                
+                <div class="poz"><p>2</p></div>
+                
+            </div>
+        </div>
+    </div>
+    <svg class="grks-giver-links" viewBox="0 0 1360 150" aria-hidden="true">
+        <path data-target="challenge" d="M310 56 V102 H780 V112"></path>
+        <path data-target="date" d="M711 8 H820 V112"></path>
+        <path data-target="stats" d="M930 56 H850 V102 H780 V112"></path>
+        <circle cx="310" cy="56" r="3"></circle>
+        <circle cx="711" cy="8" r="3"></circle>
+        <circle cx="930" cy="56" r="3"></circle>
+    </svg>
+    <p class="grks-giver-shared-command">#phi grks hint 4</p>
+</div>
+
+<div class="b19">
+    
+    <div class="song phi_song">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">P1</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.2</p></div>
+                <div class="rel"><p>16.20</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 01">示例曲目 01</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/phi.png" alt="phi">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>1000000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>100.00%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    <div class="song phi_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">P2</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.1</p></div>
+                <div class="rel"><p>16.05</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 02">示例曲目 02</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/phi.png" alt="phi">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>1000000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>100.00%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · P2</p><p class="grks-giver-command">#phi grks hint P2</p></div>
+    </div>
+    
+    <div class="song phi_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">P3</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;15.9</p></div>
+                <div class="rel"><p>15.90</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 03">示例曲目 03</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/phi.png" alt="phi">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>1000000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>100.00%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · P3</p><p class="grks-giver-command">#phi grks hint P3</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B1</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.80</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 04">示例曲目 04</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>990000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.30%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B1</p><p class="grks-giver-command">#phi grks hint B1</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B2</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.78</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 05">示例曲目 05</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>989600</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.27%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B2</p><p class="grks-giver-command">#phi grks hint B2</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B3</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.76</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 06">示例曲目 06</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>989200</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.25%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B3</p><p class="grks-giver-command">#phi grks hint B3</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B4</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.74</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 07">示例曲目 07</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>988800</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.22%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B4</p><p class="grks-giver-command">#phi grks hint B4</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B5</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.72</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 08">示例曲目 08</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>988400</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.20%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B5</p><p class="grks-giver-command">#phi grks hint B5</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B6</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.70</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 09">示例曲目 09</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>988000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.17%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B6</p><p class="grks-giver-command">#phi grks hint B6</p></div>
+    </div>
+    
+    <div class="song best_song">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B7</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.68</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 10">示例曲目 10</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>987600</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.15%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B8</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.66</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 11">示例曲目 11</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>987200</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.13%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B8</p><p class="grks-giver-command">#phi grks hint B8</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B9</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.64</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 12">示例曲目 12</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>986800</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.10%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B9</p><p class="grks-giver-command">#phi grks hint B9</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B10</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.62</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 13">示例曲目 13</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>986400</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.08%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B10</p><p class="grks-giver-command">#phi grks hint B10</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B11</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.60</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 14">示例曲目 14</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>986000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.05%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B11</p><p class="grks-giver-command">#phi grks hint B11</p></div>
+    </div>
+    
+    <div class="song best_song">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B12</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.58</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 15">示例曲目 15</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>985600</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.02%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B13</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.56</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 16">示例曲目 16</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>985200</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>99.00%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B13</p><p class="grks-giver-command">#phi grks hint B13</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B14</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.54</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 17">示例曲目 17</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>984800</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.97%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B14</p><p class="grks-giver-command">#phi grks hint B14</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B15</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.52</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 18">示例曲目 18</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>984400</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.95%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B15</p><p class="grks-giver-command">#phi grks hint B15</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B16</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.50</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 19">示例曲目 19</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>984000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.92%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B16</p><p class="grks-giver-command">#phi grks hint B16</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B17</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.48</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 20">示例曲目 20</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>983600</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.90%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B17</p><p class="grks-giver-command">#phi grks hint B17</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B18</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.46</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 21">示例曲目 21</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>983200</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.88%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B18</p><p class="grks-giver-command">#phi grks hint B18</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B19</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.44</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 22">示例曲目 22</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>982800</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.85%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B19</p><p class="grks-giver-command">#phi grks hint B19</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B20</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.42</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 23">示例曲目 23</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>982400</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.83%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B20</p><p class="grks-giver-command">#phi grks hint B20</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B21</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.40</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 24">示例曲目 24</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>982000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.80%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B21</p><p class="grks-giver-command">#phi grks hint B21</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B22</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.38</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 25">示例曲目 25</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>981600</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.77%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B22</p><p class="grks-giver-command">#phi grks hint B22</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B23</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.36</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 26">示例曲目 26</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>981200</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.75%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B23</p><p class="grks-giver-command">#phi grks hint B23</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B24</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.34</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 27">示例曲目 27</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>980800</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.72%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B24</p><p class="grks-giver-command">#phi grks hint B24</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B25</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.32</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 28">示例曲目 28</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>980400</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.70%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B25</p><p class="grks-giver-command">#phi grks hint B25</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B26</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.30</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 29">示例曲目 29</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>980000</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.67%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B26</p><p class="grks-giver-command">#phi grks hint B26</p></div>
+    </div>
+    
+    <div class="song best_song grks-giver-unrevealed">
+        
+        <div class="ill-box">
+            <div class="num clip-box"><p name="pvis">B27</p></div>
+            <div class="ill clip-box"><img src="../../otherill/雪降SP.png" alt="ill"></div>
+            <div class="rank-IN clip-box">
+                <div class="org"><p>IN&ensp;16.0</p></div>
+                <div class="rel"><p>15.28</p></div>
+            </div>
+        </div>
+        <div class="info-IN">
+            <div class="songname">
+                <p name="pvis" class="phi-fit-line" title="示例曲目 30">示例曲目 30</p>
+            </div>
+            <div class="songinfo">
+                <div class="Rating">
+                    <img src="../../html/otherimg/V.png" alt="V">
+                </div>
+                <div class="chengji">
+                    <div class="score"><p>979600</p></div>
+                    <div class="line"></div>
+                    <div class="acc-box">
+                        <div class="acc"><p>98.65%</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    
+        <div class="grks-giver-label"><p class="grks-giver-status">未向对手公开 · B27</p><p class="grks-giver-command">#phi grks hint B27</p></div>
+    </div>
+    
+</div>
+
+<div class="over_flow grks-over-flow">
+    <div class="flow_line_box_l">
+        <div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div>
+        <div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div>
+    </div>
+    <p><i>B30 数据与猜测记录</i></p>
+    <div class="flow_line_box_r">
+        <div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div>
+        <div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div><div class="grks-flow-line clip-box"></div>
+    </div>
+</div>
+
+<div class="b30-analysis-row grks-analysis-row">
+    
+    <section class="analysis-panel histogram-panel clip-box">
+        <div class="analysis-panel-head">
+            <div>
+                <p class="analysis-kicker">RKS DISTRIBUTION</p>
+                <p class="analysis-title">等效 RKS 直方图</p>
+            </div>
+            <p class="analysis-meta">相对分布</p>
+        </div>
+        <div class="histogram-chart">
+            <div class="histogram-y-label">等效单曲 RKS</div>
+            <div class="histogram-plot">
+                <div class="histogram-scale">
+                    
+                    <div class="histogram-grid-line" style="bottom: 0%;"></div>
+                    
+                    <div class="histogram-grid-line" style="bottom: 25%;"></div>
+                    
+                    <div class="histogram-grid-line" style="bottom: 50%;"></div>
+                    
+                    <div class="histogram-grid-line" style="bottom: 75%;"></div>
+                    
+                    <div class="histogram-grid-line" style="bottom: 100%;"></div>
+                    
+                </div>
+                <div class="histogram-bars">
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar phi-bar" style="height: 95.4545454545455%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">P1</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar phi-bar" style="height: 80.63241106719381%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">P2</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar phi-bar" style="height: 65.81027667984178%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">P3</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 55.928853754940775%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B1</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 53.952569169960576%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B2</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 51.976284584980384%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B3</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 50%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B4</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 48.023715415019794%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B5</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 46.0474308300396%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B6</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 44.071146245059396%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B7</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 42.09486166007902%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B8</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 40.11857707509882%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B9</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 38.14229249011862%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B10</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 36.166007905138414%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B11</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 34.18972332015804%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B12</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 32.21343873517784%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B13</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 30.237154150197636%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B14</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 28.26086956521744%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B15</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 26.284584980237057%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B16</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 24.30830039525686%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B17</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 22.33201581027666%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B18</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 20.35573122529646%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B19</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 18.37944664031608%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B20</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 16.40316205533588%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B21</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 14.426877470355679%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B22</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 12.450592885375478%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B23</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 10.474308300395101%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B24</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 8.4980237154149%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B25</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 6.521739130434699%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B26</p>
+                    </div>
+                    
+                    <div class="histogram-slot">
+                        <div class="histogram-bar-area">
+                            <div class="histogram-bar best-bar" style="height: 4.545454545454498%;"></div>
+                        </div>
+                        <p class="histogram-slot-label">B27</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="histogram-legend">
+            <p><span class="legend-dot phi-dot"></span>P1-P3</p>
+            <p><span class="legend-dot best-dot"></span>B1-B27</p>
+            <p>30 条成绩</p>
+        </div>
+    <div class="grks-giver-label"><p class="grks-giver-status">直方图尚未向对手公开</p><p class="grks-giver-command">#phi grks hint 3 histogram</p><p class="grks-giver-command">#phi grks hint 3 range</p><p class="grks-giver-status">直方图与上下界仅可选择一种</p></div>
+    </section>
+
+    <section class="analysis-panel grks-history-panel clip-box">
+        <div class="analysis-panel-head">
+            <div>
+                <p class="analysis-kicker">GUESS HISTORY</p>
+                <p class="analysis-title">对手猜测记录</p>
+            </div>
+            <p class="analysis-meta">对手已回答 3 / 10 次</p>
+        </div>
+        <div class="grks-history-grid">
+            
+            <div class="grks-history-cell is-wrong clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">01</p>
+                    <p class="grks-history-answer">对手答 12.1</p>
+                    <p class="grks-history-result">错误</p>
+                </div>
+                <p class="grks-history-hint">已给提示：公开 P1</p>
+            </div>
+            
+            <div class="grks-history-cell is-wrong clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">02</p>
+                    <p class="grks-history-answer">对手答 13.2</p>
+                    <p class="grks-history-result">错误</p>
+                </div>
+                <p class="grks-history-hint">已给提示：公开 B7</p>
+            </div>
+            
+            <div class="grks-history-cell is-wrong clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">03</p>
+                    <p class="grks-history-answer">对手答 14.3</p>
+                    <p class="grks-history-result">错误</p>
+                </div>
+                <p class="grks-history-hint">已给提示：公开 B12</p>
+            </div>
+            
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">04</p>
+                    <p class="grks-history-answer">对手答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">已给提示：等待提示</p>
+            </div>
+            
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">05</p>
+                    <p class="grks-history-answer">对手答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">已给提示：等待提示</p>
+            </div>
+            
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">06</p>
+                    <p class="grks-history-answer">对手答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">已给提示：等待提示</p>
+            </div>
+            
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">07</p>
+                    <p class="grks-history-answer">对手答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">已给提示：等待提示</p>
+            </div>
+            
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">08</p>
+                    <p class="grks-history-answer">对手答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">已给提示：等待提示</p>
+            </div>
+            
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">09</p>
+                    <p class="grks-history-answer">对手答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">已给提示：等待提示</p>
+            </div>
+            
+            <div class="grks-history-cell is-empty clip-box">
+                <div class="grks-history-heading">
+                    <p class="grks-history-turn">10</p>
+                    <p class="grks-history-answer">对手答 —</p>
+                    <p class="grks-history-result">未开始</p>
+                </div>
+                <p class="grks-history-hint">已给提示：等待提示</p>
+            </div>
+            
+        </div>
+    </section>
+</div>
+
+
+<div class="grks-foot">
+    <p>提示者视角预览 · 所有数据均为静态示例
+房间 PREVIEW · 第 4/10 轮
+你是红方，对手：蓝方示例玩家
+提示回合：双方各选择一次提示，选择完毕后统一公布。
+本面板展示红方自己的完整 B30；暗化部分表示尚未向对手公开，底下数据仅自己可见。
+暗化区域旁标注对应指令；顶部连线连接课题分、时间和统计表，三处由同一条指令一并公开。
+已向对手公开：P1、B7、B12；右侧记录对手获得的提示、对手的回答及正误。
+本回合尚未选择提示，可选：#phi grks hint P2 / hint B1 / hint 4。
+直方图尚未公开，可在直方图与上下界之间选择一种提示；双方选完后统一公布提示。
+退出匹配：#phi grks cancel</p>
+</div>
+
+
+<div class="createdbox">
+    <div class="phi-plugin">
+        <p>phi-plugin</p>
+    </div>
+    <div class="ver">
+        <p>preview</p>
+    </div>
+</div>
+
+
+    
+    
+    
+    <!-- <div class="copyright">undefined</div> -->
+    <!-- </div> -->
+    <!-- 曲目名称自适应name-box的宽度 -->
+
+    
+</body>
+
+</html>

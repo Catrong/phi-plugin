@@ -1,5 +1,4 @@
 import Config from '../components/Config.js';
-import send from '../model/render/send.js';
 import guessTips from './guessGame/guessTips.js';
 import guessLetter from './guessGame/guessLetter.js';
 import guessIll from './guessGame/guessIll.js';
@@ -7,6 +6,8 @@ import frib19 from './guessGame/frib19.js';
 import getBanGroup from '../model/user/getBanGroup.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
+import { sendMessage } from '../model/render/message.js';
+import { guessGameMessages } from '../model/render/messages.js';
 
 /**
  * 各游戏及其自身支持的参数，按游戏分组写在这里：
@@ -80,11 +81,11 @@ export class phiGames extends phiPluginBase {
         const matched = String(e.msg ?? '').match(new RegExp(`^[#/](${head})(\\s*)(?:${games})$`))
         const msg = matched?.slice(3).find(value => value !== undefined) ?? ''
         if (!e.group_id) {
-            send.send_with_At(e, '请在群聊中使用这个功能嗷！')
+            sendMessage(e, guessGameMessages.start.groupOnly, { at: true })
             return false
         }
         if (gameList[e.group_id]) {
-            send.send_with_At(e, `当前存在其他未结束的游戏嗷！如果想要开启新游戏请 /${Config.getUserCfg('config', 'cmdhead')} ans 结束进行的游戏嗷！`)
+            sendMessage(e, guessGameMessages.start.otherGameRunning(), { at: true })
             return false
         }
         if (!msg) {
@@ -97,7 +98,7 @@ export class phiGames extends phiPluginBase {
             case "提示猜曲": {
 
                 if (await getBanGroup.get(e, 'tipgame')) {
-                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                    sendMessage(e, guessGameMessages.start.banned, { at: true })
                     return false
                 }
 
@@ -107,7 +108,7 @@ export class phiGames extends phiPluginBase {
             case "猜曲绘": {
 
                 if (await getBanGroup.get(e, 'guessgame')) {
-                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                    sendMessage(e, guessGameMessages.start.banned, { at: true })
                     return false
                 }
 
@@ -119,7 +120,7 @@ export class phiGames extends phiPluginBase {
             case "fri": {
 
                 if (await getBanGroup.get(e, 'fribgame')) {
-                    send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                    sendMessage(e, guessGameMessages.start.banned, { at: true })
                     return false
                 }
 
@@ -129,7 +130,7 @@ export class phiGames extends phiPluginBase {
                 if (gameName.startsWith("ltr") || gameName.startsWith("letter") || gameName.startsWith("开字母")) {
 
                     if (await getBanGroup.get(e, 'ltrgame')) {
-                        send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                        sendMessage(e, guessGameMessages.start.banned, { at: true })
                         return false
                     }
 
@@ -148,7 +149,7 @@ export class phiGames extends phiPluginBase {
      */
     async reveal(e) {
         if (!e.isGroup || !e.group_id) {
-            send.send_with_At(e, '请在群聊中使用这个功能嗷！')
+            sendMessage(e, guessGameMessages.reveal.groupOnly, { at: true })
             return false
         }
         switch (gameList[e.group_id]?.gameType) {
@@ -245,7 +246,7 @@ export class phiGames extends phiPluginBase {
                 return await frib19.ans(e, gameList)
             }
             default: {
-                send.reply(e, `当前没有进行中的游戏嗷！`)
+                sendMessage(e, guessGameMessages.ans.noneRunning)
                 return false
             }
         }

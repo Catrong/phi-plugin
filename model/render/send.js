@@ -4,6 +4,8 @@ import Save from "../save/Save.js";
 import logger from "../../components/Logger.js";
 import { canUseApi } from '../user/apiPermission.js';
 import platform from "../../components/platform/index.js";
+import { sendMessages } from "./messages.js";
+import { sendMessage } from './message.js'
 
 class send {
 
@@ -55,7 +57,7 @@ class send {
 
         if (!sessionToken) {
             if (send) {
-                this.send_with_At(e, `请先绑定sessionToken哦！如果不知道自己的sessionToken可以尝试扫码绑定嗷！\n帮助：/${Config.getUserCfg('config', 'cmdhead')} tk help\n获取二维码：/${Config.getUserCfg('config', 'cmdhead')} bind qrcode\n普通绑定：/${Config.getUserCfg('config', 'cmdhead')} bind <sessionToken>`)
+                await sendMessage(e, sendMessages.needSessionToken(), { at: true })
             }
             return false
         }
@@ -65,7 +67,7 @@ class send {
 
         if (!user_save || (ver && (!user_save.Recordver || user_save.Recordver < ver))) {
             if (send) {
-                this.send_with_At(e, `请先更新数据哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
+                await sendMessage(e, sendMessages.needUpdate(), { at: true })
             }
             return false
         }
@@ -85,7 +87,7 @@ class send {
             await platform.sleep(500)
         } catch (err) {
             logger.error(err)
-            this.send_with_At(e, `转发失败QAQ！请尝试在私聊触发命令！`)
+            await sendMessage(e, sendMessages.forwardFailed, { at: true })
         }
     }
 

@@ -694,18 +694,18 @@ test('market page sends one safe Markdown action row for each displayed theme', 
     send.reply = async (_event, message) => { replies.push(message); return {} }
     try {
         const markdown = buildMarketQuickMarkdown(/** @type {any} */(themes), { page: 2, pageCount: 3 })
-        assert.match(markdown, /Ocean "Salt" \| <qqbot-cmd-input text="\/custom market detail ocean-salt" show="查看详情"/)
-        assert.match(markdown, /text="\/custom market ocean-salt" show="使用主题"/)
-        assert.match(markdown, /Restricted \\| Theme \| <qqbot-cmd-input text="\/custom market detail restricted-theme" show="查看详情"/)
-        assert.match(markdown, /text="\/custom market restricted-theme" show="使用主题"/)
-        assert.match(markdown, /text="\/custompr" show="上一页"/)
-        assert.match(markdown, /text="\/customnx" show="下一页"/)
+        assert.ok(markdown.includes('Ocean "Salt" | [查看详情](mqqapi://aio/inlinecmd?command=%2Fcustom%20market%20detail%20ocean-salt&enter=false&reply=false)'))
+        assert.ok(markdown.includes('[使用主题](mqqapi://aio/inlinecmd?command=%2Fcustom%20market%20ocean-salt&enter=false&reply=false)'))
+        assert.ok(markdown.includes('Restricted \\| Theme | [查看详情](mqqapi://aio/inlinecmd?command=%2Fcustom%20market%20detail%20restricted-theme&enter=false&reply=false)'))
+        assert.ok(markdown.includes('[使用主题](mqqapi://aio/inlinecmd?command=%2Fcustom%20market%20restricted-theme&enter=false&reply=false)'))
+        assert.ok(markdown.includes('[上一页](mqqapi://aio/inlinecmd?command=%2Fcustompr&enter=false&reply=false)'))
+        assert.ok(markdown.includes('[下一页](mqqapi://aio/inlinecmd?command=%2Fcustomnx&enter=false&reply=false)'))
         assert.equal((markdown.match(/^\|/gm) || []).length, themes.length + 4)
 
         await sendMarketQuickCommands(/** @type {any} */({}), /** @type {any} */(themes))
         assert.equal(replies.length, 1)
         assert.equal(replies[0]?.type, 'markdown')
-        assert.match(replies[0]?.text || '', /\/custom market ocean-salt/)
+        assert.ok((replies[0]?.content || '').includes('command=%2Fcustom%20market%20ocean-salt&enter=false&reply=false'))
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply

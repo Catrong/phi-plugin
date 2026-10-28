@@ -2,6 +2,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { otherDataPath } from '../../filesystem/path.js'
 import logger from '../../../components/Logger.js'
+import { parsePlayerProfile } from './profile.js'
+
+/** @import {gameScoreProfile} from './profile.js' */
 
 /**
  * 通用游戏积分持久化。
@@ -22,8 +25,16 @@ import logger from '../../../components/Logger.js'
  * @property {number} hintSum 已统计对局的提示数合计（准确率榜用）
  * @property {number} hintPlays 已统计提示数的对局数（准确率榜用）
  * @property {number} updatedAt 最近一次更新时间戳（毫秒）
+ * @property {gameScoreProfile} [profile] 最近结算时的游戏身份
+ * @property {gameScoreAnswerStats} [answers] 实际答题统计，旧数据无此字段
  *
  * @typedef {{version: number, games: Record<string, Record<string, Record<string, gameScoreRecord>>>}} gameScoreStore 存储结构
+ */
+
+/**
+ * @typedef {object} gameScoreAnswerStats
+ * @property {number} total 已结算回答轮次，含回答超时
+ * @property {number} correct 回答正确次数
  */
 
 const DEFAULT_FILE = path.join(otherDataPath, 'gameScore.json')
@@ -81,7 +92,11 @@ function normalizeRecord(raw) {
         const parsed = Number(value)
         return Number.isFinite(parsed) ? parsed : fallback
     }
+    const profile = parsePlayerProfile(raw?.profile)
+    const answers = parseAnswerStats(raw?.answers)
     return {
+        ...(profile ? { profile } : {}),
+        ...(answers ? { answers } : {}),
         score: round2(num(raw?.score)),
         plays: Math.max(0, Math.trunc(num(raw?.plays))),
         best: round2(num(raw?.best)),
@@ -92,6 +107,18 @@ function normalizeRecord(raw) {
         hintPlays: Math.max(0, Math.trunc(num(raw?.hintPlays))),
         updatedAt: Math.max(0, Math.trunc(num(raw?.updatedAt))),
     }
+}
+
+/** @param {unknown} value @returns {gameScoreAnswerStats | undefined} */
+function parseAnswerStats(value) {
+    if (value === undefined) return undefined
+    if (!value || typeof value !== 'object' || Array.isArray(value) || !('total' in value) || !('correct' in value)
+        || typeof value.total !== 'number' || typeof value.correct !== 'number'
+        || !Number.isSafeInteger(value.total) || !Number.isSafeInteger(value.correct)
+        || value.total < 0 || value.correct < 0 || value.correct > value.total) {
+        throw new Error('答题统计必须为非负安全整数，且正确次数不能超过回答轮次')
+    }
+    return { total: value.total, correct: value.correct }
 }
 
 /**
@@ -158,7 +185,7 @@ function schedulePersist() {
 export function getPlayer(gameId, mode, userId) {
     const store = loadStore()
     const record = takeRecord(store, gameId, mode, String(userId), false)
-    return record ? { ...record } : null
+    return record ? { ...record, ...(record.answers ? { answers: { ...record.answers } } : {}) } : null
 }
 
 /**
@@ -179,13 +206,21 @@ export function listPlayers(gameId, mode) {
  * @param {string} mode
  * @param {string} userId
  * @param {number} points 本局积分，0 表示未得分但仍计场次
- * @param {{result?: 'win' | 'loss' | 'draw', hints?: number}} [options] hints 为本局计入准确率统计的提示数
+ * @param {{result?: 'win' | 'loss' | 'draw', hints?: number, answers?: gameScoreAnswerStats, profile?: gameScoreProfile}} [options] hints 为本局计入准确率统计的提示数
  * @returns {Promise<gameScoreRecord>} 更新后的记录
  */
 export async function addScore(gameId, mode, userId, points, options = {}) {
+    const answers = parseAnswerStats(options.answers)
     const store = loadStore()
     const record = takeRecord(store, gameId, mode, String(userId), true)
     if (!record) throw new Error('无法创建积分记录')
+    if (answers) {
+        const total = (record.answers?.total ?? 0) + answers.total
+        const correct = (record.answers?.correct ?? 0) + answers.correct
+        if (!Number.isSafeInteger(total) || !Number.isSafeInteger(correct)) throw new Error('累计答题统计超出安全整数范围')
+        record.answers = { total, correct }
+    }
+    if (options.profile) record.profile = options.profile
     const gain = Number.isFinite(Number(points)) ? Math.max(0, round2(Number(points))) : 0
     record.score = round2(record.score + gain)
     record.plays += 1
@@ -201,7 +236,7 @@ export async function addScore(gameId, mode, userId, points, options = {}) {
     }
     record.updatedAt = Date.now()
     await schedulePersist()
-    return { ...record }
+    return { ...record, ...(record.answers ? { answers: { ...record.answers } } : {}) }
 }
 
 /**

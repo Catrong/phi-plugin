@@ -8,14 +8,9 @@
                 "desc": "您的通用查分ID，可以在任意连接查分平台的BOT处使用指令进行绑定"
             },
             {
-                "title": "API token",
-                "eg": "",
-                "desc": "您的API账户密码，设置后可以管理查分账户"
-            },
-            {
                 "title": "权限管理",
                 "eg": "",
-                "desc": "通过id绑定后仅能获取与查询，评论等功能需要绑定sessionToken或验证API token"
+                "desc": "通过id绑定后仅能获取与查询，评论等功能需要绑定sessionToken"
             }
         ]
     },
@@ -38,19 +33,9 @@
         "group": "管理",
         "list": [
             {
-                "title": "/setApiToken",
-                "eg": "/setApiToken <api Token>",
-                "desc": "设置初始API Token（API密码），用于管理账户<br>eg: /setApiToken xxxxxxxx"
-            },
-            {
                 "title": "/tkls",
                 "eg": "/tkls",
                 "desc": "获取当前绑定的平台列表"
-            },
-            {
-                "title": "/auth",
-                "eg": "/auth <api Token>",
-                "desc": "验证API Token 获取管理账户权限"
             },
             {
                 "title": "/clearApiData",
@@ -58,9 +43,9 @@
                 "desc": "永久注销 phi-api 账号并清除云端数据，需要 Phigros SSTK 权限及二次确认"
             },
             {
-                "title": "/noapi",
-                "eg": "/noapi",
-                "desc": "不参与数据统计，不影响正常使用API"
+                "title": "/apiset",
+                "eg": "/apiset",
+                "desc": "设置 API 相关配置"
             }
         ]
     },

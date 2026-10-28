@@ -1,3 +1,4 @@
+import { gameScoreMessages } from '../../render/messages.js'
 import {
     registerGame,
     getGame,
@@ -25,6 +26,25 @@ import {
     describeRow,
     RANK_MIN_PLAYS,
 } from './ranking.js'
+
+/**
+ * @typedef {object} gameScoreRankingPage
+ * @property {true} ok 查询成功
+ * @property {string} text 完整文字榜单
+ * @property {string} title 榜单标题
+ * @property {string} gameId 游戏标识
+ * @property {string} mode 游戏模式
+ * @property {import('./ranking.js').gameScoreRankKind} kind 实际榜单类型
+ * @property {import('./ranking.js').gameScoreRow[]} items 本页玩家
+ * @property {number} page 当前页
+ * @property {number} pages 总页数
+ * @property {number} total 上榜人数
+ * @property {number} pageSize 每页人数
+ * @property {number} minPlays 准确率与胜率的上榜门槛
+ * @property {string} meId 查询者标识
+ * @property {number | null} meRank 查询者排名
+ * @property {import('./ranking.js').gameScoreRow | null} me 查询者上榜记录
+ */
 
 /**
  * 通用游戏积分榜入口。
@@ -57,11 +77,11 @@ export const GRKS_GAME = registerGame({
  * @param {number} [options.minPlays] 上榜门槛覆盖值（测试与第三方调用使用）
  * @param {number} [options.minMatches] `minPlays` 的旧名称
  * @param {string} [options.meId]
- * @returns {{ok: boolean, text: string, gameId?: string, mode?: string, kind?: string}}
+ * @returns {gameScoreRankingPage | {ok: false, text: string}}
  */
 export function queryRanking(options) {
     const resolved = resolveGameMode(options.gameId, options.mode)
-    if (!resolved) return { ok: false, text: '暂无可查询的游戏积分榜' }
+    if (!resolved) return { ok: false, text: gameScoreMessages.noBoard }
     const { game, mode, modeMeta } = resolved
     const kind = options.kind === 'accuracy'
         ? 'accuracy'
@@ -73,12 +93,23 @@ export function queryRanking(options) {
         : kind === 'winRate'
             ? rankByWinRate(rows, threshold)
             : rankByScore(rows)
-    const title = `${game.name} · ${modeMeta.label} ${rankKindLabel(kind)}`
+    const title = gameScoreMessages.title(game.name, modeMeta.label, rankKindLabel(kind))
+    const pageSize = options.pageSize ?? 10
+    const paged = paginate(sorted, options.page, pageSize)
+    const meId = options.meId || ''
+    const meIndex = sorted.findIndex(row => row.userId === meId)
     return {
         ok: true,
+        title,
         gameId: game.id,
         mode,
         kind,
+        ...paged,
+        pageSize,
+        minPlays: threshold,
+        meId,
+        meRank: meIndex >= 0 ? meIndex + 1 : null,
+        me: meIndex >= 0 ? sorted[meIndex] : null,
         text: formatRanking({
             title,
             kind,
@@ -97,9 +128,9 @@ export function queryRanking(options) {
  * @returns {string}
  */
 function rankKindLabel(kind) {
-    if (kind === 'accuracy') return '准确率榜'
-    if (kind === 'winRate') return '胜率榜'
-    return '积分榜'
+    if (kind === 'accuracy') return gameScoreMessages.kind.accuracy
+    if (kind === 'winRate') return gameScoreMessages.kind.winRate
+    return gameScoreMessages.kind.score
 }
 
 export {

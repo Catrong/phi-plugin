@@ -40,6 +40,11 @@ function createKoishiSchema() {
             } else if (item.type === 'select') {
                 /** @type {import('koishi').Schema<any>[]} */
                 const options = (item.options || []).map(option => Schema.const(option.value).description(option.label))
+                // 兼容旧版布尔配置：true 表示使用 md，false 表示关闭。
+                if (item.key === 'LetterMarkdown') {
+                    options.push(Schema.const(true).hidden().description('使用 md（旧配置）'))
+                    options.push(Schema.const(false).hidden().description('关闭（旧配置）'))
+                }
                 if (item.allowCustom) options.push(Schema.string().description('自定义地址'))
                 schema = Schema.union(options)
             } else {

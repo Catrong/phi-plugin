@@ -1,462 +1,501 @@
 import Config from '../../components/Config.js'
-import send from '../../model/render/send.js'
-import picmodle from '../../model/render/picmodle.js'
 import logger from '../../components/Logger.js'
 import getBanGroup from '../../model/user/getBanGroup.js'
 import { UserCredentials } from '../../model/user/userCredentials.js'
+import LocalSaveRepository from '../../model/save/getSave.js'
 import { addScore } from '../../model/game/gameScore/index.js'
-import { loadPuzzle, pickEntry } from '../../model/game/grks/pool.js'
-import {
-    applySoloHint,
-    buildView,
-    createSoloState,
-    formatHintText,
-    formatNow,
-    intCfg,
-    maxSoloHints,
-} from '../../model/game/grks/hints.js'
-import {
-    DEFAULT_MAX_SCORE,
-    DEFAULT_TOLERANCE,
-    formatScoreValue,
-    isCorrect,
-    parseGuess,
-    scoreForHintCount,
-} from '../../model/game/grks/score.js'
-import { isUsableImage, pickImageOrText } from '../../model/game/grks/renderResult.js'
+import { playerProfileForUser } from '../../model/game/gameScore/profile.js'
+import { getPool } from '../../model/game/grks/pool.js'
+import { formatScoreValue, isCorrect, parseGuess, scoreForHintCount } from '../../model/game/grks/score.js'
 import { chatTargetFromEvent, chatTargetKey } from '../../components/platform/sendTarget.js'
+import { grksMessages, grksSoloMessages } from '../../model/render/messages.js'
+import fCompute from '../../model/game/fCompute.js'
+import { grksClass } from './grks.js'
+import { sendMessage } from '../../model/render/message.js'
 
 /** @import {botEvent} from '../../components/baseClass.js' */
-/** @import {grksHint, grksPuzzle, grksSoloState} from '../../model/game/grks/hints.js' */
+/** @import {grksAnswer, grksKnownData} from './grks.js' */
+/** @import {grksViewMessageOptions} from '../../model/render/messages.js' */
 
 /**
- * @typedef {object} grksSoloGame 单机对局
- * @property {string} sessionKey 会话键
- * @property {string} userId 发起者
- * @property {grksPuzzle} puzzle 谜题
- * @property {grksSoloState} state 提示状态
- * @property {botEvent} event 最近一次有效事件
- * @property {number} startedAt 开始时间
- * @property {boolean} settled 是否已结算（并发下防止重复结算）
- * @property {ReturnType<typeof setTimeout> | null} timer 超时定时器
- * @property {ReturnType<typeof setTimeout> | null} tipTimer 提示冷却定时器
+ * 猜 RKS 单机模式（房间制）。
+ *
+ * - 房间以会话为单位：私聊一个房间，群聊一个房间，群内多人共享同一道题与提示进度。
+ * - 开局自动给出首条提示，猜错后按提示冷却追加随机提示。
+ * - 回答冷却按玩家独立计算，提示冷却按房间独立计算，两者共用 `GrksSoloCd`（默认 5s）。
+ * - 首个猜中的玩家得分并结束本局，答案图公开全部成绩。
  */
-
-/** 进行中的单机对局，键为会话键。 @type {Map<string, grksSoloGame>} */
-const soloGames = new Map()
 
 /**
- * 读取猜 RKS 相关配置，非法值回退默认。
- * @returns {any}
+ * 单机配置。
+ * @typedef {object} grksSoloConfig
+ * @property {number} cd 回答（每人）与提示（房间）共用的冷却秒数
+ * @property {number} timeLength 待机超时秒数
+ * @property {number} maxScore 单局满分
+ * @property {number} minRecord 出题池要求的最少成绩条数
+ * @property {number} poolRefreshHours 出题池缓存有效期（小时）
+ * @property {number} tolerance 答案容差
  */
-export function readConfig() {
-    /** @param {string} key @param {any} fallback */
-    const cfg = (key, fallback) => {
-        try {
-            const value = Config.getUserCfg('config', /** @type {any} */ (key))
-            return value === undefined || value === null ? fallback : value
-        } catch {
-            return fallback
+
+/**
+ * 一个进行中的单机房间。
+ * @typedef {object} grksSoloRoom
+ * @property {string} key 会话键
+ * @property {grksClass} game 题目与提示状态
+ * @property {botEvent} event 最近一次有效事件（超时结算时使用）
+ * @property {number} startedAt 开局时间戳
+ * @property {Map<string, number>} answerAtByUser 每位玩家最近一次回答时间戳（回答 CD 按玩家独立）
+ * @property {number} lastHintAt 最近一次系统提示时间戳（提示 CD 按房间独立）
+ * @property {boolean} settled 是否已结算（防止并发重复结算）
+ * @property {ReturnType<typeof setTimeout> | null} timer 待机超时定时器
+ */
+
+export class grksSoloClass {
+
+    /** 单次抽题最多尝试的存档数量。 */
+    static #DRAW_ATTEMPT_LIMIT = 6
+
+    /** @type {Map<string, grksSoloRoom>} */
+    rooms = new Map()
+
+    /** @type {Set<string>} */
+    startingRooms = new Set()
+
+    /**
+     * 命令前缀。
+     * @returns {string}
+     */
+    cmdPrefix() {
+        const head = Config.getUserCfg('config', 'cmdhead')
+        return `#${String(head ?? '')} grks`
+    }
+
+    /**
+     * 读取配置，非法值回退默认。
+     * @returns {grksSoloConfig}
+     */
+    readConfig() {
+        return {
+            cd: this.#numberCfg('GrksSoloCd', 5),
+            timeLength: this.#numberCfg('GrksTimeLength', 600),
+            maxScore: this.#numberCfg('GrksMaxScore', 10),
+            minRecord: this.#numberCfg('GrksMinRecord', 27),
+            poolRefreshHours: this.#numberCfg('GrksPoolRefreshHours', 6),
+            tolerance: this.#numberCfg('GrksTolerance', 0.1),
         }
     }
-    return {
-        tolerance: Number(cfg('GrksTolerance', DEFAULT_TOLERANCE)) || DEFAULT_TOLERANCE,
-        minRecord: intCfg(cfg('GrksMinRecord', 27), 27, 1, 30),
-        maxScore: Number(cfg('GrksMaxScore', DEFAULT_MAX_SCORE)) || DEFAULT_MAX_SCORE,
-        positionHintAt: intCfg(cfg('GrksPositionHintAt', 5), 5, 1, 30),
-        hintRevealNum: intCfg(cfg('GrksHintRevealNum', 2), 2, 1, 10),
-        tipCd: intCfg(cfg('GrksTipCd', 3), 3, 0, 3600),
-        timeLength: intCfg(cfg('GrksTimeLength', 600), 600, 30, 86400),
-        wrongLimit: intCfg(cfg('GrksWrongLimit', 0), 0, 0, 99),
-        statsHint: String(cfg('GrksStatsHint', 'auto')),
-        poolRefreshHours: intCfg(cfg('GrksPoolRefreshHours', 6), 6, 0, 168),
-        matchWaitTimeout: intCfg(cfg('GrksMatchWaitTimeout', 300), 300, 10, 86400),
-        matchRksRange: Number(cfg('GrksMatchRksRange', 0.5)) || 0.5,
-        matchTurnTime: intCfg(cfg('GrksMatchTurnTime', 90), 90, 10, 3600),
-        matchMaxTimeoutTurn: intCfg(cfg('GrksMatchMaxTimeoutTurn', 3), 3, 1, 20),
-    }
-}
 
-/**
- * 会话键；私聊与群聊各自独立。
- * @param {botEvent} e
- * @returns {string}
- */
-export function sessionKeyOf(e) {
-    const key = chatTargetKey(chatTargetFromEvent(e))
-    return key || `user:${String(e?.user_id || '')}`
-}
-
-/**
- * 命令头前缀。
- * @returns {string}
- */
-export function cmdPrefix() {
-    return `#${Config.getUserCfg('config', 'cmdhead')} grks`
-}
-
-/**
- * 渲染并发送提示图；有图时只发图，渲染失败才用文字兜底。
- * @param {botEvent} e
- * @param {object} options
- * @param {grksPuzzle} options.puzzle
- * @param {grksSoloState} options.state
- * @param {grksHint} options.hint
- * @param {string} [options.playerLabel] 标题栏标识
- * @param {string} [options.footnote] 底部状态与指令说明
- * @returns {Promise<void>}
- */
-export async function sendHintImage(e, options) {
-    const view = buildView({
-        puzzle: options.puzzle,
-        revealedSlots: options.state.revealedSlots,
-        positionRevealed: options.state.positionRevealed,
-        mode: 'solo',
-        hint: options.hint,
-        /** 已公开的统计与课题在后续提示中继续显示 */
-        statsKind: options.state.statsKind,
-        challengeRevealed: options.state.challengeRevealed,
-        playerLabel: options.playerLabel || '？？？',
-        date: formatNow(),
-        footnote: options.footnote || '',
-    })
-    const text = formatHintText({
-        puzzle: options.puzzle,
-        hint: options.hint,
-        revealedSlots: options.state.revealedSlots,
-        positionRevealed: options.state.positionRevealed,
-    })
-    let image = null
-    try {
-        image = await picmodle.grks(e, view)
-    } catch (error) {
-        logger.warn('[phi-plugin][grks] 提示图渲染失败，改为文字')
-        logger.warn(error)
-    }
-    if (!isUsableImage(image)) {
-        warnRenderFailure(image, '提示图')
-        await send.send_with_At(e, text)
-        return
-    }
-    await send.send_with_At(e, image)
-}
-
-/**
- * 渲染失败时记录原因：用户只看到文字兜底，渲染器返回的错误文案只能留在日志里。
- * @param {any} image 渲染结果
- * @param {string} label 日志中的用途说明
- */
-export function warnRenderFailure(image, label) {
-    if (typeof image === 'string') logger.warn(`[phi-plugin][grks] ${label}渲染失败，改为文字兜底：${image}`)
-}
-
-/**
- * 公布答案。
- * @param {grksSoloGame} game
- * @param {any} cfg
- * @param {string} reason
- * @returns {Promise<void>}
- */
-async function revealAnswer(game, cfg, reason) {
-    const { puzzle, event } = game
-    const view = buildView({
-        puzzle,
-        revealedSlots: puzzle.slots.map(slot => slot.slot),
-        positionRevealed: true,
-        mode: 'solo',
-        hint: null,
-        /** 答案图沿用本局已公开的统计与课题，不额外泄露未公开的信息 */
-        statsKind: game.state.statsKind,
-        challengeRevealed: game.state.challengeRevealed,
-        playerLabel: '---',
-        date: formatNow(),
-        footnote: `${reason}\n答案：${puzzle.rks.toFixed(4)}　提示 ${game.state.hintCount} 条`,
-    })
-    let image = null
-    try {
-        image = await picmodle.grks(event, view)
-    } catch (error) {
-        logger.warn('[phi-plugin][grks] 答案图渲染失败')
-        logger.warn(error)
-    }
-    warnRenderFailure(image, '答案图')
-    const text = `${reason}\n正确答案：${puzzle.rks.toFixed(4)}（±${cfg.tolerance}）\n提示次数：${game.state.hintCount}`
-    await send.send_with_At(event, pickImageOrText(image, text))
-}
-
-/**
- * 清理对局。
- * @param {grksSoloGame} game
- * @returns {boolean} 是否确实清理了本次对局
- */
-export function disposeGame(game) {
-    if (game.settled) return false
-    game.settled = true
-    if (game.timer) clearTimeout(game.timer)
-    if (game.tipTimer) clearTimeout(game.tipTimer)
-    if (soloGames.get(game.sessionKey) === game) soloGames.delete(game.sessionKey)
-    return true
-}
-
-/**
- * 开始一局单机。
- * @param {botEvent} e
- * @returns {Promise<boolean>}
- */
-export async function start(e) {
-    if (await banCheck(e)) return false
-    const cfg = readConfig()
-    const key = sessionKeyOf(e)
-    if (soloGames.has(key)) {
-        await send.send_with_At(e, `当前会话已有进行中的猜 RKS，先发送 ${cmdPrefix()} ans 结束或继续猜测吧！`)
-        return false
+    /**
+     * 当前会话是否已有进行中的房间。
+     * @param {botEvent} e
+     * @returns {boolean}
+     */
+    hasRoom(e) {
+        const key = this.#sessionKey(e)
+        return this.rooms.has(key) || this.startingRooms.has(key)
     }
 
-    /** 出题池排除自己：未绑定时不排除 */
-    /** @type {string[]} */
-    let ownTokens = []
-    try {
-        const token = await UserCredentials.fromEvent(e).getSessionToken()
-        if (token) ownTokens = [String(token)]
-    } catch {
-        ownTokens = []
+    /**
+     * 清理指定会话的房间（不发送消息）。
+     * @param {string} key
+     * @returns {boolean}
+     */
+    clearRoom(key) {
+        const room = this.rooms.get(key)
+        return room ? this.dispose(room) : false
     }
 
-    const picked = await pickEntry({
-        excludeTokens: ownTokens,
-        allowFallback: true,
-        minRecord: cfg.minRecord,
-        refreshHours: cfg.poolRefreshHours,
-    })
-    if (!picked) {
-        await send.send_with_At(e, `暂无可出题的存档：需要本地存在有效成绩不少于 ${cfg.minRecord} 条的绑定存档`)
-        return false
+    /**
+     * 开始一局单机。
+     * @param {botEvent} e
+     * @param {() => boolean} [isMatching]
+     * @returns {Promise<boolean>}
+     */
+    async start(e, isMatching = () => false) {
+        if (await this.banCheck(e)) return false
+        if (isMatching()) {
+            await sendMessage(e, grksMessages.start.matching(this.cmdPrefix()), { at: true })
+            return false
+        }
+        const key = this.#sessionKey(e)
+        if (this.rooms.has(key) || this.startingRooms.has(key)) {
+            await sendMessage(e, grksSoloMessages.start.existing(this.cmdPrefix()), { at: true })
+            return false
+        }
+
+        const cfg = this.readConfig()
+        this.startingRooms.add(key)
+        let drawn;
+        try {
+            drawn = await this.drawAnswer(e, cfg)
+        } finally {
+            this.startingRooms.delete(key)
+        }
+        if (!drawn.answer) {
+            const message = drawn.candidateCount
+                ? grksSoloMessages.start.drawFailed()
+                : grksSoloMessages.start.noArchive(cfg.minRecord)
+            await sendMessage(e, message, { at: true })
+            return false
+        }
+
+        /** @type {grksSoloRoom} */
+        const room = {
+            key,
+            game: new grksClass(drawn.answer),
+            event: e,
+            startedAt: Date.now(),
+            answerAtByUser: new Map(),
+            lastHintAt: 0,
+            settled: false,
+            timer: null,
+        }
+        room.game.randomHint()
+        room.lastHintAt = room.game.lastTipTime
+        this.rooms.set(key, room)
+        this.armTimeout(room, cfg)
+        await sendMessage(e, await grksSoloMessages.start.opened(e, this.viewOptions(room), {
+            cd: cfg.cd, limit: grksClass.MAX_GUESSES,
+        }), { at: true })
+        return true
     }
 
-    const puzzle = await loadPuzzle(picked.entry.token, { e })
-    if (!puzzle || !puzzle.slots.length) {
-        await send.send_with_At(e, '出题失败：该存档的 B30 数据不完整，请稍后再试')
-        return false
+    /**
+     * 提交猜测。回答 CD 按玩家独立计算，提示 CD 按房间计算。
+     * @param {botEvent} e
+     * @param {string} rawValue
+     * @returns {Promise<boolean>}
+     */
+    async guess(e, rawValue) {
+        const room = this.rooms.get(this.#sessionKey(e))
+        if (!room) {
+            await sendMessage(e, grksSoloMessages.guess.notRunning(this.cmdPrefix()), { at: true })
+            return false
+        }
+
+        const cfg = this.readConfig()
+        const userId = this.#userId(e)
+        const now = Date.now()
+        const answerRemain = (room.answerAtByUser.get(userId) ?? 0) + cfg.cd * 1000 - now
+        if (answerRemain > 0) {
+            await sendMessage(e, grksSoloMessages.guess.cooldown(Math.ceil(answerRemain / 1000)), { at: true })
+            return false
+        }
+
+        const value = parseGuess(rawValue)
+        if (value === null) {
+            await sendMessage(e, grksSoloMessages.guess.invalidValue(this.cmdPrefix()), { at: true })
+            return false
+        }
+
+        const answer = room.game.answer
+        if (!answer) return false
+
+        room.event = e
+        room.answerAtByUser.set(userId, now)
+
+        if (isCorrect(value, answer.rks, cfg.tolerance)) {
+            room.game.recordGuess(value, 'correct')
+            await this.finish(room, e, cfg, 'correct', value)
+            return true
+        }
+
+        room.game.recordGuess(value, 'wrong')
+        if (room.game.guessHistory.length >= grksClass.MAX_GUESSES) {
+            await this.finish(room, e, cfg, 'failed')
+            return true
+        }
+        const hintRemain = room.lastHintAt + cfg.cd * 1000 - now
+        let hintGiven = false
+        let hintWait = 0
+        if (hintRemain > 0) {
+            hintWait = Math.ceil(hintRemain / 1000)
+        } else if (room.game.hasUnknownHint()) {
+            try {
+                room.game.randomHint()
+                room.lastHintAt = now
+                hintGiven = true
+            } catch (error) {
+                logger.warn('[phi-plugin][grks] 系统提示生成失败')
+                logger.warn(error)
+            }
+        }
+        this.armTimeout(room, cfg)
+
+        await sendMessage(e, await grksSoloMessages.guess.wrong(e, this.viewOptions(room), {
+            hintGiven, hintWait, cd: cfg.cd,
+        }), { at: true })
+        return true
     }
 
-    const { state, hint } = applySoloHint(createSoloState(picked.entry.token), puzzle, {
-        PositionHintAt: cfg.positionHintAt,
-        HintRevealNum: cfg.hintRevealNum,
-        StatsHint: cfg.statsHint,
-    })
-
-    /** @type {grksSoloGame} */
-    const game = {
-        sessionKey: key,
-        userId: String(e.user_id || ''),
-        puzzle,
-        state,
-        event: e,
-        startedAt: Date.now(),
-        settled: false,
-        timer: null,
-        tipTimer: null,
+    /**
+     * 放弃并公布答案。
+     * @param {botEvent} e
+     * @returns {Promise<boolean>}
+     */
+    async ans(e) {
+        const room = this.rooms.get(this.#sessionKey(e))
+        if (!room) {
+            await sendMessage(e, grksSoloMessages.guess.notRunning(this.cmdPrefix()), { at: true })
+            return false
+        }
+        await this.finish(room, e, this.readConfig(), 'abandoned')
+        return true
     }
-    soloGames.set(key, game)
 
-    await sendHintImage(e, {
-        puzzle,
-        state,
-        hint,
-        footnote: [
-            '第 1 条提示',
-            picked.fallback ? '题库中只有你自己的存档，本局以你自己的 B30 出题' : '',
-            `猜测：${cmdPrefix()} <数值>　提示：${cmdPrefix()} tip　放弃：${cmdPrefix()} ans`,
-            `答案容差 ±${cfg.tolerance}，待机 ${cfg.timeLength}s`,
-        ].filter(Boolean).join('\n'),
-    })
-    resetTimeout(game, cfg)
-    return true
-}
-
-/**
- * 重置待机超时。
- * @param {grksSoloGame} game
- * @param {any} cfg
- */
-function resetTimeout(game, cfg) {
-    if (game.timer) clearTimeout(game.timer)
-    game.timer = setTimeout(() => {
-        void timeoutGame(game, cfg)
-    }, Math.max(30, cfg.timeLength) * 1000)
-    game.timer.unref?.()
-}
-
-/**
- * 超时结算。
- * @param {grksSoloGame} game
- * @param {any} cfg
- */
-async function timeoutGame(game, cfg) {
-    if (game.settled) return
-    if (!disposeGame(game)) return
-    await revealAnswer(game, cfg, `超过 ${cfg.timeLength}s 没有猜测，本局结束`)
-    await recordPlay(game, 0, maxSoloHints(game.puzzle, cfg))
-}
-
-/**
- * 记录一局（猜对才加分）。
- * @param {grksSoloGame} game
- * @param {number} points
- * @param {number} hints 本局计入准确率榜的提示数：猜对为本局实际提示数，未猜出按满提示
- */
-async function recordPlay(game, points, hints) {
-    if (!game.userId) return
-    try {
-        await addScore('grks', 'normal', game.userId, points, { hints })
-    } catch (error) {
-        logger.warn('[phi-plugin][grks] 记录单机积分失败')
-        logger.warn(error)
-    }
-}
-
-/**
- * 请求下一条提示。
- * @param {botEvent} e
- * @returns {Promise<boolean>}
- */
-export async function tip(e) {
-    const game = soloGames.get(sessionKeyOf(e))
-    if (!game) {
-        await send.send_with_At(e, `当前没有进行中的猜 RKS，发送 ${cmdPrefix()} 开始一局吧！`)
-        return false
-    }
-    const cfg = readConfig()
-    if (Date.now() - game.state.lastHintAt < cfg.tipCd * 1000) {
-        await send.send_with_At(e, `提示冷却中，请 ${Math.ceil((cfg.tipCd * 1000 - (Date.now() - game.state.lastHintAt)) / 1000)}s 后再试`)
-        return false
-    }
-    const result = applySoloHint(game.state, game.puzzle, {
-        PositionHintAt: cfg.positionHintAt,
-        HintRevealNum: cfg.hintRevealNum,
-        StatsHint: cfg.statsHint,
-    })
-    game.state = result.state
-    game.event = e
-    resetTimeout(game, cfg)
-
-    if (result.hint.kind === 'exhausted') {
-        await sendHintImage(e, {
-            puzzle: game.puzzle,
-            state: game.state,
-            hint: result.hint,
-            footnote: `提示已全部公开\n猜测：${cmdPrefix()} <数值>　放弃：${cmdPrefix()} ans`,
+    /**
+     * 从出题池抽一道题，排除发起者自己的存档；没有其他存档时回退到全部。
+     * @param {botEvent} e
+     * @param {grksSoloConfig} cfg
+     * @returns {Promise<{answer: grksAnswer | null, candidateCount: number}>}
+     */
+    async drawAnswer(e, cfg) {
+        const ownToken = await this.ownToken(e)
+        const pool = await getPool({
+            minRecord: cfg.minRecord,
+            refreshHours: cfg.poolRefreshHours,
         })
+        const entries = pool.entries.filter(entry => entry.token !== ownToken)
+        const candidates = entries.length ? entries : pool.entries
+        const shuffled = fCompute.randArray(candidates)
+        for (const entry of shuffled.slice(0, grksSoloClass.#DRAW_ATTEMPT_LIMIT)) {
+            const answer = await this.loadAnswer(entry.token)
+            if (answer) return { answer, candidateCount: candidates.length }
+        }
+        return { answer: null, candidateCount: candidates.length }
+    }
+
+    /**
+     * 发起者自己的 sessionToken；未绑定时为空字符串。
+     * @param {botEvent} e
+     * @returns {Promise<string>}
+     */
+    async ownToken(e) {
+        try {
+            const token = await UserCredentials.fromEvent(e).getSessionToken()
+            return token ? String(token) : ''
+        } catch {
+            return ''
+        }
+    }
+
+    /**
+     * 把一份本地存档转换为 `grksClass` 需要的答案结构。
+     * 成绩取 P3（满分最高三条）+ B27（全部成绩最高二十七条）。
+     * @param {string} token sessionToken
+     * @returns {Promise<grksAnswer | null>}
+     */
+    async loadAnswer(token) {
+        const save = await LocalSaveRepository.getSaveBySessionToken(/** @type {phigrosToken} */ (token))
+        if (!save) return null
+        return await this.buildAnswer(save)
+    }
+
+    /**
+     * @param {import('../../model/save/Save.js').default} save
+     * @returns {Promise<grksAnswer | null>}
+     */
+    async buildAnswer(save) {
+        const all = save.getRecord().filter(record => record.rks > 0)
+        if (all.length < 27) return null
+        const phi = all.filter(record => record.score >= 1000000).slice(0, 3)
+        if (phi.length < 3) return null
+        const record = [...phi, ...all.slice(0, 27)]
+
+        const total = record.reduce((sum, item) => sum + item.rks, 0)
+        const rks = Math.round(total / record.length * 10000) / 10000
+
+        const statRows = await save.getStats()
+        /** @type {[number, number, number][]} */
+        const stats = []
+        for (const row of statRows) {
+            stats.push([row.cleared, row.fc, row.phi])
+        }
+
+        const challenge = Number.isFinite(save.saveInfo.summary.challengeModeRank)
+            ? save.saveInfo.summary.challengeModeRank
+            : 0
+        const modified = save.saveInfo.modifiedAt.iso
+        const updateAt = modified instanceof Date && Number.isFinite(modified.getTime())
+            ? modified.getTime()
+            : Date.now()
+
+        return { rks, record, stats, challenge, updateAt }
+    }
+
+    /**
+     * 群禁用检查。
+     * @param {botEvent} e
+     * @returns {Promise<boolean>} 是否被禁用
+     */
+    async banCheck(e) {
+        if (await getBanGroup.get(e, 'grksgame')) {
+            await sendMessage(e, grksSoloMessages.start.banned(), { at: true })
+            return true
+        }
+        return false
+    }
+
+    /**
+     * 重置待机超时。
+     * @param {grksSoloRoom} room
+     * @param {grksSoloConfig} cfg
+     */
+    armTimeout(room, cfg) {
+        if (room.timer) clearTimeout(room.timer)
+        room.timer = setTimeout(() => {
+            void this.timeout(room, cfg)
+        }, Math.max(30, cfg.timeLength) * 1000)
+        room.timer.unref?.()
+    }
+
+    /**
+     * 超时结算。
+     * @param {grksSoloRoom} room
+     * @param {grksSoloConfig} cfg
+     * @returns {Promise<void>}
+     */
+    async timeout(room, cfg) {
+        if (room.settled) return
+        await this.finish(room, room.event, cfg, 'timeout')
+    }
+
+    /**
+     * 结算并公布答案。
+     * @param {grksSoloRoom} room
+     * @param {botEvent} e
+     * @param {grksSoloConfig} cfg
+     * @param {'correct' | 'timeout' | 'abandoned' | 'failed'} reason
+     * @param {number | null} [guess] 猜中的数值
+     * @returns {Promise<void>}
+     */
+    async finish(room, e, cfg, reason, guess = null) {
+        if (!this.dispose(room)) return
+        const answer = room.game.answer
+        if (!answer) return
+
+        const hintCount = room.game.hintCnt
+        const rks = answer.rks.toFixed(4)
+        if (reason === 'timeout' || reason === 'abandoned') {
+            room.game.recordGuess(null, reason)
+        }
+
+        if (reason === 'correct') {
+            const points = scoreForHintCount(hintCount, cfg.maxScore)
+            const message = await grksSoloMessages.reveal.correct(e, this.viewOptions(room, true), {
+                rks,
+                guess: String(guess ?? ''),
+                tolerance: cfg.tolerance,
+                points: formatScoreValue(points),
+                hints: hintCount,
+            })
+            await sendMessage(e, message, { at: true })
+            await this.recordPlay(e, points, hintCount)
+            return
+        }
+
+        const options = this.viewOptions(room, true)
+        const message = reason === 'failed'
+            ? await grksSoloMessages.reveal.failed(e, options, grksClass.MAX_GUESSES)
+            : reason === 'timeout'
+                ? await grksSoloMessages.reveal.timeout(e, options, cfg.timeLength)
+                : await grksSoloMessages.reveal.abandoned(e, options)
+        await sendMessage(e, message, { at: true })
+    }
+
+    /** @param {grksSoloRoom} room @param {boolean} [revealAll] @returns {grksViewMessageOptions} */
+    viewOptions(room, revealAll = false) {
+        const known = room.game.getKnownData()
+        const answer = room.game.answer
+        /** @type {grksKnownData} */
+        const data = revealAll && answer
+            ? {
+                records: answer.record,
+                info: known.info ?? {
+                    stats: answer.stats,
+                    challenge: answer.challenge,
+                    updateAt: answer.updateAt,
+                },
+                sheet: known.sheet,
+            }
+            : known
+        const answerRks = revealAll && answer ? answer.rks : null
+        return {
+            data,
+            orderKnown: room.game.knownOrder,
+            hintCount: room.game.hintCnt,
+            prefix: this.cmdPrefix(),
+            answerRks,
+            revealAll,
+            history: room.game.history.map(entry => ({ ...entry })),
+        }
+    }
+
+    /**
+     * 记录猜中者的积分。
+     * @param {botEvent} e
+     * @param {number} points
+     * @param {number} hints
+     * @returns {Promise<void>}
+     */
+    async recordPlay(e, points, hints) {
+        const userId = String(e.user_id ?? '')
+        if (!userId) return
+        try {
+            const profile = await playerProfileForUser(userId)
+            await addScore('grks', 'normal', userId, points, { hints, profile })
+        } catch (error) {
+            logger.warn('[phi-plugin][grks] 记录单机积分失败')
+            logger.warn(error)
+        }
+    }
+
+    /**
+     * 清理房间。
+     * @param {grksSoloRoom} room
+     * @returns {boolean} 是否确实清理了本次房间
+     */
+    dispose(room) {
+        if (room.settled) return false
+        room.settled = true
+        if (room.timer) clearTimeout(room.timer)
+        if (this.rooms.get(room.key) === room) this.rooms.delete(room.key)
         return true
     }
 
-    await sendHintImage(e, {
-        puzzle: game.puzzle,
-        state: game.state,
-        hint: result.hint,
-        footnote: [
-            `第 ${game.state.hintCount} 条提示`,
-            game.state.positionRevealed ? '位置已公开' : `第 ${cfg.positionHintAt} 条提示后公开位置`,
-            `已使用提示 ${game.state.hintCount} 条，猜对可得 ${formatScoreValue(scoreForHintCount(game.state.hintCount, cfg.maxScore))} 分`,
-            `猜测：${cmdPrefix()} <数值>　提示：${cmdPrefix()} tip　放弃：${cmdPrefix()} ans`,
-        ].join('\n'),
-    })
-    return true
-}
-
-/**
- * 提交猜测。
- * @param {botEvent} e
- * @param {string} rawValue
- * @returns {Promise<boolean>}
- */
-export async function guess(e, rawValue) {
-    const game = soloGames.get(sessionKeyOf(e))
-    if (!game) {
-        await send.send_with_At(e, `当前没有进行中的猜 RKS，发送 ${cmdPrefix()} 开始一局吧！`)
-        return false
-    }
-    if (String(e.user_id || '') !== game.userId) {
-        await send.send_with_At(e, '这局游戏由发起者猜测，其他人可以发送 ' + cmdPrefix() + ' 开启新的一局')
-        return false
-    }
-    const cfg = readConfig()
-    const guessValue = parseGuess(rawValue)
-    if (guessValue === null) {
-        await send.send_with_At(e, `请输入 0~99 的数值，例如：${cmdPrefix()} 15.25`)
-        return false
-    }
-    game.event = e
-    if (isCorrect(guessValue, game.puzzle.rks, cfg.tolerance)) {
-        if (!disposeGame(game)) return false
-        const points = scoreForHintCount(game.state.hintCount, cfg.maxScore)
-        await send.send_with_At(e, `🎉 猜对了！答案 ${game.puzzle.rks.toFixed(4)}，你猜 ${guessValue}（容差 ±${cfg.tolerance}）\n本局得分：${formatScoreValue(points)} 分（提示 ${game.state.hintCount} 条）`)
-        await revealAnswer(game, cfg, '本局已结算')
-        await recordPlay(game, points, game.state.hintCount)
-        return true
+    /**
+     * 会话键；私聊与群聊各自独立。
+     * @param {botEvent} e
+     * @returns {string}
+     */
+    #sessionKey(e) {
+        const key = chatTargetKey(chatTargetFromEvent(e))
+        return key || `user:${this.#userId(e)}`
     }
 
-    game.state = { ...game.state, wrongCount: game.state.wrongCount + 1, lastGuessAt: Date.now() }
-    resetTimeout(game, cfg)
-    const direction = guessValue > game.puzzle.rks ? '偏大' : '偏小'
-    if (cfg.wrongLimit > 0 && game.state.wrongCount >= cfg.wrongLimit) {
-        if (!disposeGame(game)) return false
-        await revealAnswer(game, cfg, `已经猜错 ${game.state.wrongCount} 次，本局结束`)
-        await recordPlay(game, 0, maxSoloHints(game.puzzle, cfg))
-        return true
+    /**
+     * 事件发送者 ID。
+     * @param {botEvent} e
+     * @returns {string}
+     */
+    #userId(e) {
+        return String(e.user_id ?? '')
     }
-    const remain = cfg.wrongLimit > 0 ? `\n还可猜错 ${Math.max(0, cfg.wrongLimit - game.state.wrongCount)} 次` : ''
-    await send.send_with_At(e, `不是这个值（${direction}）${remain}\n继续猜测：${cmdPrefix()} <数值>　提示：${cmdPrefix()} tip`)
-    return true
-}
 
-/**
- * 放弃并公布答案。
- * @param {botEvent} e
- * @returns {Promise<boolean>}
- */
-export async function ans(e) {
-    const game = soloGames.get(sessionKeyOf(e))
-    if (!game) {
-        await send.send_with_At(e, '当前没有进行中的猜 RKS')
-        return false
+    /**
+     * 读取数值配置，非法值回退默认。
+     * @param {configName} key
+     * @param {number} fallback
+     * @returns {number}
+     */
+    #numberCfg(key, fallback) {
+        /** @type {unknown} */
+        const value = Config.getUserCfg('config', key)
+        if (typeof value === 'number') return Number.isFinite(value) ? value : fallback
+        if (typeof value === 'string' && value.trim() !== '') {
+            const parsed = Number(value)
+            return Number.isFinite(parsed) ? parsed : fallback
+        }
+        return fallback
     }
-    const cfg = readConfig()
-    if (!disposeGame(game)) return false
-    await revealAnswer(game, cfg, '本局已放弃')
-    await recordPlay(game, 0, maxSoloHints(game.puzzle, cfg))
-    return true
-}
-
-/**
- * 群禁用检查。
- * @param {botEvent} e
- * @returns {Promise<boolean>} 是否被禁用
- */
-async function banCheck(e) {
-    if (await getBanGroup.get(e, 'grksgame')) {
-        await send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
-        return true
-    }
-    return false
-}
-
-/**
- * 该会话是否已有单机对局（供匹配模式提示冲突）。
- * @param {botEvent} e
- * @returns {boolean}
- */
-export function hasSoloGame(e) {
-    return soloGames.has(sessionKeyOf(e))
-}
-
-/**
- * 清理指定会话的对局（不发送消息）。
- * @param {string} sessionKey
- * @returns {boolean}
- */
-export function clearSoloGame(sessionKey) {
-    const game = soloGames.get(sessionKey)
-    if (!game) return false
-    return disposeGame(game)
 }

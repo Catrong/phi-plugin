@@ -32,13 +32,20 @@ export interface PhiTextSegment {
     text: string
 }
 
-export type PhiSegment = PhiImageSegment | PhiAtSegment | PhiMarkdownSegment | PhiTextSegment
+export interface PhiButtonSegment {
+    __phiSegment: true
+    type: 'button'
+    rows: any[][]
+}
+
+export type PhiSegment = PhiImageSegment | PhiAtSegment | PhiMarkdownSegment | PhiTextSegment | PhiButtonSegment
 
 export interface PlatformSegment {
     image(data: unknown): PlatformMessageOutput | PhiImageSegment
     at(userId: PlatformUserId): PlatformMessageOutput | PhiAtSegment
     markdown(text: string): PlatformMessageOutput | PhiMarkdownSegment
     text(text: string): PlatformMessageOutput | PhiTextSegment
+    button(...rows: any[][]): PlatformMessageOutput | PhiButtonSegment
     [key: string]: unknown
 }
 
@@ -272,6 +279,7 @@ export interface PlatformAdapter {
     /** 宿主当前启用的渲染器；仅用于自动模式，不推测未安装的服务。 */
     getActiveRendererName?(): string
     hasPuppeteerService?(): boolean
+    hasButtonSegment?(): boolean
     getPackageVersion(): string
     getBotNickname(e?: PlatformEvent): string
     getAdapterName(e?: PlatformEvent): string

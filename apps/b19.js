@@ -22,15 +22,9 @@ import {
     buildRksHistogram,
     getB30AnalysisRecords,
 } from '../model/game/b30Analysis.js';
-import {
-    sendQuickCommands,
-    scoreQuickCommands,
-    b19AnalysisQuickCommands,
-    singleScoreQuickCommands,
-    suggestQuickCommands,
-    chapterQuickCommands,
-    achievementQuickCommands,
-} from '../model/game/markdown.js'
+import { sendMessage } from '../model/render/message.js'
+import { b19Messages } from '../model/render/messages.js'
+import dateValue from '../model/save/dateVaule.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -98,7 +92,7 @@ export class phib19 extends phiPluginBase {
         const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'b19')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
         let save;
@@ -114,7 +108,7 @@ export class phib19 extends phiPluginBase {
                 save = await credentials.getCloudSaveByApiId(otherId);
                 if (!save) throw new Error('API未返回存档')
             } catch (err) {
-                send.send_with_At(e, `获取用户 ${otherId} 的存档失败！请确认该用户公开了存档且ID正确喵！\n错误信息：${err}`);
+                sendMessage(e, b19Messages.b19.otherSaveFailed(otherId, err), { at: true });
                 return true;
             }
         } else {
@@ -126,10 +120,6 @@ export class phib19 extends phiPluginBase {
         }
 
         let err = save.checkNoInfo()
-
-        if (err.length) {
-            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
-        }
 
 
         let numMsg = e.msg.match(/^.*?(b|rks|pgr)[0-9]*/i)?.[0]
@@ -157,7 +147,7 @@ export class phib19 extends phiPluginBase {
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
         if (!Config.getUserCfg('config', 'isGuild')) {
-            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            sendMessage(e, b19Messages.generating, { recallMsg: 5 })
         }
 
 
@@ -189,13 +179,14 @@ export class phib19 extends phiPluginBase {
             }
         }
 
+        // 处理版本与rks变化
         const spInfo = [];
 
-        /**
-         * 回复的消息
-         * @type {any[]}
-         */
-        const res = [];
+        let changed = {
+            comRKS: save_b19.com_rks,
+            saveRKS: save.saveInfo.summary.rankingScore,
+            changedKind: '',
+        }
 
         const saveVer = save.saveInfo.summary.gameVersion
         if (saveVer &&
@@ -205,24 +196,22 @@ export class phib19 extends phiPluginBase {
                 spInfo.push(`${getInfo.versionInfoByCode[`${saveVer}`]?.version_label || saveVer} Update to ${Version.phigros}`)
                 spInfo.push(`Real RKS: ${save_b19.com_rks.toFixed(4)}`)
                 if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
-                    res.push(`请注意，当前版本可能更改了定数\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+                    changed.changedKind = 'lower';
                 }
             } else {
                 spInfo.push(`${getInfo.versionInfoByCode[`${saveVer}`]?.version_label || saveVer} later than ${Version.phigros}`)
-
                 if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
-                    res.push(`请注意，您的版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+                    changed.changedKind = 'higher';
                 }
             }
 
         } else {
             if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
-                res.push(`请注意，您的版本可能更改了定数或计算规则\n计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
+                changed.changedKind = 'higher';
             }
         }
 
 
-        // let dan = await get.getDan(e.user_id)
         let money = save.gameProgress?.money || [0, 0, 0, 0, 0]
         let gameuser = {
             avatar: getInfo.idgetavatar(save.gameuser.avatar),
@@ -233,9 +222,7 @@ export class phib19 extends phiPluginBase {
             selfIntro: save.gameuser.selfIntro,
             backgroundUrl: await fCompute.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
-            // dan: dan,
         }
-        // console.info(save_b19.b19_list)
         let data = {
             BSIllPath: getInfo.getill(/**@type {idString} */('BANGINGSTRIKE.DewPleiades.0'), 'common'),
             phi: save_b19.phi,
@@ -245,7 +232,6 @@ export class phib19 extends phiPluginBase {
             Date: fCompute.formatDate(save.saveInfo.summary.updatedAt),
             ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
             ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            // dan: await get.getDan(e.user_id),
             background: bksong || getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))], 'blur'),
             theme: plugin_data?.theme || 'star',
             gameuser,
@@ -255,9 +241,7 @@ export class phib19 extends phiPluginBase {
             b30Analysis,
         }
         const img = await picmodle.b19(e, data)
-        res.unshift(img);
-        send.send_with_At(e, res)
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        sendMessage(e, b19Messages.b19.finalMessage(img, err, changed), { at: true })
     }
 
     /**
@@ -268,7 +252,7 @@ export class phib19 extends phiPluginBase {
     async p30(e) {
 
         if (await getBanGroup.get(e, 'p30')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
 
@@ -276,13 +260,6 @@ export class phib19 extends phiPluginBase {
         if (!save) {
             return true
         }
-
-        let err = save.checkNoInfo()
-
-        if (err.length) {
-            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
-        }
-
 
         let match = e.msg.match(/^.*?(p|x|fc)\s*([0-9]+)/i)
         let nnum = Number(match?.[2] || 33)
@@ -309,7 +286,7 @@ export class phib19 extends phiPluginBase {
 
 
         if (!Config.getUserCfg('config', 'isGuild'))
-            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            sendMessage(e, b19Messages.generating, { recallMsg: 5 })
 
         let save_b19;
         let spInfo = [];
@@ -375,11 +352,7 @@ export class phib19 extends phiPluginBase {
             stats,
             spInfo,
         }
-
-        let res = [await picmodle.b19(e, data)]
-        res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        send.send_with_At(e, res)
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        sendMessage(e, b19Messages.p30.finalMessage(await picmodle.b19(e, data), save_b19.com_rks, save.saveInfo.summary.rankingScore), { at: true })
     }
 
     /**
@@ -390,7 +363,7 @@ export class phib19 extends phiPluginBase {
     async arcgrosB19(e) {
 
         if (await getBanGroup.get(e, 'arcgrosB19')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
 
@@ -402,10 +375,6 @@ export class phib19 extends phiPluginBase {
 
         let err = save.checkNoInfo()
 
-        if (err.length) {
-            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
-        }
-
 
         let numMsg = e.msg.match(/(b|B)[0-9]*/g)
         let nnum = numMsg ? Number(numMsg[0].replace(/(b|B)/g, '')) - 1 : 32
@@ -415,6 +384,38 @@ export class phib19 extends phiPluginBase {
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
         let save_b19 = await save.getB19(e, nnum)
+
+        // 处理版本与rks变化
+        const spInfo = [];
+
+        let changed = {
+            comRKS: save_b19.com_rks,
+            saveRKS: save.saveInfo.summary.rankingScore,
+            changedKind: '',
+        }
+
+        const saveVer = save.saveInfo.summary.gameVersion
+        if (saveVer &&
+            !isNaN(saveVer) &&
+            saveVer != Number(Version.phigrosVerNum)) {
+            if (saveVer < Number(Version.phigrosVerNum)) {
+                spInfo.push(`${getInfo.versionInfoByCode[`${saveVer}`]?.version_label || saveVer} Update to ${Version.phigros}`)
+                spInfo.push(`Real RKS: ${save_b19.com_rks.toFixed(4)}`)
+                if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                    changed.changedKind = 'lower';
+                }
+            } else {
+                spInfo.push(`${getInfo.versionInfoByCode[`${saveVer}`]?.version_label || saveVer} later than ${Version.phigros}`)
+                if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                    changed.changedKind = 'higher';
+                }
+            }
+
+        } else {
+            if (Math.abs(save_b19.com_rks - save.saveInfo.summary.rankingScore) > 1e-4) {
+                changed.changedKind = 'higher';
+            }
+        }
 
         let money = save.gameProgress.money
         let gameuser = {
@@ -445,8 +446,7 @@ export class phib19 extends phiPluginBase {
             nnum: nnum,
         }
 
-        send.send_with_At(e, await picmodle.arcgros_b19(e, data))
-        await sendQuickCommands(e, b19AnalysisQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩分析快捷操作')
+        sendMessage(e, b19Messages.b19.finalMessage(await picmodle.arcgros_b19(e, data), err, changed), { at: true })
     }
 
     /**
@@ -456,7 +456,7 @@ export class phib19 extends phiPluginBase {
      */
     async lmtAcc(e) {
         if (await getBanGroup.get(e, 'lmtAcc')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
 
@@ -465,17 +465,11 @@ export class phib19 extends phiPluginBase {
             return false
         }
 
-        let err = save.checkNoInfo()
-
-        if (err.length) {
-            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
-        }
-
 
         let acc = Number(e.msg.replace(/^.*lmtacc\s*/g, ''))
 
         if (!acc || acc < 0 || acc > 100) {
-            send.send_with_At(e, `我听不懂 ${e.msg.replace(/^.*lmtacc\s*/g, '')} 是多少喵！请指定一个0-100的数字喵！\n格式：/${Config.getUserCfg('config', 'cmdhead')} lmtAcc <0-100>`)
+            sendMessage(e, b19Messages.lmtAcc.invalidAcc(e.msg.replace(/^.*lmtacc\s*/g, '')), { at: true })
             return false
         }
 
@@ -486,7 +480,7 @@ export class phib19 extends phiPluginBase {
 
 
         if (!Config.getUserCfg('config', 'isGuild'))
-            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            sendMessage(e, b19Messages.generating, { recallMsg: 5 })
 
         let save_b19 = await save.getBestWithLimit(nnum, [{ type: 'acc', value: [acc, 100] }])
         let stats = await save.getStats()
@@ -523,10 +517,7 @@ export class phib19 extends phiPluginBase {
             spInfo: [`ACC is limited to ${acc}%`],
         }
 
-        let res = [await picmodle.b19(e, data)]
-        res.push(`计算rks: ${save_b19.com_rks}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        send.send_with_At(e, res)
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        sendMessage(e, b19Messages.p30.finalMessage(await picmodle.b19(e, data), save_b19.com_rks, save.saveInfo.summary.rankingScore), { at: true })
 
     }
 
@@ -537,7 +528,7 @@ export class phib19 extends phiPluginBase {
      */
     async overLevelB30(e) {
         if (await getBanGroup.get(e, 'b19')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
 
@@ -546,64 +537,59 @@ export class phib19 extends phiPluginBase {
             return false
         }
 
-        let err = save.checkNoInfo()
-
-        if (err.length) {
-            send.send_with_At(e, "以下曲目无信息，可能导致b19显示错误\n" + err.join('\n'))
-        }
-
         /**是否计入Flick */
-        let withFlick = /(?:越级\s*(?:b\s*)?[0-9]*\s*)(flick|fl|fk|划键|划)\s*$/i.test(e.msg)
+        let withFlick = /(?:越级?\s*(?:b\s*)?[0-9]*\s*)(flick|fl|fk|划键|划)\s*$/i.test(e.msg)
 
         /**显示数量，默认30 */
-        let nnum = Number(e.msg.match(/越级\s*(?:b\s*)?([0-9]*)/i)?.[1])
+        let nnum = Number(e.msg.match(/越级?\s*(?:b\s*)?([0-9]*)/i)?.[1])
         if (!nnum) {
             nnum = 30
         }
         nnum = Math.min(nnum, Config.getUserCfg('config', 'B19MaxNum'))
 
         /**预先合并曲目信息，避免逐条成绩查找时重复展开 */
-        const allCharts = { ...getInfo.ori_info, ...getInfo.sp_info }
+        const allCharts = getInfo.ori_info
 
         /**越级判定：acc低于 98.5+1.5×(Dr[+Fk])/总物量 */
-        let overLevelLimit = [{
-            type: 'custom',
-            value: (record) => {
-                const chart = allCharts[record.id]?.chart?.[record.rank]
-                record.overLevelLine = fCompute.getOverLevelLine(chart?.drag, chart?.flick, chart?.combo, withFlick)
-                return record.acc < record.overLevelLine
+        let overLevelLimit = (/**@type {{id: idString, rank: allLevelKind, acc: number}}*/record) => {
+            const chart = allCharts[record.id]?.chart?.[record.rank]
+            if (!chart?.drag || !chart?.flick || !chart?.combo) {
+                return false
             }
-        }]
+            const overLevelLine = fCompute.getOverLevelLine(chart.drag, chart.flick, chart.combo, withFlick)
+            return record.acc < overLevelLine
+        }
 
-        let save_b19 = await save.getBestWithLimit(nnum, overLevelLimit, false)
+        let save_b19 = await save.getBestWithLimit(nnum, [{ type: 'custom', value: overLevelLimit }], false)
 
         if (!save_b19.b19_list.length) {
-            send.send_with_At(e, withFlick
-                ? '没有找到越级的成绩喵！(计入Flick时所有成绩的acc均不低于越级线)'
-                : '没有找到越级的成绩喵！(不计Flick时所有成绩的acc均不低于越级线)')
+            sendMessage(e, b19Messages.overLevelB30.noOverLevel(withFlick), { at: true })
             return true
         }
 
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
         if (!Config.getUserCfg('config', 'isGuild'))
-            send.reply(e, "正在生成图片，请稍等一下哦！\n//·/w\\·\\\\", false, { recallMsg: 5 })
+            sendMessage(e, b19Messages.generating, { recallMsg: 5 })
 
         let stats = await save.getStats()
 
         /**越级线显示与配色，分段同推分建议 */
         for (let x of save_b19.b19_list) {
-            if (x.overLevelLine == undefined) continue
-            x.suggest = x.overLevelLine.toFixed(2) + '%'
-            if (x.overLevelLine < 98.5) {
+            const chart = allCharts[x.id]?.chart?.[x.rank]
+            if (!chart?.drag || !chart?.flick || !chart?.combo) continue
+            const overLevelLine = fCompute.getOverLevelLine(chart.drag, chart.flick, chart.combo, withFlick)
+
+            x.suggest = overLevelLine.toFixed(2) + '%'
+            if (overLevelLine < 98.5) {
                 x.suggestType = 0
-            } else if (x.overLevelLine < 99) {
+            } else if (overLevelLine < 99) {
                 x.suggestType = 1
-            } else if (x.overLevelLine < 99.5) {
+            } else if (overLevelLine < 99.5) {
                 x.suggestType = 2
-            } else if (x.overLevelLine < 99.7) {
+            } else if (overLevelLine < 99.7) {
                 x.suggestType = 3
-            } else if (x.overLevelLine < 99.85) {
+            } else if (overLevelLine < 99.85) {
                 x.suggestType = 4
             } else {
                 x.suggestType = 5
@@ -637,11 +623,12 @@ export class phib19 extends phiPluginBase {
             spInfo: [`越级线=98.5+1.5×${withFlick ? '(Dr+Fk)' : 'Dr'}占比`],
         }
 
-        let res = [await picmodle.b19(e, data)]
         let sum_rks = save_b19.b19_list.reduce((sum, x) => sum + Number(x?.rks || 0), 0)
-        res.push(`越级成绩均rks: ${(sum_rks / save_b19.b19_list.length).toFixed(4)}\n存档rks: ${save.saveInfo.summary.rankingScore}`)
-        send.send_with_At(e, res)
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
+        sendMessage(e, b19Messages.overLevelB30.finalMessage(
+            await picmodle.b19(e, data),
+            (sum_rks / save_b19.b19_list.length).toFixed(4),
+            save.saveInfo.summary.rankingScore
+        ), { at: true })
 
     }
 
@@ -653,7 +640,7 @@ export class phib19 extends phiPluginBase {
     async bestn(e) {
 
         if (await getBanGroup.get(e, 'bestn')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
         }
 
         const save = await send.getsave_result(e)
@@ -665,7 +652,7 @@ export class phib19 extends phiPluginBase {
         let numMsg = e.msg.replace(/[#/](.*?)(best)(\s*)/g, '')
 
         if (Number(numMsg) % 1 != 0) {
-            await send.reply(e, `${numMsg}不是个数字吧！`, true)
+            await sendMessage(e, b19Messages.bestn.notNumber(numMsg), { quote: true })
             return true
         }
 
@@ -704,13 +691,11 @@ export class phib19 extends phiPluginBase {
 
         if (e.isGroup) {
             /**群聊只发送10条 */
-            send.send_with_At(e, Remsg[0])
-            send.send_with_At(e, `消息过长，自动转为私聊发送喵～`)
+            await sendMessage(e, b19Messages.bestn.finalMessage({ text: [Remsg[0], b19Messages.bestn.tooLong.text].join('') }), { at: true })
             send.pick_send(e, await common.makeForwardMsg(e, Remsg, undefined))
         } else {
-            send.reply(e, await common.makeForwardMsg(e, Remsg, undefined))
+            await sendMessage(e, b19Messages.bestn.finalMessage({ text: await common.makeForwardMsg(e, Remsg, undefined) }))
         }
-        await sendQuickCommands(e, scoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成绩页快捷操作')
     }
 
 
@@ -721,7 +706,7 @@ export class phib19 extends phiPluginBase {
     async singlescore(e) {
 
         if (await getBanGroup.get(e, 'singlescore')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
 
@@ -750,12 +735,12 @@ export class phib19 extends phiPluginBase {
         }
 
         if (!song) {
-            send.send_with_At(e, `请指定曲名哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} score <曲名>`)
+            sendMessage(e, b19Messages.singlescore.specifySong(), { at: true })
             return true
         }
         const songIds = getInfo.fuzzysongsnick(song)
         if (!songIds[0]) {
-            send.send_with_At(e, `未找到 ${song} 的有关信息哦！`)
+            sendMessage(e, b19Messages.singlescore.songNotFound(song), { at: true })
             return true
         }
         if (songIds.length > 1) {
@@ -783,7 +768,7 @@ export class phib19 extends phiPluginBase {
     async suggest(e) {
 
         if (await getBanGroup.get(e, 'suggest')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
 
@@ -937,7 +922,7 @@ export class phib19 extends phiPluginBase {
         }
 
         if (data.length > Config.getUserCfg('config', 'listScoreMaxNum')) {
-            send.send_with_At(e, `谱面数量过多(${data.length})大于设置的最大值(${Config.getUserCfg('config', 'listScoreMaxNum')})，只显示前${Config.getUserCfg('config', 'listScoreMaxNum')}条！`)
+            sendMessage(e, b19Messages.suggest.tooMany(data.length, Config.getUserCfg('config', 'listScoreMaxNum')), { at: true })
         }
 
         data.splice(Config.getUserCfg('config', 'listScoreMaxNum'))
@@ -952,20 +937,21 @@ export class phib19 extends phiPluginBase {
 
         let plugin_data = await getNotes.getNotesData(e.user_id)
 
-        send.send_with_At(e, await picmodle.common(e, 'suggest', {
-            head_title: "推分建议",
-            song: data,
-            phisong: phidata,
-            background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
-            theme: plugin_data?.theme || 'star',
-            PlayerId: save.saveInfo.PlayerId,
-            Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
-            Date: save.saveInfo.summary.updatedAt,
-            ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
-            ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
-            // dan: await get.getDan(e.user_id)
-        }))
-        await sendQuickCommands(e, suggestQuickCommands(Config.getUserCfg('config', 'cmdhead')), '推分建议快捷操作')
+        sendMessage(e, b19Messages.suggest.finalMessage({
+            image: await picmodle.common(e, 'suggest', {
+                head_title: "推分建议",
+                song: data,
+                phisong: phidata,
+                background: getInfo.getill(getInfo.illlist[fCompute.randInt(0, getInfo.illlist.length - 1)]),
+                theme: plugin_data?.theme || 'star',
+                PlayerId: save.saveInfo.PlayerId,
+                Rks: Number(save.saveInfo.summary.rankingScore).toFixed(4),
+                Date: save.saveInfo.summary.updatedAt,
+                ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+                ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+                // dan: await get.getDan(e.user_id)
+            })
+        }), { at: true })
 
     }
 
@@ -977,12 +963,12 @@ export class phib19 extends phiPluginBase {
     async chap(e) {
 
         if (await getBanGroup.get(e, 'chap')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
         let msg = e.msg.replace(/^[#/].*chap\s*/, '').toUpperCase()
         if (msg == 'HELP' || !msg) {
-            send.send_with_At(e, getPic.getimg('chapHelp'))
+            sendMessage(e, b19Messages.chap.helpMessage(getPic.getimg('chapHelp')), { at: true })
             return true
         }
 
@@ -994,7 +980,7 @@ export class phib19 extends phiPluginBase {
         let chap = fCompute.fuzzySearch(msg, getInfo.chapNick)[0]?.value
 
         if (!chap && msg != 'ALL') {
-            send.send_with_At(e, `未找到${msg}章节QAQ！可以使用 /${Config.getUserCfg('config', 'cmdhead')} chap help 来查询支持的名称嗷！`)
+            sendMessage(e, b19Messages.chap.notFound(msg), { at: true })
             return false
         }
 
@@ -1086,16 +1072,17 @@ export class phib19 extends phiPluginBase {
             }
         }
 
-        send.send_with_At(e, await picmodle.chap(e, {
-            player: { id: save.saveInfo.PlayerId },
-            count,
-            song_box,
-            progress,
-            num: rank.EZ,
-            chapName: msg == 'ALL' ? 'AllSong' : chap,
-            chapIll: getInfo.getChapIll(msg == 'ALL' ? 'AllSong' : chap),
-        }))
-        await sendQuickCommands(e, chapterQuickCommands(Config.getUserCfg('config', 'cmdhead')), '章节成绩快捷操作')
+        sendMessage(e, b19Messages.chap.finalMessage({
+            image: await picmodle.chap(e, {
+                player: { id: save.saveInfo.PlayerId },
+                count,
+                song_box,
+                progress,
+                num: rank.EZ,
+                chapName: msg == 'ALL' ? 'AllSong' : chap,
+                chapIll: getInfo.getChapIll(msg == 'ALL' ? 'AllSong' : chap),
+            })
+        }), { at: true })
 
     }
 
@@ -1105,7 +1092,7 @@ export class phib19 extends phiPluginBase {
      */
     async achievement(e) {
         if (await getBanGroup.get(e, 'achievement')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, b19Messages.banned, { at: true })
             return false
         }
 
@@ -1118,12 +1105,12 @@ export class phib19 extends phiPluginBase {
         let dif = Number(difMatch?.[0])
 
         if (!difMatch) {
-            send.send_with_At(e, `请输入定数嗷！\n/格式：${Config.getUserCfg('config', 'cmdhead')} table <定数>`, true)
+            sendMessage(e, b19Messages.achievement.specifyDifficulty(), { at: true, quote: true })
             return false
         }
 
         if (dif > getInfo.MAX_DIFFICULTY) {
-            send.send_with_At(e, `定数已经超过最高的定数${getInfo.MAX_DIFFICULTY}了QAQ！`)
+            sendMessage(e, b19Messages.achievement.difficultyTooHigh(getInfo.MAX_DIFFICULTY), { at: true })
             return false
         }
 
@@ -1134,14 +1121,14 @@ export class phib19 extends phiPluginBase {
         if (matchVersion) {
             if (matchVersion.includes('.')) {
                 if (!getInfo.versionInfoByLabel[matchVersion]) {
-                    send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                    sendMessage(e, b19Messages.achievement.versionNotFound(matchVersion), { at: true })
                     return true
                 }
                 matchVerCode = getInfo.versionInfoByLabel[matchVersion].version_code
             } else {
                 let verCodeNum = Number(matchVersion)
                 if (!getInfo.versionInfoByCode[verCodeNum]) {
-                    send.send_with_At(e, `未找到版本 ${matchVersion} 的相关信息QAQ！`)
+                    sendMessage(e, b19Messages.achievement.versionNotFound(matchVersion), { at: true })
                     return true
                 }
                 matchVerCode = verCodeNum
@@ -1153,7 +1140,7 @@ export class phib19 extends phiPluginBase {
         const versionInfo = getInfo.versionInfoByCode[matchVerCode]
         if (!versionInfo) {
             console.error(`[phi-plugin] 版本信息获取失败，versionCode: ${matchVerCode}`);
-            send.send_with_At(e, `发生未知错误QAQ！请回报管理员！`)
+            sendMessage(e, b19Messages.achievement.unknownError, { at: true })
             return true
         }
 
@@ -1198,8 +1185,7 @@ export class phib19 extends phiPluginBase {
 
         }
 
-        send.send_with_At(e, await picmodle.common(e, 'table', data));
-        await sendQuickCommands(e, achievementQuickCommands(Config.getUserCfg('config', 'cmdhead')), '成就页快捷操作')
+        sendMessage(e, b19Messages.achievement.finalMessage({ image: await picmodle.common(e, 'table', data) }), { at: true })
     }
 }
 
@@ -1222,7 +1208,7 @@ async function getScore(songId, e, args = {}) {
 
     const info = getInfo.info(songId, true)
     if (!info) {
-        send.send_with_At(e, `未找到${songId}的相关信息QAQ！`)
+        sendMessage(e, b19Messages.getScore.infoNotFound(songId), { at: true })
         return true
     }
 
@@ -1232,7 +1218,7 @@ async function getScore(songId, e, args = {}) {
     let songRecord = Record[songId]
 
     if (!songRecord) {
-        send.send_with_At(e, `我不知道你关于[${info.song}]的成绩哦！可以试试更新成绩哦！\n格式：/${Config.getUserCfg('config', 'cmdhead')} update`)
+        sendMessage(e, b19Messages.getScore.noRecord(info.song), { at: true })
         return true
     }
 
@@ -1240,11 +1226,11 @@ async function getScore(songId, e, args = {}) {
 
     /**获取历史成绩 */
     /**
-     * @type {songRecordHistory | undefined}
+     * @type {Partial<Record<allLevelKind, dateValue<scoreDetailV4> | dateValueJSON<scoreDetailV4>>> | undefined}
      */
     let HistoryData = undefined;
     /**历史成绩的展示时区：优先 API 记录方时区，其次本地历史来源时区，最后运行环境 */
-    let historyTimezone = undefined;
+    let historyTimezone = '';
     /**读取本地历史，并顺带补齐展示时区 */
     const readLocalSongHistory = async () => {
         const localHistory = await credentials.getLocalHistory()
@@ -1271,6 +1257,7 @@ async function getScore(songId, e, args = {}) {
 
     if (HistoryData) {
         for (let i of allLevel) {
+            if (!HistoryData[i]) continue
             /**v4 历史：dateValue 实例或 dateValueJSON */
             for (const item of ScoreHistory.toScoreDetails(HistoryData[i])) {
                 const tem = ScoreHistory.extend(songId, i, item)
@@ -1326,19 +1313,7 @@ async function getScore(songId, e, args = {}) {
             const suggest = save.getSuggest(songId, i, undefined, chartInfo.difficulty);
             if (suggest != -1) {
                 data.scoreData[Level[i]].suggest = suggest.toFixed(4) + '%'
-                if (suggest < 98.5) {
-                    data.scoreData[Level[i]].suggestType = 0
-                } else if (suggest < 99) {
-                    data.scoreData[Level[i]].suggestType = 1
-                } else if (suggest < 99.5) {
-                    data.scoreData[Level[i]].suggestType = 2
-                } else if (suggest < 99.7) {
-                    data.scoreData[Level[i]].suggestType = 3
-                } else if (suggest < 99.85) {
-                    data.scoreData[Level[i]].suggestType = 4
-                } else {
-                    data.scoreData[Level[i]].suggestType = 5
-                }
+                data.scoreData[Level[i]].suggestType = suggestType(suggest)
             } else {
                 data.scoreData[Level[i]].suggest = "无法推分"
             }
@@ -1422,8 +1397,7 @@ async function getScore(songId, e, args = {}) {
     }
 
 
-    send.send_with_At(e, await picmodle.score(e, data, 1))
-    await sendQuickCommands(e, singleScoreQuickCommands(Config.getUserCfg('config', 'cmdhead')), '单曲成绩快捷操作')
+    sendMessage(e, b19Messages.getScore.finalMessage({ image: await picmodle.score(e, data, 1) }), { at: true })
 
 }
 

@@ -8,6 +8,8 @@ import fs from 'node:fs';
 import phiPluginBase from "../components/baseClass.js";
 import logger from "../components/Logger.js";
 import platform from "../components/platform/index.js";
+import { sendMessage } from "../model/render/message.js";
+import { updateMessages, updateWords } from "../model/render/messages.js";
 
 const require = createRequire(import.meta.url);
 const { exec, execSync } = require("child_process");
@@ -50,13 +52,13 @@ export class phiupdate extends phiPluginBase {
      */
     async update() {
         if (!this.e.isMaster) {
-            this.reply("无权限");
+            sendMessage(this.e, updateMessages.update.noPermission)
             return false;
         }
 
         /** 检查是否正在更新中 */
         if (uping) {
-            await this.reply("已有命令更新中..请勿重复操作");
+            await sendMessage(this.e, updateMessages.update.updating)
             return;
         }
 
@@ -71,7 +73,7 @@ export class phiupdate extends phiPluginBase {
         try {
             ifrestart = await this.runUpdate(isForce);
         } catch (err) {
-            this.reply("phi-plugin更新失败QAQ!" + err)
+            sendMessage(this.e, updateMessages.update.failed(err))
             console.error(err)
         }
 
@@ -79,7 +81,7 @@ export class phiupdate extends phiPluginBase {
             try {
                 await this.ill_update()
             } catch (err) {
-                this.reply("曲绘文件更新失败QAQ!" + err)
+                sendMessage(this.e, updateMessages.update.illFailed(err))
                 console.error(err)
             }
         }
@@ -88,11 +90,11 @@ export class phiupdate extends phiPluginBase {
         /** 是否需要重启 */
         if (this.isUp) {
             if (ifrestart) {
-                await this.reply("更新完毕，正在重启云崽以应用更新")
+                await sendMessage(this.e, updateMessages.update.restarting)
                 setTimeout(() => this.restart(), 2000)
             } else {
                 getInfo.init()
-                await this.reply("更新完毕，本次更新不需要进行重启")
+                await sendMessage(this.e, updateMessages.update.updatedNoRestart)
             }
         }
     }
@@ -116,9 +118,9 @@ export class phiupdate extends phiPluginBase {
                 // 即使 .gitignore 被用户修改，也不能让强制更新删除已安装主题。
                 `git -C ${repoPath} clean -fd -e resources/themes/`
             ].join(" && ");
-            this.reply("开始执行强制更新操作，请稍等");
+            sendMessage(this.e, updateMessages.update.forceStarting);
         } else {
-            this.reply("开始执行更新操作，请稍等");
+            sendMessage(this.e, updateMessages.update.starting);
         }
         /** 获取上次提交的commitId，用于获取日志时判断新增的更新日志 */
         this.oldCommitId = await this.getcommitId("phi-plugin");
@@ -138,9 +140,9 @@ export class phiupdate extends phiPluginBase {
         var ifrestart = false
 
         if (/(Already up[ -]to[ -]date|已经是最新的)/.test(ret.stdout)) {
-            await this.reply(`phi-plugin已经是最新版本\n最后更新时间：${time}`);
+            await sendMessage(this.e, updateMessages.update.upToDate(time));
         } else {
-            await this.reply(`phi-plugin\n最后更新时间：${time}`);
+            await sendMessage(this.e, updateMessages.update.current(time));
             this.isUp = true;
             /** 获取phi-plugin的更新日志 */
             ifrestart = await this.getLog("phi-plugin");
@@ -193,13 +195,13 @@ export class phiupdate extends phiPluginBase {
         let line = log.length;
 
         if (line <= 0) return false;
-        log.unshift(`phi-plugin更新日志，共${line}条`);
+        log.unshift(updateWords.log.header(line));
 
         if (!Config.getUserCfg('config', 'isGuild')) {
-            log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin");
-            await this.reply(await common.makeForwardMsg(this.e, log, `phi-plugin更新日志，共${line}条`))
+            log.push(updateWords.log.moreInfo);
+            await sendMessage(this.e, updateMessages.log.forward(await common.makeForwardMsg(this.e, log, updateWords.log.header(line))))
         } else {
-            await this.reply(log.join("\n"))
+            await sendMessage(this.e, updateMessages.log.text(log))
         }
 
         return ifrestart;
@@ -234,7 +236,7 @@ export class phiupdate extends phiPluginBase {
         } catch (error) {
             // @ts-ignore
             logger.error(error.toString());
-            time = "获取时间失败";
+            time = updateWords.time.failed;
         }
         return time;
     }
@@ -246,13 +248,13 @@ export class phiupdate extends phiPluginBase {
      */
     async ill_update() {
         if (!this.e.isMaster) {
-            this.reply("无权限");
+            sendMessage(this.e, updateMessages.ill_update.noPermission)
             return false;
         }
 
         /** 检查是否正在更新中 */
         if (uping) {
-            await this.reply("已有命令更新中..请勿重复操作");
+            await sendMessage(this.e, updateMessages.ill_update.updating)
             return;
         }
 
@@ -273,14 +275,14 @@ export class phiupdate extends phiPluginBase {
 
         /** 是否成功 */
         if (this.isUp) {
-            await this.reply("更新完毕")
+            await sendMessage(this.e, updateMessages.ill_update.finished)
         }
     }
 
     async ill_clone() {
         let command = `git clone ${this.getDownIllUrl()} ${shellPath(originalIllPath)} --depth=1`;
 
-        this.reply("开始下载曲绘文件");
+        sendMessage(this.e, updateMessages.ill.startingClone)
 
         uping = true;
         let ret = await this.execSync(command);
@@ -295,13 +297,13 @@ export class phiupdate extends phiPluginBase {
         let time = await this.ill_getTime();
 
         if (/(Already up[ -]to[ -]date|已经是最新的)/.test(ret.stdout)) {
-            await this.reply(`曲绘文件已经是最新版本\n最后更新时间：${time}`);
+            await sendMessage(this.e, updateMessages.ill.upToDate(time))
         } else {
-            await this.reply(`phi-plugin-ill\n最后更新时间：${time}`);
+            await sendMessage(this.e, updateMessages.ill.current(time));
             this.isUp = true;
             /** 获取phi-plugin-ill的更新日志 */
             let log = await this.ill_getLog();
-            await this.reply(log);
+            await sendMessage(this.e, updateMessages.ill.log(log))
         }
 
         logger.mark(`${this.e.logFnc} 最后更新时间：${time}`);
@@ -340,7 +342,7 @@ export class phiupdate extends phiPluginBase {
             `git -C ${repoPath} reflog expire --expire=now --expire-unreachable=now --all`,
             `git -C ${repoPath} repack -a -d -q`
         ].join(" && ");
-        this.reply("开始更新曲绘文件，请稍等");
+        sendMessage(this.e, updateMessages.ill.startingUpdate)
 
         /** 获取上次提交的commitId，用于获取日志时判断新增的更新日志 */
         this.oldCommitId = await this.ill_getcommitId();
@@ -358,13 +360,13 @@ export class phiupdate extends phiPluginBase {
         let time = await this.ill_getTime();
 
         if (/(Already up[ -]to[ -]date|已经是最新的)/.test(ret.stdout)) {
-            await this.reply(`曲绘文件已经是最新版本\n最后更新时间：${time}`);
+            await sendMessage(this.e, updateMessages.ill.upToDate(time))
         } else {
-            await this.reply(`phi-plugin-ill\n最后更新时间：${time}`);
+            await sendMessage(this.e, updateMessages.ill.current(time));
             this.isUp = true;
             /** 获取phi-plugin-ill的更新日志 */
             let log = await this.ill_getLog();
-            await this.reply(log);
+            await sendMessage(this.e, updateMessages.ill.log(log))
         }
 
         logger.mark(`${this.e.logFnc} 最后更新时间：${time}`);
@@ -424,7 +426,7 @@ export class phiupdate extends phiPluginBase {
             log.push(str[1]);
         }
         if (!Config.getUserCfg('config', 'isGuild')) {
-            log.push("更多详细信息，请前往github查看\nhttps://github.com/Catrong/phi-plugin-ill");
+            log.push(updateWords.log.moreInfo);
         }
 
         let line = log.length;
@@ -432,7 +434,7 @@ export class phiupdate extends phiPluginBase {
         if (line <= 1) return "";
 
 
-        log = await common.makeForwardMsg(this.e, log, `phi-plugin-ill更新日志，共${line - 1}条`)
+        log = await common.makeForwardMsg(this.e, log, updateWords.log.illHeader(line - 1))
         return log;
     }
 
@@ -463,7 +465,7 @@ export class phiupdate extends phiPluginBase {
         } catch (error) {
             // @ts-ignore
             logger.error(error.toString());
-            time = "获取时间失败";
+            time = updateWords.time.failed;
         }
         return time;
     }
@@ -475,46 +477,36 @@ export class phiupdate extends phiPluginBase {
      * @returns
      */
     async gitErr(err, stdout) {
-        let msg = "更新失败QAQ！";
         let errMsg = err.toString();
         stdout = stdout.toString();
 
         if (errMsg.includes("Timed out")) {
             // @ts-ignore
             let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
-            await this.reply(msg + `\n连接超时：${remote}`);
+            await sendMessage(this.e, updateMessages.gitErr.timeout(remote));
             return;
         }
 
         if (/Failed to connect|unable to access/g.test(errMsg)) {
             // @ts-ignore
             let remote = errMsg.match(/'(.+?)'/g)[0].replace(/'/g, "");
-            await this.reply(msg + `\n连接失败：${remote}`);
+            await sendMessage(this.e, updateMessages.gitErr.connectFailed(remote));
             return;
         }
 
         if (errMsg.includes("be overwritten by merge")) {
-            await this.reply(
-                msg +
-                `存在冲突：\n${errMsg}\n` +
-                "请解决冲突后再更新，或者执行#phi强制更新，放弃本地修改"
-            );
+            await sendMessage(this.e, updateMessages.gitErr.conflict(errMsg));
             return;
         }
 
         if (stdout.includes("CONFLICT")) {
             // @ts-ignore
-            await this.reply([
-                msg + "存在冲突\n",
-                errMsg,
-                stdout,
-                "\n请解决冲突后再更新，或者执行#phi强制更新，放弃本地修改",
-            ]);
+            await sendMessage(this.e, updateMessages.gitErr.conflictWithOutput(errMsg, stdout));
             return;
         }
 
         // @ts-ignore
-        await this.reply([errMsg, stdout]);
+        await sendMessage(this.e, updateMessages.gitErr.output(errMsg, stdout));
     }
 
     /**
@@ -537,7 +529,7 @@ export class phiupdate extends phiPluginBase {
     async checkGit() {
         let ret = await execSync("git --version", { encoding: "utf-8" });
         if (!ret || !ret.includes("git version")) {
-            await this.reply("请先安装git");
+            await sendMessage(this.e, updateMessages.checkGit.gitMissing)
             return false;
         }
         return true;

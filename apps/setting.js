@@ -8,9 +8,9 @@ import themeManager from '../model/theme/manager.js'
 import themeUseService, { marketThemeErrorMessage } from '../model/theme/useService.js'
 import { getThemeInstallRequesterId } from '../model/theme/installGuard.js'
 import getBanGroup from '../model/user/getBanGroup.js'
-import send from '../model/render/send.js'
 import { isApiCapabilityEnabled } from '../model/user/apiPermission.js'
-import { sendQuickCommands, configQuickCommands, sendQuickCommandSections, userSettingQuickCommandSections } from '../model/game/markdown.js'
+import { buildQuickCommandSectionsMarkdown, sendMessage } from '../model/render/message.js'
+import { menus, settingMessages, marketMessages } from '../model/render/messages.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -185,12 +185,11 @@ export class phihelp extends phiPluginBase {
         }
         // console.info(data)
         let plugin_data = await getNotes.getNotesData(e.user_id)
-        send.reply(e, await picmodle.common(e, 'setting', {
-            data,
-            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
-            theme: plugin_data?.theme || 'star'
-        }))
-        await sendQuickCommands(e, configQuickCommands(Config.getUserCfg('config', 'cmdhead')), '全局设置快捷操作')
+        sendMessage(e, settingMessages.set.finalMessage({ image: await picmodle.common(e, 'setting', {
+                data,
+                background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
+                theme: plugin_data?.theme || 'star'
+            }) }))
     }
 
     /**
@@ -199,7 +198,7 @@ export class phihelp extends phiPluginBase {
      */
     async showUserSetting(e) {
         if (await getBanGroup.get(e, 'help')) {
-            send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+            sendMessage(e, settingMessages.showUserSetting.banned, { at: true })
             return false
         }
         let pluginData = await getNotes.getNotesData(e.user_id)
@@ -307,7 +306,7 @@ export class phihelp extends phiPluginBase {
             const args = normalized.split(' ')
 
             if (args.length < 2) {
-                send.send_with_At(e, `参数不足，请提供“设置项 + 目标值”。\n${usage}`)
+                sendMessage(e, settingMessages.showUserSetting.missingArgs(usage), { at: true })
                 return true
             }
 
@@ -325,12 +324,12 @@ export class phihelp extends phiPluginBase {
             }
 
             if (!settingKey) {
-                send.send_with_At(e, `未知设置项：${args[0]}\n支持：主题 / 均值范围 / 配色 / API开关 / B30分析\n${usage}`)
+                sendMessage(e, settingMessages.showUserSetting.unknownSetting(args[0], usage), { at: true })
                 return true
             }
 
             if (settingKey === 'theme' && await getBanGroup.get(e, 'theme')) {
-                send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+                sendMessage(e, settingMessages.showUserSetting.themeBanned, { at: true })
                 return false
             }
 
@@ -360,10 +359,10 @@ export class phihelp extends phiPluginBase {
                 && (!optionMap[canonicalValue] || selectedTheme?.marketInstalled)
             if (shouldPrepareTheme) {
                 if (!selectedTheme && !isApiCapabilityEnabled('customTheme')) {
-                    send.send_with_At(e, '该主题尚未下载，自动下载依赖联合查分 API，请联系 Bot 主人启用。')
+                    sendMessage(e, settingMessages.showUserSetting.themeApiDisabled, { at: true })
                     return true
                 }
-                send.send_with_At(e, `正在校验并准备主题 ${canonicalValue}，请稍候。`)
+                sendMessage(e, settingMessages.showUserSetting.preparingTheme(canonicalValue), { at: true })
                 try {
                     await themeUseService.use(canonicalValue, { requesterId: getThemeInstallRequesterId(e) })
                     // 下载期间用户数据可能已由其他命令更新；保存前重新读取，避免覆盖并发修改。
@@ -371,14 +370,14 @@ export class phihelp extends phiPluginBase {
                     optionMap = /** @type {Record<string, { title: string, description: string }>} */ (getOptions(settingKey))
                     optionKeys = Object.keys(optionMap)
                 } catch (error) {
-                    send.send_with_At(e, marketThemeErrorMessage(error))
+                    sendMessage(e, marketMessages.themeError(marketThemeErrorMessage(error)), { at: true })
                     return true
                 }
             }
 
             if (!optionMap[canonicalValue]) {
                 const optionalValues = optionKeys.map((value, index) => `${index}. ${value}`).join(' / ')
-                send.send_with_At(e, `无效值：${valueInputRaw}\n${USER_SETTING_META[settingKey].title} 可选：${optionalValues}`)
+                sendMessage(e, settingMessages.showUserSetting.invalidValue(valueInputRaw, USER_SETTING_META[settingKey].title, optionalValues), { at: true })
                 return true
             }
 
@@ -391,11 +390,11 @@ export class phihelp extends phiPluginBase {
                 pluginData[settingKey] = canonicalValue
             }
             if (!getNotes.putNotesData(e.user_id, pluginData)) {
-                send.send_with_At(e, '主题或用户设置已准备完成，但保存失败，请稍后重试。')
+                sendMessage(e, settingMessages.showUserSetting.saveFailed, { at: true })
                 return true
             }
 
-            send.send_with_At(e, `设置成功：${USER_SETTING_META[settingKey].title} -> ${optionMap[canonicalValue].title}`)
+            sendMessage(e, settingMessages.showUserSetting.success(USER_SETTING_META[settingKey].title, optionMap[canonicalValue].title), { at: true })
         }
 
         /**
@@ -462,12 +461,14 @@ export class phihelp extends phiPluginBase {
             ]
         }
 
-        send.send_with_At(e, await picmodle.common(e, 'setting', {
-            ...data,
-            background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
-            theme: pluginData?.theme || 'default'
-        }, 'userSetting'))
-        await sendQuickCommandSections(e, userSettingQuickCommandSections(Config.getUserCfg('config', 'cmdhead')), '用户设置快捷操作')
+        sendMessage(e, {
+            image: await picmodle.common(e, 'setting', {
+                ...data,
+                background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
+                theme: pluginData?.theme || 'default'
+            }, 'userSetting'),
+            markdown: buildQuickCommandSectionsMarkdown(menus.userSettingSections()),
+        }, { at: true })
         return true
     }
 }

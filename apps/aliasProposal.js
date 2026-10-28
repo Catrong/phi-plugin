@@ -1,17 +1,17 @@
 import Config from '../components/Config.js'
 import phiPluginBase from '../components/baseClass.js'
-import send from '../model/render/send.js'
 import getInfo from '../model/game/getInfo.js'
 import aliasProposalService from '../model/api/aliasProposalService.js'
 import botSyncService from '../model/api/botSyncService.js'
 import shared from '../components/settings/shared.cjs'
 import logger from '../components/Logger.js'
+import { sendMessage } from '../model/render/message.js'
+import { aliasProposalMessages, aliasProposalWords } from '../model/render/messages.js'
 
 /** @import {PlatformEvent} from '../components/platform/types.js' */
 /** @import {AliasProposalRecord, AliasProposalStatus} from '../model/type/aliasProposal.js' */
 
-const getHead = () => Config.getUserCfg('config', 'cmdhead')
-const getPrefix = () => `^[#/](${getHead()})(\\s*)(别名|alias)(\\s*)`
+const getPrefix = () => `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(别名|alias)(\\s*)`
 const DEFAULT_TASK_CRON = '0 * * * * ?'
 
 /**
@@ -42,17 +42,6 @@ export function createAliasProposalTask() {
     }
 }
 
-/** @type {Record<AliasProposalStatus, string>} */
-const statusName = {
-    submitted: '等待初审',
-    rejected_private: '私密拒绝',
-    public_review_requested: '已申请公审',
-    public_voting: '公开投票',
-    vote_passed: '投票通过待终审',
-    approved: '正式通过',
-    public_review_denied: '公审申请被拒',
-    rejected_final: '最终拒绝',
-}
 
 /**
  * 按命令前缀和竖线分隔符解析用户输入。
@@ -73,15 +62,6 @@ function splitArgs(message, command) {
  * @param {boolean} [includeVote=false] 是否展示票数和公开评审理由
  * @returns {string} 可直接发送的消息文本
  */
-function shortList(items, includeVote = false) {
-    if (!items.length) return '暂无相关别名提案。'
-    return items.slice(0, 15).map((item, index) => {
-        const vote = includeVote ? `｜+${item.votesUp || 0}/-${item.votesDown || 0}` : ''
-        const reason = includeVote && item.publicReviewReason ? `\n理由：${item.publicReviewReason}` : ''
-        return `${index + 1}. ${item.alias} -> ${item.songId}\n${statusName[item.status] || item.status}${vote}${reason}\nID: ${item.id}`
-    }).join('\n\n')
-}
-
 export class aliasProposal extends phiPluginBase {
     /** 初始化命令规则、Bot心跳和正式别名同步任务。 */
     constructor() {
@@ -113,10 +93,10 @@ export class aliasProposal extends phiPluginBase {
         try {
             return await operation()
         } catch (error) {
-            const message = error instanceof Error && error.message === '请先绑定 sessionToken。'
+            const message = error instanceof Error && error.message === aliasProposalWords.failure.needToken
                 ? error.message
-                : '别名服务暂时不可用，请稍后重试。'
-            send.send_with_At(e, message)
+                : aliasProposalWords.failure.serviceUnavailable
+            sendMessage(e, aliasProposalMessages.failure(message), { at: true })
             return null
         }
     }
@@ -128,28 +108,28 @@ export class aliasProposal extends phiPluginBase {
      */
     async propose(e) {
         if (e.isGroup) {
-            send.send_with_At(e, '别名提案仅允许在私聊中提交。')
+            sendMessage(e, aliasProposalMessages.propose.privateOnly, { at: true })
             return false
         }
         const [songText, alias, note] = splitArgs(e.msg, '(提案|submit)')
         if (!songText || !alias) {
-            send.send_with_At(e, `格式：/${getHead()} alias submit 曲目 | 别名 | 私密备注（可选）`)
+            sendMessage(e, aliasProposalMessages.propose.format(), { at: true })
             return false
         }
         if (alias.length > 64 || (note && note.length > 500)) {
-            send.send_with_At(e, '别名最多 64 字，备注最多 500 字。')
+            sendMessage(e, aliasProposalMessages.propose.lengthLimit, { at: true })
             return false
         }
         const songIds = getInfo.fuzzysongsnick(songText, 0.85, true)
         if (songIds.length !== 1) {
             const candidates = songIds.slice(0, 8).map(id => `${getInfo.info(id, true)?.song || id} (${id})`).join('\n')
-            send.send_with_At(e, songIds.length ? `曲目不唯一，请使用更精确的名称：\n${candidates}` : '未找到对应曲目。')
+            sendMessage(e, songIds.length ? aliasProposalMessages.propose.ambiguous(candidates) : aliasProposalMessages.propose.songNotFound, { at: true })
             return false
         }
         const proposal = await this.withFailureMessage(e, () => aliasProposalService.create(e, {
             songId: songIds[0], alias, note,
         }))
-        if (proposal) send.send_with_At(e, `提案已提交。\n${proposal.alias} -> ${proposal.songId}\nID: ${proposal.id}`)
+        if (proposal) sendMessage(e, aliasProposalMessages.propose.submitted(proposal), { at: true })
         return Boolean(proposal)
     }
 
@@ -160,7 +140,7 @@ export class aliasProposal extends phiPluginBase {
      */
     async mine(e) {
         const items = await this.withFailureMessage(e, () => aliasProposalService.mine(e))
-        if (items) send.send_with_At(e, shortList(items))
+        if (items) sendMessage(e, aliasProposalMessages.list.content(items), { at: true })
         return Boolean(items)
     }
 
@@ -171,7 +151,7 @@ export class aliasProposal extends phiPluginBase {
      */
     async publicList(e) {
         const items = await this.withFailureMessage(e, () => aliasProposalService.publicList(e))
-        if (items) send.send_with_At(e, shortList(items, true))
+        if (items) sendMessage(e, aliasProposalMessages.list.content(items, true), { at: true })
         return Boolean(items)
     }
 
@@ -182,20 +162,20 @@ export class aliasProposal extends phiPluginBase {
      */
     async appeal(e) {
         if (e.isGroup) {
-            send.send_with_At(e, '公审申请仅允许在私聊中提交。')
+            sendMessage(e, aliasProposalMessages.appeal.privateOnly, { at: true })
             return false
         }
         const [proposalId, reason] = splitArgs(e.msg, '(申诉|appeal)')
         if (!proposalId || !reason) {
-            send.send_with_At(e, `格式：/${getHead()} alias appeal 提案ID | 10-500字理由`)
+            sendMessage(e, aliasProposalMessages.appeal.format(), { at: true })
             return false
         }
         if (reason.length < 10 || reason.length > 500) {
-            send.send_with_At(e, '公审理由必须为 10-500 字。')
+            sendMessage(e, aliasProposalMessages.appeal.reasonLength, { at: true })
             return false
         }
         const proposal = await this.withFailureMessage(e, () => aliasProposalService.requestPublicReview(e, proposalId, reason))
-        if (proposal) send.send_with_At(e, `公审申请已提交。\nID: ${proposal.id}`)
+        if (proposal) sendMessage(e, aliasProposalMessages.appeal.submitted(proposal), { at: true })
         return Boolean(proposal)
     }
 
@@ -211,11 +191,11 @@ export class aliasProposal extends phiPluginBase {
         /** @type {1 | -1 | null} */
         const value = ['赞成', 'yes', '1', '+'].includes(choice) ? 1 : ['反对', 'no', '-1', '-'].includes(choice) ? -1 : null
         if (!proposalId || value === null) {
-            send.send_with_At(e, `格式：/${getHead()} alias vote 提案ID 赞成|反对`)
+            sendMessage(e, aliasProposalMessages.vote.format(), { at: true })
             return false
         }
         const proposal = await this.withFailureMessage(e, () => aliasProposalService.vote(e, proposalId, value))
-        if (proposal) send.send_with_At(e, `投票已记录：${value === 1 ? '赞成' : '反对'}。`)
+        if (proposal) sendMessage(e, aliasProposalMessages.vote.recorded(value), { at: true })
         return Boolean(proposal)
     }
 
@@ -227,11 +207,11 @@ export class aliasProposal extends phiPluginBase {
     async unvote(e) {
         const proposalId = e.msg.replace(new RegExp(`${getPrefix()}(撤票|unvote)\\s*`, 'i'), '').trim()
         if (!proposalId) {
-            send.send_with_At(e, `格式：/${getHead()} alias unvote 提案ID`)
+            sendMessage(e, aliasProposalMessages.unvote.format(), { at: true })
             return false
         }
         const proposal = await this.withFailureMessage(e, () => aliasProposalService.vote(e, proposalId, 0))
-        if (proposal) send.send_with_At(e, '投票已撤回。')
+        if (proposal) sendMessage(e, aliasProposalMessages.unvote.withdrawn, { at: true })
         return Boolean(proposal)
     }
 

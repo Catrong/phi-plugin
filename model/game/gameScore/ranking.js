@@ -5,6 +5,9 @@
  * @typedef {'score' | 'winRate' | 'accuracy'} gameScoreRankKind 榜单类型
  */
 
+import { gameScoreMessages } from '../../render/messages.js'
+import { ANONYMOUS_PLAYER_PROFILE } from './profile.js'
+
 /** 准确率榜与胜率榜的统一上榜门槛：至少完成 10 局。 */
 export const RANK_MIN_PLAYS = 10
 
@@ -116,26 +119,36 @@ export function paginate(rows, page = 1, pageSize = 10) {
  * @returns {string}
  */
 export function formatRanking(options) {
-    const kind = options.kind
     const rows = options.rows || []
     const pageSize = options.pageSize ?? 10
-    const threshold = options.minPlays ?? RANK_MIN_PLAYS
     const paged = paginate(rows, options.page ?? 1, pageSize)
-    const lines = [`🏆 ${options.title}（共 ${paged.total} 人）`]
+    const meId = options.meId || ''
+    const meIndex = rows.findIndex(row => row.userId === meId)
+    return formatRankingPage({
+        title: options.title, kind: options.kind, ...paged, pageSize,
+        minPlays: options.minPlays ?? RANK_MIN_PLAYS,
+        meId, meRank: meIndex >= 0 ? meIndex + 1 : null, me: meIndex >= 0 ? rows[meIndex] : null,
+    })
+}
+
+/** @param {Pick<import('./index.js').gameScoreRankingPage, 'title' | 'kind' | 'total' | 'page' | 'pages' | 'pageSize' | 'items' | 'minPlays' | 'meId' | 'meRank' | 'me'>} options @returns {string} */
+export function formatRankingPage(options) {
+    const kind = options.kind
+    const threshold = options.minPlays
+    const paged = options
+    const lines = [gameScoreMessages.boardTitle(options.title, paged.total)]
     if (!paged.total) {
         lines.push(emptyBoardHint(kind, threshold))
         return lines.join('\n')
     }
-    if (paged.pages > 1) lines.push(`第 ${paged.page}/${paged.pages} 页`)
+    if (paged.pages > 1) lines.push(gameScoreMessages.page(paged.page, paged.pages))
     paged.items.forEach((row, index) => {
-        const rank = (paged.page - 1) * pageSize + index + 1
-        lines.push(`#${rank} ${describeRow(row, kind)}`)
+        const rank = (paged.page - 1) * options.pageSize + index + 1
+        lines.push(gameScoreMessages.rankLine(rank, describeRow(row, kind)))
     })
-    const meId = options.meId ? String(options.meId) : ''
-    if (meId) {
-        const index = rows.findIndex(row => String(row.userId) === meId)
-        if (index >= 0) {
-            lines.push(`我的排名：#${index + 1} ${describeRow(rows[index], kind)}`)
+    if (options.meId) {
+        if (options.meRank !== null && options.me) {
+            lines.push(gameScoreMessages.myRank(options.meRank, describeRow(options.me, kind)))
         } else {
             lines.push(meRankHint(kind, threshold))
         }
@@ -150,9 +163,9 @@ export function formatRanking(options) {
  * @returns {string}
  */
 function emptyBoardHint(kind, threshold) {
-    if (kind === 'accuracy') return `暂无符合条件的玩家（至少完成 ${threshold} 局）`
-    if (kind === 'winRate') return `暂无符合条件的玩家（至少 ${threshold} 场匹配对局）`
-    return '暂无数据，快去玩一局吧！'
+    if (kind === 'accuracy') return gameScoreMessages.empty.accuracy(threshold)
+    if (kind === 'winRate') return gameScoreMessages.empty.winRate(threshold)
+    return gameScoreMessages.empty.score
 }
 
 /**
@@ -162,9 +175,9 @@ function emptyBoardHint(kind, threshold) {
  * @returns {string}
  */
 function meRankHint(kind, threshold) {
-    if (kind === 'accuracy') return `我的排名：未上榜（需要至少完成 ${threshold} 局）`
-    if (kind === 'winRate') return `我的排名：未上榜（需要至少 ${threshold} 场匹配对局）`
-    return '我的排名：暂无记录'
+    if (kind === 'accuracy') return gameScoreMessages.me.accuracy(threshold)
+    if (kind === 'winRate') return gameScoreMessages.me.winRate(threshold)
+    return gameScoreMessages.me.score
 }
 
 /**
@@ -174,15 +187,15 @@ function meRankHint(kind, threshold) {
  * @returns {string}
  */
 export function describeRow(row, kind) {
-    const name = String(row.userId)
+    const name = row.profile?.name || ANONYMOUS_PLAYER_PROFILE.name
     if (kind === 'accuracy') {
         const average = averageHints(row)
         const averageText = average === null ? '--' : average.toFixed(2)
-        return `${name}　平均 ${averageText} 条提示　${row.plays} 局　积分 ${row.score.toFixed(2)}`
+        return gameScoreMessages.describe.accuracy(name, averageText, row.plays, row.score.toFixed(2))
     }
     if (kind === 'winRate') {
         const total = row.wins + row.losses + row.draws
-        return `${name}　胜率 ${(winRate(row) * 100).toFixed(1)}%　${row.wins}胜 ${row.losses}负 ${row.draws}平（${total} 场）　积分 ${row.score.toFixed(2)}`
+        return gameScoreMessages.describe.winRate(name, (winRate(row) * 100).toFixed(1), row.wins, row.losses, row.draws, total, row.score.toFixed(2))
     }
-    return `${name}　${row.score.toFixed(2)} 分　${row.plays} 局　最高 ${row.best.toFixed(2)}`
+    return gameScoreMessages.describe.score(name, row.score.toFixed(2), row.plays, row.best.toFixed(2))
 }

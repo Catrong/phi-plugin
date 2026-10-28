@@ -42,6 +42,9 @@ function readGeneratedSettings() {
 function normalizeSettings(input) {
     const result = Object.fromEntries(Object.entries(input).filter(([key]) => fields.has(key)))
     if (result.githubProxy === 'false') result.githubProxy = false
+    // 旧版 LetterMarkdown 是布尔值，迁移为三态选择。
+    if (result.LetterMarkdown === true) result.LetterMarkdown = 'markdown'
+    if (result.LetterMarkdown === false) result.LetterMarkdown = 'off'
     if (result.isGuild) {
         result.WordB19Img = false
         result.WordSuggImg = false

@@ -477,6 +477,9 @@ export function createKoishiAdapter(ctx, options = {}) {
         hasPuppeteerService() {
             return Boolean(ctx?.puppeteer)
         },
+        hasButtonSegment() {
+            return false
+        },
         segment: {
             image(data) {
                 data = imageSource(data)
@@ -495,6 +498,9 @@ export function createKoishiAdapter(ctx, options = {}) {
             text(text) {
                 if (typeof h?.text === 'function') return h.text(text)
                 return text
+            },
+            button(...rows) {
+                return { __phiSegment: true, type: 'button', rows }
             },
         },
 
@@ -547,6 +553,7 @@ export function createKoishiAdapter(ctx, options = {}) {
             if (segment.type === 'at') return this.segment.at(segment.userId)
             if (segment.type === 'markdown') return this.segment.markdown(segment.text)
             if (segment.type === 'text') return segment.text
+            if (segment.type === 'button') return segment.rows.flat().map(button => button.text).join(' ')
             return message
         },
 

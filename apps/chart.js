@@ -9,7 +9,8 @@ import logger from '../components/Logger.js';
 import { UserCredentials } from '../model/user/userCredentials.js';
 import { canUseApi, getApiAccessState } from '../model/user/apiPermission.js'
 import platform from '../components/platform/index.js'
-import { sendQuickCommands } from '../model/game/markdown.js'
+import { sendMessage } from '../model/render/message.js'
+import { chartMessages, chartWords } from '../model/render/messages.js'
 import { originalIllPath } from '../model/filesystem/path.js'
 
 /** @import {botEvent} from '../components/baseClass.js' */
@@ -79,7 +80,6 @@ import { originalIllPath } from '../model/filesystem/path.js'
  * @property {number | undefined} flick Flick 数
  * @property {number | undefined} combo Combo 数
  * @property {[number, number, number, number, number][] | undefined} distribution 物量分布
- * @property {string} tip 提示文本
  * @property {string} chartLength 谱面时长
  * @property {ChartTagWord[]} words 谱面标签词云数据
  * @property {number} wordsMaxValue 谱面标签最大有效票数
@@ -262,25 +262,11 @@ function removeSelectedTagTokens(message, categorySelection, childSelections) {
  * @param {ChartTagTreeNode[]} tagTree
  * @returns {string}
  */
-function formatTagCategoryMenu(tagTree) {
-  return [
-    '请选择标签分类：',
-    ...tagTree.map((category, index) => `-${index + 1}. ${category.name}${category.description ? `：${category.description}` : ''}`),
-    '示例：/settag <曲名> <难度> 读谱',
-  ].join('\n')
-}
 
 /**
  * @param {ChartTagTreeNode} category
  * @returns {string}
  */
-function formatTagChildMenu(category) {
-  return [
-    `请选择「${category.name}」下的细分标签：`,
-    ...(category.children || []).map((tag, index) => `-${index + 1}. ${tag.name}${tag.description ? `：${tag.description}` : ''}`),
-    `示例：/settag <曲名> <难度> ${category.name} 1`,
-  ].join('\n')
-}
 
 /**
  * 汇总一个分类下的全部叶标签票数。
@@ -376,7 +362,7 @@ export class phihelp extends phiPluginBase {
   async chart(e) {
 
     if (await getBanGroup.get(e, 'chart')) {
-      send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+      sendMessage(e, chartMessages.chart.banned, { at: true })
       return false
     }
 
@@ -394,13 +380,13 @@ export class phihelp extends phiPluginBase {
    */
   async tag(e) {
     if (await getBanGroup.get(e, 'tag')) {
-      send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+      sendMessage(e, chartMessages.chart.banned, { at: true })
       return false
     }
 
     const apiAccess = await getApiAccessState(e, 'scoreStatistics')
     if (!apiAccess.enabled) {
-      send.send_with_At(e, apiAccess.globalEnabled ? 'Bot 主人已关闭查分数据统计功能。' : '这里没有连接查分平台哦！')
+      sendMessage(e, chartMessages.tag.apiDisabled(apiAccess.globalEnabled), { at: true })
       return false
     }
 
@@ -419,17 +405,13 @@ export class phihelp extends phiPluginBase {
   async settag(e) {
     const credentials = UserCredentials.fromEvent(e)
     if (await getBanGroup.get(e, 'tag')) {
-      send.send_with_At(e, '这里被管理员禁止使用这个功能了呐QAQ！')
+      sendMessage(e, chartMessages.chart.banned, { at: true })
       return false
     }
 
     const apiAccess = await getApiAccessState(e)
     if (!apiAccess.enabled) {
-      send.send_with_At(e, !apiAccess.globalEnabled
-        ? '这里没有连接查分平台哦！'
-        : !apiAccess.capabilityEnabled
-          ? 'Bot 主人已关闭在线查分功能。'
-          : '你已在本地用户设置中禁用 API 功能，可在 /myset 中重新开启。')
+      sendMessage(e, chartMessages.settag.apiDisabled(apiAccess), { at: true })
       return false
     }
 
@@ -441,7 +423,7 @@ export class phihelp extends phiPluginBase {
 
     const sessionToken = await credentials.getSessionToken()
     if (!sessionToken) {
-      send.send_with_At(e, '权限不足，请尝试扫码登录或使用sessionToken进行绑定哦~', true);
+      sendMessage(e, chartMessages.settag.permissionDenied, { at: true, quote: true });
       return false;
     }
 
@@ -462,8 +444,8 @@ export class phihelp extends phiPluginBase {
       this.getMicInfoFromMsg(e, /[#/](.*?)(settag)(\s*)/, ['rank'], { sessionToken, tagTree }, async (e, id, optObj) => {
         const timeout = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
         setSetTagState(String(e.user_id), { id, rank: optObj.rank, sessionToken, tagTree }, timeout)
-        send.send_with_At(e, formatTagCategoryMenu(tagTree), true);
-        setContext(this, 'settagCategory', false, timeout, '操作超时已取消，请重新使用 /settag。')
+        sendMessage(e, chartMessages.settag.categoryMenu(tagTree), { at: true, quote: true })
+        setContext(this, 'settagCategory', false, timeout, chartWords.settag.timeout)
       })
       return true;
     }
@@ -475,14 +457,14 @@ export class phihelp extends phiPluginBase {
       this.getMicInfoFromMsg(cleanEvent, /[#/](.*?)(settag)(\s*)/, ['rank'], { sessionToken }, async (e, id, optObj) => {
         const timeout = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
         setSetTagState(String(e.user_id), { id, rank: optObj.rank, sessionToken, category: categorySelection.category }, timeout)
-        send.send_with_At(e, formatTagChildMenu(categorySelection.category), true);
-        setContext(this, 'settagChild', false, timeout, '操作超时已取消，请重新使用 /settag。')
+        sendMessage(e, chartMessages.settag.childMenu(categorySelection.category), { at: true, quote: true })
+        setContext(this, 'settagChild', false, timeout, chartWords.settag.timeout)
       })
       return true;
     }
 
     /** @type {chartsTagString[]} */
-    const selectedTags = uniqueTagNames(childSelections.map(selection => /** @type {chartsTagString} */ (selection.tag.name)));
+    const selectedTags = uniqueTagNames(childSelections.map(selection => /** @type {chartsTagString} */(selection.tag.name)));
     const cleanEvent = platform.cloneEvent(e, { msg: removeSelectedTagTokens(e.msg, categorySelection, childSelections) })
 
     this.getMicInfoFromMsg(cleanEvent, /[#/](.*?)(settag)(\s*)/, ['rank'], { selectedTags, sessionToken }, async (e, id, optObj) => {
@@ -504,16 +486,16 @@ export class phihelp extends phiPluginBase {
 
     const categorySelection = findCategorySelection(this.e.msg, state.tagTree ?? [])
     if (!categorySelection) {
-      send.send_with_At(this.e, formatTagCategoryMenu(state.tagTree ?? []), true)
+      sendMessage(this.e, chartMessages.settag.categoryMenu(state.tagTree ?? []), { at: true, quote: true })
       return false
     }
 
     state.category = categorySelection.category
-    send.send_with_At(this.e, formatTagChildMenu(categorySelection.category), true)
+    sendMessage(this.e, chartMessages.settag.childMenu(categorySelection.category), { at: true, quote: true })
     finishContext(this, 'settagCategory', false)
     const timeout = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
     setSetTagState(userId, state, timeout)
-    setContext(this, 'settagChild', false, timeout, '操作超时已取消，请重新使用 /settag。')
+    setContext(this, 'settagChild', false, timeout, chartWords.settag.timeout)
     return true
   }
 
@@ -532,12 +514,12 @@ export class phihelp extends phiPluginBase {
 
     const childSelections = findChildSelections(this.e.msg, state.category)
     if (!childSelections.length) {
-      send.send_with_At(this.e, formatTagChildMenu(state.category), true)
+      sendMessage(this.e, chartMessages.settag.childMenu(state.category), { at: true, quote: true })
       return false
     }
 
     /** @type {chartsTagString[]} */
-    const selectedTags = uniqueTagNames(childSelections.map(selection => /** @type {chartsTagString} */ (selection.tag.name)))
+    const selectedTags = uniqueTagNames(childSelections.map(selection => /** @type {chartsTagString} */(selection.tag.name)))
     clearSetTagState(userId)
     finishContext(this, 'settagChild', false)
     await setChartTags(this.e, state.id, { rank: state.rank, selectedTags, sessionToken: state.sessionToken })
@@ -600,7 +582,6 @@ async function getChartImg(e, id, options) {
     flick: chart.flick,
     combo: chart.combo,
     distribution: chart.distribution,
-    tip: '',
     chartLength: `${Math.floor((chart.maxTime || 0) / 60)}:${Math.floor((chart.maxTime || 0) % 60).toString().padStart(2, '0')}`,
     words,
     wordsMaxValue
@@ -611,13 +592,7 @@ async function getChartImg(e, id, options) {
     chartImg: getInfo.getChartImg(info.id, rank),
   });
 
-  await send.send_with_At(e, [img, `${info.song} - ${rank}\n谱师：${info.chart[rank].charter}`])
-  const commandHead = Config.getUserCfg('config', 'cmdhead')
-  await sendQuickCommands(e, [
-    { command: `/${commandHead} chart ${info.id} ${rank}`, label: '其他难度' },
-    { command: `/${commandHead} tag ${info.id} ${rank}`, label: '查看标签' },
-    { command: `/${commandHead} help`, label: '帮助' },
-  ], '谱面操作')
+  await sendMessage(e, chartMessages.getChartImg.finalMessage(img, info.id, rank, info.song, info.chart[rank].charter), { at: true })
   return;
 }
 
@@ -666,28 +641,15 @@ async function getChartTags(e, id, options) {
     wordsMaxValue = Math.max(wordsMaxValue, value)
   }
 
-  /** @type {string[]} */
-  const resMsg = [];
-  resMsg.push(`${info.song}`);
-  resMsg.push(`by ${info.composer}`);
-  resMsg.push(`${rank} - ${chart.difficulty}`);
-  resMsg.push(`谱师：${chart.charter}`);
-  resMsg.push(`标签：`);
-  words.forEach((category, index) => {
-    resMsg.push(`-${index + 1}. ${category.name}：${category.value}`);
-    category.children.forEach((tag, childIndex) => {
-      const voted = usersVote?.[0]?.tags?.includes(tag.name) ?? false
-      resMsg.push(`  ${index + 1}.${childIndex + 1} ${tag.name}：${tag.voteCount} ${voted ? '(✓)' : ''}`);
-    })
-  });
+  await sendMessage(e, chartMessages.getChartTags.finalMessage({
+    id: info.id,
+    song: info.song,
+    composer: info.composer,
+    rank: rank,
+    charter: chart.charter,
+    difficulty: chart.difficulty,
+  }, words, usersVote), { at: true })
 
-  await send.send_with_At(e, resMsg.join('\n'));
-  const commandHead = Config.getUserCfg('config', 'cmdhead')
-  await sendQuickCommands(e, [
-    { command: `/${commandHead} chart ${info.id} ${rank}`, label: '查看谱面' },
-    { command: `/${commandHead} settag ${info.id} ${rank}`, label: '提交标签' },
-    { command: `/${commandHead} help`, label: '帮助' },
-  ], '谱面操作')
 }
 
 /**

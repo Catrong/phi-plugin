@@ -1,0 +1,80 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+<link rel="stylesheet" href="{{_res_path}}html/tableImage/table.css">
+{{/block}}
+
+{{block 'main'}}
+<div class="page-wrap">
+    <div class="panel">
+        <div class="title-box">
+            <p class="page-title">{{pageTitle}}</p>
+            {{if pageDescription}}
+            <p class="page-desc">{{pageDescription}}</p>
+            {{/if}}
+        </div>
+
+        {{if notice}}
+        <div class="notice">
+            <p>{{notice}}</p>
+        </div>
+        {{/if}}
+
+        {{if rows && rows.length}}
+        <div class="table-box">
+            <table>
+                <thead>
+                    <tr>
+                        {{each columns col}}
+                        <th class="align-{{col.align || 'center'}}{{if col.highlight}} col-highlight{{/if}}"
+                            {{if col.width}}style="width: {{col.width}}"{{/if}}>{{col.title}}</th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{each rows row}}
+                    <tr>
+                        {{each row cell}}
+                        {{if cell && cell.text !== undefined && cell.text !== null}}
+                        <td class="align-{{cell.align || 'center'}}{{if cell.highlight}} highlight{{/if}}{{if cell.className}} {{cell.className}}{{/if}}"
+                            {{if cell.colspan}}colspan="{{cell.colspan}}"{{/if}}
+                            {{if cell.rowspan}}rowspan="{{cell.rowspan}}"{{/if}}
+                            {{if cell.color || cell.background}}style="{{if cell.color}}color: {{cell.color}};{{/if}}{{if cell.background}} background: {{cell.background}};{{/if}}"{{/if}}>
+                            <p class="cell-main">{{cell.text}}</p>
+                            {{if cell.subtext}}
+                            <p class="cell-sub">{{cell.subtext}}</p>
+                            {{/if}}
+                        </td>
+                        {{else}}
+                        <td class="align-center">
+                            <p class="cell-main">{{cell}}</p>
+                        </td>
+                        {{/if}}
+                        {{/each}}
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{else}}
+        <div class="empty">
+            <p>{{emptyText || '暂无数据'}}</p>
+        </div>
+        {{/if}}
+
+        {{if footer}}
+        <div class="table-footer">
+            <p>{{footer}}</p>
+        </div>
+        {{/if}}
+    </div>
+
+    <div class="createdbox">
+        <div class="phi-plugin">
+            <p>{{_plugin}}</p>
+        </div>
+        <div class="ver">
+            <p>{{Version.ver}}</p>
+        </div>
+    </div>
+</div>
+{{/block}}
