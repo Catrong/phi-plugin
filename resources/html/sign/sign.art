@@ -1,12 +1,7 @@
 {{extend defaultLayout}}
-{{set pvis = [1037.75, 69, 28, 14, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]}}
+{{set pvis = [982, 92, 28, 12, null, { method: 'pvis', breakWords: true, useFontMetrics: !(themeInfo && themeInfo.fontUrl) }]}}
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/sign/sign.css" />
-{{if renderNoJs}}
-<style>
-    .quoteText p { white-space: normal; overflow-wrap: anywhere; }
-</style>
-{{/if}}
 {{/block}}
 
 {{block 'main'}}

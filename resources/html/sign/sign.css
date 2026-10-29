@@ -259,8 +259,8 @@ body {
 }
 
 .quoteCard {
-  --top: 528px;
-  --height: 110px;
+  --top: 520px;
+  --height: 150px;
   width: 1104px;
   transform: translate(12px, 0px);
 }
@@ -289,14 +289,26 @@ body {
   text-shadow: 0 0 16px rgb(255 247 0 / 45%);
 }
 
+/* 每日一言：卡片是平行四边形，左右斜切会吃掉边缘；
+   文本框用左右内缩避开斜切，文字不会在行尾被裁掉。 */
 .quoteText {
-  --top: 41px;
+  --top: 44px;
+  left: 52px;
+  right: 70px;
+  bottom: 14px;
+  width: auto;
+  height: auto;
   display: flex;
-  width: 94%;
-  height: 69px;
   color: #edf6ff;
   font-size: 28px;
   align-items: center;
+}
+
+.quoteText p {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .panelHeader {
