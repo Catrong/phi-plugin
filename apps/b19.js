@@ -31,6 +31,7 @@ import {
     chapterQuickCommands,
     achievementQuickCommands,
 } from '../model/game/markdown.js'
+import { getTableDifficulty } from '../model/game/tableDifficulty.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -82,7 +83,7 @@ export class phib19 extends phiPluginBase {
                     fnc: 'chap'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(achievement|ahv).*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(achievement|ahv)\\s*[0-9]+\\s*(-v\\s*\\S*)?$`,
                     fnc: 'achievement'
                 }
             ]
@@ -1128,6 +1129,9 @@ export class phib19 extends phiPluginBase {
         }
 
         // 定数下限为 0（4.0.1 起存在 0.5 定数的谱面，向下取整为 0 级）
+        // 与 #table 保持一致：0 级与 18 级谱面分别就近并入 1 级与 17 级，
+        // #ahv 0 等同于 #ahv 1，#ahv 18 等同于 #ahv 17
+        const tableDif = getTableDifficulty(dif)
 
         let matchVersion = e.msg.match(/-v\s*(\S+)/i)?.[1];
         let matchVerCode = 0;
@@ -1160,7 +1164,7 @@ export class phib19 extends phiPluginBase {
         let pluginData = await getNotes.getNotesData(e.user_id)
         const data = {
             title: {
-                difficulty: dif,
+                difficulty: tableDif.label,
                 total: 0,
                 version: versionInfo.version_label,
                 dec: "Player Achievements"
@@ -1173,15 +1177,14 @@ export class phib19 extends phiPluginBase {
         }
 
         const info_by_difficulty = getInfo.historyDifficultyByVerDifficulty[versionInfo.version_code];
-        for (let i = 0; i < 10; ++i) {
-            const difStr = Math.round((dif + i * 0.1) * 10) / 10;
-            if (!info_by_difficulty[difStr.toFixed(1)]) continue;
-            data.title.total += info_by_difficulty[difStr.toFixed(1)].length;
+        for (const difStr of tableDif.buckets) {
+            if (!info_by_difficulty[difStr]) continue;
+            data.title.total += info_by_difficulty[difStr].length;
             let minScore = Infinity;
             let fcFlag = true;
             data.table.push({
-                difficulty: difStr.toFixed(1),
-                songs: info_by_difficulty[difStr.toFixed(1)]?.map(chart => {
+                difficulty: difStr,
+                songs: info_by_difficulty[difStr].map(chart => {
                     const playerRecord = save.getScore(chart.id, chart.rank);
                     minScore = Math.min(minScore, playerRecord?.score || 0);
                     if (!playerRecord?.fc) {
@@ -1192,7 +1195,7 @@ export class phib19 extends phiPluginBase {
                         illustration: getInfo.getill(chart.id, 'low', chart.rank),
                         score: playerRecord?.acc || 0,
                     })
-                }) || [],
+                }),
                 rating: fCompute.rate(minScore, fcFlag)
             })
 

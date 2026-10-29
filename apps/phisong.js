@@ -20,6 +20,7 @@ import Chart from "../model/game/Chart.js"
 import getNotes from "../model/user/getNotes.js"
 import { canUseApi } from '../model/user/apiPermission.js'
 import TapInfo from "../model/integrations/getInfoFromTap.js"
+import { getTableDifficulty } from '../model/game/tableDifficulty.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -783,6 +784,9 @@ export class phisong extends phiPluginBase {
         }
 
         // 定数下限为 0（4.0.1 起存在 0.5 定数的谱面，向下取整为 0 级）
+        // 0 级与 18 级的谱面各只有一首，分别就近并入 1 级与 17 级的定数表：
+        // #table 0 等同于 #table 1，#table 18 等同于 #table 17
+        const tableDif = getTableDifficulty(dif)
 
         let matchVersion = e.msg.match(/-v\s*(\S+)/i)?.[1];
         let matchVerCode = 0;
@@ -815,7 +819,7 @@ export class phisong extends phiPluginBase {
         let pluginData = await getNotes.getNotesData(e.user_id)
         const data = {
             title: {
-                difficulty: dif,
+                difficulty: tableDif.label,
                 total: 0,
                 version: versionInfo.version_label
             },
@@ -826,16 +830,15 @@ export class phisong extends phiPluginBase {
         }
 
         const info_by_difficulty = getInfo.historyDifficultyByVerDifficulty[versionInfo.version_code];
-        for (let i = 0; i < 10; ++i) {
-            const difStr = Math.round((dif + i * 0.1) * 10) / 10;
-            if (!info_by_difficulty[difStr.toFixed(1)]) continue;
-            data.title.total += info_by_difficulty[difStr.toFixed(1)].length;
+        for (const difStr of tableDif.buckets) {
+            if (!info_by_difficulty[difStr]) continue;
+            data.title.total += info_by_difficulty[difStr].length;
             data.table.push({
-                difficulty: difStr.toFixed(1),
-                songs: info_by_difficulty[difStr.toFixed(1)]?.map(chart => ({
+                difficulty: difStr,
+                songs: info_by_difficulty[difStr].map(chart => ({
                     rank: chart.rank,
                     illustration: getInfo.getill(chart.id, 'low', chart.rank),
-                })) || []
+                }))
             })
 
         }
