@@ -223,26 +223,81 @@ test('匹配按钮按自身提示状态和回合切换，重复操作与终局�
     assert.deepEqual(keyboards.at(-1)?.keyboard, buildQuickCommandKeyboard(menus.grksHome()))
 })
 
-test('提示只暂存，双方选完后各通知一次，并使用最新提示会话', async t => {
+test('提示回合消息本身就是提示方视角，提交后只补一条文字确认，双方选完后各通知一次', async t => {
     const setup = fixture(t)
     const room = await openRoom(setup)
+    /** 进入提示回合的两条消息已经是提示方视角：自己完整 B30，未公开部分带遮罩 */
+    assert.equal(setup.views.length, 2)
+    const opening = setup.views.at(-2)
+    assert.equal(opening?.giver, true)
+    assert.equal(opening?.records.length, 30)
+    assert.equal(opening?.records.every(slot => slot.masked), true)
+    assert.match(String(setup.sent.at(-2)?.content), /红方 · 提示者视角/)
+    assert.match(String(setup.sent.at(-2)?.content), /提示回合/)
+    assert.match(String(setup.sent.at(-2)?.content), /本方：未选提示/)
     const redHint = event('a', 'red-hint-group')
     const blueHint = event('b', 'blue-hint-group')
     const before = setup.sent.length
     await setup.matches.hint(redHint, '1', 'B7')
-    assert.equal(setup.sent.length, before)
-    assert.equal(room.sides.red.game.hintCnt, 0)
-    assert.equal(room.sides.red.game.knownRecords[9], false)
+    /** 提交提示只补一条文字确认，不再重复发一张提示方视角的图 */
+    assert.equal(setup.sent.length - before, 1)
+    assert.equal(setup.views.length, 2)
+    const confirm = setup.sent.at(-1)
+    assert.equal(confirm?.event, redHint)
+    assert.match(String(confirm?.content), /红方 · 提示者视角/)
+    assert.match(String(confirm?.content), /本方提示已锁定：公开随机成绩 1 条/)
+    assert.equal(room.sides.red.game.hintCnt, 1)
+    assert.equal(room.sides.red.game.knownRecords[9], true)
+    assert.equal(room.stage, 'hint')
+    assert.ok(!setup.sent.slice(before).some(item => item.event.user_id === 'b'))
     await setup.matches.hint(blueHint, '1', 'B8')
     const messages = setup.sent.slice(before)
-    assert.equal(messages.length, 2)
+    assert.equal(messages.length, 4)
     assert.deepEqual(new Set(messages.map(item => item.event.group_id)), new Set(['red-hint-group', 'blue-hint-group']))
     assert.equal(room.sides.red.event, redHint)
     assert.equal(room.sides.blue.event, blueHint)
     assert.equal(room.stage, 'answer')
     assert.equal(room.sides.red.game.hintCnt, 1)
-    assert.ok(messages.some(item => item.event.user_id === 'b' && String(item.content).includes('Song a6')))
-    assert.ok(messages.some(item => item.event.user_id === 'a' && String(item.content).includes('Song b7')))
+    assert.equal(room.sides.blue.game.hintCnt, 1)
+    /** 公布后各拿到对手视角：红方看到蓝方新公开的 B8，蓝方看到红方新公开的 B7 */
+    const redSeesBlue = setup.views.at(-2)?.records.map(slot => slot.record?.song)
+    const blueSeesRed = setup.views.at(-1)?.records.map(slot => slot.record?.song)
+    assert.deepEqual(redSeesBlue, ['Song b7'])
+    assert.deepEqual(blueSeesRed, ['Song a6'])
+})
+
+test('开局不预先知道成绩位置，第 5 次提示后与单机一致公开顺序', async t => {
+    const setup = fixture(t)
+    const room = await openRoom(setup)
+    assert.equal(room.sides.red.game.knownOrder, false)
+    assert.equal(room.sides.blue.game.knownOrder, false)
+    await setup.matches.hint(setup.a, '1', 'B7')
+    await setup.matches.hint(setup.b, '1', 'B7')
+    /** 位置未知时对手视图按单曲 rks 降序排列，且不带槽位名 */
+    const first = setup.views.at(-2)
+    assert.equal(first?.records.length, 1)
+    assert.equal(first?.records[0].slot, '')
+    for (let turn = 2; turn <= 4; turn++) {
+        await setup.matches.guess(setup.a, '1')
+        await setup.matches.guess(setup.b, '1')
+        await setup.matches.hint(setup.a, '1', `B${turn}`)
+        await setup.matches.hint(setup.b, '1', `B${turn}`)
+    }
+    assert.equal(room.sides.red.game.hintCnt, 4)
+    assert.equal(room.sides.red.game.knownOrder, false)
+    await setup.matches.guess(setup.a, '1')
+    await setup.matches.guess(setup.b, '1')
+    await setup.matches.hint(setup.a, '1', 'B5')
+    await setup.matches.hint(setup.b, '1', 'B5')
+    assert.equal(room.sides.red.game.hintCnt, 5)
+    assert.equal(room.sides.red.game.knownOrder, true)
+    assert.equal(room.sides.blue.game.knownOrder, true)
+    assert.match(room.sides.red.game.history[4].hint, /公开成绩顺序/)
+    const revealed = setup.views.at(-2)
+    assert.equal(revealed?.records.length, 30)
+    assert.equal(revealed?.records[0].slot, 'P1')
+    /** 第 5 条提示后顺序公开，槽位名开始出现在对手视角里 */
+    assert.ok(revealed?.records.some(slot => slot.slot === 'B7'))
 })
 
 test('双方回答结束后各通知一次，下一轮使用本轮最新回答会话', async t => {
@@ -289,27 +344,36 @@ test('正确答案也等待双方作答后才判定，并且只发送一次终�
 test('猜测记录按各自视角关联提示，单方提交时不提前公开回答', async t => {
     const setup = fixture(t)
     const room = await openRoom(setup)
+    /** 只看对手视角的图：提示回合的消息是提示方视角，会改变 views 的索引 */
+    const views = () => setup.views.filter(view => !view.giver)
     await setup.matches.hint(setup.a, '1', 'B1')
-    assert.deepEqual(room.sides.red.game.history, [])
+    /** 提示立即生效：自己的题目新增一条待回答记录，位置未知时不写槽位名 */
+    assert.equal(room.sides.red.game.history.length, 1)
+    assert.equal(room.sides.red.game.history[0].result, 'pending')
+    assert.equal(room.sides.red.game.history[0].hint, '公开随机成绩 1 条')
     await setup.matches.hint(setup.b, '1', 'B2')
-    assert.equal(setup.views.at(-2)?.history[0].hint, '公开 B2')
-    assert.equal(setup.views.at(-1)?.history[0].hint, '公开 B1')
-    const before = setup.views.length
+    assert.equal(views().at(-2)?.history[0].hint, '公开随机成绩 1 条')
+    assert.equal(views().at(-1)?.history[0].hint, '公开随机成绩 1 条')
+    const before = views().length
     await setup.matches.guess(setup.a, '1')
-    assert.equal(setup.views.length, before)
+    assert.equal(views().length, before)
     assert.equal(room.sides.blue.game.history[0].guess, null)
     assert.equal(room.sides.blue.game.history[0].result, 'pending')
     await setup.matches.guess(setup.b, '2')
-    assert.equal(setup.views.at(-2)?.history[0].answer, '1')
-    assert.equal(setup.views.at(-1)?.history[0].answer, '2')
-    assert.equal(setup.views.at(-2)?.history[0].result, 'wrong')
-    assert.equal(setup.views.at(-2)?.history[1].result, 'empty')
+    /** 双方都答完才结算：各自的题目记下对手的猜测，下一轮公布时才带进视角 */
+    assert.equal(room.sides.blue.game.history[0].guess, 1)
+    assert.equal(room.sides.red.game.history[0].guess, 2)
+    assert.equal(room.sides.blue.game.history[0].result, 'wrong')
     await enterAnswer(setup, 'B3', 'B4')
+    assert.equal(views().at(-2)?.history[0].answer, '1')
+    assert.equal(views().at(-1)?.history[0].answer, '2')
+    assert.equal(views().at(-2)?.history[0].result, 'wrong')
+    assert.equal(views().at(-2)?.history[1].result, 'pending')
     await setup.matches.guess(setup.a, String(room.sides.blue.answer.rks))
     await timeout(setup, room)
-    assert.equal(setup.views.at(-2)?.history[1].result, 'correct')
-    assert.equal(setup.views.at(-1)?.history[1].result, 'timeout')
-    assert.equal(setup.views.at(-1)?.history[1].answer, '—')
+    assert.equal(views().at(-2)?.history[1].result, 'correct')
+    assert.equal(views().at(-1)?.history[1].result, 'timeout')
+    assert.equal(views().at(-1)?.history[1].answer, '—')
     assert.equal(room.sides.blue.game.history.length, 2)
 })
 
@@ -331,7 +395,7 @@ test('重复选择和重复回答只报错，不重复公布或覆盖首次提�
     assert.deepEqual(await Promise.all([
         setup.matches.hint(setup.a, '1', 'B1'), setup.matches.hint(setup.a, '1', 'B2'),
     ]), [true, false])
-    assert.equal(room.sides.red.game.hintCnt, 0)
+    assert.equal(room.sides.red.game.hintCnt, 1)
     await setup.matches.hint(setup.b, '1', 'B1')
     const before = setup.sent.length
     assert.deepEqual(await Promise.all([
@@ -438,7 +502,8 @@ test('已排队的旧提示超时不会跳过新回答阶段或重复发送消�
     await room.pending
     assert.equal(room.stage, 'answer')
     assert.equal(room.phase, 'playing')
-    assert.equal(setup.sent.length - before, 2)
+    /** 两条提示方视角消息 + 两条阶段消息 */
+    assert.equal(setup.sent.length - before, 4)
 })
 
 test('提示阶段发出的提前回答不能在排队等待后混入回答阶段', async t => {
@@ -471,7 +536,8 @@ test('十轮均未猜中判平且不进入第十一轮，每轮固定发送两�
     assert.equal(getPlayer('grks', 'match', 'a')?.score, 0)
     assert.deepEqual(getPlayer('grks', 'match', 'a')?.answers, { total: 10, correct: 0 })
     assert.deepEqual(getPlayer('grks', 'match', 'b')?.answers, { total: 10, correct: 0 })
-    assert.equal(setup.sent.length - before, 10 * 2 * 2)
+    /** 每轮：两条提示方视角消息 + 两条阶段消息；前十轮另有九次进入下一轮通知，最后两条为结算 */
+    assert.equal(setup.sent.length - before, 10 * 4 + 9 * 2 + 2)
     assert.equal(await setup.matches.hint(setup.a, '1', 'B11'), false)
 })
 
@@ -500,23 +566,29 @@ test('同回合双方都猜中平局且各按提示数计分', async t => {
     assert.deepEqual(getPlayer('grks', 'match', 'b')?.answers, { total: 10, correct: 1 })
 })
 
-test('图文消息在阶段结束时也只向每人发送一条', async t => {
+test('提示方视角随进入提示回合的消息一起发出，提交只补文字，公布后各收到一张阶段图', async t => {
     const setup = fixture(t)
     await openRoom(setup)
     t.mock.method(picmodle, 'grks', async () => ({ type: 'image', file: 'image.png' }))
     const before = setup.sent.length
     await enterAnswer(setup)
-    assert.equal(setup.sent.length - before, 2)
-    assert.ok(setup.sent.slice(before).every(item => Array.isArray(item.content)))
+    assert.equal(setup.sent.length - before, 4)
+    /** 提交提示的两条是纯文字确认，只有公布阶段的两条带图 */
+    assert.equal(setup.sent.slice(before).filter(item => Array.isArray(item.content)).length, 2)
+    assert.ok(setup.sent.slice(before, before + 2).every(item => !Array.isArray(item.content)))
 })
 
-test('图片渲染失败改发文字，不中止房间或重复通知', async t => {
+test('图片渲染异常不再兜底成文字，房间按阶段消息发送失败关闭', async t => {
     const setup = fixture(t)
     const room = await openRoom(setup)
     t.mock.method(picmodle, 'grks', async () => { throw new Error('render failed') })
     const before = setup.sent.length
-    await enterAnswer(setup)
-    assert.equal(room.phase, 'playing')
+    assert.equal(await setup.matches.hint(setup.a, '1', 'B1'), true)
+    /** 公布阶段要发图，渲染抛错即视为阶段消息发送失败 */
+    assert.equal(await setup.matches.hint(setup.b, '1', 'B1'), false)
+    assert.equal(room.error, true)
+    assert.equal(room.phase, 'settled')
+    /** 只有提交提示的两条文字确认，公布阶段没有可发的内容 */
     assert.equal(setup.sent.length - before, 2)
 })
 

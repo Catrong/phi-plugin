@@ -15,12 +15,10 @@ import Config from '../../components/Config.js'
 import segment from '../../components/segment.js'
 import { butCmd } from './message.js';
 import { isUsableImage } from '../game/grks/renderResult.js'
-import { Level } from '../game/constNum.js'
 
 /** @import {botEvent} from '../../components/baseClass.js' */
 /** @import {MessageParts} from './message.js' */
 /** @import {grksKnownData, grksGuessEntry} from '../../apps/grks/grks.js' */
-/** @import {grksSoloView} from '../../apps/grks/soloRender.js' */
 /** @import {gameScoreRankingPage} from '../game/gameScore/index.js' */
 /** @import {gameScoreRow, gameScoreRankKind} from '../game/gameScore/ranking.js' */
 
@@ -1735,14 +1733,16 @@ export const grksRankingWords = {
  *
  * @typedef {object} grksViewMessageOptions
  * @property {grksKnownData} data 已公开的题目数据
- * @property {boolean} orderKnown 是否公开成绩位置
- * @property {number} hintCount 已使用提示条数
+ * @property {boolean} [orderKnown] 是否公开成绩位置
+ * @property {number} [hintCount] 已使用提示条数
  * @property {string} prefix 命令前缀
  * @property {number | null} [answerRks] 结算答案
  * @property {boolean} [revealAll] 是否已结算
  * @property {'ans' | 'cancel'} [exitCommand] 退出指令
  * @property {grksGuessEntry[]} [history] 当前视角的猜测记录
  * @property {string} [playerId] 标题玩家标识
+ * @property {boolean} [giver] 是否为提示方视角
+ * @property {import('../../apps/grks/soloRender.js').grksGiverKnown} [known] 提示方视角下对手已看到的部分
  *
  * @typedef {object} grksMatchQueueMessageOptions
  * @property {number} timeout 匹配池等待上限秒数
@@ -1794,6 +1794,24 @@ export const grksViewWords = {
     anonymous: '？？？',
     waitingHint: '等待提示',
     unanswered: '—',
+    historyTitle: '猜测记录',
+    /** @param {number} answered */
+    historyMeta: (answered) => `已回答 ${answered} / 10 次`,
+    /** @param {string} hint @param {boolean} [giver] */
+    historyHint: (hint, giver = false) => `${giver ? '已给提示' : '提示'}：${hint}`,
+    /** @param {string} answer @param {boolean} [giver] */
+    historyAnswer: (answer, giver = false) => `${giver ? '对手答' : '答'} ${answer}`,
+    giver: {
+        title: '提示者视角',
+        /** @param {string} slot */
+        slotHidden: (slot) => `未向对手公开 · ${slot}`,
+        hiddenStats: '统计与课题分尚未向对手公开',
+        hiddenSheet: '直方图尚未向对手公开',
+        sheetExclusive: '直方图与上下界仅可选择一种',
+        historyTitle: '对手猜测记录',
+        /** @param {number} answered */
+        historyMeta: (answered) => `对手已回答 ${answered} / 10 次`,
+    },
     guessResult: {
         pending: '待回答', correct: '正确', wrong: '错误',
         timeout: '超时放弃', abandoned: '已放弃', empty: '未开始',
@@ -1812,51 +1830,6 @@ export const grksViewWords = {
     answer(value) {
         return value === null || value === undefined ? grksViewWords.unanswered : String(value)
     },
-    /** @param {grksSoloView} view @param {grksViewMessageOptions} options @returns {string[]} */
-    details(view, options) {
-        const { data } = options
-        const orderKnown = options.revealAll === true || options.orderKnown
-        /** @type {string[]} */
-        const lines = []
-        if (data.records.length) {
-            lines.push(orderKnown ? '已公开的成绩：' : '已公开的成绩（按单曲 rks 降序）：')
-            data.records.forEach((record, index) => {
-                if (!record) return
-                const position = orderKnown ? grksViewWords.slotName(index) : ''
-                const song = record.song || String(record.id)
-                lines.push(`${position}${record.rank} ${record.difficulty.toFixed(1)} ${song} · ${record.score} · ${record.acc.toFixed(2)}%`)
-            })
-        } else {
-            lines.push('暂无公开的成绩')
-        }
-        if (data.info) {
-            lines.push('存档统计：')
-            data.info.stats.forEach((row, index) => {
-                lines.push(`${Level[index] || `难度${index + 1}`}：通关 ${row[0]} · FC ${row[1]} · φ ${row[2]}`)
-            })
-            lines.push(`课题分：${data.info.challenge}`)
-        }
-        if (view.sheet.kind === 'histogram') {
-            const textBarWidth = 20
-            lines.push('单曲等效 RKS 相对分布（不含数值刻度）：')
-            for (const bar of view.sheet.bars) {
-                const width = Math.max(1, Math.round(bar.height / 100 * textBarWidth))
-                lines.push(`${bar.label} ${'|'.repeat(width)}`)
-            }
-        } else if (view.sheet.kind === 'range') {
-            lines.push(`单曲等效 RKS 区间：${view.sheet.min.toFixed(2)} ~ ${view.sheet.max.toFixed(2)}`)
-        }
-        if (typeof options.answerRks === 'number' && Number.isFinite(options.answerRks)) {
-            lines.push(`正确答案：${options.answerRks.toFixed(4)}`)
-        }
-        for (const entry of view.history) {
-            if (entry.result === 'empty') continue
-            lines.push(`第 ${entry.turn} 次 · 提示：${entry.hint} · 回答：${entry.answer} · ${entry.resultText}`)
-        }
-        lines.push(`已使用提示 ${options.hintCount} 条`)
-        lines.push(`猜测：${options.prefix} <数值>　放弃：${options.prefix} ${options.exitCommand || 'ans'}`)
-        return lines
-    },
 }
 
 /** @param {grksMatchMenuOptions | 'queue'} [state] @returns {buttonCommandObject[][]} */
@@ -1867,24 +1840,19 @@ function grksMatchButtons(state) {
 /** @param {botEvent} e @param {grksViewMessageOptions} options @param {string} footnote @returns {Promise<Pick<grksFinalMessage, 'text' | 'image'>>} */
 async function renderGrksView(e, options, footnote) {
     const { grksSoloRender } = await import('../../apps/grks/soloRender.js')
-    const view = grksSoloRender.buildView({
-        data: options.data, orderKnown: options.orderKnown, footnote,
-        answerRks: options.answerRks, revealAll: options.revealAll, history: options.history,
-    })
-    if (options.playerId) view.header.playerId = options.playerId
-    const { default: logger } = await import('../../components/Logger.js')
-    /** @type {unknown} */
-    let image = null
-    try {
-        const { default: picmodle } = await import('./picmodle.js')
-        image = await picmodle.grks(e, view)
-    } catch (error) {
-        logger.warn('[phi-plugin][grks] 提示图渲染失败，改为文字')
-        logger.warn(error)
-    }
-    if (isUsableImage(image)) return { image, text: footnote }
-    if (typeof image === 'string') logger.warn(`[phi-plugin][grks] 提示图渲染失败，改为文字兜底：${image}`)
-    return { text: [footnote, grksViewWords.details(view, options).join('\n')].filter(Boolean).join('\n\n') }
+    const view = options.giver
+        ? grksSoloRender.buildGiverView({
+            data: options.data, known: options.known || { records: [], info: false, sheetKind: '' },
+            footnote, answerRks: options.answerRks, history: options.history,
+            playerId: options.playerId, prefix: options.prefix,
+        })
+        : grksSoloRender.buildView({
+            data: options.data, orderKnown: options.orderKnown === true, footnote,
+            answerRks: options.answerRks, revealAll: options.revealAll, history: options.history,
+        })
+    if (options.playerId && !options.giver) view.header.playerId = options.playerId
+    const { default: picmodle } = await import('./picmodle.js')
+    return { image: await picmodle.grks(e, view), text: footnote }
 }
 
 /**
@@ -1907,6 +1875,22 @@ export const grksMatchMessages = {
         invalidHint: (/** @type {grksMatchMenuOptions | 'queue'} */ state) => ({ text: '提示参数不合法或已公开。可选 P1-P3、B1-B27；统计和课题信息各只能提示一次。', button: grksMatchButtons(state) }),
         noMatch: (/** @type {string} */ prefix) => ({ text: `当前没有匹配对局，发送 ${prefix} match 加入匹配池`, button: menus.grksHome() }),
         alreadyHinted: (/** @type {grksMatchMenuOptions | 'queue'} */ state) => ({ text: '本轮提示已锁定，等待双方选择完毕后统一公布。', button: grksMatchButtons(state) }),
+        /**
+         * 提示锁定后的文字确认。
+         *
+         * 提示方视角的图片已经随“进入提示回合”的那条消息一起发出，这里不再重复发图，
+         * 只告诉提示者本轮提示已经生效、正在等对手选择。
+         * @param {grksMatchViewOptions} data @param {grksMatchMenuOptions} state
+         */
+        locked: (data, state) => ({
+            text: [
+                grksMatchWords.giver(data.team),
+                grksMatchWords.room(data.id, data.team, data.opponent, data.turn, data.maxTurns),
+                data.notice,
+                grksMatchWords.progress(data.hinted, data.guessed, data.opponentHinted, data.opponentGuessed),
+            ].filter(Boolean).join('\n'),
+            button: menus.grksMatch(state),
+        }),
     },
     guess: {
         wrongStage: (/** @type {grksMatchMenuOptions | 'queue'} */ state) => ({ text: '当前是提示回合，双方选择完毕并公布提示后才能作答。', button: grksMatchButtons(state) }),
@@ -1922,6 +1906,7 @@ export const grksMatchMessages = {
     /** @param {botEvent} e @param {grksViewMessageOptions} options @param {grksMatchViewOptions} data @param {grksMatchMenuOptions} state @returns {Promise<grksFinalMessage>} */
     async view(e, options, data, state) {
         const text = [
+            options.giver ? grksMatchWords.giver(data.team) : '',
             grksMatchWords.room(data.id, data.team, data.opponent, data.turn, data.maxTurns),
             grksMatchWords.stage(data.stage, data.settled),
             data.settled ? '' : data.notice,
@@ -1934,23 +1919,27 @@ export const grksMatchMessages = {
 }
 
 export const grksMatchWords = {
-    started: '匹配成功，双方进入提示回合，请各选择一次提示。',
-    hintsPublished: '双方提示已统一公布，进入回答回合，请各提交一次猜测。',
-    nextRound: (/** @type {number} */ turn) => `第 ${turn} 轮双方均未猜中，进入下一轮提示回合。`,
+    started: '匹配成功喵，双方进入提示回合，各选择一次提示喵！',
+    hintsPublished: '提示公布！请猜测喵！',
+    nextRound: (/** @type {number} */ turn) => `第 ${turn} 轮没有人猜中，进入下一轮提示回合喵。`,
     failed: '房间处理失败，已停止对局；积分可能未完整保存，请联系管理员查看日志。',
-    answerTimeout: '回答阶段超时，未回答者视为放弃；双方均未回答则判平',
-    correct: '本回合猜测已结算',
-    hintLimit: '已完成 10 次提示及回答，双方均未猜中，判为平局',
-    quit: (/** @type {string} */ name) => `${name} 主动退出，判负`,
+    answerTimeout: '回答超时喵...未回答者视为放弃对局！',
+    correct: '本回合猜测已结算喵',
+    hintLimit: '已完成 10 次提示及回答，双方均未猜中，判为平局喵',
+    quit: (/** @type {string} */ name) => `${name} 主动退出，判负喵`,
     settlement: (/** @type {string} */ reason) => `猜 RKS 匹配结束：${reason}`,
     room: (/** @type {string} */ id, /** @type {'red'|'blue'} */ team, /** @type {string} */ opponent, /** @type {number} */ turn, /** @type {number} */ maxTurns) =>
-        `房间 ${id} · 第 ${turn}/${maxTurns} 轮\n你是${team === 'red' ? '红方' : '蓝方'}，对手：${opponent}`,
-    stage: (/** @type {'hint'|'answer'} */ stage, /** @type {boolean} */ settled) => settled ? '当前阶段：已结算'
-        : stage === 'hint' ? '提示回合：双方各选择一次提示，选择完毕后统一公布。'
-            : '回答回合：提示已公布，双方各作答一次，作答完毕后统一校验。',
+        `第 ${turn}/${maxTurns} 轮\n你是${team === 'red' ? '红方' : '蓝方'}`,
+    stage: (/** @type {'hint'|'answer'} */ stage, /** @type {boolean} */ settled) => settled ? '当前阶段：回合结束喵'
+        : stage === 'hint' ? '提示回合：请选择你要给出的提示喵。'
+            : '回答回合：提示已公布，等待你的猜测喵。',
     opponent: (/** @type {'red'|'blue'} */ team) => `${team === 'red' ? '红方视角 · 蓝方' : '蓝方视角 · 红方'} B30`,
+    giver: (/** @type {'red'|'blue'} */ team) => `${team === 'red' ? '红方' : '蓝方'} · 提示视角`,
+    /** @param {string} hint 本次锁定的提示说明 */
+    hintLocked: (hint) => `本方提示已锁定：${hint}。等待对手选择提示，双方选择完毕后统一公布并进入回答回合。`,
     progress: (/** @type {boolean} */ hinted, /** @type {boolean} */ guessed, /** @type {boolean} */ opponentHinted, /** @type {boolean} */ opponentGuessed) =>
-        `本方：${hinted ? '已选提示' : '未选提示'} / ${guessed ? '已提交猜测' : '未提交猜测'}\n对方：${opponentHinted ? '已选提示' : '未选提示'} / ${opponentGuessed ? '已提交猜测' : '未提交猜测'}`,
+        '当前状态：' + ((hinted && opponentHinted && !guessed || !hinted) ? `需要${guessed ? '回答' : '选择提示'}` : `等待${opponentGuessed ? '对手回答' : '对手选择提示'}`),
+        // `本方：${hinted ? '已选提示' : '未选提示'} / ${guessed ? '已提交猜测' : '未提交猜测'}\n对方：${opponentHinted ? '已选提示' : '未选提示'} / ${opponentGuessed ? '已提交猜测' : '未提交猜测'}`,
     commands: (/** @type {string} */ prefix, /** @type {number} */ seconds, /** @type {number} */ tolerance, /** @type {number} */ maxTurns) =>
         `每阶段 ${seconds}s，容差 ±${tolerance}。提示：${prefix} hint B7 / hint 3 range / hint 4\n猜测：${prefix} 15.25；退出判负：${prefix} cancel\n最多 ${maxTurns} 次提示，最后一次回答后仍无人猜中则平局。回答超时即放弃；阶段结束时向双方最新会话各发送一次消息。`,
     result: (/** @type {'red'|'blue'} */ team, /** @type {string} */ name, /** @type {'win'|'loss'|'draw'} */ result, /** @type {string} */ points, /** @type {string} */ answer) =>
@@ -2120,7 +2109,7 @@ export const grksSoloMessages = {
         cooldown: (/** @type {number} */ seconds) => ({ text: `你的回答冷却中，请 ${seconds}s 后再试`, button: menus.grksSolo() }),
         /** @param {botEvent} e @param {grksViewMessageOptions} options @param {{hintGiven: boolean, hintWait: number, cd: number}} data @returns {Promise<grksFinalMessage>} */
         async wrong(e, options, data) {
-            const text = grksSoloWords.wrong({ ...data, hintCount: options.hintCount, prefix: options.prefix })
+            const text = grksSoloWords.wrong({ ...data, hintCount: options.hintCount ?? 0, prefix: options.prefix })
             return { ...await renderGrksView(e, options, text), button: menus.grksSolo() }
         },
     },

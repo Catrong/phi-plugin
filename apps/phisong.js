@@ -22,6 +22,7 @@ import { canUseApi } from '../model/user/apiPermission.js'
 import TapInfo from "../model/integrations/getInfoFromTap.js"
 import { sendMessage } from '../model/render/message.js'
 import { phisongMessages } from '../model/render/messages.js'
+import { getTableDifficulty } from '../model/game/tableDifficulty.js'
 
 /**@import {botEvent} from '../components/baseClass.js' */
 
@@ -676,7 +677,6 @@ export class phisong extends phiPluginBase {
         // 0 级与 18 级的谱面各只有一首，分别就近并入 1 级与 17 级的定数表：
         // #table 0 等同于 #table 1，#table 18 等同于 #table 17
         const tableDif = getTableDifficulty(dif)
-
         let matchVersion = e.msg.match(/-v\s*(\S+)/i)?.[1];
         let matchVerCode = 0;
         if (matchVersion) {

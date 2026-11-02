@@ -13,13 +13,3 @@ export function isUsableImage(image) {
     if (typeof image === 'string') return image.startsWith('[CQ:image')
     return true
 }
-
-/**
- * 有图时只发送图片；渲染失败时返回文字兜底内容。
- * @param {unknown} image 渲染结果
- * @param {string} fallbackText 渲染失败时发送的文字
- * @returns {unknown} 可直接交给发送接口的消息内容
- */
-export function pickImageOrText(image, fallbackText) {
-    return isUsableImage(image) ? image : fallbackText
-}

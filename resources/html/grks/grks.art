@@ -24,7 +24,7 @@
             <p>{{header.rks}}</p>
         </div>
         {{if header.challenge}}
-        <div class="clgBox">
+        <div class="clgBox{{if header.challengeMasked}} grks-masked{{/if}}">
             <div class="Challenge">
                 <img src="{{_res_path}}html/otherimg/{{header.challenge.colorIndex}}.png" alt="Challenge">
                 <p>{{header.challenge.score}}</p>
@@ -32,12 +32,12 @@
         </div>
         {{/if}}
         {{if stats.revealed}}
-        <div class="date">
+        <div class="date{{if stats.masked}} grks-masked{{/if}}">
             <p>{{header.date}}</p>
         </div>
         {{/if}}
     </div>
-    <div class="recordInfo clip-box">
+    <div class="recordInfo clip-box{{if stats.masked}} grks-masked{{/if}}">
         <div class="whiteLine clip-box"></div>
         <div class="sheet">
             <div class="row">
@@ -65,12 +65,18 @@
                 {{/each}}
             </div>
         </div>
+        {{if stats.masked}}
+        <div class="grks-giver-label">
+            <p class="grks-giver-status">{{stats.maskLabel}}</p>
+            <p class="grks-giver-command">{{stats.command}}</p>
+        </div>
+        {{/if}}
     </div>
 </div>
 
 <div class="b19">
     {{each records song}}
-    <div class="song {{song.kind}}_song{{song.revealed ? '' : ' grks-hidden-song'}}">
+    <div class="song {{song.kind}}_song{{song.revealed ? '' : ' grks-hidden-song'}}{{if song.masked}} grks-masked{{/if}}">
         {{if song.record}}
         <div class="ill-box">
             <div class="num clip-box"><p name="pvis">{{song.slot}}</p></div>
@@ -98,7 +104,12 @@
             </div>
         </div>
         {{/if}}
-        {{if !song.revealed}}
+        {{if song.masked}}
+        <div class="grks-giver-label">
+            <p class="grks-giver-status">{{song.maskLabel}}</p>
+            <p class="grks-giver-command">{{song.command}}</p>
+        </div>
+        {{else if !song.revealed}}
         <div class="grks-overlay is-solid clip-box">
             <p class="grks-hidden-slot">{{song.slot}}</p>
             <p class="grks-placeholder">成绩未公开</p>
@@ -122,7 +133,7 @@
 
 <div class="b30-analysis-row grks-analysis-row">
     {{if sheet.kind == 'histogram'}}
-    <section class="analysis-panel histogram-panel clip-box">
+    <section class="analysis-panel histogram-panel clip-box{{if sheet.masked}} grks-masked{{/if}}">
         <div class="analysis-panel-head">
             <div>
                 <p class="analysis-kicker">RKS DISTRIBUTION</p>
@@ -155,6 +166,14 @@
             <p><span class="legend-dot best-dot"></span>B1-B27</p>
             <p>{{sheet.count}} 条成绩</p>
         </div>
+        {{if sheet.masked}}
+        <div class="grks-giver-label">
+            <p class="grks-giver-status">{{sheet.maskLabel}}</p>
+            <p class="grks-giver-command">{{sheet.command}}</p>
+            <p class="grks-giver-command">{{sheet.commandAlt}}</p>
+            <p class="grks-giver-status">{{sheet.exclusive}}</p>
+        </div>
+        {{/if}}
     </section>
 {{else if sheet.kind == 'range'}}
     <section class="analysis-panel grks-ruler-panel clip-box">
@@ -200,19 +219,19 @@
         <div class="analysis-panel-head">
             <div>
                 <p class="analysis-kicker">GUESS HISTORY</p>
-                <p class="analysis-title">猜测记录</p>
+                <p class="analysis-title">{{historyTitle}}</p>
             </div>
-            <p class="analysis-meta">已回答 {{answeredCount}} / 10 次</p>
+            <p class="analysis-meta">{{historyMeta}}</p>
         </div>
         <div class="grks-history-grid">
             {{each history entry}}
             <div class="grks-history-cell is-{{entry.result}} clip-box">
                 <div class="grks-history-heading">
                     <p class="grks-history-turn">{{entry.turn < 10 ? '0' : ''}}{{entry.turn}}</p>
-                    <p class="grks-history-answer">答 {{entry.answer}}</p>
+                    <p class="grks-history-answer">{{entry.answerLabel}}</p>
                     <p class="grks-history-result">{{entry.resultText}}</p>
                 </div>
-                <p class="grks-history-hint">提示：{{entry.hint}}</p>
+                <p class="grks-history-hint">{{entry.hintLabel}}</p>
             </div>
             {{/each}}
         </div>

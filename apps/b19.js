@@ -25,6 +25,7 @@ import {
 import { sendMessage } from '../model/render/message.js'
 import { b19Messages } from '../model/render/messages.js'
 import dateValue from '../model/save/dateVaule.js';
+import { getTableDifficulty } from '../model/game/tableDifficulty.js';
 
 /**@import {botEvent} from '../components/baseClass.js' */
 

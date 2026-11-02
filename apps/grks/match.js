@@ -15,7 +15,7 @@ import { sendMessage } from '../../model/render/message.js'
 /** @import {botEvent} from '../../components/baseClass.js' */
 /** @import {grksSoloClass} from './solo.js' */
 /** @import {grksAnswer, grksKnownData} from './grks.js' */
-/** @import {grksMatchMenuOptions, grksFinalMessage} from '../../model/render/messages.js' */
+/** @import {grksMatchMenuOptions, grksFinalMessage, grksViewMessageOptions, grksMatchViewOptions} from '../../model/render/messages.js' */
 /** @import {gameScoreProfile} from '../../model/game/gameScore/profile.js' */
 
 /**
@@ -67,6 +67,7 @@ import { sendMessage } from '../../model/render/message.js'
  * @property {grksTeam} team 红蓝阵营
  * @property {grksClass} game 独立游戏状态
  * @property {grksSelectedHint | null} pendingHint 本轮已锁定的提示
+ * @property {boolean} hintApplied 本轮提示是否已应用到自己的题目
  * @property {number | null} guess 本轮已提交的猜测
  */
 
@@ -316,9 +317,9 @@ export class grksMatchClass {
 
     /** @param {grksQueueEntry} entry @param {grksTeam} team @returns {grksRoomPlayer} */
     createSide(entry, team) {
+        /** 成绩顺序与单机一致，第 5 次提示后才公开，开局不预先知道位置 */
         const game = new grksClass(entry.answer)
-        game.knownOrder = true
-        return { ...entry, team, game, pendingHint: null, guess: null }
+        return { ...entry, team, game, pendingHint: null, hintApplied: false, guess: null }
     }
 
     /** @param {[grksQueueEntry, grksQueueEntry]} entries @param {grksMatchConfig} config */
@@ -383,11 +384,81 @@ export class grksMatchClass {
             if (!hint) return invalid
             player.event = e
             player.pendingHint = hint
+            this.applyHint(player)
+            await this.sendHintLocked(room, player, e)
             await this.publishHints(room)
             return { ok: !room.error }
         })
         if (result.message) await sendMessage(e, result.message, { at: true })
         return result.ok
+    }
+
+    /**
+     * 把本轮锁定的提示应用到自己的题目状态。
+     *
+     * 提示由持有者给出，公开的是自己的成绩；先在自己这里生效，双方公布时
+     * 对手拿到的才是最新的已公开数据。对手在双方选择完毕前收不到任何新消息。
+     * @param {grksRoomPlayer} player
+     */
+    applyHint(player) {
+        if (!player.pendingHint || player.hintApplied) return
+        player.game.userHint(player.pendingHint)
+        player.hintApplied = true
+    }
+
+    /**
+     * 提示锁定后的文字确认。
+     *
+     * 提示方视角的图片已随“进入提示回合”的消息一起发出，这里只补一条文字，
+     * 告诉提示者本轮提示已经生效、正在等对手选择。发送失败只记录日志：
+     * 提示已经锁定，双方公布时仍会收到阶段消息。
+     * @param {grksMatchRoom} room @param {grksRoomPlayer} player @param {botEvent} e
+     * @returns {Promise<void>}
+     */
+    async sendHintLocked(room, player, e) {
+        try {
+            const hint = player.game.history.at(-1)?.hint || ''
+            const message = grksMatchMessages.hint.locked(
+                this.viewStatus(room, player, grksMatchWords.hintLocked(hint)), this.menuState(room, player))
+            const sent = await sendMessage(e, message, { at: true })
+            if (sent === false || (sent && typeof sent === 'object' && 'error' in sent
+                && Array.isArray(sent.error) && sent.error.length)) {
+                logger.error('[phi-plugin][grks] 提示锁定消息发送失败', sent)
+            }
+        } catch (error) {
+            logger.warn('[phi-plugin][grks] 提示锁定消息发送失败')
+            logger.warn(error)
+        }
+    }
+
+    /**
+     * 提示方视角的渲染数据：自身完整 B30 + 对手已经看到的部分。
+     * @param {grksMatchRoom} room @param {grksRoomPlayer} player
+     * @returns {grksViewMessageOptions}
+     */
+    giverOptions(room, player) {
+        const answer = player.answer
+        const game = player.game
+        return {
+            giver: true,
+            data: {
+                records: answer.record,
+                info: { stats: answer.stats, challenge: answer.challenge, updateAt: answer.updateAt },
+                sheet: {
+                    range: [Math.max(answer.record[2].rks, answer.record[3].rks), answer.record[29].rks],
+                    histogram: answer.record.map(record => record.rks),
+                },
+            },
+            known: {
+                records: game.knownRecords.slice(),
+                info: game.knownInfo,
+                sheetKind: game.knownSheetType,
+            },
+            answerRks: answer.rks,
+            playerId: grksMatchWords.giver(player.team),
+            prefix: this.solo.cmdPrefix(),
+            history: game.history.map(entry => ({ ...entry })),
+        }
     }
 
     /** @param {grksClass} game @param {string} type @param {string} [arg] @returns {grksSelectedHint | null} */
@@ -450,8 +521,8 @@ export class grksMatchClass {
     async publishHints(room) {
         const { red, blue } = room.sides
         if (!red.pendingHint || !blue.pendingHint) return
-        red.game.userHint(red.pendingHint)
-        blue.game.userHint(blue.pendingHint)
+        this.applyHint(red)
+        this.applyHint(blue)
         room.stage = 'answer'
         room.notice = grksMatchWords.hintsPublished
         if (room.timer) clearTimeout(room.timer)
@@ -465,6 +536,7 @@ export class grksMatchClass {
         room.stage = 'hint'
         for (const side of Object.values(room.sides)) {
             side.pendingHint = null
+            side.hintApplied = false
             side.guess = null
         }
         await this.notifyRoom(room)
@@ -495,6 +567,7 @@ export class grksMatchClass {
                 const index = side.game.knownRecords.indexOf(false)
                 side.pendingHint = index >= 0 ? { type: 'record', value: [index] }
                     : !side.game.knownSheetType ? { type: 'sheet', value: 'histogram' } : { type: 'info' }
+                this.applyHint(side)
             }
             await this.publishHints(room)
             return
@@ -646,23 +719,50 @@ export class grksMatchClass {
     /** @param {grksMatchRoom} room @param {grksRoomPlayer} player */
     async sendView(room, player) {
         const event = player.event
-        const opponent = this.opponent(room, player)
         const revealAll = room.phase === 'settled'
+        /**
+         * 提示回合看的是自己的 B30：把提示方视角直接并进“进入提示回合”的这条消息，
+         * 提示者据此决定公开哪一条成绩，不再额外多发一张图。
+         */
+        if (room.stage === 'hint' && !revealAll) {
+            const message = await grksMatchMessages.view(event, this.giverOptions(room, player),
+                this.viewStatus(room, player), this.menuState(room, player))
+            return await sendMessage(event, message, { at: true })
+        }
+        const opponent = this.opponent(room, player)
         /** @type {grksKnownData} */
         const data = revealAll ? {
             records: opponent.answer.record,
             info: { stats: opponent.answer.stats, challenge: opponent.answer.challenge, updateAt: opponent.answer.updateAt },
             sheet: opponent.game.getKnownData().sheet,
         } : opponent.game.getKnownData()
-        const status = {
+        const message = await grksMatchMessages.view(event, {
+            data,
+            orderKnown: opponent.game.knownOrder, hintCount: opponent.game.hintCnt,
+            prefix: this.solo.cmdPrefix(), answerRks: revealAll ? opponent.answer.rks : null, revealAll,
+            exitCommand: 'cancel',
+            history: opponent.game.history.map(entry => ({ ...entry })),
+            playerId: grksMatchWords.opponent(player.team),
+        }, this.viewStatus(room, player), this.menuState(room, player))
+        return await sendMessage(event, message, { at: true })
+    }
+
+    /**
+     * 阶段消息的公共状态。
+     * @param {grksMatchRoom} room @param {grksRoomPlayer} player @param {string} [notice] 覆盖阶段通知
+     * @returns {grksMatchViewOptions}
+     */
+    viewStatus(room, player, notice) {
+        const opponent = this.opponent(room, player)
+        return {
             id: room.id,
             team: player.team,
             opponent: opponent.nickname,
             turn: room.turn,
             maxTurns: grksMatchClass.#MAX_HINT_ROUNDS,
             stage: room.stage,
-            settled: revealAll,
-            notice: room.notice,
+            settled: room.phase === 'settled',
+            notice: notice ?? room.notice,
             hinted: player.pendingHint !== null,
             guessed: player.guess !== null,
             opponentHinted: opponent.pendingHint !== null,
@@ -673,15 +773,6 @@ export class grksMatchClass {
             seconds: room.config.turnTime,
             tolerance: room.config.tolerance,
         }
-        const message = await grksMatchMessages.view(event, {
-            data,
-            orderKnown: true, hintCount: opponent.game.hintCnt,
-            prefix: this.solo.cmdPrefix(), answerRks: revealAll ? opponent.answer.rks : null, revealAll,
-            exitCommand: 'cancel',
-            history: opponent.game.history.map(entry => ({ ...entry })),
-            playerId: grksMatchWords.opponent(player.team),
-        }, status, this.menuState(room, player))
-        return await sendMessage(event, message, { at: true })
     }
 
     /** @param {botEvent} e */

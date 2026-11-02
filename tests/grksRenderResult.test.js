@@ -5,10 +5,10 @@ import { fileURLToPath } from 'node:url'
 import Config from '../components/Config.js'
 import send from '../model/render/send.js'
 import picmodle from '../model/render/picmodle.js'
-import { isUsableImage, pickImageOrText } from '../model/game/grks/renderResult.js'
+import { isUsableImage } from '../model/game/grks/renderResult.js'
 import { grksSoloRender } from '../apps/grks/soloRender.js'
 import { grksClass } from '../apps/grks/grks.js'
-import { grksMessages, grksSoloMessages, grksMatchMessages, grksViewWords, menus } from '../model/render/messages.js'
+import { grksMessages, grksSoloMessages, grksMatchMessages, menus } from '../model/render/messages.js'
 import { buildQuickCommandKeyboard, sendMessage } from '../model/render/message.js'
 
 /** @typedef {import('../model/game/LevelRecordInfo.js').default} LevelRecordInfo */
@@ -54,9 +54,6 @@ test('recognizes rendered images from every platform shape', () => {
     assert.equal(isUsableImage(undefined), false)
     assert.equal(isUsableImage([]), false)
     assert.equal(isUsableImage([null]), false)
-
-    assert.equal(pickImageOrText('[CQ:image,file=x]', '文字'), '[CQ:image,file=x]')
-    assert.equal(pickImageOrText('渲染失败QAQ！', '文字'), '文字')
 })
 
 test('builds the view from known data', () => {
@@ -132,18 +129,6 @@ test('shows the answer rks, update time and slots on the settlement view', () =>
     assert.equal(view.stats.revealed, true)
     assert.deepEqual(view.header.challenge, { colorIndex: 2, score: 34 })
     assert.equal(view.sheet.kind, 'range')
-
-    const text = grksViewWords.details(view, {
-        data,
-        orderKnown: false,
-        hintCount: 3,
-        prefix: '#phi grks',
-        answerRks: 15.4,
-        revealAll: true,
-    }).join('\n')
-    assert.ok(text.includes('正确答案：15.4000'))
-    assert.ok(text.includes('P1IN'))
-    assert.ok(text.includes('B27IN'))
 })
 
 test('仅在课题分与统计信息公开后展示玩家时间', () => {
@@ -166,7 +151,79 @@ test('仅在课题分与统计信息公开后展示玩家时间', () => {
     }
 })
 
-test('最终消息叶子提供图片和按钮，渲染失败时提供完整文字且不自行发送', async t => {
+test('提示方视角保留完整 B30，未向对手公开的部分盖遮罩并给出提示指令', () => {
+    /** @type {LevelRecordInfo[]} */
+    const records = makeRecords()
+    /** @type {grksKnownData} */
+    const data = {
+        records,
+        info: { stats: [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]], challenge: 234, updateAt: Date.now() },
+        sheet: { range: [records[3].rks, records[29].rks], histogram: records.map(item => item.rks) },
+    }
+    const view = grksSoloRender.buildGiverView({
+        data,
+        known: { records: records.map((_, index) => index === 0 || index === 9), info: false, sheetKind: '' },
+        prefix: '#phi grks',
+        playerId: '红方 · 提示者视角',
+        answerRks: 15.4,
+        history: [{ turn: 1, hint: '公开随机成绩 1 条', guess: 1.2345, result: 'wrong' }],
+    })
+    assert.equal(view.giver, true)
+    assert.equal(view.header.playerId, '红方 · 提示者视角')
+    assert.equal(view.header.rks, '15.4000')
+    assert.equal(view.header.challengeMasked, true)
+    assert.equal(view.records.length, 30)
+    assert.equal(view.records[0].masked, false)
+    assert.equal(view.records[0].slot, 'P1')
+    assert.equal(view.records[9].masked, false)
+    assert.equal(view.records[1].masked, true)
+    assert.equal(view.records[1].command, '#phi grks hint P2')
+    assert.equal(view.records[1].rksText, records[1].rks.toFixed(2))
+    assert.equal(view.stats.masked, true)
+    assert.equal(view.stats.revealed, true)
+    assert.equal(view.sheet.kind, 'histogram')
+    assert.equal(view.sheet.masked, true)
+    assert.equal(view.history[0].answerLabel, '对手答 1.2345')
+    assert.equal(view.history[0].hintLabel, '已给提示：公开随机成绩 1 条')
+    assert.equal(view.historyTitle, '对手猜测记录')
+
+    const templatePath = fileURLToPath(new URL('../resources/html/grks/grks.art', import.meta.url))
+    const render = () => template(templatePath, {
+        ...view,
+        defaultLayout: fileURLToPath(new URL('../resources/html/common/layout/default.art', import.meta.url)),
+        _res_path: '/resources/', _plugin: 'phi-plugin', Version: { ver: 'test' }, sys: { scale: '' },
+        renderNoJs: true, themeInfo: null,
+    })
+    const html = render()
+    /** 28 个未公开槽位 + 统计与课题分 + 直方图各一处遮罩 */
+    assert.equal((html.match(/class="grks-giver-label"/g) || []).length, 30)
+    assert.ok(html.includes('未向对手公开 · P2'))
+    assert.ok(html.includes('#phi grks hint P2'))
+    assert.ok(html.includes('统计与课题分尚未向对手公开'))
+    assert.ok(html.includes('直方图尚未向对手公开'))
+    assert.ok(html.includes('对手猜测记录'))
+    assert.ok(html.includes('对手答 1.2345'))
+    assert.ok(!html.includes('成绩未公开'))
+
+    const revealed = grksSoloRender.buildGiverView({
+        data,
+        known: { records: records.map(() => true), info: true, sheetKind: 'histogram' },
+        prefix: '#phi grks',
+    })
+    assert.equal(revealed.records.every(slot => !slot.masked), true)
+    assert.equal(revealed.stats.masked, false)
+    assert.equal(revealed.sheet.masked, false)
+    const revealedHtml = template(templatePath, {
+        ...revealed,
+        defaultLayout: fileURLToPath(new URL('../resources/html/common/layout/default.art', import.meta.url)),
+        _res_path: '/resources/', _plugin: 'phi-plugin', Version: { ver: 'test' }, sys: { scale: '' },
+        renderNoJs: true, themeInfo: null,
+    })
+    assert.ok(!revealedHtml.includes('grks-giver-label'))
+    assert.ok(!revealedHtml.includes('未向对手公开'))
+})
+
+test('最终消息叶子只带图片与按钮，渲染结果原样交给发送层', async t => {
     const data = { records: makeRecords().slice(0, 5), info: null, sheet: { range: /** @type {[number, number]} */ ([15.5, 14.2]), histogram: null } }
     const options = { data, orderKnown: false, hintCount: 1, prefix: '#phi grks' }
     const event = /** @type {import('../components/baseClass.js').botEvent} */ ({ user_id: 'leaf-render' })
@@ -178,18 +235,17 @@ test('最终消息叶子提供图片和按钮，渲染失败时提供完整文�
     assert.match(String(success.text), /^猜 RKS 开始/)
     assert.deepEqual(success.button, menus.grksSolo())
     assert.equal(sender.mock.callCount(), 0)
+    /** 渲染器返回错误文案时也原样透传，不再拼接文字详情 */
     image = '渲染失败QAQ！\nError: boom'
-    const fallback = await grksSoloMessages.start.opened(event, options, { cd: 5, limit: 10 })
-    assert.equal(fallback.image, undefined)
-    assert.deepEqual(fallback.button, success.button)
-    assert.match(String(fallback.text), /^猜 RKS 开始/)
-    assert.match(String(fallback.text), /单曲等效 RKS 区间：14.20 ~ 15.50/)
-    assert.ok(!String(fallback.text).includes('Error: boom'))
+    const failed = await grksSoloMessages.start.opened(event, options, { cd: 5, limit: 10 })
+    assert.equal(failed.image, image)
+    assert.deepEqual(failed.button, success.button)
+    assert.equal(failed.text, success.text)
     assert.equal(sender.mock.callCount(), 0)
-    t.mock.method(picmodle, 'grks', async () => { throw new Error('渲染异常') })
-    const thrown = await grksSoloMessages.start.opened(event, options, { cd: 5, limit: 10 })
-    assert.equal(thrown.image, undefined)
-    assert.match(String(thrown.text), /已使用提示 1 条/)
+    /** 渲染异常直接抛出，不再兜底成文字 */
+    const error = new Error('渲染异常')
+    t.mock.method(picmodle, 'grks', async () => { throw error })
+    await assert.rejects(grksSoloMessages.start.opened(event, options, { cd: 5, limit: 10 }), error)
 })
 
 test('完整消息直接发送时保留失败返回值与异常', async t => {
@@ -268,7 +324,7 @@ test('所有普通消息分支直接产出文本与按钮，无需后续补齐',
     }
 })
 
-test('单机开局、猜错和每类结算消息均直接包含图片或完整降级文字及按钮', async t => {
+test('单机开局、猜错和每类结算消息均直接包含图片与按钮', async t => {
     const data = { records: [], info: null, sheet: { range: null, histogram: null } }
     const options = { data, orderKnown: false, hintCount: 1, prefix: '#phi grks', answerRks: 15.4 }
     const event = /** @type {import('../components/baseClass.js').botEvent} */ ({ user_id: 'solo-leaves' })
@@ -289,16 +345,16 @@ test('单机开局、猜错和每类结算消息均直接包含图片或完整�
         const success = await factory()
         assert.ok(success.image)
         assert.deepEqual(success.button, index < 2 ? menus.grksSolo() : menus.grksHome())
+        /** 渲染结果无论是否可用都原样交给发送层，叶子不再改写文字 */
         image = false
-        const fallback = await factory()
-        assert.equal(fallback.image, undefined)
-        assert.deepEqual(fallback.button, success.button)
-        assert.ok(String(fallback.text).startsWith(`${success.text}\n\n`))
-        assert.match(String(fallback.text), /已使用提示 1 条/)
+        const failed = await factory()
+        assert.equal(failed.image, false)
+        assert.deepEqual(failed.button, success.button)
+        assert.equal(failed.text, success.text)
     }
 })
 
-test('匹配视图叶子组装完整阶段消息、按钮及文本降级，状态文案仅出现一次', async t => {
+test('匹配视图叶子组装完整阶段消息与按钮，状态文案仅出现一次', async t => {
     const options = { data: { records: [], info: null, sheet: { range: null, histogram: null } }, orderKnown: true, hintCount: 1, prefix: '#phi grks', exitCommand: /** @type {'cancel'} */ ('cancel') }
     const event = /** @type {import('../components/baseClass.js').botEvent} */ ({ user_id: 'match-leaf' })
     let image = true
@@ -319,14 +375,10 @@ test('匹配视图叶子组装完整阶段消息、按钮及文本降级，状�
         const success = await grksMatchMessages.view(event, options, status, state)
         assert.ok(success.image)
         assert.deepEqual(success.button, menus.grksMatch(state))
-        image = false
-        const fallback = await grksMatchMessages.view(event, options, status, state)
-        assert.equal(fallback.image, undefined)
-        assert.deepEqual(fallback.button, success.button)
-        assert.ok(String(fallback.text).startsWith(`${success.text}\n\n`))
-        assert.equal(String(fallback.text).split('房间 test-room').length - 1, 1)
-        assert.match(String(fallback.text), /放弃：#phi grks cancel/)
-        assert.ok(!String(fallback.text).includes('#phi grks ans'))
+        /** 阶段文案只出现在消息文本里，不再拼一段文字详情 */
+        assert.equal(String(success.text).split('房间 test-room').length - 1, 1)
+        assert.match(String(success.text), /退出判负：#phi grks cancel/)
+        assert.ok(!String(success.text).includes('#phi grks ans'))
     }
 })
 
@@ -368,19 +420,6 @@ test('图表隐藏、区间和直方图均保留十次记录，模板转义提�
             assert.ok(!html.includes('平均 RKS'))
         } else if (view.sheet.kind === 'range') {
             assert.ok(tickLabels.every(match => /<p>[\d.]+<\/p>/.test(match[1])))
-        }
-        const fallback = grksViewWords.details(view, {
-            data, orderKnown: false, hintCount: game.hintCnt, prefix: '#phi grks',
-        }).join('\n')
-        assert.match(fallback, /回答：1.2345 · 错误/)
-        if (view.sheet.kind === 'histogram') {
-            assert.match(fallback, /P1 \|+/)
-            assert.match(fallback, /B27 \|+/)
-            assert.ok(!fallback.includes('15.60'))
-            assert.ok(!fallback.includes('15.31'))
-            assert.ok(!fallback.includes('平均 RKS'))
-        } else if (view.sheet.kind === 'range') {
-            assert.match(fallback, /单曲等效 RKS 区间：15.10 ~ 15.80/)
         }
     }
 })

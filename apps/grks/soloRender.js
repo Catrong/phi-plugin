@@ -47,6 +47,9 @@ import fCompute from '../../model/game/fCompute.js'
  * @property {string} rating 评级图标名
  * @property {string} rksText 单曲等效 rks 文本
  * @property {'phi' | 'best'} kind 槽位样式
+ * @property {boolean} [masked] 提示方视角下是否盖遮罩（对手尚未看到）
+ * @property {string} [maskLabel] 遮罩上的状态文案
+ * @property {string} [command] 遮罩上展示的提示指令
  */
 
 /**
@@ -85,6 +88,11 @@ import fCompute from '../../model/game/fCompute.js'
  * @property {number} max 最大值
  * @property {number} minPosition 最小值在标尺上的百分比位置
  * @property {number} maxPosition 最大值在标尺上的百分比位置
+ * @property {boolean} [masked] 提示方视角下是否盖遮罩（对手尚未看到）
+ * @property {string} [maskLabel] 遮罩上的状态文案
+ * @property {string} [exclusive] 遮罩上的互斥说明
+ * @property {string} [command] 遮罩上展示的直方图提示指令
+ * @property {string} [commandAlt] 遮罩上展示的上下界提示指令
  */
 
 /**
@@ -95,17 +103,21 @@ import fCompute from '../../model/game/fCompute.js'
  * @property {string} rks 答案 rks；未结算时为占位
  * @property {string} date 日期文本
  * @property {{colorIndex: number, score: number} | null} challenge 课题分；未公开时为 null
+ * @property {boolean} [challengeMasked] 提示方视角下课题分是否尚未公开给对手
  */
 
 /**
  * 一张提示图所需的全部数据。
  * @typedef {object} grksSoloView
+ * @property {boolean} [giver] 是否为提示方视角（匹配提示回合）
  * @property {grksSoloHeader} header 标题栏
- * @property {{revealed: boolean, rows: grksSoloStatsRow[]}} stats 存档统计
+ * @property {{revealed: boolean, masked?: boolean, rows: grksSoloStatsRow[], maskLabel?: string, command?: string}} stats 存档统计
  * @property {grksSoloRecordView[]} records 成绩槽位
  * @property {grksSoloSheet} sheet 统计图
  * @property {string} background 背景图
  * @property {string} footnote 底部状态
+ * @property {string} [historyTitle] 猜测记录标题
+ * @property {string} [historyMeta] 猜测记录统计文案
  * @property {grksHistoryCell[]} history 十次猜测记录
  * @property {number} answeredCount 已回答次数
  */
@@ -128,7 +140,32 @@ import fCompute from '../../model/game/fCompute.js'
  * @property {string} answer 回答内容
  * @property {grksGuessResult | 'empty'} result 判定样式
  * @property {string} resultText 判定文字
+ * @property {string} hintLabel 带前缀的提示文案
+ * @property {string} answerLabel 带前缀的回答文案
  */
+
+/**
+ * 提示方视角中“对手已看到的部分”。
+ * @typedef {object} grksGiverKnown
+ * @property {boolean[]} records 已向对手公开的成绩位置
+ * @property {boolean} info 是否已向对手公开统计与课题分
+ * @property {'' | 'histogram' | 'range'} sheetKind 已向对手公开的统计图
+ */
+
+/**
+ * `buildGiverView` 的输入。提示方持有完整题目，只需标出哪些部分已经给对手看过。
+ * @typedef {object} grksGiverViewOptions
+ * @property {grksKnownData} data 自身完整数据（30 条成绩、统计与课题、完整统计图）
+ * @property {grksGiverKnown} known 对手已看到的部分
+ * @property {string} [footnote] 底部状态
+ * @property {number | null} [answerRks] 自身答案 rks
+ * @property {string} [playerId] 标题玩家标识
+ * @property {string} [prefix] 提示指令前缀
+ * @property {grksGuessEntry[]} [history] 对手对本方的猜测记录
+ */
+
+/** 一张提示图固定展示的猜测记录条数。 */
+const HISTORY_SLOTS = 10
 
 export class grksSoloRender {
 
@@ -140,6 +177,7 @@ export class grksSoloRender {
     static buildView(options) {
         const { data } = options
         const orderKnown = options.revealAll === true || options.orderKnown
+        const history = options.history || []
         return {
             header: {
                 playerId: grksViewWords.anonymous,
@@ -156,24 +194,80 @@ export class grksSoloRender {
             sheet: buildSheet(data.sheet),
             background: fCompute.randBackground(true),
             footnote: options.footnote || '',
-            history: buildHistory(options.history || []),
-            answeredCount: (options.history || []).filter(entry => entry.guess !== null).length,
+            historyTitle: grksViewWords.historyTitle,
+            historyMeta: grksViewWords.historyMeta(countAnswered(history)),
+            history: buildHistory(history),
+            answeredCount: countAnswered(history),
+        }
+    }
+
+    /**
+     * 构建提示方视角视图（匹配提示回合）。
+     *
+     * 提示方掌握自己的完整 B30，因此底图始终展示全部槽位；尚未向对手公开的部分
+     * 盖上遮罩并写出可以使用的提示指令，让提示方知道自己给对手看到了什么。
+     * @param {grksGiverViewOptions} options
+     * @returns {grksSoloView}
+     */
+    static buildGiverView(options) {
+        const { data, known } = options
+        const prefix = String(options.prefix || '')
+        const statsMasked = !known.info
+        const history = options.history || []
+        return {
+            giver: true,
+            header: {
+                playerId: options.playerId || grksViewWords.giver.title,
+                avatar: 'Introduction',
+                rks: grksViewWords.answerRks(options.answerRks),
+                date: grksViewWords.date(data.info?.updateAt),
+                challenge: data.info ? challengeInfo(data.info.challenge) : null,
+                challengeMasked: statsMasked,
+            },
+            stats: {
+                revealed: Boolean(data.info),
+                masked: statsMasked,
+                rows: buildStatsRows(data.info),
+                maskLabel: grksViewWords.giver.hiddenStats,
+                command: statsMasked ? `${prefix} hint 4` : '',
+            },
+            records: buildGiverRecords(data.records, known.records, prefix),
+            sheet: buildGiverSheet(data.sheet, known.sheetKind, prefix),
+            background: fCompute.randBackground(true),
+            footnote: options.footnote || '',
+            historyTitle: grksViewWords.giver.historyTitle,
+            historyMeta: grksViewWords.giver.historyMeta(countAnswered(history)),
+            history: buildHistory(history, true),
+            answeredCount: countAnswered(history),
         }
     }
 
 }
 
-/** @param {grksGuessEntry[]} history @returns {grksHistoryCell[]} */
-function buildHistory(history) {
-    return Array.from({ length: 10 }, (_, index) => {
+/** @param {grksGuessEntry[]} history @returns {number} */
+function countAnswered(history) {
+    return history.filter(entry => entry.guess !== null).length
+}
+
+/**
+ * @param {grksGuessEntry[]} history
+ * @param {boolean} [giver] 提示方视角：记录的是对手的回答
+ * @returns {grksHistoryCell[]}
+ */
+function buildHistory(history, giver = false) {
+    return Array.from({ length: HISTORY_SLOTS }, (_, index) => {
         const entry = history[index]
         const result = entry?.result || 'empty'
+        const answer = grksViewWords.answer(entry?.guess)
+        const hint = entry?.hint || grksViewWords.waitingHint
         return {
             turn: index + 1,
-            hint: entry?.hint || grksViewWords.waitingHint,
-            answer: grksViewWords.answer(entry?.guess),
+            hint,
+            answer,
             result,
             resultText: grksViewWords.guessResult[result],
+            hintLabel: grksViewWords.historyHint(hint, giver),
+            answerLabel: grksViewWords.historyAnswer(answer, giver),
         }
     })
 }
@@ -233,6 +327,28 @@ function buildRecords(records, orderKnown) {
  */
 function isKnownRecord(record) {
     return record !== null
+}
+
+/**
+ * 提示方视角的成绩槽位：始终补齐 30 个槽位并展示真实成绩，未公开的槽位由遮罩覆盖。
+ * @param {(LevelRecordInfo | null)[]} records 自身完整成绩
+ * @param {boolean[]} revealed 已向对手公开的位置
+ * @param {string} prefix 提示指令前缀
+ * @returns {grksSoloRecordView[]}
+ */
+function buildGiverRecords(records, revealed, prefix) {
+    return records.map((record, index) => {
+        const slot = grksViewWords.slotName(index)
+        const known = Boolean(revealed[index])
+        return {
+            ...buildRecordView(record, slot, index < 3, true),
+            revealed: known,
+            masked: !known,
+            rksText: grksViewWords.recordRks(record ? record.rks : null),
+            maskLabel: grksViewWords.giver.slotHidden(slot),
+            command: known ? '' : `${prefix} hint ${slot}`.trim(),
+        }
+    })
 }
 
 /**
@@ -335,6 +451,32 @@ function buildSheet(sheet) {
         max: 0,
         minPosition: 0,
         maxPosition: 0,
+    }
+}
+
+/**
+ * 提示方视角的统计图：尚未公开给对手时保留直方图底图并盖遮罩。
+ * @param {{range: [number, number] | null, histogram: number[] | null}} sheet 自身完整统计图
+ * @param {'' | 'histogram' | 'range'} known 已向对手公开的统计图
+ * @param {string} prefix 提示指令前缀
+ * @returns {grksSoloSheet}
+ */
+function buildGiverSheet(sheet, known, prefix) {
+    if (known === 'range') {
+        return {
+            ...buildSheet({ range: sheet.range, histogram: null }),
+            masked: false, maskLabel: '', exclusive: '', command: '', commandAlt: '',
+        }
+    }
+    const view = buildSheet({ range: null, histogram: sheet.histogram })
+    const masked = known !== 'histogram'
+    return {
+        ...view,
+        masked,
+        maskLabel: masked ? grksViewWords.giver.hiddenSheet : '',
+        exclusive: masked ? grksViewWords.giver.sheetExclusive : '',
+        command: masked ? `${prefix} hint 3 histogram`.trim() : '',
+        commandAlt: masked ? `${prefix} hint 3 range`.trim() : '',
     }
 }
 
