@@ -5,6 +5,7 @@ import platform from '../../components/platform/index.js'
 import makeRequest from './makeRequest.js'
 import { isApiVersionBlocked } from './apiVersion.js'
 import themePolicy from '../theme/policy.js'
+import { refreshAvgSnapshot } from './avgSnapshot.js'
 import { UserCredentials } from '../user/userCredentials.js'
 
 export class BotSyncService {
@@ -35,6 +36,7 @@ export class BotSyncService {
             for (const id of acknowledgedMessageIds) this.pendingAcknowledgements.delete(id)
             this.reportRenderPressure = response?.reporting?.renderPressure === true
             if (response?.themePolicy) themePolicy.apply(response.themePolicy)
+            if (response?.avgAccSnapshot) void refreshAvgSnapshot(response.avgAccSnapshot)
 
             for (const request of response?.unbindRequests || []) {
                 await this.applyUnbindRequest(request)

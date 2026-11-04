@@ -523,6 +523,7 @@ export default class makeRequest {
      * @returns {Promise<{
      *  ok: true, serverTime: string, nextSyncAfterSeconds: number,
      *  reporting: {renderPressure: boolean},
+     *  avgAccSnapshot?: import('./avgSnapshot.js').Manifest,
      *  themePolicy?: {mode:'blacklist'|'whitelist', entries:string[]},
      *  unbindRequests?: {bindingId:string,platform:string,platformId:string,reason:string,requestedAt:string}[],
      *  messages: {id:string,type:string,schemaVersion:number,target:{platform:string,platformId:string},text:string,payload:object,createdAt:string,expiresAt:string}[]
