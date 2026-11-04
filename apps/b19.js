@@ -57,7 +57,7 @@ export class phib19 extends phiPluginBase {
                     fnc: 'lmtAcc'
                 },
                 {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)越级.*$`,
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)越级?.*$`,
                     fnc: 'overLevelB30'
                 },
                 {

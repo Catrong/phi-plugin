@@ -94,8 +94,8 @@
             },
             {
                 "title": "/越30",
-                "eg": "/越30 [数量] [flick]",
-                "desc": "筛选acc低于越级线(98.5%+1.5×Dr占比，附加 flick/fl/fk/划/划键 参数时计入Flick)的成绩构造b30分表，成绩旁百分比为该谱面越级线 <br>eg: /越30 50 flick"
+                "eg": "/越[数量] [flick]",
+                "desc": "筛选acc低于越级线(98.5%+1.5×Dr占比，附加 flick/fl/fk/划/划键 参数时计入Flick)的成绩构造b30分表，成绩旁百分比为该谱面越级线 <br>eg: /越30 flick"
             },
             {
                 "title": "/bestN",
