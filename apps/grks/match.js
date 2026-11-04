@@ -7,6 +7,8 @@ import send from '../../model/render/send.js'
 import { grksMatchMessages, grksMatchWords } from '../../model/render/messages.js'
 import { addScore, getPlayer } from '../../model/game/gameScore/index.js'
 import { playerProfileFromSave } from '../../model/game/gameScore/profile.js'
+import { getPool } from '../../model/game/grks/pool.js'
+import { drawPair } from '../../model/game/grks/drawPair.js'
 import { normalizeSlotName, resolveStatsKind } from '../../model/game/grks/hints.js'
 import { isCorrect, parseGuess, scoreForHintCount, formatScoreValue } from '../../model/game/grks/score.js'
 import { grksClass } from './grks.js'
@@ -30,6 +32,7 @@ import { sendMessage } from '../../model/render/message.js'
  * @property {number} minRecord 最少有效成绩条数
  * @property {number} tolerance 答案容差
  * @property {number} turnTime 每阶段的时限秒数
+ * @property {number} poolRefreshHours 题库缓存有效期（小时）
  */
 
 /**
@@ -42,6 +45,7 @@ import { sendMessage } from '../../model/render/message.js'
 
 /**
  * @typedef {object} grksQueueEntry
+ * @property {string} token 参赛者存档标识
  * @property {gameScoreProfile} profile 游戏身份快照
  * @property {string} userKey 平台和玩家组成的身份键
  * @property {string} userId 玩家 ID
@@ -49,7 +53,6 @@ import { sendMessage } from '../../model/render/message.js'
  * @property {botEvent} event 当前会话事件
  * @property {string} nickname 玩家昵称
  * @property {number} joinedAt 入池时间戳
- * @property {grksAnswer} answer 玩家的 B30 答案快照
  * @property {number} matches 已结算匹配场次
  * @property {number | null} accuracy 答题正确率，无样本时为空
  */
@@ -172,6 +175,7 @@ export class grksMatchClass {
             minRecord: config.minRecord,
             tolerance: config.tolerance,
             turnTime: this.numberConfig('GrksMatchTurnTime', 1),
+            poolRefreshHours: config.poolRefreshHours,
         }
     }
 
@@ -228,9 +232,7 @@ export class grksMatchClass {
         try {
             const save = await send.getsave_result(e)
             if (this.joining.get(userKey) !== request || !save) return false
-            const answer = await this.solo.buildAnswer(save)
-            if (this.joining.get(userKey) !== request) return false
-            if (!answer || save.getRecord().filter(record => record.rks > 0).length < cfg.minRecord) {
+            if (save.getRecord().filter(record => record.rks > 0).length < cfg.minRecord) {
                 await sendMessage(e, grksMatchMessages.join.incomplete(cfg.minRecord), { at: true })
                 return false
             }
@@ -242,10 +244,10 @@ export class grksMatchClass {
             this.detachPlayer(userKey)
             this.queue.set(userKey, {
                 ...request,
+                token: save.getSessionToken(),
                 nickname: profile.name,
                 profile,
                 joinedAt: Date.now(),
-                answer,
                 matches: record?.plays ?? 0,
                 accuracy: record?.answers?.total ? record.answers.correct / record.answers.total : null,
             })
@@ -315,19 +317,36 @@ export class grksMatchClass {
         this.scanner = null
     }
 
-    /** @param {grksQueueEntry} entry @param {grksTeam} team @returns {grksRoomPlayer} */
-    createSide(entry, team) {
+    /** @param {grksQueueEntry} entry @param {grksAnswer} answer @param {grksTeam} team @returns {grksRoomPlayer} */
+    createSide(entry, answer, team) {
         /** 成绩顺序与单机一致，第 5 次提示后才公开，开局不预先知道位置 */
-        const game = new grksClass(entry.answer)
-        return { ...entry, team, game, pendingHint: null, hintApplied: false, guess: null }
+        const game = new grksClass(answer)
+        return { ...entry, answer, team, game, pendingHint: null, hintApplied: false, guess: null }
+    }
+
+    /**
+     * @param {[grksQueueEntry, grksQueueEntry]} entries
+     * @param {grksMatchConfig} config
+     * @returns {Promise<[grksAnswer, grksAnswer] | null>}
+     */
+    async drawRoomAnswers(entries, config) {
+        const pool = await getPool({ minRecord: config.minRecord, refreshHours: config.poolRefreshHours })
+        return drawPair(pool.entries.map(entry => entry.token), entries[0].token, entries[1].token,
+            token => this.solo.loadAnswer(token))
     }
 
     /** @param {[grksQueueEntry, grksQueueEntry]} entries @param {grksMatchConfig} config */
     async createRoom(entries, config) {
+        const answers = await this.drawRoomAnswers(entries, config)
+        if (!answers) {
+            await Promise.all(entries.map(entry => sendMessage(entry.event,
+                grksMatchMessages.join.noPuzzle(), { at: true })))
+            return null
+        }
         /** @type {grksMatchRoom} */
         const room = {
             id: ulid(),
-            sides: { red: this.createSide(entries[0], 'red'), blue: this.createSide(entries[1], 'blue') },
+            sides: { red: this.createSide(entries[0], answers[0], 'red'), blue: this.createSide(entries[1], answers[1], 'blue') },
             turn: 1,
             phase: 'playing',
             stage: 'hint',
@@ -720,15 +739,7 @@ export class grksMatchClass {
     async sendView(room, player) {
         const event = player.event
         const revealAll = room.phase === 'settled'
-        /**
-         * 提示回合看的是自己的 B30：把提示方视角直接并进“进入提示回合”的这条消息，
-         * 提示者据此决定公开哪一条成绩，不再额外多发一张图。
-         */
-        if (room.stage === 'hint' && !revealAll) {
-            const message = await grksMatchMessages.view(event, this.giverOptions(room, player),
-                this.viewStatus(room, player), this.menuState(room, player))
-            return await sendMessage(event, message, { at: true })
-        }
+        /** 左侧显示对手已公布的题目，右侧显示本方可公布的提示。 */
         const opponent = this.opponent(room, player)
         /** @type {grksKnownData} */
         const data = revealAll ? {
@@ -736,13 +747,20 @@ export class grksMatchClass {
             info: { stats: opponent.answer.stats, challenge: opponent.answer.challenge, updateAt: opponent.answer.updateAt },
             sheet: opponent.game.getKnownData().sheet,
         } : opponent.game.getKnownData()
-        const message = await grksMatchMessages.view(event, {
+        /** @type {grksViewMessageOptions} */
+        const question = {
             data,
             orderKnown: opponent.game.knownOrder, hintCount: opponent.game.hintCnt,
             prefix: this.solo.cmdPrefix(), answerRks: revealAll ? opponent.answer.rks : null, revealAll,
             exitCommand: 'cancel',
             history: opponent.game.history.map(entry => ({ ...entry })),
             playerId: grksMatchWords.opponent(player.team),
+        }
+        const hint = this.giverOptions(room, player)
+        const message = await grksMatchMessages.view(event, {
+            ...question,
+            giver: room.stage === 'hint' && !revealAll,
+            matchPanels: { question, hint },
         }, this.viewStatus(room, player), this.menuState(room, player))
         return await sendMessage(event, message, { at: true })
     }

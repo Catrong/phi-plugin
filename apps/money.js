@@ -94,10 +94,10 @@ export class phimoney extends phiPluginBase {
                     reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(retask|刷新任务)$`,
                     fnc: 'retask'
                 },
-                {
-                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(send|送|转)(.*)$`,
-                    fnc: 'send'
-                },
+                // {
+                //     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)(send|送|转)(.*)$`,
+                //     fnc: 'send'
+                // },
                 {
                     reg: `^[#/]?(${Config.getUserCfg('config', 'cmdhead')})(\\s*)(theme)(\\s*)[0-9]+$`,
                     fnc: 'theme'
@@ -280,91 +280,91 @@ export class phimoney extends phiPluginBase {
         return true
     }
 
-    /**
-     * 转账
-     * @param {botEvent} e
-     */
-    async send(e) {
+    // /**
+    //  * 转账 （有BUG，暂时禁用）
+    //  * @param {botEvent} e
+    //  */
+    // async send(e) {
 
-        if (await getBanGroup.get(e, 'send')) {
-            sendMessage(e, moneyMessages.send.banned, { at: true })
-            return false
-        }
-        const tmp = `\n格式：/${Config.getUserCfg('config', 'cmdhead')} send <@ or id> <数量>`;
-        let msg = e.msg.replace(/[#/](.*?)(send|送|转)(\s*)/g, "")
-        msg = msg.replace(/[\<\>]/g, "")
-        let target = e.at
-        let num
-        if (!e.at) {
-            if (msg.includes(' ')) {
-                const parts = msg.split(' ')
-                target = parts[0]
-                num = Number(parts[1])
-            } else {
-                sendMessage(e, moneyMessages.send.formatTarget(tmp), { at: true, quote: true })
-                return true
-            }
-        } else {
-            num = Number(msg)
-        }
-        // Note 恒为正整数，拒绝小数、0、负数与非数字
-        if (!Number.isInteger(num) || num <= 0) {
-            sendMessage(e, moneyMessages.send.invalidAmount(tmp), { at: true, quote: true })
-            return true
-        }
+    //     if (await getBanGroup.get(e, 'send')) {
+    //         sendMessage(e, moneyMessages.send.banned, { at: true })
+    //         return false
+    //     }
+    //     const tmp = `\n格式：/${Config.getUserCfg('config', 'cmdhead')} send <@ or id> <数量>`;
+    //     let msg = e.msg.replace(/[#/](.*?)(send|送|转)(\s*)/g, "")
+    //     msg = msg.replace(/[\<\>]/g, "")
+    //     let target = e.at
+    //     let num
+    //     if (!e.at) {
+    //         if (msg.includes(' ')) {
+    //             const parts = msg.split(' ')
+    //             target = parts[0]
+    //             num = Number(parts[1])
+    //         } else {
+    //             sendMessage(e, moneyMessages.send.formatTarget(tmp), { at: true, quote: true })
+    //             return true
+    //         }
+    //     } else {
+    //         num = Number(msg)
+    //     }
+    //     // Note 恒为正整数，拒绝小数、0、负数与非数字
+    //     if (!Number.isInteger(num) || num <= 0) {
+    //         sendMessage(e, moneyMessages.send.invalidAmount(tmp), { at: true, quote: true })
+    //         return true
+    //     }
 
-        if (!target) {
-            sendMessage(e, moneyMessages.send.formatTarget(tmp), { at: true, quote: true })
-            return true
-        }
+    //     if (!target) {
+    //         sendMessage(e, moneyMessages.send.formatTarget(tmp), { at: true, quote: true })
+    //         return true
+    //     }
 
-        try {
-            const tar = await platform.pickMember(e, target);
-            if (!tar) throw new Error("not found");
-        } catch (err) {
-            sendMessage(e, moneyMessages.send.targetNotFound, { at: true })
-            return true
-        }
-
-
-        let target_data = await getNotes.getNotesData(target)
-
-        let sender_data = await getNotes.getNotesData(e.user_id)
-
-        if (target == e.user_id) {
-            await sendMessage(e, moneyMessages.send.selfTarget, { at: true })
-            await common.sleep(1000)
-            await sendMessage(e, moneyMessages.send.failedDeduct, { at: true })
-            if (sender_data.money < 20) {
-                await sendMessage(e, moneyMessages.send.no20Notes, { at: true })
-                await sendMessage(e, moneyMessages.send.forgive, { at: true })
-            } else {
-                sender_data.money -= 20
-            }
-            getNotes.putNotesData(e.user_id, sender_data)
-            return true
-        }
-
-        if (sender_data.money < num) {
-            sendMessage(e, moneyMessages.send.notEnough(sender_data.money), { at: true })
-            return true
-        }
+    //     try {
+    //         const tar = await platform.pickMember(e, target);
+    //         if (!tar) throw new Error("not found");
+    //     } catch (err) {
+    //         sendMessage(e, moneyMessages.send.targetNotFound, { at: true })
+    //         return true
+    //     }
 
 
-        let sender_old = sender_data.money
-        let target_old = target_data.money
+    //     let target_data = await getNotes.getNotesData(target)
 
-        const received = Math.ceil(num * 0.8)
-        target_data.money += received
-        sender_data.money -= num
+    //     let sender_data = await getNotes.getNotesData(e.user_id)
 
-        getNotes.putNotesData(e.user_id, sender_data)
+    //     if (target == e.user_id) {
+    //         await sendMessage(e, moneyMessages.send.selfTarget, { at: true })
+    //         await common.sleep(1000)
+    //         await sendMessage(e, moneyMessages.send.failedDeduct, { at: true })
+    //         if (sender_data.money < 20) {
+    //             await sendMessage(e, moneyMessages.send.no20Notes, { at: true })
+    //             await sendMessage(e, moneyMessages.send.forgive, { at: true })
+    //         } else {
+    //             sender_data.money -= 20
+    //         }
+    //         getNotes.putNotesData(e.user_id, sender_data)
+    //         return true
+    //     }
 
-        getNotes.putNotesData(target, target_data)
-        let target_card = await platform.pickMember(e, target)
-        const targetName = target_card?.nickname || target_card?.card || target
-        sendMessage(e, moneyMessages.send.success(sender_old, num, sender_data.money, targetName, target_old, received, target_data.money), { at: true })
-    }
+    //     if (sender_data.money < num) {
+    //         sendMessage(e, moneyMessages.send.notEnough(sender_data.money), { at: true })
+    //         return true
+    //     }
+
+
+    //     let sender_old = sender_data.money
+    //     let target_old = target_data.money
+
+    //     const received = Math.ceil(num * 0.8)
+    //     target_data.money += received
+    //     sender_data.money -= num
+
+    //     getNotes.putNotesData(e.user_id, sender_data)
+
+    //     getNotes.putNotesData(target, target_data)
+    //     let target_card = await platform.pickMember(e, target)
+    //     const targetName = target_card?.nickname || target_card?.card || target
+    //     sendMessage(e, moneyMessages.send.success(sender_old, num, sender_data.money, targetName, target_old, received, target_data.money), { at: true })
+    // }
 
     /**
      * 主题相关

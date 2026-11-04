@@ -60,15 +60,23 @@ function fixture(t) {
     const solo = new grksSoloClass()
     const matches = new grksMatchClass(solo)
     /** @type {grksMatchConfig} */
-    const config = { maxScore: 10, minRecord: 27, tolerance: 0.01, turnTime: 90 }
+    const config = { maxScore: 10, minRecord: 27, tolerance: 0.01, turnTime: 90, poolRefreshHours: 6 }
     t.mock.method(matches, 'readConfig', () => config)
     t.mock.method(solo, 'banCheck', async () => false)
     t.mock.method(solo, 'cmdPrefix', () => '#phi grks')
     t.mock.method(send, 'getsave_result', async (/** @type {botEvent} */ e) => ({
         getRecord: () => records(String(e.user_id)),
+        getSessionToken: () => String(e.user_id),
         getStats: () => [{ cleared: 27, fc: 3, phi: 3 }],
         saveInfo: { PlayerId: `Phigros ${e.user_id}`, summary: { challengeModeRank: 456, avatar: 'Glaciaxion' }, modifiedAt: { iso: new Date('2026-10-24T00:00:00Z') } },
     }))
+    t.mock.method(matches, 'drawRoomAnswers', async (/** @type {import('../apps/grks/match.js').grksQueueEntry[]} */ entries) => Promise.all(entries.map(async entry => {
+        const save = await send.getsave_result(entry.event)
+        if (!save) throw new Error('测试存档不可用')
+        const answer = await solo.buildAnswer(save)
+        assert.ok(answer)
+        return answer
+    })))
     /** @type {import('../apps/grks/soloRender.js').grksSoloView[]} */
     const views = []
     t.mock.method(picmodle, 'grks', async (/** @type {botEvent} */ _event, /** @type {import('../apps/grks/soloRender.js').grksSoloView} */ view) => {
@@ -232,6 +240,12 @@ test('提示回合消息本身就是提示方视角，提交后只补一条文�
     assert.equal(opening?.giver, true)
     assert.equal(opening?.records.length, 30)
     assert.equal(opening?.records.every(slot => slot.masked), true)
+    assert.equal(opening?.match, true)
+    assert.equal(opening?.panels?.length, 2)
+    assert.equal(opening?.panels?.[0].panelTitle, '题目部分 · 对方公布的提示')
+    assert.equal(opening?.panels?.[0].records.length, 0)
+    assert.equal(opening?.panels?.[1].panelTitle, '提示部分 · 自己可以公布的提示')
+    assert.equal(opening?.panels?.[1].records.length, 30)
     assert.match(String(setup.sent.at(-2)?.content), /红方 · 提示者视角/)
     assert.match(String(setup.sent.at(-2)?.content), /提示回合/)
     assert.match(String(setup.sent.at(-2)?.content), /本方：未选提示/)
@@ -705,8 +719,7 @@ test('先比较匹配场次差，正确率与 RKS 均不能覆盖场次优先级
     a.accuracy = 0.1
     b.matches = 11
     b.accuracy = 0.1
-    const c = { ...b, userKey: 'qq:c', sessionKey: 'group-c', matches: 10, accuracy: 0.9,
-        answer: { ...b.answer, rks: 1 } }
+    const c = { ...b, userKey: 'qq:c', sessionKey: 'group-c', matches: 10, accuracy: 0.9 }
     assert.deepEqual(selectPair([a, b, c]), [a, c])
 })
 
@@ -716,8 +729,7 @@ test('场次差相同时比较正确率差，同条件按等待先后配对', as
     a.matches = b.matches = 10
     a.accuracy = 0.1
     b.accuracy = 0.8
-    const c = { ...b, userKey: 'qq:c', sessionKey: 'group-c', accuracy: 0.15,
-        answer: { ...b.answer, rks: 1 } }
+    const c = { ...b, userKey: 'qq:c', sessionKey: 'group-c', accuracy: 0.15 }
     assert.deepEqual(selectPair([a, b, c]), [a, c])
     a.joinedAt = b.joinedAt = Date.now() - 10000
     c.accuracy = b.accuracy = a.accuracy
@@ -757,8 +769,6 @@ test('无场次、正确率或 RKS 差值门槛，且不存在十秒放宽机制
     entries[1].matches = 100000
     entries[0].accuracy = 0
     entries[1].accuracy = 1
-    entries[0].answer.rks = 1
-    entries[1].answer.rks = 20
     for (const now of [0, 9999, 10000, 239999]) assert.deepEqual(selectPair(entries, { now }), entries)
     assert.equal(selectPair(entries, { now: 240000 }), null)
     assert.equal(selectPair([entries[0], { ...entries[1], sessionKey: entries[0].sessionKey }], { now: 0 }), null)

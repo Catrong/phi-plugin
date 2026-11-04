@@ -1743,6 +1743,7 @@ export const grksRankingWords = {
  * @property {string} [playerId] 标题玩家标识
  * @property {boolean} [giver] 是否为提示方视角
  * @property {import('../../apps/grks/soloRender.js').grksGiverKnown} [known] 提示方视角下对手已看到的部分
+ * @property {{question: grksViewMessageOptions, hint: grksViewMessageOptions}} [matchPanels] 匹配模式的题目与提示面板
  *
  * @typedef {object} grksMatchQueueMessageOptions
  * @property {number} timeout 匹配池等待上限秒数
@@ -1851,6 +1852,29 @@ async function renderGrksView(e, options, footnote) {
             answerRks: options.answerRks, revealAll: options.revealAll, history: options.history,
         })
     if (options.playerId && !options.giver) view.header.playerId = options.playerId
+    if (options.matchPanels) {
+        const question = grksSoloRender.buildView({
+            data: options.matchPanels.question.data,
+            orderKnown: options.matchPanels.question.orderKnown === true,
+            footnote, answerRks: options.matchPanels.question.answerRks,
+            revealAll: options.matchPanels.question.revealAll,
+            history: options.matchPanels.question.history,
+        })
+        question.header.playerId = options.matchPanels.question.playerId || question.header.playerId
+        const hint = grksSoloRender.buildGiverView({
+            data: options.matchPanels.hint.data,
+            known: options.matchPanels.hint.known || { records: [], info: false, sheetKind: '' },
+            footnote, answerRks: options.matchPanels.hint.answerRks,
+            history: options.matchPanels.hint.history,
+            playerId: options.matchPanels.hint.playerId,
+            prefix: options.matchPanels.hint.prefix,
+        })
+        view.panels = [
+            { ...question, panelTitle: '题目部分 · 对方公布的提示' },
+            { ...hint, panelTitle: '提示部分 · 自己可以公布的提示' },
+        ]
+        view.match = true
+    }
     const { default: picmodle } = await import('./picmodle.js')
     return { image: await picmodle.grks(e, view), text: footnote }
 }
@@ -1864,6 +1888,7 @@ export const grksMatchMessages = {
         /** @param {string} prefix @param {grksMatchMenuOptions | 'queue'} [state] */
         alreadyInMatch: (prefix, state) => ({ text: `你已在对局中，发送 ${prefix} cancel 可退出`, button: grksMatchButtons(state) }),
         noSession: () => ({ text: '无法识别当前会话，请稍后重试', button: menus.grksHome() }),
+        noPuzzle: () => ({ text: '题库无法为双方各分配一份不同的 B30 并避开对方存档，本次匹配已取消。', button: menus.grksHome() }),
         soloGame: (/** @type {string} */ prefix) => ({ text: `当前会话还有进行中的单机对局，先发送 ${prefix} ans 结束再匹配吧！`, button: menus.grksSolo() }),
         /** @param {number} count @param {grksMatchQueueMessageOptions} rules @param {string} prefix */
         joined: (count, rules, prefix) =>

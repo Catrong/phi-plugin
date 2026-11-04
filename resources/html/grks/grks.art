@@ -7,10 +7,25 @@
 
 {{block 'css'}}
 <link rel="stylesheet" href="{{_res_path}}html/grks/grks.css">
+{{if match}}<style>body { width: 2760px; }</style>{{/if}}
 {{/block}}
 
 {{block 'main'}}
 
+<div class="grks-panels{{if match}} is-match{{/if}}">
+    {{each panels panel}}
+    {{set header = panel.header}}
+    {{set stats = panel.stats}}
+    {{set records = panel.records}}
+    {{set sheet = panel.sheet}}
+    {{set historyTitle = panel.historyTitle}}
+    {{set historyMeta = panel.historyMeta}}
+    {{set history = panel.history}}
+    {{set footnote = panel.footnote}}
+    <section class="grks-panel">
+    {{if panel.panelTitle}}
+    <div class="grks-panel-title clip-box"><p>{{panel.panelTitle}}</p></div>
+    {{/if}}
 <div class="title">
     <div class="playerInfo">
         <div class="blackBlock clip-box"></div>
@@ -243,6 +258,9 @@
     <p>{{footnote}}</p>
 </div>
 {{/if}}
+    </section>
+    {{/each}}
+</div>
 
 <div class="createdbox">
     <div class="phi-plugin">

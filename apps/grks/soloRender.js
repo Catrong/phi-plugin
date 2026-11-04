@@ -120,6 +120,9 @@ import fCompute from '../../model/game/fCompute.js'
  * @property {string} [historyMeta] 猜测记录统计文案
  * @property {grksHistoryCell[]} history 十次猜测记录
  * @property {number} answeredCount 已回答次数
+ * @property {grksSoloView[]} [panels] 并排渲染的面板
+ * @property {string} [panelTitle] 面板标题
+ * @property {boolean} [match] 是否为匹配模式并排视图
  */
 
 /**
@@ -178,7 +181,7 @@ export class grksSoloRender {
         const { data } = options
         const orderKnown = options.revealAll === true || options.orderKnown
         const history = options.history || []
-        return {
+        const view = {
             header: {
                 playerId: grksViewWords.anonymous,
                 avatar: 'Introduction',
@@ -199,6 +202,7 @@ export class grksSoloRender {
             history: buildHistory(history),
             answeredCount: countAnswered(history),
         }
+        return { ...view, panels: [view] }
     }
 
     /**
@@ -214,7 +218,7 @@ export class grksSoloRender {
         const prefix = String(options.prefix || '')
         const statsMasked = !known.info
         const history = options.history || []
-        return {
+        const view = {
             giver: true,
             header: {
                 playerId: options.playerId || grksViewWords.giver.title,
@@ -240,6 +244,7 @@ export class grksSoloRender {
             history: buildHistory(history, true),
             answeredCount: countAnswered(history),
         }
+        return { ...view, panels: [view] }
     }
 
 }

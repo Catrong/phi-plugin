@@ -4,6 +4,39 @@ body {
   width: 1360px;
 }
 
+.grks-panels.is-match {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  width: 2760px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.grks-panel {
+  position: relative;
+  min-width: 0;
+}
+
+.grks-panel-title {
+  --height: 42px;
+  width: 95%;
+  box-sizing: border-box;
+  margin: 0 auto 18px;
+  padding: 10px 20px;
+  background: rgba(9, 16, 27, 0.74);
+  border-left: 3px solid #00b7f0;
+}
+
+.grks-panel-title p {
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.grks-panels.is-match .grks-foot {
+  margin-bottom: 0;
+}
+
 .b19 {
   width: 95%;
   margin: 0 auto;
