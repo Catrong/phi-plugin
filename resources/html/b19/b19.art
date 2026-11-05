@@ -381,7 +381,7 @@
                         <circle class="tag-radar-point" cx="{{category.pointX}}" cy="{{category.pointY}}" r="2.3"></circle>
                         <text class="tag-radar-label" x="{{category.labelX}}" y="{{category.labelY}}" text-anchor="{{category.anchor}}">
                             <tspan x="{{category.labelX}}">{{category.name}}</tspan>
-                            <tspan class="tag-radar-score" x="{{category.labelX}}" dy="10">{{category.displayRks}}</tspan>
+                            <tspan class="tag-radar-score" x="{{category.labelX}}" dy="15">{{category.displayRks}}</tspan>
                         </text>
                         {{/each}}
                     </svg>

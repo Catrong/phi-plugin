@@ -995,13 +995,13 @@ body p {
 
 .tag-radar-label {
   fill: rgba(255, 255, 255, 0.82);
-  font-size: 10px;
+  font-size: 15px;
   font-family: "PHI";
 }
 
 .tag-radar-score {
   fill: #00b7f0;
-  font-size: 8px;
+  font-size: 12px;
 }
 
 .tag-ranking-group + .tag-ranking-group {
@@ -1044,6 +1044,7 @@ body p {
   position: absolute;
   inset: 15px 8px 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 0 26px;
