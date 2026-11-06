@@ -4,11 +4,12 @@ import Config from '../components/Config.js'
 import send from '../model/render/send.js'
 import platform from '../components/platform/index.js'
 import getQRcode from '../lib/getQRcode.js'
-import { sessionMessages } from '../model/render/messages.js'
+import { menus, sessionMessages } from '../model/render/messages.js'
 import {
     DEFAULT_MESSAGE_ORDER,
     buildQuickCommandKeyboard,
     buildQuickCommandMarkdown,
+    buildQuickCommandSectionsMarkdown,
     composeMessage,
     getShortcutMode,
     mdCmd,
@@ -27,6 +28,37 @@ test('Markdown 快捷指令保留完整命令且仅填入输入框，标签不�
     assert.equal(link.searchParams.get('reply'), 'false')
     assert.equal([...link.searchParams].length, 3)
     assert.equal(link.hash, '')
+})
+
+test('用户设置页快捷指令：每段带标题，已选项的序号换成 ✅', () => {
+    const originalGetUserCfg = Config.getUserCfg
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'p' : undefined)
+    try {
+        const markdown = buildQuickCommandSectionsMarkdown(menus.userSettingSections({
+            theme: 'snow',
+            b30AvgKind: 'top',
+            b30AvgColor: 'gold',
+            allowApiUsage: false,
+            showB30Analysis: true,
+        }))
+        const lines = markdown.split('\n')
+        assert.deepEqual(
+            lines.filter(line => line && !line.startsWith('[')),
+            ['主题风格', 'B30统计数据展示', 'B30均值条配色', 'API功能开关', 'B30统计分析'],
+        )
+        const themeLine = lines.find(line => line.includes('[✅寒冬]'))
+        assert.ok(themeLine)
+        assert.ok(themeLine.includes('[[0]默认]'))
+        assert.ok(!themeLine.includes('[[1]寒冬]'))
+        assert.ok(themeLine.includes('command=%2Fp%20myset%20theme%201'))
+        assert.equal((markdown.match(/✅/g) || []).length, 5)
+
+        const unselected = buildQuickCommandSectionsMarkdown(menus.userSettingSections({ theme: 'milthm' }))
+        assert.ok(!unselected.includes('✅'))
+        assert.ok(unselected.startsWith('主题风格\n'))
+    } finally {
+        Config.getUserCfg = originalGetUserCfg
+    }
 })
 
 test('composeMessage 默认按图片、文本、Markdown、按钮顺序组装', () => {

@@ -154,13 +154,17 @@ export function buildQuickCommandMarkdown(rows) {
     return normalizedRows.map(inputRow => inputRow.map(item => mdCmd(item.command, item.label)).join(' | ')).join('\n')
 }
 
-/** @param {any[]} sections */
+/**
+ * 构建分组快捷操作：每段先输出标题行，再输出该段的指令行。
+ * @param {any[]} sections
+ */
 export function buildQuickCommandSectionsMarkdown(sections) {
     const blocks = []
     for (const section of sections || []) {
-        const sectionButtons = section?.buttons || section?.commands || []
-        const block = buildQuickCommandMarkdown(sectionButtons)
-        if (block) blocks.push(block)
+        const block = buildQuickCommandMarkdown(section?.buttons || section?.commands || [])
+        if (!block) continue
+        const title = String(section?.title ?? '').trim()
+        blocks.push(title ? `${title}\n${block}` : block)
     }
     return blocks.join('\n\n')
 }

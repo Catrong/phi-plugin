@@ -449,15 +449,23 @@ export class phihelp extends phiPluginBase {
             }
         }
 
+        const currentSettings = {
+            theme: pluginData?.theme || 'default',
+            b30AvgKind: pluginData?.b30AvgKind || 'all',
+            b30AvgColor: pluginData?.b30AvgColor || 'red',
+            allowApiUsage: pluginData?.allowApiUsage !== false,
+            showB30Analysis: pluginData?.showB30Analysis !== false,
+        }
+
         const data = {
             pageTitle: 'Phi-Plugin 用户设置',
             pageDescription: '以下选项为你的个人偏好展示，选择结果将用于对应图片渲染。',
             items: [
-                buildThemeItem(pluginData?.theme || 'default'),
-                buildItem('b30AvgKind', pluginData?.b30AvgKind || 'all'),
-                buildItem('b30AvgColor', pluginData?.b30AvgColor || 'red'),
-                buildItem('allowApiUsage', String(pluginData?.allowApiUsage !== false)),
-                buildItem('showB30Analysis', String(pluginData?.showB30Analysis !== false))
+                buildThemeItem(currentSettings.theme),
+                buildItem('b30AvgKind', currentSettings.b30AvgKind),
+                buildItem('b30AvgColor', currentSettings.b30AvgColor),
+                buildItem('allowApiUsage', String(currentSettings.allowApiUsage)),
+                buildItem('showB30Analysis', String(currentSettings.showB30Analysis))
             ]
         }
 
@@ -465,9 +473,9 @@ export class phihelp extends phiPluginBase {
             image: await picmodle.common(e, 'setting', {
                 ...data,
                 background: getInfo.getill(getInfo.illlist[Number((Math.random() * (getInfo.illlist.length - 1)).toFixed(0))]),
-                theme: pluginData?.theme || 'default'
+                theme: currentSettings.theme
             }, 'userSetting'),
-            markdown: buildQuickCommandSectionsMarkdown(menus.userSettingSections()),
+            markdown: buildQuickCommandSectionsMarkdown(menus.userSettingSections(currentSettings)),
         }, { at: true })
         return true
     }

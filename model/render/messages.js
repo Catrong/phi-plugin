@@ -13,6 +13,7 @@
 
 import Config from '../../components/Config.js'
 import segment from '../../components/segment.js'
+import { USER_SETTING_META, USER_SETTING_OPTIONS } from '../game/constNum.js'
 import { butCmd } from './message.js';
 import { isUsableImage } from '../game/grks/renderResult.js'
 
@@ -22,50 +23,37 @@ import { isUsableImage } from '../game/grks/renderResult.js'
 /** @import {gameScoreRankingPage} from '../game/gameScore/index.js' */
 /** @import {gameScoreRow, gameScoreRankKind} from '../game/gameScore/ranking.js' */
 
-/** 用户设置页：每个设置区域单独展示该区域的全部选项 */
-const userSettingSections = () => [
-    {
-        title: '主题风格',
-        buttons: [
-            butCmd('myset theme 0', '[0]默认'),
-            butCmd('myset theme 1', '[1]寒冬'),
-            butCmd('myset theme 2', '[2]使一颗心免于哀伤'),
-            butCmd('myset theme 3', '[3]大师赛2'),
-        ],
-    },
-    {
-        title: 'B30统计数据展示',
-        buttons: [
-            butCmd('myset avgkind 0', '[0]全部统计'),
-            butCmd('myset avgkind 1', '[1]仅B30'),
-            butCmd('myset avgkind 2', '[2]仅Top'),
-            butCmd('myset avgkind 3', '[3]隐藏'),
-        ],
-    },
-    {
-        title: 'B30均值条配色',
-        buttons: [
-            butCmd('myset avgcolor 0', '[0]红'),
-            butCmd('myset avgcolor 1', '[1]金'),
-            butCmd('myset avgcolor 2', '[2]蓝'),
-            butCmd('myset avgcolor 3', '[3]绿'),
-        ],
-    },
-    {
-        title: 'API功能开关',
-        buttons: [
-            butCmd('myset api 0', '[0]启用'),
-            butCmd('myset api 1', '[1]禁用'),
-        ],
-    },
-    {
-        title: 'B30统计分析',
-        buttons: [
-            butCmd('myset B30分析 0', '[0]显示'),
-            butCmd('myset B30分析 1', '[1]隐藏'),
-        ],
-    },
-];
+/** @typedef {'theme' | 'b30AvgKind' | 'b30AvgColor' | 'allowApiUsage' | 'showB30Analysis'} UserSettingKey */
+
+/** 用户设置页的分区顺序与指令名，选项文案统一取自 USER_SETTING_OPTIONS */
+/** @type {{ key: UserSettingKey, command: string }[]} */
+const USER_SETTING_SECTIONS = [
+    { key: 'theme', command: 'theme' },
+    { key: 'b30AvgKind', command: 'avgkind' },
+    { key: 'b30AvgColor', command: 'avgcolor' },
+    { key: 'allowApiUsage', command: 'api' },
+    { key: 'showB30Analysis', command: 'B30分析' },
+]
+
+/**
+ * 用户设置页：每个设置区域单独展示该区域的全部选项。
+ * 已选项把序号 `[n]` 换成 ✅，便于一眼看出当前值。
+ * @param {Partial<Record<UserSettingKey, string | boolean>>} [current]
+ */
+const userSettingSections = (current = {}) => USER_SETTING_SECTIONS.map(({ key, command }) => {
+    const options = /** @type {Record<string, { title: string, description: string }>} */ (USER_SETTING_OPTIONS[key])
+    const raw = current[key]
+    const currentValue = raw === undefined ? '' : String(raw)
+    return {
+        title: USER_SETTING_META[key].title,
+        buttons: Object.keys(options).map((value, index) => {
+            const label = options[value].title
+            return butCmd(`myset ${command} ${index}`, value === currentValue
+                ? label.replace(/^\[\d+\]/, '✅')
+                : label)
+        }),
+    }
+})
 
 /**
  * 通用快捷操作菜单。指令头在生成时统一读取配置，文案与按钮标签集中在这里。
