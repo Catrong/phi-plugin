@@ -126,7 +126,7 @@ export const menus = {
         [
             butCmd('p30', 'P30成绩'),
             butCmd('x30', 'X30成绩'),
-            butCmd('x30', 'X30成绩')
+            butCmd('越30', '越级30成绩')
         ],
 
     ],
@@ -1964,7 +1964,7 @@ export const grksMatchWords = {
     hintLocked: (hint) => `本方提示已锁定：${hint}。等待对手选择提示，双方选择完毕后统一公布并进入回答回合。`,
     progress: (/** @type {boolean} */ hinted, /** @type {boolean} */ guessed, /** @type {boolean} */ opponentHinted, /** @type {boolean} */ opponentGuessed) =>
         '当前状态：' + ((hinted && opponentHinted && !guessed || !hinted) ? `需要${guessed ? '回答' : '选择提示'}` : `等待${opponentGuessed ? '对手回答' : '对手选择提示'}`),
-        // `本方：${hinted ? '已选提示' : '未选提示'} / ${guessed ? '已提交猜测' : '未提交猜测'}\n对方：${opponentHinted ? '已选提示' : '未选提示'} / ${opponentGuessed ? '已提交猜测' : '未提交猜测'}`,
+    // `本方：${hinted ? '已选提示' : '未选提示'} / ${guessed ? '已提交猜测' : '未提交猜测'}\n对方：${opponentHinted ? '已选提示' : '未选提示'} / ${opponentGuessed ? '已提交猜测' : '未提交猜测'}`,
     commands: (/** @type {string} */ prefix, /** @type {number} */ seconds, /** @type {number} */ tolerance, /** @type {number} */ maxTurns) =>
         `每阶段 ${seconds}s，容差 ±${tolerance}。提示：${prefix} hint B7 / hint 3 range / hint 4\n猜测：${prefix} 15.25；退出判负：${prefix} cancel\n最多 ${maxTurns} 次提示，最后一次回答后仍无人猜中则平局。回答超时即放弃；阶段结束时向双方最新会话各发送一次消息。`,
     result: (/** @type {'red'|'blue'} */ team, /** @type {string} */ name, /** @type {'win'|'loss'|'draw'} */ result, /** @type {string} */ points, /** @type {string} */ answer) =>

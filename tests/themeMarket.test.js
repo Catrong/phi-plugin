@@ -8,7 +8,7 @@ import art from 'art-template'
 import JSZip from 'jszip'
 import Config from '../components/Config.js'
 import { phiMarket } from '../apps/market.js'
-import { buildMarketQuickMarkdown, sendMarketQuickCommands } from '../model/game/markdown.js'
+import { buildMarketQuickMarkdown, marketQuickMarkdownPart, sendMarketQuickCommands } from '../model/game/markdown.js'
 import getBanGroup from '../model/user/getBanGroup.js'
 import getNotes from '../model/user/getNotes.js'
 import send from '../model/render/send.js'
@@ -706,6 +706,35 @@ test('market page sends one safe Markdown action row for each displayed theme', 
         assert.equal(replies.length, 1)
         assert.equal(replies[0]?.type, 'markdown')
         assert.ok((replies[0]?.content || '').includes('command=%2Fcustom%20market%20ocean-salt&enter=false&reply=false'))
+    } finally {
+        Config.getUserCfg = originalGetUserCfg
+        send.reply = originalReply
+    }
+})
+
+test('market page keeps the Markdown table when shortcut mode is button', async () => {
+    const themes = [
+        { slug: 'ocean-salt', name: 'Ocean Salt', botDownloadAllowed: true },
+        { slug: 'ink', name: 'Ink', botDownloadAllowed: true },
+    ]
+    const originalGetUserCfg = Config.getUserCfg
+    const originalReply = send.reply
+    /** @type {any[]} */ const replies = []
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown' ? 'button' : key === 'cmdhead' ? 'p' : undefined)
+    send.reply = async (_event, message) => { replies.push(message); return {} }
+    try {
+        const part = marketQuickMarkdownPart(/** @type {any} */(themes), { page: 1, pageCount: 2 })
+        assert.equal('button' in part, false)
+        assert.ok(part.markdown.includes('| 名称 | 查看详情 | 使用主题 |'))
+
+        await sendMarketQuickCommands(/** @type {any} */({}), /** @type {any} */(themes), { page: 1, pageCount: 2 })
+        assert.equal(replies.length, 1)
+        const segments = Array.isArray(replies[0]) ? replies[0] : [replies[0]]
+        assert.ok(!segments.some(item => item?.type === 'button'))
+        const markdown = segments.find(item => item?.type === 'markdown')
+        const content = String(markdown?.text ?? markdown?.content ?? '')
+        assert.ok(content.includes('| Ocean Salt |'))
+        assert.ok(content.includes('| Ink |'))
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply

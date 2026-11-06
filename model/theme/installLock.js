@@ -7,8 +7,17 @@ import { migrateLegacyThemeDirectories, themesDir } from './paths.js'
 
 const LOCK_PATH = path.join(themesDir, '.phi-market-install.lock')
 const LOCK_REAP_PREFIX = `${LOCK_PATH}.reap-`
-const LOCK_WAIT_MS = 120_000
+const DEFAULT_LOCK_WAIT_MS = 120_000
 const LOCK_STALE_MS = 5 * 60_000
+
+/**
+ * 锁等待上限：默认 120 秒，测试可用 PHI_MARKET_LOCK_WAIT_MS 覆盖为更短的值。
+ * @returns {number}
+ */
+function lockWaitMs() {
+    const raw = Number(process.env.PHI_MARKET_LOCK_WAIT_MS)
+    return Number.isSafeInteger(raw) && raw > 0 ? raw : DEFAULT_LOCK_WAIT_MS
+}
 
 /** @type {Promise<void>} */
 let processQueue = Promise.resolve()

@@ -38,27 +38,6 @@ export async function sendQuickCommands(e, buttons) {
 }
 
 
-/** @param {{slug:string,name:string,botDownloadAllowed:boolean|null}[]} themes @param {{page?:number,pageCount?:number}} pagination */
-function marketQuickCommands(themes, pagination = {}) {    const commandHead = `${Config.getUserCfg('config', 'cmdhead')}`
-    const rows = []
-    for (const theme of themes || []) {
-        rows.push([
-            { button: { command: `/${commandHead} market detail ${theme.slug}`, label: '查看详情' } },
-            { button: { command: `/${commandHead} market ${theme.slug}`, label: '使用主题' } },
-        ])
-    }
-    const page = pagination.page || 1
-    const pageCount = pagination.pageCount || 1
-    if (pageCount > 1) {
-        const navigation = []
-        if (page > 1) navigation.push({ button: { command: `/${commandHead}pr`, label: '上一页' } })
-        if (page < pageCount) navigation.push({ button: { command: `/${commandHead}nx`, label: '下一页' } })
-        if (navigation.length) rows.push(navigation)
-    }
-    return rows
-}
-
-
 /**
  * 生成主题市场的 Markdown 表格与翻页导航。
  * @param {{slug:string,name:string,botDownloadAllowed:boolean|null}[]} themes
@@ -90,15 +69,12 @@ export function buildMarketQuickMarkdown(themes, pagination = {}) {
 
 
 /**
- * 组合主题市场的 Markdown 发送片段：同一调用位置的标题、表格与快捷操作。
+ * 组合主题市场的 Markdown 发送片段：表格自带可点击指令链接，不再额外转成按钮键盘。
  * @param {{slug:string,name:string,botDownloadAllowed:boolean|null}[]} themes
  * @param {{page?:number,pageCount?:number}} [pagination]
  */
 export function marketQuickMarkdownPart(themes, pagination = {}) {
-    return {
-        markdown: buildMarketQuickMarkdown(themes, pagination),
-        button: marketQuickCommands(themes, pagination),
-    }
+    return { markdown: buildMarketQuickMarkdown(themes, pagination) }
 }
 
 /**
@@ -110,7 +86,7 @@ export async function sendMarketQuickCommands(e, themes, pagination = {}) {
     const markdown = buildMarketQuickMarkdown(themes, pagination)
     if (!markdown) return
     try {
-        const sent = /** @type {{error?: unknown[]}|undefined} */ (await sendMessage(e, { markdown, button: marketQuickCommands(themes, pagination) }, { requireOfficialBot: false }))
+        const sent = /** @type {{error?: unknown[]}|undefined} */ (await sendMessage(e, { markdown }, { requireOfficialBot: false }))
         if (sent?.error?.length) logger.warn('[phi-plugin][主题市场] Markdown 发送失败')
     } catch (error) {
         logger.warn('[phi-plugin][主题市场] Markdown 发送失败', error)
