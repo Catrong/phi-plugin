@@ -85,7 +85,7 @@ test('Markdown 与按钮消息不引用，改为开头 @ 用户', async () => {
         )
         assert.equal(sent.length, 1)
         assert.equal(sent[0].quote, false)
-        assert.match(String(sent[0].message?.text ?? sent[0].message?.content), /^\n\nMarkdown 消息$/)
+        assert.equal(String(sent[0].message?.text ?? sent[0].message?.content), 'Markdown 消息')
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.send_with_At = originalWithAt
@@ -163,7 +163,7 @@ test('sendMessage 默认只在 QQ 官方机器人发送 Markdown，可显式关�
             { requireOfficialBot: false },
         )
         assert.equal(replies.length, 1)
-        assert.match(String(replies[0]?.text ?? replies[0]?.content), /^\n\n市场快捷操作$/)
+        assert.equal(String(replies[0]?.text ?? replies[0]?.content), '市场快捷操作')
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
@@ -260,7 +260,7 @@ test('图文合并关闭时图片与纯文本仍合并为一条', async () => {
     }
 })
 
-test('快捷操作模式为 markdown 时把 button 列表渲染为 Markdown 表格', async () => {
+test('快捷操作模式为 markdown 时把 button 列表渲染为指令行而非表格', async () => {
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
     const originalWithAt = send.send_with_At
@@ -269,13 +269,15 @@ test('快捷操作模式为 markdown 时把 button 列表渲染为 Markdown 表�
     send.reply = send.send_with_At = async (_event, message, _quote, data) => { replies.push({ message, data }); return {} }
     try {
         await sendMessage({ bot: { adapter: 'qqbot' }, user_id: 'test-user' }, {
-            button: [[{ button: { command: '/p b30', label: 'B30' } }]],
+            button: [[{ button: { command: '/p b30', label: 'B30' } }, { button: { command: '/p p30', label: 'P30' } }]],
         })
         assert.equal(replies.length, 1)
         const markdown = replies[0].message
         assert.equal(markdown?.type, 'markdown')
-        assert.ok((markdown?.text ?? markdown?.content).includes('[B30](mqqapi://aio/inlinecmd?command=%2Fp%20b30&enter=false&reply=false)'))
-        assert.ok((markdown?.text ?? markdown?.content).startsWith('\n\n'))
+        const content = String(markdown?.text ?? markdown?.content)
+        assert.equal(content.trimEnd(), '[B30](mqqapi://aio/inlinecmd?command=%2Fp%20b30&enter=false&reply=false) | [P30](mqqapi://aio/inlinecmd?command=%2Fp%20p30&enter=false&reply=false)')
+        // 附带键盘时正文尾部补一个换行，与键盘留出间距
+        assert.ok(content.endsWith('\n'))
         const action = replies[0].data?.keyboard?.content?.rows?.[0]?.buttons?.[0]?.action
         assert.equal(action?.type, 2)
         assert.equal(action?.data, '/p b30')
@@ -364,9 +366,12 @@ test('二维按钮按输入行换行，且不会与下一行接续', () => {
         [button('R5')],
     ])
     const rows = markdown.split('\n')
-    assert.match(rows[2], /R4/)
-    assert.doesNotMatch(rows[2], /R5/)
-    assert.match(rows[3], /R5/)
+    assert.equal(rows.length, 3)
+    assert.match(rows[0], /R1.*\|.*R2.*\|.*R3/)
+    assert.match(rows[1], /R4/)
+    assert.doesNotMatch(rows[1], /R5/)
+    assert.match(rows[2], /R5/)
+    assert.ok(!markdown.includes('| :---: |'))
 })
 
 test('按钮构建保留 style 字段', () => {

@@ -146,25 +146,20 @@ function normalizeButtonRows(rows) {
 }
 
 /**
- * 构建通用的快捷操作菜单。
+ * 构建通用的快捷操作菜单：指令链接按 ` | ` 间隔，换行规则与按钮行一致。
  * @param {any[]} rows 二维按钮列表
  */
 export function buildQuickCommandMarkdown(rows) {
     const normalizedRows = normalizeButtonRows(rows)
     if (!normalizedRows.length) return ''
-    // QQ 官方 Markdown 的旧解析器按主题市场的三列表格处理，固定三列最稳定。
-    const columns = 3
-    const tableRows = []
+    /** @type {string[]} */
+    const lines = []
     for (const inputRow of normalizedRows) {
-        for (let index = 0; index < inputRow.length; index += columns) {
-            const row = inputRow.slice(index, index + columns)
-            while (row.length < columns) row.push({ command: '', label: '' })
-            tableRows.push(`| ${row.map(item => item.command ? mdCmd(item.command, item.label) : '\u200b').join(' | ')} |`)
+        for (let offset = 0; offset < inputRow.length && lines.length < 5; offset += 3) {
+            lines.push(inputRow.slice(offset, offset + 3).map(item => mdCmd(item.command, item.label)).join(' | '))
         }
     }
-    if (!tableRows.length) return ''
-    const separator = `| ${Array.from({ length: columns }, () => ':---:').join(' | ')} |`
-    return [tableRows[0], separator, ...tableRows.slice(1)].join('\n')
+    return lines.join('\n')
 }
 
 /** @param {any[]} sections */
@@ -172,8 +167,8 @@ export function buildQuickCommandSectionsMarkdown(sections) {
     const blocks = []
     for (const section of sections || []) {
         const sectionButtons = section?.buttons || section?.commands || []
-        const table = buildQuickCommandMarkdown(sectionButtons)
-        if (table) blocks.push(table)
+        const block = buildQuickCommandMarkdown(sectionButtons)
+        if (block) blocks.push(block)
     }
     return blocks.join('\n\n')
 }
@@ -376,8 +371,6 @@ function dispatchMessage(e, parts, options = {}) {
         const mode = getShortcutMode(e)
         let text = markdown
         if (!text && buttons) text = buildQuickCommandMarkdown(buttons)
-        // Markdown 正文前留空行，配合开头的 @ 用户
-        const body = text
         const canSend = mode !== 'off' && (!requireOfficialBot || isOfficialBot(e))
         if (canSend) {
             if (mode === 'button') {
@@ -387,11 +380,11 @@ function dispatchMessage(e, parts, options = {}) {
                     resolved.button = button
                 } else if (text) {
                     // 按钮消息不可用时，自动降级为 Markdown 列表。
-                    if (isOfficialBot(e) || !requireOfficialBot) resolved.markdown = segment.markdown(body)
+                    if (isOfficialBot(e) || !requireOfficialBot) resolved.markdown = segment.markdown(text)
                     else resolved.text = resolved.text ? [resolved.text, text] : text
                 }
             } else if (text) {
-                resolved.markdown = segment.markdown(body)
+                resolved.markdown = segment.markdown(text)
                 if (buttons) {
                     markdownData = { ...markdownData, ...quickCommandReplyData(e, buttons) }
                 }
