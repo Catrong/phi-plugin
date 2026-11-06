@@ -377,7 +377,7 @@ function dispatchMessage(e, parts, options = {}) {
         let text = markdown
         if (!text && buttons) text = buildQuickCommandMarkdown(buttons)
         // Markdown 正文前留空行，配合开头的 @ 用户
-        const body = `\n\n${text}`
+        const body = text
         const canSend = mode !== 'off' && (!requireOfficialBot || isOfficialBot(e))
         if (canSend) {
             if (mode === 'button') {
