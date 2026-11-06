@@ -78,7 +78,7 @@ export function mdCmd(text, show) {
  */
 export function butCmd(command, label, style) {
     const head = Config.getUserCfg('config', 'cmdhead')
-    return { command: (head && command) ? `/${head} ${command}` : '', label, style }
+    return { command: (head && command) ? `/${head} ${command}` : `/${command}`, label, style }
 }
 
 /**
