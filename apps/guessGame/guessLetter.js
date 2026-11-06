@@ -812,7 +812,7 @@ function cmdInpt(text, show, reference = false) {
  */
 async function tryToSendMd(e, fnc) {
     const useMarkdown = Config.getUserCfg('config', 'LetterMessageMode') === 'markdown'
-    if (!useMarkdown || getShortcutMode() === 'off' || ((e?.bot || e?.platform) && !isOfficialBot(e))) {
+    if (!useMarkdown || getShortcutMode(e) === 'off' || ((e?.bot || e?.platform) && !isOfficialBot(e))) {
         await sendMessage(e, guessLetterMessages.puzzle.plain(fnc(false)))
         return;
     }

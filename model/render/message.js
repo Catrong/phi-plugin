@@ -42,6 +42,16 @@ export function isOfficialBot(e) {
     return typeof adapter === 'string' && /^(qqbot|qq[-_ ]?official[-_ ]?bot)$/i.test(adapter.trim())
 }
 
+/**
+ * 判断是否为 QQ 频道的私聊会话：用户 ID 带 qg_ 前缀且不是群聊。
+ * 频道私聊接口只收基础消息，Markdown 与按钮都不生效。
+ * @param {any} e
+ */
+export function isGuildDirect(e) {
+    if (!e || e.isGroup) return false
+    return String(e.user_id ?? e.userId ?? '').startsWith('qg_')
+}
+
 /** @param {unknown} value */
 export function escapeMarkdownText(value) {
     return String(value ?? '')
@@ -84,9 +94,12 @@ export function butCmd(command, label, style) {
 /**
  * 当前快捷操作发送方式。
  * 兼容旧布尔配置：true -> markdown，false -> off。
+ * 频道私聊不支持 Markdown 与按钮，一律按 off 处理。
+ * @param {any} [e]
  * @returns {'off' | 'markdown' | 'button'}
  */
-export function getShortcutMode() {
+export function getShortcutMode(e) {
+    if (isGuildDirect(e)) return 'off'
     const value = Config.getUserCfg('config', 'LetterMarkdown')
     if (value === false || value === 'off') return 'off'
     if (value === 'button') return 'button'
@@ -341,14 +354,14 @@ export function sendMessage(e, parts = {}, options = {}) {
  */
 function dispatchMessage(e, parts, options = {}) {
     const {
-        at = false,
-        quote = false,
         recallMsg,
         data = {},
         order = DEFAULT_MESSAGE_ORDER,
         requireOfficialBot = true,
         compose = composeMessage,
     } = options
+    let at = options.at ?? false
+    let quote = options.quote ?? false
 
     /** @type {Record<string, unknown>} */
     const resolved = {}
@@ -360,9 +373,11 @@ function dispatchMessage(e, parts, options = {}) {
     const markdown = typeof parts.markdown === 'string' ? parts.markdown : ''
     const buttons = Array.isArray(parts.button) ? parts.button : undefined
     if (markdown || buttons) {
-        const mode = getShortcutMode()
+        const mode = getShortcutMode(e)
         let text = markdown
         if (!text && buttons) text = buildQuickCommandMarkdown(buttons)
+        // Markdown 正文前留空行，配合开头的 @ 用户
+        const body = `\n\n${text}`
         const canSend = mode !== 'off' && (!requireOfficialBot || isOfficialBot(e))
         if (canSend) {
             if (mode === 'button') {
@@ -372,16 +387,22 @@ function dispatchMessage(e, parts, options = {}) {
                     resolved.button = button
                 } else if (text) {
                     // 按钮消息不可用时，自动降级为 Markdown 列表。
-                    if (isOfficialBot(e) || !requireOfficialBot) resolved.markdown = segment.markdown(text)
+                    if (isOfficialBot(e) || !requireOfficialBot) resolved.markdown = segment.markdown(body)
                     else resolved.text = resolved.text ? [resolved.text, text] : text
                 }
             } else if (text) {
-                resolved.markdown = segment.markdown(text)
+                resolved.markdown = segment.markdown(body)
                 if (buttons) {
                     markdownData = { ...markdownData, ...quickCommandReplyData(e, buttons) }
                 }
             }
         }
+    }
+
+    // Markdown/按钮消息不走引用，改为开头 @ 用户
+    if (resolved.markdown || resolved.button) {
+        at = true
+        quote = false
     }
 
     if (compose === composeMessage && markdownData.keyboard && resolved.markdown) {

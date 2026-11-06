@@ -689,9 +689,10 @@ test('market page sends one safe Markdown action row for each displayed theme', 
     ]
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'custom' : key === 'LetterMarkdown')
-    send.reply = async (_event, message) => { replies.push(message); return {} }
+    send.reply = send.send_with_At = async (_event, message) => { replies.push(message); return {} }
     try {
         const markdown = buildMarketQuickMarkdown(/** @type {any} */(themes), { page: 2, pageCount: 3 })
         assert.ok(markdown.includes('Ocean "Salt" | [查看详情](mqqapi://aio/inlinecmd?command=%2Fcustom%20market%20detail%20ocean-salt&enter=false&reply=false)'))
@@ -709,6 +710,7 @@ test('market page sends one safe Markdown action row for each displayed theme', 
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
@@ -719,9 +721,10 @@ test('market page keeps the Markdown table when shortcut mode is button', async 
     ]
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown' ? 'button' : key === 'cmdhead' ? 'p' : undefined)
-    send.reply = async (_event, message) => { replies.push(message); return {} }
+    send.reply = send.send_with_At = async (_event, message) => { replies.push(message); return {} }
     try {
         const part = marketQuickMarkdownPart(/** @type {any} */(themes), { page: 1, pageCount: 2 })
         assert.equal('button' in part, false)
@@ -738,26 +741,27 @@ test('market page keeps the Markdown table when shortcut mode is button', async 
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
 test('market page sends no quick-command text when Markdown is disabled or fails', async () => {
     const themes = /** @type {any} */ ([{ slug: 'ocean-salt', name: 'Ocean Salt', botDownloadAllowed: true }])
     const originalGetUserCfg = Config.getUserCfg
-    const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     let calls = 0
     try {
         Config.getUserCfg = /** @type {any} */ (() => false)
-        send.reply = async () => { calls++; return {} }
+        send.send_with_At = async () => { calls++; return {} }
         await sendMarketQuickCommands(/** @type {any} */({}), themes)
         assert.equal(calls, 0)
 
         Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
-        send.reply = async () => { calls++; throw new Error('markdown unavailable') }
+        send.send_with_At = async () => { calls++; throw new Error('markdown unavailable') }
         await sendMarketQuickCommands(/** @type {any} */({}), themes)
         assert.equal(calls, 1)
 
-        send.reply = async () => { calls++; return { error: [new Error('markdown rejected')] } }
+        send.send_with_At = async () => { calls++; return { error: [new Error('markdown rejected')] } }
         await sendMarketQuickCommands(/** @type {any} */({}), themes)
         assert.equal(calls, 2)
 
@@ -767,7 +771,7 @@ test('market page sends no quick-command text when Markdown is disabled or fails
         assert.ok(!fields.includes('letterMarkdown'))
     } finally {
         Config.getUserCfg = originalGetUserCfg
-        send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 

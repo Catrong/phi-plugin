@@ -10,6 +10,7 @@ import {
     buildQuickCommandKeyboard,
     buildQuickCommandMarkdown,
     composeMessage,
+    getShortcutMode,
     mdCmd,
     sendMessage,
 } from '../model/render/message.js'
@@ -48,9 +49,10 @@ test('composeMessage 支持自定义组装顺序与空元素过滤', () => {
 test('sendMessage 把同一处的普通消息和 Markdown 合并成一条发送', async () => {
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
-    send.reply = async (_event, message) => { replies.push(message); return {} }
+    send.reply = send.send_with_At = async (_event, message) => { replies.push(message); return {} }
     try {
         const event = { bot: { adapter: 'qqbot' }, user_id: 'test-user' }
         await sendMessage(event, {
@@ -61,10 +63,57 @@ test('sendMessage 把同一处的普通消息和 Markdown 合并成一条发送'
         assert.ok(Array.isArray(replies[0]))
         assert.equal(replies[0][0], '普通消息')
         assert.equal(replies[0][1]?.type, 'markdown')
-        assert.equal(replies[0][1]?.text ?? replies[0][1]?.content, '\nMarkdown 消息')
+        assert.match(String(replies[0][1]?.text ?? replies[0][1]?.content), /^\n+Markdown 消息$/)
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
+        send.send_with_At = originalWithAt
+    }
+})
+
+test('Markdown 与按钮消息不引用，改为开头 @ 用户', async () => {
+    const originalGetUserCfg = Config.getUserCfg
+    const originalWithAt = send.send_with_At
+    /** @type {{quote: boolean | undefined, message: any}[]} */ const sent = []
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown' ? 'markdown' : undefined)
+    send.send_with_At = async (_event, message, quote) => { sent.push({ quote, message }); return {} }
+    try {
+        await sendMessage(
+            { bot: { adapter: 'qqbot' }, user_id: 'test-user', isGroup: true },
+            { markdown: 'Markdown 消息' },
+            { quote: true },
+        )
+        assert.equal(sent.length, 1)
+        assert.equal(sent[0].quote, false)
+        assert.match(String(sent[0].message?.text ?? sent[0].message?.content), /^\n\nMarkdown 消息$/)
+    } finally {
+        Config.getUserCfg = originalGetUserCfg
+        send.send_with_At = originalWithAt
+    }
+})
+
+test('频道私聊自动关闭 Markdown 与按钮，纯文本消息照常发送', async () => {
+    const originalGetUserCfg = Config.getUserCfg
+    const originalReply = send.reply
+    const originalWithAt = send.send_with_At
+    /** @type {any[]} */ const replies = []
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown' ? 'button' : undefined)
+    send.reply = send.send_with_At = async (_event, message) => { replies.push(message); return {} }
+    try {
+        const guildDirect = { bot: { adapter: 'qqbot' }, user_id: 'qg_abc', isGroup: false }
+        assert.equal(getShortcutMode(guildDirect), 'off')
+        await sendMessage(guildDirect, { markdown: 'Markdown 消息' })
+        assert.equal(replies.length, 0)
+
+        await sendMessage(guildDirect, { text: '普通消息' })
+        assert.deepEqual(replies, ['普通消息'])
+
+        const group = { bot: { adapter: 'qqbot' }, user_id: 'qg_abc', group_id: 'qg_1-2', isGroup: true }
+        assert.equal(getShortcutMode(group), 'button')
+    } finally {
+        Config.getUserCfg = originalGetUserCfg
+        send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
@@ -101,9 +150,10 @@ test('扫码绑定以图片元素发送 PNG 二维码，并保留提示和撤回
 test('sendMessage 默认只在 QQ 官方机器人发送 Markdown，可显式关闭该限制', async () => {
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown')
-    send.reply = async (_event, message) => { replies.push(message); return {} }
+    send.reply = send.send_with_At = async (_event, message) => { replies.push(message); return {} }
     try {
         await sendMessage({ platform: 'yunzai' }, { markdown: 'unused' })
         assert.equal(replies.length, 0)
@@ -113,10 +163,11 @@ test('sendMessage 默认只在 QQ 官方机器人发送 Markdown，可显式关�
             { requireOfficialBot: false },
         )
         assert.equal(replies.length, 1)
-        assert.equal(replies[0]?.text ?? replies[0]?.content, '市场快捷操作')
+        assert.match(String(replies[0]?.text ?? replies[0]?.content), /^\n\n市场快捷操作$/)
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
@@ -137,13 +188,14 @@ test('sendMessage 支持通过 compose 接管组装', async () => {
 test('默认设置下图片与文本/Markdown 分开发送：先图片，后文本与 Markdown', async () => {
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => {
         if (key === 'LetterMarkdown') return true
         if (key === 'MergeImageWithText') return false
         return undefined
     })
-    send.reply = async (_event, message) => { replies.push(message); return {} }
+    send.reply = send.send_with_At = async (_event, message) => { replies.push(message); return {} }
     try {
         await sendMessage(
             { bot: { adapter: 'qqbot' } },
@@ -153,23 +205,25 @@ test('默认设置下图片与文本/Markdown 分开发送：先图片，后文�
         assert.equal(replies[0], 'image')
         assert.ok(Array.isArray(replies[1]))
         assert.equal(replies[1][0], '普通消息')
-        assert.equal(replies[1][1]?.text ?? replies[1][1]?.content, '\nMarkdown 消息')
+        assert.match(String(replies[1][1]?.text ?? replies[1][1]?.content), /^\n+Markdown 消息$/)
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
 test('开启图文合并后图片、文本和 Markdown 合并为一条', async () => {
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => {
         if (key === 'LetterMarkdown') return true
         if (key === 'MergeImageWithText') return true
         return undefined
     })
-    send.reply = async (_event, message) => { replies.push(message); return {} }
+    send.reply = send.send_with_At = async (_event, message) => { replies.push(message); return {} }
     try {
         await sendMessage(
             { bot: { adapter: 'qqbot' } },
@@ -179,10 +233,11 @@ test('开启图文合并后图片、文本和 Markdown 合并为一条', async (
         assert.ok(Array.isArray(replies[0]))
         assert.equal(replies[0][0], 'image')
         assert.equal(replies[0][1], '\n普通消息')
-        assert.equal(replies[0][2]?.text ?? replies[0][2]?.content, '\nMarkdown 消息')
+        assert.match(String(replies[0][2]?.text ?? replies[0][2]?.content), /^\n+Markdown 消息$/)
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
@@ -208,9 +263,10 @@ test('图文合并关闭时图片与纯文本仍合并为一条', async () => {
 test('快捷操作模式为 markdown 时把 button 列表渲染为 Markdown 表格', async () => {
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown' ? 'markdown' : undefined)
-    send.reply = async (_event, message, _quote, data) => { replies.push({ message, data }); return {} }
+    send.reply = send.send_with_At = async (_event, message, _quote, data) => { replies.push({ message, data }); return {} }
     try {
         await sendMessage({ bot: { adapter: 'qqbot' }, user_id: 'test-user' }, {
             button: [[{ button: { command: '/p b30', label: 'B30' } }]],
@@ -219,6 +275,7 @@ test('快捷操作模式为 markdown 时把 button 列表渲染为 Markdown 表�
         const markdown = replies[0].message
         assert.equal(markdown?.type, 'markdown')
         assert.ok((markdown?.text ?? markdown?.content).includes('[B30](mqqapi://aio/inlinecmd?command=%2Fp%20b30&enter=false&reply=false)'))
+        assert.ok((markdown?.text ?? markdown?.content).startsWith('\n\n'))
         const action = replies[0].data?.keyboard?.content?.rows?.[0]?.buttons?.[0]?.action
         assert.equal(action?.type, 2)
         assert.equal(action?.data, '/p b30')
@@ -226,15 +283,17 @@ test('快捷操作模式为 markdown 时把 button 列表渲染为 Markdown 表�
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
 test('快捷操作模式为 button 时发送按钮行而不是 Markdown 表格', async () => {
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown' ? 'button' : undefined)
-    send.reply = async (_event, message, _quote, data) => { replies.push({ message, data }); return {} }
+    send.reply = send.send_with_At = async (_event, message, _quote, data) => { replies.push({ message, data }); return {} }
     try {
         await sendMessage({ bot: { adapter: 'qqbot' }, user_id: 'test-user' }, {
             button: [[{ button: { command: '/p b30', label: 'B30' } }]],
@@ -252,6 +311,7 @@ test('快捷操作模式为 button 时发送按钮行而不是 Markdown 表格',
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
@@ -275,11 +335,12 @@ test('快捷操作模式为 off 时不发送快捷操作', async () => {
 test('按钮消息不可用时自动降级为 Markdown 列表', async () => {
     const originalGetUserCfg = Config.getUserCfg
     const originalReply = send.reply
+    const originalWithAt = send.send_with_At
     const originalHasButtonSegment = platform.hasButtonSegment
     /** @type {any[]} */ const replies = []
     Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'LetterMarkdown' ? 'button' : undefined)
     platform.hasButtonSegment = () => false
-    send.reply = async (_event, message, _quote, data) => { replies.push({ message, data }); return {} }
+    send.reply = send.send_with_At = async (_event, message, _quote, data) => { replies.push({ message, data }); return {} }
     try {
         await sendMessage({ bot: { adapter: 'qqbot' }, user_id: 'test-user' }, {
             button: [[{ button: { command: '/p b30', label: 'B30' } }]],
@@ -292,6 +353,7 @@ test('按钮消息不可用时自动降级为 Markdown 列表', async () => {
         Config.getUserCfg = originalGetUserCfg
         platform.hasButtonSegment = originalHasButtonSegment
         send.reply = originalReply
+        send.send_with_At = originalWithAt
     }
 })
 
