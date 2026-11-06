@@ -1400,7 +1400,10 @@ async function getScore(songId, e, args = {}) {
     }
 
 
-    sendMessage(e, b19Messages.getScore.finalMessage({ image: await picmodle.score(e, data, 1) }), { at: true })
+    sendMessage(e, b19Messages.getScore.finalMessage(
+        { image: await picmodle.score(e, data, 1) },
+        { id: songId, ranks: Object.keys(info.chart || {}) },
+    ), { at: true })
 
 }
 

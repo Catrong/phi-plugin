@@ -158,15 +158,9 @@ export const menus = {
             butCmd('help', '帮助'),
         ]
     ],
-    /** 单曲成绩页 */
-    singleScore: () => [
-        [
-            butCmd('list', '成绩筛选'),
-            butCmd('pgr', 'B30成绩'),
-            butCmd('info', '个人信息'),
-            butCmd('help', '帮助'),
-        ]
-    ],
+    /** 单曲成绩页：与 /song 图鉴一致，直接给出该曲的谱面入口 */
+    /** @param {idString} id @param {string[]} ranks */
+    singleScore: (id, ranks = []) => songChartButtons(id, ranks),
     /** 推分建议页 */
     suggest: () => [
         [
@@ -390,7 +384,7 @@ export const b19Messages = {
         infoNotFound: (/** @type {string} */ id) => ({ text: `未找到${id}的相关信息QAQ！` }),
         noRecord: (/** @type {string} */ song) => { const head = Config.getUserCfg('config', 'cmdhead'); return ({ text: (`我不知道你关于[${song}]的成绩哦！可以试试更新成绩哦！\n格式：/${head} update`) }); },
         suggestUnavailable: ({ text: '无法推分' }),
-        finalMessage: (/** @type {{image?: unknown}} */ parts) => ({ ...parts, button: menus.singleScore() }),
+        finalMessage: (/** @type {{image?: unknown}} */ parts, /** @type {{id: idString, ranks: string[]}} */ chart) => ({ ...parts, button: menus.singleScore(chart.id, chart.ranks) }),
     },
 }
 
@@ -667,13 +661,15 @@ export const marketMessages = {
          * @param {boolean} result.local
          * @param {boolean} result.offline
          * @param {string} result.version
-         * @param {string} result.theme
+         * @param {object} result.theme
+         * @param {string} result.theme.id
+         * @param {string} result.theme.name
          * @param {string} result.detail
          * @returns 
          */
         enabled: (result) => {
             const actionText = result.local ? '已使用本地主题' : result.cached ? '已使用本地安全缓存' : '已自动下载并完成安全校验'
-            return { text: `主题已启用：${result.theme}${result.version ?? ''}（${actionText}）` }
+            return { text: `主题已启用：${result.theme.name}${result.version ?? ''}（${actionText}）` }
         }
     },
 }
@@ -854,6 +850,20 @@ export const moneyMessages = {
 }
 
 /**
+ * 曲目图鉴的谱面快捷入口：第一行 AT（有该难度时）、IN，第二行 HD、EZ。
+ * 只列出该曲目实际拥有的难度。
+ * @param {idString} id
+ * @param {string[]} ranks 曲目实际拥有的难度键
+ */
+function songChartButtons(id, ranks) {
+    return [['AT', 'IN'], ['HD', 'EZ']]
+        .map(row => row
+            .filter(rank => ranks.includes(rank))
+            .map(rank => butCmd(`chart ${id} ${rank}`, rank)))
+        .filter(row => row.length)
+}
+
+/**
  * @description apps/phisong.js
  * @satisfies {messagesClass}
  */
@@ -863,7 +873,8 @@ export const phisongMessages = {
     },
     song: {
         banned: { text: '这里被管理员禁止使用这个功能了呐QAQ！' },
-        image: (/** @type {unknown} */ image) => ({ image }),
+        /** @param {unknown} image @param {{id: idString, ranks: string[]}} [chart] */
+        image: (image, chart) => ({ image, button: chart ? songChartButtons(chart.id, chart.ranks) : undefined }),
         specifySong: () => { const head = Config.getUserCfg('config', 'cmdhead'); return ({ text: (`请指定曲名哦！\n格式：/${head} song <曲名>`) }); },
         notFound: (/** @type {string} */ msg) => ({ text: `未找到${msg}的相关曲目信息QAQ\n如果想要提供别名的话请访问 /phihelp 中的别名投稿链接嗷！` }),
     },

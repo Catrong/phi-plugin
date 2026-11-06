@@ -4,7 +4,7 @@ import Config from '../components/Config.js'
 import send from '../model/render/send.js'
 import platform from '../components/platform/index.js'
 import getQRcode from '../lib/getQRcode.js'
-import { menus, sessionMessages } from '../model/render/messages.js'
+import { b19Messages, menus, sessionMessages } from '../model/render/messages.js'
 import {
     DEFAULT_MESSAGE_ORDER,
     buildQuickCommandKeyboard,
@@ -56,6 +56,26 @@ test('用户设置页快捷指令：每段带标题，已选项的序号换成 �
         const unselected = buildQuickCommandSectionsMarkdown(menus.userSettingSections({ theme: 'milthm' }))
         assert.ok(!unselected.includes('✅'))
         assert.ok(unselected.startsWith('主题风格\n'))
+    } finally {
+        Config.getUserCfg = originalGetUserCfg
+    }
+})
+
+test('单曲成绩页的快捷按钮与 /song 图鉴一致：AT/IN 一行、HD/EZ 一行', () => {
+    const originalGetUserCfg = Config.getUserCfg
+    Config.getUserCfg = /** @type {any} */ ((_name = '', key = '') => key === 'cmdhead' ? 'p' : undefined)
+    try {
+        /** @type {any} */
+        const chart = { id: 'Credits.Frums.0', ranks: ['EZ', 'HD', 'IN', 'AT'] }
+        const parts = b19Messages.getScore.finalMessage({ image: 'score-image' }, chart)
+        assert.equal(parts.image, 'score-image')
+        assert.deepEqual(
+            (parts.button || []).map(row => row.map(item => [item.label, item.command])),
+            [
+                [['AT', '/p chart Credits.Frums.0 AT'], ['IN', '/p chart Credits.Frums.0 IN']],
+                [['HD', '/p chart Credits.Frums.0 HD'], ['EZ', '/p chart Credits.Frums.0 EZ']],
+            ],
+        )
     } finally {
         Config.getUserCfg = originalGetUserCfg
     }

@@ -7,6 +7,7 @@ import getBanGroup from '../model/user/getBanGroup.js'
 import getNotes from '../model/user/getNotes.js'
 import picmodle from '../model/render/picmodle.js'
 import send from '../model/render/send.js'
+import { phisongMessages } from '../model/render/messages.js'
 
 /** @param {string} msg */
 const event = msg => /** @type {any} */ ({
@@ -96,6 +97,90 @@ test('search 渲染通用表格：每页上限取 listScoreMaxNum，超限时提
         send.send_with_At = originals.sendWithAt
         send.reply = originals.reply
     }
+})
+
+test('song 图鉴把谱面按钮随曲目图一起发出', async () => {
+    const originals = {
+        getBan: getBanGroup.get,
+        fuzzysongsnick: getInfo.fuzzysongsnick,
+        info: getInfo.info,
+        common: picmodle.common,
+        getUserCfg: Config.getUserCfg,
+        sendWithAt: send.send_with_At,
+        reply: send.reply,
+    }
+    /** @type {any[]} */
+    const sent = []
+    getBanGroup.get = async () => false
+    getInfo.fuzzysongsnick = /** @type {any} */ (() => ['Credits.Frums.0'])
+    getInfo.info = /** @type {any} */ ((/** @type {string} */ id) => ({
+        id,
+        song: 'Credits',
+        chart: { EZ: { difficulty: 2 }, HD: { difficulty: 8 }, IN: { difficulty: 13 }, AT: { difficulty: 15 } },
+    }))
+    picmodle.common = /** @type {any} */ (async () => 'atlas-image')
+    Config.getUserCfg = /** @type {any} */ ((/** @type {string} */ name, /** @type {string} */ key) => {
+        if (key === 'LetterMarkdown') return 'button'
+        if (key === 'allowComment') return false
+        return /** @type {any} */ (originals.getUserCfg).call(Config, name, key)
+    })
+    send.send_with_At = /** @type {any} */ (async (/** @type {any} */ _e, /** @type {any} */ payload) => {
+        sent.push(payload)
+        return undefined
+    })
+    send.reply = /** @type {any} */ (async () => undefined)
+
+    try {
+        const command = new phisong()
+        const e = { ...event('/phi song Credits'), bot: { adapter: { name: 'QQBot' } } }
+        assert.equal(await command.song(e), true)
+
+        const items = Array.isArray(sent[0]) ? sent[0] : [sent[0]]
+        const button = items.find((/** @type {any} */ item) => item?.type === 'button')
+        assert.ok(button)
+        // icqq 的 button 段只保留首行（content），TRSS 用 data 承载全部行，这里断言首行以兼容两者。
+        const firstRow = (button.data ?? button.rows ?? [button.content])[0]
+        assert.deepEqual(firstRow.map((/** @type {any} */ item) => item.text ?? item.label), ['AT', 'IN'])
+        assert.equal(firstRow[0].input ?? firstRow[0].command, '/p chart Credits.Frums.0 AT')
+    } finally {
+        getBanGroup.get = originals.getBan
+        getInfo.fuzzysongsnick = originals.fuzzysongsnick
+        getInfo.info = originals.info
+        picmodle.common = originals.common
+        Config.getUserCfg = originals.getUserCfg
+        send.send_with_At = originals.sendWithAt
+        send.reply = originals.reply
+    }
+})
+
+test('song 图鉴的谱面按钮按 AT/IN、HD/EZ 两行排列，缺失难度自动跳过', () => {
+    /**
+     * @param {string} id
+     * @param {string[]} ranks
+     * @returns {any}
+     */
+    const chart = (id, ranks) => ({ id, ranks })
+    const full = phisongMessages.song.image('atlas-image', chart('Credits.Frums.0', ['EZ', 'HD', 'IN', 'AT']))
+    assert.deepEqual(
+        (full.button || []).map(row => row.map(item => [item.label, item.command])),
+        [
+            [['AT', '/p chart Credits.Frums.0 AT'], ['IN', '/p chart Credits.Frums.0 IN']],
+            [['HD', '/p chart Credits.Frums.0 HD'], ['EZ', '/p chart Credits.Frums.0 EZ']],
+        ],
+    )
+    assert.equal(full.image, 'atlas-image')
+
+    const noAt = phisongMessages.song.image('atlas-image', chart('Glaciaxion.SunsetRay.0', ['EZ', 'HD', 'IN']))
+    assert.deepEqual(
+        (noAt.button || []).map(row => row.map(item => item.label)),
+        [['IN'], ['HD', 'EZ']],
+    )
+
+    const onlyIn = phisongMessages.song.image('atlas-image', chart('SpSong.0', ['IN']))
+    assert.deepEqual((onlyIn.button || []).map(row => row.map(item => item.label)), [['IN']])
+
+    // 没有曲目信息时不附加按钮
+    assert.equal(phisongMessages.song.image('atlas-image').button, undefined)
 })
 
 test('search 无筛选时展示全部曲目摘要，未命中时给出空状态文案', async () => {

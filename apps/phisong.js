@@ -152,10 +152,10 @@ export class phisong extends phiPluginBase {
         let ids = getInfo.fuzzysongsnick(msg)
         if (ids[0]) {
             if (!ids[1]) {
-                sendMessage(e, phisongMessages.song.image(await songInfo(page, addComment, ids[0], e)), { at: true })
+                sendMessage(e, phisongMessages.song.image(await songInfo(page, addComment, ids[0], e), songChartMenu(ids[0])), { at: true })
             } else {
                 this.choseMutiNick(e, ids, { page, addComment }, async (e, id, options) => {
-                    sendMessage(e, phisongMessages.song.image(await songInfo(options.page, options.addComment, id, e)), { at: true });
+                    sendMessage(e, phisongMessages.song.image(await songInfo(options.page, options.addComment, id, e), songChartMenu(id)), { at: true });
                 })
             }
         } else {
@@ -1125,6 +1125,17 @@ export class phisong extends phiPluginBase {
             sendMessage(e, phisongMessages.notice.image(img), { at: true });
         }
     }
+}
+
+/**
+ * 曲目图鉴的谱面快捷入口数据：曲目 id 与该曲目实际拥有的难度。
+ * 缺少曲目信息时返回 undefined，此时不附加按钮。
+ * @param {idString} id
+ * @returns {{id: idString, ranks: string[]} | undefined}
+ */
+function songChartMenu(id) {
+    const chart = getInfo.info(id)?.chart
+    return chart ? { id, ranks: Object.keys(chart) } : undefined
 }
 
 /**
