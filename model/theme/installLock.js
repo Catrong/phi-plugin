@@ -89,14 +89,41 @@ function isStaleFileLock(state) {
 }
 
 /**
+ * 回收者自己也可能被杀：此时 reap 文件会一直占位，让该代锁永久无法回收。
+ * 记录里的 pid 已死（或文件只写了一半且已过陈旧阈值）时视为残留并清掉。
+ * @param {string} reapPath
+ * @returns {Promise<boolean>} 是否清掉了残留的 reap 文件
+ */
+async function discardDeadReaper(reapPath) {
+    /** @type {fs.Stats | undefined} */
+    let stat
+    /** @type {any} */
+    let owner = null
+    try {
+        stat = await fs.promises.stat(reapPath)
+        owner = JSON.parse(await fs.promises.readFile(reapPath, 'utf8'))
+    } catch (error) {
+        if (/** @type {any} */ (error)?.code === 'ENOENT') return false
+        if (!stat || Date.now() - stat.mtimeMs <= LOCK_STALE_MS) return false
+        await fs.promises.rm(reapPath, { force: true }).catch(() => {})
+        return true
+    }
+    if (processAlive(Number(owner?.pid), undefined)) return false
+    await fs.promises.rm(reapPath, { force: true }).catch(() => {})
+    return true
+}
+
+/**
  * A token-specific reap file elects one cleanup owner for a stale lock
  * generation. A crashed reaper fails closed for that generation instead of
  * letting a second process unlink a newly-created lock.
+ * @param {boolean} [retried] 是否已经清理过残留 reap 文件
  */
-async function reapStaleFileLock() {
+async function reapStaleFileLock(retried = false) {
     const observed = await readFileLockState()
     if (!observed || !isStaleFileLock(observed)) return false
     const reapPath = `${LOCK_REAP_PREFIX}${observed.generation}`
+    if (!retried && await discardDeadReaper(reapPath)) return reapStaleFileLock(true)
     let reapHandle
     try {
         reapHandle = await fs.promises.open(reapPath, 'wx', 0o600)
@@ -128,7 +155,8 @@ async function acquireFileLock() {
     migrateLegacyThemeDirectories()
     await fs.promises.mkdir(themesDir, { recursive: true, mode: 0o700 })
     const started = Date.now()
-    while (Date.now() - started < LOCK_WAIT_MS) {
+    const waitMs = lockWaitMs()
+    while (Date.now() - started < waitMs) {
         let handle
         try {
             handle = await fs.promises.open(LOCK_PATH, 'wx', 0o600)
