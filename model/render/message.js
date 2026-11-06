@@ -75,9 +75,8 @@ export function escapeCommandAttribute(value) {
 
 /** @param {string} text @param {string} show */
 export function mdCmd(text, show) {
-    const label = escapeMarkdownText(show).replace(/([\[\]])/g, '\\$1')
     const command = encodeURIComponent(text).replace(/[!'()*]/g, char => `%${char.charCodeAt(0).toString(16).toUpperCase()}`)
-    return `[${label}](mqqapi://aio/inlinecmd?command=${command}&enter=false&reply=false)`
+    return `[${String(show ?? '')}](mqqapi://aio/inlinecmd?command=${command}&enter=false&reply=false)`
 }
 
 /** 
@@ -146,20 +145,13 @@ function normalizeButtonRows(rows) {
 }
 
 /**
- * 构建通用的快捷操作菜单：指令链接按 ` | ` 间隔，换行规则与按钮行一致。
+ * 构建通用的快捷操作菜单：每个输入行输出一行，行内指令用 ` | ` 间隔。
  * @param {any[]} rows 二维按钮列表
  */
 export function buildQuickCommandMarkdown(rows) {
     const normalizedRows = normalizeButtonRows(rows)
     if (!normalizedRows.length) return ''
-    /** @type {string[]} */
-    const lines = []
-    for (const inputRow of normalizedRows) {
-        for (let offset = 0; offset < inputRow.length && lines.length < 5; offset += 3) {
-            lines.push(inputRow.slice(offset, offset + 3).map(item => mdCmd(item.command, item.label)).join(' | '))
-        }
-    }
-    return lines.join('\n')
+    return normalizedRows.map(inputRow => inputRow.map(item => mdCmd(item.command, item.label)).join(' | ')).join('\n')
 }
 
 /** @param {any[]} sections */

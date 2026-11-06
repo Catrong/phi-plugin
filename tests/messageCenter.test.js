@@ -15,10 +15,10 @@ import {
     sendMessage,
 } from '../model/render/message.js'
 
-test('Markdown 快捷指令保留完整命令且仅填入输入框', () => {
+test('Markdown 快捷指令保留完整命令且仅填入输入框，标签不做转义', () => {
     const command = '/phi 搜索 空格 &reply=true#片段 "引号" [方括号](圆括号)!*\n下一行'
     const markdown = mdCmd(command, '执行 [指令](名称) | <标签>\n下一行')
-    assert.ok(markdown.startsWith('[执行 \\[指令\\](名称) \\| &lt;标签&gt; 下一行]('))
+    assert.ok(markdown.startsWith('[执行 [指令](名称) | <标签>\n下一行]('))
     const match = markdown.match(/\]\((mqqapi:\/\/aio\/inlinecmd\?[^\s()]+)\)$/)
     assert.ok(match)
     const link = new URL(match[1])
@@ -359,18 +359,16 @@ test('按钮消息不可用时自动降级为 Markdown 列表', async () => {
     }
 })
 
-test('二维按钮按输入行换行，且不会与下一行接续', () => {
+test('md 按钮行只在数组结束后换行，不再按 3 个一行折行', () => {
     const button = (/** @type {string} */ label) => ({ button: { command: `/${label}`, label } })
     const markdown = buildQuickCommandMarkdown([
         [button('R1'), button('R2'), button('R3'), button('R4')],
         [button('R5')],
     ])
     const rows = markdown.split('\n')
-    assert.equal(rows.length, 3)
-    assert.match(rows[0], /R1.*\|.*R2.*\|.*R3/)
-    assert.match(rows[1], /R4/)
-    assert.doesNotMatch(rows[1], /R5/)
-    assert.match(rows[2], /R5/)
+    assert.equal(rows.length, 2)
+    assert.match(rows[0], /R1.*\|.*R2.*\|.*R3.*\|.*R4/)
+    assert.match(rows[1], /R5/)
     assert.ok(!markdown.includes('| :---: |'))
 })
 
