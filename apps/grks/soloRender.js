@@ -1,6 +1,6 @@
 import { grksViewWords } from '../../model/render/messages.js'
 import { Level } from '../../model/game/constNum.js'
-import fCompute from '../../model/game/fCompute.js'
+import getInfo from '../../model/game/getInfo.js'
 
 /** @import {grksKnownData, grksGuessEntry, grksGuessResult} from './grks.js' */
 
@@ -195,7 +195,7 @@ export class grksSoloRender {
             },
             records: buildRecords(data.records, orderKnown),
             sheet: buildSheet(data.sheet),
-            background: fCompute.randBackground(true),
+            background: getInfo.randBackground(true),
             footnote: options.footnote || '',
             historyTitle: grksViewWords.historyTitle,
             historyMeta: grksViewWords.historyMeta(countAnswered(history)),
@@ -237,7 +237,7 @@ export class grksSoloRender {
             },
             records: buildGiverRecords(data.records, known.records, prefix),
             sheet: buildGiverSheet(data.sheet, known.sheetKind, prefix),
-            background: fCompute.randBackground(true),
+            background: getInfo.randBackground(true),
             footnote: options.footnote || '',
             historyTitle: grksViewWords.giver.historyTitle,
             historyMeta: grksViewWords.giver.historyMeta(countAnswered(history)),

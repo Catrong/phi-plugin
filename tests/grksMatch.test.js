@@ -11,7 +11,6 @@ import Config from '../components/Config.js'
 import { getPlatformAdapter } from '../components/platform/index.js'
 import send from '../model/render/send.js'
 import picmodle from '../model/render/picmodle.js'
-import fCompute from '../model/game/fCompute.js'
 import getInfo from '../model/game/getInfo.js'
 import { addScore, getPlayer, getStoreFile, setStoreFile } from '../model/game/gameScore/index.js'
 import { shortcutCommands } from '../components/platform/koishiCommandNames.js'
@@ -83,7 +82,7 @@ function fixture(t) {
         views.push(view)
         return false
     })
-    t.mock.method(fCompute, 'randBackground', () => 'test-background')
+    t.mock.method(getInfo, 'randBackground', () => 'test-background')
     /** @type {grksTestMessage[]} */
     const sent = []
     t.mock.method(send, 'send_with_At', async (/** @type {botEvent} */ e, /** @type {PlatformMessageInput} */ content) => {

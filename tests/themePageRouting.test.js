@@ -6,7 +6,6 @@ import { phihelp as UserSettings } from '../apps/setting.js'
 import { phimoney as Money } from '../apps/money.js'
 import { phiuser as UserInfo } from '../apps/user.js'
 import getInfo from '../model/game/getInfo.js'
-import fCompute from '../model/game/fCompute.js'
 import picmodle from '../model/render/picmodle.js'
 import send from '../model/render/send.js'
 import getBanGroup from '../model/user/getBanGroup.js'
@@ -351,7 +350,7 @@ test('info 命令传递用户主题并正确区分新版和旧版渲染', async 
         getIll: getInfo.getill,
         fuzzySongsNick: getInfo.fuzzysongsnick,
         getAvatar: getInfo.idgetavatar,
-        getBackground: fCompute.getBackground,
+        getBackground: getInfo.getBackground,
         getSave: send.getsave_result,
         send: send.send_with_At,
         userInfo: picmodle.user_info,
@@ -385,7 +384,7 @@ test('info 命令传递用户主题并正确区分新版和旧版渲染', async 
     getInfo.getill = () => 'background.png'
     getInfo.fuzzysongsnick = /** @type {any} */ (() => ['song-id'])
     getInfo.idgetavatar = () => 'avatar1'
-    fCompute.getBackground = () => 'player-background.png'
+    getInfo.getBackground = () => 'player-background.png'
     send.getsave_result = /** @type {any} */ (async () => save)
     send.send_with_At = /** @type {any} */ (async () => undefined)
     picmodle.user_info = /** @type {any} */ (async (/** @type {any} */ e, /** @type {any} */ data, /** @type {any} */ kind) => {
@@ -422,7 +421,7 @@ test('info 命令传递用户主题并正确区分新版和旧版渲染', async 
         getInfo.getill = originals.getIll
         getInfo.fuzzysongsnick = originals.fuzzySongsNick
         getInfo.idgetavatar = originals.getAvatar
-        fCompute.getBackground = originals.getBackground
+        getInfo.getBackground = originals.getBackground
         send.getsave_result = originals.getSave
         send.send_with_At = originals.send
         picmodle.user_info = originals.userInfo

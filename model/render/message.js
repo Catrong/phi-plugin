@@ -248,18 +248,56 @@ async function resolvePart(value) {
 export function composeMessage(parts, order = DEFAULT_MESSAGE_ORDER, context = {}) {
     /** @type {unknown[]} */
     const message = []
+    let previousKind = ''
     for (const kind of order) {
         const value = parts?.[kind]
         if (isEmpty(value)) continue
-        if (Array.isArray(value)) {
-            for (const item of value) {
-                if (!isEmpty(item)) message.push(item)
+        const items = (Array.isArray(value) ? value : [value]).filter(item => !isEmpty(item))
+        if (!items.length) continue
+        if (message.length && previousKind !== kind) {
+            const last = message.length - 1
+            if (!hasBoundaryNewline(message[last], false) && !hasBoundaryNewline(items[0], true)) {
+                if (kind === 'text' || kind === 'markdown') {
+                    const padded = addBoundaryNewline(items[0], true)
+                    if (padded !== undefined) items[0] = padded
+                    else message.push('\n')
+                } else {
+                    const padded = addBoundaryNewline(message[last], false)
+                    if (padded !== undefined) message[last] = padded
+                    else message.push('\n')
+                }
             }
-            continue
         }
-        message.push(value)
+        message.push(...items)
+        previousKind = kind
     }
     return message
+}
+
+/** @param {unknown} value @returns {string | undefined} */
+function boundaryText(value) {
+    if (typeof value === 'string') return value
+    if (value && typeof value === 'object') {
+        if ('text' in value && typeof value.text === 'string') return value.text
+        if ('content' in value && typeof value.content === 'string') return value.content
+    }
+}
+
+/** @param {unknown} value @param {boolean} start */
+function hasBoundaryNewline(value, start) {
+    const text = boundaryText(value)
+    return text !== undefined && (start ? text.startsWith('\n') : text.endsWith('\n'))
+}
+
+/** @param {unknown} value @param {boolean} start @returns {unknown} */
+function addBoundaryNewline(value, start) {
+    const text = boundaryText(value)
+    if (text === undefined) return undefined
+    const padded = hasBoundaryNewline(value, start) ? text : start ? `\n${text}` : `${text}\n`
+    if (typeof value === 'string') return padded
+    if (value && typeof value === 'object') {
+        return 'text' in value ? { ...value, text: padded } : { ...value, content: padded }
+    }
 }
 
 /**
@@ -346,6 +384,9 @@ function dispatchMessage(e, parts, options = {}) {
         }
     }
 
+    if (compose === composeMessage && markdownData.keyboard && resolved.markdown) {
+        resolved.markdown = addBoundaryNewline(resolved.markdown, false) ?? resolved.markdown
+    }
     const message = compose(resolved, order, { e, parts, order })
     if (!message.length) return undefined
 

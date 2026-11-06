@@ -1,11 +1,8 @@
 import Config from '../../components/Config.js'
 import logger from '../../components/Logger.js'
-import LevelRecordInfo from './LevelRecordInfo.js'
-import { Level, MAX_DIFFICULTY } from './constNum.js'
-import getInfo from './getInfo.js'
+import { MAX_DIFFICULTY } from './constNum.js'
 import platform from '../../components/platform/index.js'
-import { fileMessages } from '../render/messages.js'
-import { sendMessage } from '../render/message.js'
+
 
 export default class fCompute {
     /**
@@ -94,25 +91,13 @@ export default class fCompute {
             await platform.uploadFile(e, file, filename)
 
         } catch (err) {
+            const { fileMessages } = await import('../render/messages.js')
+            const { sendMessage } = await import('../render/message.js')
             // @ts-ignore
             logger.error(`文件上传错误：${logger.red(err.stack)}`)
             console.error(err)
             // @ts-ignore
             await sendMessage(e, fileMessages.uploadError(err.stack))
-        }
-    }
-
-    /**
-     * 获取角色介绍背景曲绘
-     * @param {string} save_background 
-     * @returns 
-     */
-    static getBackground(save_background) {
-        try {
-            return getInfo.getBackground(save_background)
-        } catch (err) {
-            logger.error(`获取背景曲绘错误`, err)
-            return false
         }
     }
 
@@ -598,58 +583,6 @@ export default class fCompute {
     }
 
     /**
-     * 多别名的返回消息
-     * @param {idString[]} idArr 
-     */
-    static mutiNick(idArr) {
-        /**
-         * 筛选出重复的别名
-         * @type {Record<string, number>}
-         */
-        const nickCnt = {};
-        idArr.forEach((id) => {
-            (getInfo?.nicklist?.[id] || []).forEach((nick) => {
-                if (!nickCnt[nick]) {
-                    nickCnt[nick] = 1;
-                } else {
-                    nickCnt[nick]++;
-                }
-            })
-        })
-        /**
-         * @type {string[]}
-         */
-        const nickList = []
-        for (let nick in nickCnt) {
-            if (nickCnt[nick] > 1) {
-                nickList.push(nick);
-            }
-        }
-        /**生成消息 */
-        let msg = '你要找的是不是：\n';
-        idArr.forEach((id, index) => {
-            let info = getInfo.info(id);
-            if (info) {
-                msg += `${index + 1}. ${info.song}\n-作者：${info.composer}\n`;
-                if (getInfo.nicklist?.[id]) {
-                    for (let nick of getInfo.nicklist[id]) {
-                        if (!nickList.includes(nick)) {
-                            msg += `-其他别名：${nick}\n`;
-                            break;
-                        }
-                    }
-                } else {
-                    msg += `-其他别名：${info.id.replace('.', ' . ')}\n`;
-                }
-            } else {
-                msg += `${index + 1}. ${id}\n暂无信息\n`;
-            }
-        })
-        msg += `请在${Config.getUserCfg('config', 'mutiNickWaitTimeOut')}秒内回复序号`;
-        return msg
-    }
-
-    /**
      * 判断是不是1GOOD
      * @param {number} score 
      * @param {number} maxc 总物量
@@ -668,43 +601,6 @@ export default class fCompute {
      */
     static objectKeys(record) {
         return /**@type {(keyof T)[]} */(Object.keys(record));
-    }
-
-
-    /**
-     * 根据游戏记录和难度信息计算B30
-     * @param {gameRecord} records 
-     * @param {import('./getInfo.js').versionInfoObject} [diffInfo] 成绩对应版本的定数信息，省略时使用当前定数
-     * @returns {{rks: number, phi: LevelRecordInfo[], best: LevelRecordInfo[]}}
-     */
-    static getB30(records, diffInfo) {
-        const allRecords = [];
-        for (const id of this.objectKeys(records)) {
-            const levelRecords = records[id];
-            if (!levelRecords) continue;
-            for (let i = 0; i < Level.length; i++) {
-                const record = levelRecords[i];
-                if (!record) continue;
-                allRecords.push(new LevelRecordInfo(record, id, i, diffInfo?.version_code));
-            }
-        }
-
-        const best = allRecords.sort((a, b) => b.rks - a.rks);
-
-        const phi = best.filter(record => record.acc >= 100);
-
-        let rks = 0;
-
-        /**RKS = (最高27个单曲RKS + 最高3个phi单曲RKS) / 30 */
-        for (let i = 0; i < 27 && i < best.length; i++) {
-            rks += best[i].rks;
-        }
-
-        for (let i = 0; i < 3 && i < phi.length; i++) {
-            rks += phi[i].rks;
-        }
-
-        return { rks: rks / 30, phi, best };
     }
 
     /**
@@ -814,13 +710,6 @@ export default class fCompute {
     static getRexWithCmdHead(content) {
         let rex = new RegExp(`^[#/]\\s*${Config.getUserCfg('config', 'cmdhead')}\\s*(${content})\\s*`, 'i')
         return rex;
-    }
-
-    static randBackground(original = false) {
-        if (!original) {
-            return getInfo.getill(getInfo.illlist[Math.floor((Math.random() * (getInfo.illlist.length - 1)))], 'blur');
-        }
-        return getInfo.getill(getInfo.idList[Math.floor((Math.random() * (getInfo.idList.length - 1)))], 'blur');
     }
 
 }

@@ -294,7 +294,7 @@ export default class saveHistory {
 
         // 4. 按目标日期对应的历史版本定数计算 RKS（仅保留4位小数）
         const versionInfo = getInfo.getVersionDifficultyByDate(targetDate)
-        const rks = Number(fCompute.getB30(gameRecord, versionInfo).rks.toFixed(4))
+        const rks = Number(getInfo.getB30(gameRecord, versionInfo).rks.toFixed(4))
 
         return {
             gameRecord,

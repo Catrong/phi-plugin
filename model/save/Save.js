@@ -12,6 +12,7 @@ import makeRequest from '../api/makeRequest.js'
 import { localAvgSnapshot, lookupAvgRange } from '../api/avgSnapshot.js'
 import LevelRecordInfo from '../game/LevelRecordInfo.js'
 
+
 export default class Save {
 
     /**
@@ -829,7 +830,7 @@ export default class Save {
             rks: this.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: this.gameuser.selfIntro,
-            backgroundUrl: fCompute.getBackground(this.gameuser.background),
+            backgroundUrl: getInfo.getBackground(this.gameuser.background),
             PlayerId: fCompute.convertRichText(this.saveInfo.PlayerId),
             date: fCompute.formatDate(this.saveInfo.summary.updatedAt)
         }

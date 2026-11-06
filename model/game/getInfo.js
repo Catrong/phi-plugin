@@ -1,3 +1,4 @@
+import LevelRecordInfo from './LevelRecordInfo.js'
 import readFile from '../filesystem/getFile.js'
 import { DlcInfoPath, configPath, dataPath, imgPath, infoPath, originalIllPath, ortherIllPath, oldInfoPath, pluginResources } from '../filesystem/path.js'
 import path from 'path'
@@ -11,6 +12,7 @@ import logger from '../../components/Logger.js'
 import fileWatcherRegistry from '../../components/FileWatcherRegistry.js'
 import Chart from './Chart.js'
 import Save from '../save/Save.js'
+
 
 
 /**
@@ -328,8 +330,7 @@ class getInfo {
         this.allLevel = allLevel
         this.Level = Level
         for (const unit of getInfo.infoReloadOrder) {
-            if (!wanted.has(unit)) continue
-            switch (unit) {
+            if (!wanted.has(unit)) continue            switch (unit) {
                 case 'versionHistory': await this.loadVersionHistory(); break
                 case 'songs': await this.loadSongs(); break
                 case 'aliases': await this.loadAliases(); break
@@ -1341,6 +1342,103 @@ class getInfo {
         return undefined;
     }
 
+
+
+    /**
+     * 多别名的返回消息
+     * @param {idString[]} idArr
+     */
+    mutiNick(idArr) {
+        /**
+         * 筛选出重复的别名
+         * @type {Record<string, number>}
+         */
+        const nickCnt = {};
+        idArr.forEach((id) => {
+            (this?.nicklist?.[id] || []).forEach((nick) => {
+                if (!nickCnt[nick]) {
+                    nickCnt[nick] = 1;
+                } else {
+                    nickCnt[nick]++;
+                }
+            })
+        })
+        /**
+         * @type {string[]}
+         */
+        const nickList = []
+        for (let nick in nickCnt) {
+            if (nickCnt[nick] > 1) {
+                nickList.push(nick);
+            }
+        }
+        /**生成消息 */
+        let msg = '你要找的是不是：\n';
+        idArr.forEach((id, index) => {
+            let info = this.info(id);
+            if (info) {
+                msg += `${index + 1}. ${info.song}\n-作者：${info.composer}\n`;
+                if (this.nicklist?.[id]) {
+                    for (let nick of this.nicklist[id]) {
+                        if (!nickList.includes(nick)) {
+                            msg += `-其他别名：${nick}\n`;
+                            break;
+                        }
+                    }
+                } else {
+                    msg += `-其他别名：${info.id.replace('.', ' . ')}\n`;
+                }
+            } else {
+                msg += `${index + 1}. ${id}\n暂无信息\n`;
+            }
+        })
+        msg += `请在${Config.getUserCfg('config', 'mutiNickWaitTimeOut')}秒内回复序号`;
+        return msg
+    }
+
+
+    /**
+     * 根据游戏记录和难度信息计算B30
+     * @param {gameRecord} records
+     * @param {versionInfoObject} [diffInfo] 成绩对应版本的定数信息，省略时使用当前定数
+     * @returns {{rks: number, phi: LevelRecordInfo[], best: LevelRecordInfo[]}}
+     */
+    getB30(records, diffInfo) {
+        const allRecords = [];
+        for (const id of fCompute.objectKeys(records)) {
+            const levelRecords = records[id];
+            if (!levelRecords) continue;
+            for (let i = 0; i < Level.length; i++) {
+                const record = levelRecords[i];
+                if (!record) continue;
+                allRecords.push(new LevelRecordInfo(record, id, i, diffInfo?.version_code));
+            }
+        }
+
+        const best = allRecords.sort((a, b) => b.rks - a.rks);
+
+        const phi = best.filter(record => record.acc >= 100);
+
+        let rks = 0;
+
+        /**RKS = (最高27个单曲RKS + 最高3个phi单曲RKS) / 30 */
+        for (let i = 0; i < 27 && i < best.length; i++) {
+            rks += best[i].rks;
+        }
+
+        for (let i = 0; i < 3 && i < phi.length; i++) {
+            rks += phi[i].rks;
+        }
+
+        return { rks: rks / 30, phi, best };
+    }
+
+    randBackground(original = false) {
+        if (!original) {
+            return this.getill(this.illlist[Math.floor((Math.random() * (this.illlist.length - 1)))], 'blur');
+        }
+        return this.getill(this.idList[Math.floor((Math.random() * (this.idList.length - 1)))], 'blur');
+    }
 }
 
 /**

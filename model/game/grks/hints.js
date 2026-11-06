@@ -1,5 +1,5 @@
 import { buildRksHistogram, getB30AnalysisRecords } from '../b30Analysis.js'
-import fCompute from '../fCompute.js'
+import getInfo from '../getInfo.js'
 import { grksHintWords } from '../../render/messages.js'
 
 /**
@@ -595,7 +595,7 @@ export function buildView(options) {
             stats: puzzle.stats,
         },
         footnote: options.footnote || '',
-        background: options.background || fCompute.randBackground(true),
+        background: options.background || getInfo.randBackground(true),
     }
 
     if (positionRevealed) {

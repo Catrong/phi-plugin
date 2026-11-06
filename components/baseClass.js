@@ -1,10 +1,10 @@
 import Config from './Config.js'
-import fCompute from '../model/game/fCompute.js'
 import getInfo from '../model/game/getInfo.js';
 import logger from './Logger.js';
 import platform from './platform/index.js';
 import { sendMessage } from '../model/render/message.js'
 import { baseClassMessages } from '../model/render/messages.js'
+
 
 /** @import {PlatformEvent, PlatformMessageInput, PlatformPluginConfig, PlatformUserId} from './platform/types.js' */
 
@@ -188,7 +188,7 @@ export default class phiPluginBase extends HostPlugin {
       callback(e, idList[0], options);
       return;
     }
-    sendMessage(e, baseClassMessages.choseMutiNick.list(fCompute.mutiNick(idList)), { at: true });
+    sendMessage(e, baseClassMessages.choseMutiNick.list(getInfo.mutiNick(idList)), { at: true });
     const userId = String(e.user_id)
     const timeoutSeconds = Number(Config.getUserCfg('config', 'mutiNickWaitTimeOut')) || 0
     clearMutiNickState(userId)

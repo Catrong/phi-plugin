@@ -119,7 +119,7 @@ export class phiuser extends phiPluginBase {
         let stats = await save.getStats()
 
         let money = save.gameProgress.money
-        let userbackground = await fCompute.getBackground(save.gameuser.background)
+        let userbackground = await getInfo.getBackground(save.gameuser.background)
 
         if (!userbackground) {
             sendMessage(e, userMessages.info.backgroundNotFound(save.gameuser.background))
@@ -438,7 +438,7 @@ export class phiuser extends phiPluginBase {
             }
         }
 
-        let illustration = await fCompute.getBackground(save.gameuser.background)
+        let illustration = await getInfo.getBackground(save.gameuser.background)
 
         if (!illustration) {
             sendMessage(e, userMessages.lvscore.backgroundNotFound(save.gameuser.background))
@@ -783,7 +783,7 @@ export class phiuser extends phiPluginBase {
 
             /**使用该时刻对应的历史版本定数重算B30 */
             const versionInfo = getInfo.getVersionDifficultyByDate(new Date(Number(time)));
-            const newB30 = fCompute.getB30(gameRecord, versionInfo);
+            const newB30 = getInfo.getB30(gameRecord, versionInfo);
 
             /**加入后新B30 */
             const newB30List = {
@@ -959,7 +959,7 @@ export class phiuser extends phiPluginBase {
             rks: save.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: save.gameuser.selfIntro,
-            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            backgroundUrl: await getInfo.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             // dan: dan,
         }

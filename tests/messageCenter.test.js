@@ -33,14 +33,14 @@ test('composeMessage 默认按图片、文本、Markdown、按钮顺序组装', 
     const text = '普通消息'
     const markdown = { type: 'markdown', text: 'Markdown 消息' }
     assert.deepEqual(DEFAULT_MESSAGE_ORDER, ['image', 'text', 'markdown', 'button'])
-    assert.deepEqual(composeMessage({ image, text, markdown }), [image, text, markdown])
-    assert.deepEqual(composeMessage({ markdown, text, image }), [image, text, markdown])
+    assert.deepEqual(composeMessage({ image, text, markdown }), [image, '\n' + text, { ...markdown, text: '\n' + markdown.text }])
+    assert.deepEqual(composeMessage({ markdown, text, image }), [image, '\n' + text, { ...markdown, text: '\n' + markdown.text }])
 })
 
 test('composeMessage 支持自定义组装顺序与空元素过滤', () => {
     assert.deepEqual(
         composeMessage({ image: 'image', text: 'text', markdown: 'md' }, ['markdown', 'text', 'image']),
-        ['md', 'text', 'image'],
+        ['md', '\ntext\n', 'image'],
     )
     assert.deepEqual(composeMessage({ image: false, text: '', markdown: null }), [])
 })
@@ -61,7 +61,7 @@ test('sendMessage 把同一处的普通消息和 Markdown 合并成一条发送'
         assert.ok(Array.isArray(replies[0]))
         assert.equal(replies[0][0], '普通消息')
         assert.equal(replies[0][1]?.type, 'markdown')
-        assert.equal(replies[0][1]?.text ?? replies[0][1]?.content, 'Markdown 消息')
+        assert.equal(replies[0][1]?.text ?? replies[0][1]?.content, '\nMarkdown 消息')
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
@@ -92,7 +92,7 @@ test('扫码绑定以图片元素发送 PNG 二维码，并保留提示和撤回
     await sendMessage({ user_id: 'qrcode-test' }, message, { at: true, recallMsg: 60 })
     assert.equal(reply.mock.callCount(), 1)
     const [, payload, quote, data] = reply.mock.calls[0].arguments
-    assert.deepEqual(payload, [message.image, message.text])
+    assert.deepEqual(payload, [message.image, '\n' + message.text])
     assert.match(message.text, /二维码剩余时间:120/)
     assert.equal(quote, false)
     assert.deepEqual(data, { recallMsg: 60 })
@@ -153,7 +153,7 @@ test('默认设置下图片与文本/Markdown 分开发送：先图片，后文�
         assert.equal(replies[0], 'image')
         assert.ok(Array.isArray(replies[1]))
         assert.equal(replies[1][0], '普通消息')
-        assert.equal(replies[1][1]?.text ?? replies[1][1]?.content, 'Markdown 消息')
+        assert.equal(replies[1][1]?.text ?? replies[1][1]?.content, '\nMarkdown 消息')
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
@@ -178,8 +178,8 @@ test('开启图文合并后图片、文本和 Markdown 合并为一条', async (
         assert.equal(replies.length, 1)
         assert.ok(Array.isArray(replies[0]))
         assert.equal(replies[0][0], 'image')
-        assert.equal(replies[0][1], '普通消息')
-        assert.equal(replies[0][2]?.text ?? replies[0][2]?.content, 'Markdown 消息')
+        assert.equal(replies[0][1], '\n普通消息')
+        assert.equal(replies[0][2]?.text ?? replies[0][2]?.content, '\nMarkdown 消息')
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
@@ -198,7 +198,7 @@ test('图文合并关闭时图片与纯文本仍合并为一条', async () => {
     try {
         await sendMessage({ platform: 'yunzai' }, { image: 'image', text: '普通消息' })
         assert.equal(replies.length, 1)
-        assert.deepEqual(replies[0], ['image', '普通消息'])
+        assert.deepEqual(replies[0], ['image', '\n普通消息'])
     } finally {
         Config.getUserCfg = originalGetUserCfg
         send.reply = originalReply
@@ -310,4 +310,17 @@ test('二维按钮按输入行换行，且不会与下一行接续', () => {
 test('按钮构建保留 style 字段', () => {
     const keyboard = buildQuickCommandKeyboard([[{ command: '/p b30', label: 'B30', style: 3 }]])
     assert.equal(keyboard?.content?.rows?.[0]?.buttons?.[0]?.render_data?.style, 3)
+})
+
+test('混合类型边界换行且不修改原始消息', () => {
+    const image = { type: 'image', file: 'image.png' }
+    const markdown = { type: 'markdown', content: '菜单' }
+    const button = { type: 'button' }
+    assert.deepEqual(composeMessage({ image, text: '说明', markdown, button }), [image, '\n说明', { ...markdown, content: '\n菜单\n' }, button])
+    assert.deepEqual(markdown, { type: 'markdown', content: '菜单' })
+    assert.deepEqual(composeMessage({ markdown, button }), [{ ...markdown, content: '菜单\n' }, button])
+    assert.deepEqual(composeMessage({ image, button }), [image, '\n', button])
+    assert.deepEqual(composeMessage({ image: [image, image], text: ['\n说明', '补充'] }), [image, image, '\n说明', '补充'])
+    assert.deepEqual(composeMessage({ text: '说明\n', markdown }), ['说明\n', markdown])
+    assert.deepEqual(composeMessage({ image: [null, false], text: '说明' }), ['说明'])
 })

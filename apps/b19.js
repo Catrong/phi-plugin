@@ -221,7 +221,7 @@ export class phib19 extends phiPluginBase {
             rks: save.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: save.gameuser.selfIntro,
-            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            backgroundUrl: await getInfo.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
         }
         let data = {
@@ -332,7 +332,7 @@ export class phib19 extends phiPluginBase {
             rks: save_b19.com_rks,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: save.gameuser.selfIntro,
-            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            backgroundUrl: await getInfo.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             // dan: dan,
         }
@@ -426,7 +426,7 @@ export class phib19 extends phiPluginBase {
             rks: save.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: save.gameuser.selfIntro,
-            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            backgroundUrl: await getInfo.getBackground(save.gameuser.background),
             PlayerId: save.saveInfo.PlayerId,
         }
 
@@ -496,7 +496,7 @@ export class phib19 extends phiPluginBase {
             rks: save_b19.com_rks,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: save.gameuser.selfIntro,
-            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            backgroundUrl: await getInfo.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             // dan: dan,
         }
@@ -605,7 +605,7 @@ export class phib19 extends phiPluginBase {
             rks: save.saveInfo.summary.rankingScore,
             data: `${money[4] ? `${money[4]}PiB ` : ''}${money[3] ? `${money[3]}TiB ` : ''}${money[2] ? `${money[2]}GiB ` : ''}${money[1] ? `${money[1]}MiB ` : ''}${money[0] ? `${money[0]}KiB ` : ''}`,
             selfIntro: save.gameuser.selfIntro,
-            backgroundUrl: await fCompute.getBackground(save.gameuser.background),
+            backgroundUrl: await getInfo.getBackground(save.gameuser.background),
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
         }
 
