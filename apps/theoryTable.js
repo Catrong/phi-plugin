@@ -114,7 +114,7 @@ export class phiTheoryTable extends phiPluginBase {
         const data = {
             phi,
             b19_list,
-            PlayerId: theoryTableMessages.theoryTable.playerName(versionInfo.version_label),
+            PlayerId: theoryTableWords.theoryTable.playerName(versionInfo.version_label),
             Rks: com_rks.toFixed(4),
             Date: fCompute.formatDate(versionInfo.update_date * 1000),
             ChallengeMode: 0,
@@ -129,7 +129,7 @@ export class phiTheoryTable extends phiPluginBase {
                 data: '',
                 selfIntro: '',
                 backgroundUrl: '',
-                PlayerId: theoryTableMessages.theoryTable.playerName(versionInfo.version_label),
+                PlayerId: theoryTableWords.theoryTable.playerName(versionInfo.version_label),
             },
             nnum: bestCount,
             stats,

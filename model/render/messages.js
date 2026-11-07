@@ -1268,6 +1268,7 @@ export const theoryTableWords = {
             '模拟分表：理论模拟，非真实存档',
             `理论rks = ${algorithm}（${label}${isNewAlgo ? '' : '旧版'}算法）`,
         ]),
+        playerName: (/** @type {string} */ label) => `v${label}理论分表`,
     }
 }
 
@@ -1283,7 +1284,6 @@ export const theoryTableMessages = {
         unknownError: { text: '发生未知错误QAQ！请回报管理员！' },
         chartTableUnavailable: (/** @type {string} */ label) => ({ text: `未能获取版本 ${label} 的定数表QAQ！` }),
         generating: { text: '正在生成图片，请稍等一下哦！\n//·/w\·\\' },
-        playerName: (/** @type {string} */ label) => ({ text: `v${label}理论分表` }),
 
     },
 }
