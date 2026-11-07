@@ -449,7 +449,7 @@ export class phihelp extends phiPluginBase {
             return false
         }
 
-        let save = await send.getsave_result(e)
+        let { save } = await send.getsave_result(e) || {}
         if (!save) {
             return true
         }

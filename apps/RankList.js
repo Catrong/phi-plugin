@@ -95,12 +95,15 @@ export class phiRankList extends phiPluginBase {
         /**请求的排名 */
         let msg = e.msg.match(/\d+/)
         let rankNum = 0
+        /** @type {Awaited<ReturnType<typeof send.getsave_result>>} */
+        let currentSaveResult = false
         data.totDataNum = await getRksRank.getAllRank()
 
         if (msg) {
             rankNum = Math.max(Math.min(Number(msg[0]), data.totDataNum), 1) - 1
         } else {
-            let save = await send.getsave_result(e)
+            currentSaveResult = await send.getsave_result(e)
+            const { save } = currentSaveResult || {}
             if (!save) {
                 return true
             }
@@ -127,14 +130,15 @@ export class phiRankList extends phiPluginBase {
             }
             let item = list[index]
             let sessionToken = item
-            const save = await getSave.getSaveBySessionToken(sessionToken)
+            const current = currentSaveResult && currentSaveResult.save.getSessionToken() === sessionToken ? currentSaveResult : null
+            const save = current?.save ?? await getSave.getSaveBySessionToken(sessionToken)
             if (!save) {
                 data.users.push({ playerId: '无效用户', index: index + rankNum - 2 })
                 getRksRank.delUserRks(sessionToken)
             } else {
                 data.users.push({ ...await makeSmallLine(save), index: Math.max(index + rankNum - 1, index + 1), me: myTk === save.getSessionToken() })
                 if (myTk === sessionToken) {
-                    let history = await getSave.getHistoryBySessionToken(save.getSessionToken())
+                    const history = current?.history ?? await getSave.getHistoryBySessionToken(save.getSessionToken())
                     data.me = await makeLargeLine(save, history, e)
                 }
             }

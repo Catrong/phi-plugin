@@ -67,7 +67,7 @@ export class phiuser extends phiPluginBase {
         }
 
 
-        let save = await send.getsave_result(e)
+        let { save } = await send.getsave_result(e) || {}
 
         if (!save) {
             return true
@@ -86,7 +86,6 @@ export class phiuser extends phiPluginBase {
      * @param {botEvent} e
      */
     async info(e) {
-        const credentials = UserCredentials.fromEvent(e)
 
         if (await getBanGroup.get(e, 'info')) {
             sendMessage(e, userMessages.info.banned, { at: true })
@@ -106,7 +105,7 @@ export class phiuser extends phiPluginBase {
             bksong = getInfo.getill(illList[fCompute.randInt(0, illList.length - 1)], 'blur')
         }
 
-        let save = await send.getsave_result(e, 1.0)
+        const { save, history: user_data } = await send.getsave_result(e, 1.0) || {}
 
         if (!save) {
             return true
@@ -139,20 +138,6 @@ export class phiuser extends phiPluginBase {
             PlayerId: fCompute.convertRichText(save.saveInfo.PlayerId),
             // CLGMOD: dan?.Dan,
             // EX: dan?.EX,
-        }
-
-        let user_data;
-
-        if (await canUseApi(e)) {
-            try {
-                user_data = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
-                if (!user_data) user_data = await credentials.getLocalHistory()
-            } catch (error) {
-                logger.info('通过phi-plugin API获取历史记录失败，改为本地存储获取')
-                user_data = await credentials.getLocalHistory()
-            }
-        } else {
-            user_data = await credentials.getLocalHistory()
         }
 
         if (!user_data) {
@@ -291,7 +276,7 @@ export class phiuser extends phiPluginBase {
         }
 
 
-        let save = await send.getsave_result(e, 1.0)
+        let { save } = await send.getsave_result(e, 1.0) || {}
 
         if (!save) {
             return true
@@ -517,7 +502,7 @@ export class phiuser extends phiPluginBase {
         }
 
 
-        let save = await send.getsave_result(e)
+        let { save } = await send.getsave_result(e) || {}
 
         if (!save) {
             return true
@@ -652,7 +637,6 @@ export class phiuser extends phiPluginBase {
      */
     async analyze2025SaveHistory(e) {
 
-        const credentials = UserCredentials.fromEvent(e)
 
 
         if (await getBanGroup.get(e, 'analyze2025SaveHistory')) {
@@ -661,13 +645,12 @@ export class phiuser extends phiPluginBase {
         }
 
 
-        let save = await send.getsave_result(e)
+        const { save, history } = await send.getsave_result(e) || {}
 
         if (!save) {
             return true
         }
 
-        const history = await credentials.getHistoryFromApi(['challengeModeRank', 'data', 'rks', 'scoreHistory'])
 
         if (!history) {
             return true;
@@ -687,19 +670,17 @@ export class phiuser extends phiPluginBase {
      * @returns 
      */
     async hisb30(e) {
-        const credentials = UserCredentials.fromEvent(e)
         if (await getBanGroup.get(e, 'hisb30')) {
             sendMessage(e, userMessages.hisb30.banned, { at: true })
             return false
         }
 
-        const save = await send.getsave_result(e)
+        const { save, history } = await send.getsave_result(e) || {}
 
         if (!save) {
             return true
         }
 
-        const history = await credentials.getHistoryFromApi(['scoreHistory'])
 
         if (!history) {
             return true;

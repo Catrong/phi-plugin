@@ -158,7 +158,7 @@ export class phimoney extends phiPluginBase {
         }
 
         /** 尝试拿存档（无存档也照样渲染） */
-        let save = await send.getsave_result(e, undefined, false)
+        let { save } = await send.getsave_result(e, undefined, false) || {}
 
         /** 今日任务：有存档且今日未刷新时，静默刷新一次并写回 */
         if (save) {
@@ -194,7 +194,7 @@ export class phimoney extends phiPluginBase {
             return false
         }
 
-        let save = await send.getsave_result(e)
+        let { save } = await send.getsave_result(e) || {}
 
         if (!save) {
             return false
@@ -262,7 +262,7 @@ export class phimoney extends phiPluginBase {
             return false
         }
 
-        let save = await send.getsave_result(e)
+        let { save } = await send.getsave_result(e) || {}
 
         if (!save) {
             return false

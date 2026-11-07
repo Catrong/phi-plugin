@@ -195,10 +195,6 @@ export class phisstk extends phiPluginBase {
                 let result = await credentials.bindWithSessionToken(sessionToken, isGlobal)
                 if (result?.apiUserId) {
                     apiBindingSucceeded = true
-                    let oldHistory = await credentials.getLocalHistory()
-                    if (oldHistory) {
-                        await credentials.uploadHistory(oldHistory)
-                    }
                     let updateData = await credentials.getUpdatedSaveFromApi()
                     let history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
                     if (updateData && history) await build(e, updateData, history, 'bind', { simpleReply, apiUserId: result.apiUserId })
@@ -419,7 +415,7 @@ export class phisstk extends phiPluginBase {
             return false
         }
 
-        let save = await send.getsave_result(e)
+        let { save } = await send.getsave_result(e) || {}
         if (!save) {
             sendMessage(e, sessionMessages.getSstk.notBound, { at: true })
             return true

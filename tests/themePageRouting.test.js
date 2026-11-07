@@ -385,15 +385,15 @@ test('info 命令传递用户主题并正确区分新版和旧版渲染', async 
     getInfo.fuzzysongsnick = /** @type {any} */ (() => ['song-id'])
     getInfo.idgetavatar = () => 'avatar1'
     getInfo.getBackground = () => 'player-background.png'
-    send.getsave_result = /** @type {any} */ (async () => save)
+    send.getsave_result = /** @type {any} */ (async () => ({ save, history }))
     send.send_with_At = /** @type {any} */ (async () => undefined)
     picmodle.user_info = /** @type {any} */ (async (/** @type {any} */ e, /** @type {any} */ data, /** @type {any} */ kind) => {
         renders.push({ e, data, kind })
         return 'image'
     })
     UserCredentials.fromEvent = /** @type {any} */ (() => ({
-        getLocalHistory: async () => history,
-        getCloudHistory: async () => history,
+        getLocalHistory: async () => { throw new Error('用户信息页不应重复读取历史') },
+        getCloudHistory: async () => { throw new Error('用户信息页不应重复同步历史') },
     }))
 
     try {

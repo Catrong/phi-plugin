@@ -123,3 +123,21 @@ test('UserCredentials can ignore missing local credentials before making the API
         phiApiClient.request = originalRequest
     }
 })
+
+
+test('conditional save sync validates updated and unchanged responses', async () => {
+    const original = phiApiClient.request
+    const params = { platform: 'qq', platform_id: 'request-user', _local_user_id: 'request-user', history: null }
+    const modifiedAt = '2026-11-07T00:00:00.000Z'
+    try {
+        phiApiClient.request = async () => ({ saveChanged: false, historyChanged: false, modifiedAt })
+        assert.deepEqual(await makeRequest.syncCloudSave(params), { saveChanged: false, historyChanged: false, modifiedAt })
+        const updated = { saveChanged: true, historyChanged: false, modifiedAt, save: { gameRecord: {}, saveInfo: { modifiedAt: { iso: modifiedAt } } } }
+        phiApiClient.request = async () => updated
+        assert.deepEqual(await makeRequest.syncCloudSave(params), updated)
+        phiApiClient.request = async () => ({ saveChanged: true, historyChanged: false, modifiedAt })
+        await assert.rejects(makeRequest.syncCloudSave(params), /返回格式错误/)
+    } finally {
+        phiApiClient.request = original
+    }
+})

@@ -230,7 +230,7 @@ export class grksMatchClass {
         const request = { userKey, userId: String(e.user_id), sessionKey, event: e }
         this.joining.set(userKey, request)
         try {
-            const save = await send.getsave_result(e)
+            const { save } = await send.getsave_result(e) || {}
             if (this.joining.get(userKey) !== request || !save) return false
             if (save.getRecord().filter(record => record.rks > 0).length < cfg.minRecord) {
                 await sendMessage(e, grksMatchMessages.join.incomplete(cfg.minRecord), { at: true })

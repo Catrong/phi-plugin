@@ -38,7 +38,7 @@ class send {
      * @param {*} e 
      * @param {Number} [ver] 存档版本
      * @param {boolean} [send=true] 是否发送提示
-     * @returns {Promise<Save|false>} 存档对象或false
+     * @returns {Promise<{save: Save, history: import("../save/saveHistory.js").default}|false>} 存档、历史或失败
      */
     static async getsave_result(e, ver = undefined, send = true) {
 
@@ -49,7 +49,13 @@ class send {
         if (allowApi) {
             try {
                 user_save = await credentials.getUpdatedSaveFromApi()
-                if (user_save) return user_save.save
+                if (user_save) {
+                    if (ver && (!user_save.save.Recordver || user_save.save.Recordver < ver)) {
+                        if (send) await sendMessage(e, sendMessages.needUpdate(), { at: true })
+                        return false
+                    }
+                    return { save: user_save.save, history: user_save.history }
+                }
             } catch (/**@type {any} */ err) {
                 logger.warn(`[phi-plugin] getUpdatedSaveFromApi `, err)
             }
@@ -62,17 +68,17 @@ class send {
             return false
         }
 
-        user_save = (await credentials.getUpdatedSaveFromLocal(sessionToken))?.save
+        user_save = await credentials.getUpdatedSaveFromLocal(sessionToken)
 
 
-        if (!user_save || (ver && (!user_save.Recordver || user_save.Recordver < ver))) {
+        if (!user_save || (ver && (!user_save.save.Recordver || user_save.save.Recordver < ver))) {
             if (send) {
                 await sendMessage(e, sendMessages.needUpdate(), { at: true })
             }
             return false
         }
 
-        return user_save
+        return { save: user_save.save, history: user_save.history }
     }
 
     /**

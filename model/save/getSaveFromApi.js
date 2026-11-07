@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import Save from './Save.js'
+import saveHistory from './saveHistory.js'
 import readFile from '../filesystem/getFile.js'
 import { apiSavePath } from '../filesystem/path.js'
 
@@ -42,5 +43,26 @@ export default class ApiSaveCacheRepository {
         if (!apiId) return false
         fs.rmSync(path.join(apiSavePath, apiId), { recursive: true, force: true })
         return true
+    }
+    /** @param {apiUserId | null | undefined} apiId */
+    static async getHistoryByApiId(apiId) {
+        if (!apiId) return null
+        const file = path.join(apiSavePath, apiId, 'history.json')
+        if (!fs.existsSync(file)) return null
+        return new saveHistory(JSON.parse(await fs.promises.readFile(file, 'utf8')))
+    }
+
+    /** @param {apiUserId} apiId @param {saveHistory} history */
+    static async putHistoryByApiId(apiId, history) {
+        if (!apiId) throw new Error('apiId is undefined')
+        const directory = path.join(apiSavePath, apiId)
+        fs.mkdirSync(directory, { recursive: true })
+        const file = path.join(directory, 'history.json')
+        const merged = fs.existsSync(file) ? new saveHistory(JSON.parse(fs.readFileSync(file, 'utf8'))) : new saveHistory()
+        merged.add(history)
+        const temporary = `${file}.${process.pid}.tmp`
+        fs.writeFileSync(temporary, JSON.stringify(merged))
+        fs.renameSync(temporary, file)
+
     }
 }

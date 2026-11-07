@@ -38,6 +38,8 @@ export class UserCredentials {
             ? { ...event, user_id: normalizedUserId, userId: normalizedUserId }
             : undefined
         this.store = store
+        /** @type {Promise<Awaited<ReturnType<UserCredentials['syncSaveAndHistory']>>> | undefined} */
+        this.syncPromise = undefined
     }
 
     /**
@@ -443,20 +445,6 @@ export class UserCredentials {
     }
 
     /**
-     * 将当前用户的本地历史记录上传到 API。
-     * @param {import('../save/saveHistory.js').default | saveHistoryObjectV3} history 待上传的历史记录
-     * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
-     * @returns {Promise<{message: string} | null>} 上传结果；失败返回 `null`
-     */
-    async uploadHistory(history, options = {}) {
-        const sessionToken = await this.getSessionToken()
-        return makeRequest.setHistory(
-            { ...(await this.platformParams()), token: sessionToken, data: /** @type {any} */ (history) },
-            this.endpointOptions(options),
-        )
-    }
-
-    /**
      * 获取当前用户的 API 隐私与数据设置。
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
      * @returns {Promise<import('../api/makeRequest.js').userSetting | null>} 用户设置；失败返回 `null`
@@ -615,14 +603,7 @@ export class UserCredentials {
      * @returns {Promise<Save | null>} 初始化后的云存档；失败返回 `null`
      */
     async getCloudSave(options = {}) {
-        const cloudSave = await makeRequest.getCloudSaves(
-            await this.platformParams(true),
-            this.endpointOptions(options),
-        )
-        if (!cloudSave) return null
-        let result = new Save(cloudSave)
-        await result.init()
-        return result
+        return (await this.getUpdatedSaveFromApi(options))?.save ?? null
     }
 
     /**
@@ -632,18 +613,19 @@ export class UserCredentials {
      * @returns {Promise<Save | null>} 已初始化的云存档
      */
     async getCloudSaveByApiId(apiId, options = {}) {
-        const cloudSave = await makeRequest.getCloudSaves(
-            { api_user_id: apiId },
+        const response = await makeRequest.syncCloudSave(
+            { api_user_id: apiId, history: null },
             this.endpointOptions(options),
         )
-        if (!cloudSave) return null
-        const result = new Save(cloudSave)
+        if (!response) return null
+        if (!response.saveChanged) throw new Error('首次同步未返回存档')
+        const result = new Save(response.save)
         await result.init()
         return result
     }
 
     /**
-     * 从 API 获取当前用户指定字段的历史记录（v4 端点 `/get/history/historyV4`）。
+     * 同步存档与历史后读取完整历史。
      * 响应固定含 `version` 与 `timezone`，由 saveHistory 直接消费。
      * @template {keyof saveHistoryObjectV3} K
      * @param {K[]} [fields] 需要返回的历史字段
@@ -651,12 +633,7 @@ export class UserCredentials {
      * @returns {Promise<saveHistory | null>} 云端历史记录；失败返回 `null`
      */
     async getCloudHistory(fields = [], options = {}) {
-        const result = await makeRequest.getHistory(
-            { ...(await this.platformParams(true)), request: fields },
-            this.endpointOptions(options),
-        )
-        if (!result) return null
-        return new saveHistory(result)
+        return (await this.getUpdatedSaveFromApi(options))?.history ?? null
     }
 
     /**
@@ -669,7 +646,7 @@ export class UserCredentials {
      * @param {levelKind} difficulty 难度
      * @returns {Promise<{ data: dateValueJSON<scoreDetailV4>, timezone: string } | null>} 成绩历史与记录方时区；失败返回 `null`
      * 
-     * 从 API 获取当前用户的成绩历史（v4 端点 `/get/history/recordV4`），支持全部成绩、单曲或单难度三种粒度。
+     * 同步后从本地历史筛选全部成绩、单曲或单难度。
      * 返回 v4 紧凑结构（dateValue）与记录方 `timezone`；
      * 调用方可用 `ScoreHistory.toScoreDetails()` 展开为 `[acc, score, date, fc]`，
      * 并按 `timezone` 校准时间展示。
@@ -679,16 +656,11 @@ export class UserCredentials {
      * @returns {Promise<{ data: any, timezone: string } | null>} 成绩历史与记录方时区；失败返回 `null`
      */ 
     async getCloudSongHistory(songId, difficulty = undefined, options = {}) {
-        const response = await makeRequest.getHistoryRecord(
-            {
-                ...(await this.platformParams(true)),
-                ...(songId ? { song_id: songId } : {}),
-                ...(difficulty ? { rank: difficulty } : {}),
-            },
-            this.endpointOptions(options),
-        )
-        if (!response) return null
-        return { data: response.data ?? null, timezone: response.timezone }
+        const history = await this.getCloudHistory([], options)
+        if (!history) return null
+        const exported = history.toJSON()
+        const song = songId ? exported.scoreHistory[songId] : undefined
+        return { data: songId ? (difficulty ? song?.[difficulty] ?? [] : song ?? {}) : exported.scoreHistory, timezone: exported.timezone }
     }
 
     // 云端存档同步与本地增量计算。
@@ -699,31 +671,55 @@ export class UserCredentials {
      * @returns 更新后的存档及增量统计；失败返回 `null`
      */
     async getUpdatedSaveFromApi(options = {}) {
+        if (!this.syncPromise) this.syncPromise = this.syncSaveAndHistory(options).catch(error => {
+            this.syncPromise = undefined
+            throw error
+        })
+        const result = await this.syncPromise
+        if (!result) this.syncPromise = undefined
+        return result
+    }
+
+    /** @param {UserCredentialApiOptions} options */
+    async syncSaveAndHistory(options) {
         const event = this.requireEvent()
         const old = await this.getApiCachedSave()
-        const newSaveInfo = await makeRequest.getCloudSaveInfo(
+        let history = await getSaveFromApi.getHistoryByApiId(await this.getApiId())
+        if (await this.getSessionToken()) {
+            const local = await this.getLocalHistory()
+            if (history) history.add(local)
+            else history = local
+        }
+        const modifiedAt = old?.gameRecord && old?.saveInfo?.modifiedAt?.iso
+        const response = await makeRequest.syncCloudSave(
             {
                 ...(await this.platformParams(true)),
+                ...(modifiedAt ? { modifiedAt: new Date(modifiedAt).toISOString() } : {}),
+                history: history?.toJSON() ?? null,
             },
             this.endpointOptions(options),
         )
-        if (!newSaveInfo) return null
-        if (new Date(newSaveInfo.modifiedAt.iso).getTime() != old?.saveInfo?.modifiedAt?.iso?.getTime()) {
-            const newSave = await makeRequest.getCloudSaves(
-                {
-                    ...(await this.platformParams(true))
-                },
-                this.endpointOptions(options),
-            )
-            if (!newSave) return null
+        if (!response) return null
+        if (response.historyChanged) {
+            if (history) history.add(new saveHistory(response.history))
+            else history = new saveHistory(response.history)
+        }
+        if (!history) throw new Error('存档同步未返回缺失的历史记录')
+        const apiId = response.saveChanged ? response.save.apiId : await this.getApiId()
+        if (!apiId) throw new Error('同步存档缺少 API ID')
+        await getSaveFromApi.putHistoryByApiId(apiId, history)
+        if (await this.getSessionToken()) await this.putLocalHistory(history)
+        if (response.saveChanged) {
+            const newSave = response.save
             await this.putApiCachedSave(newSave)
             const result = new Save(newSave)
             await result.init()
             await this.putApiCachedSave(result)
             const added_rks_notes = await buildingRecord(old, result, event)
-            return { save: result, added_rks_notes }
+            return { save: result, history, added_rks_notes }
         } else {
-            return { save: old, added_rks_notes: [0, 0] }
+            if (!old || !modifiedAt) throw new Error('存档同步返回未更新，但本地缺少完整缓存')
+            return { save: old, history, added_rks_notes: [0, 0] }
         }
     }
 
@@ -745,7 +741,7 @@ export class UserCredentials {
             await user.buildRecord()
             if (getInfo.badSave && new Save(user).equalRecord(getInfo.badSave)) {
                 notifyUser(event, '请注意，TapTap目前的云存档API疑似存在问题，已阻止本次更新，请在确保游戏内数据正常的情况下，覆盖云存档并尝试更新，如若依旧失败请耐心等待恢复。')
-                return old ? { save: old, added_rks_notes: [0, 0] } : undefined
+                return old ? { save: old, history: await this.getLocalHistory(), added_rks_notes: [0, 0] } : undefined
             }
         } catch (error) {
             const message = platform.getAdapterName(event) === 'QQBot'
@@ -773,7 +769,7 @@ export class UserCredentials {
         history.update(now)
         await this.putLocalHistory(history)
         const added_rks_notes = await buildingRecord(old, now, event)
-        return { save: now, added_rks_notes }
+        return { save: now, history, added_rks_notes }
     }
 
     /**
@@ -810,23 +806,7 @@ export class UserCredentials {
             return this.getLocalHistory()
         }
 
-        if (!sessionToken) {
-            const remoteHistory = await this.getCloudHistory(fields, options)
-            if (!remoteHistory && !options.ignoreUnboundError) {
-                notifyUser(event, '从API获取历史记录失败，请稍后重试或绑定sessionToken后重试哦')
-            }
-            return remoteHistory
-        }
-
-        const localHistory = await this.getLocalHistory()
-        if (localHistory) await this.uploadHistory(localHistory)
-        const remoteHistory = await this.getCloudHistory(fields, options)
-        if (remoteHistory) return remoteHistory
-        if (!options.ignoreUnboundError) {
-            logger.warn('[phi-plugin]获取历史记录失败，将使用本地历史记录')
-            notifyUser(event, '从API获取历史记录失败，将使用本地存档的历史记录哦')
-        }
-        return localHistory
+        return this.getCloudHistory(fields, options)
     }
 }
 

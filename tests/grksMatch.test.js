@@ -63,14 +63,14 @@ function fixture(t) {
     t.mock.method(matches, 'readConfig', () => config)
     t.mock.method(solo, 'banCheck', async () => false)
     t.mock.method(solo, 'cmdPrefix', () => '#phi grks')
-    t.mock.method(send, 'getsave_result', async (/** @type {botEvent} */ e) => ({
+    t.mock.method(send, 'getsave_result', async (/** @type {botEvent} */ e) => ({ save: {
         getRecord: () => records(String(e.user_id)),
         getSessionToken: () => String(e.user_id),
         getStats: () => [{ cleared: 27, fc: 3, phi: 3 }],
         saveInfo: { PlayerId: `Phigros ${e.user_id}`, summary: { challengeModeRank: 456, avatar: 'Glaciaxion' }, modifiedAt: { iso: new Date('2026-10-24T00:00:00Z') } },
-    }))
+    }, history: {} }))
     t.mock.method(matches, 'drawRoomAnswers', async (/** @type {import('../apps/grks/match.js').grksQueueEntry[]} */ entries) => Promise.all(entries.map(async entry => {
-        const save = await send.getsave_result(entry.event)
+        const { save } = await send.getsave_result(entry.event) || {}
         if (!save) throw new Error('测试存档不可用')
         const answer = await solo.buildAnswer(save)
         assert.ok(answer)

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import getSave from '../model/save/getSave.js'
+import apiCache from '../model/save/getSaveFromApi.js'
+import SaveHistory from '../model/save/saveHistory.js'
 import makeRequest from '../model/api/makeRequest.js'
 import phiApiClient from '../model/api/phiApiClient.js'
 import { UserCredentials } from '../model/user/userCredentials.js'
@@ -199,63 +201,40 @@ test('platformParams optionally attaches sessionToken first and otherwise API ID
     assert.equal(byApiId.api_user_id, '12345')
 })
 
-test('save and history operations are exposed through the user instance', async () => {
-    const originals = {
-        localSave: getSave.getSaveBySessionToken,
-        localHistory: getSave.getHistoryBySessionToken,
-        cloudHistory: makeRequest.getHistory,
-        cloudHistoryRecord: makeRequest.getHistoryRecord,
-    }
-    /** @type {any[]} */ const calls = []
-    getSave.getSaveBySessionToken = async sessionToken => { calls.push(['localSave', sessionToken]); return /** @type {any} */ ({}) }
-    getSave.getHistoryBySessionToken = async sessionToken => { calls.push(['localHistory', sessionToken]); return /** @type {any} */ ({}) }
-    makeRequest.getHistory = async (/** @type {any} */ params) => {
-        calls.push(['cloudHistory', params._local_user_id, params.request])
-        return /** @type {any} */ ({})
-    }
-    makeRequest.getHistoryRecord = async (/** @type {any} */ params) => {
-        calls.push(['cloudHistoryRecord', params.song_id, params.rank, params.difficulty])
-        return /** @type {any} */ ([])
-    }
-    try {
-        const store = fakeStore()
-        store.sessions.set('save-user', 'save-token')
-        const credentials = UserCredentials.fromEvent(event('save-user'), { store: /** @type {any} */ (store) })
-        await credentials.getLocalSave()
-        await credentials.getLocalHistory()
-        await credentials.getCloudHistory(['rks'])
-        await credentials.getCloudSongHistory(/** @type {idString} */ ('song.0'), 'IN')
-        assert.deepEqual(calls, [
-            ['localSave', 'save-token'],
-            ['localHistory', 'save-token'],
-            ['cloudHistory', 'save-user', ['rks']],
-            ['cloudHistoryRecord', 'song.0', 'IN', undefined],
-        ])
-    } finally {
-        getSave.getSaveBySessionToken = originals.localSave
-        getSave.getHistoryBySessionToken = originals.localHistory
-        makeRequest.getHistory = originals.cloudHistory
-        makeRequest.getHistoryRecord = originals.cloudHistoryRecord
-    }
-})
-
-test('API save refresh is implemented by UserCredentials and reuses an unchanged cache', async () => {
+test('save and history share one sync and history can change without a save update', async () => {
     const store = fakeStore()
     store.apiIds.set('save-user', '12345')
     const credentials = UserCredentials.fromEvent(event('save-user'), { store: /** @type {any} */ (store) })
-    const cached = /** @type {any} */ ({ saveInfo: { modifiedAt: { iso: new Date('2026-01-01') } } })
-    const originalGetCached = credentials.getApiCachedSave
-    const originalSaveInfo = makeRequest.getCloudSaveInfo
+    const cached = /** @type {any} */ ({ gameRecord: {}, saveInfo: { modifiedAt: { iso: new Date('2026-01-01') } } })
+    const history = new SaveHistory()
+    const originals = { request: makeRequest.syncCloudSave, get: apiCache.getHistoryByApiId, put: apiCache.putHistoryByApiId }
+    let calls = 0
+    let writes = 0
     credentials.getApiCachedSave = async () => cached
-    makeRequest.getCloudSaveInfo = async () => /** @type {any} */ ({ modifiedAt: { iso: '2026-01-01T00:00:00.000Z' } })
+    apiCache.getHistoryByApiId = async () => null
+    apiCache.putHistoryByApiId = async (id, value) => {
+        assert.equal(id, '12345')
+        assert.deepEqual(value.toJSON(), history.toJSON())
+        writes++
+    }
+    makeRequest.syncCloudSave = async params => {
+        calls++
+        assert.equal(params.history, null)
+        assert.equal(params.modifiedAt, '2026-01-01T00:00:00.000Z')
+        return /** @type {any} */ ({ saveChanged: false, historyChanged: true, history: history.toJSON(), modifiedAt: params.modifiedAt })
+    }
     try {
-        assert.deepEqual(await credentials.getUpdatedSaveFromApi(), {
-            save: cached,
-            added_rks_notes: [0, 0],
-        })
+        const result = await credentials.getUpdatedSaveFromApi()
+        assert.equal(result?.save, cached)
+        assert.deepEqual(result?.added_rks_notes, [0, 0])
+        assert.deepEqual((await credentials.getCloudHistory())?.toJSON(), history.toJSON())
+        assert.deepEqual((await credentials.getCloudSongHistory(/** @type {idString} */ ('missing.0')))?.data, {})
+        assert.equal(calls, 1)
+        assert.equal(writes, 1)
     } finally {
-        credentials.getApiCachedSave = originalGetCached
-        makeRequest.getCloudSaveInfo = originalSaveInfo
+        makeRequest.syncCloudSave = originals.request
+        apiCache.getHistoryByApiId = originals.get
+        apiCache.putHistoryByApiId = originals.put
     }
 })
 

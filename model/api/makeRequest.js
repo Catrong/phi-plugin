@@ -603,23 +603,20 @@ export default class makeRequest {
     }
 
     /**
-     * 获取用户云存档数据
-     * @param {baseAu} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<oriSave>}
+     * @param {baseAu & {modifiedAt?: string, history: ReturnType<saveHistory["toJSON"]> | null}} params
+     * @param {ApiRequestExecutionOptions} [options]
+     * @returns {Promise<(({saveChanged: false} | {saveChanged: true, save: oriSave}) & ({historyChanged: false} | {historyChanged: true, history: saveHistoryObjectV4}) & {modifiedAt: string}) | null>}
      */
-    static async getCloudSaves(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return (await makeFetch(burl('/get/cloud/saves'), params, 'POST', options))?.data ?? null
-    }
-
-    /**
-     * 获取用户云存档saveInfo数据
-     * @param {baseAu} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<saveInfo>}
-     */
-    static async getCloudSaveInfo(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return (await makeFetch(burl('/get/cloud/saveInfo'), params, 'POST', options))?.data ?? null
+    static async syncCloudSave(params, options = undefined) {
+        const result = await makeFetch(burl('/get/cloud/sync'), params, 'POST', options)
+        if (!result) return null
+        if (typeof result.saveChanged !== 'boolean' || typeof result.historyChanged !== 'boolean' || typeof result.modifiedAt !== 'string'
+            || !Number.isFinite(Date.parse(result.modifiedAt))
+            || (result.saveChanged && (!result.save || typeof result.save.gameRecord !== 'object' || !result.save.saveInfo))
+            || (result.historyChanged && (!result.history || result.history.version !== 4 || !result.history.scoreHistory || !Array.isArray(result.history.rks) || !Array.isArray(result.history.data) || !Array.isArray(result.history.challengeModeRank)))) {
+            throw new Error('存档同步接口返回格式错误')
+        }
+        return result
     }
 
     /**
@@ -731,42 +728,6 @@ export default class makeRequest {
      */
     static async getAllSongAccRank(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
         return (await makeFetch(burl('/get/scoreList/allAccRank'), params, 'POST', options))?.data ?? null
-    }
-
-    /**
-     * 获取用户历史记录（v4 端点，响应固定含 `version` 与 `timezone`）
-     * @template {keyof saveHistoryObjectV4} K
-     * @param {baseAu & {request?: K[]}} params 只过滤 data/rks/scoreHistory/challengeModeRank
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<(Partial<saveHistoryObjectV4> & { version: 4, timezone: string }) | null>}
-     */
-    static async getHistory(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return (await makeFetch(burl('/get/history/historyV4'), params, 'POST', options))?.data ?? null
-    }
-
-    /**
-     * 获取用户成绩历史记录（v4 端点）
-     * 返回完整响应体：`data` 为 v4 紧凑结构，顶层固定带 `version` 与 `timezone`
-     * @param {baseAu & {song_id?: idString, rank?: levelKind}} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<{
-     *   data: any,
-     *   version: number,
-     *   timezone: string
-     * } | null>}
-     */
-    static async getHistoryRecord(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return await makeFetch(burl('/get/history/recordV4'), params, 'POST', options) ?? null
-    }
-
-    /**
-     * 上传用户的历史记录
-     * @param {baseAu & {data: saveHistory}} params
-     * @param {ApiRequestExecutionOptions} [options] 错误处理上下文
-     * @returns {Promise<{message: string}>}
-     */
-    static async setHistory(params, /** @type {ApiRequestExecutionOptions | undefined} */ options = undefined) {
-        return await makeFetch(burl('/set/history'), params, 'POST', options)
     }
 
     /**
