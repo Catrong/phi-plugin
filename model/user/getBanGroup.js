@@ -31,12 +31,12 @@ export default class getBanGroup {
     static async get(e, fnc) {
         const { group_id } = e;
         const credentials = UserCredentials.fromEvent(e)
-        if (await canUseApi(e)) {
-            if (await credentials.getUserAPIBanStatus({ ignoreUnboundError: true })) {
-                sendMessage(e, banGroupMessages.bannedPrimary, { at: true })
-                return true;
-            }
-        }
+        // if (await canUseApi(e)) {
+        //     if (await credentials.getUserAPIBanStatus({ ignoreUnboundError: true })) {
+        //         sendMessage(e, banGroupMessages.bannedPrimary, { at: true })
+        //         return true;
+        //     }
+        // }
         if (await credentials.getUserLoaclBanStatus()) {
             sendMessage(e, banGroupMessages.bannedSecondary, { at: true })
             return true;
