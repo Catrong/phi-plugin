@@ -445,16 +445,16 @@ export const userMessages = {
                 button: [
                     [butCmd('list', '/list')],
                     [
-                        butCmd('-acc 90+', '添加ACC筛选', undefined, true),
-                        butCmd('-dif 15+', '添加难度筛选', undefined, true)
+                        butCmd(' -acc 90+', '添加ACC筛选', undefined, true),
+                        butCmd(' -dif 15+', '添加难度筛选', undefined, true)
                     ],
                     [
-                        butCmd('AT', '只看AT', undefined, true),
-                        butCmd('IN', '只看IN', undefined, true)
+                        butCmd(' AT', '只看AT', undefined, true),
+                        butCmd(' IN', '只看IN', undefined, true)
                     ],
                     [
-                        butCmd('HD', '只看HD', undefined, true),
-                        butCmd('EZ', '只看EZ', undefined, true)
+                        butCmd(' HD', '只看HD', undefined, true),
+                        butCmd(' EZ', '只看EZ', undefined, true)
                     ],
                 ]
             }
