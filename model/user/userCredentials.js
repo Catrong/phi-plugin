@@ -15,6 +15,7 @@ import getNotes from './getNotes.js'
 import fCompute from '../game/fCompute.js'
 import { LevelNum } from '../game/constNum.js'
 import getInfo from '../game/getInfo.js'
+import { apiWords } from '../render/messages.js'
 
 /** @typedef {{platform_name: string, platform_id: string, create_at: string, update_at: string, authentication: number, authentication_label?: string, binding_type?: 'bot'|'legacy', bot_display_name?: string, migration_notice?: string|null}} PlatformBindingInfo */
 /** @typedef {{data: any, user_id: number, phigros_token: string, api_token: string, create_at: string, update_at: string, platform_data: PlatformBindingInfo[]}} PlatformBindingsResponse */
@@ -654,7 +655,7 @@ export class UserCredentials {
      * @param {levelKind} [difficulty] 难度
      * @param {UserCredentialApiOptions} [options] 错误处理策略，可忽略未绑定错误
      * @returns {Promise<{ data: any, timezone: string } | null>} 成绩历史与记录方时区；失败返回 `null`
-     */ 
+     */
     async getCloudSongHistory(songId, difficulty = undefined, options = {}) {
         const history = await this.getCloudHistory([], options)
         if (!history) return null
@@ -744,9 +745,12 @@ export class UserCredentials {
                 return old ? { save: old, history: await this.getLocalHistory(), added_rks_notes: [0, 0] } : undefined
             }
         } catch (error) {
-            const message = platform.getAdapterName(event) === 'QQBot'
-                ? '更新失败！QAQ\n请稍后重试'
-                : `更新失败！QAQ\n${error}`
+
+            if (error == '未找到存档QAQ！') {
+                error = apiWords.saveNotFound;
+            }
+
+            const message = `更新失败！QAQ\n${error}`
             notifyUser(event, message)
             logger.error(error)
             return undefined

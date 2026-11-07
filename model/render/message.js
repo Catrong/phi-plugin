@@ -83,11 +83,18 @@ export function mdCmd(text, show) {
  * @param {string} command 省略命令头的指令文本
  * @param {string} label
  * @param {buttonStyle} [style] 按钮样式:1-蓝框蓝字,2-灰框黑字,3-灰框红字,4-蓝底白字,其他均为灰框黑字
+ * @param {boolean} [withOutHead=false] 不填充指令头
  * @returns {buttonCommandObject}
  */
-export function butCmd(command, label, style) {
-    const head = Config.getUserCfg('config', 'cmdhead')
-    return { command: (head && command) ? `/${head} ${command}` : `/${command}`, label, style }
+export function butCmd(command, label, style, withOutHead = false) {
+    const head = Config.getUserCfg('config', 'cmdhead');
+    let cmdStr = '';
+    if (!withOutHead) {
+        cmdStr = '/';
+        if (head) cmdStr += `${head} `;
+    }
+    cmdStr += command;
+    return { command: cmdStr, label, style }
 }
 
 /**

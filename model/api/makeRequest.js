@@ -4,7 +4,7 @@ import logger from '../../components/Logger.js';
 import platform from '../../components/platform/index.js';
 import { APII18NCN } from '../game/constNum.js';
 import { getPhiApiUserMessage, hasPhiApiUserMessage } from './phiApiErrors.js';
-import { apiMessages } from '../render/messages.js';
+import { apiMessages, apiWords } from '../render/messages.js';
 
 /**
  * API 请求的统一错误处理选项。
@@ -413,10 +413,17 @@ export default class makeRequest {
         }
 
         if (notifyUser && userMessage) {
+
+            let userMessageStr = userMessage;
+
+            if (userMessageStr == '未找到对应 存档') {
+                userMessageStr = apiWords.saveNotFound
+            }
+
             const prefix = errorPrefix ? `${errorPrefix}\n` : ''
             platform.sendWithAt(
                 platform.wrapEvent(event),
-                `${prefix}${userMessage}`,
+                `${prefix}${userMessageStr}`,
                 false,
                 {},
             )

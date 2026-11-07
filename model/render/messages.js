@@ -438,8 +438,27 @@ export const userMessages = {
     },
     list: {
         banned: { text: '这里被管理员禁止使用这个功能了呐QAQ！' },
-        tooMany: (/** @type {number} */ count, /** @type {number} */ max) =>
-            ({ text: `谱面数量过多(${count})大于设置的最大值(${max})，请缩小搜索范围QAQ！` }),
+        tooMany: (/** @type {number} */ count, /** @type {number} */ max) => {
+            const head = Config.getUserCfg('config', 'cmdhead');
+            return {
+                text: `谱面数量过多(${count})大于设置的最大值(${max})，请缩小搜索范围QAQ！\n示例/${head} list IN AT FC AP -acc 90+ -dif 15+`,
+                button: [
+                    [butCmd('list', '/list')],
+                    [
+                        butCmd('-acc 90+', '添加ACC筛选', undefined, true),
+                        butCmd('-dif 15+', '添加难度筛选', undefined, true)
+                    ],
+                    [
+                        butCmd('AT', '只看AT', undefined, true),
+                        butCmd('IN', '只看IN', undefined, true)
+                    ],
+                    [
+                        butCmd('HD', '只看HD', undefined, true),
+                        butCmd('EZ', '只看EZ', undefined, true)
+                    ],
+                ]
+            }
+        },
         finalMessage: (/** @type {{image?: unknown}} */ parts) => ({ ...parts, button: menus.userList() }),
     },
     analyze2025SaveHistory: {
@@ -2058,6 +2077,10 @@ export const sendMessages = {
         };
     },
     forwardFailed: { text: '转发失败QAQ！请尝试在私聊触发命令！' },
+}
+
+export const apiWords = {
+    saveNotFound: '当前TapTap账号下未找到存档，请检查是否登录了错误的TapTap账号，并且在游戏内手动同步后再次尝试呐~'
 }
 
 /**
