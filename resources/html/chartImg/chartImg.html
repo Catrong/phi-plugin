@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" type="text/css" href="../common/common.css" />
+    
+    
+
+    
+    <link rel="stylesheet" href="../chartImg/chartImg.css">
+    
+    <style>
+        /* 本页已有曲绘背景，避免重复绘制整页模糊背景。 */
+        .theme-background { display: none; }
+    </style>
+    
+    
+    <script src="./echarts.js"></script>
+    <script src="./echarts-wordcloud.min.js"></script>
+    
+    
+
+
+    
+
+    
+    
+    <title>phi-plugin</title>
+</head>
+
+<body class="elem-hydro default-mode  " style="transform:scale(2)">
+
+
+    <div class="background theme-background">
+        
+        
+        <img src="../otherimg/phigros.png" alt="曲绘-模糊">
+        
+        
+    </div>
+
+    
+    <script>
+        var _res_path = "../../";
+    </script>
+
+    
+    
+
+    <!-- <div class="container" id="container"> -->
+    
+    <div class="background chart-background-preblurred">
+        <img src="../../original_ill/illBlur/DistortedFate.Sakuzyo.png" alt="曲绘-模糊">
+    </div>
+    <div class="backBlock">
+        <div class="totalBox" id="box">
+            <img src="../../original_ill/chartimg/IN/DistortedFate.Sakuzyo.png" alt="谱面预览">
+        </div>
+    </div>
+    <div class="chart-info">
+        <div class="box-content dot-box">
+            <div class="dot left top"></div>
+            <div class="dot left bottom"></div>
+            <div class="dot right top"></div>
+            <div class="dot right bottom"></div>
+            <div class="info-content">
+                <div class="info-box has-charter">
+                    <div class="content-title">
+                        <p>Basic Information</p>
+                    </div>
+                    <div class="content">
+                        <p>曲目 Distorted Fate</p>
+                        <p>时长 2:42</p>
+                        <p>难度 IN 16.3</p>
+                        <p>谱师 Divination Fortune</p>
+                        
+                        <p class="charter-real">（XMT小咩兔）</p>
+                        <p class="charter-source">谱师名录来源于 daogemm.github.io，按字典序排列</p>
+                        
+                    </div>
+                </div>
+                <div class="notes-box">
+                    <div class="content-title">
+                        <p>Notes</p>
+                    </div>
+                    <div class="content">
+                        <div class="notes-content tap-p">
+                            <p>841</p>
+                            <p>Tap</p>
+                        </div>
+                        <div class="notes-content drag-p"> 
+                            <p>430</p>
+                            <p>Drag</p>
+                        </div>
+                        <div class="notes-content hold-p">
+                            <p>132</p>
+                            <p>Hold</p>
+                        </div>
+                        <div class="notes-content flick-p">
+                            <p>46</p>
+                            <p>Flick</p>
+                        </div>
+                        <div class="notes-content">
+                            <p>1449</p>
+                            <p>Combo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="words-box">
+                    <div class="content-title">
+                        <p>Chart Tag</p>
+                    </div>
+                    <div class="box-tip">
+                        <p>维度标签体系参考自 @空游小站（kyou.net.cn）</p>
+                    </div>
+                    <div class="words" id="words">
+                        <div class="tag-detail-layout">
+                            <svg class="tag-radar-preview" viewBox="0 0 420 420" role="img" aria-label="谱面标签雷达图">
+                                <polygon class="tag-radar-grid" points="210,176 242,199 230,237 190,237 178,199"></polygon>
+                                <polygon class="tag-radar-grid" points="210,142 275,189 250,265 170,265 145,189"></polygon>
+                                <polygon class="tag-radar-grid" points="210,108 307,178 270,292 150,292 113,178"></polygon>
+                                <polygon class="tag-radar-grid" points="210,74 339,168 290,320 130,320 81,168"></polygon>
+                                <polygon class="tag-radar-grid" points="210,40 372,157 310,347 110,347 48,157"></polygon>
+                                <line class="tag-radar-axis" x1="210" y1="210" x2="210" y2="40"></line>
+                                <line class="tag-radar-axis" x1="210" y1="210" x2="372" y2="157"></line>
+                                <line class="tag-radar-axis" x1="210" y1="210" x2="310" y2="347"></line>
+                                <line class="tag-radar-axis" x1="210" y1="210" x2="110" y2="347"></line>
+                                <line class="tag-radar-axis" x1="210" y1="210" x2="48" y2="157"></line>
+                                <polygon class="tag-radar-shape" points="210,74 334,170 274,298 140,306 90,171"></polygon>
+                                <circle class="tag-radar-point" cx="210" cy="74" r="5"></circle>
+                                <circle class="tag-radar-point" cx="334" cy="170" r="5"></circle>
+                                <circle class="tag-radar-point" cx="274" cy="298" r="5"></circle>
+                                <circle class="tag-radar-point" cx="140" cy="306" r="5"></circle>
+                                <circle class="tag-radar-point" cx="90" cy="171" r="5"></circle>
+                            </svg>
+                            <div class="tag-category-list">
+                                <section class="tag-category tag-category-reading">
+                                    <div class="tag-category-name">读谱</div>
+                                    <p class="tag-category-items">差速(0)、脑裂(0)、多面下落(0)、变速/闪现(0)、面海(0)、扫线(0)、长条藏键(0)、慢流速(0)、非线性下落(0)、判定线干扰(0)、复杂节奏(0)</p>
+                                </section>
+                                <section class="tag-category tag-category-stamina">
+                                    <div class="tag-category-name">硬抗</div>
+                                    <p class="tag-category-items">长纵连(0)、长连点/交互(0)、快交互(0)、双押海(0)、宽排键(0)、连点爆发(0)</p>
+                                </section>
+                                <section class="tag-category tag-category-pattern">
+                                    <div class="tag-category-name">拆谱</div>
+                                    <p class="tag-category-items">全换(0)、反手(0)、锁手(0)、锚键(0)、刹车(0)、面海(0)、长条藏键(0)、频繁切轨(0)</p>
+                                </section>
+                                <section class="tag-category tag-category-precision">
+                                    <div class="tag-category-name">定位</div>
+                                    <p class="tag-category-items">脑裂(0)、宽排键(0)、倒打(0)、蓝夹黄(0)、蓝夹红(0)、浮现式(0)、频繁切轨(0)、非线性下落(0)</p>
+                                </section>
+                                <section class="tag-category tag-category-multifinger">
+                                    <div class="tag-category-name">多指</div>
+                                    <p class="tag-category-items">叠(0)、乱(0)、切(0)、楼梯(0)、3k(0)、4k(0)、5k(0)、6k(0)、拍砖(0)、对拍(0)、对切(0)、频繁切轨(0)</p>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="notes-bar">
+                    <div class="content-title">
+                        <p>Notes Distribution</p>
+                    </div>
+                    <div class="box-tip">
+                        <p>谱面时长：2:36</p>
+                    </div>
+                    <div class="bar-box" id="bar-box">
+                        
+                        <div class="bar" style="height: 0%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 0%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 0%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 0%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 10%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 20%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 60%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 20%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 20%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 14%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 75%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 25%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 26%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 76.92%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 23.08%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 28%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 78.57%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 21.43%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 66.67%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 25%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 8.33%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 30%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 80%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 20%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 83.33%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 16.67%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 12%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 100%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 20%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 40%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 60%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 12%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 50%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 50%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 0%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 22%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 38%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 63.16%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 36.84%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 38%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 36.84%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 42.11%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 10.53%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 10.53%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 50%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 25%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 25%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 22%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 90.91%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 9.09%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 46%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 73.91%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 26.09%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 42%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 90.48%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 9.52%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 46%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 65.22%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 34.78%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 48%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 66.67%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 33.33%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 32%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 93.75%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 6.25%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 40%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 75%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 25%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 44%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 72.73%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 27.27%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 38%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 68.42%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 21.05%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 10.53%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 38%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 73.68%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 10.53%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 15.79%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 16%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 42%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 95.24%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 4.76%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 40%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 95%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 5%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 38%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 89.47%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 10.53%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 42%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 80.95%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 19.05%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 36%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 88.89%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 11.11%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 12%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 33.33%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 33.33%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 33.33%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 0%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 4%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 16%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 75%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 25%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 12%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 14%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 71.43%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 28.57%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 22%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 81.82%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 18.18%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 20%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 90%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 10%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 26%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 84.62%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 15.38%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 91.67%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 8.33%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 40%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 95%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 5%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 30%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 93.33%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 6.67%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 26%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 26%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 4%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 4%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 4%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 22%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 100%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 20%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 80%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 34%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 88.24%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 11.76%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 84%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 16.67%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 80.95%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 2.38%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 68%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 47.06%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 52.94%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 62%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 19.35%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 80.65%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 76%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 18.42%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 81.58%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 58%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 58.62%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 37.93%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 3.45%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 78%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 41.03%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 58.97%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 60%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 40%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 56.67%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 3.33%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 80%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 35%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 65%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 68%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 26.47%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 64.71%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 5.88%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 2.94%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 84%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 23.81%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 76.19%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 68%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 26.47%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 70.59%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 2.94%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 80%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 12%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 33.33%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 66.67%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 24%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 16.67%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 83.33%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 30%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 20%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 80%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 30%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 20%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 80%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 32%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 25%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 75%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 34%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 23.53%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 76.47%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 30%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 13.33%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 86.67%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 36%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 22.22%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 77.78%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 32%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 62.5%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 25%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 12.5%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 40%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 80%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 20%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 46%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 91.3%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 8.7%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 42%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 90.48%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 9.52%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 46%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 100%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 64%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 71.88%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 28.12%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 6%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 33.33%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 66.67%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 8%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 75%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 25%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 16%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 87.5%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 12.5%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                        <div class="bar" style="height: 16%">
+                            <div
+                                class="bar-item TAP-BKG"
+                                style="height: 87.5%"
+                            ></div>
+                            <div
+                                class="bar-item DRAG-BKG"
+                                style="height: 0%"
+                            ></div>
+                            <div
+                                class="bar-item HOLD-BKG"
+                                style="height: 12.5%"
+                            ></div>
+                            <div
+                                class="bar-item FLICK-BKG"
+                                style="height: 0%"
+                            ></div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- <div class="copyright">Created By yunzai<span class="version">v3.1.3</span> & phi-Plugin<span class="version">v1.0.3</span></div> -->
+    <!-- </div> -->
+    <!-- 曲目名称自适应name-box的宽度 -->
+
+    
+    <script>
+        function isBiggerThanParent(songName, parentElement) {
+            console.log(songName, parentElement)
+            console.log(songName.scrollWidth, parentElement.offsetWidth, songName.scrollHeight, parentElement.offsetHeight)
+            return songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight
+        }
+        const originalFontStyles = new WeakMap();
+        function adjustFontSize() {
+            //获取p元素
+            let a = document.getElementsByName('pvis')
+            for (let i = 0; i < a.length; ++i) {
+
+                let songName = a[i]
+
+                if (!songName) continue
+
+                // 每次按模板原字号重新测，避免先用回退字体缩小后无法恢复。
+                if (!originalFontStyles.has(songName)) originalFontStyles.set(songName, songName.style.fontSize);
+                else songName.style.fontSize = originalFontStyles.get(songName);
+
+                /*调整曲目名称字体大小*/
+                let parentElement = songName.parentElement
+
+                if (!isBiggerThanParent(songName, parentElement)) continue
+
+                let fontSize = Number(window.getComputedStyle(songName, null).getPropertyValue('font-size').replace("px", ""));
+
+                let l = 0, r = fontSize;
+                while (l < r) {
+                    let mid = Math.floor((l + r + 1) / 2);
+                    songName.style.fontSize = mid + "px";
+                    if (isBiggerThanParent(songName, parentElement)) {
+                        r = mid - 1;
+                    } else {
+                        l = mid;
+                    }
+                }
+                songName.style.fontSize = l + "px";
+            }
+
+        }
+        
+        // 将颜色转为半透明（用于虚线）
+        function lightenColor(hex, alpha = 0.4) {
+          // 支持 #RRGGBB 格式
+          const r = parseInt(hex.slice(1, 3), 16)
+          const g = parseInt(hex.slice(3, 5), 16)
+          const b = parseInt(hex.slice(5, 7), 16)
+          return `rgba(${r},${g},${b},${alpha})`
+        }
+
+        // 绘制定数变化折线图的函数
+        // lines: { data: [{x, xLabel, visX, y, yLabel, visY}], color: string }[]
+        function drawDifficultyChart(svgId, lines) {
+          // 获取SVG元素
+          const svg = document.getElementById(svgId)
+          if (!svg) {
+            console.error("SVG元素未找到:", svgId)
+            return
+          }
+
+          // 清空SVG内容
+          svg.innerHTML = ""
+
+          // 设置SVG尺寸
+          const width = parseInt(svg.getAttribute("width")) || 800
+          const height = parseInt(svg.getAttribute("height")) || 400
+
+          // 定义边距
+          const margin = { top: 30, right: 30, bottom: 50, left: 60 }
+          const innerWidth = width - margin.left - margin.right
+          const innerHeight = height - margin.top - margin.bottom
+
+          // 创建主绘图区域组
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g")
+          g.setAttribute("transform", `translate(${margin.left},${margin.top})`)
+          svg.appendChild(g)
+
+          // 汇总所有折线的数据，计算全局范围
+          const allData = lines.flatMap(l => l.data)
+          const xValues = allData.map(d => d.x)
+          const yValues = allData.map(d => d.y)
+          const xMin = Math.min(...xValues)
+          const xMax = Math.max(...xValues)
+          const yMin = Math.min(...yValues)
+          const yMax = Math.max(...yValues)
+
+          // 添加一些边距，避免数据点落在轴上
+          const xPadding = (xMax - xMin) * 0.1 || 1
+          const yPadding = (yMax - yMin) * 0.1 || 1
+          const xScaleMin = xMin - xPadding
+          const xScaleMax = xMax + xPadding
+          const yScaleMin = yMin - yPadding
+          const yScaleMax = yMax + yPadding
+
+          // 缩放函数
+          const xScale = value => {
+            return ((value - xScaleMin) / (xScaleMax - xScaleMin)) * innerWidth
+          }
+          const yScale = value => {
+            return innerHeight - ((value - yScaleMin) / (yScaleMax - yScaleMin)) * innerHeight
+          }
+
+          // 绘制X轴
+          const xAxis = document.createElementNS("http://www.w3.org/2000/svg", "line")
+          xAxis.setAttribute("x1", 0)
+          xAxis.setAttribute("y1", innerHeight)
+          xAxis.setAttribute("x2", innerWidth)
+          xAxis.setAttribute("y2", innerHeight)
+          xAxis.setAttribute("stroke", "white")
+          xAxis.setAttribute("stroke-width", 1)
+          g.appendChild(xAxis)
+
+          // 绘制Y轴
+          const yAxis = document.createElementNS("http://www.w3.org/2000/svg", "line")
+          yAxis.setAttribute("x1", 0)
+          yAxis.setAttribute("y1", 0)
+          yAxis.setAttribute("x2", 0)
+          yAxis.setAttribute("y2", innerHeight)
+          yAxis.setAttribute("stroke", "white")
+          yAxis.setAttribute("stroke-width", 1)
+          g.appendChild(yAxis)
+
+          // 绘制X轴刻度
+          const xTicks = 5
+          for (let i = 0; i <= xTicks; i++) {
+            const value = xScaleMin + (i / xTicks) * (xScaleMax - xScaleMin)
+            const x = xScale(value)
+            const tick = document.createElementNS("http://www.w3.org/2000/svg", "line")
+            tick.setAttribute("x1", x)
+            tick.setAttribute("y1", innerHeight)
+            tick.setAttribute("x2", x)
+            tick.setAttribute("y2", innerHeight + 6)
+            tick.setAttribute("stroke", "white")
+            g.appendChild(tick)
+          }
+
+          // 绘制Y轴刻度
+          const yTicks = 5
+          for (let i = 0; i <= yTicks; i++) {
+            const value = yScaleMin + (i / yTicks) * (yScaleMax - yScaleMin)
+            const y = yScale(value)
+            const tick = document.createElementNS("http://www.w3.org/2000/svg", "line")
+            tick.setAttribute("x1", -6)
+            tick.setAttribute("y1", y)
+            tick.setAttribute("x2", 0)
+            tick.setAttribute("y2", y)
+            tick.setAttribute("stroke", "white")
+            g.appendChild(tick)
+          }
+
+          // 遍历每条折线
+          lines.forEach(line => {
+            const data = line.data
+            const color = line.color || "#64B5F6"
+            const dashColor = lightenColor(color, 0.4)
+
+            // 绘制折线路径
+            if (data.length > 1) {
+              let pathData = ""
+              data.forEach((d, i) => {
+                const x = xScale(d.x)
+                const y = yScale(d.y)
+                if (i === 0) {
+                  pathData += `M ${x} ${y}`
+                } else {
+                  pathData += ` L ${x} ${y}`
+                }
+              })
+              const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+              path.setAttribute("d", pathData)
+              path.setAttribute("fill", "none")
+              path.setAttribute("stroke", color)
+              path.setAttribute("stroke-width", 2)
+              g.appendChild(path)
+            }
+
+            // 绘制数据点、虚线和标签
+            data.forEach(d => {
+              const x = xScale(d.x)
+              const y = yScale(d.y)
+
+              // 绘制数据点
+              const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+              circle.setAttribute("cx", x)
+              circle.setAttribute("cy", y)
+              circle.setAttribute("r", 4)
+              circle.setAttribute("fill", color)
+              g.appendChild(circle)
+
+              // 如果visX为true，绘制向X轴的虚线并标注xLabel
+              if (d.visX) {
+                const dashLine = document.createElementNS("http://www.w3.org/2000/svg", "line")
+                dashLine.setAttribute("x1", x)
+                dashLine.setAttribute("y1", y)
+                dashLine.setAttribute("x2", x)
+                dashLine.setAttribute("y2", innerHeight)
+                dashLine.setAttribute("stroke", dashColor)
+                dashLine.setAttribute("stroke-width", 1)
+                dashLine.setAttribute("stroke-dasharray", "4,2")
+                g.appendChild(dashLine)
+
+                const label = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                label.setAttribute("x", x)
+                label.setAttribute("y", innerHeight + 15)
+                label.setAttribute("text-anchor", "middle")
+                label.setAttribute("font-size", "11px")
+                label.setAttribute("fill", color)
+                label.textContent = d.xLable || d.xLabel || ""
+                g.appendChild(label)
+              }
+
+              // 如果visY为true，绘制向Y轴的虚线并标注yLabel
+              if (d.visY) {
+                const dashLine = document.createElementNS("http://www.w3.org/2000/svg", "line")
+                dashLine.setAttribute("x1", x)
+                dashLine.setAttribute("y1", y)
+                dashLine.setAttribute("x2", 0)
+                dashLine.setAttribute("y2", y)
+                dashLine.setAttribute("stroke", dashColor)
+                dashLine.setAttribute("stroke-width", 1)
+                dashLine.setAttribute("stroke-dasharray", "4,2")
+                g.appendChild(dashLine)
+
+                const label = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                label.setAttribute("x", -10)
+                label.setAttribute("y", y)
+                label.setAttribute("text-anchor", "end")
+                label.setAttribute("dominant-baseline", "middle")
+                label.setAttribute("font-size", "11px")
+                label.setAttribute("fill", color)
+                label.textContent = d.yLable || d.yLabel || ""
+                g.appendChild(label)
+              }
+            })
+          })
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            adjustFontSize();
+            // 本地字体也会异步加载；等待实际字体再执行同一套宽高约束。
+            if (document.fonts) document.fonts.ready.then(adjustFontSize);
+        });
+        window.addEventListener("resize", adjustFontSize);
+    </script>
+    
+</body>
+
+</html>

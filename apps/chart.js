@@ -59,6 +59,14 @@ import { originalIllPath } from '../model/filesystem/path.js'
  */
 
 /**
+ * @typedef {object} ChartTagCategoryView
+ * @property {chartsTagString} name 分类名
+ * @property {string} key 分类样式名
+ * @property {number} value 分类总票数
+ * @property {ChartTagWord[]} children 子标签
+ */
+
+/**
  * @typedef {ChartTagWord & {
  *   children: ChartTagTreeNode[]
  * }} ChartTagCategoryWord
@@ -83,6 +91,7 @@ import { originalIllPath } from '../model/filesystem/path.js'
  * @property {string} chartLength 谱面时长
  * @property {ChartTagWord[]} words 谱面标签词云数据
  * @property {number} wordsMaxValue 谱面标签最大有效票数
+ * @property {ChartTagCategoryView[]} tagCategories 分类及子标签票数
  */
 
 /**
@@ -94,6 +103,15 @@ import { originalIllPath } from '../model/filesystem/path.js'
 
 /** @type {Record<string, SetTagWaitState>} */
 const wait_to_settag = {}
+
+/** @type {Record<string, string>} */
+const tagCategoryKeys = {
+  '读谱': 'reading',
+  '硬抗': 'stamina',
+  '拆谱': 'pattern',
+  '定位': 'precision',
+  '多指': 'multifinger',
+}
 
 /** @param {string} userId */
 function clearSetTagState(userId) {
@@ -293,20 +311,17 @@ function getCategoryVoteCount(category) {
 
 /**
  * @param {ChartTagTreeNode[]} tagTree
- * @returns {{words: ChartTagWord[], wordsMaxValue: number}}
+ * @returns {{words: ChartTagWord[], wordsMaxValue: number, tagCategories: ChartTagCategoryView[]}}
  */
-function makeCategoryWords(tagTree) {
-  /** @type {ChartTagWord[]} */
-  const words = []
-  let wordsMaxValue = 0
-
-  for (const category of tagTree || []) {
-    const value = getCategoryVoteCount(category)
-    words.push({ name: category.name, value })
-    wordsMaxValue = Math.max(wordsMaxValue, value)
-  }
-
-  return { words, wordsMaxValue: Math.max(wordsMaxValue, 1) }
+export function makeCategoryWords(tagTree) {
+  const tagCategories = tagTree.map(category => ({
+    name: category.name,
+    key: tagCategoryKeys[category.name] || 'other',
+    value: getCategoryVoteCount(category),
+    children: (category.children || []).map(child => ({ name: child.name, value: child.voteCount })),
+  }))
+  const words = tagCategories.map(({ name, value }) => ({ name, value }))
+  return { words, wordsMaxValue: Math.max(1, ...words.map(word => word.value)), tagCategories }
 }
 
 /**
@@ -548,6 +563,8 @@ async function getChartImg(e, id, options) {
   /** @type {ChartTagWord[]} */
   const words = []
   let wordsMaxValue = 0
+  /** @type {ChartTagCategoryView[]} */
+  let tagCategories = []
 
   if (await canUseApi(e, 'scoreStatistics')) {
     /** @type {ChartTagSongRankResponse | null} */
@@ -559,6 +576,7 @@ async function getChartImg(e, id, options) {
       const categoryWords = makeCategoryWords(apiChartTag.tree)
       words.push(...categoryWords.words)
       wordsMaxValue = categoryWords.wordsMaxValue
+      tagCategories = categoryWords.tagCategories
     }
   }
 
@@ -584,7 +602,8 @@ async function getChartImg(e, id, options) {
     distribution: chart.distribution,
     chartLength: `${Math.floor((chart.maxTime || 0) / 60)}:${Math.floor((chart.maxTime || 0) % 60).toString().padStart(2, '0')}`,
     words,
-    wordsMaxValue
+    wordsMaxValue,
+    tagCategories,
   }
 
   const img = await picmodle.common(e, 'chartImg', {

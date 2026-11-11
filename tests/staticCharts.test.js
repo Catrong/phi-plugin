@@ -29,6 +29,10 @@ function renderData(renderNoJs, theme = 'default') {
         distribution: [[25, 25, 25, 25, 100]], tip: '',
         words: [{ name: '多指', value: 10 }, { name: '交互', value: 8 }, { name: '纵连', value: 6 }],
         wordsMaxValue: 12,
+        tagCategories: [
+            { name: '读谱', key: 'reading', value: 8, children: [{ name: '差速', value: 8 }] },
+            { name: '多指', key: 'multifinger', value: 10, children: [{ name: '楼梯', value: 10 }] },
+        ],
     }
 }
 
@@ -279,17 +283,23 @@ test('密集雷达保留所有轴和标签，自动调整字号且不越过画�
     }
 })
 
-test('Shotium 模板在服务器生成图表，Puppeteer 保留原脚本', () => {
+test('图表模板在服务器生成图表，只有旧谱面信息页保留 Puppeteer 脚本', () => {
     const difficulty = render('difficultyHistory', true)
     assert.match(difficulty, /<polyline /)
     assert.doesNotMatch(difficulty, /const sampleLines|drawDifficultyChart\("difficultyChart"/)
     assert.match(render('difficultyHistory', false), /drawDifficultyChart\("difficultyChart"/)
-    for (const page of ['chartInfo', 'chartImg']) {
-        const html = render(page, true)
-        assert.match(html, /aria-label="谱面标签雷达图"/)
-        assert.match(html, /多指/)
-        assert.doesNotMatch(html, /echarts\.js|echarts\.init/)
-        assert.match(render(page, false), /echarts\.init/)
+    const chartInfo = render('chartInfo', true)
+    assert.match(chartInfo, /aria-label="谱面标签雷达图"/)
+    assert.doesNotMatch(chartInfo, /echarts\.js|echarts\.init/)
+    assert.match(render('chartInfo', false), /echarts\.init/)
+
+    for (const renderNoJs of [true, false]) {
+        const chartImg = render('chartImg', renderNoJs)
+        assert.match(chartImg, /aria-label="谱面标签雷达图"/)
+        assert.match(chartImg, /class="tag-category-name">读谱</)
+        assert.match(chartImg, /差速\(8\)/)
+        assert.match(chartImg, /楼梯\(10\)/)
+        assert.doesNotMatch(chartImg, /echarts\.js|echarts\.init/)
     }
 })
 

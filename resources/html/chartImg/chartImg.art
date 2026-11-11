@@ -7,10 +7,6 @@
         .theme-background { display: none; }
     </style>
     {{/if}}
-    {{if !renderNoJs}}
-    <script src="{{_res_path}}html/chartInfo/echarts.js"></script>
-    <script src="{{_res_path}}html/chartInfo/echarts-wordcloud.min.js"></script>
-    {{/if}}
     {{if renderNoJs}}
     <style>
         /* 静态 SVG 与文本参与布局，信息较多时面板按实际内容增长。 */
@@ -92,9 +88,22 @@
                         <p>维度标签体系参考自 @空游小站（kyou.net.cn）</p>
                     </div>
                     <div class="words" id="words">
-                        {{if renderNoJs}}
-                        {{@ staticCharts.radar(words, wordsMaxValue, { width: 450, height: 430, fontSize: 30, showValue: true })}}
-                        {{/if}}
+                        <div class="tag-detail-layout">
+                            <div class="tag-radar-preview">
+                                {{@ staticCharts.radar(words, wordsMaxValue, { width: 420, height: 420, fontSize: 30 })}}
+                            </div>
+                            <div class="tag-category-list">
+                                {{each tagCategories category}}
+                                <div class="tag-category tag-category-{{category.key}}">
+                                    <div class="tag-category-name">{{category.name}}</div>
+                                    <p class="tag-category-items">{{each category.children child childIndex}}{{if childIndex}}、{{/if}}{{child.name}}({{child.value}}){{/each}}</p>
+                                </div>
+                                {{/each}}
+                                {{if !tagCategories.length}}
+                                <p class="tag-category-empty">暂无谱面标签</p>
+                                {{/if}}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="notes-bar">
@@ -130,72 +139,4 @@
             </div>
         </div>
     </div>
-    {{if !renderNoJs}}
-    <script>
-        var chart = echarts.init(document.getElementById("words"), {renderer: 'svg'});
-        // 准备雷达图数据
-        var indicators = [];
-        var values = [];
-        {{each words e}}
-        indicators.push({name: '{{e.name}}({{e.value}})', max: {{wordsMaxValue}}});
-        values.push({{e.value}});
-        {{/each}}
-        
-        chart.setOption({
-            animation: false,
-            radar: {
-                indicator: indicators,
-                shape: 'polygon',
-                splitNumber: 5,
-                name: {
-                    textStyle: {
-                        color: '#fff',
-                        fontFamily: 'phi',
-                        fontSize: 30
-                    }
-                },
-                splitLine: {
-                    lineStyle: {
-                        color: 'rgba(255, 255, 255, 0.3)'
-                    }
-                },
-                splitArea: {
-                    show: true,
-                    areaStyle: {
-                        color: [
-                            'rgba(255, 255, 255, 0.05)',
-                            'rgba(255, 255, 255, 0.1)'
-                        ]
-                    }
-                },
-                axisLine: {
-                    lineStyle: {
-                        color: 'rgba(255, 255, 255, 0.5)'
-                    }
-                }
-            },
-            series: [
-                {
-                    type: 'radar',
-                    data: [
-                        {
-                            value: values,
-                            name: 'Data',
-                            lineStyle: {
-                                color: 'rgba(100, 200, 255, 0.8)',
-                                width: 2
-                            },
-                            areaStyle: {
-                                color: 'rgba(100, 200, 255, 0.3)'
-                            },
-                            itemStyle: {
-                                color: 'rgba(100, 200, 255, 1)'
-                            }
-                        }
-                    ]
-                }
-            ]
-        });
-    </script>
-    {{/if}}
 {{/block}}

@@ -225,7 +225,7 @@ body {
 }
 
 .info-box {
-    width: 20%;
+    width: 10%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -309,7 +309,7 @@ body {
 
 .box-content p {
     color: var(--text-color-light);
-    font-size: 20px;
+    font-size: 30px;
 }
 
 .info-content {
@@ -463,7 +463,7 @@ body {
 .words-box {
     position: relative;
     display: flex;
-    width: 22%;
+    width: 30%;
     height: 100%;
     flex-direction: column;
 }
@@ -481,4 +481,125 @@ body {
     height: 100%;
     position: absolute;
     right: 0;
+}
+
+.words-box .box-tip {
+    top: 8px;
+}
+
+.words-box .box-tip p {
+    font-size: 20px;
+}
+
+.words-box .words {
+    width: 100%;
+    height: calc(100% - 76px);
+    right: auto;
+    bottom: 0;
+}
+
+.tag-detail-layout {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tag-radar-preview {
+    width: auto;
+    height: 100%;
+    overflow: visible;
+}
+
+.tag-radar-preview svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.tag-radar-preview .phi-chart-radar-label {
+    display: none;
+}
+
+.tag-radar-grid {
+    fill: rgba(255, 255, 255, 0.03);
+    stroke: rgba(255, 255, 255, 0.3);
+    stroke-width: 1.5;
+}
+
+.tag-radar-axis {
+    stroke: rgba(255, 255, 255, 0.42);
+    stroke-width: 1.5;
+}
+
+.tag-radar-shape {
+    fill: rgba(100, 200, 255, 0.24);
+    stroke: #64c8ff;
+    stroke-width: 3;
+}
+
+.tag-radar-point {
+    fill: #64c8ff;
+}
+
+.tag-category-list {
+    min-width: 0;
+    display: grid;
+    gap: 9px;
+}
+
+.tag-category {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+}
+
+.tag-category-name {
+    padding: 5px 8px;
+    color: #101820;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.tag-category-items {
+    margin: 0;
+    color: #fff;
+    font-size: 15px;
+    line-height: 1.42;
+    overflow-wrap: anywhere;
+}
+
+.tag-category-empty {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 20px;
+}
+
+.tag-category-reading .tag-category-name {
+    background: #75e5ef;
+}
+
+.tag-category-stamina .tag-category-name {
+    background: #ffa478;
+}
+
+.tag-category-pattern .tag-category-name {
+    background: #c2a5ff;
+}
+
+.tag-category-precision .tag-category-name {
+    background: #95cfae;
+}
+
+.tag-category-multifinger .tag-category-name {
+    background: #f1ce81;
+}
+
+.tag-category-other .tag-category-name {
+    background: #d5dbe0;
 }
