@@ -27,7 +27,7 @@ function renderData(renderNoJs, theme = 'default') {
         chartImg: 'chart.png', chartLength: '2:00', charter: '谱师', charterReal: '',
         rank: 'IN', difficulty: 15.5, tap: 10, drag: 10, hold: 10, flick: 10, combo: 40,
         distribution: [[25, 25, 25, 25, 100]], tip: '',
-        words: [{ name: '多指', value: 10 }, { name: '交互', value: 8 }, { name: '纵连', value: 6 }],
+        words: [{ name: '读谱', value: 8 }, { name: '多指', value: 10 }, { name: '拆谱', value: 6 }],
         wordsMaxValue: 12,
         tagCategories: [
             { name: '读谱', key: 'reading', value: 8, children: [{ name: '差速', value: 8 }] },
@@ -297,6 +297,9 @@ test('图表模板在服务器生成图表，只有旧谱面信息页保留 Pupp
         const chartImg = render('chartImg', renderNoJs)
         assert.match(chartImg, /aria-label="谱面标签雷达图"/)
         assert.match(chartImg, /class="tag-category-name">读谱</)
+        assert.match(chartImg, /class="phi-chart-radar-label"[^>]*>读谱<\/text>/)
+        assert.match(chartImg, /class="phi-chart-radar-label"[^>]*>多指<\/text>/)
+        assert.match(chartImg, /class="phi-chart-radar-label"[^>]*>拆谱<\/text>/)
         assert.match(chartImg, /差速\(8\)/)
         assert.match(chartImg, /楼梯\(10\)/)
         assert.doesNotMatch(chartImg, /echarts\.js|echarts\.init/)

@@ -508,6 +508,7 @@ body {
 .tag-radar-preview {
     width: auto;
     height: 100%;
+    position: relative;
     overflow: visible;
 }
 
@@ -515,10 +516,6 @@ body {
     width: 100%;
     height: 100%;
     display: block;
-}
-
-.tag-radar-preview .phi-chart-radar-label {
-    display: none;
 }
 
 .tag-radar-grid {
@@ -540,6 +537,12 @@ body {
 
 .tag-radar-point {
     fill: #64c8ff;
+}
+
+.tag-radar-label {
+    fill: #fff;
+    font-size: 22px;
+    dominant-baseline: central;
 }
 
 .tag-category-list {
