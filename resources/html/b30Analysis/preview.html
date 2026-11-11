@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920" />
+    <title>B30 谱面实力词条分析 · 演示预览</title>
+    <link rel="stylesheet" href="./b30Analysis.css" />
+  </head>
+  <body>
+    <div class="masthead">
+      <span>PHIGROS / B30 ANALYSIS</span
+      ><span class="edition">谱面实力档案 / 01</span>
+    </div>
+    <header class="title">
+      <div class="playerInfo">
+        <div class="blackBlock clip-box"></div>
+        <div class="avatar clip-box">
+          <img src="../avatar/Feast远东之宴1.png" alt="演示用户头像" />
+        </div>
+        <div class="playerId"><p>Demo Player</p></div>
+        <div class="clgBox">
+          <div class="Challenge">
+            <img src="../otherimg/5.png" alt="Challenge" />
+            <p>54</p>
+          </div>
+        </div>
+        <div class="rks clip-box"><p>15.7284</p></div>
+        <div class="date"><p>更新时间 2026/11/11 12:00:00</p></div>
+      </div>
+      <div class="report-title">
+        <h1>谱面实力 · 词条分析</h1>
+        <p>CHART STRENGTH PROFILE</p>
+      </div>
+    </header>
+    <div class="section-bar">
+      <h2>01 / 五维表现与词条分析</h2>
+      <span class="demo-label">演示数据 · 数值随机 · 曲绘随机配图</span>
+    </div>
+    <main class="analysis">
+      <aside
+        class="calculation-method"
+        aria-labelledby="calculation-method-title"
+      >
+        <h3 id="calculation-method-title">五维实力如何计算</h3>
+        <p>
+          <strong>取样与投票</strong>使用全部已记录成绩，不限 B30。谱面至少有 3
+          人投票，且某词条至少获 3 人支持，才计入该词条；主选票按 3 倍、次选票按
+          1 倍折算。
+        </p>
+        <p>
+          <strong>单谱贡献</strong>词条系数 = 该词条折算票数 ÷
+          该谱面最高词条折算票数。单谱贡献 = 单曲 RKS × 词条系数；估计定数 =
+          谱面定数 × 词条系数。
+        </p>
+        <p>
+          <strong>词条数值与有效性</strong>取该词条全部单谱贡献的最高值。至少有
+          3 张谱面参与，且最高估计定数 ≥ 玩家 RKS −
+          0.5，才参与五维计算；未达条件的词条仅展示名称。
+        </p>
+        <p>
+          <strong>维度加权</strong>基础权重为参与谱面数；若该词条在其中不足 3
+          张谱面上获得最高折算票数（含并列），权重减半。每一维 = Σ（有效词条数值
+          × 权重）÷ Σ 权重；同一词条可归属多个维度。
+        </p>
+        <p class="calculation-method-note">
+          维度标签体系参考自 @空游小站（kyou.net.cn），投票数据采用插件自收集，谱面投票可前往 phib19.top 或使用 /settag 指令提交。
+        </p>
+      </aside>
+
+      <svg
+        class="radar"
+        viewBox="-210 0 1920 1270"
+        role="img"
+        aria-label="五维实力雷达图，演示数值，刻度零至十八"
+      >
+        <polygon
+          points="750.0,604.4 783.9,629.0 770.9,668.8 729.1,668.8 716.1,629.0"
+          class="grid"
+        />
+        <polygon
+          points="750.0,568.8 817.7,618.0 791.9,697.6 708.1,697.6 682.3,618.0"
+          class="grid"
+        />
+        <polygon
+          points="750.0,533.2 851.6,607.0 812.8,726.4 687.2,726.4 648.4,607.0"
+          class="grid"
+        />
+        <polygon
+          points="750.0,497.6 885.4,596.0 833.7,755.2 666.3,755.2 614.6,596.0"
+          class="grid"
+        />
+        <polygon
+          points="750.0,462.0 919.3,585.0 854.6,784.0 645.4,784.0 580.7,585.0"
+          class="grid"
+        />
+        <path d="M750 640 L750.0 462.0" class="axis" />
+        <path d="M750 640 L919.2880599005373 584.9949750012594" class="axis" />
+        <path d="M750 640 L854.6257749080603 784.0050249987406" class="axis" />
+        <path d="M750 640 L645.3742250919398 784.0050249987406" class="axis" />
+        <path d="M750 640 L580.7119400994627 584.9949750012594" class="axis" />
+        <polygon
+          points="750.0,493.4 882.3,597.0 827.2,746.3 661.9,761.3 619.9,597.7"
+          class="strength"
+        />
+      </svg>
+      <div class="radar-caption radar-caption-reading">
+        <div class="dimension-label">读谱</div>
+        <div class="dimension-number">14.82</div>
+      </div>
+      <div class="radar-caption radar-caption-stamina">
+        <div class="dimension-label">硬抗</div>
+        <div class="dimension-number">14.07</div>
+      </div>
+      <div class="radar-caption radar-caption-pattern">
+        <div class="dimension-label">拆谱</div>
+        <div class="dimension-number">13.29</div>
+      </div>
+      <div class="radar-caption radar-caption-precision">
+        <div class="dimension-label">定位</div>
+        <div class="dimension-number">15.16</div>
+      </div>
+      <div class="radar-caption radar-caption-multifinger">
+        <div class="dimension-label">多指</div>
+        <div class="dimension-number">13.83</div>
+      </div>
+      <section
+        class="dimension dimension-reading clip-box"
+        aria-label="读谱词条分析"
+        style="--height: 320px; --accent: #75e5ef"
+      >
+        <svg class="panel-edge" viewBox="0 0 560 320" aria-hidden="true">
+          <path d="M0 319 L464.3 319" />
+        </svg>
+        <div class="panel-heading" style="left: 110.1px">
+          <span>01 / 读谱</span><small>词条表现 · 贡献前三</small>
+        </div>
+        <div class="charts" style="left: 76.4412px">
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/Dash.小红Akane李祥辉.png"
+              alt="Dash.小红Akane李祥辉"
+            /><strong class="chart-tag">长条藏键</strong
+            ><span class="difficulty">IN 15.6</span
+            ><span class="chart-value">15.87<small>权重 22 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/LuminousEntitiesLostHeart.NormalMfeatUsagiDenki.png"
+              alt="LuminousEntitiesLostHeart.NormalMfeatUsagiDenki"
+            /><strong class="chart-tag">面海</strong
+            ><span class="difficulty">IN 14.8</span
+            ><span class="chart-value">13.93<small>权重 21 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/AnotherMe.DAAN.png"
+              alt="AnotherMe.DAAN"
+            /><strong class="chart-tag">变速/闪现</strong
+            ><span class="difficulty">IN 15.2</span
+            ><span class="chart-value">16.80<small>权重 20 首</small></span>
+          </div>
+        </div>
+        <div class="tag-row" style="top: 137.1959px; left: 63.8412px">
+          <span class="tag clip-box valid" style="width: 138px"
+            >差速 <b>13.23</b><small> / 13 首</small></span
+          ><span class="tag clip-box valid" style="width: 164px"
+            >复杂节奏 <b>16.21</b><small> / 9 首</small></span
+          >
+        </div>
+        <div class="tag-row" style="top: 177.1959px; left: 51.8412px">
+          <span class="tag clip-box valid" style="width: 177px"
+            >判定线干扰 <b>16.48</b><small> / 5 首</small></span
+          ><span class="tag clip-box valid" style="width: 151px"
+            >慢流速 <b>14.06</b><small> / 4 首</small></span
+          >
+        </div>
+        <div class="tag-row" style="top: 217.1959px; left: 39.8412px">
+          <span class="tag clip-box valid" style="width: 177px"
+            >非线性下落 <b>15.07</b><small> / 4 首</small></span
+          ><span class="tag clip-box valid" style="width: 138px"
+            >脑裂 <b>12.64</b><small> / 3 首</small></span
+          ><span class="tag clip-box invalid" style="width: 52px">扫线</span>
+        </div>
+        <div class="tag-row" style="top: 257.1959px; left: 27.8412px">
+          <span class="tag clip-box invalid" style="width: 78px">多面下落</span>
+        </div>
+      </section>
+      <section
+        class="dimension dimension-stamina clip-box"
+        aria-label="硬抗词条分析"
+        style="--height: 320px; --accent: #ffa478"
+      >
+        <svg class="panel-edge" viewBox="0 0 560 320" aria-hidden="true">
+          <path d="M95.7 1 L0.3 319" />
+        </svg>
+        <div class="panel-heading" style="left: 110.1px">
+          <span>02 / 硬抗</span><small>词条表现 · 贡献前三</small>
+        </div>
+        <div class="charts" style="left: 76.4412px">
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/TheWholeRest.KIVΛ.png"
+              alt="TheWholeRest.KIVΛ"
+            /><strong class="chart-tag">宽排键</strong
+            ><span class="difficulty">AT 16.2</span
+            ><span class="chart-value">12.10<small>权重 21 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/明鏡烈火.MUEvsRekuMochizuki.png"
+              alt="明鏡烈火.MUEvsRekuMochizuki"
+            /><strong class="chart-tag">长纵连</strong
+            ><span class="difficulty">AT 16.2</span
+            ><span class="chart-value">16.40<small>权重 17 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/Dlyrotz.Likey.png"
+              alt="Dlyrotz.Likey"
+            /><strong class="chart-tag">双押海</strong
+            ><span class="difficulty">IN 15.6</span
+            ><span class="chart-value">16.55<small>权重 17 首</small></span>
+          </div>
+        </div>
+        <div class="tag-row" style="top: 137.1959px; left: 63.8412px">
+          <span class="tag clip-box valid" style="width: 164px"
+            >连点爆发 <b>14.28</b><small> / 16 首</small></span
+          ><span class="tag clip-box valid" style="width: 151px"
+            >快交互 <b>13.59</b><small> / 15 首</small></span
+          >
+        </div>
+        <div class="tag-row" style="top: 177.1959px; left: 51.8412px">
+          <span class="tag clip-box valid" style="width: 190px"
+            >长连点/交互 <b>14.51</b><small> / 6 首</small></span
+          >
+        </div>
+      </section>
+      <section
+        class="dimension dimension-pattern clip-box"
+        aria-label="拆谱词条分析"
+        style="--height: 320px; --accent: #c2a5ff"
+      >
+        <svg class="panel-edge" viewBox="0 0 560 320" aria-hidden="true">
+          <path d="M96 1 L559 1" />
+        </svg>
+        <div class="panel-heading" style="left: 110.1px">
+          <span>03 / 拆谱</span><small>词条表现 · 贡献前三</small>
+        </div>
+        <div class="charts" style="left: 76.4412px">
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/Alb.Avans.png"
+              alt="Alb.Avans"
+            /><strong class="chart-tag">锁手</strong
+            ><span class="difficulty">IN 15.6</span
+            ><span class="chart-value">16.49<small>权重 24 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/Cristalisia.onoken.png"
+              alt="Cristalisia.onoken"
+            /><strong class="chart-tag">面海</strong
+            ><span class="difficulty">AT 16.2</span
+            ><span class="chart-value">15.09<small>权重 23 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/大和撫子WildDances.adapatorvsDRIVE.png"
+              alt="大和撫子WildDances.adapatorvsDRIVE"
+            /><strong class="chart-tag">全换</strong
+            ><span class="difficulty">IN 14.8</span
+            ><span class="chart-value">15.97<small>权重 17 首</small></span>
+          </div>
+        </div>
+        <div class="tag-row" style="top: 137.1959px; left: 63.8412px">
+          <span class="tag clip-box valid" style="width: 164px"
+            >频繁切轨 <b>16.59</b><small> / 17 首</small></span
+          ><span class="tag clip-box valid" style="width: 138px"
+            >锚键 <b>13.44</b><small> / 13 首</small></span
+          >
+        </div>
+        <div class="tag-row" style="top: 177.1959px; left: 51.8412px">
+          <span class="tag clip-box valid" style="width: 138px"
+            >刹车 <b>16.41</b><small> / 10 首</small></span
+          ><span class="tag clip-box valid" style="width: 138px"
+            >反手 <b>15.19</b><small> / 7 首</small></span
+          >
+        </div>
+        <div class="tag-row" style="top: 217.1959px; left: 39.8412px">
+          <span class="tag clip-box valid" style="width: 164px"
+            >长条藏键 <b>13.49</b><small> / 5 首</small></span
+          >
+        </div>
+      </section>
+      <section
+        class="dimension dimension-precision clip-box"
+        aria-label="定位词条分析"
+        style="--height: 320px; --accent: #95cfae"
+      >
+        <svg class="panel-edge" viewBox="0 0 560 320" aria-hidden="true">
+          <path d="M96 1 L559 1" />
+        </svg>
+        <div class="panel-heading" style="left: 110.1px">
+          <span>04 / 定位</span><small>词条表现 · 贡献前三</small>
+        </div>
+        <div class="charts" style="left: 76.4412px">
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/70MinutesFighters.かたぎり.png"
+              alt="70MinutesFighters.かたぎり"
+            /><strong class="chart-tag">宽排键</strong
+            ><span class="difficulty">IN 15.6</span
+            ><span class="chart-value">15.48<small>权重 21 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/RubbishSorting.CtymaxvsNceS.png"
+              alt="RubbishSorting.CtymaxvsNceS"
+            /><strong class="chart-tag">非线性下落</strong
+            ><span class="difficulty">IN 14.8</span
+            ><span class="chart-value">12.93<small>权重 19 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/Pontdessouvenirs.VeetaCrushvsitsufeatitsu.png"
+              alt="Pontdessouvenirs.VeetaCrushvsitsufeatitsu"
+            /><strong class="chart-tag">蓝夹黄</strong
+            ><span class="difficulty">IN 15.6</span
+            ><span class="chart-value">15.95<small>权重 16 首</small></span>
+          </div>
+        </div>
+        <div class="tag-row" style="top: 137.1959px; left: 63.8412px">
+          <span class="tag clip-box valid" style="width: 151px"
+            >蓝夹红 <b>13.79</b><small> / 15 首</small></span
+          ><span class="tag clip-box valid" style="width: 151px"
+            >浮现式 <b>12.67</b><small> / 13 首</small></span
+          >
+        </div>
+        <div class="tag-row" style="top: 177.1959px; left: 51.8412px">
+          <span class="tag clip-box valid" style="width: 164px"
+            >频繁切轨 <b>15.60</b><small> / 11 首</small></span
+          ><span class="tag clip-box valid" style="width: 138px"
+            >脑裂 <b>14.79</b><small> / 9 首</small></span
+          ><span class="tag clip-box invalid" style="width: 52px">倒打</span>
+        </div>
+      </section>
+      <section
+        class="dimension dimension-multifinger clip-box"
+        aria-label="多指词条分析"
+        style="--height: 320px; --accent: #f1ce81"
+      >
+        <svg class="panel-edge" viewBox="0 0 560 320" aria-hidden="true">
+          <path d="M559.7 1 L464.3 319" />
+        </svg>
+        <div class="panel-heading" style="left: 110.1px">
+          <span>05 / 多指</span><small>词条表现 · 贡献前三</small>
+        </div>
+        <div class="charts" style="left: 76.4412px">
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/贝多芬祝福BeethovenBlessing.Nauts.png"
+              alt="贝多芬祝福BeethovenBlessing.Nauts"
+            /><strong class="chart-tag">对拍</strong
+            ><span class="difficulty">IN 15.6</span
+            ><span class="chart-value">12.80<small>权重 24 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/DeadSoul.SoundSouler.png"
+              alt="DeadSoul.SoundSouler"
+            /><strong class="chart-tag">6k</strong
+            ><span class="difficulty">IN 15.2</span
+            ><span class="chart-value">12.83<small>权重 23 首</small></span>
+          </div>
+          <div class="chart clip-box">
+            <img
+              src="../../original_ill/illBlur/CROSSSOUL.HyuNfeatSyepias.png"
+              alt="CROSSSOUL.HyuNfeatSyepias"
+            /><strong class="chart-tag">拍砖</strong
+            ><span class="difficulty">IN 15.6</span
+            ><span class="chart-value">12.10<small>权重 22 首</small></span>
+          </div>
+        </div>
+        <div class="tag-row" style="top: 137.1959px; left: 63.8412px">
+          <span class="tag clip-box valid" style="width: 138px"
+            >楼梯 <b>13.71</b><small> / 16 首</small></span
+          ><span class="tag clip-box valid" style="width: 125px"
+            >切 <b>14.30</b><small> / 15 首</small></span
+          ><span class="tag clip-box valid" style="width: 125px"
+            >乱 <b>14.94</b><small> / 11 首</small></span
+          >
+        </div>
+        <div class="tag-row" style="top: 177.1959px; left: 51.8412px">
+          <span class="tag clip-box valid" style="width: 125px"
+            >叠 <b>15.64</b><small> / 10 首</small></span
+          ><span class="tag clip-box valid" style="width: 138px"
+            >3k <b>12.85</b><small> / 8 首</small></span
+          ><span class="tag clip-box valid" style="width: 138px"
+            >对切 <b>14.55</b><small> / 7 首</small></span
+          >
+        </div>
+        <div class="tag-row" style="top: 217.1959px; left: 39.8412px">
+          <span class="tag clip-box valid" style="width: 138px"
+            >5k <b>15.55</b><small> / 4 首</small></span
+          ><span class="tag clip-box invalid" style="width: 78px">频繁切轨</span
+          ><span class="tag clip-box invalid" style="width: 52px">4k</span>
+        </div>
+      </section>
+      <div class="radar-note">词条实力 / 0—18<br />权重 = 参与计算的谱面数</div>
+    </main>
+<footer class="footer">
+      <span>PHIGROS · B30 STRENGTH REPORT</span
+      ><span>词条来源：API tagsTree.json · 无效词条仅展示名称</span>
+    </footer>
+  </body>
+</html>

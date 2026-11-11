@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920" />
+    <title>B30 谱面实力词条分析 </title>
+    <link rel="stylesheet" href="{{_res_path}}html/b30Analysis/b30Analysis.css" />
+  </head>
+  <body class="analysis-report" {{@sys.scale}}>
+    <div class="masthead">
+      <span>PHIGROS / B30 ANALYSIS</span
+      ><span class="edition">谱面实力档案 / 01</span>
+    </div>
+    <header class="title">
+      <div class="playerInfo">
+        <div class="blackBlock clip-box"></div>
+        <div class="avatar clip-box">
+          <img src="{{_res_path}}html/avatar/{{gameuser.avatar}}.png" alt="用户头像" />
+        </div>
+        <div class="playerId"><p>{{gameuser.PlayerId}}</p></div>
+        <div class="clgBox">
+          <div class="Challenge">
+            <img src="{{_res_path}}html/otherimg/{{gameuser.ChallengeMode}}.png" alt="Challenge" />
+            <p>{{gameuser.ChallengeModeRank}}</p>
+          </div>
+        </div>
+        <div class="rks clip-box"><p>{{gameuser.rks.toFixed(4)}}</p></div>
+        <div class="date"><p>更新时间 {{Date}}</p></div>
+      </div>
+      <div class="report-title">
+        <h1>谱面实力 · 词条分析</h1>
+        <p>CHART STRENGTH PROFILE</p>
+      </div>
+    </header>
+    <div class="section-bar">
+      <h2>01 / 五维表现与词条分析</h2>
+      <span>{{if analysis.insufficient}}投票或有效样本不足，结果仅供参考{{else}}全部成绩 · 实际词条分析{{/if}}</span>
+    </div>
+    <main class="analysis" style="height: {{analysis.analysisHeight}}px; --upper-growth: {{analysis.upperGrowth}}px; --middle-growth: {{analysis.middleGrowth}}px">
+      <aside
+        class="calculation-method"
+        aria-labelledby="calculation-method-title"
+      >
+        <h3 id="calculation-method-title">五维实力如何计算</h3>
+        <p>
+          <strong>取样与投票</strong>使用全部已记录成绩，不限 B30。谱面至少有 3
+          人投票，且某词条至少获 3 人支持，才计入该词条；主选票按 3 倍、次选票按
+          1 倍折算。
+        </p>
+        <p>
+          <strong>单谱贡献</strong>词条系数 = 该词条折算票数 ÷
+          该谱面最高词条折算票数。单谱贡献 = 单曲 RKS × 词条系数；估计定数 =
+          谱面定数 × 词条系数。
+        </p>
+        <p>
+          <strong>词条数值与有效性</strong>取该词条全部单谱贡献的最高值。至少有
+          3 张谱面参与，且最高估计定数 ≥ 玩家 RKS −
+          0.5，才参与五维计算；未达条件的词条仅展示名称。
+        </p>
+        <p>
+          <strong>维度加权</strong>基础权重为参与谱面数；若该词条在其中不足 3
+          张谱面上获得最高折算票数（含并列），权重减半。每一维 = Σ（有效词条数值
+          × 权重）÷ Σ 权重；同一词条可归属多个维度。
+        </p>
+        <p class="calculation-method-note">
+          维度标签体系参考自 @空游小站（kyou.net.cn），投票数据采用插件自收集，谱面投票可前往 phib19.top 或使用 /settag 指令提交。
+        </p>
+      </aside>
+
+      <svg
+        class="radar"
+        viewBox="-210 0 1920 1270"
+        role="img"
+        aria-label="五维实力雷达图，刻度零至{{analysis.axisMax}}"
+      >
+        <polygon
+          points="750.0,604.4 783.9,629.0 770.9,668.8 729.1,668.8 716.1,629.0"
+          class="grid"
+        />
+        <polygon
+          points="750.0,568.8 817.7,618.0 791.9,697.6 708.1,697.6 682.3,618.0"
+          class="grid"
+        />
+        <polygon
+          points="750.0,533.2 851.6,607.0 812.8,726.4 687.2,726.4 648.4,607.0"
+          class="grid"
+        />
+        <polygon
+          points="750.0,497.6 885.4,596.0 833.7,755.2 666.3,755.2 614.6,596.0"
+          class="grid"
+        />
+        <polygon
+          points="750.0,462.0 919.3,585.0 854.6,784.0 645.4,784.0 580.7,585.0"
+          class="grid"
+        />
+        <path d="M750 640 L750.0 462.0" class="axis" />
+        <path d="M750 640 L919.2880599005373 584.9949750012594" class="axis" />
+        <path d="M750 640 L854.6257749080603 784.0050249987406" class="axis" />
+        <path d="M750 640 L645.3742250919398 784.0050249987406" class="axis" />
+        <path d="M750 640 L580.7119400994627 584.9949750012594" class="axis" />
+        {{if analysis.complete}}<polygon points="{{analysis.points}}" class="strength" />{{/if}}
+      </svg>
+      {{each analysis.panels panel}}
+      <div class="radar-caption radar-caption-{{panel.key}}">
+        <div class="dimension-label">{{panel.name}}</div>
+        <div class="dimension-number">{{panel.value}}</div>
+      </div>
+      <section class="dimension dimension-{{panel.key}} clip-box" aria-label="{{panel.name}}词条分析"
+        style="--height: {{panel.height}}px; --accent: {{panel.color}}; --chart-height: {{panel.chartHeight}}px; --chart-width: {{panel.chartWidth}}px">
+        <svg class="panel-edge" viewBox="0 0 560 {{panel.height}}" aria-hidden="true"><path d="{{panel.edge}}" /></svg>
+        <div class="panel-heading" style="left: {{panel.headingLeft}}px"><span>{{panel.number}} / {{panel.name}}</span><small>词条表现 · 权重前三</small></div>
+        <div class="charts" style="left: {{panel.chartLeft}}px">
+          {{each panel.cards card}}
+          <div class="chart clip-box">
+            <img src="{{card.illustration}}" alt="{{card.name}}代表曲绘" />
+            <strong class="chart-tag">{{card.name}}</strong>
+            <span class="difficulty">{{card.rank}} {{card.difficulty}}</span>
+            <span class="chart-value">{{card.value}}<small>权重 {{card.sampleCount}} 首</small></span>
+          </div>
+          {{/each}}
+        </div>
+        {{if !panel.cards.length}}<p class="analysis-empty" style="left: {{panel.chartLeft}}px">暂无足够的有效词条</p>{{/if}}
+        {{each panel.rows row}}
+        <div class="tag-row" style="top: {{row.top}}px; left: {{row.left}}px">
+          {{each row.tags tag}}
+          <span class="tag clip-box {{tag.valid ? 'valid' : 'invalid'}}" style="width: {{tag.width}}px">{{tag.name}}{{if tag.valid}} <b>{{tag.value}}</b><small> / {{tag.sampleCount}} 首</small>{{/if}}</span>
+          {{/each}}
+        </div>
+        {{/each}}
+      </section>
+      {{/each}}
+      <div class="radar-note">词条实力 / 0—{{analysis.axisMax}}<br />{{if !analysis.complete}}部分维度样本不足{{else}}权重 = 参与计算的谱面数{{/if}}</div>
+    </main>
+<footer class="footer">
+      <span>PHIGROS · B30 STRENGTH REPORT</span
+      ><span>无效词条仅展示名称</span>
+    </footer>
+  </body>
+</html>
