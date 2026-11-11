@@ -50,6 +50,28 @@ const dimensions = [
     { name: '定位', key: 'precision', color: '#95cfae' },
     { name: '多指', key: 'multifinger', color: '#f1ce81' },
 ]
+/** @param {unknown} value */
+function radarPoints(value) {
+    const points = text(value).trim().split(/\s+/)
+    if (points.length !== 5) throw new Error('分析 API 雷达图必须包含五个顶点')
+    for (const point of points) {
+        if (!/^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$/.test(point) || point.split(',').some(part => !Number.isFinite(Number(part)))) throw new Error('分析 API 雷达图坐标无效')
+    }
+    return points.join(' ')
+}
+/** @param {unknown} value */
+function parseRadar(value) {
+    const radar = object(value)
+    const categories = array(radar.categories).map(value => text(object(value).name))
+    const grids = array(radar.grids).map(radarPoints)
+    const axes = array(radar.axes).map(value => {
+        const axis = object(value)
+        return { x: number(axis.x), y: number(axis.y) }
+    })
+    if (!categories.length && !grids.length && !axes.length && radar.points === '') return { grids, axes, points: '' }
+    if (categories.length !== 5 || categories.some((name, i) => name !== dimensions[i].name) || axes.length !== 5 || !grids.length) throw new Error('分析 API 雷达图维度与页面不一致')
+    return { grids, axes, points: radarPoints(radar.points) }
+}
 /** @param {string} value */
 function textWidth(value) {
     return [...value].reduce((width, char) => width + (/^[\x00-\x7f]$/.test(char) ? 8 : 14), 0)
@@ -130,14 +152,10 @@ export function buildB30AnalysisView(response, playerRks, illustration) {
                 return { tags, top, left: (height - top - 30) * .3 + 18 }
             }) }
     })
-    const axisMax = Math.max(18, Math.ceil(Math.max(...panels.map(panel => panel.rks ?? 0))))
-    const points = panels.map((panel, i) => {
-        const radius = (panel.rks ?? 0) / axisMax * 178
-        return `${750 + Math.sin(i * 2 * Math.PI / 5) * radius},${640 - Math.cos(i * 2 * Math.PI / 5) * radius}`
-    }).join(' ')
+    const radar = parseRadar(data.radar)
     const upperGrowth = Math.max(0, panels[0].height - 340)
     const middleGrowth = Math.max(0, panels[1].height - 455, panels[4].height - 455)
     const bottomGrowth = Math.max(0, panels[2].height - 320, panels[3].height - 320)
-    return { panels, points, axisMax, insufficient, complete: panels.every(panel => panel.rks !== null),
+    return { panels, radar, insufficient, complete: panels.every(panel => panel.rks !== null),
         upperGrowth, middleGrowth, analysisHeight: 1270 + upperGrowth + middleGrowth + bottomGrowth }
 }

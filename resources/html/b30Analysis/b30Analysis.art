@@ -71,34 +71,17 @@
         class="radar"
         viewBox="-210 0 1920 1270"
         role="img"
-        aria-label="五维实力雷达图，刻度零至{{analysis.axisMax}}"
+        aria-label="五维实力雷达图"
       >
-        <polygon
-          points="750.0,604.4 783.9,629.0 770.9,668.8 729.1,668.8 716.1,629.0"
-          class="grid"
-        />
-        <polygon
-          points="750.0,568.8 817.7,618.0 791.9,697.6 708.1,697.6 682.3,618.0"
-          class="grid"
-        />
-        <polygon
-          points="750.0,533.2 851.6,607.0 812.8,726.4 687.2,726.4 648.4,607.0"
-          class="grid"
-        />
-        <polygon
-          points="750.0,497.6 885.4,596.0 833.7,755.2 666.3,755.2 614.6,596.0"
-          class="grid"
-        />
-        <polygon
-          points="750.0,462.0 919.3,585.0 854.6,784.0 645.4,784.0 580.7,585.0"
-          class="grid"
-        />
-        <path d="M750 640 L750.0 462.0" class="axis" />
-        <path d="M750 640 L919.2880599005373 584.9949750012594" class="axis" />
-        <path d="M750 640 L854.6257749080603 784.0050249987406" class="axis" />
-        <path d="M750 640 L645.3742250919398 784.0050249987406" class="axis" />
-        <path d="M750 640 L580.7119400994627 584.9949750012594" class="axis" />
-        {{if analysis.complete}}<polygon points="{{analysis.points}}" class="strength" />{{/if}}
+        <svg x="572" y="462" width="356" height="356" viewBox="45 37 110 110">
+          {{each analysis.radar.grids grid}}
+          <polygon points="{{grid}}" class="grid" vector-effect="non-scaling-stroke" />
+          {{/each}}
+          {{each analysis.radar.axes axis}}
+          <path d="M100 92 L{{axis.x}} {{axis.y}}" class="axis" vector-effect="non-scaling-stroke" />
+          {{/each}}
+          {{if analysis.complete && analysis.radar.points}}<polygon points="{{analysis.radar.points}}" class="strength" vector-effect="non-scaling-stroke" />{{/if}}
+        </svg>
       </svg>
       {{each analysis.panels panel}}
       <div class="radar-caption radar-caption-{{panel.key}}">
@@ -129,7 +112,7 @@
         {{/each}}
       </section>
       {{/each}}
-      <div class="radar-note">词条实力 / 0—{{analysis.axisMax}}<br />{{if !analysis.complete}}部分维度样本不足{{else}}权重 = 参与计算的谱面数{{/if}}</div>
+      <div class="radar-note">词条实力 / API 动态刻度<br />{{if !analysis.complete}}部分维度样本不足{{else}}权重 = 参与计算的谱面数{{/if}}</div>
     </main>
 <footer class="footer">
       <span>PHIGROS · B30 STRENGTH REPORT</span

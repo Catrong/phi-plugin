@@ -13,7 +13,11 @@ function tag(name, samples, weight, ceiling = 16) {
 function response(tags) {
     return { valueUnit: 'rks', minimumTagSamples: 3, insufficient: false,
         categories: [{ name: '读谱', rks: 15, hasVotes: tags.some(t => t.sampleCount >= 3 && t.ceiling >= 14.5) }],
-        tagGroups: [{ name: '读谱', tags }] }
+        tagGroups: [{ name: '读谱', tags }],
+        radar: { grids: ['100,78.3 113.1,87.8 108.1,103.1 91.9,103.1 86.9,87.8'],
+            axes: [{ x: 100, y: 37 }, { x: 152.3, y: 75 }, { x: 132.3, y: 136.5 }, { x: 67.7, y: 136.5 }, { x: 47.7, y: 75 }],
+            points: '100,66 120,85 118,115 80,118 73,83',
+            categories: ['读谱', '硬抗', '拆谱', '定位', '多指'].map(name => ({ name })) } }
 }
 const image = () => 'test.png'
 
@@ -70,4 +74,20 @@ test('模板编译成功，转义名称、不渲染无效数值和谱面推荐',
     assert.ok(!html.includes('随机'))
     assert.ok(!html.includes('class="strength"'))
     assert.match(html, /invalid[^>]*>&#60;script&#62;bad&#60;\/script&#62;<\/span>/)
+})
+
+test('沿用 API 网格和坐标，不按本地上限重新计算', () => {
+    const data = response([tag('有效', 3, 3)])
+    const view = buildB30AnalysisView(data, 15, image)
+    assert.deepEqual(view.radar, { grids: data.radar.grids, axes: data.radar.axes, points: data.radar.points })
+    data.radar.points = '100,70 110,80 120,100 90,110 80,85'
+    assert.equal(buildB30AnalysisView(data, 15, image).radar.points, data.radar.points)
+    data.radar.grids[0] = '100,NaN'
+    assert.throws(() => buildB30AnalysisView(data, 15, image), /顶点|坐标/)
+})
+
+test('空雷达图不伪造刻度', () => {
+    const data = response([])
+    data.radar = { grids: [], axes: [], points: '', categories: [] }
+    assert.deepEqual(buildB30AnalysisView(data, 15, image).radar, { grids: [], axes: [], points: '' })
 })
