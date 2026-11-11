@@ -112,7 +112,7 @@
         {{/each}}
       </section>
       {{/each}}
-      <div class="radar-note">词条实力 / API 动态刻度<br />{{if !analysis.complete}}部分维度样本不足{{else}}权重 = 参与计算的谱面数{{/if}}</div>
+      <div class="radar-note">{{if !analysis.complete}}部分维度样本不足{{else}}权重 = 参与计算的谱面数{{/if}}</div>
     </main>
 <footer class="footer">
       <span>PHIGROS · B30 STRENGTH REPORT</span
