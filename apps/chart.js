@@ -318,7 +318,9 @@ export function makeCategoryWords(tagTree) {
     name: category.name,
     key: tagCategoryKeys[category.name] || 'other',
     value: getCategoryVoteCount(category),
-    children: (category.children || []).map(child => ({ name: child.name, value: child.voteCount })),
+    children: [...(category.children || [])]
+      .sort((left, right) => right.voteCount - left.voteCount)
+      .map(child => ({ name: child.name, value: child.voteCount })),
   }))
   const words = tagCategories.map(({ name, value }) => ({ name, value }))
   return { words, wordsMaxValue: Math.max(1, ...words.map(word => word.value)), tagCategories }

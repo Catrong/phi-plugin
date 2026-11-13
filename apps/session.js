@@ -239,12 +239,12 @@ export class phisstk extends phiPluginBase {
         }
         let updateData;
         let history;
+        if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
+            sendMessage(e, sessionMessages.update.updating, { quote: true, recallMsg: 5 })
+        }
         if (await canUseApi(e)) {
             try {
 
-                if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
-                    sendMessage(e, sessionMessages.update.updating, { quote: true, recallMsg: 5 })
-                }
 
                 updateData = await credentials.getUpdatedSaveFromApi()
                 history = await credentials.getCloudHistory(['data', 'rks', 'scoreHistory'])
@@ -265,10 +265,6 @@ export class phisstk extends phiPluginBase {
             if (!session) {
                 sendMessage(e, sessionMessages.update.noSave(), { quote: true })
                 return true
-            }
-
-            if (!Config.getUserCfg('config', 'isGuild') || !e.isGroup) {
-                sendMessage(e, sessionMessages.update.updating, { quote: true, recallMsg: 5 })
             }
 
             try {
