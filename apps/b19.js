@@ -10,6 +10,7 @@ import getNotes from '../model/user/getNotes.js';
 import getPic from '../model/render/getPic.js';
 import getBanGroup from '../model/user/getBanGroup.js';
 import makeRequest from '../model/api/makeRequest.js';
+import { buildB30AnalysisView } from '../model/game/b30AnalysisView.js';
 import { buildGameRecordPayload } from '../model/api/gameRecordPayload.js';
 import phiPluginBase from '../components/baseClass.js';
 import logger from '../components/Logger.js';
@@ -40,6 +41,10 @@ export class phib19 extends phiPluginBase {
             event: 'message',
             priority: 1000,
             rule: [
+                {
+                    reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})\\s*analysis\\s*$`,
+                    fnc: 'analysis'
+                },
                 {
                     reg: `^[#/](${Config.getUserCfg('config', 'cmdhead')})(\\s*)((b|B)\\s*[0-9]+|rks|pgr|RKS|PGR).*$`,
                     fnc: 'b19'
@@ -82,6 +87,48 @@ export class phib19 extends phiPluginBase {
                 }
             ]
         })
+    }
+
+    /** @param {botEvent} e */
+    async analysis(e) {
+        if (await getBanGroup.get(e, 'b19')) {
+            await sendMessage(e, b19Messages.banned, { at: true })
+            return false
+        }
+        if (!await canUseApi(e, 'scoreStatistics')) {
+            await sendMessage(e, { text: '谱面分析需要启用成绩统计 API。' }, { at: true })
+            return true
+        }
+        const { save } = await send.getsave_result(e) || {}
+        if (!save) return true
+        try {
+            const { com_rks } = await save.getB19(e, 33, { avgType: 'none', color: 'blue' })
+            const response = await makeRequest.getB30TagAnalysis(
+                { gameRecord: buildGameRecordPayload(save.gameRecord) }, { event: e },
+            )
+            if (!response) throw new Error('分析 API 未返回数据')
+            const analysis = buildB30AnalysisView(response, com_rks, (songId, rank) => {
+                const id = getInfo.idList.find(id => id === songId)
+                if (!id || !getInfo.info(id)?.chart[rank]) throw new Error(`本地缺少谱面资源：${songId} ${rank}`)
+                return getInfo.getill(id, 'blur', rank)
+            })
+            const image = await picmodle.common(e, 'b30Analysis', {
+                analysis,
+                Date: fCompute.formatDate(save.saveInfo.summary.updatedAt),
+                gameuser: {
+                    avatar: getInfo.idgetavatar(save.gameuser.avatar),
+                    PlayerId: save.saveInfo.PlayerId,
+                    rks: save.saveInfo.summary.rankingScore,
+                    ChallengeMode: Math.floor(save.saveInfo.summary.challengeModeRank / 100),
+                    ChallengeModeRank: save.saveInfo.summary.challengeModeRank % 100,
+                },
+            })
+            await sendMessage(e, { image }, { at: true })
+        } catch (error) {
+            logger.error('[phi-plugin][analysis]', error)
+            await sendMessage(e, { text: `谱面分析失败：${error instanceof Error ? error.message : String(error)}` }, { at: true })
+        }
+        return true
     }
 
     /**

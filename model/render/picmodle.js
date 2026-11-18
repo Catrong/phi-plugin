@@ -542,7 +542,7 @@ export class PicModel {
     /** 
      * @typedef {'atlas'|'task'|'b19'|'arcgrosB19'|'update'|'tasks'|'sign'|'lvsco'|'list'|'suggest'|
      * 'ill'|'chartInfo'|'guess'|'frib19'|'rand'|'help'|'chap'|'rankingList'|'clg'|'chartImg'|'jrrp'|'newSong'|'market'|
-     * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'|'grks'|'tableImage'
+     * 'setting'|'analyzeSaveHistory'|'historyB30'|'table'|'newnotice'|'difficultyHistory'|'grks'|'tableImage'|'b30Analysis'
      * } picKind
      */
 
