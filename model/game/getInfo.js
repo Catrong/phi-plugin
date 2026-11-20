@@ -330,7 +330,8 @@ class getInfo {
         this.allLevel = allLevel
         this.Level = Level
         for (const unit of getInfo.infoReloadOrder) {
-            if (!wanted.has(unit)) continue            switch (unit) {
+            if (!wanted.has(unit)) continue
+            switch (unit) {
                 case 'versionHistory': await this.loadVersionHistory(); break
                 case 'songs': await this.loadSongs(); break
                 case 'aliases': await this.loadAliases(); break
@@ -800,7 +801,7 @@ class getInfo {
     /** 重载头像可选列表 */
     async loadAvatar() {
         const raw = await readFile.FileReader(path.join(infoPath, 'avatar.txt'))
-        this.avatarid = String(raw ?? '').replace(/\r/g, '').split('\n')
+        this.avatarid = String(raw ?? '').replace(/\r/g, '').split('\n').filter(line => line.trim() !== '')
     }
 
     /** 重载 jrrp 词库 */
