@@ -141,6 +141,24 @@ class getInfo {
     chapNick = {}
 
     /**
+     * @type {{[code:string]: string}}
+     * @description 章节代码到章节名的映射，来自 chaplist.yaml 第一个别名 chap[code] = name
+     */
+    chapName = {}
+
+    /**
+     * @type {{[name:string]: string}}
+     * @description 章节展示名到章节代码，章节曲绘按 APK 章节代码命名 chapCode[name] = code
+     */
+    chapCode = {}
+
+    /**
+     * @type {Record<string, string>}
+     * @description 曲目id（不带.0）到章节代码，来自 chapters.json chapterOf[id] = code
+     */
+    chapterOf = {}
+
+    /**
      * 按dif分的info
      * @type {Record<string, Chart[]>}
      */
@@ -216,6 +234,7 @@ class getInfo {
     static infoReloadMap = {
         'info.csv': ['songs'],
         'infolist.json': ['songs'],
+        'chapters.json': ['chapters'],
         'notesInfo.json': ['songs'],
         'oldNotesInfo.json': ['songs'],
         'spinfo.json': ['songs'],
@@ -770,25 +789,61 @@ class getInfo {
 
 
         this.rebuildAliasIndex()
+        this.applyChapterNames()
     }
 
-    /** 重载章节别名 */
+    /** 重载章节信息：归属以 chapters.json 为准，名称取 chaplist.yaml 第一个别名 */
     async loadChapters() {
         this.chapNick = {};
+        this.chapName = {};
+        this.chapCode = {};
+        this.chapterOf = {};
         /**
-         * @type {{[key:string]: string[]}}
-         * @description 章节列表，以章节名为key，内容为别名
+         * @type {{[code:string]: string[]}}
+         * @description 章节列表，以章节代码为key，内容为别名，第一个是正式名称
          */
-        this.chapList = await readFile.FileReader(path.join(infoPath, 'chaplist.yaml'))
+        this.chapList = await readFile.FileReader(path.join(infoPath, 'chaplist.yaml')) || {}
 
-        for (let i in this.chapList) {
-            for (let item of this.chapList[i]) {
+        for (const code in this.chapList) {
+            const aliases = Array.isArray(this.chapList[code]) ? this.chapList[code] : []
+            this.chapName[code] = aliases[0] || code
+            /** 章节曲绘按 APK 章节代码命名，展示名反查代码 */
+            this.chapCode[this.chapName[code]] = code
+            for (const item of aliases) {
                 if (this.chapNick[item]) {
-                    this.chapNick[item].push(i)
+                    this.chapNick[item].push(this.chapName[code])
                 } else {
-                    this.chapNick[item] = [i]
+                    this.chapNick[item] = [this.chapName[code]]
                 }
             }
+        }
+
+        const chapters = await readFile.FileReader(path.join(infoPath, 'chapters.json'))
+        if (Array.isArray(chapters)) {
+            for (const chapter of chapters) {
+                /** 同一曲出现在多个章节时取最后命中 */
+                for (const id of chapter.songs || []) this.chapterOf[id] = chapter.code
+            }
+        } else {
+            logger.warn('[phi-plugin]缺少 chapters.json，章节归属沿用 infolist.json')
+        }
+
+        const unnamed = [...new Set(Object.values(this.chapterOf))].filter(code => !this.chapName[code])
+        if (unnamed.length) {
+            logger.warn('[phi-plugin]chaplist.yaml 缺少章节中文名：' + unnamed.join(', '))
+        }
+
+        this.applyChapterNames()
+    }
+
+    /** 把章节名写回曲目信息，chapters.json 覆盖 infolist.json 的章节 */
+    applyChapterNames() {
+        for (const id in this.ori_info) {
+            const code = this.chapterOf[id.replace(/\.0$/, '')]
+            if (!code) continue
+            const info = this.ori_info[/** @type {idString} */(id)]
+            if (!info) continue
+            info.chapter = this.chapName[code] || code
         }
     }
 
@@ -1217,13 +1272,15 @@ class getInfo {
 
     /**
      * 返回章节封面 url
-     * @param {string} name 标准章节名
+     * @param {string} name 标准章节名，也接受章节代码
      */
     getChapIll(name) {
-        if (fs.existsSync(path.join(originalIllPath, "chap", `${name}.png`))) {
-            return path.join(originalIllPath, "chap", `${name}.png`)
+        // 曲绘文件用 APK 章节代码命名（MainStory9.png、vividstasis.png）
+        const file = `${this.chapCode?.[name] || name}.png`
+        if (fs.existsSync(path.join(originalIllPath, "chap", file))) {
+            return path.join(originalIllPath, "chap", file)
         } else {
-            return this.getOnlinePhiIllUrl('chap', `${name}.png`)
+            return this.getOnlinePhiIllUrl('chap', file)
         }
     }
 
