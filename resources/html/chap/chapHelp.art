@@ -1,0 +1,68 @@
+{{extend defaultLayout}}
+{{block 'css'}}
+    <link rel="stylesheet" href="{{_res_path}}html/chap/chapHelp.css">
+    <style>
+        /* 帮助页高度随章节数增长，不能锁死在 1080；body 交给 .stage 撑开 */
+        html, body {
+            height: auto;
+            min-height: 1080px;
+        }
+        body {
+            position: relative;
+        }
+    </style>
+{{/block}}
+{{block 'main'}}
+    <div class="background">
+        <img src="{{_res_path}}original_ill/chap/MainStory9.png" alt="{{illustration}}" />
+    </div>
+    <!--
+        布局参数：改这几个 set 就能调整整页排布，单位都是三角网格的格数。
+
+          cols     每行章节数
+          rowStep  相邻两行的 row 间隔（竖向间距 = rowStep · th）
+          colStep  相邻两章的 col 间隔（横向间距 = colStep · side）
+          topRow   首行曲绘卡所在的 row
+          leftCol  首列曲绘卡所在的 col
+
+        col 的逐行补偿必须取 rowStep / 2：row 每 +1，x 就 +side/2，
+        不抵消的话整页会一行比一行往右移。
+    -->
+    {{set cols = 3}}
+    {{set rowStep = 3}}
+    {{set colStep = 7}}
+    {{set topRow = 4}}
+    {{set leftCol = 1.5}}
+    {{set rows = Math.max(1, Math.ceil(chapters.length / cols))}}
+    <div class="stage chapHelp" style="--help-rows: {{rows}}; --help-top-row: {{topRow}}; --help-row-step: {{rowStep}}">
+        {{each chapters ch index}}
+        {{set r = Math.floor(index / cols)}}
+        {{set c = index % cols}}
+        {{set sixRow = topRow + rowStep * r}}
+        {{set sixCol = leftCol + colStep * c - rowStep / 2 * r}}
+        <!--
+            每章两个格点，相对偏移沿用 chapHelp-orz.html：
+            别名框恒在 (曲绘卡 row + 1, 曲绘卡 col + 0.5)。
+            rowBox 自带 translate(0,-100%)，会以底边贴住六边形底边、从右下角伸出去。
+            rowBox 写在前面，保证它压在曲绘卡上层。
+
+            三角网格由 chapHelp.css 的 .chapHelp::before 用 repeating-linear-gradient
+            铺出，不依赖 canvas 与页面脚本，shotium 后端同样能出网格。
+        -->
+        <div class="grid-point" style="--row: {{sixRow + 1}}; --col: {{sixCol + 0.5}}">
+            <div class="rowBox">
+                <i></i><i></i><i></i><i></i>
+                <div class="title">别名：</div>
+                <div class="content">{{ch.alias}}</div>
+            </div>
+        </div>
+        <div class="grid-point" style="--row: {{sixRow}}; --col: {{sixCol}}">
+            <div class="sixLineBox" style="--six-fill: #0b0f16">
+                <img src="{{ch.ill}}" alt="{{ch.name}}">
+                <div class="boxName">{{ch.name}}</div>
+            </div>
+            <div class="sixLine"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+        {{/each}}
+    </div>
+{{/block}}

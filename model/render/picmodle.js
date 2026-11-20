@@ -530,6 +530,17 @@ export class PicModel {
     }
 
     /**
+     * 章节查询帮助图。
+     * 模板为 `resources/html/chap/chapHelp.art`，数据契约见 `getInfo.getChapterList()`。
+     * @param {any} e
+     * @param {{ chapters: { code: string, name: string, alias: string, ill: string }[] }} data
+     * @returns
+     */
+    async chapHelp(e, data) {
+        return await this.common(e, 'chap', data, 'chapHelp')
+    }
+
+    /**
      * 
      * @param {botEvent} e 
      * @param {{stats: import('../save/analyzeSaveHistory.js').AnalyzeSaveHistoryResult} & {background: string}} data 

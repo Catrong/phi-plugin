@@ -1,0 +1,228 @@
+<head>
+  <link rel="stylesheet" href="./chapHelp.css" />
+</head>
+
+<body>
+  <div class="background">
+    <img src="../../original_ill/chap/MainStory9.png" alt="{{illustration}}" />
+  </div>
+
+  <div class="stage">
+    <canvas id="cv"></canvas>
+
+    <!-- 示例：.grid-point 是 0×0 定位点，靠 --row / --col 落在格点上，内容放在其内部 -->
+
+    <div class="grid-point" style="--row: 7; --col: 3">
+      <!-- 一行三角形的外边框 -->
+      <div class="rowBox">
+        <i></i><i></i><i></i><i></i>
+        <div class="title">别名：</div>
+        <div class="content">vs</div>
+      </div>
+    </div>
+    <div class="grid-point" style="--row: 6; --col: 2.5">
+      <!-- 实心六边形：单一闭合六边形填充，无内部边线，三族长度可单独设置 -->
+      <div class="sixLineBox">
+        <img
+          src="../../original_ill/chap/vividstasis.png"
+          alt="{{illustration}}"
+        />
+        <div class="boxName">Chapter EX-vivid/stasis 精选集</div>
+      </div>
+      <!-- 六边形线框：六条边各一根横条，三个边长默认取 --side（正六边形）
+         根变量的 alpha 当前为 00，此处显式给可见色以便观察 -->
+      <div class="sixLine"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      /* ================= 全部配置为常量 =================
+     颜色以 chapHelp.css 的 --bg / --stroke / --fill 为准（透明度随之生效）；
+     此处的颜色只在变量缺失或非法时兜底。
+     canvas 背景透明时，会透出下方插图。
+  ================================================== */
+      const CONFIG = {
+        side: 102.4, // 正三角形边长（px）
+        lineWidth: 2, // 线宽
+        stroke: "rgba(79, 195, 247, 0.90)", // 兜底线条颜色
+        fill: "rgba(23, 50, 77, 0.50)", // 兜底填充颜色
+        bg: "rgba(15, 17, 23, 0.65)", // 兜底背景颜色
+        doFill: true, // 是否填充
+      };
+
+      /* 颜色变量名 → 与 CSS 中 :root 的定义一一对应 */
+      const COLOR_VARS = { bg: "--bg", stroke: "--stroke", fill: "--fill" };
+      const rootStyle = getComputedStyle(document.documentElement);
+
+      /* 读取 CSS 颜色变量：保留原始字符串，alpha 原样交给 canvas 解析 */
+      function readColor(varName, fallback) {
+        const raw = rootStyle.getPropertyValue(varName).trim();
+        if (!raw) return fallback;
+        if (!CSS.supports("color", raw)) {
+          console.warn("[chapHelp] 颜色变量非法，已回退兜底色:", varName, raw);
+          return fallback;
+        }
+        return raw;
+      }
+
+      /* 每次重绘重新取值，改完 CSS 变量后重绘即可生效 */
+      function readTheme() {
+        return {
+          bg: readColor(COLOR_VARS.bg, CONFIG.bg),
+          fill: readColor(COLOR_VARS.fill, CONFIG.fill),
+          stroke: readColor(COLOR_VARS.stroke, CONFIG.stroke),
+        };
+      }
+
+      /* 把边长同步给 CSS，格点标记的位置会自动跟随 */
+      document.documentElement.style.setProperty("--side", CONFIG.side + "px");
+
+      const cv = document.getElementById("cv");
+      const ctx = cv.getContext("2d");
+
+      /* 与 CSS 中 --th / --ox / --oy 完全一致的几何常量 */
+      const S = CONFIG.side;
+      const TH = (S * Math.sqrt(3)) / 2; // 正三角形的高
+      const OX = -S;
+      const OY = -TH;
+
+      /* ---------------- 重绘节流 ---------------- */
+      let rafId = null;
+      function scheduleDraw() {
+        if (rafId !== null) return;
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          draw();
+        });
+      }
+
+      /* ---------------- 主绘制 ---------------- */
+      function draw() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = cv.clientWidth;
+        const h = cv.clientHeight;
+        if (!w || !h) return;
+
+        const pw = Math.round(w * dpr);
+        const ph = Math.round(h * dpr);
+        if (cv.width !== pw || cv.height !== ph) {
+          cv.width = pw;
+          cv.height = ph;
+        }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        /* 1. 清空画布：保证背景可透明 */
+        ctx.clearRect(0, 0, w, h);
+
+        const theme = readTheme();
+
+        /* 2. 半透明 / 全透明背景 */
+        if (theme.bg) {
+          ctx.fillStyle = theme.bg;
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        /* 3. 半透明填充：一条 path 一次性 fill，重叠区域不会叠加变深 */
+        if (CONFIG.doFill && theme.fill) {
+          buildTrianglePath(w, h);
+          ctx.fillStyle = theme.fill;
+          ctx.fill();
+        }
+
+        /* 4. 半透明线条：三族平行线，每条边只画一次，共享边不会叠加变深 */
+        if (theme.stroke && CONFIG.lineWidth > 0) {
+          buildLinePath(w, h);
+          ctx.strokeStyle = theme.stroke;
+          ctx.lineWidth = CONFIG.lineWidth;
+          ctx.lineJoin = "miter";
+          ctx.lineCap = "butt";
+          ctx.stroke();
+        }
+      }
+
+      /* ==================================================
+     填充路径：每个菱形拆成「一正一倒」两个三角形。
+     用单条 path 一次性 fill，透明填充不会在公共边叠加。
+     ================================================== */
+      function buildTrianglePath(w, h) {
+        const rows = Math.ceil((h - OY) / TH) + 1;
+        const iEnd = Math.ceil((w - OX) / S) + 2;
+
+        ctx.beginPath();
+        for (let j = 0; j <= rows; j++) {
+          const iStart = -Math.ceil(j / 2) - 1; // j 行整体右移，左侧补负列
+          for (let i = iStart; i <= iEnd; i++) {
+            const ax = OX + i * S + (j * S) / 2,
+              ay = OY + j * TH;
+            const bx = ax + S,
+              by = ay;
+            const cx = ax + S / 2,
+              cy = ay + TH;
+            const dx = bx + S / 2,
+              dy = by + TH;
+
+            // 倒三角 A-B-C
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(bx, by);
+            ctx.lineTo(cx, cy);
+            ctx.closePath();
+
+            // 正三角 B-C-D（与上面共用 B-C 边）
+            ctx.moveTo(bx, by);
+            ctx.lineTo(cx, cy);
+            ctx.lineTo(dx, dy);
+            ctx.closePath();
+          }
+        }
+      }
+
+      /* ==================================================
+     描边路径：三族平行线（水平 / +60° / -60°）。
+     与三角形路径的边完全重合，但每条边只画一次，
+     因此半透明线条不会在共享边处叠加变深。
+     ================================================== */
+      function buildLinePath(w, h) {
+        const SQRT3 = Math.sqrt(3);
+        ctx.beginPath();
+
+        /* --- 水平线族：y = OY + j·TH --- */
+        for (let j = 0; ; j++) {
+          const y = OY + j * TH;
+          if (y > h + TH) break;
+          if (y < -TH) continue;
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+        }
+
+        /* --- +60° 线族：斜率 √3，i = 常数 --- */
+        const iMin = Math.ceil((OY - SQRT3 * OX - h) / (SQRT3 * S));
+        const iMax = Math.floor((OY - SQRT3 * OX + SQRT3 * w) / (SQRT3 * S));
+        for (let i = iMin; i <= iMax; i++) {
+          const y0 = OY - SQRT3 * OX - SQRT3 * S * i; // x = 0 处的 y
+          ctx.moveTo(0, y0);
+          ctx.lineTo(w, y0 + SQRT3 * w);
+        }
+
+        /* --- -60° 线族：斜率 -√3，k = i + j 为常数 --- */
+        const kMin = Math.ceil(-(OY + SQRT3 * OX) / (SQRT3 * S));
+        const kMax = Math.floor(
+          (h - OY - SQRT3 * OX + SQRT3 * w) / (SQRT3 * S),
+        );
+        for (let k = kMin; k <= kMax; k++) {
+          const y0 = OY + SQRT3 * OX + SQRT3 * S * k; // x = 0 处的 y
+          ctx.moveTo(0, y0);
+          ctx.lineTo(w, y0 - SQRT3 * w);
+        }
+      }
+
+      /* ---------------- 尺寸变化重绘 ---------------- */
+      window.addEventListener("resize", scheduleDraw);
+      if (window.ResizeObserver) {
+        new ResizeObserver(scheduleDraw).observe(cv);
+      }
+
+      draw();
+    })();
+  </script>
+</body>

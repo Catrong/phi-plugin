@@ -1,0 +1,645 @@
+@import "../common/common.css";
+
+:root {
+  /* ===== 网格常量（JS 会把 CONFIG.side 同步写入 --side） ===== */
+  --side: 102.4px;
+  --th: calc(var(--side) * 0.8660254037844386); /* 边长 × √3/2 */
+  --ox: calc(-1 * var(--side)); /* 起始横向偏移 */
+  --oy: calc(-1 * var(--th)); /* 起始纵向偏移 */
+
+  /* 配色常量：网格颜色的唯一来源，JS 每次重绘都直接读取（含透明度）
+     #RRGGBBAA 的末两位是 alpha，00 表示全透明 */
+  --bg: #0f111700;
+  --stroke: #80acc1;
+  --fill: #00000000;
+  
+  --grid-drop-shadow: #000;
+  --object-drop-shadow: #fff;
+
+  color-scheme: dark;
+}
+
+html,
+body {
+  width: 2150.4px;
+  height: 1080px;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+/* 画布容器：canvas 与格点标记共享同一坐标系 */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0px 0px 3px var(--grid-drop-shadow));
+}
+
+/* ==========================================================
+     ★ 工具样式：把任意元素定位到正三角形网格的「格点」上
+     用法：
+       <div class="grid-point" style="--row:3; --col:5">
+         <span class="marker">…</span>
+       </div>
+
+     --row：行号 j（沿 60° 斜边方向的层数）
+     --col：列号 i（沿水平方向的格数）
+
+     格点公式： x = ox + i·s + j·s/2
+                y = oy + j·th
+     .grid-point 是 0 宽 0 高的纯定位点：left/top 落点即格点本身，
+     不需要 translate 补偿；内部内容自行相对该点定位并居中。
+     ========================================================== */
+.grid-point {
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: calc(
+    var(--ox) + var(--col) * var(--side) + var(--row) * var(--side) / 2
+  );
+  top: calc(var(--oy) + var(--row) * var(--th));
+  pointer-events: none; /* 不阻挡交互 */
+  --horiz-count: 2;
+}
+
+/* 视觉样式（纯装饰，可任意替换，不影响定位逻辑）
+   相对 0×0 锚点绝对定位，再用 translate(-50%,-50%) 把自身中心对准格点 */
+.marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  background: #ff5252;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+}
+.marker::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+.marker.alt {
+  background: #ffb300;
+  color: #1a1a1a;
+}
+.marker.alt::before {
+  background: #1a1a1a;
+}
+
+/* ==========================================================
+     ★ 工具样式：以格点为心的六边形线框（六条边各自成元素，无填充）
+     用法：
+       <div class="grid-point" style="--row:4; --col:4">
+         <div class="sixLine">
+           <i></i><i></i><i></i><i></i><i></i><i></i>
+         </div>
+       </div>
+
+     六边形在三角网格上闭合，对边必须平行等长，故只有三个长度自由度：
+      横边族 = 顶边 + 底边（--six-horiz）
+      上斜边族 = 右上 + 左下（--six-up）
+      下斜边族 = 右下 + 左上（--six-down）
+     三个长度都取 --side 时，顶点正好落在格点的六个最近邻上，
+     恰好覆盖该格点周围的 6 个三角面。
+     可覆盖变量：--six-horiz / --six-up / --six-down / --six-line-width / --six-line
+     ========================================================== */
+.sixLine {
+  --six-horiz: calc(
+    var(--side) * var(--horiz-count)
+  ); /* 横边长（顶边与底边） */
+  --six-up: var(--side); /* 上斜边长（右上 + 左下） */
+  --six-down: var(--side); /* 下斜边长（右下 + 左上） */
+  --six-line-width: 5px;
+  --six-line: #fff;
+
+  /* 斜接补偿：两端各外延 t/(2√3)，120° 拐角不留缝也不重叠 */
+  --six-miter: calc(var(--six-line-width) * 0.2886751345948129);
+
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* 外接框：宽 = 横边 + 两族斜边的水平投影，高 = 两族斜边的垂直投影 */
+  width: calc(var(--six-horiz) + (var(--six-up) + var(--six-down)) / 2);
+  height: calc((var(--six-up) + var(--six-down)) * 0.8660254037844386);
+  transform: translate(-50%, -50%); /* 中心对准格点 */
+  filter: drop-shadow(0px 0px 3px var(--object-drop-shadow));
+}
+
+/* 每条边从起点顶点起笔：left/top 落在起点，绕起点旋转，
+   再沿自身方向回退半段斜接量，让两端各多出一截去填拐角 */
+.sixLine > i {
+  position: absolute;
+  left: var(--edge-x);
+  top: var(--edge-y);
+  width: calc(var(--edge-len) + var(--six-miter) * 2);
+  height: var(--six-line-width);
+  margin-top: calc(var(--six-line-width) / -2);
+  transform-origin: 0 50%;
+  transform: rotate(var(--edge-angle)) translateX(calc(var(--six-miter) * -1));
+  background: var(--six-line);
+}
+
+.sixLine > i:nth-child(1) {
+  /* 顶边：起点 (下斜边/2, 0)，长度 = 横边 */
+  --edge-x: calc(var(--six-down) / 2);
+  --edge-y: 0;
+  --edge-len: var(--six-horiz);
+  --edge-angle: 0deg;
+}
+.sixLine > i:nth-child(2) {
+  /* 右上斜边：起点 (横边 + 下斜边/2, 0)，长度 = 上斜边 */
+  --edge-x: calc(var(--six-horiz) + var(--six-down) / 2);
+  --edge-y: 0;
+  --edge-len: var(--six-up);
+  --edge-angle: 60deg;
+}
+.sixLine > i:nth-child(3) {
+  /* 右下斜边：起点 (100%, 上斜边·√3/2)，长度 = 下斜边 */
+  --edge-x: 100%;
+  --edge-y: calc(var(--six-up) * 0.8660254037844386);
+  --edge-len: var(--six-down);
+  --edge-angle: 120deg;
+}
+.sixLine > i:nth-child(4) {
+  /* 底边：起点 (横边 + 上斜边/2, 100%)，长度 = 横边 */
+  --edge-x: calc(var(--six-horiz) + var(--six-up) / 2);
+  --edge-y: 100%;
+  --edge-len: var(--six-horiz);
+  --edge-angle: 180deg;
+}
+.sixLine > i:nth-child(5) {
+  /* 左下斜边：起点 (上斜边/2, 100%)，长度 = 上斜边 */
+  --edge-x: calc(var(--six-up) / 2);
+  --edge-y: 100%;
+  --edge-len: var(--six-up);
+  --edge-angle: 240deg;
+}
+.sixLine > i:nth-child(6) {
+  /* 左上斜边：起点 (0, 下斜边·√3/2)，长度 = 下斜边 */
+  --edge-x: 0;
+  --edge-y: calc(var(--six-down) * 0.8660254037844386);
+  --edge-len: var(--six-down);
+  --edge-angle: 300deg;
+}
+
+/* ==========================================================
+     ★ 工具样式：以格点为心的实心六边形（纯填充，无内部边线）
+     用法：
+       <div class="grid-point" style="--row:6; --col:4.5">
+         <div class="sixLineBox" style="--six-fill: rgba(128, 172, 193, 0.6)"></div>
+       </div>
+
+     与 .sixLine 共用同一套顶点：六条边首尾相接围成一个闭合六边形，
+     整块作为单个 clip-path 填充，内部不含任何连线。
+     三个长度自由度与 .sixLine 完全一致：
+       横边族 = 顶边 + 底边（--six-horiz）
+       上斜边族 = 右上 + 左下（--six-up）
+       下斜边族 = 右下 + 左上（--six-down）
+     可覆盖变量：--six-horiz / --six-up / --six-down / --six-fill
+     ========================================================== */
+.sixLineBox {
+  --six-horiz: calc(
+    var(--side) * var(--horiz-count)
+  ); /* 横边长（顶边与底边） */
+  --six-up: var(--side); /* 上斜边长（右上 + 左下） */
+  --six-down: var(--side); /* 下斜边长（右下 + 左上） */
+  --six-fill: var(--stroke); /* 填充色 */
+
+  /* 外接框尺寸 */
+  --six-w: calc(var(--six-horiz) + (var(--six-up) + var(--six-down)) / 2);
+  --six-h: calc((var(--six-up) + var(--six-down)) * 0.8660254037844386);
+
+  /* 六个顶点：V0→V1 顶边，V1→V2 右上，V2→V3 右下，
+                V3→V4 底边，V4→V5 左下，V5→V0 左上 */
+  --six-v0x: calc(var(--six-down) / 2);
+  --six-v0y: 0px;
+  --six-v1x: calc(var(--six-down) / 2 + var(--six-horiz));
+  --six-v1y: 0px;
+  --six-v2x: var(--six-w);
+  --six-v2y: calc(var(--six-up) * 0.8660254037844386);
+  --six-v3x: calc(var(--six-horiz) + var(--six-up) / 2);
+  --six-v3y: var(--six-h);
+  --six-v4x: calc(var(--six-up) / 2);
+  --six-v4y: var(--six-h);
+  --six-v5x: 0px;
+  --six-v5y: calc(var(--six-down) * 0.8660254037844386);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--six-w);
+  height: var(--six-h);
+  background: var(--six-fill);
+  /* 单一闭合六边形裁剪：V0→V1→…→V5 即六条边，无内部分割 */
+  clip-path: polygon(
+    var(--six-v0x) var(--six-v0y),
+    var(--six-v1x) var(--six-v1y),
+    var(--six-v2x) var(--six-v2y),
+    var(--six-v3x) var(--six-v3y),
+    var(--six-v4x) var(--six-v4y),
+    var(--six-v5x) var(--six-v5y)
+  );
+  transform: translate(-50%, -50%); /* 中心对准格点 */
+}
+
+.sixLineBox img {
+  width: auto;
+  height: stretch;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.boxName {
+  position: absolute;
+  bottom: 0;
+  height: 30%;
+  padding: 0px 51px;
+  width: stretch;
+  background: linear-gradient(0deg, #000000ff 20%, #00000000 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  word-break: keep-all;
+}
+
+/* ==========================================================
+     ★ 工具样式：一行三角形的外边框（只有整行外轮廓，内部公共边不画）
+     用法：
+       <div class="grid-point" style="--row:6; --col:6">
+         <div class="rowBox"
+              style="--row-count:4; --row-start:0;
+                     --row-stroke:#fff; --row-fill:rgba(79,195,247,.45);
+                     --row-stroke-width:3px">
+           <i></i><i></i><i></i><i></i>
+         </div>
+       </div>
+
+     N 个交替正/倒三角形在一行内首尾相接，拼成的外轮廓是一个梯形
+     （N 为偶数时退化为平行四边形，N=1 时退化为单个三角形），
+     恒为 4 个顶点，故可用 calc 精确算出位置：
+       TL = (s/2, 0)                TR = (b, 0)
+       BL = (0, h)                  BR = (c, h)
+     其中 s 为三角形边长，h = s·√3/2；
+       b = floor(N/2)·s + s/2   （顶边右端）
+       c = ceil(N/2)·s          （底边右端）
+
+     外轮廓由 4 根 <i> 边条首尾相接围成（TL→TR→BR→BL）。
+     每根边条的端点都是半径 = 线宽/2 的圆头（等价 stroke-linecap: round），
+     四条边的圆头圆心都落在同一个顶点上，角部自然收成半径 t/2 的圆弧：
+     既不会像直切端头那样在衔接处外凸，也不会留缺口。
+     内部填充由 ::before 铺一层同形 clip-path（不参与描边）。
+
+     可覆盖变量：
+       --row-count        三角形数量（整数）
+       --row-start        第一个三角形方向：0 = 正三角△，1 = 倒三角▽
+       --row-side         单元三角形边长（默认 var(--side)）
+       --row-stroke       边线颜色
+       --row-fill         内部填充颜色
+       --row-stroke-width 边线宽
+     ========================================================== */
+.rowBox {
+  --row-side: var(--side); /* 单元三角形边长 */
+  --row-count: 4; /* 三角形数量（整数） */
+  --row-start: 0; /* 0 = 首个正三角△；1 = 首个倒三角▽ */
+  --row-stroke: #fff; /* 边线颜色 */
+  --row-fill: #fff; /* 内部填充颜色 */
+  --row-stroke-width: 5px; /* 边线宽 */
+
+  /* 单元三角形尺寸与外接框 */
+  --rw-s: var(--row-side);
+  --rw-h: calc(var(--rw-s) * 0.8660254037844386); /* s·√3/2 */
+  --rw-w: calc((var(--row-count) + 1) * var(--rw-s) / 2);
+
+  /* 奇偶与正/倒三角计数 */
+  --rw-p: mod(var(--row-count), 2); /* 0 偶 / 1 奇 */
+  --rw-down: calc((var(--row-count) - var(--rw-p)) / 2); /* floor(N/2) */
+  --rw-up: calc((var(--row-count) + var(--rw-p)) / 2); /* ceil(N/2) */
+
+  /* 外轮廓四个顶点 x（y 用 0 / --rw-h） */
+  --rw-b: calc(var(--rw-down) * var(--rw-s) + var(--rw-s) / 2); /* 顶边右端 */
+  --rw-c: calc(var(--rw-up) * var(--rw-s)); /* 底边右端 */
+
+  /* 右边 TR→BR：水平跨距恒为 s/2，斜率随奇偶在 120° / 60° 间切换，长度恒为 s */
+  --rw-angle: calc(120deg - var(--rw-p) * 60deg);
+
+  --rw-t: var(--row-stroke-width); /* 线宽（= 圆头直径） */
+
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--rw-w);
+  height: var(--rw-h);
+  /* --row-start = 1 时整体上下翻转，得到「首个倒三角」的一行 */
+  transform: translate(0%, -100%) scaleY(calc(1 - 2 * var(--row-start)));
+  filter: drop-shadow(0px 0px 3px var(--object-drop-shadow));
+}
+
+/* 内部填充：单一闭合四边形裁剪，垫在 4 根边条下面 */
+.rowBox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--row-fill);
+  clip-path: polygon(
+    calc(var(--rw-s) / 2) 0px,
+    var(--rw-b) 0px,
+    var(--rw-c) var(--rw-h),
+    0px var(--rw-h)
+  );
+}
+
+/* 边条：从起点顶点起笔，绕起点旋转；两端圆头，圆心正好压在顶点上。
+
+   注意 border-radius 的圆角是「内切」的：t/2 的圆角让端头半圆的圆心落在
+   端边往里 t/2 处，而不是端边上。所以元素要让两端各外扩 t/2，
+   圆心才回到顶点（否则每条线在顶点处都缩进 t/2，衔接处就露出缺口）。
+   旋转中心也随之移到半圆圆心（左端 + t/2）。 */
+.rowBox > i {
+  position: absolute;
+  left: calc(var(--edge-x) - var(--rw-t) / 2);
+  top: var(--edge-y);
+  width: calc(var(--edge-len, 0px) + var(--rw-t));
+  height: var(--rw-t);
+  margin-top: calc(var(--rw-t) / -2);
+  transform-origin: calc(var(--rw-t) / 2) 50%;
+  transform: rotate(var(--edge-angle, 0deg));
+  background: var(--row-stroke);
+  border-radius: calc(var(--rw-t) / 2); /* 两端圆头 */
+}
+
+/* 顶边 TL→TR：长度 = floor(N/2)·s（N=1 时长度为 0，整根隐去） */
+.rowBox > i:nth-child(1) {
+  --edge-x: calc(var(--rw-s) / 2);
+  --edge-y: 0px;
+  --edge-len: calc(var(--rw-down) * var(--rw-s));
+  --edge-angle: 0deg;
+}
+
+/* 右边 TR→BR：长度恒 = s */
+.rowBox > i:nth-child(2) {
+  --edge-x: var(--rw-b);
+  --edge-y: 0px;
+  --edge-len: var(--rw-s);
+  --edge-angle: var(--rw-angle);
+}
+
+/* 底边 BR→BL：长度 = ceil(N/2)·s */
+.rowBox > i:nth-child(3) {
+  --edge-x: var(--rw-c);
+  --edge-y: var(--rw-h);
+  --edge-len: calc(var(--rw-up) * var(--rw-s));
+  --edge-angle: 180deg;
+}
+
+/* 左边 BL→TL：长度恒 = s */
+.rowBox > i:nth-child(4) {
+  --edge-x: 0px;
+  --edge-y: var(--rw-h);
+  --edge-len: var(--rw-s);
+  --edge-angle: 300deg;
+}
+
+.rowBox .title {
+  position: absolute;
+  left: 50px;
+  top: 0px;
+  color: black;
+  font-size: 20px;
+  z-index: 10;
+}
+
+.rowBox .content {
+  position: absolute;
+  left: 0;
+  bottom: 2.5px;
+  width: 250px;
+  text-align: center;
+  color: black;
+  font-size: 40px;
+  z-index: 10;
+}
+
+/* ==========================================================
+     ★ 背景的径向广角拉伸（fisheye）：中心保持原比例，越靠边缘放大越多
+     用法：
+       <div class="background">
+         <div class="warpField" style="--warp-src: url(图片路径)">
+           <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+         </div>
+       </div>
+
+     原理（纯 CSS，无 JS）：
+     同一张图复制成 N 层，第 i 层整体放大 1 + i·step，
+     再用径向 mask 只保留它负责的那一圈环带。
+     因为层越往外放大率越高，边缘环带显示的就是原图更靠内的内容
+     ——相当于把内圈内容「拉」到外圈，观感即向外拉伸；
+     中心那层 scale = 1，所以画面中心保持原始比例。
+     环带交界靠 --warp-feather 渐变混合，配合背景本身的模糊不会看出接缝。
+
+     可覆盖变量：
+       --warp-src        图片地址（必填，url(...)）
+       --warp-step       每往外一层额外放大的比例，默认 0.065
+       --warp-feather    环带交界的渐变宽度，默认 7%
+       --warp-blur       模糊半径，默认 20px（与原 .background img 一致）
+       --warp-brightness 亮度，默认 50%
+     ========================================================== */
+.background .warpField {
+  --warp-blur: 20px;
+  --warp-brightness: 50%;
+  --warp-step: 0.065;
+  --warp-feather: 7%;
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.background .warpField > i {
+  position: absolute;
+  inset: 0;
+  background-image: var(--warp-src, none);
+  background-position: 50% 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(var(--warp-blur)) brightness(var(--warp-brightness));
+  /* --wl-k 是该层的外推档位，scale 随之线性增长 */
+  transform: scale(calc(1 + var(--wl-k, 0) * var(--warp-step)));
+  transform-origin: 50% 50%;
+  /* 只保留 [--wl-in, --wl-out] 这一圈。
+     两端各向外扩 feather：相邻两层在交界处正好一段渐隐、一段渐显，
+     alpha 互补，拼起来才不会露出一条暗环。 */
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent calc(var(--wl-in, 0%) - var(--warp-feather)),
+    #000 calc(var(--wl-in, 0%) + var(--warp-feather)),
+    #000 calc(var(--wl-out, 0%) - var(--warp-feather)),
+    transparent calc(var(--wl-out, 0%) + var(--warp-feather))
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent calc(var(--wl-in, 0%) - var(--warp-feather)),
+    #000 calc(var(--wl-in, 0%) + var(--warp-feather)),
+    #000 calc(var(--wl-out, 0%) - var(--warp-feather)),
+    transparent calc(var(--wl-out, 0%) + var(--warp-feather))
+  );
+}
+
+/* 最内层从圆心起就是实心的，单独给它一条「由中心向外渐隐」的 mask */
+.background .warpField > i:nth-child(1) {
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 calc(var(--wl-out) - var(--warp-feather)),
+    transparent calc(var(--wl-out) + var(--warp-feather))
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 calc(var(--wl-out) - var(--warp-feather)),
+    transparent calc(var(--wl-out) + var(--warp-feather))
+  );
+}
+
+/* 七层环带：半径（相对 farthest-corner，约等于画面半对角线）+ 外推档位 */
+.background .warpField > i:nth-child(1) {
+  --wl-in: 0%;
+  --wl-out: 20%;
+  --wl-k: 0;
+}
+.background .warpField > i:nth-child(2) {
+  --wl-in: 20%;
+  --wl-out: 33%;
+  --wl-k: 1;
+}
+.background .warpField > i:nth-child(3) {
+  --wl-in: 33%;
+  --wl-out: 46%;
+  --wl-k: 2;
+}
+.background .warpField > i:nth-child(4) {
+  --wl-in: 46%;
+  --wl-out: 60%;
+  --wl-k: 3;
+}
+.background .warpField > i:nth-child(5) {
+  --wl-in: 60%;
+  --wl-out: 76%;
+  --wl-k: 4;
+}
+.background .warpField > i:nth-child(6) {
+  --wl-in: 76%;
+  --wl-out: 96%;
+  --wl-k: 5;
+}
+/* 最外层铺到画面角落以外，保证四角也被放大层盖满 */
+.background .warpField > i:nth-child(7) {
+  --wl-in: 96%;
+  --wl-out: 150%;
+  --wl-k: 6;
+}
+
+/* ==========================================================
+     ★ /chap help 章节帮助页（chapHelp.art）
+     这里只负责页面尺寸，不碰 .sixLineBox / .rowBox 及其内部元素 ——
+     曲绘卡与别名框的相对布局、内部结构完全沿用 chapHelp-orz.html，
+     模板只把章节数据填进去。
+
+     行列间距不在 CSS 里写死，由模板的 rowStep / colStep / topRow / leftCol
+     决定；这里只接收 --help-rows / --help-top-row / --help-row-step 用来算页面高度，
+     配合模板里 html/body 的 height:auto 才能截到完整长图。
+     可覆盖变量：--side（网格与全部卡片的尺寸）
+                 --help-rows / --help-top-row / --help-row-step（由模板注入）
+     ========================================================== */
+.chapHelp {
+  /* --side: 96px; */
+  /* :root 的 --th / --ox / --oy 是按 192px 算好再继承下来的，
+     改了 --side 不会自动跟着变，必须在这里按新边长重算一遍 */
+  --th: calc(var(--side) * 0.8660254037844386);
+  --ox: calc(-1 * var(--side));
+  --oy: calc(-1 * var(--th));
+  --help-rows: 12;
+  --help-top-row: 4;
+  --help-row-step: 4;
+
+  /* 曲绘卡 row = topRow + rowStep·r，中心 y = (row - 1)·th，
+     末行六边形底边 = (topRow + rowStep·(rows - 1))·th，再留 2th 底部余量 */
+  height: calc(
+    (var(--help-top-row) + var(--help-row-step) * (var(--help-rows) - 1) + 2) *
+      var(--th)
+  );
+}
+
+/* ==========================================================
+     三角网格背景：用纯 CSS 复刻原来 canvas 画的三族平行线。
+     好处是不依赖页面脚本，shotium（renderNoJs）后端也能出网格。
+
+     三族线的法向间距都等于 --th，所以渐变周期统一取 --th；
+     平铺尺寸取「--side × 2·th」，这个矩形沿任一族法向的投影都正好是
+     --th 的整数倍，平铺后相位连续、不会出现拼接缝。
+
+     三个角度与 canvas 的对应关系：
+       180deg ↔ 水平线族
+       120deg ↔ 斜率为 -√3 的那族（canvas 里 lineTo(w, y0 - √3·w)）
+        60deg ↔ 斜率为 +√3 的那族（canvas 里 lineTo(w, y0 + √3·w)）
+
+     background-position 的偏移量负责把三族锚到同一组格点上，
+     使三条线交于格点而不是错开成摩尔纹。
+
+     与 canvas 版的两处已知差异：
+       1. --fill（三角面填充）没有对应实现，当前该变量为全透明，无影响；
+       2. --stroke 若带 alpha，三层背景会在交点处叠加，比 canvas 的一次
+          性 stroke 更实。保持不透明色（默认即可）就没有差别。
+     ========================================================== */
+.chapHelp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      var(--stroke) 0 2px,
+      transparent 2px var(--th)
+    ),
+    repeating-linear-gradient(
+      120deg,
+      var(--stroke) 0 2px,
+      transparent 2px var(--th)
+    ),
+    repeating-linear-gradient(
+      60deg,
+      var(--stroke) 0 2px,
+      transparent 2px var(--th)
+    );
+  background-size: var(--side) calc(var(--th) * 2);
+  background-position:
+    0 -1px,
+    0 calc(-1 * var(--th)),
+    0 var(--th);
+  background-repeat: repeat;
+  filter: drop-shadow(0 0 3px var(--grid-drop-shadow));
+}

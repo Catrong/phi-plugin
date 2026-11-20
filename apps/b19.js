@@ -1016,7 +1016,12 @@ export class phib19 extends phiPluginBase {
         }
         let msg = e.msg.replace(/^[#/].*chap\s*/, '').toUpperCase()
         if (msg == 'HELP' || !msg) {
-            sendMessage(e, b19Messages.chap.helpMessage(getPic.getimg('chapHelp')), { at: true })
+            /** 章节帮助图由模板渲染；章节数据异常时回退到内置静态图 */
+            const chapters = getInfo.getChapterList?.() || []
+            const image = chapters.length
+                ? await picmodle.chapHelp(e, { chapters })
+                : getPic.getimg('chapHelp')
+            sendMessage(e, b19Messages.chap.helpMessage(image), { at: true })
             return true
         }
 

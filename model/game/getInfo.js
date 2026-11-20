@@ -1285,6 +1285,26 @@ class getInfo {
     }
 
     /**
+     * 章节列表，供 /chap help 的章节帮助图使用。
+     *
+     * - `name`：章节名称，取 chaplist.yaml 里该章节的第一个别名（即正式名），
+     *   与 `ori_info[].chapter`、`fuzzySearch` 的返回值保持一致，可直接用于查询。
+     * - `alias`：展示用的别名，取该章节所有别名中最短的一个（正式名也参与比较），
+     *   帮助图排版空间有限，短别名不易折行。
+     * @returns {{ code: string, name: string, alias: string, ill: string }[]}
+     */
+    getChapterList() {
+        return Object.entries(this.chapList || {}).map(([code, aliases]) => {
+            const list = (Array.isArray(aliases) ? aliases : [])
+                .filter(alias => typeof alias === 'string' && alias.length > 0)
+            const name = this.chapName?.[code] || code
+            /** 最短别名；正式名一起参与比较，别名表为空时回退到章节名 */
+            const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
+            return { code, name, alias, ill: this.getChapIll(name) }
+        })
+    }
+
+    /**
      * 通过id获得头像文件名称
      * @param {string} id 
      * @returns file name
