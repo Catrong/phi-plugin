@@ -1399,12 +1399,12 @@
     "FixationsTowardtheStars.Foodbot": {
         "bpm": "150",
         "length": "2:49",
-        "chapter": "Single-单曲 精选集"
+        "chapter": "Single-vivid/stasis 精选集"
     },
     "valorstarcross.LundyvsWyvren": {
         "bpm": "175",
         "length": "2:39",
-        "chapter": "Single-单曲 精选集"
+        "chapter": "Single-vivid/stasis 精选集"
     },
     "CometFeat符白牙.CNHKSS": {
         "bpm": "180",
@@ -1846,6 +1846,16 @@
         "length": "2:42",
         "chapter": "Chapter 9 穹顶孤舟",
         "isOriginal": true
+    },
+    "STARGAZERS.proxime":{
+        "bpm": "186",
+        "length": "2:51",
+        "chapter": "Chapter EX-vivid/stasis 精选集"
+    },
+    "OMG.DopamnevszEnsEn":{
+        "bpm": "128",
+        "length": "2:28",
+        "chapter": "Chapter EX-TAKUMI³ 精选集"
     }
 }
 
