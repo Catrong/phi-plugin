@@ -16,7 +16,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import template from 'art-template'
-import yaml from 'js-yaml'
+import YAML from 'yaml'
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const pluginRoot = path.resolve(scriptDir, '..')
@@ -34,16 +34,36 @@ function relPrefix(fromDir) {
 
 /**
  * 章节数据：规则与 getInfo.getChapterList() 保持一致 ——
- * name 取 chaplist.yaml 的第一个别名（正式名），alias 取该章最短别名。
+ * name 取 chaplist.yaml 的第一个别名（正式名），alias 取该章最短别名，
+ * aliases 为全部别名，displayAliases 去掉与曲绘卡重复的正式名。
  * @param {string} rel 相对 resources/ 的前缀
  */
 function buildChapters(rel) {
-    const chapList = yaml.load(fs.readFileSync(path.join(resRoot, 'info/chaplist.yaml'), 'utf8'))
+    const chapList = YAML.parse(fs.readFileSync(path.join(resRoot, 'info/chaplist.yaml'), 'utf8'))
+    /* 本地曲绘按章节名称存放，个别名称与 chaplist 有空格 / 前缀差异（Single-单曲 精选集 → 单曲精选集.png） */
+    const chapDir = path.join(resRoot, 'original_ill/chap')
+    const chapFiles = fs.existsSync(chapDir)
+        ? fs.readdirSync(chapDir).filter(file => file.toLowerCase().endsWith('.png'))
+        : []
+    const normalize = value => value.replace(/\.png$/i, '').replace(/^Single-/, '').replace(/\s+/g, '').toLowerCase()
+    const illFor = name => {
+        const file = chapFiles.find(item => normalize(item) === normalize(name))
+        return rel + 'original_ill/chap/' + (file || name + '.png')
+    }
     return Object.entries(chapList).map(([code, aliases]) => {
         const list = (Array.isArray(aliases) ? aliases : []).filter(a => typeof a === 'string' && a.length > 0)
         const name = list[0] || code
         const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
-        return { code, name, alias, ill: rel + 'original_ill/chap/' + code + '.png' }
+        const allAliases = list.length ? list : [name]
+        const displayAliases = allAliases.filter(item => item !== name)
+        return {
+            code,
+            name,
+            alias,
+            aliases: allAliases,
+            displayAliases: displayAliases.length ? displayAliases : [name],
+            ill: illFor(name),
+        }
     })
 }
 

@@ -52,12 +52,12 @@
         <div class="grid-point" style="--row: {{sixRow + 1}}; --col: {{sixCol + 0.5}}">
             <div class="rowBox">
                 <i></i><i></i><i></i><i></i>
-                <div class="title">别名：</div>
-                <div class="content">{{ch.alias}}</div>
+                <div class="title">别名</div>
+                <div class="content">{{each ch.displayAliases aliasText}}<span>{{aliasText}}</span>{{/each}}</div>
             </div>
         </div>
         <div class="grid-point" style="--row: {{sixRow}}; --col: {{sixCol}}">
-            <div class="sixLineBox" style="--six-fill: #0b0f16">
+            <div class="sixLineBox">
                 <img src="{{ch.ill}}" alt="{{ch.name}}">
                 <div class="boxName">{{ch.name}}</div>
             </div>
