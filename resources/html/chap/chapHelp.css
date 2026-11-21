@@ -439,24 +439,30 @@ canvas {
    用 right:0 会让文字跑到斜边外面。 */
 .rowBox .content {
   position: absolute;
-  left: 26px;
-  right: 56px;
-  bottom: 8px;
+  left: 32px;
+  right: 32px;
+  bottom: 4px;
   width: auto;
+  height: 100%;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-end;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 2px 8px;
   color: #0a2436;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1.1;
   z-index: 10;
+  transform: skewX(-30deg); /* 让文字沿梯形底边水平排列 */
 }
 
 .rowBox .content span {
   white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  transform: skewX(30deg); /* 把文字本身反向扭回来，保持正常阅读 */
 }
 
 /* ==========================================================
@@ -840,7 +846,7 @@ canvas {
 }
 
 .helpHeader__text p {
-  margin: 0;
+  margin: 10px;
 }
 
 .helpHeader__name {
@@ -875,7 +881,7 @@ canvas {
 .helpHeader__ver {
   padding: 7px 22px;
   background: linear-gradient(180deg, #f7fdff, #cfeefe);
-  clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+  /* clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%); */
 }
 
 .helpHeader__ver p {
