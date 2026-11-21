@@ -30,9 +30,9 @@
     -->
     {{set cols = 3}}
     {{set rowStep = 3}}
-    {{set colStep = 7}}
+    {{set colStep = 6}}
     {{set topRow = 5}}
-    {{set leftCol = 1.5}}
+    {{set leftCol = 2.5}}
     {{set rows = Math.max(1, Math.ceil(chapters.length / cols))}}
     <div class="stage chapHelp" style="--help-rows: {{rows}}; --help-top-row: {{topRow}}; --help-row-step: {{rowStep}}">
         <div class="helpHeader">
