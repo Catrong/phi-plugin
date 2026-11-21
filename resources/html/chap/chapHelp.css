@@ -650,7 +650,12 @@ canvas {
       var(--stroke) 0 2px,
       transparent 2px var(--th)
     );
-  background-size: var(--side) calc(var(--th) * 2);
+  /* 水平线层用 1·th 的贴片（每 th 一条线），与曲绘卡顶/底边同相位；
+     两族斜线仍用 2·th 的贴片，保证斜线交点与格点对齐 */
+  background-size:
+    var(--side) var(--th),
+    var(--side) calc(var(--th) * 2),
+    var(--side) calc(var(--th) * 2);
   background-position:
     0 -1px,
     0 calc(-1 * var(--th)),

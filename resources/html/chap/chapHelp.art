@@ -52,7 +52,7 @@
         {{set r = Math.floor(index / cols)}}
         {{set c = index % cols}}
         {{set sixRow = topRow + rowStep * r}}
-        {{set sixCol = leftCol + colStep * c - rowStep / 2 * r}}
+        {{set sixCol = leftCol + colStep * c - rowStep / 2 * r - (r % 2 === 0 ? 0.5 : 0)}}
         <!--
             每章两个格点，相对偏移沿用 chapHelp-orz.html：
             别名框恒在 (曲绘卡 row + 1, 曲绘卡 col + 0.5)。
