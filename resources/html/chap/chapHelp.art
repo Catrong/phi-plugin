@@ -31,10 +31,23 @@
     {{set cols = 3}}
     {{set rowStep = 3}}
     {{set colStep = 7}}
-    {{set topRow = 4}}
+    {{set topRow = 5}}
     {{set leftCol = 1.5}}
     {{set rows = Math.max(1, Math.ceil(chapters.length / cols))}}
     <div class="stage chapHelp" style="--help-rows: {{rows}}; --help-top-row: {{topRow}}; --help-row-step: {{rowStep}}">
+        <div class="helpHeader">
+            <div class="helpHeader__left">
+                <span class="helpHeader__tri"></span>
+                <div class="helpHeader__text">
+                    <p class="helpHeader__name">Phigros</p>
+                    <p class="helpHeader__desc">CHAPTER GUIDE</p>
+                </div>
+            </div>
+            <div class="helpHeader__right">
+                <p class="helpHeader__count">{{chapters.length}} CHAPTERS</p>
+                <div class="helpHeader__ver"><p>{{Version.ver}}</p></div>
+            </div>
+        </div>
         {{each chapters ch index}}
         {{set r = Math.floor(index / cols)}}
         {{set c = index % cols}}
@@ -64,5 +77,9 @@
             <div class="sixLine"><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
         {{/each}}
+        <div class="chapFooter">
+            <div class="phi-plugin"><p>{{_plugin}}</p></div>
+            <div class="ver"><p>{{Version.ver}}</p></div>
+        </div>
     </div>
 {{/block}}

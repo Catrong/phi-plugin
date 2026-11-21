@@ -600,9 +600,9 @@ canvas {
   --help-row-step: 4;
 
   /* 曲绘卡 row = topRow + rowStep·r，中心 y = (row - 1)·th，
-     末行六边形底边 = (topRow + rowStep·(rows - 1))·th，再留 2th 底部余量 */
+     末行六边形底边 = (topRow + rowStep·(rows - 1))·th，再留 3th 底部余量给品牌区 */
   height: calc(
-    (var(--help-top-row) + var(--help-row-step) * (var(--help-rows) - 1) + 2) *
+    (var(--help-top-row) + var(--help-row-step) * (var(--help-rows) - 1) + 3) *
       var(--th)
   );
 }
@@ -741,11 +741,12 @@ canvas {
 }
 
 .chapHelp .sixLine {
-  --six-line: #d7f2ff;
+  --six-line: #d0fffc;
   --six-line-width: 4px;
-  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.55))
-    drop-shadow(0 0 12px rgba(72, 198, 255, 0.55))
-    drop-shadow(0 0 2px rgba(255, 255, 255, 0.45));
+  filter: drop-shadow(0 0 2px rgba(208, 255, 252, 0.9))
+    drop-shadow(0 0 9px rgba(0, 194, 255, 0.5))
+    drop-shadow(0 0 22px rgba(0, 162, 255, 0.32))
+    drop-shadow(0 12px 26px rgba(0, 0, 0, 0.6));
 }
 
 .chapHelp .rowBox {
@@ -773,4 +774,150 @@ canvas {
     radial-gradient(900px 520px at 18% 4%, rgba(64, 196, 255, 0.22), transparent 70%),
     radial-gradient(820px 480px at 84% 12%, rgba(136, 96, 255, 0.16), transparent 72%),
     radial-gradient(1000px 620px at 50% 100%, rgba(38, 214, 196, 0.12), transparent 74%);
+}
+
+/* ==========================================================
+     ★ 顶部标题栏（参考第九章 C9song：黑底 + 青白霓虹 + 三角）
+     - 左侧 Phigros 标题与 CHAPTER GUIDE 副标题，右侧章节数与版本
+     - 底部一条「青白 → 透明」的渐隐线，呼应 C9song 的 songNameBoxBorder
+     ========================================================== */
+.helpHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 210px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 130px;
+  box-sizing: border-box;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 8, 16, 0.66) 0%,
+    rgba(0, 8, 16, 0.18) 62%,
+    transparent 100%
+  );
+}
+
+.helpHeader::after {
+  content: "";
+  position: absolute;
+  left: 130px;
+  right: 130px;
+  bottom: 26px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    #d0fffc,
+    rgba(0, 162, 255, 0.6) 42%,
+    transparent 100%
+  );
+}
+
+.helpHeader__left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.helpHeader__tri {
+  width: 0;
+  height: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 52px solid #d0fffc;
+  filter: drop-shadow(0 0 14px rgba(0, 190, 255, 0.55));
+}
+
+.helpHeader__text p {
+  margin: 0;
+}
+
+.helpHeader__name {
+  font-family: "Aldrich", "PHI";
+  font-size: 58px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(0, 194, 255, 0.55);
+}
+
+.helpHeader__desc {
+  font-family: "Aldrich", "PHI";
+  font-size: 24px;
+  letter-spacing: 9px;
+  color: #d0fffc;
+}
+
+.helpHeader__right {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+}
+
+.helpHeader__count {
+  font-family: "Aldrich", "PHI";
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: rgba(208, 255, 252, 0.7);
+}
+
+.helpHeader__ver {
+  padding: 7px 22px;
+  background: linear-gradient(180deg, #f7fdff, #cfeefe);
+  clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+}
+
+.helpHeader__ver p {
+  margin: 0;
+  color: #0a2436;
+  font-size: 21px;
+  font-family: "Aldrich", "PHI";
+}
+
+/* ==========================================================
+     ★ 底部品牌区（C9 风格：青白发光 + 渐隐线）
+     ========================================================== */
+.chapFooter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  z-index: 21;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.chapFooter::before {
+  content: "";
+  width: 620px;
+  height: 2px;
+  margin-bottom: 16px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #d0fffc 32%,
+    rgba(0, 162, 255, 0.7) 68%,
+    transparent
+  );
+}
+
+.chapFooter .phi-plugin p {
+  font-family: "Aldrich", "PHI";
+  font-size: 62px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #eafcff;
+  text-shadow: 0 0 24px rgba(0, 194, 255, 0.5);
+}
+
+.chapFooter .ver p {
+  font-size: 21px;
+  letter-spacing: 5px;
+  color: rgba(208, 255, 252, 0.6);
 }
