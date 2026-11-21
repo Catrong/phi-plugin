@@ -656,10 +656,12 @@ canvas {
     var(--side) var(--th),
     var(--side) calc(var(--th) * 2),
     var(--side) calc(var(--th) * 2);
+  /* 两族斜线平铺后的交点相位比 grid-point 的格点偏半个 side，
+     整层左移半个 side，交点才会落在格点上（与曲绘卡中心/顶点重合） */
   background-position:
     0 -1px,
-    0 calc(-1 * var(--th)),
-    0 var(--th);
+    calc(var(--side) * -0.5) calc(-1 * var(--th)),
+    calc(var(--side) * -0.5) var(--th);
   background-repeat: repeat;
   filter: drop-shadow(0 0 3px var(--grid-drop-shadow));
 }
