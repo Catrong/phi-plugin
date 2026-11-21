@@ -45,7 +45,7 @@
             </div>
             <div class="helpHeader__right">
                 <p class="helpHeader__count">{{chapters.length}} CHAPTERS</p>
-                <div class="helpHeader__ver"><p>{{Version.ver}}</p></div>
+                <div class="helpHeader__ver"><p>{{Version.phigros || Version.ver}}</p></div>
             </div>
         </div>
         {{each chapters ch index}}

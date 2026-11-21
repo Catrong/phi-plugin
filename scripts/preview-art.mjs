@@ -92,6 +92,12 @@ if (!buildData) {
 const outDir = path.dirname(artPath)
 const outPath = path.join(outDir, tplName + '-render.html')
 const rel = relPrefix(outDir)
+const pluginVersion = 'v' + JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version
+/* 游戏内版本与 Version.js 一样从 README 的 Phigros-x.y.z 标记读取 */
+const readmePath = path.join(pluginRoot, 'README.md')
+const phigrosVersion = fs.existsSync(readmePath)
+    ? /Phigros-([0-9.]+)/.exec(fs.readFileSync(readmePath, 'utf8'))?.[1] ?? ''
+    : ''
 
 const data = {
     defaultLayout: path.join(htmlRoot, 'common/layout/default.art'),
@@ -108,7 +114,7 @@ const data = {
     sys: { scale: '' },
     background: '',
     _plugin: 'Phi-Plugin',
-    Version: { ver: 'v' + JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version },
+    Version: { ver: pluginVersion, phigros: phigrosVersion },
     Math,
     fCompute: {},
     ...buildData(rel),
