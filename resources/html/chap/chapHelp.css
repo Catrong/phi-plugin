@@ -426,7 +426,7 @@ canvas {
 .rowBox .title {
   position: absolute;
   left: 56px;
-  top: 6px;
+  top: 4px;
   color: rgba(8, 34, 50, 0.6);
   font-family: "Aldrich", "PHI";
   font-size: 15px;
@@ -821,13 +821,14 @@ canvas {
   left: 130px;
   right: 130px;
   bottom: 26px;
-  height: 2px;
+  height: 12px;
   background: linear-gradient(
     90deg,
     #d0fffc,
     rgba(0, 162, 255, 0.6) 42%,
     transparent 100%
   );
+  
 }
 
 .helpHeader__left {
@@ -893,7 +894,7 @@ canvas {
 
 /* ==========================================================
      ★ 底部品牌区（C9 风格：青白发光 + 渐隐线）
-     ========================================================== */
+   ========================================================== */
 .chapFooter {
   position: absolute;
   left: 0;
@@ -915,7 +916,8 @@ canvas {
   background: linear-gradient(
     90deg,
     transparent,
-    #d0fffc 32%,
+    rgba(0, 162, 255, 0.7) 32%,
+    #d0fffc 50%,
     rgba(0, 162, 255, 0.7) 68%,
     transparent
   );
