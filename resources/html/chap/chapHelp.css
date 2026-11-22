@@ -467,8 +467,8 @@ canvas {
   transform: skewX(30deg); /* 把文字本身反向扭回来，保持正常阅读 */
 }
 
-/* 多个别名之间用发光斜线分隔，像指示灯一样 */
-.rowBox .content span:not(:last-child)::after {
+/* 每个别名末尾都跟一条发光斜线，像指示灯一样；最后一行同样保留 */
+.rowBox .content span::after {
   content: "";
   display: inline-block;
   width: 3px;
@@ -476,7 +476,7 @@ canvas {
   margin-left: 8px;
   vertical-align: -2px;
   border-radius: 2px;
-  background: linear-gradient(180deg, #f2feff 0%, #4ecbff 60%, #1f8fd0 100%);
+  background: #4ecbff;
   box-shadow:
     0 0 6px rgba(78, 203, 255, 0.95),
     0 0 14px rgba(78, 203, 255, 0.5),
