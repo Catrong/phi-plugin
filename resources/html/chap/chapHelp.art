@@ -30,16 +30,29 @@
     -->
     {{set cols = 3}}
     {{set rowStep = 3}}
-    {{set colStep = 7}}
-    {{set topRow = 4}}
-    {{set leftCol = 1.5}}
+    {{set colStep = 6}}
+    {{set topRow = 5}}
+    {{set leftCol = 2.5}}
     {{set rows = Math.max(1, Math.ceil(chapters.length / cols))}}
     <div class="stage chapHelp" style="--help-rows: {{rows}}; --help-top-row: {{topRow}}; --help-row-step: {{rowStep}}">
+        <div class="helpHeader">
+            <div class="helpHeader__left">
+                <span class="helpHeader__tri"></span>
+                <div class="helpHeader__text">
+                    <p class="helpHeader__name">Phigros</p>
+                    <p class="helpHeader__desc">CHAPTER GUIDE</p>
+                </div>
+            </div>
+            <div class="helpHeader__right">
+                <p class="helpHeader__count">{{chapters.length}} CHAPTERS</p>
+                <div class="helpHeader__ver"><p>{{Version.phigros || Version.ver}}</p></div>
+            </div>
+        </div>
         {{each chapters ch index}}
         {{set r = Math.floor(index / cols)}}
         {{set c = index % cols}}
         {{set sixRow = topRow + rowStep * r}}
-        {{set sixCol = leftCol + colStep * c - rowStep / 2 * r}}
+        {{set sixCol = leftCol + colStep * c - rowStep / 2 * r - (r % 2 === 0 ? 0.5 : 0)}}
         <!--
             每章两个格点，相对偏移沿用 chapHelp-orz.html：
             别名框恒在 (曲绘卡 row + 1, 曲绘卡 col + 0.5)。
@@ -52,17 +65,21 @@
         <div class="grid-point" style="--row: {{sixRow + 1}}; --col: {{sixCol + 0.5}}">
             <div class="rowBox">
                 <i></i><i></i><i></i><i></i>
-                <div class="title">别名：</div>
-                <div class="content">{{ch.alias}}</div>
+                <div class="title">别名</div>
+                <div class="content">{{each ch.displayAliases aliasText}}<span>{{aliasText}}</span>{{/each}}</div>
             </div>
         </div>
         <div class="grid-point" style="--row: {{sixRow}}; --col: {{sixCol}}">
-            <div class="sixLineBox" style="--six-fill: #0b0f16">
+            <div class="sixLineBox">
                 <img src="{{ch.ill}}" alt="{{ch.name}}">
                 <div class="boxName">{{ch.name}}</div>
             </div>
             <div class="sixLine"><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
         {{/each}}
+        <div class="chapFooter">
+            <div class="phi-plugin"><p>{{_plugin}}</p></div>
+            <div class="ver"><p>{{Version.ver}}</p></div>
+        </div>
     </div>
 {{/block}}

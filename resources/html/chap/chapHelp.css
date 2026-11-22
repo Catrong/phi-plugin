@@ -425,22 +425,65 @@ canvas {
 
 .rowBox .title {
   position: absolute;
-  left: 50px;
-  top: 0px;
-  color: black;
-  font-size: 20px;
+  left: 56px;
+  top: 4px;
+  color: rgba(8, 34, 50, 0.6);
+  font-family: "Aldrich", "PHI";
+  font-size: 15px;
+  letter-spacing: 3px;
   z-index: 10;
 }
 
+/* 别名可能有多条：横向自动换行、从底部向上堆。
+   左右内缩按可见梯形取值 —— rowBox 的外接框比填充形状宽，
+   用 right:0 会让文字跑到斜边外面。 */
 .rowBox .content {
   position: absolute;
-  left: 0;
-  bottom: 2.5px;
-  width: 250px;
-  text-align: center;
-  color: black;
-  font-size: 40px;
+  left: 32px;
+  right: 32px;
+  bottom: 4px;
+  width: auto;
+  height: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: flex-end;
+  justify-content: flex-end;
+  gap: 2px 6px;
+  color: #0a2436;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.1;
   z-index: 10;
+  transform: skewX(-30deg);
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.rowBox .content span {
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  transform: skewX(30deg); /* 把文字本身反向扭回来，保持正常阅读 */
+}
+
+/* 每个别名末尾都跟一条发光斜线，像指示灯一样；最后一行同样保留。
+   外层青白光用半透明，避免在白色别名框上糊成一块白斑 */
+.rowBox .content span::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  margin-left: 8px;
+  vertical-align: -2px;
+  border-radius: 2px;
+  background: rgb(0, 150, 215);
+  box-shadow:
+    0 0 6px rgba(0, 179, 255, 0.95),
+    0 0 12px rgba(0, 203, 255, 0.5),
+    0 0 18px rgba(0, 203, 255, 0.25),
+    0 0 26px rgba(208, 255, 252, 0.45);
+  transform: rotate(30deg);
 }
 
 /* ==========================================================
@@ -585,9 +628,9 @@ canvas {
   --help-row-step: 4;
 
   /* 曲绘卡 row = topRow + rowStep·r，中心 y = (row - 1)·th，
-     末行六边形底边 = (topRow + rowStep·(rows - 1))·th，再留 2th 底部余量 */
+     末行六边形底边 = (topRow + rowStep·(rows - 1))·th，再留 3th 底部余量给品牌区 */
   height: calc(
-    (var(--help-top-row) + var(--help-row-step) * (var(--help-rows) - 1) + 2) *
+    (var(--help-top-row) + var(--help-row-step) * (var(--help-rows) - 1) + 3) *
       var(--th)
   );
 }
@@ -635,11 +678,283 @@ canvas {
       var(--stroke) 0 2px,
       transparent 2px var(--th)
     );
-  background-size: var(--side) calc(var(--th) * 2);
+  /* 水平线层用 1·th 的贴片（每 th 一条线），与曲绘卡顶/底边同相位；
+     两族斜线仍用 2·th 的贴片，保证斜线交点与格点对齐 */
+  background-size:
+    var(--side) var(--th),
+    var(--side) calc(var(--th) * 2),
+    var(--side) calc(var(--th) * 2);
+  /* 两族斜线平铺后的交点相位比 grid-point 的格点偏半个 side，
+     整层左移半个 side，交点才会落在格点上（与曲绘卡中心/顶点重合） */
   background-position:
     0 -1px,
-    0 calc(-1 * var(--th)),
-    0 var(--th);
+    calc(var(--side) * -0.5) calc(-1 * var(--th)),
+    calc(var(--side) * -0.5) var(--th);
   background-repeat: repeat;
   filter: drop-shadow(0 0 3px var(--grid-drop-shadow));
+}
+
+/* ==========================================================
+     ★ 静态光效与质感
+     Shotium / 截图后端没有动画引擎，这里用渐变、发光与暗角模拟
+     Phigros 的动态辉光；全部是纯 CSS，不依赖页面脚本。
+
+     - 曲绘背景压暗并偏冷，避免抢卡片
+     - 网格线改为半透明并向外淡出，脱离「作业纸」观感
+     - 六边形卡：深蓝渐变 + 内发光 + 冷色描边，名条加渐变高光
+     - 别名框：浅青渐变 + 投影 + 辉光
+     - 页面叠加扫描线、顶部冷光、四周暗角
+     ========================================================== */
+.background img {
+  filter: blur(18px) brightness(0.4) saturate(1.35) hue-rotate(-10deg);
+}
+
+.chapHelp {
+  --stroke: rgba(126, 198, 226, 0.3);
+  --object-drop-shadow: rgba(120, 220, 255, 0.55);
+  /* 扫描线放在 stage 背景层：只透过网格可见，不会印在卡片与别名框上 */
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.03) 0 1px,
+    transparent 1px 4px
+  );
+}
+
+.chapHelp::before {
+  -webkit-mask-image: radial-gradient(
+    120% 88% at 50% 32%,
+    #000 46%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(120% 88% at 50% 32%, #000 46%, transparent 100%);
+}
+
+.chapHelp .sixLineBox {
+  background: linear-gradient(
+    158deg,
+    rgba(24, 52, 80, 0.97) 0%,
+    rgba(6, 12, 21, 0.99) 54%,
+    rgba(9, 20, 34, 0.99) 100%
+  );
+  box-shadow: inset 0 0 46px rgba(64, 196, 255, 0.16);
+}
+
+.chapHelp .sixLineBox img {
+  filter: brightness(1.12) contrast(1.05) saturate(1.08);
+}
+
+/* 卡片左上角斜向高光 + 底部冷色反光，让黑色卡片不只靠外发光撑层次 */
+.chapHelp .sixLineBox::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      136deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.04) 26%,
+      transparent 46%
+    ),
+    linear-gradient(0deg, rgba(64, 196, 255, 0.08), transparent 32%);
+}
+
+.chapHelp .boxName {
+  height: 34%;
+  padding: 0 40px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #ecf9ff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background: linear-gradient(
+    0deg,
+    rgba(2, 8, 15, 0.98) 14%,
+    rgba(2, 8, 15, 0.72) 62%,
+    rgba(2, 8, 15, 0) 100%
+  );
+}
+
+.chapHelp .sixLine {
+  --six-line: #d0fffc;
+  --six-line-width: 4px;
+  filter: drop-shadow(0 0 2px rgba(208, 255, 252, 0.9))
+    drop-shadow(0 0 9px rgba(0, 194, 255, 0.5))
+    drop-shadow(0 0 22px rgba(0, 162, 255, 0.32))
+    drop-shadow(0 12px 26px rgba(0, 0, 0, 0.6));
+}
+
+.chapHelp .rowBox {
+  --row-fill: linear-gradient(135deg, #f4fbff 0%, #d8ecfb 56%, #b5d5ea 100%);
+  --row-stroke: #eaf9ff;
+  --row-stroke-width: 3px;
+  filter: drop-shadow(0 8px 22px rgba(0, 8, 18, 0.55))
+    drop-shadow(0 0 14px rgba(120, 220, 255, 0.35));
+}
+
+.chapHelp::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(58, 178, 255, 0.14) 0%,
+      transparent 16%,
+      transparent 84%,
+      rgba(0, 0, 0, 0.4) 100%
+    ),
+    radial-gradient(900px 520px at 18% 4%, rgba(64, 196, 255, 0.22), transparent 70%),
+    radial-gradient(820px 480px at 84% 12%, rgba(136, 96, 255, 0.16), transparent 72%),
+    radial-gradient(1000px 620px at 50% 100%, rgba(38, 214, 196, 0.12), transparent 74%);
+}
+
+/* ==========================================================
+     ★ 顶部标题栏（参考第九章 C9song：黑底 + 青白霓虹 + 三角）
+     - 左侧 Phigros 标题与 CHAPTER GUIDE 副标题，右侧章节数与版本
+     - 底部一条「青白 → 透明」的渐隐线，呼应 C9song 的 songNameBoxBorder
+     ========================================================== */
+.helpHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 210px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 130px;
+  box-sizing: border-box;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 8, 16, 0.66) 0%,
+    rgba(0, 8, 16, 0.18) 62%,
+    transparent 100%
+  );
+}
+
+.helpHeader::after {
+  content: "";
+  position: absolute;
+  left: 130px;
+  right: 130px;
+  bottom: 26px;
+  height: 14px;
+  background: linear-gradient(
+    90deg,
+    #d0fffc,
+    rgba(0, 162, 255, 0.6) 42%,
+    transparent 100%
+  );
+  
+}
+
+.helpHeader__left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.helpHeader__tri {
+  width: 0;
+  height: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 52px solid #d0fffc;
+  filter: drop-shadow(0 0 14px rgba(0, 190, 255, 0.55));
+}
+
+.helpHeader__text p {
+  margin: 10px;
+}
+
+.helpHeader__name {
+  font-family: "Aldrich", "PHI";
+  font-size: 58px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(0, 194, 255, 0.55);
+}
+
+.helpHeader__desc {
+  font-family: "Aldrich", "PHI";
+  font-size: 24px;
+  letter-spacing: 9px;
+  color: #d0fffc;
+}
+
+.helpHeader__right {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+}
+
+.helpHeader__count {
+  font-family: "Aldrich", "PHI";
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: rgba(208, 255, 252, 0.7);
+}
+
+.helpHeader__ver {
+  padding: 7px 22px;
+  background: linear-gradient(180deg, #f7fdff, #cfeefe);
+  /* clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%); */
+}
+
+.helpHeader__ver p {
+  margin: 0;
+  color: #0a2436;
+  font-size: 21px;
+  font-family: "Aldrich", "PHI";
+}
+
+/* ==========================================================
+     ★ 底部品牌区（C9 风格：青白发光 + 渐隐线）
+   ========================================================== */
+.chapFooter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  z-index: 21;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.chapFooter::before {
+  content: "";
+  width: 620px;
+  height: 2px;
+  margin-bottom: 16px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 162, 255, 0.7) 32%,
+    #d0fffc 50%,
+    rgba(0, 162, 255, 0.7) 68%,
+    transparent
+  );
+}
+
+.chapFooter .phi-plugin p {
+  font-family: "Aldrich", "PHI";
+  font-size: 62px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #eafcff;
+  text-shadow: 0 0 24px rgba(0, 194, 255, 0.5);
+}
+
+.chapFooter .ver p {
+  font-size: 21px;
+  letter-spacing: 5px;
+  color: rgba(208, 255, 252, 0.6);
 }

@@ -16,7 +16,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import template from 'art-template'
-import yaml from 'js-yaml'
+import YAML from 'yaml'
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const pluginRoot = path.resolve(scriptDir, '..')
@@ -34,16 +34,27 @@ function relPrefix(fromDir) {
 
 /**
  * 章节数据：规则与 getInfo.getChapterList() 保持一致 ——
- * name 取 chaplist.yaml 的第一个别名（正式名），alias 取该章最短别名。
+ * name 取 chaplist.yaml 的第一个别名（正式名），alias 取该章最短别名，
+ * aliases 为全部别名，displayAliases 去掉与曲绘卡重复的正式名后取前三个。
  * @param {string} rel 相对 resources/ 的前缀
  */
 function buildChapters(rel) {
-    const chapList = yaml.load(fs.readFileSync(path.join(resRoot, 'info/chaplist.yaml'), 'utf8'))
+    const chapList = YAML.parse(fs.readFileSync(path.join(resRoot, 'info/chaplist.yaml'), 'utf8'))
     return Object.entries(chapList).map(([code, aliases]) => {
         const list = (Array.isArray(aliases) ? aliases : []).filter(a => typeof a === 'string' && a.length > 0)
         const name = list[0] || code
         const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
-        return { code, name, alias, ill: rel + 'original_ill/chap/' + code + '.png' }
+        const allAliases = list.length ? list : [name]
+        const displayAliases = allAliases.filter(item => item !== name).slice(0, 3)
+        return {
+            code,
+            name,
+            alias,
+            aliases: allAliases,
+            displayAliases: displayAliases.length ? displayAliases : [name],
+            /* 本地曲绘按章节代码命名：Single.png、MainStory9.png、vividstasis.png */
+            ill: rel + 'original_ill/chap/' + code + '.png',
+        }
     })
 }
 
@@ -72,6 +83,12 @@ if (!buildData) {
 const outDir = path.dirname(artPath)
 const outPath = path.join(outDir, tplName + '-render.html')
 const rel = relPrefix(outDir)
+const pluginVersion = 'v' + JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version
+/* 游戏内版本与 Version.js 一样从 README 的 Phigros-x.y.z 标记读取 */
+const readmePath = path.join(pluginRoot, 'README.md')
+const phigrosVersion = fs.existsSync(readmePath)
+    ? /Phigros-([0-9.]+)/.exec(fs.readFileSync(readmePath, 'utf8'))?.[1] ?? ''
+    : ''
 
 const data = {
     defaultLayout: path.join(htmlRoot, 'common/layout/default.art'),
@@ -87,8 +104,8 @@ const data = {
     bodyClass: '',
     sys: { scale: '' },
     background: '',
-    _plugin: 'phi-Plugin',
-    Version: { ver: '' },
+    _plugin: 'Phi-Plugin',
+    Version: { ver: pluginVersion, phigros: phigrosVersion },
     Math,
     fCompute: {},
     ...buildData(rel),
