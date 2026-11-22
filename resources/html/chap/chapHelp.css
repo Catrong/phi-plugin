@@ -467,21 +467,23 @@ canvas {
   transform: skewX(30deg); /* 把文字本身反向扭回来，保持正常阅读 */
 }
 
-/* 每个别名末尾都跟一条发光斜线，像指示灯一样；最后一行同样保留 */
+/* 每个别名末尾都跟一条发光斜线，像指示灯一样；最后一行同样保留。
+   外层青白光用半透明，避免在白色别名框上糊成一块白斑 */
 .rowBox .content span::after {
   content: "";
   display: inline-block;
-  width: 3px;
+  width: 4px;
   height: 18px;
   margin-left: 8px;
   vertical-align: -2px;
   border-radius: 2px;
-  background: #4ecbff;
+  background: rgb(0, 150, 215);
   box-shadow:
-    0 0 6px rgba(78, 203, 255, 0.95),
-    0 0 14px rgba(78, 203, 255, 0.5),
-    0 0 24px rgba(78, 203, 255, 0.25);
-  transform: rotate(24deg);
+    0 0 6px rgba(0, 179, 255, 0.95),
+    0 0 12px rgba(0, 203, 255, 0.5),
+    0 0 18px rgba(0, 203, 255, 0.25),
+    0 0 26px rgba(208, 255, 252, 0.45);
+  transform: rotate(30deg);
 }
 
 /* ==========================================================

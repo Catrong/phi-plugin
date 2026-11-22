@@ -35,21 +35,11 @@ function relPrefix(fromDir) {
 /**
  * 章节数据：规则与 getInfo.getChapterList() 保持一致 ——
  * name 取 chaplist.yaml 的第一个别名（正式名），alias 取该章最短别名，
- * aliases 为全部别名，displayAliases 去掉与曲绘卡重复的正式名。
+ * aliases 为全部别名，displayAliases 去掉与曲绘卡重复的正式名后取前三个。
  * @param {string} rel 相对 resources/ 的前缀
  */
 function buildChapters(rel) {
     const chapList = YAML.parse(fs.readFileSync(path.join(resRoot, 'info/chaplist.yaml'), 'utf8'))
-    /* 本地曲绘按章节名称存放，个别名称与 chaplist 有空格 / 前缀差异（Single-单曲 精选集 → 单曲精选集.png） */
-    const chapDir = path.join(resRoot, 'original_ill/chap')
-    const chapFiles = fs.existsSync(chapDir)
-        ? fs.readdirSync(chapDir).filter(file => file.toLowerCase().endsWith('.png'))
-        : []
-    const normalize = value => value.replace(/\.png$/i, '').replace(/^Single-/, '').replace(/\s+/g, '').toLowerCase()
-    const illFor = name => {
-        const file = chapFiles.find(item => normalize(item) === normalize(name))
-        return rel + 'original_ill/chap/' + (file || name + '.png')
-    }
     return Object.entries(chapList).map(([code, aliases]) => {
         const list = (Array.isArray(aliases) ? aliases : []).filter(a => typeof a === 'string' && a.length > 0)
         const name = list[0] || code
@@ -62,7 +52,8 @@ function buildChapters(rel) {
             alias,
             aliases: allAliases,
             displayAliases: displayAliases.length ? displayAliases : [name],
-            ill: illFor(name),
+            /* 本地曲绘按章节代码命名：Single.png、MainStory9.png、vividstasis.png */
+            ill: rel + 'original_ill/chap/' + code + '.png',
         }
     })
 }
