@@ -55,7 +55,7 @@ function buildChapters(rel) {
         const name = list[0] || code
         const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
         const allAliases = list.length ? list : [name]
-        const displayAliases = allAliases.filter(item => item !== name)
+        const displayAliases = allAliases.filter(item => item !== name).slice(0, 3)
         return {
             code,
             name,

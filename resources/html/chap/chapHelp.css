@@ -445,16 +445,18 @@ canvas {
   width: auto;
   height: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-content: flex-end;
   justify-content: flex-end;
-  gap: 2px 8px;
+  gap: 2px 6px;
   color: #0a2436;
   font-size: 24px;
   font-weight: 600;
   line-height: 1.1;
   z-index: 10;
-  transform: skewX(-30deg); /* 让文字沿梯形底边水平排列 */
+  transform: skewX(-30deg);
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .rowBox .content span {
@@ -469,6 +471,7 @@ canvas {
 .rowBox .content span:not(:last-child)::after {
   content: ";";
   margin-left: 1px;
+  color: gray;
 }
 
 /* ==========================================================

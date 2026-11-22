@@ -1290,7 +1290,7 @@ class getInfo {
      * - `name`：章节名称，取 chaplist.yaml 里该章节的第一个别名（即正式名），
      *   与 `ori_info[].chapter`、`fuzzySearch` 的返回值保持一致，可直接用于查询。
      * - `aliases`：该章节的全部别名（含正式名），顺序与 chaplist.yaml 一致。
-     * - `displayAliases`：别名框里展示的别名，去掉与曲绘卡重复的正式名；
+     * - `displayAliases`：别名框里展示的别名，去掉与曲绘卡重复的正式名后取前三个；
      *   没有其他别名时回退为正式名，保证别名框不空。
      * - `alias`：最短别名（正式名也参与比较），保留给旧调用方。
      * @returns {{ code: string, name: string, alias: string, aliases: string[], displayAliases: string[], ill: string }[]}
@@ -1303,7 +1303,8 @@ class getInfo {
             /** 最短别名；正式名一起参与比较，别名表为空时回退到章节名 */
             const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
             const allAliases = list.length ? list : [name]
-            const displayAliases = allAliases.filter(item => item !== name)
+            /** 别名框高度有限，只展示前三个别名（正式名已经在曲绘卡上） */
+            const displayAliases = allAliases.filter(item => item !== name).slice(0, 3)
             return {
                 code,
                 name,
