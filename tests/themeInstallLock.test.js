@@ -64,3 +64,47 @@ test('PHI_MARKET_LOCK_WAIT_MS 可以缩短锁等待上限', async () => {
         fs.rmSync(lockPath, { force: true })
     }
 })
+
+test('锁文件短暂被占用时，释放锁后下一次安装可以继续', async t => {
+    const remove = fs.promises.rm
+    let blocked = false
+    const mock = t.mock.method(fs.promises, 'rm', async (/** @type {Parameters<typeof remove>} */ ...args) => {
+        if (args[0] === lockPath && !blocked) {
+            blocked = true
+            throw Object.assign(new Error('锁文件短暂被占用'), { code: 'EPERM' })
+        }
+        return remove(...args)
+    })
+
+    try {
+        assert.equal(await withMarketInstallLock(async () => 'first'), 'first')
+        assert.equal(blocked, true)
+        assert.equal(fs.existsSync(lockPath), false)
+        assert.equal(await withMarketInstallLock(async () => 'second'), 'second')
+    } finally {
+        mock.mock.restore()
+        await remove(lockPath, { force: true })
+    }
+})
+
+test('锁文件持续被占用时保留原始错误，占用结束后队列可继续', async t => {
+    const remove = fs.promises.rm
+    const lockError = Object.assign(new Error('锁文件仍被占用'), { code: 'EBUSY' })
+    let blocked = true
+    const mock = t.mock.method(fs.promises, 'rm', async (/** @type {Parameters<typeof remove>} */ ...args) => {
+        if (args[0] === lockPath && blocked) throw lockError
+        return remove(...args)
+    })
+
+    try {
+        await assert.rejects(withMarketInstallLock(async () => {}), error => error === lockError)
+        assert.equal(fs.existsSync(lockPath), true)
+
+        blocked = false
+        assert.equal(await withMarketInstallLock(async () => 'next'), 'next')
+        assert.equal(fs.existsSync(lockPath), false)
+    } finally {
+        mock.mock.restore()
+        await remove(lockPath, { force: true })
+    }
+})

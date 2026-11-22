@@ -9,6 +9,8 @@ const LOCK_PATH = path.join(themesDir, '.phi-market-install.lock')
 const LOCK_REAP_PREFIX = `${LOCK_PATH}.reap-`
 const DEFAULT_LOCK_WAIT_MS = 120_000
 const LOCK_STALE_MS = 5 * 60_000
+const LOCK_RELEASE_RETRY_DELAYS_MS = [100, 200]
+const LOCK_RELEASE_RETRY_CODES = new Set(['EACCES', 'EBUSY', 'EPERM'])
 
 /**
  * 锁等待上限：默认 120 秒，测试可用 PHI_MARKET_LOCK_WAIT_MS 覆盖为更短的值。
@@ -22,6 +24,8 @@ function lockWaitMs() {
 /** @type {Promise<void>} */
 let processQueue = Promise.resolve()
 const installLockContext = new AsyncLocalStorage()
+/** @type {Awaited<ReturnType<typeof acquireFileLock>> | undefined} */
+let pendingRelease
 
 /** @param {number} ms */
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -184,6 +188,28 @@ async function acquireFileLock() {
     throw new ThemeMarketClientError('theme_install_busy')
 }
 
+async function releasePendingFileLock() {
+    const lock = pendingRelease
+    if (!lock) return
+    await lock.handle.close()
+    for (let attempt = 0; ; attempt++) {
+        try {
+            const raw = await fs.promises.readFile(LOCK_PATH, 'utf8')
+            if (JSON.parse(raw)?.token === lock.token) {
+                await fs.promises.rm(LOCK_PATH, { force: true })
+            }
+            break
+        } catch (error) {
+            const code = /** @type {NodeJS.ErrnoException} */ (error)?.code
+            if (code === 'ENOENT') break
+            const delay = LOCK_RELEASE_RETRY_DELAYS_MS[attempt]
+            if (delay === undefined || !code || !LOCK_RELEASE_RETRY_CODES.has(code)) throw error
+            await wait(delay)
+        }
+    }
+    pendingRelease = undefined
+}
+
 /** @template T @param {() => Promise<T>} operation @returns {Promise<T>} */
 export async function withMarketInstallLock(operation) {
     if (installLockContext.getStore()) return operation()
@@ -192,18 +218,29 @@ export async function withMarketInstallLock(operation) {
     let releaseQueue = () => {}
     processQueue = new Promise(resolve => { releaseQueue = () => resolve() })
     await previous
-    let lock
     try {
-        lock = await acquireFileLock()
-        return await installLockContext.run(lock, operation)
-    } finally {
-        if (lock) {
-            await lock.handle.close().catch(() => {})
-            const current = await readFileLockState()
-            if (current?.owner?.token === lock.token) {
-                await fs.promises.rm(LOCK_PATH, { force: true }).catch(() => {})
+        await releasePendingFileLock()
+        const lock = await acquireFileLock()
+        pendingRelease = lock
+        let operationFailed = false
+        let operationError
+        try {
+            return await installLockContext.run(lock, operation)
+        } catch (error) {
+            operationFailed = true
+            operationError = error
+            throw error
+        } finally {
+            try {
+                await releasePendingFileLock()
+            } catch (releaseError) {
+                if (operationFailed) {
+                    throw new AggregateError([operationError, releaseError], '主题安装操作和锁释放均失败')
+                }
+                throw releaseError
             }
         }
+    } finally {
         releaseQueue()
     }
 }
