@@ -1,0 +1,330 @@
+:root {
+
+  --side: 102.4px;
+  --th: calc(var(--side) * 0.8660254037844386);
+  --ox: calc(-1 * var(--side));
+  --oy: calc(-1 * var(--th));
+
+  --bg: #0f111700;
+  --stroke: #80acc1;
+  --fill: #00000000;
+
+  --grid-drop-shadow: #000;
+  --object-drop-shadow: #fff;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0px 0px 3px var(--grid-drop-shadow));
+}
+
+.grid-point {
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: calc(
+    var(--ox) + var(--col) * var(--side) + var(--row) * var(--side) / 2
+  );
+  top: calc(var(--oy) + var(--row) * var(--th));
+  pointer-events: none;
+  --horiz-count: 2;
+}
+
+.marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  background: #ff5252;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+}
+
+.marker::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.marker.alt {
+  background: #ffb300;
+  color: #1a1a1a;
+}
+
+.marker.alt::before {
+  background: #1a1a1a;
+}
+
+.sixLine {
+  --six-horiz: calc(
+    var(--side) * var(--horiz-count)
+  );
+  --six-up: var(--side);
+  --six-down: var(--side);
+  --six-line-width: 5px;
+  --six-line: #fff;
+
+  --six-miter: calc(var(--six-line-width) * 0.2886751345948129);
+
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  width: calc(var(--six-horiz) + (var(--six-up) + var(--six-down)) / 2);
+  height: calc((var(--six-up) + var(--six-down)) * 0.8660254037844386);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0px 0px 3px var(--object-drop-shadow));
+}
+
+.sixLine > i {
+  position: absolute;
+  left: var(--edge-x);
+  top: var(--edge-y);
+  width: calc(var(--edge-len) + var(--six-miter) * 2);
+  height: var(--six-line-width);
+  margin-top: calc(var(--six-line-width) / -2);
+  transform-origin: 0 50%;
+  transform: rotate(var(--edge-angle)) translateX(calc(var(--six-miter) * -1));
+  background: var(--six-line);
+}
+
+.sixLine > i:nth-child(1) {
+
+  --edge-x: calc(var(--six-down) / 2);
+  --edge-y: 0;
+  --edge-len: var(--six-horiz);
+  --edge-angle: 0deg;
+}
+
+.sixLine > i:nth-child(2) {
+
+  --edge-x: calc(var(--six-horiz) + var(--six-down) / 2);
+  --edge-y: 0;
+  --edge-len: var(--six-up);
+  --edge-angle: 60deg;
+}
+
+.sixLine > i:nth-child(3) {
+
+  --edge-x: 100%;
+  --edge-y: calc(var(--six-up) * 0.8660254037844386);
+  --edge-len: var(--six-down);
+  --edge-angle: 120deg;
+}
+
+.sixLine > i:nth-child(4) {
+
+  --edge-x: calc(var(--six-horiz) + var(--six-up) / 2);
+  --edge-y: 100%;
+  --edge-len: var(--six-horiz);
+  --edge-angle: 180deg;
+}
+
+.sixLine > i:nth-child(5) {
+
+  --edge-x: calc(var(--six-up) / 2);
+  --edge-y: 100%;
+  --edge-len: var(--six-up);
+  --edge-angle: 240deg;
+}
+
+.sixLine > i:nth-child(6) {
+
+  --edge-x: 0;
+  --edge-y: calc(var(--six-down) * 0.8660254037844386);
+  --edge-len: var(--six-down);
+  --edge-angle: 300deg;
+}
+
+.sixLineBox {
+  --six-horiz: calc(
+    var(--side) * var(--horiz-count)
+  );
+  --six-up: var(--side);
+  --six-down: var(--side);
+  --six-fill: var(--stroke);
+
+  --six-w: calc(var(--six-horiz) + (var(--six-up) + var(--six-down)) / 2);
+  --six-h: calc((var(--six-up) + var(--six-down)) * 0.8660254037844386);
+
+  --six-v0x: calc(var(--six-down) / 2);
+  --six-v0y: 0px;
+  --six-v1x: calc(var(--six-down) / 2 + var(--six-horiz));
+  --six-v1y: 0px;
+  --six-v2x: var(--six-w);
+  --six-v2y: calc(var(--six-up) * 0.8660254037844386);
+  --six-v3x: calc(var(--six-horiz) + var(--six-up) / 2);
+  --six-v3y: var(--six-h);
+  --six-v4x: calc(var(--six-up) / 2);
+  --six-v4y: var(--six-h);
+  --six-v5x: 0px;
+  --six-v5y: calc(var(--six-down) * 0.8660254037844386);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--six-w);
+  height: var(--six-h);
+  background: var(--six-fill);
+
+  clip-path: polygon(
+    var(--six-v0x) var(--six-v0y),
+    var(--six-v1x) var(--six-v1y),
+    var(--six-v2x) var(--six-v2y),
+    var(--six-v3x) var(--six-v3y),
+    var(--six-v4x) var(--six-v4y),
+    var(--six-v5x) var(--six-v5y)
+  );
+  transform: translate(-50%, -50%);
+}
+
+.rowBox {
+  --row-side: var(--side);
+  --row-count: 4;
+  --row-start: 0;
+  --row-stroke: #fff;
+  --row-fill: #fff;
+  --row-stroke-width: 5px;
+
+  --rw-s: var(--row-side);
+  --rw-h: calc(var(--rw-s) * 0.8660254037844386);
+  --rw-w: calc((var(--row-count) + 1) * var(--rw-s) / 2);
+
+  --rw-p: mod(var(--row-count), 2);
+  --rw-down: calc((var(--row-count) - var(--rw-p)) / 2);
+  --rw-up: calc((var(--row-count) + var(--rw-p)) / 2);
+
+  --rw-b: calc(var(--rw-down) * var(--rw-s) + var(--rw-s) / 2);
+  --rw-c: calc(var(--rw-up) * var(--rw-s));
+
+  --rw-angle: calc(120deg - var(--rw-p) * 60deg);
+
+  --rw-t: var(--row-stroke-width);
+
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--rw-w);
+  height: var(--rw-h);
+
+  transform: translate(0%, -100%) scaleY(calc(1 - 2 * var(--row-start)));
+  filter: drop-shadow(0px 0px 3px var(--object-drop-shadow));
+}
+
+.rowBox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--row-fill);
+  clip-path: polygon(
+    calc(var(--rw-s) / 2) 0px,
+    var(--rw-b) 0px,
+    var(--rw-c) var(--rw-h),
+    0px var(--rw-h)
+  );
+}
+
+.rowBox > i {
+  position: absolute;
+  left: calc(var(--edge-x) - var(--rw-t) / 2);
+  top: var(--edge-y);
+  width: calc(var(--edge-len, 0px) + var(--rw-t));
+  height: var(--rw-t);
+  margin-top: calc(var(--rw-t) / -2);
+  transform-origin: calc(var(--rw-t) / 2) 50%;
+  transform: rotate(var(--edge-angle, 0deg));
+  background: var(--row-stroke);
+  border-radius: calc(var(--rw-t) / 2);
+}
+
+.rowBox > i:nth-child(1) {
+  --edge-x: calc(var(--rw-s) / 2);
+  --edge-y: 0px;
+  --edge-len: calc(var(--rw-down) * var(--rw-s));
+  --edge-angle: 0deg;
+}
+
+.rowBox > i:nth-child(2) {
+  --edge-x: var(--rw-b);
+  --edge-y: 0px;
+  --edge-len: var(--rw-s);
+  --edge-angle: var(--rw-angle);
+}
+
+.rowBox > i:nth-child(3) {
+  --edge-x: var(--rw-c);
+  --edge-y: var(--rw-h);
+  --edge-len: calc(var(--rw-up) * var(--rw-s));
+  --edge-angle: 180deg;
+}
+
+.rowBox > i:nth-child(4) {
+  --edge-x: 0px;
+  --edge-y: var(--rw-h);
+  --edge-len: var(--rw-s);
+  --edge-angle: 300deg;
+}
+
+.phigrOS-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      var(--stroke) 0 2px,
+      transparent 2px var(--th)
+    ),
+    repeating-linear-gradient(
+      120deg,
+      var(--stroke) 0 2px,
+      transparent 2px var(--th)
+    ),
+    repeating-linear-gradient(
+      60deg,
+      var(--stroke) 0 2px,
+      transparent 2px var(--th)
+    );
+
+  background-size:
+    var(--side) var(--th),
+    var(--side) calc(var(--th) * 2),
+    var(--side) calc(var(--th) * 2);
+
+  background-position:
+    0 -1px,
+    calc(var(--side) * -0.5) calc(-1 * var(--th)),
+    calc(var(--side) * -0.5) var(--th);
+  background-repeat: repeat;
+  filter: drop-shadow(0 0 3px var(--grid-drop-shadow));
+}
+
+.phigrOS-grid {
+  --th: calc(var(--side) * 0.8660254037844386);
+  --ox: calc(-1 * var(--side));
+  --oy: calc(-1 * var(--th));
+  position: relative;
+}
