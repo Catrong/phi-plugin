@@ -35,7 +35,7 @@ function relPrefix(fromDir) {
 /**
  * 章节数据：规则与 getInfo.getChapterList() 保持一致 ——
  * name 取 chaplist.yaml 的第一个别名（正式名），alias 取该章最短别名，
- * aliases 为全部别名，displayAliases 去掉与曲绘卡重复的正式名后取前三个。
+ * aliases 为全部别名，displayAliases 去掉正式名后按长度升序取最短三个。
  * @param {string} rel 相对 resources/ 的前缀
  */
 function buildChapters(rel) {
@@ -45,7 +45,11 @@ function buildChapters(rel) {
         const name = list[0] || code
         const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
         const allAliases = list.length ? list : [name]
-        const displayAliases = allAliases.filter(item => item !== name).slice(0, 3)
+        /* 按长度升序取最短三个，正式名已在卡上 */
+        const displayAliases = allAliases
+            .filter(item => item !== name)
+            .sort((a, b) => a.length - b.length)
+            .slice(0, 3)
         return {
             code,
             name,

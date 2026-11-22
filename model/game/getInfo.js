@@ -1303,8 +1303,11 @@ class getInfo {
             /** 最短别名；正式名一起参与比较，别名表为空时回退到章节名 */
             const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
             const allAliases = list.length ? list : [name]
-            /** 别名框高度有限，只展示前三个别名（正式名已经在曲绘卡上） */
-            const displayAliases = allAliases.filter(item => item !== name).slice(0, 3)
+            /** 按长度升序取最短三个，正式名已在卡上 */
+            const displayAliases = allAliases
+                .filter(item => item !== name)
+                .sort((a, b) => a.length - b.length)
+                .slice(0, 3)
             return {
                 code,
                 name,
