@@ -467,11 +467,21 @@ canvas {
   transform: skewX(30deg); /* 把文字本身反向扭回来，保持正常阅读 */
 }
 
-/* 多个别名之间用分号分隔：空格容易被误读成一个整体别名 */
+/* 多个别名之间用发光斜线分隔，像指示灯一样 */
 .rowBox .content span:not(:last-child)::after {
-  content: ";";
-  margin-left: 1px;
-  color: gray;
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 18px;
+  margin-left: 8px;
+  vertical-align: -2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #f2feff 0%, #4ecbff 60%, #1f8fd0 100%);
+  box-shadow:
+    0 0 6px rgba(78, 203, 255, 0.95),
+    0 0 14px rgba(78, 203, 255, 0.5),
+    0 0 24px rgba(78, 203, 255, 0.25);
+  transform: rotate(24deg);
 }
 
 /* ==========================================================
