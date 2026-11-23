@@ -8,7 +8,6 @@
 html,
 body {
   width: 2150.4px;
-  /* 帮助页高度随章节数增长，不能锁死在 1080；body 交给 .stage 撑开 */
   height: auto;
   min-height: 1080px;
 }
@@ -55,14 +54,11 @@ body {
 }
 
 
-/* 别名可能有多条：从底部向上堆。
-   左右内缩按可见梯形取值 —— rowBox 的外接框比填充形状宽，
-   用 right:0 会让文字跑到斜边外面。 */
 .rowBox .content {
   position: absolute;
   left: 32px;
   right: 32px;
-  bottom: 4px;
+  bottom: 3px;
   width: auto;
   height: 100%;
   display: flex;
@@ -85,11 +81,9 @@ body {
   margin: 0;
   padding: 0;
   display: inline-block;
-  transform: skewX(30deg); /* 把文字本身反向扭回来，保持正常阅读 */
+  transform: skewX(30deg); 
 }
 
-/* 每个别名末尾都跟一条发光斜线，像指示灯一样；最后一行同样保留。
-   外层青白光用半透明，避免在白色别名框上糊成一块白斑 */
 .rowBox .content span::after {
   content: "";
   display: inline-block;
@@ -107,8 +101,6 @@ body {
   transform: rotate(30deg);
 }
 
-/* 页面高度：曲绘卡 row = topRow + rowStep·r，末行六边形底边再留 3·th 给品牌区。
-   .phigrOS-grid 负责 --th / --ox / --oy，这里只接收模板注入的行列参数。 */
 .chapHelp {
   --help-rows: 12;
   --help-top-row: 4;
@@ -124,20 +116,18 @@ body {
   filter: blur(18px) brightness(0.4) saturate(1.35) hue-rotate(-10deg);
 }
 
-/* 配色全部走 phigrOS.css 暴露的变量，不直接覆盖它声明的属性：
+/* 配色走 phigrOS.css 暴露的变量
    --stroke / --object-drop-shadow / --grid-mask-image（网格）
    --six-fill / --six-glow（曲绘卡六边形）
    --row-fill / --row-stroke / --row-stroke-width / --row-glow（别名框） */
 .chapHelp {
   --stroke: rgba(126, 198, 226, 0.3);
   --object-drop-shadow: rgba(120, 220, 255, 0.55);
-  /* 网格线向四周淡出，脱离「作业纸」观感 */
   --grid-mask-image: radial-gradient(
     120% 88% at 50% 32%,
     #000 46%,
     transparent 100%
   );
-  /* 扫描线放在 stage 背景层：只透过网格可见，不会印在卡片与别名框上 */
   background-image: repeating-linear-gradient(
     0deg,
     rgba(255, 255, 255, 0.03) 0 1px,
@@ -145,7 +135,7 @@ body {
   );
 }
 
-/* 六边形曲绘卡：深蓝渐变 + 内发光 */
+
 .chapHelp .sixLineBox {
   --six-fill: linear-gradient(
     158deg,
@@ -159,7 +149,6 @@ body {
 .chapHelp .sixLineBox img {
   filter: brightness(1.12) contrast(1.05) saturate(1.08);
 }
-
 
 .chapHelp .sixLineBox::after {
   content: "";
@@ -251,7 +240,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 130px;
+  padding: 0 125px;
   box-sizing: border-box;
   background: linear-gradient(
     180deg,
@@ -264,10 +253,10 @@ body {
 .helpHeader::after {
   content: "";
   position: absolute;
-  left: 130px;
-  right: 130px;
+  left: var(--side);
+  right: var(--side);
   bottom: 26px;
-  height: 14px;
+  height: 12px;
   background: linear-gradient(
     90deg,
     #d0fffc,
@@ -280,6 +269,7 @@ body {
   display: flex;
   align-items: center;
   gap: 30px;
+  margin-bottom: 40px;
 }
 
 .helpHeader__tri {
@@ -325,7 +315,7 @@ body {
 }
 
 .helpHeader__ver {
-  padding: 7px 22px;
+  padding: 5px 22px;
   background: linear-gradient(180deg, #f7fdff, #cfeefe);
 }
 
@@ -341,7 +331,7 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 40px;
+  bottom: 50px;
   z-index: 21;
   display: flex;
   flex-direction: column;
