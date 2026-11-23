@@ -1290,7 +1290,8 @@ class getInfo {
      * - `name`：章节名称，取 chaplist.yaml 里该章节的第一个别名（即正式名），
      *   与 `ori_info[].chapter`、`fuzzySearch` 的返回值保持一致，可直接用于查询。
      * - `aliases`：该章节的全部别名（含正式名），顺序与 chaplist.yaml 一致。
-     * - `displayAliases`：别名框里展示的别名，去掉与曲绘卡重复的正式名后取前三个；
+     * - `displayAliases`：别名框里展示的别名，去掉与曲绘卡重复的正式名后按显示宽度取最短三个
+     *   （中日韩等全角字符按双字符计，见 `aliasDisplayWidth`）；
      *   没有其他别名时回退为正式名，保证别名框不空。
      * - `alias`：最短别名（正式名也参与比较），保留给旧调用方。
      * @returns {{ code: string, name: string, alias: string, aliases: string[], displayAliases: string[], ill: string }[]}
@@ -1303,10 +1304,10 @@ class getInfo {
             /** 最短别名；正式名一起参与比较，别名表为空时回退到章节名 */
             const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
             const allAliases = list.length ? list : [name]
-            /** 按长度升序取最短三个，正式名已在卡上 */
+            /** 按显示宽度升序取最短三个，正式名已在卡上 */
             const displayAliases = allAliases
                 .filter(item => item !== name)
-                .sort((a, b) => a.length - b.length)
+                .sort((a, b) => aliasDisplayWidth(a) - aliasDisplayWidth(b))
                 .slice(0, 3)
             return {
                 code,
@@ -1541,6 +1542,26 @@ class getInfo {
  */
 function idWithout0ToIdWith0(idWithout0) {
     return /** @type {idString} */(idWithout0 + '.0')
+}
+
+/** 全角（East Asian Wide / Fullwidth）字符范围：这类字符占两个字符宽度 */
+const WIDE_CHAR = /[\u1100-\u115F\u2E80-\u303E\u3041-\u33FF\u3400-\u4DBF\u4E00-\u9FFF\uA000-\uA4CF\uAC00-\uD7A3\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE6F\uFF00-\uFF60\uFFE0-\uFFE6]/
+
+/**
+ * 别名的显示宽度：全角字符按 2 计，其余按 1 计。
+ *
+ * 别名框按「最短」挑别名，只数 length 的话一个汉字（如「盘子」）算 2、
+ * 两个字母（如「or」）也算 2，但前者实际占位是后者的两倍。
+ * 按显示宽度比较才和肉眼看到的短长一致。
+ * @param {string} text
+ * @returns {number}
+ */
+function aliasDisplayWidth(text) {
+    let width = 0
+    for (const char of text) {
+        width += WIDE_CHAR.test(char) ? 2 : 1
+    }
+    return width
 }
 
 
