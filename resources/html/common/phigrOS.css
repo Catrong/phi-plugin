@@ -95,7 +95,8 @@ canvas {
   width: calc(var(--six-horiz) + (var(--six-up) + var(--six-down)) / 2);
   height: calc((var(--six-up) + var(--six-down)) * 0.8660254037844386);
   transform: translate(-50%, -50%);
-  filter: drop-shadow(0px 0px 3px var(--object-drop-shadow));
+  /* 主题化钩子：页面可整段替换成多层发光，不必覆盖 filter 属性 */
+  filter: var(--six-glow, drop-shadow(0px 0px 3px var(--object-drop-shadow)));
 }
 
 .sixLine > i {
@@ -229,7 +230,8 @@ canvas {
   height: var(--rw-h);
 
   transform: translate(0%, -100%) scaleY(calc(1 - 2 * var(--row-start)));
-  filter: drop-shadow(0px 0px 3px var(--object-drop-shadow));
+  /* 主题化钩子：同 --six-glow，页面只需给变量，不覆盖 filter */
+  filter: var(--row-glow, drop-shadow(0px 0px 3px var(--object-drop-shadow)));
 }
 
 .rowBox::before {
@@ -320,6 +322,9 @@ canvas {
     calc(var(--side) * -0.5) var(--th);
   background-repeat: repeat;
   filter: drop-shadow(0 0 3px var(--grid-drop-shadow));
+  /* 主题化钩子：默认不裁剪，页面可给一条 radial-gradient 做出四周淡出的暗角 */
+  -webkit-mask-image: var(--grid-mask-image, none);
+  mask-image: var(--grid-mask-image, none);
 }
 
 .phigrOS-grid {

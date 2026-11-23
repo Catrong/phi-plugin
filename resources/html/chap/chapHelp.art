@@ -56,7 +56,7 @@
             <div class="rowBox">
                 <i></i><i></i><i></i><i></i>
                 <div class="title">别名</div>
-                <div class="content">{{each ch.displayAliases aliasText i}}<span><p>{{aliasText}}</p><b class="clip-box alias-sep"></b></span>{{/each}}</div>
+                <div class="content">{{each ch.displayAliases aliasText}}<span>{{aliasText}}</span>{{/each}}</div>
             </div>
         </div>
         <div class="grid-point" style="--row: {{sixRow}}; --col: {{sixCol}}">

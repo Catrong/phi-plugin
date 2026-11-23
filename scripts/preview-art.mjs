@@ -32,10 +32,24 @@ function relPrefix(fromDir) {
     return path.relative(fromDir, resRoot).replace(/\\/g, '/') + '/'
 }
 
+/** 全角（East Asian Wide / Fullwidth）字符范围：这类字符占两个字符宽度 */
+const WIDE_CHAR = /[\u1100-\u115F\u2E80-\u303E\u3041-\u33FF\u3400-\u4DBF\u4E00-\u9FFF\uA000-\uA4CF\uAC00-\uD7A3\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE6F\uFF00-\uFF60\uFFE0-\uFFE6]/
+
+/**
+ * 别名的显示宽度：全角字符按 2 计，其余按 1 计。
+ * 与 getInfo.js 的 aliasDisplayWidth 保持一致，预览才和线上选到同样三个别名。
+ * @param {string} text
+ */
+function aliasDisplayWidth(text) {
+    let width = 0
+    for (const char of text) width += WIDE_CHAR.test(char) ? 2 : 1
+    return width
+}
+
 /**
  * 章节数据：规则与 getInfo.getChapterList() 保持一致 ——
  * name 取 chaplist.yaml 的第一个别名（正式名），alias 取该章最短别名，
- * aliases 为全部别名，displayAliases 去掉正式名后按长度升序取最短三个。
+ * aliases 为全部别名，displayAliases 去掉正式名后按显示宽度升序取最短三个。
  * @param {string} rel 相对 resources/ 的前缀
  */
 function buildChapters(rel) {
@@ -45,10 +59,10 @@ function buildChapters(rel) {
         const name = list[0] || code
         const alias = list.reduce((best, cur) => (cur.length < best.length ? cur : best), name)
         const allAliases = list.length ? list : [name]
-        /* 按长度升序取最短三个，正式名已在卡上 */
+        /* 按显示宽度升序取最短三个，正式名已在卡上 */
         const displayAliases = allAliases
             .filter(item => item !== name)
-            .sort((a, b) => a.length - b.length)
+            .sort((a, b) => aliasDisplayWidth(a) - aliasDisplayWidth(b))
             .slice(0, 3)
         return {
             code,
