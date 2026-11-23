@@ -7,13 +7,15 @@
 
 html,
 body {
-  width: 2201.6px;
+  width: 2150.4px;
+  /* 帮助页高度随章节数增长，不能锁死在 1080；body 交给 .stage 撑开 */
   height: auto;
-  position: relative;
+  min-height: 1080px;
 }
 body {
   margin: 0;
   background: var(--bg);
+  position: relative;
 }
 
 
@@ -53,16 +55,20 @@ body {
 }
 
 
+/* 别名可能有多条：从底部向上堆。
+   左右内缩按可见梯形取值 —— rowBox 的外接框比填充形状宽，
+   用 right:0 会让文字跑到斜边外面。 */
 .rowBox .content {
   position: absolute;
   left: 32px;
   right: 32px;
   bottom: 4px;
   width: auto;
-  top: 4px;
+  height: 100%;
   display: flex;
   flex-wrap: nowrap;
   align-content: flex-end;
+  justify-content: flex-end;
   gap: 2px 6px;
   color: #0a2436;
   font-size: 24px;
@@ -72,153 +78,66 @@ body {
   transform: skewX(-30deg);
   flex-direction: column;
   align-items: flex-end;
-  justify-content: flex-end;
 }
 
 .rowBox .content span {
   white-space: nowrap;
-  margin-right: -9px;
-  margin-top: 1px;
+  margin: 0;
   padding: 0;
-  --height: 25px;
-  height: var(--height);
-  transform: skewX(30deg); 
-  display: flex;
-  align-items: center;
-}
-
-.rowBox .content p {
-  z-index: 10;
-}
-
-
-.alias-sep {
-  --clipSlope: 0.6;
   display: inline-block;
-  width: calc(60px + var(--height) * var(--clipSlope));
-  margin-left: -60px;
-  background: linear-gradient(-60deg, #6e9dd7 13%, #00000000 80%);
-  z-index: 0;
+  transform: skewX(30deg); /* 把文字本身反向扭回来，保持正常阅读 */
 }
 
-
-.background .warpField {
-  --warp-blur: 20px;
-  --warp-brightness: 50%;
-  --warp-step: 0.065;
-  --warp-feather: 7%;
-
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: -1;
+/* 每个别名末尾都跟一条发光斜线，像指示灯一样；最后一行同样保留。
+   外层青白光用半透明，避免在白色别名框上糊成一块白斑 */
+.rowBox .content span::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  margin-left: 8px;
+  vertical-align: -2px;
+  border-radius: 2px;
+  background: rgb(0, 150, 215);
+  box-shadow:
+    0 0 6px rgba(0, 179, 255, 0.95),
+    0 0 12px rgba(0, 203, 255, 0.5),
+    0 0 18px rgba(0, 203, 255, 0.25),
+    0 0 26px rgba(208, 255, 252, 0.45);
+  transform: rotate(30deg);
 }
 
-.background .warpField > i {
-  position: absolute;
-  inset: 0;
-  background-image: var(--warp-src, none);
-  background-position: 50% 50%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  filter: blur(var(--warp-blur)) brightness(var(--warp-brightness));
-  
-  transform: scale(calc(1 + var(--wl-k, 0) * var(--warp-step)));
-  transform-origin: 50% 50%;
-  
-  -webkit-mask-image: radial-gradient(
-    circle at 50% 50%,
-    transparent calc(var(--wl-in, 0%) - var(--warp-feather)),
-    #000 calc(var(--wl-in, 0%) + var(--warp-feather)),
-    #000 calc(var(--wl-out, 0%) - var(--warp-feather)),
-    transparent calc(var(--wl-out, 0%) + var(--warp-feather))
-  );
-  mask-image: radial-gradient(
-    circle at 50% 50%,
-    transparent calc(var(--wl-in, 0%) - var(--warp-feather)),
-    #000 calc(var(--wl-in, 0%) + var(--warp-feather)),
-    #000 calc(var(--wl-out, 0%) - var(--warp-feather)),
-    transparent calc(var(--wl-out, 0%) + var(--warp-feather))
-  );
-}
-
-
-.background .warpField > i:nth-child(1) {
-  -webkit-mask-image: radial-gradient(
-    circle at 50% 50%,
-    #000 calc(var(--wl-out) - var(--warp-feather)),
-    transparent calc(var(--wl-out) + var(--warp-feather))
-  );
-  mask-image: radial-gradient(
-    circle at 50% 50%,
-    #000 calc(var(--wl-out) - var(--warp-feather)),
-    transparent calc(var(--wl-out) + var(--warp-feather))
-  );
-}
-
-
-.background .warpField > i:nth-child(1) {
-  --wl-in: 0%;
-  --wl-out: 20%;
-  --wl-k: 0;
-}
-.background .warpField > i:nth-child(2) {
-  --wl-in: 20%;
-  --wl-out: 33%;
-  --wl-k: 1;
-}
-.background .warpField > i:nth-child(3) {
-  --wl-in: 33%;
-  --wl-out: 46%;
-  --wl-k: 2;
-}
-.background .warpField > i:nth-child(4) {
-  --wl-in: 46%;
-  --wl-out: 60%;
-  --wl-k: 3;
-}
-.background .warpField > i:nth-child(5) {
-  --wl-in: 60%;
-  --wl-out: 76%;
-  --wl-k: 4;
-}
-.background .warpField > i:nth-child(6) {
-  --wl-in: 76%;
-  --wl-out: 96%;
-  --wl-k: 5;
-}
-
-.background .warpField > i:nth-child(7) {
-  --wl-in: 96%;
-  --wl-out: 150%;
-  --wl-k: 6;
-}
-
-
+/* 页面高度：曲绘卡 row = topRow + rowStep·r，末行六边形底边再留 3·th 给品牌区。
+   .phigrOS-grid 负责 --th / --ox / --oy，这里只接收模板注入的行列参数。 */
 .chapHelp {
-  
-  
-
   --help-rows: 12;
   --help-top-row: 4;
   --help-row-step: 4;
 
-  
   height: calc(
     (var(--help-top-row) + var(--help-row-step) * (var(--help-rows) - 1) + 3) *
       var(--th)
   );
 }
 
-
 .background img {
   filter: blur(18px) brightness(0.4) saturate(1.35) hue-rotate(-10deg);
 }
 
+/* 配色全部走 phigrOS.css 暴露的变量，不直接覆盖它声明的属性：
+   --stroke / --object-drop-shadow / --grid-mask-image（网格）
+   --six-fill / --six-glow（曲绘卡六边形）
+   --row-fill / --row-stroke / --row-stroke-width / --row-glow（别名框） */
 .chapHelp {
   --stroke: rgba(126, 198, 226, 0.3);
   --object-drop-shadow: rgba(120, 220, 255, 0.55);
-  
+  /* 网格线向四周淡出，脱离「作业纸」观感 */
+  --grid-mask-image: radial-gradient(
+    120% 88% at 50% 32%,
+    #000 46%,
+    transparent 100%
+  );
+  /* 扫描线放在 stage 背景层：只透过网格可见，不会印在卡片与别名框上 */
   background-image: repeating-linear-gradient(
     0deg,
     rgba(255, 255, 255, 0.03) 0 1px,
@@ -226,17 +145,9 @@ body {
   );
 }
 
-.chapHelp::before {
-  -webkit-mask-image: radial-gradient(
-    120% 88% at 50% 32%,
-    #000 46%,
-    transparent 100%
-  );
-  mask-image: radial-gradient(120% 88% at 50% 32%, #000 46%, transparent 100%);
-}
-
+/* 六边形曲绘卡：深蓝渐变 + 内发光 */
 .chapHelp .sixLineBox {
-  background: linear-gradient(
+  --six-fill: linear-gradient(
     158deg,
     rgba(24, 52, 80, 0.97) 0%,
     rgba(6, 12, 21, 0.99) 54%,
@@ -284,7 +195,7 @@ body {
 .chapHelp .sixLine {
   --six-line: #d0fffc;
   --six-line-width: 4px;
-  filter: drop-shadow(0 0 2px rgba(208, 255, 252, 0.9))
+  --six-glow: drop-shadow(0 0 2px rgba(208, 255, 252, 0.9))
     drop-shadow(0 0 9px rgba(0, 194, 255, 0.5))
     drop-shadow(0 0 22px rgba(0, 162, 255, 0.32))
     drop-shadow(0 12px 26px rgba(0, 0, 0, 0.6));
@@ -294,7 +205,7 @@ body {
   --row-fill: linear-gradient(135deg, #f4fbff 0%, #d8ecfb 56%, #b5d5ea 100%);
   --row-stroke: #eaf9ff;
   --row-stroke-width: 3px;
-  filter: drop-shadow(0 8px 22px rgba(0, 8, 18, 0.55))
+  --row-glow: drop-shadow(0 8px 22px rgba(0, 8, 18, 0.55))
     drop-shadow(0 0 14px rgba(120, 220, 255, 0.35));
 }
 
@@ -340,7 +251,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0px 125px;
+  padding: 0 130px;
   box-sizing: border-box;
   background: linear-gradient(
     180deg,
@@ -353,10 +264,10 @@ body {
 .helpHeader::after {
   content: "";
   position: absolute;
-  left: var(--side);
-  right: var(--side);
+  left: 130px;
+  right: 130px;
   bottom: 26px;
-  height: 12px;
+  height: 14px;
   background: linear-gradient(
     90deg,
     #d0fffc,
@@ -369,7 +280,6 @@ body {
   display: flex;
   align-items: center;
   gap: 30px;
-  margin-bottom: 40px;
 }
 
 .helpHeader__tri {
@@ -415,9 +325,8 @@ body {
 }
 
 .helpHeader__ver {
-  padding: 5px 22px;
+  padding: 7px 22px;
   background: linear-gradient(180deg, #f7fdff, #cfeefe);
-  
 }
 
 .helpHeader__ver p {
@@ -432,7 +341,7 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 50px;
+  bottom: 40px;
   z-index: 21;
   display: flex;
   flex-direction: column;
